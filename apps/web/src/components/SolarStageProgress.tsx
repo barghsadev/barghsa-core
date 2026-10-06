@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { ProgressStepper, StatusTimeline } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
@@ -54,7 +55,9 @@ export function SolarStageProgress({
               title: copy(`construction_${event.stage}`),
               dateTime: event.recordedAt,
               dateLabel: time.format(event.recordedAt),
-              actorLabel: event.actorName ?? copy('constructionActor'),
+              actorLabel: [event.actorName, historyContextText(event.actorContext, locale)]
+                .filter(Boolean)
+                .join(' · '),
               description: <span className="whitespace-pre-wrap break-words">{event.note}</span>,
             }))}
           />

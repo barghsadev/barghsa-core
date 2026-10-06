@@ -157,7 +157,7 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
     [
       'savingFulfillmentEvents',
       `SELECT e.id,e.order_id,e.stage,e.from_status,e.to_status,
-              e.explanation,e.handover_description,e.created_at
+              e.explanation,e.handover_description,e.actor_context,e.created_at
        FROM saving_fulfillment_events e JOIN saving_orders o ON o.id=e.order_id
        WHERE o.profile_id=$1 ORDER BY e.created_at,e.id LIMIT 5001`,
       [profileId],
@@ -171,7 +171,7 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
     ],
     [
       'savingRevisions',
-      `SELECT r.id,r.order_id,r.previous_version_id,r.version_id,r.created_at
+      `SELECT r.id,r.order_id,r.previous_version_id,r.version_id,r.actor_context,r.created_at
        FROM saving_order_revisions r JOIN saving_orders o ON o.id=r.order_id
        WHERE o.profile_id=$1 ORDER BY r.created_at,r.id LIMIT 5001`,
       [profileId],
@@ -179,7 +179,7 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
     [
       'savingAddressAmendments',
       `SELECT a.id,a.order_id,a.contract_id,a.contract_version_id,a.previous_address_id,
-              a.address_id,a.previous_snapshot,a.address_snapshot,a.reason,a.created_at
+              a.address_id,a.previous_snapshot,a.address_snapshot,a.reason,a.actor_context,a.created_at
        FROM saving_address_amendments a JOIN saving_orders o ON o.id=a.order_id
        WHERE o.profile_id=$1 ORDER BY a.created_at,a.id LIMIT 5001`,
       [profileId],
@@ -188,7 +188,7 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
       'savingHardwareAmendments',
       `SELECT a.id,a.order_id,a.contract_id,a.contract_version_id,a.previous_hardware_id,
               a.hardware_id,a.previous_snapshot,a.hardware_snapshot,a.original_invoice_id,
-              a.adjustment_invoice_id,a.price_delta_irr,a.reason,a.created_at
+              a.adjustment_invoice_id,a.price_delta_irr,a.reason,a.actor_context,a.created_at
        FROM saving_hardware_amendments a JOIN saving_orders o ON o.id=a.order_id
        WHERE o.profile_id=$1 ORDER BY a.created_at,a.id LIMIT 5001`,
       [profileId],
@@ -197,7 +197,7 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
       'savingHardwareUpgrades',
       `SELECT u.id,u.order_id,u.contract_id,u.contract_version_id,u.previous_hardware_id,
               u.hardware_id,u.hardware_snapshot,u.original_invoice_id,u.adjustment_invoice_id,
-              u.price_delta_irr,u.status,u.reason,u.created_at,u.applied_at,u.closed_at
+              u.price_delta_irr,u.status,u.reason,u.actor_context,u.created_at,u.applied_at,u.closed_at
        FROM saving_hardware_upgrade_requests u JOIN saving_orders o ON o.id=u.order_id
        WHERE o.profile_id=$1 ORDER BY u.created_at,u.id LIMIT 5001`,
       [profileId],
@@ -239,7 +239,7 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
     ],
     [
       'solarConstructionProgress',
-      `SELECT e.id,e.request_id,e.contract_id,e.stage,e.revision,e.note,e.recorded_at
+      `SELECT e.id,e.request_id,e.contract_id,e.stage,e.revision,e.note,e.actor_context,e.recorded_at
        FROM solar_construction_progress_events e JOIN solar_construction_requests r ON r.id=e.request_id
        WHERE r.profile_id=$1 ORDER BY e.recorded_at,e.id LIMIT 5001`,
       [profileId],
@@ -253,7 +253,7 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
     ],
     [
       'consultationEvents',
-      `SELECT e.id,e.request_id,e.status,e.reason,e.created_at
+      `SELECT e.id,e.request_id,e.status,e.reason,e.actor_context,e.created_at
        FROM consultation_request_events e JOIN consultation_requests r ON r.id=e.request_id
        WHERE r.profile_id=$1 ORDER BY e.created_at,e.id LIMIT 5001`,
       [profileId],
@@ -382,8 +382,8 @@ export async function generateProfileExport(
       );
       if (updated.rowCount !== 1) throw new Error('Profile export authorization changed');
       await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata)
-       VALUES($1,$2,'profile_export_generated',$3::jsonb)`,
+        `INSERT INTO audit_log(id,user_id,event,metadata,operating_context)
+       VALUES($1,$2,'profile_export_generated',$3::jsonb,'customer')`,
         [
           randomUUID(),
           userId,

@@ -405,6 +405,7 @@ it('creates a private archive with customer fields and eligible document bytes, 
     expect.objectContaining({
       request_id: portfolio.consultationId,
       reason: 'customer published offer',
+      actor_context: null,
     }),
   ]);
   for (const protectedValue of [
@@ -423,6 +424,13 @@ it('creates a private archive with customer fields and eligible document bytes, 
       )
     ).rows[0].count
   ).toBe(1);
+  expect(
+    (
+      await pool.query(
+        "SELECT operating_context FROM audit_log WHERE event='profile_export_generated'"
+      )
+    ).rows
+  ).toEqual([{ operating_context: 'customer' }]);
   await pool.query(
     `UPDATE tickets SET privacy_export_expires_at=now()-interval '1 second' WHERE id=$1`,
     [ticketId]

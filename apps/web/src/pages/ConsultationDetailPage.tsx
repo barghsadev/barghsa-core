@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import {
@@ -67,7 +68,7 @@ interface Detail {
   };
   history: Array<{
     status: string;
-    actor_type: 'staff' | 'customer';
+    actor_type: 'staff' | 'customer' | 'unknown';
     actor_name?: string | null;
     reason: string | null;
     created_at: string;
@@ -640,9 +641,7 @@ export function ConsultationDetailPage() {
                 state: event.status,
                 dateTime: event.created_at,
                 dateLabel: time.format(event.created_at),
-                actorLabel: ['customer', 'staff'].includes(event.actor_type)
-                  ? `${copy('actor')}: ${[event.actor_name, copy(`actor_${event.actor_type}`)].filter(Boolean).join(' · ')}`
-                  : undefined,
+                actorLabel: `${copy('actor')}: ${[['staff', 'customer', 'unknown'].includes(event.actor_type) ? event.actor_name : null, historyContextText(event.actor_type, locale)].filter(Boolean).join(' · ')}`,
                 description: event.reason ? `${copy('reason')}: ${event.reason}` : undefined,
               }))}
             />

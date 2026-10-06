@@ -3,7 +3,7 @@ import type { PoolClient } from 'pg';
 export async function savingAddressAmendments(client: PoolClient, savingOrderId: string) {
   return (
     await client.query(
-      `SELECT id,created_at AS "changedAt",reason,
+      `SELECT id,COALESCE(actor_context,'unknown') AS "actorContext",created_at AS "changedAt",reason,
               previous_snapshot->>'full_address' AS "previousAddress",
               address_snapshot->>'full_address' AS "address",
               previous_snapshot->>'postal_code' AS "previousPostalCode",

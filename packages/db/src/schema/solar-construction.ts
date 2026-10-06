@@ -38,6 +38,7 @@ export const solarConstructionProgressEvents = pgTable(
     revision: integer('revision').notNull(),
     operationId: uuid('operation_id').notNull(),
     actorUserId: text('actor_user_id').references(() => users.userId, { onDelete: 'set null' }),
+    actorContext: text('actor_context', { enum: ['staff', 'customer'] }),
     note: text('note').notNull(),
     review: jsonb('review').$type<Record<string, unknown>>().notNull(),
     recordedAt: timestamp('recorded_at', { withTimezone: true })
@@ -45,6 +46,10 @@ export const solarConstructionProgressEvents = pgTable(
       .default(sql`clock_timestamp()`),
   },
   (t) => [
+    check(
+      'solar_construction_progress_events_actor_context_valid',
+      sql`${t.actorContext} IN ('staff','customer')`
+    ),
     uniqueIndex('solar_progress_operation_key').on(t.operationId),
     uniqueIndex('solar_progress_stage_key').on(t.requestId, t.stage),
     uniqueIndex('solar_progress_revision_key').on(t.requestId, t.revision),

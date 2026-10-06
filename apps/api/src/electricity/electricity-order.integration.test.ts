@@ -396,6 +396,12 @@ it('projects only opted-in activity names into authorized customer and staff ord
     expect(response.status, http.logs()).toBe(200);
     const body = (await response.json()) as { timeline: Array<{ actorName: string | null }> };
     expect(body.timeline.every((event) => event.actorName === null)).toBe(true);
+    expect(body.timeline.find((event) => (event as { id?: string }).id === eventId)).toMatchObject({
+      actorContext: 'unknown',
+    });
+    expect(body.timeline).toEqual(
+      expect.arrayContaining([expect.objectContaining({ actorContext: 'customer' })])
+    );
   }
   await http.pool.query(
     "UPDATE conversation_identities SET share_in_activity=true WHERE user_id='reviewer'"

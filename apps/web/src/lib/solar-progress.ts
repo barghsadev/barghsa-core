@@ -21,6 +21,7 @@ export interface SolarProgress {
     revision: number;
     recordedAt: string;
     actorName: string | null;
+    actorContext?: string | null;
     note: string;
   }>;
 }

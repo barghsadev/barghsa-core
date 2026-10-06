@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/app';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
@@ -120,9 +121,9 @@ for (const locale of ['en', 'fa'] as const)
           .locator('[data-tone]')
           .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-tone')))
       ).toEqual(consultationContextTones);
-      await expect(timeline).toContainText(copy('actor_customer'));
-      await expect(timeline).toContainText(copy('actor_staff'));
-      await expect(timeline).toContainText(copy('actor_unknown'));
+      await expect(timeline).toContainText(t('history.context.customer', locale));
+      await expect(timeline).toContainText(t('history.context.staff', locale));
+      await expect(timeline).toContainText(t('history.context.unknown', locale));
       await expect(timeline).toContainText('Reviewer <script>');
       await expect(timeline).toContainText('<img src=x onerror=alert(1)>');
       await expect(timeline.locator('time').first()).toHaveAttribute(

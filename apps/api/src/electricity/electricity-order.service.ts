@@ -451,10 +451,11 @@ export class ElectricityOrderService {
           id: string;
           event: string;
           user_id: string | null;
+          actor_context: string;
           created_at: Date;
           metadata: Record<string, unknown>;
         }>(
-          `SELECT id,event,user_id,created_at,metadata::jsonb AS metadata FROM audit_log
+          `SELECT id,event,user_id,created_at,COALESCE(operating_context,'unknown') AS actor_context,metadata::jsonb AS metadata FROM audit_log
              WHERE (metadata::jsonb->>'orderId'=$1
                     AND (event LIKE 'electricity.%' OR event='order_created'))
               OR ($2::uuid IS NOT NULL AND metadata::jsonb->>'refundId'=$2::text
@@ -526,6 +527,7 @@ export class ElectricityOrderService {
             event: item.event,
             at: item.created_at.toISOString(),
             actor: item.user_id,
+            actorContext: item.actor_context,
             actorName: item.user_id ? (names.get(item.user_id) ?? null) : null,
             reason: typeof item.metadata.reason === 'string' ? item.metadata.reason : null,
             comment:
@@ -536,6 +538,7 @@ export class ElectricityOrderService {
             event: item.event,
             at: item.at.toISOString(),
             actor: null,
+            actorContext: 'unknown',
             actorName: null,
             reason: null,
             comment: null,

@@ -1,4 +1,6 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect, type Page } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { contractText } from '@barghsa/i18n/contracts';
 import { t } from '@barghsa/i18n/app';
@@ -12,14 +14,14 @@ const firstAt = '2026-10-01T10:00:00.000Z';
 const lastAt = '2026-10-02T10:00:00.000Z';
 
 async function shell(page: Page, locale: 'en' | 'fa', staff = false) {
-  await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await crmShell(page, locale);
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
       json: {
         userId: 'timeline-user',
         isStaff: staff,
         operatingContext: staff ? 'staff' : 'customer',
+        navigation: fullNavigation(staff ? 'staff' : 'customer'),
         canSwitchContext: false,
         requiresTosAcceptance: false,
       },
@@ -29,6 +31,7 @@ async function shell(page: Page, locale: 'en' | 'fa', staff = false) {
     route.fulfill({
       json: {
         activeProfileId: profileId,
+        hasDefault: true,
         profiles: [
           {
             id: profileId,
@@ -183,7 +186,7 @@ for (const locale of ['en', 'fa'] as const) {
         });
       denied = true;
       await page.reload();
-      await expect(page.getByText(word('error'), { exact: true })).toBeVisible();
+      await expect(page).not.toHaveURL(/contractId=/);
       await expect(page.locator('[data-slot="status-timeline"]')).toHaveCount(0);
       await expect(page.locator('body')).not.toContainText('private-note-is-literal');
       await expect(page.locator('body')).not.toContainText('Older version recorded note');
@@ -232,6 +235,7 @@ for (const locale of ['en', 'fa'] as const) {
               at: lastAt,
               actor: 'internal-staff-id',
               actorName: 'Chosen electricity staff <name>',
+              actorContext: 'staff',
               reason: 'Recorded rejection reason',
               comment: 'Recorded customer comment',
             },
@@ -252,8 +256,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(timeline).toContainText(t('electricity.order.timeline.submitted', locale));
     await expect(timeline).toContainText(t('electricity.order.timeline.updated', locale));
     await expect(timeline).toContainText('Recorded rejection reason');
-    await expect(timeline.locator('bdi')).toContainText('Chosen electricity staff <name>');
+    await expect(timeline.locator('bdi').nth(1)).toHaveText(
+      'Chosen electricity staff <name> · ' + t('history.context.staff', locale)
+    );
     await expect(timeline).toContainText('Recorded customer comment');
+    await expect(timeline).toContainText(t('history.context.staff', locale));
+    await expect(timeline).toContainText(t('history.context.unknown', locale));
     await expect(page.locator('body')).not.toContainText('internal-staff-id');
     await expect(page.locator('body')).not.toContainText('__proto__');
 
@@ -262,6 +270,7 @@ for (const locale of ['en', 'fa'] as const) {
         json: {
           request: {
             id,
+            profile_id: profileId,
             status: 'completed',
             product_snapshot: { title: { en: 'Consultation', fa: 'مشاوره' } },
             submitted_at: firstAt,
@@ -306,11 +315,13 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto(`/consultations/${id}`);
     timeline = await inspect(page, ['info', 'default', 'default']);
     await expect(timeline).toContainText(tConsultation('status_submitted', locale));
-    await expect(timeline).toContainText(tConsultation('actor_staff', locale));
+    await expect(timeline).toContainText(t('history.context.staff', locale));
     await expect(timeline).toContainText('Chosen consultation staff نام');
     await expect(timeline).toContainText(tConsultation('status_unknown', locale));
     await expect(timeline).toContainText('Recorded completion note');
     await expect(timeline).not.toContainText('private_future');
+    await expect(timeline).toContainText(t('history.context.customer', locale));
+    await expect(timeline).toContainText(t('history.context.unknown', locale));
 
     const invoice = {
       invoiceId: id,

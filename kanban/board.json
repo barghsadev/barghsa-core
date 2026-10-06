@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-06",
-  "source_commit": "f96d425945e6459a09501a5b5e384fa8e5a7e6d8",
+  "source_commit": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17232,7 +17232,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "ced941196b6c0a36a04e6794a85c915fc069796b991cfcf2b9ad486e0c9f11fb"
+              "sha256": "d40a1b2228ce48244cf38524c4a9f65d631f09f93cb5e74af5d746fdb9d25a3e"
             },
             {
               "path": "packages/db/src/migrate.baseline.test.ts",
@@ -17270,13 +17270,22 @@
             "83 selected shared limiter cases and8 actual PostgreSQL rolling-window cases pass, including durable concurrency and Redis loss/recovery. Unchanged registration/OTP policy acceptance from2153725 is reused using matching source hashes rather than adding overlapping counts.",
             "Actual committed staging NGINX config passes isolated nginx -t and FA/EN auth-burst tests:10r/s burst5, forged X-Forwarded-For cannot bypass quota, Retry-After1/private-no-store/security headers, unaffected health, API-origin Retry-After60 retained,11MiB template upload, unbuffered SSE and WebSocket upgrade. Existing pilot TLS/routing/cache/upload/AI/auth checks also pass after fixture-runner extension.",
             "Final source/config/test hashes and980 compiled web/i18n bindings saved in source-manifest.json; all1003 registration source/output bindings still match. Existing API/web production build/types/budgets reused because application/dependency sources are unchanged. Scoped script lint/format and board/diff checks pass.",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
             "Local source/HTTP/browser and supplied edge acceptance. Actual staged deployment/Telegram receipts and production ingress/provider operational gates remain separate.",
             "CSRF exceptional-route policy, step-up policy and manual lost-contact recovery remain separate partial tasks with pending owner decisions."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ]
+          }
         }
       }
     },
@@ -17868,11 +17877,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
-              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+              "sha256": "fdb701567465a59422eb87a45a2861ba7f12c2bb3f781c3d366a519e45da280b"
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
@@ -17908,7 +17917,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2c98f29169414f315ee5005312ad38ef32eed1d7eabd553fdc75833a0e9e346e"
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -17945,13 +17954,24 @@
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
             "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
             "At account-preferences-acceptance, renewed apps/web/e2e/form-accessibility.spec.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance.",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
             "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
             "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "apps/api/src/electricity/electricity-order.service.ts",
+              "apps/api/src/solar/solar-request.service.ts"
+            ]
+          }
         }
       }
     },
@@ -19567,7 +19587,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "f6d3da549142db14627e0724ba8f8a463631522b662fba6e4314ff0b0e91bbe5"
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -19657,13 +19677,22 @@
             "Matching prior profile-write HTTP acceptance is reused narrowly using current controller/service manifest hashes plus immutable prior-baseline test Git blob (profile-write-reuse.json). No whole186-case rerun claim. Existing source rechecks account/session/profile ownership/type/verified-field permissions under lock and appends address history atomically with audit/idempotency.",
             "Timezone consumer audit distinguishes authenticated instants from Iranian electricity civil-period rules and date-only receipt/postal calendars. Public terms explicitly fetch credentials:omit and use the product default in that unauthenticated view. Production electricity detail panels receive account formatters; admin catalogue/gift details gate timezone readiness. Found bill-source instants in simple ordering incorrectly fixed to Tehran; now use existing account formatter/loading/error retry. Exact original civil-period, totals/payment/contract assertions still pass in both journey engines.",
             "Latest web production build/types, changed-file lint/format, all85 unchanged bundle budgets and strict SAST1804files/0findings/0errors/5rule fixtures pass. API/schema/dependencies unchanged. Final source/test/config hashes and980 compiled outputs are bound in source-manifest.json; earlier failed/incomplete commands are diagnostic evidence only.",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
             "Local source/HTTP/browser/provider fixtures only. Live operational/whole-release acceptance remains separate.",
             "No pending owner policy decision is approved by this batch."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/web/src/pages/ElectricityOrderDetailsPage.tsx"
+            ]
+          }
         }
       }
     },
@@ -19839,7 +19868,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
-              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+              "sha256": "fdb701567465a59422eb87a45a2861ba7f12c2bb3f781c3d366a519e45da280b"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -19883,9 +19912,18 @@
             "Deletion criterion uses the specified soft-delete-and-warning behavior: no physical DELETE in the customer command, retained rows/order snapshots, current main-address replacement required, localized history warning in confirmation. Does not claim a separate linked-order soft-delete prohibition. Related 18 address HTTP cases and EN/FA native-form browser/source receipts remain valid for unchanged profile/address methods.",
             "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
             "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance.",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance",
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/electricity/electricity-order.service.ts"
+            ]
+          }
         },
         "address_checkpoint": {
           "base_commit": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
@@ -20095,7 +20133,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
-              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+              "sha256": "fdb701567465a59422eb87a45a2861ba7f12c2bb3f781c3d366a519e45da280b"
             },
             {
               "path": "apps/api/src/finance/review-snapshot.service.ts",
@@ -20127,7 +20165,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2c98f29169414f315ee5005312ad38ef32eed1d7eabd553fdc75833a0e9e346e"
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -20191,7 +20229,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "8dba106fec11f2690c3843fbf88bf7498cb8cab49e937affaa2ed5a3039f6411"
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -20244,14 +20282,25 @@
             "Inspected final detail SQL: historical address comes only from recorded review data; mutable address join removed. New copied-field storage and role/session checks are unchanged. Legacy rows without recorded values display a localized unknown message; schema and signed receipts are preserved.",
             "Earlier address checkpoints retain exact criteria/evidence: scoped native CRUD/retries, electricity saved/new address and immutable order fields, saving exact keyed creation plus authoritative quote snapshot, and both solar types with complete signed JSON. Final changes are confined to legacy solar detail projection/wording; prior unaffected intake/form methods and dictionary keys are retained. Dependency security patches were separately verified with136boundary cases and identical client assets.",
             "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance.",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "related_evidence": [
             "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots/review.json"
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-legacy-address-history"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-legacy-address-history",
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/electricity/electricity-order.service.ts",
+              "apps/api/src/solar/solar-request.service.ts",
+              "apps/web/src/pages/SolarRequestDetailPage.tsx"
+            ]
+          }
         },
         "solar_address_checkpoint": {
           "paths": [
@@ -20683,7 +20732,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -20699,7 +20748,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2c98f29169414f315ee5005312ad38ef32eed1d7eabd553fdc75833a0e9e346e"
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/tos/tos-acceptance.ts",
@@ -20804,13 +20853,23 @@
             "58 frontend cases and26 dictionary cases pass. Seven fetch cases are included in58, not added again: original response body preserved; explicit same-origin terms denial only. Intake functions/dictionary existing entries and unrelated methods proven unchanged by compatibility-proof.json/source-delta-review.json.",
             "48 distinct final Chromium/mobile Safari cases pass with zero retries:16 shell/theme,6 acknowledgement/reopening cases and2 migrated live-publication/public-page cases per engine. Evidence assembled from source-matching successful tests across browser-final-report.json (Chromium shell/theme),receipt-live-final-report.json (Chromium acknowledgement),mobile-current-report.json andlive-chromium-current-report.json. Empty/wrong-version/no-body acknowledgements remain required; synchronous pending claim excludes duplicate writes; explicit denial rechecks account before reopening and does not reopen an accepted account. No failed/stopped command is claimed passing.",
             "Live terms fixture corrected for responsive mobile list cards and native Select All in rich content; original strong-text/current-publication/duplicate-version/retained-draft/discard/public FA/EN assertions preserved. Earlier diagnostics retained. Updated saved API contract only for the already-implemented optional household solar siteAddressId field.",
-            "Final API/shared/i18n/web production builds,11 workspace type/build tasks, scoped lint/format/diff, generated contract comparison,85 unchanged route/interaction budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. External source-manifest.json binds current product/test/config sources and generated outputs. Local source acceptance only; no release/deployment/Telegram receipt is inferred."
+            "Final API/shared/i18n/web production builds,11 workspace type/build tasks, scoped lint/format/diff, generated contract comparison,85 unchanged route/interaction budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. External source-manifest.json binds current product/test/config sources and generated outputs. Local source acceptance only; no release/deployment/Telegram receipt is inferred.",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
             "Local source/HTTP/browser fixtures only; live operational data, global coverage/release gates and staging receipts remain separate.",
             "Production remains subject to complete launch gates and explicit owner authorization."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "apps/api/src/solar/solar-request.service.ts"
+            ]
+          }
         }
       }
     },
@@ -20919,7 +20978,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -20935,7 +20994,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2c98f29169414f315ee5005312ad38ef32eed1d7eabd553fdc75833a0e9e346e"
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/tos/tos-acceptance.ts",
@@ -21040,13 +21099,23 @@
             "58 frontend cases and26 dictionary cases pass. Seven fetch cases are included in58, not added again: original response body preserved; explicit same-origin terms denial only. Intake functions/dictionary existing entries and unrelated methods proven unchanged by compatibility-proof.json/source-delta-review.json.",
             "48 distinct final Chromium/mobile Safari cases pass with zero retries:16 shell/theme,6 acknowledgement/reopening cases and2 migrated live-publication/public-page cases per engine. Evidence assembled from source-matching successful tests across browser-final-report.json (Chromium shell/theme),receipt-live-final-report.json (Chromium acknowledgement),mobile-current-report.json andlive-chromium-current-report.json. Empty/wrong-version/no-body acknowledgements remain required; synchronous pending claim excludes duplicate writes; explicit denial rechecks account before reopening and does not reopen an accepted account. No failed/stopped command is claimed passing.",
             "Live terms fixture corrected for responsive mobile list cards and native Select All in rich content; original strong-text/current-publication/duplicate-version/retained-draft/discard/public FA/EN assertions preserved. Earlier diagnostics retained. Updated saved API contract only for the already-implemented optional household solar siteAddressId field.",
-            "Final API/shared/i18n/web production builds,11 workspace type/build tasks, scoped lint/format/diff, generated contract comparison,85 unchanged route/interaction budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. External source-manifest.json binds current product/test/config sources and generated outputs. Local source acceptance only; no release/deployment/Telegram receipt is inferred."
+            "Final API/shared/i18n/web production builds,11 workspace type/build tasks, scoped lint/format/diff, generated contract comparison,85 unchanged route/interaction budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. External source-manifest.json binds current product/test/config sources and generated outputs. Local source acceptance only; no release/deployment/Telegram receipt is inferred.",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
             "Local source/HTTP/browser fixtures only; live operational data, global coverage/release gates and staging receipts remain separate.",
             "Production remains subject to complete launch gates and explicit owner authorization."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "apps/api/src/solar/solar-request.service.ts"
+            ]
+          }
         }
       }
     },
@@ -21163,7 +21232,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -21179,7 +21248,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2c98f29169414f315ee5005312ad38ef32eed1d7eabd553fdc75833a0e9e346e"
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/tos/tos-acceptance.ts",
@@ -21284,13 +21353,23 @@
             "58 frontend cases and26 dictionary cases pass. Seven fetch cases are included in58, not added again: original response body preserved; explicit same-origin terms denial only. Intake functions/dictionary existing entries and unrelated methods proven unchanged by compatibility-proof.json/source-delta-review.json.",
             "48 distinct final Chromium/mobile Safari cases pass with zero retries:16 shell/theme,6 acknowledgement/reopening cases and2 migrated live-publication/public-page cases per engine. Evidence assembled from source-matching successful tests across browser-final-report.json (Chromium shell/theme),receipt-live-final-report.json (Chromium acknowledgement),mobile-current-report.json andlive-chromium-current-report.json. Empty/wrong-version/no-body acknowledgements remain required; synchronous pending claim excludes duplicate writes; explicit denial rechecks account before reopening and does not reopen an accepted account. No failed/stopped command is claimed passing.",
             "Live terms fixture corrected for responsive mobile list cards and native Select All in rich content; original strong-text/current-publication/duplicate-version/retained-draft/discard/public FA/EN assertions preserved. Earlier diagnostics retained. Updated saved API contract only for the already-implemented optional household solar siteAddressId field.",
-            "Final API/shared/i18n/web production builds,11 workspace type/build tasks, scoped lint/format/diff, generated contract comparison,85 unchanged route/interaction budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. External source-manifest.json binds current product/test/config sources and generated outputs. Local source acceptance only; no release/deployment/Telegram receipt is inferred."
+            "Final API/shared/i18n/web production builds,11 workspace type/build tasks, scoped lint/format/diff, generated contract comparison,85 unchanged route/interaction budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. External source-manifest.json binds current product/test/config sources and generated outputs. Local source acceptance only; no release/deployment/Telegram receipt is inferred.",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
             "Local source/HTTP/browser fixtures only; live operational data, global coverage/release gates and staging receipts remain separate.",
             "Production remains subject to complete launch gates and explicit owner authorization."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "apps/api/src/solar/solar-request.service.ts"
+            ]
+          }
         }
       }
     },
@@ -41900,7 +41979,7 @@
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
-              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
+              "sha256": "c575d7a6d3c849005c2e634a37e7e96061a500778b16655129cbeedaf6858fd0"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
@@ -41968,11 +42047,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+              "sha256": "5046ee67d06620fda117dc8631e20e9c3b67af1ed2b9fdba3b84c7c70e7c72e0"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+              "sha256": "0589413e3d522d5ca6bdb077d2f9ba17c2e5113a439313d1c1b2acd60cc9a7b6"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.ts",
@@ -41984,19 +42063,19 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
-              "sha256": "9baf88b6329874136410e9098e280d5d3595a9bdda2b9b17539ce90f0cbfa0af"
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
             },
             {
               "path": "packages/db/src/schema/solar-construction.ts",
-              "sha256": "987943951c19b917c5f580d39f9e0ae2f0d6b85a1045b3621d1d4adec4daadca"
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
             },
             {
               "path": "packages/db/src/schema/consultation-requests.ts",
-              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
+              "sha256": "cf7ebea876b950bffd569252e85df55653be979dfe724021660c52af39927b60"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -42017,13 +42096,28 @@
             "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
             "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
             "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim.",
-            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance"
+            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
             "Local source/HTTP/browser/provider fixtures only. Whole-release coverage/operational/staging acceptance remains separate.",
             "Closure completion export access and immutable business acting-context attribution remain explicitly partial in their own tasks."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/session/session-step-up.ts",
+              "apps/worker/src/privacy/profile-export.ts",
+              "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "packages/db/src/schema/saving-orders.ts",
+              "packages/db/src/schema/solar-construction.ts",
+              "packages/db/src/schema/consultation-requests.ts"
+            ]
+          }
         }
       }
     },
@@ -42148,7 +42242,7 @@
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
-              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
+              "sha256": "c575d7a6d3c849005c2e634a37e7e96061a500778b16655129cbeedaf6858fd0"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
@@ -42216,11 +42310,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+              "sha256": "5046ee67d06620fda117dc8631e20e9c3b67af1ed2b9fdba3b84c7c70e7c72e0"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+              "sha256": "0589413e3d522d5ca6bdb077d2f9ba17c2e5113a439313d1c1b2acd60cc9a7b6"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.ts",
@@ -42232,19 +42326,19 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
-              "sha256": "9baf88b6329874136410e9098e280d5d3595a9bdda2b9b17539ce90f0cbfa0af"
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
             },
             {
               "path": "packages/db/src/schema/solar-construction.ts",
-              "sha256": "987943951c19b917c5f580d39f9e0ae2f0d6b85a1045b3621d1d4adec4daadca"
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
             },
             {
               "path": "packages/db/src/schema/consultation-requests.ts",
-              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
+              "sha256": "cf7ebea876b950bffd569252e85df55653be979dfe724021660c52af39927b60"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -42265,13 +42359,28 @@
             "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
             "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
             "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim.",
-            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance"
+            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
             "Local source/HTTP/browser/provider fixtures only. Whole-release coverage/operational/staging acceptance remains separate.",
             "Closure completion export access and immutable business acting-context attribution remain explicitly partial in their own tasks."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/session/session-step-up.ts",
+              "apps/worker/src/privacy/profile-export.ts",
+              "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "packages/db/src/schema/saving-orders.ts",
+              "packages/db/src/schema/solar-construction.ts",
+              "packages/db/src/schema/consultation-requests.ts"
+            ]
+          }
         }
       }
     },
@@ -42322,7 +42431,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
@@ -42342,7 +42451,7 @@
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
-              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
+              "sha256": "c575d7a6d3c849005c2e634a37e7e96061a500778b16655129cbeedaf6858fd0"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -42478,27 +42587,27 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+              "sha256": "0589413e3d522d5ca6bdb077d2f9ba17c2e5113a439313d1c1b2acd60cc9a7b6"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+              "sha256": "5046ee67d06620fda117dc8631e20e9c3b67af1ed2b9fdba3b84c7c70e7c72e0"
             },
             {
               "path": "packages/db/src/schema/consultation-requests.ts",
-              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
+              "sha256": "cf7ebea876b950bffd569252e85df55653be979dfe724021660c52af39927b60"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
-              "sha256": "9baf88b6329874136410e9098e280d5d3595a9bdda2b9b17539ce90f0cbfa0af"
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
             },
             {
               "path": "packages/db/src/schema/solar-construction.ts",
-              "sha256": "987943951c19b917c5f580d39f9e0ae2f0d6b85a1045b3621d1d4adec4daadca"
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "668d97d7244a4c4adbdaa81ea5d490e741469e0a06204e7a55ad393105caa225"
+              "sha256": "2b8c8103792d3afb5838702ed762dfc4e27abe805357a58c63c62d82ad392d6e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -42521,13 +42630,29 @@
             "23 distinct frontend component/model cases pass:7 unchanged lifecycle-panel cases from web-source.json plus16 final closure/model cases from web-source-current.json. Exact11 lifecycle blockers retained; closure requires all13 codes with exact owners/steps and rejects missing/foreign metadata. Staff blocked-state renders bilingual owner and next step; no approval/password UI is offered.",
             "28 distinct Chromium/mobile Safari cases pass with zero retries:16 original lifecycle cases,8 new pending-export/ownership blocker cases, and4 completed support/reference cases with no active profile, in both FA/EN. browser-report.json/blocker-browser-report.json/support-reference-browser-current-report.json. Original test body bytes and existing fixture factory are unchanged; the factory is only exported for new cases (browser-reuse-proof.json). A synthetic customer fixture first lacked seeded history and was corrected; no failed run is accepted.",
             "25 message dictionary cases pass (one actual messages.test.ts file; the listed app.test.ts does not exist and contributes no cases). Six new entries are the only dictionary delta, proven by exact byte projection. API/i18n/web builds,11 type/build tasks, scoped lint/format/diff, exact generated contract,85 unchanged budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. Production sources match the scans/builds; final test-only factory export retains its exact body. Source-manifest.json binds53 sources and2982 required outputs; stale emitted test-only API files are excluded from reuse.",
-            "Local source/HTTP/browser/provider fixtures only. All-four-service blocker SQL reviewed with terminal dispositions, including solar close-no-contract mapping to cancelled. No whole-release, external legal policy, staging or Telegram completion is inferred. Acting-context history remains partial in its own two tasks."
+            "Local source/HTTP/browser/provider fixtures only. All-four-service blocker SQL reviewed with terminal dispositions, including solar close-no-contract mapping to cancelled. No whole-release, external legal policy, staging or Telegram completion is inferred. Acting-context history remains partial in its own two tasks.",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
           "limitations": [
             "Local fixtures/source acceptance only; operational and whole-release/coverage gates remain separate.",
             "Downloads continue to require an active owned profile. Completion retains the owned support/export-request reference as specified and warned in existing final-review copy."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "apps/api/src/session/session-step-up.ts",
+              "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "apps/worker/src/privacy/profile-export.ts",
+              "packages/db/src/schema/consultation-requests.ts",
+              "packages/db/src/schema/saving-orders.ts",
+              "packages/db/src/schema/solar-construction.ts",
+              "packages/i18n/src/app.ts"
+            ]
+          }
         }
       }
     },
@@ -42542,12 +42667,10 @@
         "story": "02-auth-users-admin.md#spec-632156a4a3ea"
       },
       "requirement": "**T-11.02.01 — Explicit operating context in session and authorization policy**\n\n- Description: Users who are both staff and customers/agents operate in an explicit `staff` or `customer` context. Customer context never inherits staff capabilities; staff context never acts as an active customer profile.\n- Technical notes: Central authorization policy evaluates context, capability, active profile, and object ownership for HTTP, workers, exports, files, and AI tools. Context switching rotates relevant CSRF/session claims and is audited.\n- UI/UX: A persistent, unmistakable context indicator and deliberate switch action prevent accidental privilege use.\n- Dependencies: T-02.02.01, E-06 authorization policy\n- Complexity: L",
-      "status": "partial",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Preserve original acting context in business history. Demonstrated current gap: consultation detail labels every event using current users.is_staff, so a dual-role user submitting in customer context is labelled staff and later role changes can rewrite displayed attribution. Inspect analogous four-service histories, bind new events to validated original context, and represent unknowable historical context honestly. Existing route/session/job/file/AI boundaries and persistent mode indicator pass; no full context acceptance yet."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -42555,139 +42678,20 @@
         "changed_paths": [],
         "batches": [
           "2026-09-29-notification-context-isolation",
-          "2026-09-29-staff-customer-context"
+          "2026-09-29-staff-customer-context",
+          "release-0.2-business-history-acting-context"
         ],
         "current_acceptance": {
-          "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
-          "reviewed_sha": "5558bb1a26855ed7388a4f58f1f423bc30bb0429",
+          "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
+          "reviewed_sha": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
           "source_evidence": [
             {
-              "path": "apps/web/src/components/ProfileMenu.tsx",
-              "sha256": "a40578e12602623b84defeac711537a44e1c2b212cd1c50df0d28207d8740feb"
-            },
-            {
-              "path": "apps/web/src/components/OperatingContextSwitch.tsx",
-              "sha256": "64ca9e56f51a3895e65b880f12f14fc20e8ce2a0072f47b3a4c249d8b0125cb5"
-            },
-            {
-              "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "845807f1c108c2094f3ab83cb696af8ca9ba93b805b9497c8df86d061cd9deb8"
-            },
-            {
-              "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "a80298034ed9f094d6dce51c583186830421bf8f5ee14473cb08749f9cca9f36"
-            },
-            {
-              "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
-            },
-            {
-              "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
-              "sha256": "28e171a60604ea137d893d52523fb940eeb921d2cd225e91e05719f4b7f7157c"
-            },
-            {
-              "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
-              "sha256": "d8411ecb8bb33ae50119da998c9c4938021670e5b317352effb953e79cb71333"
-            },
-            {
-              "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
-              "sha256": "a0daa42bb119d73a1d2b51835d635f2245de928170d19adcf15a6b1fd3680532"
-            },
-            {
-              "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "4b21178cbd75ad53cf02061465cba44b1f59808da971573adc4c2efd09baa9d4"
-            },
-            {
-              "path": "apps/web/src/lib/profile-lifecycle-form.ts",
-              "sha256": "2ab822939c8242b4194999cd360b29b5e46cbe24f21ce319aeb69e261e924f01"
-            },
-            {
-              "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
-              "sha256": "4c6948d97dc0eead8b86e375de9e844dab59b196ded1894ca9bb660c5af735a0"
-            },
-            {
-              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "daa058189ffe6716dbce77aeb3a1e9b8990e0d7a8759744b155e86ee10b55975"
-            },
-            {
-              "path": "apps/web/e2e/operating-context.spec.ts",
-              "sha256": "cdc848fba5d0801b0c6b3fc6cd3e3f5326ddb929fe922a4a55aeef34946e611a"
-            },
-            {
-              "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "bdfc3bd0e0f1154202547429577c9f0398f27066e514d02a6a22998cf6047de8"
-            },
-            {
-              "path": "apps/web/e2e/navigation-fixture.ts",
-              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
-            },
-            {
-              "path": "apps/web/e2e/coverage-fixture.ts",
-              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
-            },
-            {
-              "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
-              "sha256": "c9418f77d7a493baf146e13a1e9a77701bc11c7d07453806dd5c11de41cf9f6f"
-            },
-            {
-              "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "098259107740d1139e7ba966cbac623e47933474bd2ed917499b3c94c05d6711"
-            },
-            {
-              "path": "apps/api/src/tickets/tickets.controller.ts",
-              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
-            },
-            {
-              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
-              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
-            },
-            {
-              "path": "apps/api/src/tickets/ticket-actor.ts",
-              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
-            },
-            {
-              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
-              "sha256": "0313df2115fe8c95dcea6d139f57cd6a11602cbb4222cd8808d2890ed21931dc"
-            },
-            {
-              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "1aeb5ef8061b6adf02f483d465173bba87b47832bf4462601f89878256babc3e"
-            },
-            {
-              "path": "apps/api/src/session/session-step-up.ts",
-              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
-            },
-            {
-              "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
-            },
-            {
-              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
-            },
-            {
-              "path": "apps/api/src/session/session.service.ts",
-              "sha256": "fcd4ecb530a72a8b3c2238b9ceb442974c087d575cee544817f07c6b6cc101e1"
-            },
-            {
-              "path": "apps/api/src/session/session.guard.ts",
-              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
-            },
-            {
-              "path": "apps/api/src/session/staff-permissions.ts",
-              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
-            },
-            {
-              "path": "apps/api/src/session/staff-permissions.test.ts",
-              "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
               "sha256": "d92d0850c8f5189ba8603471fe0dce4da6b3f9d2ee09d66a65b7928e4dcf56ff"
-            },
-            {
-              "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -42698,6 +42702,30 @@
               "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
             },
             {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "b7768b39ef594183c33be1b6902d4eb80bfbe81cfd15628622c6b395c9d60e72"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-request.service.ts",
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+              "sha256": "d1203985c6a54dded1dc7ef3796f988147d1b5e11dd88ace8548234c24b64d12"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "2916ec9d1afdeada60114a2043a4f4816c2b2cb0c1a0d41a7b913aa85a6f6d60"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "fdb701567465a59422eb87a45a2861ba7f12c2bb3f781c3d366a519e45da280b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
               "sha256": "51b8afd3583b1085f71133554a92b7753f8ecb8ac5baf89e2c9b2bc6b01632e2"
             },
@@ -42706,12 +42734,100 @@
               "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
             },
             {
-              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "b7768b39ef594183c33be1b6902d4eb80bfbe81cfd15628622c6b395c9d60e72"
+              "path": "apps/api/src/saving/saving-address-amendments.ts",
+              "sha256": "05ae53ec24152c2ce4105cbaada7c86470b9d97dd8ca8586dab64d7aac6b61f0"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+              "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+            },
+            {
+              "path": "apps/api/src/saving/saving-hardware-amendments.ts",
+              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+            },
+            {
+              "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
+              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order-revisions.ts",
+              "sha256": "b9b5ba39654682775b5def3385eb73a2a107be5e00f2edc8a4a973b60a976797"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "d7e697dda3b334b6da76bbf144187d05d2c5ef74efce2d4d9a8a4b65d546a9c5"
+            },
+            {
+              "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
+              "sha256": "5888a69052b3ff154b4f7e9892407b2a0a63eeeb632a02027abc792e2a620c71"
+            },
+            {
+              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+            },
+            {
+              "path": "apps/api/src/session/operating-context.ts",
+              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "c575d7a6d3c849005c2e634a37e7e96061a500778b16655129cbeedaf6858fd0"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "fcd4ecb530a72a8b3c2238b9ceb442974c087d575cee544817f07c6b6cc101e1"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.test.ts",
+              "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress-projection.ts",
+              "sha256": "b1afee0d4f31d3213f2351c4b4d91e9955f19d4d92efc0de041ae477ece64d76"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress.integration.test.ts",
+              "sha256": "77a667acb89237aa1726a68c2c59f686d706a1bce877f636ef53f6c66aea0e0d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
               "sha256": "6e87fbd695c2f3af40a7551e93d5d54837ccd2590aebf0bd802fae85c5a4a2c9"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "0313df2115fe8c95dcea6d139f57cd6a11602cbb4222cd8808d2890ed21931dc"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "78083b316348ccd3697744043689eb38556322d4bf05831d46012171d7a26855"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -42722,44 +42838,208 @@
               "sha256": "06c0985be504019735f627c8e32096a123d056c2c00ad76fdb4984b9509b4e16"
             },
             {
-              "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+              "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
+              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
             },
             {
-              "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
             },
             {
-              "path": "apps/worker/src/jobs/async-runner.ts",
-              "sha256": "a4451a44decdb22f867ec2ae4738bf6f39b707bbd03e7273c00ade06c9591125"
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/operating-context.spec.ts",
+              "sha256": "cdc848fba5d0801b0c6b3fc6cd3e3f5326ddb929fe922a4a55aeef34946e611a"
+            },
+            {
+              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+              "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+            },
+            {
+              "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+            },
+            {
+              "path": "apps/web/e2e/status-timelines.spec.ts",
+              "sha256": "2eef40b829e0beea002d98adfb0a31718e978df8c273d8942bb3aa111d639900"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
+              "sha256": "a0daa42bb119d73a1d2b51835d635f2245de928170d19adcf15a6b1fd3680532"
+            },
+            {
+              "path": "apps/web/src/components/OperatingContextSwitch.tsx",
+              "sha256": "64ca9e56f51a3895e65b880f12f14fc20e8ce2a0072f47b3a4c249d8b0125cb5"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
+              "sha256": "96bfc1d589dfac358c1ba0d68a5f1db6ba68b5af7ea51d15083d9ee4421bba79"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.tsx",
+              "sha256": "68b7cf5b32f2eb7fc8236514cf29e322f7ea07e3d7b3e7c985e2fba0a4a13345"
+            },
+            {
+              "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
+              "sha256": "28e171a60604ea137d893d52523fb940eeb921d2cd225e91e05719f4b7f7157c"
+            },
+            {
+              "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+              "sha256": "845807f1c108c2094f3ab83cb696af8ca9ba93b805b9497c8df86d061cd9deb8"
+            },
+            {
+              "path": "apps/web/src/components/ProfileMenu.tsx",
+              "sha256": "a40578e12602623b84defeac711537a44e1c2b212cd1c50df0d28207d8740feb"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.test.tsx",
+              "sha256": "f6fb5fe6d18a99ac54fa7a7ab2d37f4c83e6477f9b425abad4f58612cf44073e"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.tsx",
+              "sha256": "19c07cb747250b72f5012e93c1fa20314fb1a5e91305515d31f98bc74458ba1d"
+            },
+            {
+              "path": "apps/web/src/components/SolarStageProgress.test.tsx",
+              "sha256": "d1f22f55b523880b03d3cc6201210a220718e6115104244968889710be348ad8"
+            },
+            {
+              "path": "apps/web/src/components/SolarStageProgress.tsx",
+              "sha256": "5aebd5249e8e6dad5a6619ec4ff90264545ab3c57bb2f7ff2d2fdb55a0c520c3"
+            },
+            {
+              "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
+              "sha256": "4b21178cbd75ad53cf02061465cba44b1f59808da971573adc4c2efd09baa9d4"
+            },
+            {
+              "path": "apps/web/src/components/jobs/JobProgress.tsx",
+              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+            },
+            {
+              "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
+              "sha256": "0632db7007eac560883c9a204df2f6b9eacf894df07f46a1dc319c3715ca257a"
+            },
+            {
+              "path": "apps/web/src/lib/history-context.test.ts",
+              "sha256": "a555f350df9d109b70ad5a1a3ab99fd6e1f6ec1321e0c05fa6c16bc3c0365b99"
+            },
+            {
+              "path": "apps/web/src/lib/history-context.ts",
+              "sha256": "41e8c6a06b4ff432aadd9d21ba3f31938d8d8e6c9b242b2611b7c88fb58f1b68"
+            },
+            {
+              "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
+              "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
+            },
+            {
+              "path": "apps/web/src/lib/profile-lifecycle-form.ts",
+              "sha256": "015735107b504174b47b000b65ef8d1966719e133e0e6a6684a4ae9938e1f028"
+            },
+            {
+              "path": "apps/web/src/lib/saving-fulfillment.ts",
+              "sha256": "c827a546a6f16b6a05ba68bbf63335da16d7c0ac9610b906b371f3177c263514"
+            },
+            {
+              "path": "apps/web/src/lib/solar-progress.ts",
+              "sha256": "13089b9df3f140497bdb8e4e5d9438e420002aa1432c6bb555c69c538841dfa6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+              "sha256": "97f49530d307cd33507fb69b1b017d5f3aa32c378377127c79c983e319f0e779"
+            },
+            {
+              "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+              "sha256": "9efbd2493a4289a36971e3f7d95236c01aeff90b9c46458f3ad64873103c4d08"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
+              "sha256": "0f62fea02553ab260803f0b2bf6e56b0e9598ee31949a2c9e3f3cca4551b0a7b"
+            },
+            {
+              "path": "apps/web/src/test/solar-progress-fixtures.ts",
+              "sha256": "90bb7545645098a50a14ed48aa95fb4b066b02fcfc459f4c0571d51ce39a1cc6"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
               "sha256": "7788f26a8c3fb3d37d1584988ee01c991bf524c4f3a64adc4aa175a077c17813"
             },
             {
-              "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "path": "apps/worker/src/jobs/async-runner.ts",
+              "sha256": "a4451a44decdb22f867ec2ae4738bf6f39b707bbd03e7273c00ade06c9591125"
             },
             {
-              "path": "packages/db/src/schema/saving-orders.ts",
-              "sha256": "9baf88b6329874136410e9098e280d5d3595a9bdda2b9b17539ce90f0cbfa0af"
+              "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "sha256": "0589413e3d522d5ca6bdb077d2f9ba17c2e5113a439313d1c1b2acd60cc9a7b6"
             },
             {
-              "path": "packages/db/src/schema/solar-construction.ts",
-              "sha256": "987943951c19b917c5f580d39f9e0ae2f0d6b85a1045b3621d1d4adec4daadca"
+              "path": "apps/worker/src/privacy/profile-export.ts",
+              "sha256": "5046ee67d06620fda117dc8631e20e9c3b67af1ed2b9fdba3b84c7c70e7c72e0"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/drizzle/production/0245_business_actor_context.sql",
+              "sha256": "404a3081057bcf546f9212ac351864e4dc55032d95d30a6a632de4e807e16f75"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/0245_snapshot.json",
+              "sha256": "d5cb7c1bac9b6b10952d6d11bf66b1dcd519f71f8faac4fd5cbb5c1f2a13ccf8"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "d40a1b2228ce48244cf38524c4a9f65d631f09f93cb5e74af5d746fdb9d25a3e"
+            },
+            {
+              "path": "packages/db/src/business-actor-context-migration.test.ts",
+              "sha256": "cf60f792b900c3d851c50906b9ce6c198faca3c8cd99a99a6944a56e9d98b5fd"
+            },
+            {
+              "path": "packages/db/src/schema/audit-log.ts",
+              "sha256": "d45a8cda4dcc7578e2c96950dd111550cd73dd6e52865d1ad1272e819c2179e2"
             },
             {
               "path": "packages/db/src/schema/consultation-requests.ts",
-              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
+              "sha256": "cf7ebea876b950bffd569252e85df55653be979dfe724021660c52af39927b60"
+            },
+            {
+              "path": "packages/db/src/schema/saving-orders.ts",
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "2b8c8103792d3afb5838702ed762dfc4e27abe805357a58c63c62d82ad392d6e"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
-            },
-            {
-              "path": "apps/web/playwright.config.ts",
-              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -42767,16 +43047,19 @@
             }
           ],
           "checks": [
-            "Inspected exact six task requirements and current profile-scoped privacy/controller/service/worker/UI/session/staff implementations. Reused closure/session/profile engines; changed only a demonstrated missing all-service export projection and persistent operating-mode badge.",
-            "78 distinct API/unit cases pass in eleven existing files:40 lifecycle/closure/operating context/staff creation/jobs/owned profile/AI availability cases plus38 storage URL/upload context/policy cases. Current migrated PostgreSQL proves scoped/audited/idempotent requests, closure blocker and audit rollback, session revocation/support history, staff sole verified addressless Individual profile/creation rollback/authorship retention, rotated session/refresh/CSRF and cleared step-up, stale credentials and staff/customer/AI/job/file isolation. api.json/api-files.json.",
-            "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
-            "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
-            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim."
+            "Read exact operating-context/isolation requirements and graph/source history writers/readers. Reviewed final diff once. Preserved authorization, profile ownership, role switches, row/session locks, database-clock checks, step-up, actor identity, money, rollback and idempotency. No rebuild of existing service workflows.",
+            "Capture matched validated session actor/context in transaction-local PostgreSQL settings within the existing locked session clock query. Eight insert triggers copy only matched provenance; inconsistent explicit context is rejected. Eight update guards make context immutable. Additive migration retains legacy NULLs; unknown history is never inferred from current users.is_staff. Existing schema snapshot and full journal prefix are unchanged except eight nullable columns/eight checks; generated snapshot/journal verified and application rollback keeps additive provenance.",
+            "153 distinct API/unit cases pass:76 successful cases from api-history.log (its failed new case excluded), one final dual-role history/rotation case from api-history-rotations.json, one solar ordered-progress case from api-provenance.log, and75 affected lifecycle/closure/job/profile/AI/storage/upload/staff-creation cases from api-boundaries.json. Final electricity history assertion is verified in api-provenance-current.json; saving staff fulfillment attribution in api-provenance.log overlaps the original76 and is not added. Actual HTTP/PG proves customer history stays customer after staff-flag and real context switches, legacy context remains unknown, stale credentials fail401, staff-mode customer command fails403, customer staff command fails403, spoofed body field fails400, and owned replay adds no event. Both electricity projections, saving fulfillment and solar progress preserve attribution/identity privacy.",
+            "Five final migrated-PostgreSQL/ZIP export cases pass in worker-export-current.json. Explicit customer job/lease/owner/active-profile checks bind generated audit context. All eligible saving/solar/consultation histories include nullable recorded context through explicit field allowlists. Exact9007199254740993 values, other-profile/private/provider-field exclusion, audit/lease-failure compensation, expiry cleanup and denied staff/current-profile-switch exports remain enforced.",
+            "46 distinct frontend cases pass:34 successes in the four green files of web-source-final.log, six final admin-queue cases in web-source-repaired.log and six final solar component cases in solar-source-final.json.112 i18n cases pass. Staff/customer/unknown labels are bilingual; original chosen names remain escaped and names attached to unrecognized actor types remain hidden. Legacy absence is explicitly tested without inventing context.",
+            "40 distinct production Chromium/mobile-Safari browser cases pass, zero retries, Persian/English. browser-accepted-cases.json enumerates accepted passes from browser-current-results.json, browser-mobile-results.json and final browser-status-profile-results.json; stopped/failed/skipped cases excluded. Original ownership/status/date/a11y/no-overflow/step-up/lost-response/replay/denial/private-name assertions retained. Obsolete fixtures now provide canonical navigation, required profile ownership and recorded staff context; denial asserts actual deliberate selection withdrawal and complete history clearing. Exact staff-label assertion uses the correct second timeline row now that unknown rows also have labels.",
+            "Four final isolated PostgreSQL migration cases, snapshot verifier, unchanged OpenAPI contract,11 workspace type/build checks plus final web/API types, scoped lint/format/diff,85 unchanged gzip budgets and pinned SAST1807files/0findings/0errors/5rule fixtures pass. Source-manifest.json binds90 current sources and4256 production/dependency outputs. AST/schema/dictionary renewal proofs preserve unaffected declarations, all original dictionary entries and preexisting migration history. Failed setup/type/fixture/projection checks remain diagnostics and are not claimed green.",
+            "Local fixture captures inspected; current mobile region captures are cropped by fixed viewport chrome and are not approved release album assets. Release-wide coverage, provider/operational/rehearsal/staging/Telegram gates and production owner authorization remain separate."
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+          "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
-            "Local source/HTTP/browser/provider fixtures only. Whole-release coverage/operational/staging acceptance remains separate.",
-            "Closure completion export access and immutable business acting-context attribution remain explicitly partial in their own tasks."
+            "Local source/HTTP/browser/provider fixtures only; release-wide acceptance and external operations remain separate. Legacy event context is unknowable and intentionally remains unknown. Production requires explicit owner authorization."
           ]
         }
       }
@@ -42792,12 +43075,10 @@
         "story": "02-auth-users-admin.md#spec-632156a4a3ea"
       },
       "requirement": "**T-11.02.02 — Context-isolation integration and E2E tests**\n\n- Description: Prove staff-only commands fail in customer context, customer commands cannot use staff permissions, profile switching cannot cross ownership, and history preserves the real acting context.\n- Technical notes: Include direct API attempts, stale tabs/tokens, workers, file URLs, exports, and AI tool calls.\n- Dependencies: T-11.02.01\n- Complexity: M",
-      "status": "partial",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Add and pass direct API/history regression coverage for a dual-role customer command and subsequent role/context changes. Existing stale session/CSRF rotations, staff/customer route and upload/job/AI/export ownership tests pass, but they do not prove immutable business event acting-context attribution."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -42805,139 +43086,20 @@
         "changed_paths": [],
         "batches": [
           "2026-09-29-notification-context-isolation",
-          "2026-09-29-staff-customer-context"
+          "2026-09-29-staff-customer-context",
+          "release-0.2-business-history-acting-context"
         ],
         "current_acceptance": {
-          "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
-          "reviewed_sha": "5558bb1a26855ed7388a4f58f1f423bc30bb0429",
+          "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
+          "reviewed_sha": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
           "source_evidence": [
             {
-              "path": "apps/web/src/components/ProfileMenu.tsx",
-              "sha256": "a40578e12602623b84defeac711537a44e1c2b212cd1c50df0d28207d8740feb"
-            },
-            {
-              "path": "apps/web/src/components/OperatingContextSwitch.tsx",
-              "sha256": "64ca9e56f51a3895e65b880f12f14fc20e8ce2a0072f47b3a4c249d8b0125cb5"
-            },
-            {
-              "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "845807f1c108c2094f3ab83cb696af8ca9ba93b805b9497c8df86d061cd9deb8"
-            },
-            {
-              "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "a80298034ed9f094d6dce51c583186830421bf8f5ee14473cb08749f9cca9f36"
-            },
-            {
-              "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
-            },
-            {
-              "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
-              "sha256": "28e171a60604ea137d893d52523fb940eeb921d2cd225e91e05719f4b7f7157c"
-            },
-            {
-              "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
-              "sha256": "d8411ecb8bb33ae50119da998c9c4938021670e5b317352effb953e79cb71333"
-            },
-            {
-              "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
-              "sha256": "a0daa42bb119d73a1d2b51835d635f2245de928170d19adcf15a6b1fd3680532"
-            },
-            {
-              "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "4b21178cbd75ad53cf02061465cba44b1f59808da971573adc4c2efd09baa9d4"
-            },
-            {
-              "path": "apps/web/src/lib/profile-lifecycle-form.ts",
-              "sha256": "2ab822939c8242b4194999cd360b29b5e46cbe24f21ce319aeb69e261e924f01"
-            },
-            {
-              "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
-              "sha256": "4c6948d97dc0eead8b86e375de9e844dab59b196ded1894ca9bb660c5af735a0"
-            },
-            {
-              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "daa058189ffe6716dbce77aeb3a1e9b8990e0d7a8759744b155e86ee10b55975"
-            },
-            {
-              "path": "apps/web/e2e/operating-context.spec.ts",
-              "sha256": "cdc848fba5d0801b0c6b3fc6cd3e3f5326ddb929fe922a4a55aeef34946e611a"
-            },
-            {
-              "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "bdfc3bd0e0f1154202547429577c9f0398f27066e514d02a6a22998cf6047de8"
-            },
-            {
-              "path": "apps/web/e2e/navigation-fixture.ts",
-              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
-            },
-            {
-              "path": "apps/web/e2e/coverage-fixture.ts",
-              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
-            },
-            {
-              "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
-              "sha256": "c9418f77d7a493baf146e13a1e9a77701bc11c7d07453806dd5c11de41cf9f6f"
-            },
-            {
-              "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "098259107740d1139e7ba966cbac623e47933474bd2ed917499b3c94c05d6711"
-            },
-            {
-              "path": "apps/api/src/tickets/tickets.controller.ts",
-              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
-            },
-            {
-              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
-              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
-            },
-            {
-              "path": "apps/api/src/tickets/ticket-actor.ts",
-              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
-            },
-            {
-              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
-              "sha256": "0313df2115fe8c95dcea6d139f57cd6a11602cbb4222cd8808d2890ed21931dc"
-            },
-            {
-              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "1aeb5ef8061b6adf02f483d465173bba87b47832bf4462601f89878256babc3e"
-            },
-            {
-              "path": "apps/api/src/session/session-step-up.ts",
-              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
-            },
-            {
-              "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
-            },
-            {
-              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
-            },
-            {
-              "path": "apps/api/src/session/session.service.ts",
-              "sha256": "fcd4ecb530a72a8b3c2238b9ceb442974c087d575cee544817f07c6b6cc101e1"
-            },
-            {
-              "path": "apps/api/src/session/session.guard.ts",
-              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
-            },
-            {
-              "path": "apps/api/src/session/staff-permissions.ts",
-              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
-            },
-            {
-              "path": "apps/api/src/session/staff-permissions.test.ts",
-              "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
               "sha256": "d92d0850c8f5189ba8603471fe0dce4da6b3f9d2ee09d66a65b7928e4dcf56ff"
-            },
-            {
-              "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -42948,6 +43110,30 @@
               "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
             },
             {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "b7768b39ef594183c33be1b6902d4eb80bfbe81cfd15628622c6b395c9d60e72"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-request.service.ts",
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+              "sha256": "d1203985c6a54dded1dc7ef3796f988147d1b5e11dd88ace8548234c24b64d12"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "2916ec9d1afdeada60114a2043a4f4816c2b2cb0c1a0d41a7b913aa85a6f6d60"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "fdb701567465a59422eb87a45a2861ba7f12c2bb3f781c3d366a519e45da280b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
               "sha256": "51b8afd3583b1085f71133554a92b7753f8ecb8ac5baf89e2c9b2bc6b01632e2"
             },
@@ -42956,12 +43142,100 @@
               "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
             },
             {
-              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "b7768b39ef594183c33be1b6902d4eb80bfbe81cfd15628622c6b395c9d60e72"
+              "path": "apps/api/src/saving/saving-address-amendments.ts",
+              "sha256": "05ae53ec24152c2ce4105cbaada7c86470b9d97dd8ca8586dab64d7aac6b61f0"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+              "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+            },
+            {
+              "path": "apps/api/src/saving/saving-hardware-amendments.ts",
+              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+            },
+            {
+              "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
+              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order-revisions.ts",
+              "sha256": "b9b5ba39654682775b5def3385eb73a2a107be5e00f2edc8a4a973b60a976797"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "d7e697dda3b334b6da76bbf144187d05d2c5ef74efce2d4d9a8a4b65d546a9c5"
+            },
+            {
+              "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
+              "sha256": "5888a69052b3ff154b4f7e9892407b2a0a63eeeb632a02027abc792e2a620c71"
+            },
+            {
+              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+            },
+            {
+              "path": "apps/api/src/session/operating-context.ts",
+              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "c575d7a6d3c849005c2e634a37e7e96061a500778b16655129cbeedaf6858fd0"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "fcd4ecb530a72a8b3c2238b9ceb442974c087d575cee544817f07c6b6cc101e1"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.test.ts",
+              "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress-projection.ts",
+              "sha256": "b1afee0d4f31d3213f2351c4b4d91e9955f19d4d92efc0de041ae477ece64d76"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress.integration.test.ts",
+              "sha256": "77a667acb89237aa1726a68c2c59f686d706a1bce877f636ef53f6c66aea0e0d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
               "sha256": "6e87fbd695c2f3af40a7551e93d5d54837ccd2590aebf0bd802fae85c5a4a2c9"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "0313df2115fe8c95dcea6d139f57cd6a11602cbb4222cd8808d2890ed21931dc"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "78083b316348ccd3697744043689eb38556322d4bf05831d46012171d7a26855"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -42972,44 +43246,208 @@
               "sha256": "06c0985be504019735f627c8e32096a123d056c2c00ad76fdb4984b9509b4e16"
             },
             {
-              "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+              "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
+              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
             },
             {
-              "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
             },
             {
-              "path": "apps/worker/src/jobs/async-runner.ts",
-              "sha256": "a4451a44decdb22f867ec2ae4738bf6f39b707bbd03e7273c00ade06c9591125"
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/operating-context.spec.ts",
+              "sha256": "cdc848fba5d0801b0c6b3fc6cd3e3f5326ddb929fe922a4a55aeef34946e611a"
+            },
+            {
+              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+              "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+            },
+            {
+              "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+            },
+            {
+              "path": "apps/web/e2e/status-timelines.spec.ts",
+              "sha256": "2eef40b829e0beea002d98adfb0a31718e978df8c273d8942bb3aa111d639900"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
+              "sha256": "a0daa42bb119d73a1d2b51835d635f2245de928170d19adcf15a6b1fd3680532"
+            },
+            {
+              "path": "apps/web/src/components/OperatingContextSwitch.tsx",
+              "sha256": "64ca9e56f51a3895e65b880f12f14fc20e8ce2a0072f47b3a4c249d8b0125cb5"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
+              "sha256": "96bfc1d589dfac358c1ba0d68a5f1db6ba68b5af7ea51d15083d9ee4421bba79"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.tsx",
+              "sha256": "68b7cf5b32f2eb7fc8236514cf29e322f7ea07e3d7b3e7c985e2fba0a4a13345"
+            },
+            {
+              "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
+              "sha256": "28e171a60604ea137d893d52523fb940eeb921d2cd225e91e05719f4b7f7157c"
+            },
+            {
+              "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+              "sha256": "845807f1c108c2094f3ab83cb696af8ca9ba93b805b9497c8df86d061cd9deb8"
+            },
+            {
+              "path": "apps/web/src/components/ProfileMenu.tsx",
+              "sha256": "a40578e12602623b84defeac711537a44e1c2b212cd1c50df0d28207d8740feb"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.test.tsx",
+              "sha256": "f6fb5fe6d18a99ac54fa7a7ab2d37f4c83e6477f9b425abad4f58612cf44073e"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.tsx",
+              "sha256": "19c07cb747250b72f5012e93c1fa20314fb1a5e91305515d31f98bc74458ba1d"
+            },
+            {
+              "path": "apps/web/src/components/SolarStageProgress.test.tsx",
+              "sha256": "d1f22f55b523880b03d3cc6201210a220718e6115104244968889710be348ad8"
+            },
+            {
+              "path": "apps/web/src/components/SolarStageProgress.tsx",
+              "sha256": "5aebd5249e8e6dad5a6619ec4ff90264545ab3c57bb2f7ff2d2fdb55a0c520c3"
+            },
+            {
+              "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
+              "sha256": "4b21178cbd75ad53cf02061465cba44b1f59808da971573adc4c2efd09baa9d4"
+            },
+            {
+              "path": "apps/web/src/components/jobs/JobProgress.tsx",
+              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+            },
+            {
+              "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
+              "sha256": "0632db7007eac560883c9a204df2f6b9eacf894df07f46a1dc319c3715ca257a"
+            },
+            {
+              "path": "apps/web/src/lib/history-context.test.ts",
+              "sha256": "a555f350df9d109b70ad5a1a3ab99fd6e1f6ec1321e0c05fa6c16bc3c0365b99"
+            },
+            {
+              "path": "apps/web/src/lib/history-context.ts",
+              "sha256": "41e8c6a06b4ff432aadd9d21ba3f31938d8d8e6c9b242b2611b7c88fb58f1b68"
+            },
+            {
+              "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
+              "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
+            },
+            {
+              "path": "apps/web/src/lib/profile-lifecycle-form.ts",
+              "sha256": "015735107b504174b47b000b65ef8d1966719e133e0e6a6684a4ae9938e1f028"
+            },
+            {
+              "path": "apps/web/src/lib/saving-fulfillment.ts",
+              "sha256": "c827a546a6f16b6a05ba68bbf63335da16d7c0ac9610b906b371f3177c263514"
+            },
+            {
+              "path": "apps/web/src/lib/solar-progress.ts",
+              "sha256": "13089b9df3f140497bdb8e4e5d9438e420002aa1432c6bb555c69c538841dfa6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+              "sha256": "97f49530d307cd33507fb69b1b017d5f3aa32c378377127c79c983e319f0e779"
+            },
+            {
+              "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+              "sha256": "9efbd2493a4289a36971e3f7d95236c01aeff90b9c46458f3ad64873103c4d08"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
+              "sha256": "0f62fea02553ab260803f0b2bf6e56b0e9598ee31949a2c9e3f3cca4551b0a7b"
+            },
+            {
+              "path": "apps/web/src/test/solar-progress-fixtures.ts",
+              "sha256": "90bb7545645098a50a14ed48aa95fb4b066b02fcfc459f4c0571d51ce39a1cc6"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
               "sha256": "7788f26a8c3fb3d37d1584988ee01c991bf524c4f3a64adc4aa175a077c17813"
             },
             {
-              "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "path": "apps/worker/src/jobs/async-runner.ts",
+              "sha256": "a4451a44decdb22f867ec2ae4738bf6f39b707bbd03e7273c00ade06c9591125"
             },
             {
-              "path": "packages/db/src/schema/saving-orders.ts",
-              "sha256": "9baf88b6329874136410e9098e280d5d3595a9bdda2b9b17539ce90f0cbfa0af"
+              "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "sha256": "0589413e3d522d5ca6bdb077d2f9ba17c2e5113a439313d1c1b2acd60cc9a7b6"
             },
             {
-              "path": "packages/db/src/schema/solar-construction.ts",
-              "sha256": "987943951c19b917c5f580d39f9e0ae2f0d6b85a1045b3621d1d4adec4daadca"
+              "path": "apps/worker/src/privacy/profile-export.ts",
+              "sha256": "5046ee67d06620fda117dc8631e20e9c3b67af1ed2b9fdba3b84c7c70e7c72e0"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/drizzle/production/0245_business_actor_context.sql",
+              "sha256": "404a3081057bcf546f9212ac351864e4dc55032d95d30a6a632de4e807e16f75"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/0245_snapshot.json",
+              "sha256": "d5cb7c1bac9b6b10952d6d11bf66b1dcd519f71f8faac4fd5cbb5c1f2a13ccf8"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "d40a1b2228ce48244cf38524c4a9f65d631f09f93cb5e74af5d746fdb9d25a3e"
+            },
+            {
+              "path": "packages/db/src/business-actor-context-migration.test.ts",
+              "sha256": "cf60f792b900c3d851c50906b9ce6c198faca3c8cd99a99a6944a56e9d98b5fd"
+            },
+            {
+              "path": "packages/db/src/schema/audit-log.ts",
+              "sha256": "d45a8cda4dcc7578e2c96950dd111550cd73dd6e52865d1ad1272e819c2179e2"
             },
             {
               "path": "packages/db/src/schema/consultation-requests.ts",
-              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
+              "sha256": "cf7ebea876b950bffd569252e85df55653be979dfe724021660c52af39927b60"
+            },
+            {
+              "path": "packages/db/src/schema/saving-orders.ts",
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "2b8c8103792d3afb5838702ed762dfc4e27abe805357a58c63c62d82ad392d6e"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
-            },
-            {
-              "path": "apps/web/playwright.config.ts",
-              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -43017,16 +43455,19 @@
             }
           ],
           "checks": [
-            "Inspected exact six task requirements and current profile-scoped privacy/controller/service/worker/UI/session/staff implementations. Reused closure/session/profile engines; changed only a demonstrated missing all-service export projection and persistent operating-mode badge.",
-            "78 distinct API/unit cases pass in eleven existing files:40 lifecycle/closure/operating context/staff creation/jobs/owned profile/AI availability cases plus38 storage URL/upload context/policy cases. Current migrated PostgreSQL proves scoped/audited/idempotent requests, closure blocker and audit rollback, session revocation/support history, staff sole verified addressless Individual profile/creation rollback/authorship retention, rotated session/refresh/CSRF and cleared step-up, stale credentials and staff/customer/AI/job/file isolation. api.json/api-files.json.",
-            "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
-            "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
-            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim."
+            "Read exact operating-context/isolation requirements and graph/source history writers/readers. Reviewed final diff once. Preserved authorization, profile ownership, role switches, row/session locks, database-clock checks, step-up, actor identity, money, rollback and idempotency. No rebuild of existing service workflows.",
+            "Capture matched validated session actor/context in transaction-local PostgreSQL settings within the existing locked session clock query. Eight insert triggers copy only matched provenance; inconsistent explicit context is rejected. Eight update guards make context immutable. Additive migration retains legacy NULLs; unknown history is never inferred from current users.is_staff. Existing schema snapshot and full journal prefix are unchanged except eight nullable columns/eight checks; generated snapshot/journal verified and application rollback keeps additive provenance.",
+            "153 distinct API/unit cases pass:76 successful cases from api-history.log (its failed new case excluded), one final dual-role history/rotation case from api-history-rotations.json, one solar ordered-progress case from api-provenance.log, and75 affected lifecycle/closure/job/profile/AI/storage/upload/staff-creation cases from api-boundaries.json. Final electricity history assertion is verified in api-provenance-current.json; saving staff fulfillment attribution in api-provenance.log overlaps the original76 and is not added. Actual HTTP/PG proves customer history stays customer after staff-flag and real context switches, legacy context remains unknown, stale credentials fail401, staff-mode customer command fails403, customer staff command fails403, spoofed body field fails400, and owned replay adds no event. Both electricity projections, saving fulfillment and solar progress preserve attribution/identity privacy.",
+            "Five final migrated-PostgreSQL/ZIP export cases pass in worker-export-current.json. Explicit customer job/lease/owner/active-profile checks bind generated audit context. All eligible saving/solar/consultation histories include nullable recorded context through explicit field allowlists. Exact9007199254740993 values, other-profile/private/provider-field exclusion, audit/lease-failure compensation, expiry cleanup and denied staff/current-profile-switch exports remain enforced.",
+            "46 distinct frontend cases pass:34 successes in the four green files of web-source-final.log, six final admin-queue cases in web-source-repaired.log and six final solar component cases in solar-source-final.json.112 i18n cases pass. Staff/customer/unknown labels are bilingual; original chosen names remain escaped and names attached to unrecognized actor types remain hidden. Legacy absence is explicitly tested without inventing context.",
+            "40 distinct production Chromium/mobile-Safari browser cases pass, zero retries, Persian/English. browser-accepted-cases.json enumerates accepted passes from browser-current-results.json, browser-mobile-results.json and final browser-status-profile-results.json; stopped/failed/skipped cases excluded. Original ownership/status/date/a11y/no-overflow/step-up/lost-response/replay/denial/private-name assertions retained. Obsolete fixtures now provide canonical navigation, required profile ownership and recorded staff context; denial asserts actual deliberate selection withdrawal and complete history clearing. Exact staff-label assertion uses the correct second timeline row now that unknown rows also have labels.",
+            "Four final isolated PostgreSQL migration cases, snapshot verifier, unchanged OpenAPI contract,11 workspace type/build checks plus final web/API types, scoped lint/format/diff,85 unchanged gzip budgets and pinned SAST1807files/0findings/0errors/5rule fixtures pass. Source-manifest.json binds90 current sources and4256 production/dependency outputs. AST/schema/dictionary renewal proofs preserve unaffected declarations, all original dictionary entries and preexisting migration history. Failed setup/type/fixture/projection checks remain diagnostics and are not claimed green.",
+            "Local fixture captures inspected; current mobile region captures are cropped by fixed viewport chrome and are not approved release album assets. Release-wide coverage, provider/operational/rehearsal/staging/Telegram gates and production owner authorization remain separate."
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+          "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
-            "Local source/HTTP/browser/provider fixtures only. Whole-release coverage/operational/staging acceptance remains separate.",
-            "Closure completion export access and immutable business acting-context attribution remain explicitly partial in their own tasks."
+            "Local source/HTTP/browser/provider fixtures only; release-wide acceptance and external operations remain separate. Legacy event context is unknowable and intentionally remains unknown. Production requires explicit owner authorization."
           ]
         }
       }
@@ -43150,7 +43591,7 @@
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
-              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
+              "sha256": "c575d7a6d3c849005c2e634a37e7e96061a500778b16655129cbeedaf6858fd0"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
@@ -43218,11 +43659,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+              "sha256": "5046ee67d06620fda117dc8631e20e9c3b67af1ed2b9fdba3b84c7c70e7c72e0"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+              "sha256": "0589413e3d522d5ca6bdb077d2f9ba17c2e5113a439313d1c1b2acd60cc9a7b6"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.ts",
@@ -43234,19 +43675,19 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "sha256": "7055044088ed38d9f6b94c461c5afef8b7e8e269f7ac4573a8c71bac19cf8349"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
-              "sha256": "9baf88b6329874136410e9098e280d5d3595a9bdda2b9b17539ce90f0cbfa0af"
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
             },
             {
               "path": "packages/db/src/schema/solar-construction.ts",
-              "sha256": "987943951c19b917c5f580d39f9e0ae2f0d6b85a1045b3621d1d4adec4daadca"
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
             },
             {
               "path": "packages/db/src/schema/consultation-requests.ts",
-              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
+              "sha256": "cf7ebea876b950bffd569252e85df55653be979dfe724021660c52af39927b60"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -43267,13 +43708,28 @@
             "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
             "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
             "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim.",
-            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance"
+            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
             "Local source/HTTP/browser/provider fixtures only. Whole-release coverage/operational/staging acceptance remains separate.",
             "Closure completion export access and immutable business acting-context attribution remain explicitly partial in their own tasks."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/session/session-step-up.ts",
+              "apps/worker/src/privacy/profile-export.ts",
+              "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "apps/api/src/consultation/consultation-request.service.ts",
+              "packages/db/src/schema/saving-orders.ts",
+              "packages/db/src/schema/solar-construction.ts",
+              "packages/db/src/schema/consultation-requests.ts"
+            ]
+          }
         }
       }
     },
@@ -48058,7 +48514,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
-              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+              "sha256": "fdb701567465a59422eb87a45a2861ba7f12c2bb3f781c3d366a519e45da280b"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -48086,9 +48542,18 @@
             "Source bindings renewed after final-review-only rendering change. Six saving source cases and 16 final browser cases revalidate original address retries/navigation and quote display. Earlier 35/6/18/2/22 receipts retain their recorded base scope; unchanged source/methods are reused. /Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review/review.json",
             "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
             "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance.",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance",
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/electricity/electricity-order.service.ts"
+            ]
+          }
         }
       }
     },
@@ -48210,7 +48675,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
-              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+              "sha256": "fdb701567465a59422eb87a45a2861ba7f12c2bb3f781c3d366a519e45da280b"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -48242,9 +48707,18 @@
             "Scoped source reuse at 4ba5c0c: service-wizard fixture changes add complete geography identifiers and solar-only snapshot/recovery cases. Saving handlers and assertions, quoted street/postcode and plan/agreement display are unchanged. Prior six saving source/16 browser checks remain valid for this unchanged behavior; no fresh full saving-suite claim.",
             "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
             "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance.",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review",
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/electricity/electricity-order.service.ts"
+            ]
+          }
         }
       }
     },
@@ -49064,7 +49538,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2c98f29169414f315ee5005312ad38ef32eed1d7eabd553fdc75833a0e9e346e"
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -49144,13 +49618,22 @@
             "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten.",
             "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
             "Scoped renewal at88a1c77: intake handlers/controls unchanged; two additive history dictionary keys and reader-only legacy fallback removal. Final4intake/history HTTP cases, two callers and10browser cases verify affected display and representative household/non-household return flows. Existing unaffected form/validation evidence retained. /Users/majid/.local/state/barghsa-manual-batches/solar-legacy-address-history/review.json",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots",
           "limitations": [
             "Older solar rows may lack full field snapshots; do not invent historical values or re-sign old receipts. Inventory remains in generic address acceptance.",
             "Hosted CI is independent and has unresolved historical failures recorded separately; local checks do not certify hosted checks or staging deployment."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/solar/solar-request.service.ts"
+            ]
+          }
         }
       }
     },
@@ -49184,7 +49667,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2c98f29169414f315ee5005312ad38ef32eed1d7eabd553fdc75833a0e9e346e"
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -49264,13 +49747,22 @@
             "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten.",
             "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
             "Scoped renewal at88a1c77: intake handlers/controls unchanged; two additive history dictionary keys and reader-only legacy fallback removal. Final4intake/history HTTP cases, two callers and10browser cases verify affected display and representative household/non-household return flows. Existing unaffected form/validation evidence retained. /Users/majid/.local/state/barghsa-manual-batches/solar-legacy-address-history/review.json",
-            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance"
+            "Terms batch compatibility renewal against 97f3425284a6545bbe78356941a8ac1e94a47512: exact prior FA/EN dictionary after removing only the new denial entry, all five intake pages byte-identical after removing the fetch alias, and contract identical after removing two optional siteAddressId fields. AST source-delta-review.json identifies unchanged methods; changed admission/replay methods reviewed with 120 affected API caller cases and 58 frontend cases. Only the two terms publication cases in the shared live-browser file change; all other test statements are unchanged. Original permissions, idempotency, money, address snapshots and account-time criteria retained; no new whole-release claim. Evidence: /Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
+            "Acting-context batch renewed affected source bindings against final source: unchanged feature declarations/journal prefix/dictionary entries proven in business-history-context-acceptance renewal proofs; applicable history/session/export/lifecycle/closure/staff-creation/browser checks pass. Prior original-scope evidence retained; no whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots",
           "limitations": [
             "Older solar rows may lack full field snapshots; do not invent historical values or re-sign old receipts. Inventory remains in generic address acceptance.",
             "Hosted CI is independent and has unresolved historical failures recorded separately; local checks do not certify hosted checks or staging deployment."
-          ]
+          ],
+          "binding_renewal": {
+            "batch": "release-0.2-business-history-acting-context",
+            "reviewed_base": "60eaf1cc2e90fe01368a794970c7bc23d46f8ddf",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+            "changed_sources": [
+              "apps/api/src/solar/solar-request.service.ts"
+            ]
+          }
         }
       }
     },
@@ -78657,6 +79149,26 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
       "scope_limit": "No release/deployment/notification claim; acting-context history and other v0.2.0 gates remain open."
+    },
+    "release-0.2-business-history-acting-context": {
+      "title": "Immutable business acting context and isolation acceptance",
+      "task_keys": [
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02"
+      ],
+      "summary": "Accepted original operating-context and context-isolation tasks; new four-service history records retain matched original mode and legacy history stays unknown. Renewed affected accepted source bindings with scoped proofs. No release acceptance or deployment.",
+      "validation": [
+        "Read exact operating-context/isolation requirements and graph/source history writers/readers. Reviewed final diff once. Preserved authorization, profile ownership, role switches, row/session locks, database-clock checks, step-up, actor identity, money, rollback and idempotency. No rebuild of existing service workflows.",
+        "Capture matched validated session actor/context in transaction-local PostgreSQL settings within the existing locked session clock query. Eight insert triggers copy only matched provenance; inconsistent explicit context is rejected. Eight update guards make context immutable. Additive migration retains legacy NULLs; unknown history is never inferred from current users.is_staff. Existing schema snapshot and full journal prefix are unchanged except eight nullable columns/eight checks; generated snapshot/journal verified and application rollback keeps additive provenance.",
+        "153 distinct API/unit cases pass:76 successful cases from api-history.log (its failed new case excluded), one final dual-role history/rotation case from api-history-rotations.json, one solar ordered-progress case from api-provenance.log, and75 affected lifecycle/closure/job/profile/AI/storage/upload/staff-creation cases from api-boundaries.json. Final electricity history assertion is verified in api-provenance-current.json; saving staff fulfillment attribution in api-provenance.log overlaps the original76 and is not added. Actual HTTP/PG proves customer history stays customer after staff-flag and real context switches, legacy context remains unknown, stale credentials fail401, staff-mode customer command fails403, customer staff command fails403, spoofed body field fails400, and owned replay adds no event. Both electricity projections, saving fulfillment and solar progress preserve attribution/identity privacy.",
+        "Five final migrated-PostgreSQL/ZIP export cases pass in worker-export-current.json. Explicit customer job/lease/owner/active-profile checks bind generated audit context. All eligible saving/solar/consultation histories include nullable recorded context through explicit field allowlists. Exact9007199254740993 values, other-profile/private/provider-field exclusion, audit/lease-failure compensation, expiry cleanup and denied staff/current-profile-switch exports remain enforced.",
+        "46 distinct frontend cases pass:34 successes in the four green files of web-source-final.log, six final admin-queue cases in web-source-repaired.log and six final solar component cases in solar-source-final.json.112 i18n cases pass. Staff/customer/unknown labels are bilingual; original chosen names remain escaped and names attached to unrecognized actor types remain hidden. Legacy absence is explicitly tested without inventing context.",
+        "40 distinct production Chromium/mobile-Safari browser cases pass, zero retries, Persian/English. browser-accepted-cases.json enumerates accepted passes from browser-current-results.json, browser-mobile-results.json and final browser-status-profile-results.json; stopped/failed/skipped cases excluded. Original ownership/status/date/a11y/no-overflow/step-up/lost-response/replay/denial/private-name assertions retained. Obsolete fixtures now provide canonical navigation, required profile ownership and recorded staff context; denial asserts actual deliberate selection withdrawal and complete history clearing. Exact staff-label assertion uses the correct second timeline row now that unknown rows also have labels.",
+        "Four final isolated PostgreSQL migration cases, snapshot verifier, unchanged OpenAPI contract,11 workspace type/build checks plus final web/API types, scoped lint/format/diff,85 unchanged gzip budgets and pinned SAST1807files/0findings/0errors/5rule fixtures pass. Source-manifest.json binds90 current sources and4256 production/dependency outputs. AST/schema/dictionary renewal proofs preserve unaffected declarations, all original dictionary entries and preexisting migration history. Failed setup/type/fixture/projection checks remain diagnostics and are not claimed green.",
+        "Local fixture captures inspected; current mobile region captures are cropped by fixed viewport chrome and are not approved release album assets. Release-wide coverage, provider/operational/rehearsal/staging/Telegram gates and production owner authorization remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
+      "scope_limit": "Original local context/history acceptance only; whole milestone/coverage/provider/operational/staging/Telegram gates remain outstanding."
     }
   },
   "historical_improvements": [
@@ -78696,12 +79208,40 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-business-history-acting-context",
+    "id": "release-0.2-catalogue-foundations",
     "release": "0.2.0",
-    "goal": "Continue unfinished operating-context acceptance. Inspect analogous four-service business histories, preserve validated original acting context for new events, represent unknown historical context honestly, and prove that later role/context changes cannot rewrite attribution. Preserve permissions, immutable events, actor identity, migrations, financial/retry boundaries and all prior local acceptances.",
+    "goal": "Verify complete catalogue foundations against current source: schema constraints, idempotent system/consultation seeds, hardware and saving-plan administration, positive pricing and immutable versioned agreements. Inspect implementations first; build only demonstrated gaps; preserve auth, money, historical snapshots and archive boundaries. Bind exact task acceptance to actual tests and source.",
     "task_keys": [
-      "02-auth-users-admin.md#T-11.02.01",
-      "02-auth-users-admin.md#T-11.02.02",
+      "03-core-business.md#T-03.01.01.01",
+      "03-core-business.md#T-03.01.01.02",
+      "03-core-business.md#T-03.01.01.03",
+      "03-core-business.md#T-03.01.01.04",
+      "03-core-business.md#T-03.01.01.05",
+      "03-core-business.md#T-03.01.01.06",
+      "03-core-business.md#T-03.01.01.07",
+      "03-core-business.md#T-03.01.02.01",
+      "03-core-business.md#T-03.01.02.02",
+      "03-core-business.md#T-03.01.02.03",
+      "03-core-business.md#T-03.01.02.04",
+      "03-core-business.md#T-03.01.03.01",
+      "03-core-business.md#T-03.01.03.02",
+      "03-core-business.md#T-03.01.03.03",
+      "03-core-business.md#T-03.01.03.04",
+      "03-core-business.md#T-03.01.03.05",
+      "03-core-business.md#T-03.01.03.06",
+      "03-core-business.md#T-03.01.03.07",
+      "03-core-business.md#T-03.01.04.01",
+      "03-core-business.md#T-03.01.04.02",
+      "03-core-business.md#T-03.01.04.03",
+      "03-core-business.md#T-03.01.04.04",
+      "03-core-business.md#T-03.01.04.05",
+      "03-core-business.md#T-03.01.04.06",
+      "03-core-business.md#T-03.01.04.07",
+      "03-core-business.md#T-03.01.04.08",
+      "03-core-business.md#T-03.01.05.01",
+      "03-core-business.md#T-03.01.05.02",
+      "03-core-business.md#T-03.01.05.03",
+      "03-core-business.md#T-03.01.05.04",
       "release-readiness#R-01.01"
     ]
   },

@@ -177,11 +177,16 @@ export const savingFulfillmentEvents = pgTable(
     actorUserId: text('actor_user_id')
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
+    actorContext: text('actor_context', { enum: ['staff', 'customer'] }),
     explanation: text('explanation').notNull(),
     handoverDescription: text('handover_description'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    check(
+      'saving_fulfillment_events_actor_context_valid',
+      sql`${table.actorContext} IN ('staff','customer')`
+    ),
     index('saving_fulfillment_events_order_idx').on(table.orderId, table.createdAt, table.id),
     check(
       'saving_fulfillment_events_stage',
@@ -232,6 +237,7 @@ export const savingOrderRevisions = pgTable(
     userId: text('user_id')
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
+    actorContext: text('actor_context', { enum: ['staff', 'customer'] }),
     idempotencyKey: uuid('idempotency_key').notNull(),
     requestHash: text('request_hash').notNull(),
     previousVersionId: uuid('previous_version_id')
@@ -245,6 +251,10 @@ export const savingOrderRevisions = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    check(
+      'saving_order_revisions_actor_context_valid',
+      sql`${table.actorContext} IN ('staff','customer')`
+    ),
     uniqueIndex('saving_order_revisions_user_key').on(table.userId, table.idempotencyKey),
     index('saving_order_revisions_order_idx').on(table.orderId, table.createdAt),
     check('saving_order_revisions_snapshot', sql`jsonb_typeof(${table.previousSnapshot})='object'`),
@@ -267,6 +277,7 @@ export const savingAddressAmendments = pgTable(
     actorUserId: text('actor_user_id')
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
+    actorContext: text('actor_context', { enum: ['staff', 'customer'] }),
     previousAddressId: uuid('previous_address_id')
       .notNull()
       .references(() => addresses.id, { onDelete: 'restrict' }),
@@ -279,6 +290,10 @@ export const savingAddressAmendments = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    check(
+      'saving_address_amendments_actor_context_valid',
+      sql`${table.actorContext} IN ('staff','customer')`
+    ),
     index('saving_address_amendments_order_idx').on(table.orderId, table.createdAt, table.id),
     check(
       'saving_address_amendments_distinct',
@@ -311,6 +326,7 @@ export const savingHardwareAmendments = pgTable(
     actorUserId: text('actor_user_id')
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
+    actorContext: text('actor_context', { enum: ['staff', 'customer'] }),
     previousHardwareId: uuid('previous_hardware_id')
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
@@ -332,6 +348,10 @@ export const savingHardwareAmendments = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    check(
+      'saving_hardware_amendments_actor_context_valid',
+      sql`${table.actorContext} IN ('staff','customer')`
+    ),
     index('saving_hardware_amendments_order_idx').on(table.orderId, table.createdAt, table.id),
     check(
       'saving_hardware_amendments_distinct',
@@ -368,6 +388,7 @@ export const savingHardwareUpgradeRequests = pgTable(
     actorUserId: text('actor_user_id')
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
+    actorContext: text('actor_context', { enum: ['staff', 'customer'] }),
     previousHardwareId: uuid('previous_hardware_id')
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
@@ -391,6 +412,10 @@ export const savingHardwareUpgradeRequests = pgTable(
     closedAt: timestamp('closed_at', { withTimezone: true }),
   },
   (table) => [
+    check(
+      'saving_hardware_upgrade_requests_actor_context_valid',
+      sql`${table.actorContext} IN ('staff','customer')`
+    ),
     uniqueIndex('saving_hardware_upgrade_invoice_key').on(table.adjustmentInvoiceId),
     uniqueIndex('saving_hardware_upgrade_pending_order_key')
       .on(table.orderId)

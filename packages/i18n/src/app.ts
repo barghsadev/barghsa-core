@@ -5,6 +5,9 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'history.context.staff': 'حالت کارمندی',
+  'history.context.customer': 'حالت مشتری',
+  'history.context.unknown': 'زمینه فعالیت ثبت نشده',
   'electricity.priceForm.contractInvalid': 'شناسه معتبر قرارداد را وارد کنید.',
   'electricity.priceForm.contractHelp':
     'شناسه قرارداد برق را برای مشاهده و بررسی تغییر قیمت وارد کنید.',
@@ -1763,6 +1766,9 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'history.context.staff': 'Staff mode',
+  'history.context.customer': 'Customer mode',
+  'history.context.unknown': 'Context not recorded',
   'electricity.priceForm.contractInvalid': 'Enter a valid contract ID.',
   'electricity.priceForm.contractHelp':
     'Enter an electricity contract ID to view and review price adjustments.',

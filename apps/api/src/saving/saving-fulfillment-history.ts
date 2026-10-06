@@ -9,11 +9,12 @@ export async function savingFulfillmentHistory(client: PoolClient, orderId: stri
     from_status: string;
     to_status: string;
     actor_user_id: string;
+    actor_context: string;
     explanation: string;
     handover_description: string | null;
     created_at: Date;
   }>(
-    `SELECT id,stage,from_status,to_status,actor_user_id,explanation,handover_description,created_at
+    `SELECT id,stage,from_status,to_status,actor_user_id,COALESCE(actor_context,'unknown') AS actor_context,explanation,handover_description,created_at
      FROM saving_fulfillment_events WHERE order_id=$1 ORDER BY created_at DESC,id DESC LIMIT 201`,
     [orderId]
   );

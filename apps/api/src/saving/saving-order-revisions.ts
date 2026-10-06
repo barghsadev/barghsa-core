@@ -4,7 +4,7 @@ import type { PoolClient } from 'pg';
 export async function savingOrderRevisions(client: PoolClient, savingOrderId: string) {
   return (
     await client.query(
-      `SELECT r.id,r.created_at AS "changedAt",
+      `SELECT r.id,COALESCE(r.actor_context,'unknown') AS "actorContext",r.created_at AS "changedAt",
               r.previous_snapshot #> '{quote,hardware,title}' AS "previousHardwareTitle",
               r.response #> '{hardware,title}' AS "hardwareTitle",
               r.previous_snapshot #>> '{address,full_address}' AS "previousAddress",

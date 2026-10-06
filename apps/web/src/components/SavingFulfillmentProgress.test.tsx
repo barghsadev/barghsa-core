@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -65,6 +66,7 @@ const events = (): SavingFulfillmentEvent[] => [
     explanation: 'Staff approved request',
     created_at: at,
     actorName: null,
+    actor_context: 'staff',
     noteKind: 'confirmed',
   },
   {
@@ -75,6 +77,7 @@ const events = (): SavingFulfillmentEvent[] => [
     explanation: 'Literal <script> note',
     created_at: at,
     actorName: 'کارشناس <img src=x>',
+    actor_context: 'staff',
     handover_description: 'تجهیز ABC <b>literal</b>',
     noteKind: 'recorded',
   },
@@ -115,11 +118,30 @@ for (const locale of ['en', 'fa'] as const) {
     expect(host.textContent).not.toContain('in_progress');
     expect(host.querySelector('script,img')).toBeNull();
     expect(host.querySelector('[data-slot=status-timeline] bdi')?.textContent).toContain(
-      tSaving('stageStaff', locale)
+      historyContextText('staff', locale)
     );
     expect(
       [...host.querySelectorAll('bdi')].some((b) => b.textContent?.includes('کارشناس <img src=x>'))
     ).toBe(true);
+  });
+  it(`${locale}: preserves literal identities while missing context stays unknown`, async () => {
+    const legacy = events().map(({ actor_context: _context, ...event }) => event);
+    await act(async () =>
+      root.render(
+        <SavingFulfillmentProgress
+          stages={stages()}
+          events={legacy}
+          status="in_progress"
+          locale={locale}
+          formatTimestamp={() => 'Account-localized date'}
+        />
+      )
+    );
+    expect(host.querySelector('[data-slot=status-timeline] bdi')?.textContent).toBe(
+      historyContextText(null, locale)
+    );
+    expect(host.textContent).toContain('کارشناس <img src=x>');
+    expect(host.querySelector('script,img')).toBeNull();
   });
   it(`${locale}: keeps stopped evidence without activating or inventing a future milestone`, async () => {
     for (const status of ['cancelled', 'rejected', 'completed']) {

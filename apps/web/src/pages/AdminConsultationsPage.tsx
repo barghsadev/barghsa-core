@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState } from 'react';
@@ -88,7 +89,7 @@ interface Detail {
   };
   history: Array<{
     status: string;
-    actor_type: 'staff' | 'customer';
+    actor_type: 'staff' | 'customer' | 'unknown';
     actor_name?: string | null;
     reason: string | null;
     created_at: string;
@@ -1841,9 +1842,6 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                   <StatusTimeline
                     label={copy('history')}
                     items={detail.history.map((event, index) => {
-                      const actor = ['staff', 'customer'].includes(event.actor_type)
-                        ? event.actor_type
-                        : 'unknown';
                       const presentation = consultationStatus(event.status, copy);
                       return {
                         id: `${event.created_at}-${index}`,
@@ -1853,8 +1851,10 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                         dateTime: event.created_at,
                         dateLabel: time.format(event.created_at),
                         actorLabel: [
-                          actor === 'unknown' ? null : event.actor_name,
-                          copy(`actor_${actor}`),
+                          ['staff', 'customer', 'unknown'].includes(event.actor_type)
+                            ? event.actor_name
+                            : null,
+                          historyContextText(event.actor_type, locale),
                         ]
                           .filter(Boolean)
                           .join(' · '),

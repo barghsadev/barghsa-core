@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -46,7 +47,9 @@ export function SolarRequestDetailPage() {
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [request, setRequest] = useState<SolarRequest | null>(null);
-  const [history, setHistory] = useState<Array<{ event: string; at: string }>>([]);
+  const [history, setHistory] = useState<
+    Array<{ event: string; at: string; actorContext?: string | null }>
+  >([]);
   const [progress, setProgress] = useState<SolarProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -86,7 +89,7 @@ export function SolarRequestDetailPage() {
         return response.json() as Promise<{
           request: SolarRequest;
           progress?: SolarProgress;
-          history?: Array<{ event: string; at: string }>;
+          history?: Array<{ event: string; at: string; actorContext?: string | null }>;
         }>;
       })
       .then((result) => {
@@ -238,6 +241,9 @@ export function SolarRequestDetailPage() {
               ).map((item, index) => (
                 <li key={`${item.at}-${index}`} className="border-s-2 border-primary/30 ps-3">
                   <p>{copy(`history_${item.event}`)}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {historyContextText(item.actorContext, locale)}
+                  </p>
                   <time className="text-sm text-muted-foreground" dateTime={item.at}>
                     {time.format(item.at)}
                   </time>

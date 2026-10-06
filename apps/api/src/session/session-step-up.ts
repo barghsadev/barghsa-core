@@ -22,6 +22,8 @@ export async function requireCurrentSession(
   // Read the database clock after any lock wait, including on the final check.
   const result = await client.query(
     `SELECT csrf_token, step_up_verified_at,
+       set_config('barghsa.actor_user_id',user_id,true) AS actor_user_scope,
+       set_config('barghsa.actor_context',operating_context,true) AS actor_context_scope,
        (CASE WHEN $4::timestamptz IS NULL THEN revoked_at IS NULL
              ELSE revoked_at=$4::timestamptz END)
        AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp() AS active,

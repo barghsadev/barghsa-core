@@ -207,6 +207,7 @@ it('records three ordered milestones and exposes the same authorized customer ti
     expect(value.events.at(-1)).toMatchObject({
       stage,
       actorName: 'Chosen construction staff',
+      actorContext: 'staff',
       note: input.note,
     });
     expect(value.canRecord).toBe(revision < 2);

@@ -437,8 +437,8 @@ export class SolarRequestService {
       )
         throw new NotFoundException('Solar request not found');
       const history = (
-        await client.query<{ event: string; created_at: Date }>(
-          `SELECT event,created_at FROM audit_log
+        await client.query<{ event: string; created_at: Date; actor_context: string }>(
+          `SELECT event,created_at,COALESCE(operating_context,'unknown') AS actor_context FROM audit_log
            WHERE event LIKE 'solar.%' AND metadata IS NOT NULL
              AND metadata::jsonb->>'requestId'=$1
              AND event IN (
@@ -453,7 +453,11 @@ export class SolarRequestService {
            ORDER BY created_at,id`,
           [id]
         )
-      ).rows.map((row) => ({ event: row.event, at: row.created_at.toISOString() }));
+      ).rows.map((row) => ({
+        event: row.event,
+        at: row.created_at.toISOString(),
+        actorContext: row.actor_context,
+      }));
       const progress = await readSolarProgress(client, id);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');

@@ -38,9 +38,10 @@ export async function readSolarProgress(client: PoolClient, requestId: string) {
       revision: number;
       recorded_at: Date;
       actor_user_id: string | null;
+      actor_context: string;
       note: string;
     }>(
-      'SELECT stage,revision,recorded_at,actor_user_id,note FROM solar_construction_progress_events WHERE request_id=$1 ORDER BY revision',
+      `SELECT stage,revision,recorded_at,actor_user_id,COALESCE(actor_context,'unknown') AS actor_context,note FROM solar_construction_progress_events WHERE request_id=$1 ORDER BY revision`,
       [requestId]
     )
   ).rows;
@@ -119,6 +120,7 @@ export async function readSolarProgress(client: PoolClient, requestId: string) {
       stage: record.stage,
       revision: record.revision,
       recordedAt: record.recorded_at.toISOString(),
+      actorContext: record.actor_context,
       actorName: record.actor_user_id ? (names.get(record.actor_user_id) ?? null) : null,
       note: record.note,
     })),

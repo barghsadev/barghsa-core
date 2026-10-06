@@ -7,6 +7,7 @@ export interface SavingFulfillmentEvent {
   handover_description?: string | null;
   created_at: string;
   actorName?: string | null;
+  actor_context?: string | null;
   noteKind?: 'started' | 'confirmed' | 'recorded';
 }
 

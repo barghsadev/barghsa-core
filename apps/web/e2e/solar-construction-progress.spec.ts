@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
@@ -134,6 +135,7 @@ for (const locale of ['en', 'fa'] as const) {
     }
     expect(previews).toHaveLength(3);
     expect(saved.size).toBe(3);
+    await expect(progress).toContainText(t('history.context.staff', locale));
     expect(writes[0]).toEqual(writes[1]);
     expect(writes[1]).toEqual(writes[2]);
     await expect(page.getByText(copy('constructionDone'), { exact: true })).toBeVisible();
@@ -147,6 +149,7 @@ for (const locale of ['en', 'fa'] as const) {
           userId: 'buyer',
           isStaff: false,
           operatingContext: 'customer',
+          navigation: fullNavigation('customer'),
           requiresTosAcceptance: false,
         },
       })

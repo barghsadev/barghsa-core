@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
@@ -121,6 +122,7 @@ interface ElectricityOrderDetail {
     at: string;
     actor: string | null;
     actorName?: string | null;
+    actorContext?: string | null;
     reason: string | null;
     comment: string | null;
   }>;
@@ -900,7 +902,9 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                     state: electricityTimelineState(event.event),
                     dateTime: event.at,
                     dateLabel: time.format(event.at),
-                    actorLabel: event.actorName ?? undefined,
+                    actorLabel: [event.actorName, historyContextText(event.actorContext, locale)]
+                      .filter(Boolean)
+                      .join(' · '),
                     description: [event.reason, event.comment].filter(Boolean).join(' · '),
                   }))}
                 />

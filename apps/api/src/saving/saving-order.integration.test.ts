@@ -2554,6 +2554,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   };
   expect(staffHistory.events).toHaveLength(9);
   expect(staffHistory.eventsTruncated).toBe(false);
+  expect(staffHistory.events.every((event) => event.actor_context === 'staff')).toBe(true);
   expect(
     staffHistory.events.every((event) => event.actorName === null && !('actor_user_id' in event))
   ).toBe(true);

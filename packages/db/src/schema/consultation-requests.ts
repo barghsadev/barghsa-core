@@ -86,10 +86,15 @@ export const consultationRequestEvents = pgTable(
     actorUserId: text('actor_user_id')
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
+    actorContext: text('actor_context', { enum: ['staff', 'customer'] }),
     reason: text('reason'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
+    check(
+      'consultation_request_events_actor_context_valid',
+      sql`${t.actorContext} IN ('staff','customer')`
+    ),
     index('consultation_events_request_idx').on(t.requestId, t.createdAt, t.id),
     check(
       'consultation_event_status',

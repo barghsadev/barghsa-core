@@ -332,9 +332,9 @@ export class ConsultationRequestService {
       const history = (
         await client.query(
           `SELECT e.status,e.actor_user_id,
-             CASE WHEN u.is_staff THEN 'staff' ELSE 'customer' END AS actor_type,
+             COALESCE(e.actor_context,'unknown') AS actor_type,
              e.reason,e.created_at
-           FROM consultation_request_events e JOIN users u ON u.user_id=e.actor_user_id
+           FROM consultation_request_events e
            WHERE e.request_id=$1 ORDER BY e.created_at,e.id`,
           [id]
         )

@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -24,7 +25,9 @@ afterEach(async () => {
 for (const locale of ['en', 'fa'] as const) {
   it(`${locale}: shows six stages in domain order with recorded dates and literal chosen names/notes`, async () => {
     state.locale = locale;
-    await act(async () => root.render(<SolarStageProgress progress={constructionProgress(2)} />));
+    const captured = constructionProgress(2);
+    captured.events = captured.events.map((event) => ({ ...event, actorContext: 'staff' }));
+    await act(async () => root.render(<SolarStageProgress progress={captured} />));
     const rows = host.querySelectorAll('[data-slot=progress-stepper]>li');
     expect(rows).toHaveLength(6);
     expect(rows[1]!.textContent).toContain(tSolar('construction_postal_submission', locale));
@@ -46,8 +49,29 @@ for (const locale of ['en', 'fa'] as const) {
     expect(host.textContent).toContain('Verified <script> work');
     expect(host.querySelector('img,script')).toBeNull();
     expect(host.querySelector('[data-slot=status-timeline] bdi')?.textContent).toBe(
-      'کارشناس <img src=x>'
+      'کارشناس <img src=x> · ' + historyContextText('staff', locale)
     );
+  });
+  it(`${locale}: retains recorded identity without inventing missing context`, async () => {
+    state.locale = locale;
+    await act(async () =>
+      root.render(
+        <SolarStageProgress
+          progress={{
+            ...constructionProgress(1),
+            events: constructionProgress(1).events.map((event) => {
+              const legacy = { ...event };
+              delete legacy.actorContext;
+              return legacy;
+            }),
+          }}
+        />
+      )
+    );
+    expect(host.querySelector('[data-slot=status-timeline] bdi')?.textContent).toBe(
+      'کارشناس <img src=x> · ' + historyContextText(null, locale)
+    );
+    expect(host.querySelector('img,script')).toBeNull();
   });
   it(`${locale}: distinguishes completed legacy paperwork with no date and closed work with no fabricated current step`, async () => {
     state.locale = locale;

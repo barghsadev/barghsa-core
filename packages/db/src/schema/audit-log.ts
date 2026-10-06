@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { check, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { users } from './users.js';
 
 /**
@@ -28,6 +28,9 @@ export const auditLog = pgTable(
     /** Optional JSON-encoded metadata payload */
     metadata: text('metadata'),
 
+    /** Original validated operating context; legacy/unclassified events remain null. */
+    operatingContext: text('operating_context', { enum: ['staff', 'customer'] }),
+
     /** Correlation ID linking related events across services. */
     correlationId: text('correlation_id'),
 
@@ -38,6 +41,7 @@ export const auditLog = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (t) => [
+    check('audit_log_operating_context_valid', sql`${t.operatingContext} IN ('staff','customer')`),
     index('audit_log_member_activity_idx').on(t.userId, t.createdAt, t.id),
     index('audit_log_profile_activity_idx').on(
       sql`((CASE WHEN ${t.metadata} IS JSON OBJECT THEN ${t.metadata}::jsonb ELSE '{}'::jsonb END)->>'profileId')`,

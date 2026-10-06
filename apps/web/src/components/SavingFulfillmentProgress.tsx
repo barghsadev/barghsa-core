@@ -1,3 +1,4 @@
+import { historyContextText } from '../lib/history-context.js';
 import { ProgressStepper, StatusTimeline, type ProgressStep } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import type { Locale } from '@barghsa/i18n';
@@ -41,9 +42,9 @@ export function SavingFulfillmentHistory({
             state: event.to_status === 'in_progress' ? 'draft' : 'completed',
             dateTime: event.created_at,
             dateLabel: formatTimestamp(event.created_at),
-            actorLabel: event.actorName
-              ? `${event.actorName} · ${copy('stageStaff')}`
-              : copy('stageStaff'),
+            actorLabel: [event.actorName, historyContextText(event.actor_context, locale)]
+              .filter(Boolean)
+              .join(' · '),
             description: (
               <span className="whitespace-pre-wrap break-words">
                 {event.noteKind === 'started'

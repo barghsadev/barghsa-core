@@ -1156,6 +1156,13 @@
       "when": 1791331202255,
       "tag": "0244_consultation_response_targets",
       "breakpoints": true
+    },
+    {
+      "idx": 245,
+      "version": "7",
+      "when": 1791331202256,
+      "tag": "0245_business_actor_context",
+      "breakpoints": true
     }
   ]
 }

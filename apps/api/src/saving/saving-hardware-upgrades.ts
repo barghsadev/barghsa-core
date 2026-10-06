@@ -3,7 +3,7 @@ import type { PoolClient } from 'pg';
 export async function savingHardwareUpgrades(client: PoolClient, savingOrderId: string) {
   return (
     await client.query(
-      `SELECT u.id,u.status,u.created_at AS "createdAt",u.applied_at AS "appliedAt",
+      `SELECT u.id,COALESCE(u.actor_context,'unknown') AS "actorContext",u.status,u.created_at AS "createdAt",u.applied_at AS "appliedAt",
               u.closed_at AS "closedAt",u.reason,
               u.price_delta_irr::text AS "priceDeltaIrR",
               u.adjustment_invoice_id AS "adjustmentInvoiceId",

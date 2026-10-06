@@ -35,6 +35,7 @@ export function constructionProgress(revision = 0, id = constructionRequest): So
       revision: index + 1,
       recordedAt: dates[index]!,
       actorName: 'کارشناس <img src=x>',
+      actorContext: 'staff',
       note: 'Verified <script> work',
     })),
   };

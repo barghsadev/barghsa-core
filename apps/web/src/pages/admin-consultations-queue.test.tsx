@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/app';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -463,9 +464,9 @@ it.each(['en', 'fa'] as const)(
       expect(
         [...timeline.querySelectorAll('[data-tone]')].map((node) => node.getAttribute('data-tone'))
       ).toEqual(consultationContextTones);
-      expect(timeline.textContent).toContain(copy('actor_customer'));
-      expect(timeline.textContent).toContain(copy('actor_staff'));
-      expect(timeline.textContent).toContain(copy('actor_unknown'));
+      expect(timeline.textContent).toContain(t('history.context.customer', locale));
+      expect(timeline.textContent).toContain(t('history.context.staff', locale));
+      expect(timeline.textContent).toContain(t('history.context.unknown', locale));
       expect(timeline.textContent).toContain('Reviewer <script>');
       expect(timeline.textContent).toContain('<img src=x onerror=alert(1)>');
       expect(timeline.textContent).toContain('Consultation delivered');

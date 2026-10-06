@@ -1,6 +1,8 @@
+import { fullNavigation } from './navigation-fixture';
 import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
+import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
 
 const id = '81111111-1111-4111-8111-111111111111';
@@ -23,6 +25,7 @@ const events = [
     created_at: at,
     noteKind: 'confirmed',
     actorName: null,
+    actor_context: 'staff',
   },
   {
     id: '2',
@@ -34,6 +37,7 @@ const events = [
     created_at: at,
     noteKind: 'recorded',
     actorName: 'کارشناس <img src=x>',
+    actor_context: 'staff',
   },
 ];
 const stages = names.map((stage, i) => ({
@@ -123,6 +127,7 @@ async function fixture(page: Page, locale: 'en' | 'fa') {
         userId: 'customer',
         isStaff: true,
         operatingContext: context,
+        navigation: fullNavigation(context === 'staff' ? 'staff' : 'customer'),
         canSwitchContext: true,
         requiresTosAcceptance: false,
       },
@@ -175,6 +180,7 @@ for (const locale of ['en', 'fa'] as const) {
     const staffHistory = page.getByRole('region', { name: copy('staffHistory') });
     await expect(staffHistory).toContainText('کارشناس <img src=x>');
     await expect(staffHistory).toContainText(copy('stageConfirmedNote'));
+    await expect(staffHistory).toContainText(t('history.context.staff', locale));
     await expect(staffHistory).toContainText('Customer retained <script> equipment');
     await expect(staffHistory).not.toContainText('in_progress');
     await expect(staffHistory.locator('img,script')).toHaveCount(0);
@@ -212,8 +218,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(progress).toContainText(copy('stageStopped'));
     await expect(progress.locator('[aria-current=step]')).toHaveCount(0);
     await expect(progress).not.toContainText('کارشناس <img src=x>');
-    await expect(progress).toContainText(copy('stageStaff'));
+    await expect(progress).toContainText(t('history.context.staff', locale));
     await expect(progress).toContainText('Customer retained <script> equipment');
+    response = {
+      ...response,
+      events: response.events.map((e) => ({ ...e, actor_context: 'unknown' })),
+    };
+    await page.reload();
+    await expect(progress).toContainText(t('history.context.unknown', locale));
+    await expect(progress).not.toContainText(t('history.context.staff', locale));
   });
 
   test(`${locale}: denied history clears detail and a failed read can be retried safely`, async ({

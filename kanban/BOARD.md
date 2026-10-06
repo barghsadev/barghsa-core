@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 59 | Accepted with unchanged source bindings. |
+| done | 61 | Accepted with unchanged source bindings. |
 | verify | 1246 | Existing work may be complete; inspect evidence before building. |
-| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,10 +39,38 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue unfinished operating-context acceptance. Inspect analogous four-service business histories, preserve validated original acting context for new events, represent unknown historical context honestly, and prove that later role/context changes cannot rewrite attribution. Preserve permissions, immutable events, actor identity, migrations, financial/retry boundaries and all prior local acceptances.
+Verify complete catalogue foundations against current source: schema constraints, idempotent system/consultation seeds, hardware and saving-plan administration, positive pricing and immutable versioned agreements. Inspect implementations first; build only demonstrated gaps; preserve auth, money, historical snapshots and archive boundaries. Bind exact task acceptance to actual tests and source.
 
-- `02-auth-users-admin.md#T-11.02.01`: Explicit operating context in session and authorization policy
-- `02-auth-users-admin.md#T-11.02.02`: Context-isolation integration and E2E tests
+- `03-core-business.md#T-03.01.01.01`: Create `products` table with columns: `id` (UUIDv7 PK), `type` (enum: `consultation`, `electricity`, `hardware`, `saving_plan`), `system_key` (nullable unique — used for immutable system products like electricity types), `title` (localized JSONB), `description` (localized JSONB, nullable), `price` (bigint nullable, in IRR), `status` (enum: `active`, `inactive`, `archived`), `created_at`, `updated_at`
+- `03-core-business.md#T-03.01.01.02`: Create `product_price_versions` table for versioned pricing: `id`, `product_id` (FK), `price` (bigint), `vat_category_override` (FK nullable), `effective_from` (timestamptz), `effective_until` (timestamptz nullable), `created_by` (FK to users)
+- `03-core-business.md#T-03.01.01.03`: Create `product_categories` table: `id`, `product_id` (FK), `category` (enum: `electricity_generation_station_consultation`, `electricity_saving_certificate_consultation`, `thermal_electricity`, `green_electricity`, `free_market_electricity`, `energy_saving_electricity`). Only for electricity and consultation types.
+- `03-core-business.md#T-03.01.01.04`: Create `electricity_product_limits` table: `id`, `product_id` (FK to electricity products only), `min_kwh` (bigint, default 0 = no limit), `max_kwh` (bigint, default 0 = no limit)
+- `03-core-business.md#T-03.01.01.05`: Create `saving_plans` table (separate from products, linked many-to-many to hardware products): `id`, `title` (localized JSONB), `description` (localized JSONB nullable), `price` (bigint), `agreement_title` (text), `agreement_body` (text, admin-editable), `status` (active/inactive), `created_at`, `updated_at`
+- `03-core-business.md#T-03.01.01.06`: Create `saving_plan_hardware` junction table: `saving_plan_id` (FK), `hardware_product_id` (FK to products where type=hardware), unique constraint on pair
+- `03-core-business.md#T-03.01.01.07`: Add database constraints: non-negative price enforcement at DB level for products and saving plans, unique `(type, system_key)` for system products, FK with ON DELETE RESTRICT for referenced products
+- `03-core-business.md#T-03.01.02.01`: Create idempotent seed migration that upserts four default electricity products by `system_key`:
+- `03-core-business.md#T-03.01.02.02`: Each default product gets: type=`electricity`, `system_key` set to the immutable key, `price`=null (unavailable until admin sets price), `status`=`inactive` by default
+- `03-core-business.md#T-03.01.02.03`: Verify `pnpm db:seed` is idempotent — running it multiple times does not create duplicate system products (use ON CONFLICT on `system_key` with unique index)
+- `03-core-business.md#T-03.01.02.04`: Admin cannot delete a system electricity product, cannot change its `system_key` or `type`, cannot create additional electricity-product types. Validate at both API and DB level.
+- `03-core-business.md#T-03.01.03.01`: Admin API: `POST /admin/products/hardware` — create hardware product (title, description, price). Validate price > 0.
+- `03-core-business.md#T-03.01.03.02`: Admin API: `GET /admin/products/hardware` — list with search, filter by status, sort, pagination
+- `03-core-business.md#T-03.01.03.03`: Admin API: `GET /admin/products/hardware/:id` — detail view
+- `03-core-business.md#T-03.01.03.04`: Admin API: `PATCH /admin/products/hardware/:id` — update. Price change creates a new versioned price record.
+- `03-core-business.md#T-03.01.03.05`: Admin API: `DELETE /admin/products/hardware/:id` — archive only (soft delete). Reject if referenced by historical saving-plan associations.
+- `03-core-business.md#T-03.01.03.06`: Hardware products are not directly orderable by customers. No customer-facing order flow creates hardware-only orders.
+- `03-core-business.md#T-03.01.03.07`: Product without a valid positive price is not orderable in any context (saving plan, etc.)
+- `03-core-business.md#T-03.01.04.01`: Admin API: `POST /admin/products/saving-plans` — create. Validate at least one hardware product selected (many-to-many).
+- `03-core-business.md#T-03.01.04.02`: Admin API: `PATCH /admin/products/saving-plans/:id` — update title, description, price, agreement, hardware associations
+- `03-core-business.md#T-03.01.04.03`: Admin API: `DELETE /admin/products/saving-plans/:id` — archive. Reject if referenced by active/paid orders.
+- `03-core-business.md#T-03.01.04.04`: Saving plan agreement is admin-editable. Changes must be versioned. Orders snapshot the accepted agreement version at time of submission.
+- `03-core-business.md#T-03.01.04.05`: Create `saving_plan_agreement_versions` table: `id`, `saving_plan_id` (FK), `title` (text), `body` (text), `status` (enum: `draft`, `active`, `superseded`), `effective_from` (timestamptz), `created_by` (FK to users). Enforce at most one active version per plan at any time.
+- `03-core-business.md#T-03.01.04.06`: Implement Draft → Active → Superseded lifecycle for saving plan agreement versions. When admin edits agreement via T-03.01.04.02, the edit creates a new draft version; admin explicitly activates it with a separate action.
+- `03-core-business.md#T-03.01.04.07`: On order submission (T-03.09.03.04), snapshot the full rendered agreement text (title + body) into the `agreement_snapshot` field, not just a version ID. The snapshot must be the exact verbatim text the customer accepted.
+- `03-core-business.md#T-03.01.04.08`: Customer order detail page displays the accepted agreement snapshot verbatim. Show notice if agreement has been updated since acceptance.
+- `03-core-business.md#T-03.01.05.01`: Seed two consultation products via migration:
+- `03-core-business.md#T-03.01.05.02`: Consultation products have no predefined price. Price field in products table is null. Creating a consultation request does not immediately create an invoice.
+- `03-core-business.md#T-03.01.05.03`: Certificate consultation is available only when active profile is Legal Entity. Frontend must hide/disable and backend must reject for Individual profiles.
+- `03-core-business.md#T-03.01.05.04`: Consultation for establishing a power station and construction request for a solar power station are independent products/records. System must not automatically convert or link them unless staff explicitly adds a reference.
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -101,8 +129,8 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-11.01.01` | done | Recorded batch work | Account/profile closure request and blocker evaluation |
 | `02-auth-users-admin.md#T-11.01.02` | done | Recorded batch work | Portable customer data export |
 | `02-auth-users-admin.md#T-11.01.03` | done | Inventory needed | Closure execution, revocation, retention and anonymization |
-| `02-auth-users-admin.md#T-11.02.01` | partial | Recorded batch work | Explicit operating context in session and authorization policy |
-| `02-auth-users-admin.md#T-11.02.02` | partial | Recorded batch work | Context-isolation integration and E2E tests |
+| `02-auth-users-admin.md#T-11.02.01` | done | Recorded batch work | Explicit operating context in session and authorization policy |
+| `02-auth-users-admin.md#T-11.02.02` | done | Recorded batch work | Context-isolation integration and E2E tests |
 | `02-auth-users-admin.md#T-11.03.01` | done | Inventory needed | Atomic staff user/profile creation without customer onboarding |
 | `03-core-business.md#T-03.01.01.01` | verify | Earlier acceptance_verified | Create `products` table with columns: `id` (UUIDv7 PK), `type` (enum: `consultation`, `electricity`, `hardware`, `saving_plan`), `system_key` (nullable unique — used for immutable system products like electricity types), `title` (localized JSONB), `description` (localized JSONB, nullable), `price` (bigint nullable, in IRR), `status` (enum: `active`, `inactive`, `archived`), `created_at`, `updated_at` |
 | `03-core-business.md#T-03.01.01.02` | verify | Earlier acceptance_verified | Create `product_price_versions` table for versioned pricing: `id`, `product_id` (FK), `price` (bigint), `vat_category_override` (FK nullable), `effective_from` (timestamptz), `effective_until` (timestamptz nullable), `created_by` (FK to users) |
