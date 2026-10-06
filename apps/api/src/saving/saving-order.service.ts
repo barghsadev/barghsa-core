@@ -157,8 +157,21 @@ export class SavingOrderService {
     private readonly billProvider: BillVerificationProvider
   ) {}
 
-  private async authorize(client: PoolClient, actor: Actor, profileId: string) {
-    if (!(await this.orders.mayManageOrders(client, actor.userId, profileId, true)))
+  private async authorize(
+    client: PoolClient,
+    actor: Actor,
+    profileId: string,
+    requireAcceptedTerms = true
+  ) {
+    if (
+      !(await this.orders.mayManageOrders(
+        client,
+        actor.userId,
+        profileId,
+        true,
+        requireAcceptedTerms
+      ))
+    )
       throw new NotFoundException('Profile not found');
     const row = (
       await client.query<{ profile_type: string }>(
@@ -396,7 +409,8 @@ export class SavingOrderService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
-      await this.authorize(client, actor, profileId);
+      // A receipt retry may still read its bill input; new submissions check terms later.
+      await this.authorize(client, actor, profileId, false);
       await client.query('COMMIT');
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -739,7 +753,15 @@ export class SavingOrderService {
         )
       ).rows[0];
       if (previous) {
-        if (!(await this.orders.mayManageOrders(client, actor.userId, previous.profile_id, true)))
+        if (
+          !(await this.orders.mayManageOrders(
+            client,
+            actor.userId,
+            previous.profile_id,
+            true,
+            false
+          ))
+        )
           throw new NotFoundException('Saving order not found');
         if (previous.request_hash !== requestHash)
           throw new ConflictException('Idempotency key was used for another change');

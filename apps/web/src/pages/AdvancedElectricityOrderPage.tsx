@@ -1,3 +1,4 @@
+import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';

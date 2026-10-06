@@ -228,9 +228,6 @@ export class SolarRequestService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
-      if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
-        throw new NotFoundException('Profile not found');
-      await this.orders.lockProfileSubmissions(client, input.profileId);
       const existing = (
         await client.query<{
           id: string;
@@ -241,6 +238,11 @@ export class SolarRequestService {
           [actor.userId, input.submissionKey]
         )
       ).rows[0];
+      if (
+        !(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true, !existing))
+      )
+        throw new NotFoundException('Profile not found');
+      await this.orders.lockProfileSubmissions(client, input.profileId);
       if (existing) {
         if (existing.profile_id !== input.profileId)
           throw new ConflictException('Submission key belongs to another request');

@@ -66,6 +66,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   const renderKey = currentTos ? `${currentTos.id}:${locale}` : null;
   const markRendered = useCallback(() => setRenderedVersion(renderKey), [renderKey]);
   const [accepting, setAccepting] = useState(false);
+  const acceptancePending = useRef(false);
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dismissedAutoModal, setDismissedAutoModal] = useState(false);
@@ -77,16 +78,16 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     setChecking(true);
     try {
       const response = await fetch('/api/auth/user');
-      if (request !== statusRequest.current) return;
+      if (request !== statusRequest.current) return null;
       if (response.status === 401) {
         setRequiresAcceptance(false);
         setStatusFailed(false);
         setShowModal(false);
-        return;
+        return false;
       }
       if (!response.ok) throw new Error('Consent status unavailable');
       const data: unknown = await response.json();
-      if (request !== statusRequest.current) return;
+      if (request !== statusRequest.current) return null;
       if (
         !data ||
         typeof data !== 'object' ||
@@ -101,8 +102,10 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
       setRequiresAcceptance(data.requiresTosAcceptance);
       setStatusFailed(false);
       if (!data.requiresTosAcceptance) setShowModal(false);
+      return data.requiresTosAcceptance;
     } catch {
       if (request === statusRequest.current) setStatusFailed(true);
+      return null;
     } finally {
       if (request === statusRequest.current) setChecking(false);
     }
@@ -155,6 +158,22 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     }
   }, [locale]);
 
+  useEffect(() => {
+    let cancelled = false;
+    const reviewRequired = () => {
+      void checkTosStatus().then((required) => {
+        if (cancelled || !required) return;
+        setDismissedAutoModal(true);
+        void openReviewModal();
+      });
+    };
+    window.addEventListener('barghsa:tos-required', reviewRequired);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('barghsa:tos-required', reviewRequired);
+    };
+  }, [checkTosStatus, openReviewModal]);
+
   // ── Auto-open modal on first non-exempt page visit ─────────────
 
   useEffect(() => {
@@ -180,7 +199,10 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   // ── Accept TOS ──────────────────────────────────────────────────
 
   const handleAccept = useCallback(async () => {
-    if (!currentTos || renderedVersion !== renderKey) return;
+    if (!currentTos || renderedVersion !== renderKey || acceptancePending.current) return;
+
+    acceptancePending.current = true;
+    const review = reviewRequest.current;
 
     setAccepting(true);
     setError(null);
@@ -196,6 +218,18 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
         return;
       }
 
+      const receipt: unknown = await response.json();
+      if (review !== reviewRequest.current) return;
+      if (
+        !receipt ||
+        typeof receipt !== 'object' ||
+        !('acceptedVersionId' in receipt) ||
+        receipt.acceptedVersionId !== currentTos.id
+      ) {
+        setError(t('tos.modal.error', locale));
+        return;
+      }
+
       statusRequest.current++;
       setChecking(false);
       setStatusFailed(false);
@@ -204,12 +238,14 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
 
       // Close modal after brief success state
       setTimeout(() => {
+        if (review !== reviewRequest.current) return;
         setShowModal(false);
         setAccepted(false);
       }, 1500);
     } catch {
       setError(t('tos.modal.error', locale));
     } finally {
+      acceptancePending.current = false;
       setAccepting(false);
     }
   }, [currentTos, locale, renderedVersion, renderKey]);

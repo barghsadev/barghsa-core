@@ -45,6 +45,7 @@ export const fa: I18nDictionary = {
   'error.authz.profile.not_verified':
     'پروفایل شما تأیید نشده است. برای ثبت سفارش جدید، ابتدا پروفایل خود را تأیید کنید',
   'error.authz.step_up.required': 'برای انجام این عملیات باید هویت خود را دوباره تأیید کنید',
+  'error.authz.tos.acceptance_required': 'برای ادامه، شرایط استفاده فعلی را بررسی و تأیید کنید',
   'error.not_found.resource': 'منبع درخواستی یافت نشد',
   'error.not_found.route': 'مسیر درخواستی یافت نشد',
   'auth.brand.slogan': 'پلتفرم هوشمند بازار برق ایران',
@@ -238,6 +239,8 @@ export const en: I18nDictionary = {
   'error.authz.profile.not_verified':
     'Your profile is not verified. Please verify your profile before placing an order',
   'error.authz.step_up.required': 'Re-verify your identity to continue',
+  'error.authz.tos.acceptance_required':
+    'Review and accept the current terms of service to continue',
   'error.not_found.resource': 'Requested resource was not found',
   'error.not_found.route': 'Requested route was not found',
   'error.conflict.duplicate': 'This entry already exists',

@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/terms';
+import { fullNavigation } from './navigation-fixture';
 for (const locale of ['fa', 'en'] as const) {
   for (const darkMode of [false, true]) {
     test(`terms status and review remain readable (${locale}, dark=${darkMode})`, async ({
@@ -9,12 +10,14 @@ for (const locale of ['fa', 'en'] as const) {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.addInitScript((value) => {
+        localStorage.setItem('barghsa.locale', value);
         const apply = () => {
           document.documentElement.lang = value;
         };
         if (document.documentElement) apply();
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
+      let sessionReads = 0;
       let statusReady = false,
         contentReady = false;
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -38,8 +41,16 @@ for (const locale of ['fa', 'en'] as const) {
       await page.route('**/api/admin/finance/vat**', (route) => route.fulfill({ json: [] }));
       await page.route('**/api/auth/user', (route) =>
         route.fulfill(
-          statusReady
-            ? { json: { isStaff: true, userId: 'owner', requiresTosAcceptance: true } }
+          ++sessionReads === 1 || statusReady
+            ? {
+                json: {
+                  navigation: fullNavigation('staff'),
+                  operatingContext: 'staff',
+                  isStaff: true,
+                  userId: 'owner',
+                  requiresTosAcceptance: true,
+                },
+              }
             : { status: 503, json: { isStaff: false } }
         )
       );

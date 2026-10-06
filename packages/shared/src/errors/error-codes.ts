@@ -435,6 +435,14 @@ export const ErrorCodes = {
     messageKey: 'error.authz.profile.not_verified',
     severity: 'info' as ErrorSeverity,
   },
+  AUTHZ_TOS_ACCEPTANCE_REQUIRED: {
+    code: 'AUTHZ:TOS_ACCEPTANCE_REQUIRED',
+    httpStatus: 403,
+    title: 'Review and accept the current terms of service to continue',
+    retryable: false,
+    messageKey: 'error.authz.tos.acceptance_required',
+    severity: 'info' as ErrorSeverity,
+  },
 
   // ── Rate Limit ──────────────────────────────────────────
   RATE_LIMIT_EXCEEDED: {

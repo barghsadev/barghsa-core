@@ -6,6 +6,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { GiftCodeService } from '../admin/gift-code.service.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireCommercialTosAcceptance } from '../tos/tos-acceptance.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
   DEFAULT_GREEN_ELECTRICITY_CONFIG,
@@ -100,7 +101,8 @@ export class OrdersService {
     client: PoolClient,
     userId: string,
     profileId: string,
-    commercial = false
+    commercial = false,
+    requireAcceptedTerms = true
   ): Promise<boolean> {
     const profile = (
       await client.query(
@@ -118,6 +120,7 @@ export class OrdersService {
       if (agent.rows.length === 0) return false;
     }
     if (commercial) {
+      if (requireAcceptedTerms) await requireCommercialTosAcceptance(client, userId);
       // Cover absent configuration keys as well as updates. Keep policy and the
       // submitted profile stable until commit, without relying on cached context.
       await client.query('LOCK TABLE app_config IN SHARE MODE');

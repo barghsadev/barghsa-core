@@ -1,3 +1,4 @@
+import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { lazy, Suspense, useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { useBlocker, useNavigate } from '@tanstack/react-router';

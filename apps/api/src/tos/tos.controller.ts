@@ -96,7 +96,7 @@ export class TosController {
   acceptVersion(
     @Param('versionId') versionId: string,
     @Req() req: AuthenticatedRequest
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; acceptedVersionId: string }> {
     // The URL identifies the displayed document. A body cannot substitute another version.
     return this.accept({ versionId }, req);
   }
@@ -139,7 +139,7 @@ export class TosController {
   async accept(
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; acceptedVersionId: string }> {
     const parsed = AcceptTosSchema.safeParse(rawBody);
 
     if (!parsed.success) {
@@ -156,6 +156,9 @@ export class TosController {
 
     this.logger.log(`TOS accepted by user ${req.session.userId}`);
 
-    return { message: 'Terms of Service accepted successfully.' };
+    return {
+      message: 'Terms of Service accepted successfully.',
+      acceptedVersionId: parsed.data.versionId,
+    };
   }
 }

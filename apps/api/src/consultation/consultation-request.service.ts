@@ -115,7 +115,9 @@ export class ConsultationRequestService {
             [actor.userId]
           );
       await this.orders.lockOrderActor(client, actor);
-      if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
+      if (
+        !(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true, !previous))
+      )
         throw new NotFoundException('Profile not found');
       await this.orders.lockProfileSubmissions(client, input.profileId);
       if (previous) {

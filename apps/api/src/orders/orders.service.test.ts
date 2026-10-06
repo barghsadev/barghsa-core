@@ -38,6 +38,7 @@ beforeEach(() => {
       return { rows: [], rowCount: 0 };
     }
     // Current-session/policy behavior is exercised against PostgreSQL in the HTTP suite.
+    if (text.startsWith('WITH active AS (')) return { rows: [{ required: false }] };
     if (text.startsWith('SELECT disabled_at FROM users')) return { rows: [{ disabled_at: null }] };
     if (text.startsWith('SELECT session_id FROM sessions'))
       return { rows: [{ session_id: orderActor.sessionId }] };

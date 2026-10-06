@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 52 | Accepted with unchanged source bindings. |
-| verify | 1255 | Existing work may be complete; inspect evidence before building. |
+| done | 55 | Accepted with unchanged source bindings. |
+| verify | 1252 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,11 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Renew public terms, immutable/versioned consent storage and required reacceptance against existing implementation. Reuse matching registration consent proofs; inspect private and public version identity, sanitized content, hashes, retry/CSRF/current-session boundaries and sensitive-action enforcement.
+Renew existing account/profile closure, export and customer/staff context isolation. Inspect exact requirements and implementations first; preserve session, ownership, financial blocker, retention, audit and retry boundaries. Build only demonstrated gaps.
 
-- `02-auth-users-admin.md#T-04.01.01`: Public TOS page
-- `02-auth-users-admin.md#T-04.01.02`: TOS acceptance storage
-- `02-auth-users-admin.md#T-04.01.03`: TOS re-acceptance flow
+- `02-auth-users-admin.md#T-11.01.01`: Account/profile closure request and blocker evaluation
+- `02-auth-users-admin.md#T-11.01.02`: Portable customer data export
+- `02-auth-users-admin.md#T-11.01.03`: Closure execution, revocation, retention and anonymization
+- `02-auth-users-admin.md#T-11.02.01`: Explicit operating context in session and authorization policy
+- `02-auth-users-admin.md#T-11.02.02`: Context-isolation integration and E2E tests
+- `02-auth-users-admin.md#T-11.03.01`: Atomic staff user/profile creation without customer onboarding
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -52,7 +55,7 @@ All four services have a safe browse → intake → review → payment where app
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-01.01` | in_progress | Inventory needed | Renew identity and all-four-service journey acceptance |
+| `release-readiness#R-01.01` | in_progress | Recorded batch work | Renew identity and all-four-service journey acceptance |
 | `release-readiness#R-01.02` | done | Inventory needed | Inspect and repair customer wallet history ownership |
 | `release-readiness#R-01.03` | done | Recorded batch work | Finish the already validated consultation history changes |
 | `release-readiness#R-01.04` | todo | Inventory needed | Verify four complete customer and staff intake journeys |
@@ -92,9 +95,9 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-03.03.06` | done | Earlier acceptance_verified | Timezone settings |
 | `02-auth-users-admin.md#T-03.04.01` | done | Earlier acceptance_verified | Address CRUD for current profile |
 | `02-auth-users-admin.md#T-03.04.02` | done | Earlier partial | Address in order flow |
-| `02-auth-users-admin.md#T-04.01.01` | verify | Earlier acceptance_verified | Public TOS page |
-| `02-auth-users-admin.md#T-04.01.02` | verify | Earlier acceptance_verified | TOS acceptance storage |
-| `02-auth-users-admin.md#T-04.01.03` | verify | Earlier acceptance_verified | TOS re-acceptance flow |
+| `02-auth-users-admin.md#T-04.01.01` | done | Earlier acceptance_verified | Public TOS page |
+| `02-auth-users-admin.md#T-04.01.02` | done | Earlier acceptance_verified | TOS acceptance storage |
+| `02-auth-users-admin.md#T-04.01.03` | done | Earlier acceptance_verified | TOS re-acceptance flow |
 | `02-auth-users-admin.md#T-07.01.02` | superseded | Earlier partial | API-based auto-verification integration |
 | `02-auth-users-admin.md#T-08.01.01` | done | Earlier partial | Dashboard page layout |
 | `02-auth-users-admin.md#T-08.01.02` | done | Earlier acceptance_verified | Wallet balance card |

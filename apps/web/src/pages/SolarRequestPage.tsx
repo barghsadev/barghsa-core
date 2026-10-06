@@ -1,3 +1,4 @@
+import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';

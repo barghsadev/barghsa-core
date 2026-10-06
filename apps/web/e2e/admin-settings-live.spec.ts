@@ -2570,8 +2570,7 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await english.fill('Published terms');
-    await english.press('ArrowRight');
-    for (const _character of 'Published terms') await english.press('Shift+ArrowLeft');
+    await english.press('ControlOrMeta+a');
     await page
       .getByRole('group', {
         name: fa ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',
@@ -2610,7 +2609,7 @@ for (const locale of ['en', 'fa'])
       page.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true })
     ).toHaveCount(0);
     await page
-      .getByRole('row')
+      .locator('table:visible > tbody > tr, ol[role=list]:visible > li')
       .filter({ hasText: versionId })
       .getByRole('button', { name: fa ? 'مشاهده' : 'View', exact: true })
       .click();
@@ -2643,7 +2642,9 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
       .click();
-    const discarded = page.getByRole('row').filter({ hasText: `discard-${locale}` });
+    const discarded = page
+      .locator('table:visible > tbody > tr, ol[role=list]:visible > li')
+      .filter({ hasText: `discard-${locale}` });
     page.once('dialog', (dialog) => dialog.accept());
     await discarded
       .getByRole('button', { name: fa ? 'حذف پیش‌نویس' : 'Discard', exact: true })
