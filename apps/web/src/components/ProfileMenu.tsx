@@ -72,7 +72,7 @@ export function ProfileMenu({
       >
         <PopoverTrigger
           render={
-            <Button variant="ghost" size="icon" aria-label={shellText('accountMenu', locale)} />
+            <Button variant="ghost" size="default" aria-label={shellText('accountMenu', locale)} />
           }
         >
           <span
@@ -84,6 +84,13 @@ export function ProfileMenu({
             ) : (
               <UserRound className="size-4" />
             )}
+          </span>
+          <span
+            data-slot="operating-context-indicator"
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+            className="whitespace-nowrap rounded-md border border-current/20 px-2 py-1 text-xs font-semibold"
+          >
+            {shellText(area === 'admin' ? 'staffContext' : 'customerContext', locale)}
           </span>
         </PopoverTrigger>
         <PopoverContent

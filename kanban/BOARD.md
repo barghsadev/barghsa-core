@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 55 | Accepted with unchanged source bindings. |
-| verify | 1252 | Existing work may be complete; inspect evidence before building. |
-| partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 58 | Accepted with unchanged source bindings. |
+| verify | 1246 | Existing work may be complete; inspect evidence before building. |
+| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,14 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Renew existing account/profile closure, export and customer/staff context isolation. Inspect exact requirements and implementations first; preserve session, ownership, financial blocker, retention, audit and retry boundaries. Build only demonstrated gaps.
+Continue unfinished lifecycle/context acceptance: preserve a usable closure export reference with exact retained-record ownership and store original acting context for four-service business history. Inspect requirements/current sources first; preserve live profile ownership, privacy/financial/audit holds, expiry, immutable history, retry and transactional boundaries.
 
-- `02-auth-users-admin.md#T-11.01.01`: Account/profile closure request and blocker evaluation
-- `02-auth-users-admin.md#T-11.01.02`: Portable customer data export
 - `02-auth-users-admin.md#T-11.01.03`: Closure execution, revocation, retention and anonymization
 - `02-auth-users-admin.md#T-11.02.01`: Explicit operating context in session and authorization policy
 - `02-auth-users-admin.md#T-11.02.02`: Context-isolation integration and E2E tests
-- `02-auth-users-admin.md#T-11.03.01`: Atomic staff user/profile creation without customer onboarding
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -102,12 +99,12 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-08.01.01` | done | Earlier partial | Dashboard page layout |
 | `02-auth-users-admin.md#T-08.01.02` | done | Earlier acceptance_verified | Wallet balance card |
 | `02-auth-users-admin.md#T-08.01.03` | done | Earlier partial | Quick status cards |
-| `02-auth-users-admin.md#T-11.01.01` | verify | Recorded batch work | Account/profile closure request and blocker evaluation |
-| `02-auth-users-admin.md#T-11.01.02` | verify | Recorded batch work | Portable customer data export |
-| `02-auth-users-admin.md#T-11.01.03` | verify | Inventory needed | Closure execution, revocation, retention and anonymization |
-| `02-auth-users-admin.md#T-11.02.01` | verify | Recorded batch work | Explicit operating context in session and authorization policy |
-| `02-auth-users-admin.md#T-11.02.02` | verify | Recorded batch work | Context-isolation integration and E2E tests |
-| `02-auth-users-admin.md#T-11.03.01` | verify | Inventory needed | Atomic staff user/profile creation without customer onboarding |
+| `02-auth-users-admin.md#T-11.01.01` | done | Recorded batch work | Account/profile closure request and blocker evaluation |
+| `02-auth-users-admin.md#T-11.01.02` | done | Recorded batch work | Portable customer data export |
+| `02-auth-users-admin.md#T-11.01.03` | partial | Inventory needed | Closure execution, revocation, retention and anonymization |
+| `02-auth-users-admin.md#T-11.02.01` | partial | Recorded batch work | Explicit operating context in session and authorization policy |
+| `02-auth-users-admin.md#T-11.02.02` | partial | Recorded batch work | Context-isolation integration and E2E tests |
+| `02-auth-users-admin.md#T-11.03.01` | done | Inventory needed | Atomic staff user/profile creation without customer onboarding |
 | `03-core-business.md#T-03.01.01.01` | verify | Earlier acceptance_verified | Create `products` table with columns: `id` (UUIDv7 PK), `type` (enum: `consultation`, `electricity`, `hardware`, `saving_plan`), `system_key` (nullable unique — used for immutable system products like electricity types), `title` (localized JSONB), `description` (localized JSONB, nullable), `price` (bigint nullable, in IRR), `status` (enum: `active`, `inactive`, `archived`), `created_at`, `updated_at` |
 | `03-core-business.md#T-03.01.01.02` | verify | Earlier acceptance_verified | Create `product_price_versions` table for versioned pricing: `id`, `product_id` (FK), `price` (bigint), `vat_category_override` (FK nullable), `effective_from` (timestamptz), `effective_until` (timestamptz nullable), `created_by` (FK to users) |
 | `03-core-business.md#T-03.01.01.03` | verify | Earlier acceptance_verified | Create `product_categories` table: `id`, `product_id` (FK), `category` (enum: `electricity_generation_station_consultation`, `electricity_saving_certificate_consultation`, `thermal_electricity`, `green_electricity`, `free_market_electricity`, `energy_saving_electricity`). Only for electricity and consultation types. |

@@ -14,6 +14,7 @@ let profileId: string;
 let ticketId: string;
 let jobId: string;
 let leaseToken: string;
+let portfolio: { savingId: string; solarId: string; consultationId: string };
 const objects = new Map<string, Buffer>();
 const scheduled = new Set<string>();
 const provider = {
@@ -40,6 +41,129 @@ const provider = {
     return { eligibleVersions: 1, heldVersions: 0 };
   },
 } as unknown as StorageProvider;
+
+async function seedPortfolio(ownedProfile: string, label: string) {
+  const province = (
+    await pool.query("INSERT INTO provinces(name_fa,name_en) VALUES('استان',$1) RETURNING id", [
+      label,
+    ])
+  ).rows[0].id;
+  const city = (
+    await pool.query(
+      "INSERT INTO cities(province_id,name_fa,name_en) VALUES($1,'شهر',$2) RETURNING id",
+      [province, label]
+    )
+  ).rows[0].id;
+  const address = (
+    await pool.query(
+      "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES($1,$2,$3,$4,'1234567890',true) RETURNING id",
+      [ownedProfile, province, city, label + ' address']
+    )
+  ).rows[0].id;
+  const product = async (type: string) =>
+    (
+      await pool.query(
+        "INSERT INTO products(type,title,status,price) VALUES($1,$2::jsonb,'active',100000) RETURNING id",
+        [type, JSON.stringify({ en: label })]
+      )
+    ).rows[0].id;
+  const plan = await product('saving_plan'),
+    hardware = await product('hardware'),
+    consultation = await product('consultation');
+  const agreement = (
+    await pool.query(
+      "INSERT INTO saving_plan_agreement_versions(plan_id,title,body,status,effective_from,created_by) VALUES($1,'Agreement',$2,'draft',NULL,$3) RETURNING id",
+      [plan, label + ' accepted saving terms', userId]
+    )
+  ).rows[0].id;
+  await pool.query(
+    "UPDATE saving_plan_agreement_versions SET status='active',effective_from=now() WHERE id=$1",
+    [agreement]
+  );
+  const order = (
+    await pool.query(
+      "INSERT INTO orders(profile_id,product_id,order_type,user_id,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code) VALUES($1,$2,'savings',$3,$4,$5,$6,'1234567890') RETURNING id",
+      [ownedProfile, plan, userId, province, city, label + ' original order address']
+    )
+  ).rows[0].id;
+  const savingId = (
+    await pool.query(
+      `INSERT INTO saving_orders(order_id,profile_id,saving_plan_id,hardware_product_id,bill_identifier,installation_address_id,agreement_version_id,agreement_snapshot,address_snapshot,pricing_snapshot,verification_result)
+    VALUES($1,$2,$3,$4,'1234567890',$5,$6,$7,$8::jsonb,'{"total":"9007199254740993"}','{"providerSecret":"PROVIDER_PRIVATE"}') RETURNING id`,
+      [
+        order,
+        ownedProfile,
+        plan,
+        hardware,
+        address,
+        agreement,
+        label + ' accepted saving terms',
+        JSON.stringify({ fullAddress: label + ' original saving address' }),
+      ]
+    )
+  ).rows[0].id as string;
+  await pool.query(
+    "INSERT INTO saving_order_lines(order_id,description,amount,type) VALUES($1,$2,9007199254740993,'plan_price')",
+    [savingId, label + ' plan']
+  );
+  await pool.query(
+    "INSERT INTO saving_fulfillment_stages(order_id,stage,status,explanation) VALUES($1,'request_confirmation','in_progress',$2)",
+    [savingId, label + ' fulfillment']
+  );
+  await pool.query(
+    "INSERT INTO saving_fulfillment_events(order_id,stage,from_status,to_status,actor_user_id,explanation) VALUES($1,'request_confirmation','pending','in_progress',$2,$3)",
+    [savingId, userId, label + ' fulfillment']
+  );
+  await pool.query(
+    'INSERT INTO saving_order_comments(order_id,author_user_id,body) VALUES($1,$2,$3)',
+    [savingId, userId, label + ' customer comment']
+  );
+  const solarId = (
+    await pool.query(
+      `INSERT INTO solar_construction_requests(profile_id,submitted_by,submission_key,building_type,grid_type,property_form,structural_frame,building_completion_date,agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at,submission_review)
+    VALUES($1,$2,$3,'building_apartment','off_grid','villa','concrete','2020-01-01',true,'v1',$4,now(),$5::jsonb) RETURNING id`,
+      [
+        ownedProfile,
+        userId,
+        randomUUID(),
+        label + ' accepted solar terms',
+        JSON.stringify({
+          data: { siteAddress: label + ' original solar address' },
+          internalSecret: 'SOLAR_REVIEW_PRIVATE',
+        }),
+      ]
+    )
+  ).rows[0].id as string;
+  await pool.query(
+    'INSERT INTO solar_document_requests(request_id,description,requested_by) VALUES($1,$2,$3)',
+    [solarId, label + ' document request', userId]
+  );
+  await pool.query(
+    "INSERT INTO solar_construction_postal(request_id,status,courier,tracking_number,send_date,staff_notes) VALUES($1,'shipped',$2,'TRACKING-1',now(),'POSTAL_INTERNAL_PRIVATE')",
+    [solarId, label + ' courier']
+  );
+  const consultationId = (
+    await pool.query(
+      `INSERT INTO consultation_requests(profile_id,product_id,product_snapshot,submitted_by,submission_key,status,fee,scope,deliverables,expected_next_step,offer_valid_until,staff_team)
+    VALUES($1,$2,$3::jsonb,$4,$5,'offer_pending',9007199254740993,$6,$7,$8,now()+interval '1 day','ASSIGNMENT_PRIVATE') RETURNING id`,
+      [
+        ownedProfile,
+        consultation,
+        JSON.stringify({ title: label }),
+        userId,
+        randomUUID(),
+        label + ' scope',
+        label + ' deliverables',
+        label + ' next step',
+      ]
+    )
+  ).rows[0].id as string;
+  await pool.query(
+    "INSERT INTO consultation_request_events(request_id,status,actor_user_id,reason) VALUES($1,'offer_pending',$2,$3)",
+    [consultationId, userId, label + ' published offer']
+  );
+  return { savingId, solarId, consultationId };
+}
 
 async function unzip(bytes: Buffer): Promise<Map<string, Buffer>> {
   return new Promise((resolve, reject) => {
@@ -161,6 +285,14 @@ beforeAll(async () => {
   } finally {
     client.release();
   }
+  portfolio = await seedPortfolio(profileId, 'customer');
+  const otherProfile = (
+    await pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES($1,'LEGAL','ACTIVE',false) RETURNING id",
+      [userId]
+    )
+  ).rows[0].id as string;
+  await seedPortfolio(otherProfile, 'OTHER_PROFILE_PRIVATE');
 }, 40000);
 
 afterAll(async () => {
@@ -222,6 +354,68 @@ it('creates a private archive with customer fields and eligible document bytes, 
       ?.toString()
   ).toBe('customer document');
   expect(JSON.stringify(data)).not.toContain('secret-password-hash');
+  expect(data.savingOrders).toEqual([
+    expect.objectContaining({
+      id: portfolio.savingId,
+      agreement_snapshot: 'customer accepted saving terms',
+      address_snapshot: { fullAddress: 'customer original saving address' },
+    }),
+  ]);
+  expect(data.savingOrderLines).toEqual([
+    expect.objectContaining({ order_id: portfolio.savingId, amount: '9007199254740993' }),
+  ]);
+  expect(data.savingFulfillmentStages).toEqual([
+    expect.objectContaining({ order_id: portfolio.savingId, explanation: 'customer fulfillment' }),
+  ]);
+  expect(data.savingFulfillmentEvents).toEqual([
+    expect.objectContaining({ order_id: portfolio.savingId, explanation: 'customer fulfillment' }),
+  ]);
+  expect(data.savingOrderComments).toEqual([
+    expect.objectContaining({ order_id: portfolio.savingId, body: 'customer customer comment' }),
+  ]);
+  expect(data.solarRequests).toEqual([
+    expect.objectContaining({
+      id: portfolio.solarId,
+      site_address: 'customer original solar address',
+      agreement_snapshot: 'customer accepted solar terms',
+    }),
+  ]);
+  expect(data.solarDocumentRequests).toEqual([
+    expect.objectContaining({
+      request_id: portfolio.solarId,
+      description: 'customer document request',
+    }),
+  ]);
+  expect(data.solarPostal).toEqual([
+    expect.objectContaining({
+      request_id: portfolio.solarId,
+      courier: 'customer courier',
+      tracking_number: 'TRACKING-1',
+    }),
+  ]);
+  expect(data.consultations).toEqual([
+    expect.objectContaining({
+      id: portfolio.consultationId,
+      fee: '9007199254740993',
+      scope: 'customer scope',
+      deliverables: 'customer deliverables',
+    }),
+  ]);
+  expect(data.consultationEvents).toEqual([
+    expect.objectContaining({
+      request_id: portfolio.consultationId,
+      reason: 'customer published offer',
+    }),
+  ]);
+  for (const protectedValue of [
+    'OTHER_PROFILE_PRIVATE',
+    'PROVIDER_PRIVATE',
+    'SOLAR_REVIEW_PRIVATE',
+    'POSTAL_INTERNAL_PRIVATE',
+    'ASSIGNMENT_PRIVATE',
+  ])
+    expect(JSON.stringify(data)).not.toContain(protectedValue);
+
   expect(
     (
       await pool.query(
@@ -237,6 +431,63 @@ it('creates a private archive with customer fields and eligible document bytes, 
   expect(objects.has(row.privacy_export_storage_key)).toBe(false);
   expect(await cleanupExpiredProfileExports(pool, provider)).toBe(0);
 });
+
+it.each(['lease change', 'audit failure'] as const)(
+  'removes an uploaded archive without publishing it after %s',
+  async (failure) => {
+    const before = (
+      await pool.query(
+        "SELECT count(*)::int AS count FROM audit_log WHERE event='profile_export_generated'"
+      )
+    ).rows[0].count;
+    let uploadedKey = '';
+    const intercepted = {
+      ...provider,
+      async putObject(key: string, body: ReadableStream) {
+        await provider.putObject(key, body, 'application/zip');
+        uploadedKey = key;
+        if (failure === 'lease change')
+          await pool.query('UPDATE async_jobs SET lease_token=$2 WHERE id=$1', [
+            jobId,
+            randomUUID(),
+          ]);
+        else
+          await pool.query(`CREATE FUNCTION reject_export_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+          BEGIN IF NEW.event='profile_export_generated' THEN RAISE EXCEPTION 'audit unavailable'; END IF; RETURN NEW; END $$;
+          CREATE TRIGGER reject_export_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_export_audit()`);
+      },
+    } as StorageProvider;
+    try {
+      await expect(
+        generateProfileExport(
+          { ticketId, profileId, userId },
+          { jobId, leaseToken, setProgress: async () => undefined },
+          pool,
+          intercepted
+        )
+      ).rejects.toThrow(failure === 'lease change' ? 'authorization changed' : 'audit unavailable');
+      expect(uploadedKey).toMatch(/^tmp\/profile-exports\//);
+      expect(objects.has(uploadedKey)).toBe(false);
+      expect(
+        (await pool.query('SELECT privacy_export_storage_key FROM tickets WHERE id=$1', [ticketId]))
+          .rows[0].privacy_export_storage_key
+      ).toBeNull();
+      expect(
+        (
+          await pool.query(
+            "SELECT count(*)::int AS count FROM audit_log WHERE event='profile_export_generated'"
+          )
+        ).rows[0].count
+      ).toBe(before);
+    } finally {
+      await pool.query('UPDATE async_jobs SET lease_token=$2 WHERE id=$1', [jobId, leaseToken]);
+      if (failure === 'audit failure')
+        await pool.query(
+          'DROP TRIGGER IF EXISTS reject_export_audit ON audit_log; DROP FUNCTION IF EXISTS reject_export_audit()'
+        );
+    }
+  }
+);
 
 it('does not generate an export after the owner switches active profiles', async () => {
   const second = (

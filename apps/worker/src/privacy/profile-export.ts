@@ -131,6 +131,134 @@ export async function collectProfileData(pool: Pool, payload: ExportPayload) {
       [profileId],
     ],
     [
+      'savingOrders',
+      `SELECT id,order_id,saving_plan_id,hardware_product_id,bill_identifier,
+              installation_address_id,agreement_version_id,agreement_snapshot,
+              address_snapshot,pricing_snapshot,status,financial_status,submitted_at,
+              created_at,updated_at
+       FROM saving_orders WHERE profile_id=$1 ORDER BY created_at,id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingOrderLines',
+      `SELECT l.id,l.order_id,l.description,l.amount,l.type,l.created_at,l.updated_at
+       FROM saving_order_lines l JOIN saving_orders o ON o.id=l.order_id
+       WHERE o.profile_id=$1 ORDER BY l.created_at,l.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingFulfillmentStages',
+      `SELECT s.id,s.order_id,s.stage,s.status,s.started_at,s.completed_at,
+              s.explanation,s.handover_description
+       FROM saving_fulfillment_stages s JOIN saving_orders o ON o.id=s.order_id
+       WHERE o.profile_id=$1 ORDER BY s.created_at,s.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingFulfillmentEvents',
+      `SELECT e.id,e.order_id,e.stage,e.from_status,e.to_status,
+              e.explanation,e.handover_description,e.created_at
+       FROM saving_fulfillment_events e JOIN saving_orders o ON o.id=e.order_id
+       WHERE o.profile_id=$1 ORDER BY e.created_at,e.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingOrderComments',
+      `SELECT c.id,c.order_id,c.body,c.created_at
+       FROM saving_order_comments c JOIN saving_orders o ON o.id=c.order_id
+       WHERE o.profile_id=$1 ORDER BY c.created_at,c.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingRevisions',
+      `SELECT r.id,r.order_id,r.previous_version_id,r.version_id,r.created_at
+       FROM saving_order_revisions r JOIN saving_orders o ON o.id=r.order_id
+       WHERE o.profile_id=$1 ORDER BY r.created_at,r.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingAddressAmendments',
+      `SELECT a.id,a.order_id,a.contract_id,a.contract_version_id,a.previous_address_id,
+              a.address_id,a.previous_snapshot,a.address_snapshot,a.reason,a.created_at
+       FROM saving_address_amendments a JOIN saving_orders o ON o.id=a.order_id
+       WHERE o.profile_id=$1 ORDER BY a.created_at,a.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingHardwareAmendments',
+      `SELECT a.id,a.order_id,a.contract_id,a.contract_version_id,a.previous_hardware_id,
+              a.hardware_id,a.previous_snapshot,a.hardware_snapshot,a.original_invoice_id,
+              a.adjustment_invoice_id,a.price_delta_irr,a.reason,a.created_at
+       FROM saving_hardware_amendments a JOIN saving_orders o ON o.id=a.order_id
+       WHERE o.profile_id=$1 ORDER BY a.created_at,a.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'savingHardwareUpgrades',
+      `SELECT u.id,u.order_id,u.contract_id,u.contract_version_id,u.previous_hardware_id,
+              u.hardware_id,u.hardware_snapshot,u.original_invoice_id,u.adjustment_invoice_id,
+              u.price_delta_irr,u.status,u.reason,u.created_at,u.applied_at,u.closed_at
+       FROM saving_hardware_upgrade_requests u JOIN saving_orders o ON o.id=u.order_id
+       WHERE o.profile_id=$1 ORDER BY u.created_at,u.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'solarRequests',
+      `SELECT id,status,contract_id,building_type,grid_type,bill_identifier,
+              property_form,structural_frame,building_completion_date,total_units,
+              site_category,installation_surface,usable_area_sqm,site_address_id,
+              submission_review->'data'->>'siteAddress' AS site_address,
+              site_relationship,site_description,agreement_version,agreement_snapshot,
+              agreement_accepted_at,status_reason,support_path,submitted_at,created_at,updated_at
+       FROM solar_construction_requests WHERE profile_id=$1 ORDER BY created_at,id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'solarDocumentReviews',
+      `SELECT d.id,d.request_id,d.document_id,d.file_name,d.staff_status,d.staff_reason,
+              d.staff_reviewed_at,d.uploaded_at
+       FROM solar_construction_documents d JOIN solar_construction_requests r ON r.id=d.request_id
+       WHERE r.profile_id=$1 ORDER BY d.uploaded_at,d.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'solarDocumentRequests',
+      `SELECT d.id,d.request_id,d.description,d.created_at
+       FROM solar_document_requests d JOIN solar_construction_requests r ON r.id=d.request_id
+       WHERE r.profile_id=$1 ORDER BY d.created_at,d.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'solarPostal',
+      `SELECT p.id,p.request_id,p.status,p.courier,p.tracking_number,p.send_date,
+              p.receipt_image_id,p.staff_confirmed_at,p.estimated_arrival_date,
+              p.tracking_url,p.tracking_note,p.tracking_recorded_at
+       FROM solar_construction_postal p JOIN solar_construction_requests r ON r.id=p.request_id
+       WHERE r.profile_id=$1 ORDER BY p.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'solarConstructionProgress',
+      `SELECT e.id,e.request_id,e.contract_id,e.stage,e.revision,e.note,e.recorded_at
+       FROM solar_construction_progress_events e JOIN solar_construction_requests r ON r.id=e.request_id
+       WHERE r.profile_id=$1 ORDER BY e.recorded_at,e.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'consultations',
+      `SELECT id,product_id,product_snapshot,status,fee,scope,deliverables,expected_next_step,
+              offer_valid_until,accepted_at,invoice_id,submitted_at,created_at,updated_at
+       FROM consultation_requests WHERE profile_id=$1 ORDER BY created_at,id LIMIT 5001`,
+      [profileId],
+    ],
+    [
+      'consultationEvents',
+      `SELECT e.id,e.request_id,e.status,e.reason,e.created_at
+       FROM consultation_request_events e JOIN consultation_requests r ON r.id=e.request_id
+       WHERE r.profile_id=$1 ORDER BY e.created_at,e.id LIMIT 5001`,
+      [profileId],
+    ],
+    [
       'walletTransactions',
       `SELECT id,type,amount,state,ref_id,description,created_at,updated_at
        FROM wallet_transactions WHERE wallet_id=$1 ORDER BY created_at,id LIMIT 5001`,
