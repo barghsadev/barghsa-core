@@ -14,7 +14,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
-import { normalizeGiftCode } from '@barghsa/shared/promotions';
+import { normalizeGiftCode, giftEligibleAmount } from '@barghsa/shared/promotions';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
 import type { StorageProvider } from '@barghsa/shared/storage';
@@ -31,6 +31,8 @@ import { ElectricityCalculationService } from './electricity-calculation.service
 import type { ElectricitySystemKey } from './electricity-calculation.js';
 import {
   calculateElectricityTotals,
+  electricityGiftCategories,
+  type ElectricityLine,
   electricitySubmissionSnapshot,
   type ElectricityGiftDiscount,
 } from './electricity-calculation.js';
@@ -1073,6 +1075,10 @@ export class ElectricityOrderService {
                 orderId,
                 orderAmount: quoted.totals.subtotalIrR.toString(),
                 category: 'electricity',
+                lines: quoted.composition.lines.map((line) => ({
+                  categories: [electricityGiftCategories[line.systemKey]],
+                  amount: line.subtotalIrR.toString(),
+                })),
                 actorUserId: actor.userId,
                 ip,
               },
@@ -1290,7 +1296,7 @@ export class ElectricityOrderService {
     client: PoolClient,
     input: Pick<OrderInput, 'profileId' | 'giftCode'>,
     subtotal: bigint,
-    now: Date
+    lines: ElectricityLine[]
   ): Promise<{
     gift: ElectricityGiftDiscount;
     id: string;
@@ -1318,13 +1324,24 @@ export class ElectricityOrderService {
         [code]
       )
     ).rows[0];
+    // Promotion lock waits must not retain the quote's earlier wall-clock sample.
+    const giftNow = (await client.query<{ now: Date }>('SELECT clock_timestamp() AS now')).rows[0]!
+      .now;
     if (
       !row ||
       row.status !== 'active' ||
-      row.valid_from > now ||
-      (row.valid_until !== null && row.valid_until <= now) ||
+      row.valid_from > giftNow ||
+      (row.valid_until !== null && row.valid_until <= giftNow) ||
       subtotal < BigInt(row.min_order_amount) ||
-      (row.categories.length > 0 && !row.categories.includes('electricity'))
+      giftEligibleAmount({
+        categories: row.categories,
+        service: 'electricity',
+        orderAmount: subtotal,
+        lines: lines.map((line) => ({
+          categories: [electricityGiftCategories[line.systemKey]],
+          amount: line.subtotalIrR,
+        })),
+      }) === null
     ) {
       throw new BadRequestException('Gift code is unavailable for this order');
     }
@@ -1358,6 +1375,11 @@ export class ElectricityOrderService {
             basisPoints: Number(row.discount_value),
             maxCapIrR: BigInt(row.max_cap_irr!),
           };
+    if (row.categories.length > 0 && !row.categories.includes('electricity')) {
+      gift.eligibleSystemKeys = lines
+        .filter((line) => row.categories.includes(electricityGiftCategories[line.systemKey]))
+        .map((line) => line.systemKey);
+    }
     return { gift, id: row.id };
   }
 
@@ -1407,7 +1429,12 @@ export class ElectricityOrderService {
     if (!advanced && !initial.composition.lines.some((line) => line.systemKey === 'thermal')) {
       throw new BadRequestException('Simple ordering requires a positive thermal quantity');
     }
-    const terms = await this.giftTerms(client, input, initial.totals.subtotalIrR, now);
+    const terms = await this.giftTerms(
+      client,
+      input,
+      initial.totals.subtotalIrR,
+      initial.composition.lines
+    );
     const totals = terms
       ? calculateElectricityTotals(initial.composition.lines, terms.gift)
       : initial.totals;
@@ -1600,6 +1627,10 @@ export class ElectricityOrderService {
             orderId,
             orderAmount: quoted.totals.subtotalIrR.toString(),
             category: 'electricity',
+            lines: quoted.composition.lines.map((line) => ({
+              categories: [electricityGiftCategories[line.systemKey]],
+              amount: line.subtotalIrR.toString(),
+            })),
             actorUserId: actor.userId,
             ip,
           },

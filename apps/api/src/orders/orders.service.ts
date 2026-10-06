@@ -447,6 +447,17 @@ export class OrdersService {
             orderId: order.id,
             orderAmount: product.price,
             category: product.type,
+            lines: [
+              {
+                categories: (
+                  await client.query<{ category: string }>(
+                    'SELECT category FROM product_categories WHERE product_id=$1',
+                    [product.id]
+                  )
+                ).rows.map((row) => row.category),
+                amount: product.price,
+              },
+            ],
             actorUserId: userId,
             ip: actorIp,
           },

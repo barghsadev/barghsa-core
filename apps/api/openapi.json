@@ -11807,7 +11807,7 @@
         ]
       },
       "post": {
-        "description": "Code is normalized (trim + uppercase) and must be unique case-insensitively. fixed_irr: discountValue = IRR amount, no cap. percentage: discountValue = basis points (1..10000, 2500 = 25%) and maxCapIrr is REQUIRED. eligible categories are products.type keys; empty = all.",
+        "description": "Code is normalized (trim + uppercase) and must be unique case-insensitively. fixed_irr: discountValue = IRR amount, no cap. percentage: discountValue = basis points (1..10000, 2500 = 25%) and maxCapIrr is REQUIRED. Categories accept service scopes and product keys; empty = all. Product keys discount matching lines only.",
         "operationId": "GiftCodeController_create",
         "parameters": [],
         "responses": {
@@ -11866,6 +11866,36 @@
       }
     },
     "/api/admin/promotions/gift-codes/{id}": {
+      "delete": {
+        "operationId": "GiftCodeController_archive",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gift code inactive."
+          },
+          "409": {
+            "description": "Active redemptions prevent archival."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Deactivate a gift code without active redemptions; retain its ledger",
+        "tags": [
+          "Admin · Gift Codes"
+        ]
+      },
       "patch": {
         "description": "Only provided fields change. Changing the code re-normalizes and re-checks case-insensitive uniqueness. For profile-restricted codes, profileIds is REPLACED when provided; switching eligibility to public clears scopes.",
         "operationId": "GiftCodeController_update",
@@ -22727,7 +22757,13 @@
                       "consultation",
                       "electricity",
                       "hardware",
-                      "saving_plan"
+                      "saving_plan",
+                      "thermal_electricity",
+                      "green_electricity",
+                      "free_market_electricity",
+                      "energy_saving_electricity",
+                      "electricity_generation_station_consultation",
+                      "electricity_saving_certificate_consultation"
                     ],
                     "type": "string"
                   },
@@ -22735,6 +22771,45 @@
                     "maxLength": 64,
                     "minLength": 3,
                     "type": "string"
+                  },
+                  "lines": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "amount": {
+                          "pattern": "^\\d{1,19}$",
+                          "type": "string"
+                        },
+                        "categories": {
+                          "items": {
+                            "enum": [
+                              "consultation",
+                              "electricity",
+                              "hardware",
+                              "saving_plan",
+                              "thermal_electricity",
+                              "green_electricity",
+                              "free_market_electricity",
+                              "energy_saving_electricity",
+                              "electricity_generation_station_consultation",
+                              "electricity_saving_certificate_consultation"
+                            ],
+                            "type": "string"
+                          },
+                          "maxItems": 10,
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "categories",
+                        "amount"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array"
                   },
                   "orderAmount": {
                     "pattern": "^\\d{1,19}$",

@@ -1,6 +1,7 @@
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
+  Delete,
   Controller,
   Get,
   HttpCode,
@@ -367,7 +368,7 @@ export class GiftCodeController {
       'Code is normalized (trim + uppercase) and must be unique case-insensitively. ' +
       `fixed_irr: discountValue = IRR amount, no cap. percentage: discountValue = basis ` +
       `points (1..${MAX_GIFT_PERCENT_BPS}, 2500 = 25%) and maxCapIrr is REQUIRED. ` +
-      'eligible categories are products.type keys; empty = all.',
+      'Categories accept service scopes and product keys; empty = all. Product keys discount matching lines only.',
   })
   @ApiResponse({ status: 201, description: 'Gift code created.' })
   async create(
@@ -395,6 +396,19 @@ export class GiftCodeController {
       actor: req.session,
       ip: requestIp(req),
     });
+  }
+
+  @Delete(':id')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Deactivate a gift code without active redemptions; retain its ledger' })
+  @ApiResponse({ status: 200, description: 'Gift code inactive.' })
+  @ApiResponse({ status: 409, description: 'Active redemptions prevent archival.' })
+  async archive(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<GiftCodeDto> {
+    this.assertPromotionsPermission(req);
+    assertUuid(id);
+    return this.service.archive(id, req.session, requestIp(req));
   }
 
   @Patch(':id')

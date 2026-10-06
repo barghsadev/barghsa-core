@@ -6,6 +6,7 @@ import {
 } from '../invoice/vat-calculation.repository.js';
 import {
   calculateElectricityTotals,
+  electricityGiftCategories,
   validateOrderComposition,
   type CompositionResult,
   type ElectricityGiftDiscount,
@@ -16,12 +17,6 @@ import {
 import type { ElectricityPeriod } from './electricity-periods.js';
 
 const keys = ['thermal', 'green', 'free_market', 'energy_saving'] as const;
-const categories: Record<ElectricitySystemKey, string> = {
-  thermal: 'thermal_electricity',
-  green: 'green_electricity',
-  free_market: 'free_market_electricity',
-  energy_saving: 'energy_saving_electricity',
-};
 
 function nonnegativeInt8(raw: string | null): bigint | null {
   if (raw === null || !/^\d+$/.test(raw)) return null;
@@ -110,7 +105,7 @@ export class ElectricityCalculationService {
     for (const line of composition.lines) {
       const rate = await this.vat.resolveRate(executor, {
         productId: line.productId,
-        category: categories[line.systemKey],
+        category: electricityGiftCategories[line.systemKey],
         at,
       });
       const fallback =

@@ -15,6 +15,24 @@ const validateGiftCodeInput = z
       .regex(/^\d{1,19}$/)
       .refine((amount) => BigInt(amount) <= MAX_GIFT_IRR),
     category: z.enum(GIFT_CODE_CATEGORIES),
+    lines: z
+      .array(
+        z
+          .object({
+            categories: z
+              .array(z.enum(GIFT_CODE_CATEGORIES))
+              .min(1)
+              .max(GIFT_CODE_CATEGORIES.length),
+            amount: z
+              .string()
+              .regex(/^\d{1,19}$/)
+              .refine((amount) => BigInt(amount) <= MAX_GIFT_IRR),
+          })
+          .strict()
+      )
+      .min(1)
+      .max(100)
+      .optional(),
   })
   .strict();
 
@@ -42,6 +60,7 @@ export class GiftCodeValidationController {
         profileId: parsed.data.profileId,
         orderAmount: parsed.data.orderAmount,
         category: parsed.data.category,
+        ...(parsed.data.lines ? { lines: parsed.data.lines } : {}),
       },
       req.session.userId
     );

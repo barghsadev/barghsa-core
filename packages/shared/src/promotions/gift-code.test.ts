@@ -5,6 +5,7 @@ import {
   GIFT_CODE_STATUSES,
   MAX_GIFT_PERCENT_BPS,
   computeGiftDiscount,
+  giftEligibleAmount,
   isGiftCodeDiscountType,
   isGiftCodeEligibility,
   isGiftCodePercentageBps,
@@ -236,5 +237,53 @@ describe('gift-code database amount bounds', () => {
         ...input,
       }).ok
     ).toBe(false);
+  });
+});
+
+describe('category gift bases', () => {
+  const lines = [
+    { categories: ['thermal_electricity'], amount: '9007199254740993' },
+    { categories: ['green_electricity'], amount: '7' },
+  ];
+  const order = { service: 'electricity', orderAmount: '9007199254741000', lines };
+  it('keeps exact matching amounts and does not count overlapping categories twice', () => {
+    expect(giftEligibleAmount({ ...order, categories: ['thermal_electricity'] })).toBe(
+      9007199254740993n
+    );
+    expect(
+      giftEligibleAmount({ ...order, categories: ['thermal_electricity', 'green_electricity'] })
+    ).toBe(9007199254741000n);
+    expect(
+      giftEligibleAmount({
+        ...order,
+        lines: [
+          { categories: ['thermal_electricity', 'green_electricity'], amount: order.orderAmount },
+        ],
+        categories: ['thermal_electricity', 'green_electricity'],
+      })
+    ).toBe(9007199254741000n);
+  });
+  it('preserves empty and service scopes, including mixed legacy/category scopes', () => {
+    for (const categories of [[], ['electricity'], ['electricity', 'green_electricity']])
+      expect(giftEligibleAmount({ ...order, categories })).toBe(9007199254741000n);
+  });
+  it('rejects an unmatched category and a category cart without lines', () => {
+    expect(giftEligibleAmount({ ...order, categories: ['saving_plan'] })).toBeNull();
+    expect(
+      giftEligibleAmount({
+        service: 'electricity',
+        orderAmount: '5',
+        categories: ['thermal_electricity'],
+      })
+    ).toBeNull();
+  });
+  it('rejects inconsistent, negative and overflowing line totals even for service codes', () => {
+    expect(() => giftEligibleAmount({ ...order, orderAmount: '1', categories: [] })).toThrow();
+    expect(() =>
+      giftEligibleAmount({ ...order, lines: [{ categories: [], amount: '-1' }], categories: [] })
+    ).toThrow();
+    expect(() =>
+      giftEligibleAmount({ ...order, orderAmount: '9223372036854775808', categories: [] })
+    ).toThrow();
   });
 });

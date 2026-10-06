@@ -7,6 +7,9 @@ import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import {
   computeGiftDiscount,
+  GIFT_CODE_PATTERN,
+  giftEligibleAmount,
+  type GiftCodeLine,
   isGiftCodeEligibility,
   isGiftCodeStatus,
   normalizeGiftCode,
@@ -111,6 +114,8 @@ export interface RedeemGiftCodeInput {
   orderAmount: string;
   /** Product category (`products.type`) the order belongs to. */
   category: string;
+  /** Authoritative pre-discount lines from the order service; preview lines are advisory. */
+  lines?: readonly GiftCodeLine[];
   /** Actor (session user) for the redemption audit trail. */
   actorUserId?: string;
   ip?: string;
@@ -118,7 +123,7 @@ export interface RedeemGiftCodeInput {
 
 export type PreviewGiftCodeInput = Pick<
   RedeemGiftCodeInput,
-  'giftCode' | 'profileId' | 'orderAmount' | 'category'
+  'giftCode' | 'profileId' | 'orderAmount' | 'category' | 'lines'
 >;
 
 // ─── Internal row types ────────────────────────────────────────────────────
@@ -184,9 +189,6 @@ const GIFT_CODE_PROFILE_LIMIT_REACHED = 'GIFT_CODE_PROFILE_LIMIT_REACHED';
 const GIFT_CODE_MIN_ORDER_NOT_MET = 'GIFT_CODE_MIN_ORDER_NOT_MET';
 const GIFT_CODE_CATEGORY_NOT_ELIGIBLE = 'GIFT_CODE_CATEGORY_NOT_ELIGIBLE';
 const GIFT_CODE_PROFILES_REQUIRED = 'GIFT_CODE_PROFILES_REQUIRED';
-
-/** Allowed code charset after normalization: A-Z0-9, dash, underscore. */
-const GIFT_CODE_PATTERN = /^[A-Z0-9][A-Z0-9_-]{2,63}$/;
 
 /** Allowed product category key: lowercase letters, digits, underscore. */
 const GIFT_CODE_CATEGORY_PATTERN = /^[a-z0-9_]+$/;
@@ -667,6 +669,38 @@ export class GiftCodeService {
     });
   }
 
+  /** Preserve the ledger; archive only after every consumed redemption has been released. */
+  async archive(
+    id: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<GiftCodeDto> {
+    return this.withAdminTransaction(actor, async (q) => {
+      const current = await this.findById(q, id, true);
+      if (!current) throw this.notFound(id);
+      const active = await q.query(
+        "SELECT 1 FROM gift_code_redemptions WHERE gift_code_id=$1 AND status='consumed' LIMIT 1",
+        [current.id]
+      );
+      if (active.rows.length > 0) {
+        throw this.http(409, 'GIFT_CODE_ACTIVE_REDEMPTIONS', 'Gift code has active redemptions');
+      }
+      if (current.status === 'inactive') return this.readDto(q, current.id);
+      await q.query(
+        "UPDATE gift_codes SET status='inactive',updated_at=clock_timestamp() WHERE id=$1",
+        [current.id]
+      );
+      await this.recordChange(q, {
+        actorUserId: actor.userId,
+        ip,
+        entity: 'gift_code',
+        action: 'archived',
+        meta: { giftCodeId: current.id, code: current.code },
+      });
+      return this.readDto(q, current.id);
+    });
+  }
+
   // ─── Redemption seam (order creation) ──────────────────────────────────
 
   /** Read-only customer check. Submission still rechecks under a row lock. */
@@ -784,7 +818,18 @@ export class GiftCodeService {
         `Gift code ${code} requires a minimum order of ${gift.min_order_amount} IRR`
       );
     }
-    if (gift.categories.length > 0 && !gift.categories.includes(input.category)) {
+    let eligibleAmount: bigint | null;
+    try {
+      eligibleAmount = giftEligibleAmount({
+        categories: gift.categories,
+        service: input.category,
+        orderAmount,
+        ...(input.lines ? { lines: input.lines } : {}),
+      });
+    } catch {
+      throw this.http(400, 'GIFT_CODE_INVALID_ORDER', 'Invalid order line subtotal');
+    }
+    if (eligibleAmount === null) {
       throw this.http(
         400,
         GIFT_CODE_CATEGORY_NOT_ELIGIBLE,
@@ -796,7 +841,7 @@ export class GiftCodeService {
       discountType: gift.discount_type,
       discountValue: gift.discount_value,
       maxCapIrr: gift.max_cap_irr,
-      orderAmount: input.orderAmount,
+      orderAmount: eligibleAmount,
     });
   }
 

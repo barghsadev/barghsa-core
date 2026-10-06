@@ -4008,3 +4008,163 @@ it.each(['charge', 'credit'] as const)(
   },
   40000
 );
+
+it.each([
+  {
+    type: 'fixed_irr',
+    value: '900000',
+    cap: null,
+    discount: '800000',
+    thermalVat: '0',
+    total: '440000',
+  },
+  {
+    type: 'percentage',
+    value: '5000',
+    cap: '900000',
+    discount: '400000',
+    thermalVat: '36000',
+    total: '876000',
+  },
+])(
+  'freezes matching-line $type gifts before VAT with authoritative redemption and replay',
+  async ({ type, value, cap, discount, thermalVat, total }) => {
+    await http.pool.query(
+      `INSERT INTO app_config(key,value,version) VALUES('electricity.green_mandatory_rules',$1::jsonb,1)`,
+      [
+        JSON.stringify({
+          simple_order: {
+            mandatory_green_enabled: true,
+            average_power_threshold_kw: 0,
+            mandatory_green_share_percent: 20,
+          },
+          advanced_order: {
+            mandatory_green_enabled: false,
+            average_power_threshold_kw: 1000,
+            mandatory_green_share_percent: 4,
+          },
+        }),
+      ]
+    );
+    await http.pool.query(
+      `INSERT INTO vat_configurations(category,rate,effective_from,created_by) VALUES('thermal_electricity',900,'2026-01-01','buyer'),('green_electricity',1000,'2026-01-01','buyer')`
+    );
+    await http.pool.query(
+      `INSERT INTO gift_codes(code,discount_type,discount_value,max_cap_irr,categories,min_order_amount,total_limit,per_profile_limit,valid_from,created_by) VALUES('MATCHING',$1,$2,$3,ARRAY['thermal_electricity'],1000000,1,1,'2026-01-01','buyer')`,
+      [type, value, cap]
+    );
+    input.giftCode = ' matching ';
+    // Full subtotal 1,200,000 meets the minimum even though the eligible base is only 800,000.
+    const preview = await post('preview/simple', {
+      profileId: input.profileId,
+      period: input.period,
+      totalKwh: input.totalKwh,
+      giftCode: input.giftCode,
+    });
+    expect(preview.status, http.logs()).toBe(200);
+    const quote = (await preview.json()) as {
+      reviewDigest: string;
+      discountIrR: string;
+      totalIrR: string;
+      lines: Array<{ systemKey: string; discountIrR: string; vatIrR: string }>;
+    };
+    expect(quote).toMatchObject({ discountIrR: discount, totalIrR: total });
+    expect(quote.lines.map((line) => [line.systemKey, line.discountIrR, line.vatIrR])).toEqual([
+      ['thermal', discount, thermalVat],
+      ['green', '0', '40000'],
+    ]);
+    expect((await http.pool.query('SELECT id FROM gift_code_redemptions')).rows).toHaveLength(0);
+    input.expectedQuoteDigest = quote.reviewDigest;
+    // A changed promotion invalidates the prior review without consuming the only slot.
+    await http.pool.query(
+      "UPDATE gift_codes SET categories=ARRAY['green_electricity'] WHERE code='MATCHING'"
+    );
+    expect((await post('orders/simple', input)).status).toBe(409);
+    expect((await http.pool.query('SELECT id FROM gift_code_redemptions')).rows).toHaveLength(0);
+    expect((await http.pool.query('SELECT id FROM orders')).rows).toHaveLength(0);
+    await http.pool.query(
+      "UPDATE gift_codes SET categories=ARRAY['thermal_electricity'] WHERE code='MATCHING'"
+    );
+    const response = await post('orders/simple', input);
+    expect(response.status, http.logs()).toBe(201);
+    const order = (await response.json()) as {
+      orderId: string;
+      invoiceId: string;
+      discountIrR: string;
+      totalIrR: string;
+    };
+    expect(order).toMatchObject({ discountIrR: discount, totalIrR: total });
+    expect(
+      (
+        await http.pool.query(
+          'SELECT discount_amount,status FROM gift_code_redemptions WHERE order_id=$1',
+          [order.orderId]
+        )
+      ).rows
+    ).toEqual([{ discount_amount: discount, status: 'consumed' }]);
+    const saved = (
+      await http.pool.query(
+        'SELECT total_amount,invoice_calculation_snapshot FROM invoices WHERE id=$1',
+        [order.invoiceId]
+      )
+    ).rows[0];
+    expect(saved.total_amount).toBe(total);
+    expect(
+      saved.invoice_calculation_snapshot.lines.map(
+        (line: { systemKey: string; discountIrR: string; vatIrR: string }) => [
+          line.systemKey,
+          line.discountIrR,
+          line.vatIrR,
+        ]
+      )
+    ).toEqual([
+      ['thermal', discount, thermalVat],
+      ['green', '0', '40000'],
+    ]);
+    await http.pool.query("UPDATE gift_codes SET status='inactive' WHERE code='MATCHING'");
+    const replay = await post('orders/simple', input);
+    expect(replay.status, http.logs()).toBe(201);
+    expect(await replay.json()).toEqual(order);
+    expect((await http.pool.query('SELECT id FROM gift_code_redemptions')).rows).toHaveLength(1);
+  },
+  40000
+);
+
+it('rejects a gift expiring while its preview waits for the promotion row lock', async () => {
+  const id = (
+    await http.pool.query(
+      "INSERT INTO gift_codes(code,discount_type,discount_value,valid_from,created_by) VALUES('LOCK-EXPIRY','fixed_irr',1000,'2026-01-01','buyer') RETURNING id"
+    )
+  ).rows[0].id;
+  const holder = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await holder.query('BEGIN');
+    await holder.query('SELECT id FROM gift_codes WHERE id=$1 FOR UPDATE', [id]);
+    pending = post('preview/simple', {
+      profileId: input.profileId,
+      period: input.period,
+      totalKwh: input.totalKwh,
+      giftCode: 'LOCK-EXPIRY',
+    });
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM gift_codes WHERE code=$1 FOR UPDATE%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await holder.query('UPDATE gift_codes SET valid_until=clock_timestamp() WHERE id=$1', [id]);
+    await holder.query('COMMIT');
+    expect((await pending).status).toBe(400);
+    expect((await http.pool.query('SELECT id FROM gift_code_redemptions')).rows).toHaveLength(0);
+  } finally {
+    await holder.query('ROLLBACK');
+    holder.release();
+    await pending;
+  }
+});

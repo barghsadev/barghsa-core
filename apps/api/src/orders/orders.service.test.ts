@@ -178,6 +178,7 @@ describe('OrdersService', () => {
         rows: [{ id: 'prod-1', type: 'electricity', system_key: 'thermal', price: '2000000' }],
       });
       queueResponse({ rows: [makeRow()] }); // insert order
+      queueResponse({ rows: [{ category: 'thermal_electricity' }] }); // authoritative product categories
       // gift code service returns the redemption…
       mockGiftCodeService.redeem.mockResolvedValue({
         id: 'red-1',
@@ -205,6 +206,7 @@ describe('OrdersService', () => {
           orderId: 'ord-001',
           orderAmount: '2000000',
           category: 'electricity',
+          lines: [{ categories: ['thermal_electricity'], amount: '2000000' }],
           actorUserId: 'user-1',
           ip: 'unknown',
         },

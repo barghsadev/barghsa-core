@@ -34,11 +34,11 @@ beforeEach(async () => {
     )
   ).rows[0].id;
 });
-function mutation(action: 'create' | 'update' | 'toggle') {
+function mutation(action: 'create' | 'update' | 'toggle' | 'archive') {
   return fetch(
     `${http.base}/api/admin/promotions/gift-codes${action === 'create' ? '' : `/${giftId}`}${action === 'toggle' ? '/toggle' : ''}`,
     {
-      method: action === 'update' ? 'PATCH' : 'POST',
+      method: action === 'archive' ? 'DELETE' : action === 'update' ? 'PATCH' : 'POST',
       headers,
       body: JSON.stringify(
         action === 'create'
@@ -122,6 +122,35 @@ it('previews a gift code repeatedly without reserving or consuming it', async ()
     expect(
       (await http.pool.query('SELECT count(*)::int AS n FROM gift_code_redemptions')).rows[0].n
     ).toBe(0);
+
+    await http.pool.query(
+      "UPDATE gift_codes SET categories=ARRAY['thermal_electricity'],min_order_amount=1500 WHERE id=$1",
+      [giftId]
+    );
+    const cart = {
+      ...body,
+      lines: [
+        { categories: ['thermal_electricity'], amount: '500' },
+        { categories: ['green_electricity'], amount: '1000' },
+      ],
+    };
+    const matching = await fetch(`${http.base}/api/gift-codes/validate`, {
+      method: 'POST',
+      headers: customerHeaders,
+      body: JSON.stringify(cart),
+    });
+    expect(matching.status).toBe(200);
+    expect(await matching.json()).toEqual({ valid: true, code: 'ORIGINAL', discountAmount: '500' });
+    const inconsistent = await fetch(`${http.base}/api/gift-codes/validate`, {
+      method: 'POST',
+      headers: customerHeaders,
+      body: JSON.stringify({ ...cart, orderAmount: '1600' }),
+    });
+    expect(inconsistent.status).toBe(400);
+    expect(await inconsistent.json()).toMatchObject({ error: { code: 'GIFT_CODE_INVALID_ORDER' } });
+    await http.pool.query("UPDATE gift_codes SET categories='{}',min_order_amount=0 WHERE id=$1", [
+      giftId,
+    ]);
 
     const unknownProfile = await fetch(`${http.base}/api/gift-codes/validate`, {
       method: 'POST',
@@ -320,7 +349,7 @@ async function unchanged() {
     { id: giftId, code: 'ORIGINAL', status: 'active' },
   ]);
 }
-it.each(['create', 'update', 'toggle'] as const)(
+it.each(['create', 'update', 'toggle', 'archive'] as const)(
   'rolls back gift code %s on audit failure',
   async (action) => {
     await http.pool.query(
@@ -334,7 +363,7 @@ it.each(['create', 'update', 'toggle'] as const)(
     }
   }
 );
-it.each(['create', 'update', 'toggle'] as const)(
+it.each(['create', 'update', 'toggle', 'archive'] as const)(
   'rejects gift code %s when permission is withdrawn during session validation',
   async (action) => {
     const client = await http.pool.connect();
@@ -584,4 +613,66 @@ it('searches only current profile names and resolves selected archived profiles 
       )
     ).status
   ).toBe(400);
+});
+
+it('archives idempotently while retaining released history and rejects consumed redemptions', async () => {
+  const archive = () =>
+    fetch(`${http.base}/api/admin/promotions/gift-codes/${giftId.toUpperCase()}`, {
+      method: 'DELETE',
+      headers,
+    });
+  const profileId = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES('gift-admin','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0].id;
+  const productId = (
+    await http.pool.query(
+      `INSERT INTO products(type,title,status,price) VALUES('hardware','{"en":"Gift hardware"}','active',1000) RETURNING id`
+    )
+  ).rows[0].id;
+  const orderId = (
+    await http.pool.query(
+      `INSERT INTO orders(user_id,profile_id,product_id,order_type,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code) VALUES('gift-admin',$1,$2,'hardware','province','city','Street','1234567890') RETURNING id`,
+      [profileId, productId]
+    )
+  ).rows[0].id;
+  await http.pool.query(
+    'INSERT INTO gift_code_redemptions(gift_code_id,profile_id,order_id,discount_amount) VALUES($1,$2,$3,1000)',
+    [giftId, profileId, orderId]
+  );
+  try {
+    expect((await archive()).status).toBe(409);
+    await unchanged();
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    ).toHaveLength(0);
+    await http.pool.query(
+      "UPDATE gift_code_redemptions SET status='released',restored_at=clock_timestamp() WHERE order_id=$1",
+      [orderId]
+    );
+    const archived = await archive();
+    expect(archived.status).toBe(200);
+    const receipt = await archived.json();
+    expect(receipt).toMatchObject({ id: giftId, status: 'inactive', usage: { released: 1 } });
+    const replay = await archive();
+    expect(replay.status).toBe(200);
+    expect(await replay.json()).toEqual(receipt);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    ).toHaveLength(1);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT discount_amount,status,restored_at FROM gift_code_redemptions WHERE order_id=$1',
+          [orderId]
+        )
+      ).rows[0]
+    ).toMatchObject({ discount_amount: '1000', status: 'released', restored_at: expect.any(Date) });
+  } finally {
+    await http.pool.query('DELETE FROM gift_code_redemptions WHERE order_id=$1', [orderId]);
+    await http.pool.query('DELETE FROM orders WHERE id=$1', [orderId]);
+    await http.pool.query('DELETE FROM products WHERE id=$1', [productId]);
+    await http.pool.query('DELETE FROM profiles WHERE id=$1', [profileId]);
+  }
 });

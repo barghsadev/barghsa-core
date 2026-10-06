@@ -20,7 +20,8 @@ const fa: Record<string, string> = {
   'admin.gifts.percentage': 'درصدی',
   'admin.gifts.saved': 'تغییرات ذخیره شد.',
   'admin.gifts.invalidField': 'مقدار معتبر برای این فیلد وارد کنید.',
-  'admin.gifts.invalidCode': 'کدی بین ۱ تا ۶۴ نویسه وارد کنید.',
+  'admin.gifts.invalidCode':
+    'کد ۳ تا ۶۴ نویسه‌ای با حرف یا رقم انگلیسی در ابتدا وارد کنید؛ پس از آن خط تیره و زیرخط نیز مجاز است.',
   'admin.gifts.invalidAmount': 'مبلغ صحیح و مثبت ریالی تا سقف ۹٬۲۲۳٬۳۷۲٬۰۳۶٬۸۵۴٬۷۷۵٬۸۰۷ وارد کنید.',
   'admin.gifts.invalidPercent': 'درصدی از ۰٫۰۱ تا ۱۰۰، با حداکثر دو رقم اعشار وارد کنید.',
   'admin.gifts.invalidLimit': 'عدد صحیحی از ۱ تا ۲٬۱۴۷٬۴۸۳٬۶۴۷ وارد کنید؛ خالی یعنی نامحدود.',
@@ -59,7 +60,8 @@ const fa: Record<string, string> = {
   'admin.gifts.unlimited': 'نامحدود',
   'admin.gifts.minimum': 'حداقل مبلغ سفارش (ریال)',
   'admin.gifts.categories': 'دسته‌های مجاز',
-  'admin.gifts.categoriesHelp': 'انتخاب خالی یعنی همه دسته‌ها.',
+  'admin.gifts.categoriesHelp':
+    'انتخاب خالی یعنی همه دسته‌ها. دسته محصول فقط اقلام منطبق را تخفیف می‌دهد؛ نوع خدمت کل سفارش را.',
   'admin.gifts.restorationPolicy': 'سیاست بازگردانی کد',
   'admin.gifts.restoreOnCancel': 'بازگردانی ظرفیت کد پس از لغو سفارش پرداخت‌نشده',
   'admin.gifts.restoreAfterPayment': 'بازگردانی ظرفیت کد پس از لغو سفارش پرداخت‌شده',
@@ -67,6 +69,12 @@ const fa: Record<string, string> = {
   'admin.gifts.restorePaid': 'بازگردانی پس از لغو، حتی بعد از پرداخت',
   'admin.gifts.restoreUnpaid': 'بازگردانی فقط پیش از پرداخت',
   'admin.gifts.category.consultation': 'مشاوره',
+  'admin.gifts.category.thermal_electricity': 'برق حرارتی',
+  'admin.gifts.category.green_electricity': 'برق سبز',
+  'admin.gifts.category.free_market_electricity': 'برق آزاد',
+  'admin.gifts.category.energy_saving_electricity': 'برق صرفه‌جویی',
+  'admin.gifts.category.electricity_generation_station_consultation': 'مشاوره احداث نیروگاه',
+  'admin.gifts.category.electricity_saving_certificate_consultation': 'مشاوره گواهی صرفه‌جویی برق',
   'admin.gifts.category.electricity': 'برق',
   'admin.gifts.category.hardware': 'تجهیزات',
   'admin.gifts.category.saving_plan': 'طرح صرفه‌جویی',
@@ -136,7 +144,8 @@ const en: Record<string, string> = {
   'admin.gifts.percentage': 'Percentage',
   'admin.gifts.saved': 'Changes saved.',
   'admin.gifts.invalidField': 'Enter a valid value for this field.',
-  'admin.gifts.invalidCode': 'Enter a code between 1 and 64 characters.',
+  'admin.gifts.invalidCode':
+    'Enter 3–64 English letters, digits, dashes or underscores, starting with a letter or digit.',
   'admin.gifts.invalidAmount':
     'Enter a positive integer IRR amount up to 9,223,372,036,854,775,807.',
   'admin.gifts.invalidPercent':
@@ -177,7 +186,8 @@ const en: Record<string, string> = {
   'admin.gifts.unlimited': 'Unlimited',
   'admin.gifts.minimum': 'Minimum order amount (IRR)',
   'admin.gifts.categories': 'Eligible categories',
-  'admin.gifts.categoriesHelp': 'Leave empty to allow all categories.',
+  'admin.gifts.categoriesHelp':
+    'Leave empty to allow all categories. Product categories discount matching lines; service scopes discount the whole order.',
   'admin.gifts.restorationPolicy': 'Cancellation restoration',
   'admin.gifts.restoreOnCancel': 'Restore code usage when an unpaid order is cancelled',
   'admin.gifts.restoreAfterPayment': 'Also restore usage after a paid order is cancelled',
@@ -185,6 +195,14 @@ const en: Record<string, string> = {
   'admin.gifts.restorePaid': 'Restores usage after cancellation, including paid orders',
   'admin.gifts.restoreUnpaid': 'Restores usage only before payment',
   'admin.gifts.category.consultation': 'Consultation',
+  'admin.gifts.category.thermal_electricity': 'Thermal electricity',
+  'admin.gifts.category.green_electricity': 'Green electricity',
+  'admin.gifts.category.free_market_electricity': 'Free-market electricity',
+  'admin.gifts.category.energy_saving_electricity': 'Energy-saving electricity',
+  'admin.gifts.category.electricity_generation_station_consultation':
+    'Generation station consultation',
+  'admin.gifts.category.electricity_saving_certificate_consultation':
+    'Saving certificate consultation',
   'admin.gifts.category.electricity': 'Electricity',
   'admin.gifts.category.hardware': 'Hardware',
   'admin.gifts.category.saving_plan': 'Saving plan',

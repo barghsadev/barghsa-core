@@ -21,7 +21,7 @@
  * - `totalLimit` / `perProfileLimit` — usage limits; null = unlimited.
  * - `validFrom` (inclusive) / `validUntil` (exclusive; null = open).
  * - `minOrderAmount` — order must total at least this much (IRR).
- * - `categories` — eligible product categories (`products.type`);
+ * - `categories` — service scopes or product category keys;
  *   empty = all categories.
  * - `status` — `active` / `inactive` (admin toggle; only active codes
  *   can be redeemed).
@@ -54,15 +54,56 @@ export const MAX_GIFT_PERCENT_BPS = 10_000;
 /** Bounds of the persisted PostgreSQL bigint amounts and integer usage limits. */
 export const MAX_GIFT_IRR = 9_223_372_036_854_775_807n;
 export const MAX_GIFT_USAGE_LIMIT = 2_147_483_647;
+/** Canonical administrator code syntax after normalization. */
+export const GIFT_CODE_PATTERN = /^[A-Z0-9][A-Z0-9_-]{2,63}$/;
 
-/** Product category quoted in the task: products.type discriminators. */
+/** Legacy service scopes and specific product categories. Service scopes discount the whole order. */
 export const GIFT_CODE_CATEGORIES = [
   'consultation',
   'electricity',
   'hardware',
   'saving_plan',
+  'thermal_electricity',
+  'green_electricity',
+  'free_market_electricity',
+  'energy_saving_electricity',
+  'electricity_generation_station_consultation',
+  'electricity_saving_certificate_consultation',
 ] as const;
 export type GiftCodeCategory = (typeof GIFT_CODE_CATEGORIES)[number];
+
+export interface GiftCodeLine {
+  categories: readonly string[];
+  amount: string | bigint;
+}
+
+/** Full-order minimums stay separate; only this eligible base receives a category discount. */
+export function giftEligibleAmount(input: {
+  categories: readonly string[];
+  service: string;
+  orderAmount: string | bigint;
+  lines?: readonly GiftCodeLine[];
+}): bigint | null {
+  const total = BigInt(input.orderAmount);
+  if (total < 0n || total > MAX_GIFT_IRR) throw new RangeError('Invalid gift order amount');
+  if (input.lines) {
+    const sum = input.lines.reduce((sum, line) => {
+      const amount = BigInt(line.amount);
+      if (amount < 0n) throw new RangeError('Invalid gift line amount');
+      return sum + amount;
+    }, 0n);
+    if (sum !== total) throw new RangeError('Gift lines must equal the order subtotal');
+  }
+  if (input.categories.length === 0 || input.categories.includes(input.service)) return total;
+  if (!input.lines) return null;
+  let matched = false;
+  const eligible = input.lines.reduce((sum, line) => {
+    if (!line.categories.some((category) => input.categories.includes(category))) return sum;
+    matched = true;
+    return sum + BigInt(line.amount);
+  }, 0n);
+  return matched ? eligible : null;
+}
 
 /**
  * Normalize a raw gift code: trim whitespace and uppercase. This is the

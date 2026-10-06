@@ -119,6 +119,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(code).toBeFocused();
     expect(writes).toHaveLength(0);
     await inspect(page, locale, info.project.name, 'validation');
+    for (const invalidCode of ['A', '-SALE', 'SALE%']) {
+      await code.fill(invalidCode);
+      await form.getByRole('button', { name: word('save'), exact: true }).click();
+      await expect(code).toHaveAttribute('aria-invalid', 'true');
+      await expect(code).toBeFocused();
+      expect(writes).toHaveLength(0);
+    }
     await code.fill('  exact  ');
     await value.fill('۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳');
     await page.locator('#gift-totalLimit').fill('٢');

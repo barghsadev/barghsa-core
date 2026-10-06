@@ -306,9 +306,17 @@ export function validateOrderComposition(
   };
 }
 
-export type ElectricityGiftDiscount =
+export const electricityGiftCategories: Record<ElectricitySystemKey, string> = {
+  thermal: 'thermal_electricity',
+  green: 'green_electricity',
+  free_market: 'free_market_electricity',
+  energy_saving: 'energy_saving_electricity',
+};
+
+export type ElectricityGiftDiscount = (
   | { type: 'fixed_irr'; value: bigint }
-  | { type: 'percentage'; basisPoints: number; maxCapIrR: bigint };
+  | { type: 'percentage'; basisPoints: number; maxCapIrR: bigint }
+) & { eligibleSystemKeys?: readonly ElectricitySystemKey[] };
 
 export function calculateElectricityTotals(
   lines: ElectricityLine[],
@@ -335,6 +343,14 @@ export function calculateElectricityTotals(
   if (subtotalIrR <= 0n) throw new RangeError('Electricity subtotal must be positive');
   if (subtotalIrR > MAX_INT8)
     throw new RangeError('Electricity subtotal exceeds supported IRR range');
+  const eligible = lines.map((line) =>
+    !gift?.eligibleSystemKeys || gift.eligibleSystemKeys.includes(line.systemKey)
+      ? line.subtotalIrR
+      : 0n
+  );
+  const eligibleSubtotal = eligible.reduce((sum, amount) => sum + amount, 0n);
+  if (gift && eligibleSubtotal <= 0n)
+    throw new RangeError('Gift has no eligible electricity lines');
   let discountIrR = 0n;
   if (gift?.type === 'fixed_irr') {
     if (gift.value < 0n) throw new RangeError('Invalid gift discount');
@@ -343,7 +359,7 @@ export function calculateElectricityTotals(
         discountType: 'fixed_irr',
         discountValue: gift.value,
         maxCapIrr: null,
-        orderAmount: subtotalIrR,
+        orderAmount: eligibleSubtotal,
       })
     );
   } else if (gift?.type === 'percentage') {
@@ -360,21 +376,21 @@ export function calculateElectricityTotals(
         discountType: 'percentage',
         discountValue: BigInt(gift.basisPoints),
         maxCapIrr: gift.maxCapIrR,
-        orderAmount: subtotalIrR,
+        orderAmount: eligibleSubtotal,
       })
     );
   }
-  if (discountIrR > subtotalIrR) discountIrR = subtotalIrR;
-  const allocations = lines.map((line) => (line.subtotalIrR * discountIrR) / subtotalIrR);
+  if (discountIrR > eligibleSubtotal) discountIrR = eligibleSubtotal;
+  const allocations = eligible.map((amount) => (amount * discountIrR) / eligibleSubtotal);
   let remaining = discountIrR - allocations.reduce((sum, value) => sum + value, 0n);
-  const priority = lines
-    .map((line, index) => ({ index, remainder: (line.subtotalIrR * discountIrR) % subtotalIrR }))
+  const priority = eligible
+    .map((amount, index) => ({ index, remainder: (amount * discountIrR) % eligibleSubtotal }))
     .sort((a, b) =>
       a.remainder === b.remainder ? a.index - b.index : a.remainder > b.remainder ? -1 : 1
     );
   for (const { index } of priority) {
     if (remaining === 0n) break;
-    if (allocations[index]! < lines[index]!.subtotalIrR) {
+    if (allocations[index]! < eligible[index]!) {
       allocations[index]! += 1n;
       remaining--;
     }

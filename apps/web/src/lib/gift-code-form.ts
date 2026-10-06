@@ -1,6 +1,7 @@
 import { datePickerAtTime } from '@barghsa/ui';
 import {
   GIFT_CODE_CATEGORIES,
+  GIFT_CODE_PATTERN,
   MAX_GIFT_IRR,
   MAX_GIFT_USAGE_LIMIT,
   normalizeGiftCode,
@@ -106,7 +107,7 @@ export function giftDraftErrors(
 ): (keyof GiftDraft)[] {
   const invalid: (keyof GiftDraft)[] = [];
   const code = normalizeGiftCode(value.code);
-  if (!code || code.length > 64) invalid.push('code');
+  if (!GIFT_CODE_PATTERN.test(code)) invalid.push('code');
   if (!['fixed_irr', 'percentage'].includes(value.discountType)) invalid.push('discountType');
   if (value.discountType === 'percentage') {
     if (!giftPercentBps(value.value)) invalid.push('value');

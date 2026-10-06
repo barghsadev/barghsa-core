@@ -213,3 +213,75 @@ describe('exact electricity calculations', () => {
     ).toBe(0n);
   });
 });
+
+describe('matching electricity gift lines', () => {
+  const lines = [
+    {
+      productId: 'thermal',
+      systemKey: 'thermal' as const,
+      quantityKwh: 1n,
+      unitPriceIrR: 101n,
+      subtotalIrR: 101n,
+      vatRateBasisPoints: 900,
+      vatSource: 'category' as const,
+    },
+    {
+      productId: 'green',
+      systemKey: 'green' as const,
+      quantityKwh: 1n,
+      unitPriceIrR: 203n,
+      subtotalIrR: 203n,
+      vatRateBasisPoints: 1000,
+      vatSource: 'category' as const,
+    },
+  ];
+  it('caps a fixed gift at matching lines before per-line half-up VAT', () => {
+    const totals = calculateElectricityTotals(lines, {
+      type: 'fixed_irr',
+      value: 999n,
+      eligibleSystemKeys: ['thermal'],
+    });
+    expect(totals.discountIrR).toBe(101n);
+    expect(totals.lines.map((line) => [line.discountIrR, line.netIrR, line.vatIrR])).toEqual([
+      [101n, 0n, 0n],
+      [0n, 203n, 20n],
+    ]);
+    expect(totals.totalIrR).toBe(223n);
+  });
+  it('calculates a percentage only on matching subtotal and respects its cap', () => {
+    const totals = calculateElectricityTotals(lines, {
+      type: 'percentage',
+      basisPoints: 5000,
+      maxCapIrR: 40n,
+      eligibleSystemKeys: ['thermal'],
+    });
+    expect(totals.lines.map((line) => [line.discountIrR, line.vatIrR])).toEqual([
+      [40n, 5n],
+      [0n, 20n],
+    ]);
+    expect(totals.totalIrR).toBe(289n);
+  });
+  it('allocates remainder IRR only among eligible lines', () => {
+    const totals = calculateElectricityTotals(
+      [...lines, { ...lines[0]!, productId: 'thermal-2', unitPriceIrR: 103n, subtotalIrR: 103n }],
+      { type: 'fixed_irr', value: 3n, eligibleSystemKeys: ['thermal'] }
+    );
+    expect(totals.lines.map((line) => line.discountIrR)).toEqual([1n, 0n, 2n]);
+  });
+  it('preserves the full-order service allocation', () => {
+    expect(
+      calculateElectricityTotals(lines, { type: 'fixed_irr', value: 3n }).lines.map(
+        (line) => line.discountIrR
+      )
+    ).toEqual([1n, 2n]);
+  });
+  it('fails closed when a gift has no positive matching line', () => {
+    expect(() =>
+      calculateElectricityTotals(lines, {
+        type: 'fixed_irr',
+        value: 3n,
+        eligibleSystemKeys: ['free_market'],
+      })
+    ).toThrow('no eligible');
+  });
+});

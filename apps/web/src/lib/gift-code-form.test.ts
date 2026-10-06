@@ -77,3 +77,12 @@ it('preserves original instants and rejects invalid windows and DST gaps in the 
   gap.changed = true;
   expect(giftDraftErrors({ ...draft, start: gap }, 'America/New_York', false)).toContain('start');
 });
+
+it.each(['A', 'AB', '-SALE', 'SALE SPACE', 'SALE%', 'کد', 'A'.repeat(65)])(
+  'rejects administrator code syntax %s before submission',
+  (code) => {
+    expect(
+      giftDraftErrors({ ...giftDraftFrom(undefined, zone), code, value: '1000' }, zone, true)
+    ).toEqual(['code']);
+  }
+);

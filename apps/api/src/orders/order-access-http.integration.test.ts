@@ -537,3 +537,44 @@ it('keeps copied order addresses and existing-order access after saved-address r
     ).rows[0]
   ).toMatchObject({ full_address: 'Changed after ordering', deleted_at: expect.any(Date) });
 });
+
+it('serializes cross-profile gift limits, rolls back the losing order and restores the consumed slot once', async () => {
+  const secondProfile = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES('manager','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0].id;
+  await http.pool.query(
+    "INSERT INTO product_categories(product_id,category) VALUES($1,'thermal_electricity')",
+    [body.productId]
+  );
+  await http.pool.query(
+    "INSERT INTO gift_codes(code,discount_type,discount_value,categories,total_limit,per_profile_limit,valid_from,created_by) VALUES('ONE-SLOT','fixed_irr',1000,ARRAY['thermal_electricity'],1,1,'2026-01-01','owner')"
+  );
+  const responses = await Promise.all([
+    request('owner', 'POST', '', { ...body, giftCode: 'one-slot' }),
+    request('manager', 'POST', '', { ...body, profileId: secondProfile, giftCode: 'ONE-SLOT' }),
+  ]);
+  expect(responses.map((response) => response.status).sort()).toEqual([201, 400]);
+  const winner = (await responses.find((response) => response.status === 201)!.json()) as {
+    id: string;
+    profileId: string;
+    giftDiscountAmount: string;
+  };
+  expect(winner.giftDiscountAmount).toBe('1000');
+  expect((await http.pool.query('SELECT id FROM orders')).rows).toHaveLength(1);
+  expect(
+    (await http.pool.query('SELECT order_id,discount_amount,status FROM gift_code_redemptions'))
+      .rows
+  ).toEqual([{ order_id: winner.id, discount_amount: '1000', status: 'consumed' }]);
+  const actor = winner.profileId === profileId ? 'owner' : 'manager';
+  expect((await request(actor, 'POST', `/${winner.id}/cancel`)).status).toBe(200);
+  const restored = (await http.pool.query('SELECT status,restored_at FROM gift_code_redemptions'))
+    .rows;
+  expect(restored).toEqual([{ status: 'released', restored_at: expect.any(Date) }]);
+  expect((await request(actor, 'POST', `/${winner.id}/cancel`)).status).toBe(200);
+  expect(
+    (await http.pool.query('SELECT status,restored_at FROM gift_code_redemptions')).rows
+  ).toEqual(restored);
+  expect((await request('owner', 'POST', '', { ...body, giftCode: 'ONE-SLOT' })).status).toBe(201);
+});

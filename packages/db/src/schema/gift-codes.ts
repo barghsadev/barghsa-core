@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
-import { boolean, integer, text, uuid } from 'drizzle-orm/pg-core';
-import { createTable } from '../base-table';
+import { boolean, integer, text, uuid, pgTable, uniqueIndex } from 'drizzle-orm/pg-core';
+import { createTable, baseColumns } from '../base-table';
+import { domainChecks } from '../domain-checks';
 import { irrAmount, timestamptz } from '../types';
 import { orders } from './orders';
 import { profiles } from './profiles';
@@ -12,7 +13,8 @@ import { users } from './users';
  *
  * `gift_codes` — one row per code. `code` is ALWAYS stored normalized
  * (trim + uppercase; see `normalizeGiftCode` in @barghsa/shared/promotions)
- * and has a UNIQUE index, so `sale10` and ` SALE10 ` collide.
+ * and has a UNIQUE index. Migration 0247 normalizes raw SQL writes too,
+ * so `sale10` and ` SALE10 ` collide; ambiguous legacy codes stop migration.
  *
  * Discount model (exact integer arithmetic, no floats):
  * - `discount_type` `fixed_irr` → `discount_value` is an IRR amount;
@@ -24,8 +26,8 @@ import { users } from './users';
  * - `total_limit` / `per_profile_limit` — null = unlimited, CHECK > 0.
  * - `valid_from` (inclusive) / `valid_until` (exclusive; null = open).
  * - `min_order_amount` — order total must reach this (IRR, >= 0).
- * - `categories` — eligible product categories (`products.type`
- *   discriminators); empty array = all categories.
+ * - `categories` — service scopes and six product category keys; empty
+ *   array = all. Product categories discount matching lines only.
  * - `eligibility` `public` | `profile` — `profile` requires rows in
  *   `gift_code_profiles`.
  * - `status` `active` | `inactive` — admin toggle; only active codes
@@ -106,17 +108,25 @@ export const giftCodes = createTable('gift_codes', {
  * grants one profile the right to redeem the code. Deleted with the
  * code (CASCADE) — profile scopes are config, not history.
  */
-export const giftCodeProfiles = createTable('gift_code_profiles', {
-  /** FK gift_codes.id, CASCADE (scope is config). */
-  giftCodeId: uuid('gift_code_id')
-    .notNull()
-    .references(() => giftCodes.id, { onDelete: 'cascade' }),
+export const giftCodeProfiles = pgTable(
+  'gift_code_profiles',
+  {
+    ...baseColumns,
+    /** FK gift_codes.id, CASCADE (scope is config). */
+    giftCodeId: uuid('gift_code_id')
+      .notNull()
+      .references(() => giftCodes.id, { onDelete: 'cascade' }),
 
-  /** FK profiles.id, CASCADE. */
-  profileId: uuid('profile_id')
-    .notNull()
-    .references(() => profiles.id, { onDelete: 'cascade' }),
-});
+    /** FK profiles.id, CASCADE. */
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+  },
+  (table) => [
+    ...domainChecks('gift_code_profiles'),
+    uniqueIndex('uq_gift_code_profiles_scope').on(table.giftCodeId, table.profileId),
+  ]
+);
 
 /**
  * Redemption ledger (T-09.12.03) — ONE row per redeemed order.

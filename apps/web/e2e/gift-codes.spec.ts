@@ -40,6 +40,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByLabel(fa ? 'مبلغ تخفیف (ریال)' : 'Discount amount (IRR)', { exact: true })
       .fill('1000');
+    await page.getByLabel(fa ? 'برق حرارتی' : 'Thermal electricity', { exact: true }).check();
     await page.getByRole('button', { name: fa ? 'ذخیره کد' : 'Save code', exact: true }).click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
@@ -61,7 +62,7 @@ for (const locale of ['en', 'fa'])
         totalLimit: null,
         perProfileLimit: null,
         minOrderAmount: '0',
-        categories: [],
+        categories: ['thermal_electricity'],
         restoreOnCancel: true,
         restoreAfterPayment: false,
         validUntil: null,

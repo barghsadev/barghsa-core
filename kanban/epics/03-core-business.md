@@ -130,27 +130,27 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.02.01.01** | Create `gift_codes` table: `id` (UUIDv7), `code` (VARCHAR, unique, normalized case-insensitively), `type` (enum: `fixed_amount`, `percentage`), `value` (bigint for fixed IRR, bigint for percentage * 10000 for precision), `max_discount` (bigint nullable — cap for percentage), `eligibility` (enum: `public`, `profile_list`), `starts_at` (timestamptz nullable), `expires_at` (timestamptz nullable), `status` (active/inactive), `total_usage_limit` (int nullable), `per_profile_usage_limit` (int nullable), `min_order_amount` (bigint nullable), `eligible_categories` (VARCHAR[] nullable — references product category keys), `restore_on_cancel` (boolean, default true), `created_at`, `updated_at` | L |
+| **T-03.02.01.01** | Create `gift_codes` table: `id` (UUIDv7), `code` (VARCHAR, unique, normalized case-insensitively), `discount_type` (enum: `fixed_irr`, `percentage`), `discount_value` (bigint for fixed IRR or percentage basis points), `max_cap_irr` (bigint nullable — required positive cap for percentage), `eligibility` (enum: `public`, `profile`), `valid_from` (timestamptz, default current time), `valid_until` (timestamptz nullable), `status` (active/inactive), `total_limit` (int nullable), `per_profile_limit` (int nullable), `min_order_amount` (bigint, default zero), `categories` (text[], empty means all; accepts legacy service scopes and six product category keys), `restore_on_cancel` (boolean, default true), `restore_after_payment` (boolean, default false), `created_by`, `created_at`, `updated_at`. Retain the existing representations under the owner-approved promotions decision. | L |
 | **T-03.02.01.02** | Create `gift_code_profiles` junction table for profile-restricted codes: `gift_code_id`, `profile_id` (FK), unique constraint | S |
-| **T-03.02.01.03** | Create `gift_code_redemptions` table: `id`, `gift_code_id` (FK), `profile_id` (FK), `order_id` (FK nullable — polymorphic, points to the parent order/request), `amount` (bigint — actual discount applied in IRR), `redeemed_at`, `restored_at` (nullable — set when usage is returned after cancellation) | M |
+| **T-03.02.01.03** | Create `gift_code_redemptions` table: `id`, `gift_code_id` (FK), `profile_id` (FK), `order_id` (non-null FK to the parent orders row, restrict deletion), `discount_amount` (bigint — actual discount applied in IRR), `created_at` (redemption time), `status` (`consumed`/`released`), `restored_at` (nullable — set when usage is returned after cancellation) | M |
 
 ### S-03.02.02: Gift Code Admin CRUD
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.02.02.01** | Admin API: `POST /admin/gift-codes` — create with all fields. Normalize code to uppercase (store as-is but query normalized). | M |
-| **T-03.02.02.02** | Admin API: `GET /admin/gift-codes` — list with search by code, filter by status/eligibility/expiry, pagination | S |
-| **T-03.02.02.03** | Admin API: `PATCH /admin/gift-codes/:id` — update. Usage counts cannot be reset manually. | M |
-| **T-03.02.02.04** | Admin API: `DELETE /admin/gift-codes/:id` — soft-delete / deactivate. Cannot delete codes with active redemptions. | S |
+| **T-03.02.02.01** | Admin API: `POST /admin/promotions/gift-codes` — create with all fields. Normalize code to uppercase (store as-is but query normalized). | M |
+| **T-03.02.02.02** | Admin API: `GET /admin/promotions/gift-codes` — list with search by code, filter by status/eligibility/expiry, pagination | S |
+| **T-03.02.02.03** | Admin API: `PATCH /admin/promotions/gift-codes/:id` — update. Usage counts cannot be reset manually. | M |
+| **T-03.02.02.04** | Admin API: `DELETE /admin/promotions/gift-codes/:id` — soft-delete / deactivate. Cannot delete codes with active redemptions. | S |
 | **T-03.02.02.05** | 📋 Admin UI: separate gift code management section with full grid, create/edit form with validation, usage statistics per code | M |
 
 ### S-03.02.03: Gift Code Validation & Redemption
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.02.03.01** | Public API: `POST /gift-codes/validate` — accept code string, validate: exists, active, not expired, within usage limits, within per-profile limit, eligible for order categories, meets min order amount. Return discount amount if valid. | L |
+| **T-03.02.03.01** | Public API: `POST /gift-codes/validate` — accept code string, validate: exists, active, not expired, within usage limits, within per-profile limit, eligible for order categories, meets full-order min order amount. Product-category codes discount matching lines only; service scopes retain whole-order behavior. Mixed-cart preview accepts line category/subtotal inputs; preview is advisory and submission uses authoritative backend lines. Return discount amount if valid. | L |
 | **T-03.02.03.02** | ⚠️ Preview validation (`POST /gift-codes/validate`) does **not** reserve or consume a code. It is a stateless check. | S |
-| **T-03.02.03.03** | Atomic redemption at order creation: within the order-creation transaction, decrement total usage + increment per-profile usage. Fail if limits would be exceeded. Redemption is atomically coupled to order creation. | M |
+| **T-03.02.03.03** | Atomic redemption at order creation: within the order-creation transaction, insert a consumed redemption and derive total/per-profile usage counts from the ledger under the gift-code row lock. Fail if limits would be exceeded. Redemption is atomically coupled to order creation. | M |
 | **T-03.02.03.04** | ⚠️ Failed order submission does not consume a gift code — rollback the redemption as part of the transaction rollback. | S |
 | **T-03.02.03.05** | ⚠️ Once gift code applied, the discount must be recalculated authoritatively by backend at submission time (never trust frontend-computed discount). | S |
 | **T-03.02.03.06** | Discount applied before VAT: `discount` is subtracted from taxable subtotal, then VAT calculated on net amount. | S |
@@ -159,9 +159,9 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.02.04.01** | On order/request cancellation **before payment**, restore gift code usage atomically: decrement total usage decrement and per-profile usage counter, set `restored_at` timestamp on the redemption record. If `restore_on_cancel` is false, do not restore. | M |
+| **T-03.02.04.01** | On order/request cancellation **before payment**, restore gift code usage atomically: change consumed redemption to released, reducing derived total/per-profile counts, and set `restored_at` timestamp on the redemption record. If `restore_on_cancel` is false, do not restore. | M |
 | **T-03.02.04.02** | Post-payment cancellation: gift code is not restored unless the promotion policy explicitly allows it. Follow admin setting. | S |
-| **T-03.02.04.03** | ⚠️ Restoration is idempotent: running the cancellation workflow twice must not double-restore usage. Use idempotency key on the restoration operation. | M |
+| **T-03.02.04.03** | ⚠️ Restoration is idempotent: running the cancellation workflow twice must not double-restore usage. Cancellation commands use idempotency keys; restoration uses a consumed-only conditional update and preserves the original restoration timestamp. | M |
 
 ### S-03.02.05: VAT Configuration
 
