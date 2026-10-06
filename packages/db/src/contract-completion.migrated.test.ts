@@ -310,16 +310,28 @@ it('completes a due active version exactly once with an atomic system audit and 
   expect(
     (
       await fixture.pool.query(
-        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='contract.completed' AND metadata::jsonb->>'contractId'=$1",
+        "SELECT user_id,operating_context,created_at,correlation_id,metadata::jsonb AS metadata FROM audit_log WHERE event='contract.completed' AND metadata::jsonb->>'contractId'=$1",
         [f.id]
       )
     ).rows
   ).toEqual([
     {
+      user_id: f.user,
+      operating_context: null,
+      created_at: expect.any(Date),
+      correlation_id: expect.stringMatching(/^[0-9a-f-]{36}$/),
       metadata: expect.objectContaining({
         versionId: f.version,
         actorType: 'system',
+        actor: 'system',
         financialClosure: false,
+        entity: 'contract',
+        entityId: f.id,
+        fromState: 'Active',
+        toState: 'Completed',
+        reason: null,
+        profileId: f.profile,
+        profileOwnerUserId: f.user,
       }),
     },
   ]);

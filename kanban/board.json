@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T20:41:58Z",
-  "source_commit": "075edfc5a176bca9747e963bb3952b8a25ba3af5",
+  "updated": "2026-10-06T20:46:56Z",
+  "source_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17302,7 +17302,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/migrate.baseline.test.ts",
@@ -17378,7 +17378,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -17427,6 +17432,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -43794,7 +43807,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -43914,7 +43927,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -43998,6 +44016,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -44357,7 +44383,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -44477,7 +44503,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -44561,6 +44592,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -45055,7 +45094,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -45198,7 +45237,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "a4e40b48ab2c8281c3d5004dd71ad9f2e5d064e3aa7df47912e9b88d71699517",
@@ -45266,6 +45310,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -45463,7 +45515,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -45606,7 +45658,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "9df6b9c0e2c697b6939b642182dec228c469f8262a8b6a7431411b6e5d60cd99",
@@ -45674,6 +45731,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -45871,7 +45936,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46014,7 +46079,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "abf471935018564f53e84a325e56b376ecb559bb3418bbf878fbeded35c5f1e5",
@@ -46082,6 +46152,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -46280,7 +46358,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46423,7 +46501,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "876e6356a9810898f3bdd41ea1ac7333b27983cb8d76a61fa5581b1e147543fc",
@@ -46491,6 +46574,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -46648,7 +46739,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46791,7 +46882,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "08aa437bde24df5a3b14f04cee30d43ae81e4083d835673734f138b5504aaf54",
@@ -46859,6 +46955,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -47016,7 +47120,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47159,7 +47263,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "7ebc6fb8ce575c36f30d618340475bf5963a5877a48db6771295776a98da73c7",
@@ -47227,6 +47336,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -47384,7 +47501,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47527,7 +47644,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "b14f69fe0c1bce4e529d6d588c159a234fe6dc344a2196766e78bb6ed09150d0",
@@ -47595,6 +47717,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -47752,7 +47882,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47895,7 +48025,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "aea2f687bda8cfbe19d7ef08e9869ebee65f946948f1f2765b671504cbb710d7",
@@ -47963,6 +48098,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -48120,7 +48263,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48263,7 +48406,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "62c4db09000a0b4bcb011a61b6cbcbf5669ba79d8099018b7c911157595c8550",
@@ -48331,6 +48479,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -48488,7 +48644,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48631,7 +48787,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "2b0ced4b278c0dddaa8f0344c2d40981db8d510c803a4f13e993a8d5af7aeb6c",
@@ -48699,6 +48860,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -48857,7 +49026,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49000,7 +49169,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "5712e71725ab7027e46d1c63786777c04c52a3e09f3d650cc4de3d598770f51c",
@@ -49068,6 +49242,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -49225,7 +49407,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49368,7 +49550,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "c8cec7820d5d6528cdbe29917d3c721e2cf539fe8dac4bf9ba4907f8abb46b2c",
@@ -49436,6 +49623,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -49594,7 +49789,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49737,7 +49932,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "adcb3f895b407baae3bae22309628b28962d63b689afcd21fa9fa84edebf9acd",
@@ -49805,6 +50005,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -49962,7 +50170,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50105,7 +50313,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "788a405ca0e2dea52f30ec7f87bd366a939f60ca4997ebc48207080f8539e64c",
@@ -50173,6 +50386,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -50330,7 +50551,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50473,7 +50694,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "12b5934296394ec004f7a0ba64fe52e78ab165cc90f8f023d124004b12c4c6ba",
@@ -50541,6 +50767,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -50698,7 +50932,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50841,7 +51075,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "b4bda91107b2e024e5f6ff5078a5f2278159e0b6909a7d446434555562fcadc3",
@@ -50909,6 +51148,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -51066,7 +51313,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51209,7 +51456,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "ac4e2ff5a36b7ad250de0f65bb6b009545054deaecbca2ce1f1f842d609eee28",
@@ -51277,6 +51529,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -51434,7 +51694,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51577,7 +51837,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "7b7eab9588ad4b06f4c6302913af30376d3e635d947932133070155732390e63",
@@ -51645,6 +51910,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -51803,7 +52076,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51946,7 +52219,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "e18a5e6e2b8048b4f8c17a4bf121eb551ded1fcbc203b83c31ae0753508cc258",
@@ -52014,6 +52292,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -52171,7 +52457,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52314,7 +52600,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "2626f91c8ca6b588294449ff33c01bffaf2252665e3b105bbc2888d832688529",
@@ -52382,6 +52673,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -52539,7 +52838,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52682,7 +52981,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "2cc38133d5cbec4f9644452f53ff5664f995e260096980dac59d8e963f6b6ab1",
@@ -52750,6 +53054,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -52907,7 +53219,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53050,7 +53362,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "8f879b4854e8aacc6717975a22200f7e11bdb5e68f488ccee84af74e82ca0393",
@@ -53118,6 +53435,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -53275,7 +53600,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53418,7 +53743,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "e557e1873c1952bd68b3e775699ad28531b9feedb907f26d8452a4f1a32a42b8",
@@ -53486,6 +53816,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -53643,7 +53981,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53786,7 +54124,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "c6c9f96c8d32528ee743a901494976986da1041030377b1e7a5f0f26f608621c",
@@ -53854,6 +54197,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -54012,7 +54363,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54155,7 +54506,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "b421d33c305606383826283ff2b08a56b96e3c576078c64bb578f98b0a8f85de",
@@ -54223,6 +54579,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -54381,7 +54745,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54524,7 +54888,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "932a5c9ca3767c3ebb2223b4aecbfee4fcc54d3e1c406773aa6c3d326f10596f",
@@ -54592,6 +54961,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -54750,7 +55127,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54893,7 +55270,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "51eaeaafd9f3b6f93102ca46fc7a1d5511e7d832e514b21e92243d236296d958",
@@ -54961,6 +55343,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -55118,7 +55508,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55261,7 +55651,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "bec275c45aaf011dd59626eca97c96116ee28d85f7b6430ea09d87749e5fa39e",
@@ -55329,6 +55724,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -55486,7 +55889,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55629,7 +56032,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "add6a9eca37f9e7cfa8369880505cdd381df2d04e5385ff4b779cfce98e4e0db",
@@ -55697,6 +56105,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -55854,7 +56270,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55997,7 +56413,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "a5d7e2f3c5b248a68180819db9322c81ba1abd2638ae04d93e21018af963c883",
@@ -56065,6 +56486,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -56111,7 +56540,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -56179,7 +56608,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "criteria": [
             "Current PostgreSQL migration head persists UUIDv7/exact amounts/cancellation defaults; canonical code identity enforced by normalization trigger, unique index and data-preserving duplicate preflight. Owner-approved field representations retained."
@@ -56203,6 +56637,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -56248,7 +56690,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -56316,7 +56758,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "criteria": [
             "Existing valid FK scopes retained; generated unique gift-code/profile index matches ORM snapshot. Actual duplicate/FK writes reject; legacy duplicates fail upgrade before mutation."
@@ -56340,6 +56787,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -56386,7 +56841,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -56454,7 +56909,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json"
           ],
           "criteria": [
             "Exact redemption amounts, UUIDv7, timestamp/status and restored-at persisted; unique parent-order association and restrict-delete FKs verified against current PostgreSQL head."
@@ -56478,6 +56938,14 @@
             ],
             "scope": "Original writer sources, compiled production outputs and26 fixture expectation ASTs unchanged. Current affected fixture checks preserve prior audit history while asserting the original new effects. Immutable SQL gate and current shared service callers pass; no unrelated task acceptance inferred.",
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/audit-append-only-integration/renewal-proof.json"
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -94939,7 +95407,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Normalize and verify automatic contract activation/completion audit transitions, plus remaining electricity revision/cancellation/increase, saving fulfillment/change and solar progress/final/postal event families. Consultation automatic paid settlement remains separate from the accepted workflow/fee helpers."
+        "Normalize and verify remaining electricity revision/cancellation/increase, saving fulfillment/change and solar progress/final/postal event families. Consultation automatic paid settlement remains separate from the accepted workflow/fee helpers."
       ],
       "owner": null,
       "depends_on": [],
@@ -94953,11 +95421,12 @@
           "release-0.2-audit-append-only-integration",
           "release-0.2-financial-document-audit-metadata",
           "release-0.2-gift-redemption-audit",
-          "release-0.2-contract-transition-audit"
+          "release-0.2-contract-transition-audit",
+          "release-0.2-contract-system-audit"
         ],
         "current_acceptance": {
-          "kind": "accepted-manual-contract-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
-          "reviewed_sha": "075edfc5a176bca9747e963bb3952b8a25ba3af5",
+          "kind": "accepted-contract-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
+          "reviewed_sha": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
           "source_evidence": [
             {
               "path": "README.md",
@@ -95193,7 +95662,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "72c497bec5edbfb03331f05e4f4e4a5b5bab62f9543c4a1dbd30e6a20c699d9e"
+              "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
             },
             {
               "path": "packages/db/src/audit-log-immutability-upgrade.migrated.test.ts",
@@ -95282,6 +95751,22 @@
             {
               "path": "apps/api/src/contract/contract.service.ts",
               "sha256": "4aeaaa6fcd6aaab890eb46c178a9fb4a4a90819c6b5a96a863a95d04e3ba8be3"
+            },
+            {
+              "path": "packages/db/drizzle/production/0250_contract_system_audit.sql",
+              "sha256": "e74ed51e02bad497302cd9da829fcfe9794561e02af79cbb6f922bc3584a7c26"
+            },
+            {
+              "path": "packages/db/src/contract-completion.migrated.test.ts",
+              "sha256": "e810f58f55c5c7df8646bef7dfc9e0138dcc30bb9e42ba6038f3038f55a7758e"
+            },
+            {
+              "path": "packages/db/src/contract-system-activation.migrated.test.ts",
+              "sha256": "139222acddb3a33e32e66c02787cc2c40851b14b153a7be0c8200b1f480169ca"
+            },
+            {
+              "path": "packages/db/src/contract-system-audit-upgrade.migrated.test.ts",
+              "sha256": "ff6e898dd3e396a9bcf8a9fff2b50096f256bec8247fe198494263ab4e8167fd"
             }
           ],
           "checks": [
@@ -95379,9 +95864,22 @@
             "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/format.json",
             "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/sast.json",
             "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/contract.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/build.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/build.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/db-final.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/upgrade-reviewed.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/api-callers.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/worker-callers.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/reviewed-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/format.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/snapshot.json"
           ],
-          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open.",
+          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
           "submission_audit_renewal": {
             "base_commit": "ed058a6c37f6ee3692e2934d21e3456399705134",
@@ -95416,6 +95914,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/renewal-proof.json",
             "scope": "Actor/audit boundaries hardened; unchanged eligibility/limits/discount/restoration logic and all other service AST verified, with149 related current outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "system_contract_audit_renewal": {
+            "base_commit": "506f1afac3f14417caeadae2c9d9f08d5f560cb4",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit/renewal-proof.json",
+            "scope": "Append-only journal250 replaces only future automatic contract audit payloads and reads prior state. All old migration SQL and journal prefix, schema, guards/financial effects and compiled runtime outputs unchanged;79 DB/API/worker outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -128802,6 +129308,43 @@
           "sha256": "4aeaaa6fcd6aaab890eb46c178a9fb4a4a90819c6b5a96a863a95d04e3ba8be3"
         }
       ]
+    },
+    "release-0.2-contract-system-audit": {
+      "title": "Automatic contract audit state metadata without rewriting history",
+      "task_keys": [
+        "03-core-business.md#T-03.90.03"
+      ],
+      "summary": "Accepted automatic contract activation/completion audit metadata subcriteria. Other business audit families remain open.",
+      "validation": [
+        "0250 replaces only two existing apply trigger functions, adding system actor, entity/id/from/to/reason and profile-owner association metadata plus read-only locked prior-state reads. Prior UPDATE/INSERT targets and all nonmetadata SQL, guards, locks, evidence, retry/financial policies and timestamps/correlations are retained exactly. Journal prefix, all historical SQL, schema and constraints remain unchanged.",
+        "Explicit metadata.actor=system and actorType=system; audit_log.user_id retains the documented affected-user linkage and FK/NOT NULL, with profileOwnerUserId association explicit. Context capture behavior stays unchanged.",
+        "249-to250 upgrade retains complete old audit rows including raw metadata, contract and activation/completion rows; replay applies zero migrations. Failure injection proves same-transaction state/evidence/audit rollback with corrected retry. Prior function rollback is rehearsed transactionally without touching existing history; old application/worker writes remain compatible.",
+        "79 distinct current outcomes:42 database,35 API,2 compiled-worker. Original73 expect calls preserved and strengthened with new metadata checks;5 new upgrade/rollback cases. Types, changed-test lint/format, snapshot guard pass.3140 compiled outputs and all application/shared runtime sources match previous source binding. Existing app/browser/budget checks remain reusable. No build/output rewrite while tests consume outputs.",
+        "No milestone accepted, no staging enqueue/Telegram receipt, no production authorization claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-system-audit",
+      "source_evidence": [
+        {
+          "path": "packages/db/drizzle/production/0250_contract_system_audit.sql",
+          "sha256": "e74ed51e02bad497302cd9da829fcfe9794561e02af79cbb6f922bc3584a7c26"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "909c625bccaa12f0f52c27c24fc09b6cf3e52155c3ee1f294b837c8979b2d4e6"
+        },
+        {
+          "path": "packages/db/src/contract-completion.migrated.test.ts",
+          "sha256": "e810f58f55c5c7df8646bef7dfc9e0138dcc30bb9e42ba6038f3038f55a7758e"
+        },
+        {
+          "path": "packages/db/src/contract-system-activation.migrated.test.ts",
+          "sha256": "139222acddb3a33e32e66c02787cc2c40851b14b153a7be0c8200b1f480169ca"
+        },
+        {
+          "path": "packages/db/src/contract-system-audit-upgrade.migrated.test.ts",
+          "sha256": "ff6e898dd3e396a9bcf8a9fff2b50096f256bec8247fe198494263ab4e8167fd"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -128843,7 +129386,7 @@
   "next_batch": {
     "id": "release-0.2-terminal-audit-wallet-gaps",
     "release": "0.2.0",
-    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify automatic contract activation/completion, remaining electricity/saving/solar/postal and consultation settlement audits. Manual contract audit transitions and general immutability are accepted. Reuse accepted engines and preserve unanswered owner decisions.",
+    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify remaining electricity/saving/solar/postal and consultation settlement audit families. Manual and automatic contract audit transitions and general immutability are accepted. Reuse accepted engines and preserve unanswered owner decisions.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.90.03",

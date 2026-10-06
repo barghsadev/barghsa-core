@@ -1191,6 +1191,13 @@
       "when": 1791331202260,
       "tag": "0249_audit_log_immutability",
       "breakpoints": true
+    },
+    {
+      "idx": 250,
+      "version": "7",
+      "when": 1791331202261,
+      "tag": "0250_contract_system_audit",
+      "breakpoints": true
     }
   ]
 }
