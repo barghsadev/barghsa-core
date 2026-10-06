@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 129 | Accepted with unchanged source bindings. |
-| verify | 1178 | Existing work may be complete; inspect evidence before building. |
+| done | 146 | Accepted with unchanged source bindings. |
+| verify | 1161 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,25 +39,32 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing electricity exact calculation, green composition and limits, settings guards/snapshots and Iran Jalali period boundaries. Inspect before building demonstrated gaps; reuse valid promotions/VAT caller evidence. Initial22 calculation/period cases and59 admin settings cases pass at3b6d0d45. Owner approved retaining existing settings design. Complete exact specification reconciliation and demonstrated activation quantity-limit gap before acceptance.
+Verify existing simple electricity period/bill-data/manual quantity, exact preview/gift/VAT, legal/verified profile admission, confirmation/snapshots and interruption recovery. Inspect existing code first and reuse final calculation/period/submission evidence; implement only demonstrated gaps.
 
-- `03-core-business.md#T-03.04.01.01`: Implement `ElectricityCalculationService` with pure functions:
-- `03-core-business.md#T-03.04.01.02`: Mandatory green rule engine:
-- `03-core-business.md#T-03.04.01.03`: Product limit validation:
-- `03-core-business.md#T-03.04.01.04`: Zero-quantity products do not trigger their min_kwh validation. A product omitted from the order has no limit check.
-- `03-core-business.md#T-03.04.01.05`: Prices snapshot at submission time: capture unit prices, VAT rates, gift code discount rate. Store in order/contract snapshot JSON.
-- `03-core-business.md#T-03.04.02.01`: Create `electricity_settings` table: `id`, `simple_green_rule_enabled` (bool, default true), `advanced_green_rule_enabled` (bool, default false), `green_threshold_kw` (int, default 1000), `green_min_percentage` (int, basis points, default 400 = 4%), `online_wallet_topup_limit` (bigint, default 2_000_000_000), `advanced_lead_days` (int, default 0), `advanced_max_duration_months` (int, default 24), `default_contract_template_id` (FK nullable), `customer_increase_max_percentage` (int, basis points), `updated_by`, `updated_at`
-- `03-core-business.md#T-03.04.02.02`: Admin API: `GET /admin/settings/electricity` and `PATCH /admin/settings/electricity` — versioned settings with validation: threshold ≥ 0, percentage 0–10000, topup limit > 0.
-- `03-core-business.md#T-03.04.02.03`: Activating mandatory green rule is blocked unless green electricity product is Active, has a valid positive price, and its per-order limits are compatible with the configured percentage.
-- `03-core-business.md#T-03.04.02.04`: Settings changes affect new drafts only. Submitted orders retain the settings snapshot from confirmation time.
-- `03-core-business.md#T-03.04.03.01`: Implement shared `validateOrderComposition(orderInput, settings, products)` function used by both simple and advanced order validation:
-- `03-core-business.md#T-03.04.03.02`: Green rule simple mode: thermal is the only user-selected product. Backend auto-composes: thermal = total × (1 - green%), green = total × green%. The total requested energy is not increased.
-- `03-core-business.md#T-03.04.03.03`: Green rule advanced mode: when rule is enabled, green quantity is derived from thermal quantity (not independently editable). When rule disabled, customer can freely set green quantity.
-- `03-core-business.md#T-03.04.03.04`: When applied composition fails product limits (e.g. required green exceeds green max_kwh), the UI must explain the exact conflict. Never silently change the configured percentage.
-- `03-core-business.md#T-03.04.04.01`: Implement Jalali calendar period calculation functions:
-- `03-core-business.md#T-03.04.04.02`: Handle 29-, 30-, and 31-day Jalali months correctly. Handle Jalali leap years.
-- `03-core-business.md#T-03.04.04.03`: Current-week period starts at current time in Iran (not at Saturday 00:00 if already past it). Week boundaries use Iran official timezone, not customer's configured timezone.
-- `03-core-business.md#T-03.04.04.04`: Current-month period: starts at current time, ends at first instant of following Jalali month. Next-month period: covers the full next month `[start_of_month, start_of_following_month)`.
+- `03-core-business.md#T-03.05.01.01`: Customer UI: period type selector — "Weekly" or "Monthly"
+- `03-core-business.md#T-03.05.01.02`: Monthly period selector: dropdown with "Current month" and "Next month" (Jalali month names displayed). Pre-calculate and display exact start/end dates in Jalali and Gregorian.
+- `03-core-business.md#T-03.05.01.03`: Weekly period selector: options for "Current week", "Next week", "Week after next" (max 2 weeks ahead). Display Saturday-to-Friday range in Jalali.
+- `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
+- `03-core-business.md#T-03.05.01.05`: Energy suggestion calculation: `suggestedKwh = avgHourlyConsumption × selectedPeriodHours`. Return `{ suggestedKwh, dataSource, dataPeriod, dataTimestamp, coverage}`.
+- `03-core-business.md#T-03.05.01.06`: UI: show suggested quantity labeled "Estimate" with source, period coverage, and timestamp disclaimer. Editable input field.
+- `03-core-business.md#T-03.05.01.07`: If bill data is unavailable/inaccessible/fails, customer enters kWh manually. Missing data never blocks manual entry. Show warning but allow proceed.
+- `03-core-business.md#T-03.05.02.01`: UI: kWh input field with numeric validation, min/max based on thermal product limits. Simple mode — only thermal quantity is user-selectable.
+- `03-core-business.md#T-03.05.02.02`: Real-time price preview API: `POST /electricity/preview/simple` — accepts period type, period selection, total kWh, gift code. Returns:
+- `03-core-business.md#T-03.05.02.03`: Preview UI: display thermal/green breakdown, unit prices, subtotals, discount, VAT, total. Must disclose mandatory green composition and price of each component before submission.
+- `03-core-business.md#T-03.05.02.04`: Gift code input with separate "Apply" action triggering validation API. Display validity and discount before submission. Re-validate atomically at submission.
+- `03-core-business.md#T-03.05.03.01`: `POST /electricity/orders/simple` — idempotent submission endpoint:
+- `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at`
+- `03-core-business.md#T-03.05.03.03`: Create `electricity_order_lines` table: `id`, `order_id` (FK), `product_id` (FK), `quantity_kwh`, `unit_price`, `line_total`
+- `03-core-business.md#T-03.05.03.04`: Create `electricity_contracts` table: `id`, `order_id` (FK), `contract_id` (FK — to Contracts module), `status` (draft/active/completed/cancelled/etc.)
+- `03-core-business.md#T-03.05.03.05`: Idempotency key required on submission. Retrying a timed-out request returns original result without creating duplicates.
+- `03-core-business.md#T-03.05.03.06`: Validate: simple mode selects only thermal electricity. Other products cannot be manually selected. Backend must reject any other product composition.
+- `03-core-business.md#T-03.05.04.01`: Step 1: Period type and period selection with Jalali calendar display
+- `03-core-business.md#T-03.05.04.02`: Step 2: kWh entry with bill-data suggestion (when available) and estimate label
+- `03-core-business.md#T-03.05.04.03`: Step 3: Price preview with mandatory green composition breakdown
+- `03-core-business.md#T-03.05.04.04`: Step 4: Optional gift code entry and validation
+- `03-core-business.md#T-03.05.04.05`: Step 5: Review page — full summary including profile, period, quantities, prices, discount, VAT, total, wallet balance, contract preview, cancellation/refund rules. Explicit "Submit" button.
+- `03-core-business.md#T-03.05.04.06`: Order confirmation page — redirects to order detail. Shows order ID, contract reference, invoice reference, payment options.
+- `03-core-business.md#T-03.05.04.07`: Multi-step form saves server-side draft after each completed step. Resumable safely. Validation errors identify exact field without clearing valid input.
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -187,23 +194,23 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.03.03.05` | done | Recorded batch work | Staff API: `POST /staff/consultations/:id/reject` — with reason |
 | `03-core-business.md#T-03.03.03.06` | done | Recorded batch work | Staff API: `POST /staff/consultations/:id/cancel` — with reason |
 | `03-core-business.md#T-03.03.03.07` | done | Recorded batch work | Fee changes after customer has already paid creates an adjustment/refund workflow — do not silently change or replace the paid invoice. |
-| `03-core-business.md#T-03.04.01.01` | verify | Inventory needed | Implement `ElectricityCalculationService` with pure functions: |
-| `03-core-business.md#T-03.04.01.02` | verify | Inventory needed | Mandatory green rule engine: |
-| `03-core-business.md#T-03.04.01.03` | verify | Inventory needed | Product limit validation: |
-| `03-core-business.md#T-03.04.01.04` | verify | Inventory needed | Zero-quantity products do not trigger their min_kwh validation. A product omitted from the order has no limit check. |
-| `03-core-business.md#T-03.04.01.05` | verify | Inventory needed | Prices snapshot at submission time: capture unit prices, VAT rates, gift code discount rate. Store in order/contract snapshot JSON. |
-| `03-core-business.md#T-03.04.02.01` | verify | Inventory needed | Create `electricity_settings` table: `id`, `simple_green_rule_enabled` (bool, default true), `advanced_green_rule_enabled` (bool, default false), `green_threshold_kw` (int, default 1000), `green_min_percentage` (int, basis points, default 400 = 4%), `online_wallet_topup_limit` (bigint, default 2_000_000_000), `advanced_lead_days` (int, default 0), `advanced_max_duration_months` (int, default 24), `default_contract_template_id` (FK nullable), `customer_increase_max_percentage` (int, basis points), `updated_by`, `updated_at` |
-| `03-core-business.md#T-03.04.02.02` | verify | Inventory needed | Admin API: `GET /admin/settings/electricity` and `PATCH /admin/settings/electricity` — versioned settings with validation: threshold ≥ 0, percentage 0–10000, topup limit > 0. |
-| `03-core-business.md#T-03.04.02.03` | verify | Inventory needed | Activating mandatory green rule is blocked unless green electricity product is Active, has a valid positive price, and its per-order limits are compatible with the configured percentage. |
-| `03-core-business.md#T-03.04.02.04` | verify | Inventory needed | Settings changes affect new drafts only. Submitted orders retain the settings snapshot from confirmation time. |
-| `03-core-business.md#T-03.04.03.01` | verify | Inventory needed | Implement shared `validateOrderComposition(orderInput, settings, products)` function used by both simple and advanced order validation: |
-| `03-core-business.md#T-03.04.03.02` | verify | Inventory needed | Green rule simple mode: thermal is the only user-selected product. Backend auto-composes: thermal = total × (1 - green%), green = total × green%. The total requested energy is not increased. |
-| `03-core-business.md#T-03.04.03.03` | verify | Inventory needed | Green rule advanced mode: when rule is enabled, green quantity is derived from thermal quantity (not independently editable). When rule disabled, customer can freely set green quantity. |
-| `03-core-business.md#T-03.04.03.04` | verify | Recorded batch work | When applied composition fails product limits (e.g. required green exceeds green max_kwh), the UI must explain the exact conflict. Never silently change the configured percentage. |
-| `03-core-business.md#T-03.04.04.01` | verify | Inventory needed | Implement Jalali calendar period calculation functions: |
-| `03-core-business.md#T-03.04.04.02` | verify | Inventory needed | Handle 29-, 30-, and 31-day Jalali months correctly. Handle Jalali leap years. |
-| `03-core-business.md#T-03.04.04.03` | verify | Inventory needed | Current-week period starts at current time in Iran (not at Saturday 00:00 if already past it). Week boundaries use Iran official timezone, not customer's configured timezone. |
-| `03-core-business.md#T-03.04.04.04` | verify | Inventory needed | Current-month period: starts at current time, ends at first instant of following Jalali month. Next-month period: covers the full next month `[start_of_month, start_of_following_month)`. |
+| `03-core-business.md#T-03.04.01.01` | done | Recorded batch work | Implement `ElectricityCalculationService` with pure functions: |
+| `03-core-business.md#T-03.04.01.02` | done | Recorded batch work | Mandatory green rule engine: |
+| `03-core-business.md#T-03.04.01.03` | done | Recorded batch work | Product limit validation: |
+| `03-core-business.md#T-03.04.01.04` | done | Recorded batch work | Zero-quantity products do not trigger their min_kwh validation. A product omitted from the order has no limit check. |
+| `03-core-business.md#T-03.04.01.05` | done | Recorded batch work | Prices snapshot at submission time: capture unit prices, VAT rates, gift code discount rate. Store in order/contract snapshot JSON. |
+| `03-core-business.md#T-03.04.02.01` | done | Recorded batch work | Retain versioned `app_config` settings: `electricity.green_mandatory_rules` stores independent simple/advanced enabled flags (defaults true/false), thresholds (1000 kW), and percentages (4%). `finance.wallet_top_up_limit` defaults to 2_000_000_000 IRR; zero is the fail-closed online top-up kill switch. `electricity.contract_limits` stores lead days (0), maximum Jalali duration (24 months) and customer quantity-increase percentage (20%). `electricity.contract_template_version_id` stores the nullable selected supported active version UUID. Each write advances its version and updated timestamp and records the actor and previous/new values in audit history. Preserve defaults, validation and immutable submitted-order snapshots. |
+| `03-core-business.md#T-03.04.02.02` | done | Recorded batch work | Admin API: retain versioned `GET`/`PUT` endpoints under `/api/admin/config/` for `green-electricity-rules`, `wallet-top-up-limit`, `contract-electricity-limits` and `electricity-contract-template`. Validate green thresholds as nonnegative safe integers and green percentages as finite 0–100 values; top-up limits are nonnegative integer IRR with zero disabling online top-ups. Contract limits and template references retain their existing bounds and eligibility validation. Preserve current role authorization, CSRF, step-up, locking, versioned audit and rollback safeguards. |
+| `03-core-business.md#T-03.04.02.03` | done | Recorded batch work | Activating mandatory green rule is blocked unless green electricity product is Active, has a valid positive price, and its per-order limits are compatible with the configured percentage. |
+| `03-core-business.md#T-03.04.02.04` | done | Recorded batch work | Settings changes affect new drafts only. Submitted orders retain the settings snapshot from confirmation time. |
+| `03-core-business.md#T-03.04.03.01` | done | Recorded batch work | Implement shared `validateOrderComposition(orderInput, settings, products)` function used by both simple and advanced order validation: |
+| `03-core-business.md#T-03.04.03.02` | done | Recorded batch work | Green rule simple mode: thermal is the only user-selected product. Backend auto-composes: thermal = total × (1 - green%), green = total × green%. The total requested energy is not increased. |
+| `03-core-business.md#T-03.04.03.03` | done | Recorded batch work | Green rule advanced mode: when rule is enabled, green quantity is derived from thermal quantity (not independently editable). When rule disabled, customer can freely set green quantity. |
+| `03-core-business.md#T-03.04.03.04` | done | Recorded batch work | When applied composition fails product limits (e.g. required green exceeds green max_kwh), the UI must explain the exact conflict. Never silently change the configured percentage. |
+| `03-core-business.md#T-03.04.04.01` | done | Recorded batch work | Implement Jalali calendar period calculation functions: |
+| `03-core-business.md#T-03.04.04.02` | done | Recorded batch work | Handle 29-, 30-, and 31-day Jalali months correctly. Handle Jalali leap years. |
+| `03-core-business.md#T-03.04.04.03` | done | Recorded batch work | Current-week period starts at current time in Iran (not at Saturday 00:00 if already past it). Week boundaries use Iran official timezone, not customer's configured timezone. |
+| `03-core-business.md#T-03.04.04.04` | done | Recorded batch work | Current-month period: starts at current time, ends at first instant of following Jalali month. Next-month period: covers the full next month `[start_of_month, start_of_following_month)`. |
 | `03-core-business.md#T-03.05.01.01` | verify | Inventory needed | Customer UI: period type selector — "Weekly" or "Monthly" |
 | `03-core-business.md#T-03.05.01.02` | verify | Inventory needed | Monthly period selector: dropdown with "Current month" and "Next month" (Jalali month names displayed). Pre-calculate and display exact start/end dates in Jalali and Gregorian. |
 | `03-core-business.md#T-03.05.01.03` | verify | Inventory needed | Weekly period selector: options for "Current week", "Next week", "Week after next" (max 2 weeks ahead). Display Saturday-to-Friday range in Jalali. |

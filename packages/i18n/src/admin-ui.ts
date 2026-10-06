@@ -894,6 +894,7 @@ export const fa: I18nDictionary = {
   'admin.green.inactive': 'محصول غیرفعال است',
   'admin.green.archived': 'محصول بایگانی شده است',
   'admin.green.unpriced': 'قیمت مثبت و معتبر لازم است',
+  'admin.green.limits_incompatible': 'محدودیت مقدار محصولات با درصد برق سبز سازگار نیست',
   'admin.green.activationFailed':
     'مقادیر و محصول برق سبز را بررسی کنید. قاعده فعال به محصول فعال با قیمت مثبت و معتبر نیاز دارد. قاعده را غیرفعال یا محصول را اصلاح و سپس تازه‌سازی کنید.',
   'admin.green.corrupt': 'قواعد ذخیره‌شده پیش از خواندن به اصلاح نیاز دارند.',
@@ -2686,6 +2687,7 @@ export const en: I18nDictionary = {
   'admin.green.inactive': 'Product is inactive',
   'admin.green.archived': 'Product is archived',
   'admin.green.unpriced': 'A positive effective price is required',
+  'admin.green.limits_incompatible': 'Product quantity limits cannot satisfy the green percentage',
   'admin.green.activationFailed':
     'Check the values and the green product. An enabled rule requires an active product with a positive effective price. Disable the rule or correct the product, then refresh.',
   'admin.green.corrupt': 'Stored rules need repair before they can be read.',

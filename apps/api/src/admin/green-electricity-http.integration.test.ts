@@ -58,6 +58,9 @@ beforeEach(async () => {
   await http.pool.query(
     "INSERT INTO products(system_key,title,price,status) VALUES ('green','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
   );
+  await http.pool.query(
+    "INSERT INTO products(system_key,type,title,price,status) VALUES ('thermal','electricity','{\"en\":\"Thermal test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
+  );
 });
 
 it('selects an active contract template version for new electricity orders and audits the setting', async () => {
@@ -199,6 +202,69 @@ function save(body: unknown = input, user = 'operator') {
     body: JSON.stringify(body),
   });
 }
+async function incompatibleLimits() {
+  await http.pool.query(
+    `INSERT INTO electricity_product_limits(product_id,min_kwh,max_kwh)
+     SELECT id,CASE WHEN system_key='green' THEN 100 ELSE 0 END,
+               CASE WHEN system_key='green' THEN 100 ELSE 1 END
+     FROM products WHERE system_key IN ('thermal','green')
+     ON CONFLICT(product_id) DO UPDATE SET min_kwh=EXCLUDED.min_kwh,max_kwh=EXCLUDED.max_kwh`
+  );
+  expect(
+    (
+      await http.pool.query(
+        "SELECT p.system_key,l.min_kwh,l.max_kwh FROM products p JOIN electricity_product_limits l ON l.product_id=p.id WHERE p.system_key IN ('thermal','green') ORDER BY p.system_key"
+      )
+    ).rows
+  ).toEqual([
+    { system_key: 'green', min_kwh: '100', max_kwh: '100' },
+    { system_key: 'thermal', min_kwh: '0', max_kwh: '1' },
+  ]);
+}
+
+it('blocks an impossible green composition without changing settings, versions or audit', async () => {
+  const version = (await http.pool.query("SELECT version FROM config_version WHERE id='global'"))
+    .rows[0].version;
+  await incompatibleLimits();
+  try {
+    const response = await save();
+    expect(response.status, http.logs()).toBe(400);
+    expect(await response.json()).toMatchObject({
+      // The HTTP filter keeps internal exception details private; the safety read exposes the reason.
+      error: { code: 'VALIDATION:INPUT:INVALID' },
+    });
+    expect(
+      (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [configKey])).rows
+    ).toEqual([]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+    ).toEqual([]);
+    expect(
+      (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows[0]
+        .version
+    ).toBe(version);
+    const safety = await fetch(
+      `${http.base}/api/admin/config/green-electricity-rules/safety-status`,
+      {
+        headers: headers.operator!,
+      }
+    );
+    expect(safety.status).toBe(200);
+    expect(await safety.json()).toMatchObject({
+      simpleOrder: { blocked: true, reasons: ['limits_incompatible'] },
+      advancedOrder: { blocked: false },
+    });
+    const disabled = await save({
+      ...input,
+      simple_order: { ...input.simple_order, mandatory_green_enabled: false },
+    });
+    expect(disabled.status, http.logs()).toBe(200);
+  } finally {
+    await http.pool.query(
+      "UPDATE electricity_product_limits SET min_kwh=0,max_kwh=0 WHERE product_id IN (SELECT id FROM products WHERE system_key IN ('thermal','green'))"
+    );
+  }
+});
 it('returns owned fields for electricity settings without disclosing submitted values or unknown keys', async () => {
   const cases = [
     ['wizard-draft-ttl', { days: 'PRIVATE_VALUE' }, ['days']],
@@ -292,7 +358,7 @@ it('serializes first writes and preserves a continuous audit version chain', asy
     [1, 2],
   ]);
 });
-it.each(['permission', 'product'])(
+it.each(['permission', 'product', 'limits'])(
   'rejects changed %s after preflight without saving',
   async (change) => {
     const client = await http.pool.connect();
@@ -316,7 +382,17 @@ it.each(['permission', 'product'])(
         .toBe(1);
       if (change === 'permission')
         await client.query("DELETE FROM user_roles WHERE user_id='operator'");
-      else await client.query("UPDATE products SET status='inactive' WHERE system_key='green'");
+      else if (change === 'product')
+        await client.query("UPDATE products SET status='inactive' WHERE system_key='green'");
+      else {
+        await client.query(
+          `INSERT INTO electricity_product_limits(product_id,min_kwh,max_kwh)
+           SELECT id,CASE WHEN system_key='green' THEN 100 ELSE 0 END,
+                     CASE WHEN system_key='green' THEN 100 ELSE 1 END
+           FROM products WHERE system_key IN ('thermal','green')
+           ON CONFLICT(product_id) DO UPDATE SET min_kwh=EXCLUDED.min_kwh,max_kwh=EXCLUDED.max_kwh`
+        );
+      }
       await client.query('COMMIT');
       expect((await pending).status).toBe(change === 'permission' ? 403 : 400);
       expect(
@@ -338,6 +414,9 @@ it.each(['permission', 'product'])(
       await pending;
       await http.pool.query(
         "INSERT INTO user_roles(user_id,role_id) VALUES ('operator','test-green') ON CONFLICT DO NOTHING"
+      );
+      await http.pool.query(
+        "UPDATE electricity_product_limits SET min_kwh=0,max_kwh=0 WHERE product_id IN (SELECT id FROM products WHERE system_key IN ('thermal','green'))"
       );
     }
   }

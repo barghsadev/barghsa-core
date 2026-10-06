@@ -85,7 +85,7 @@ export function calculateDuration(start: Date, end: Date): { milliseconds: bigin
   if (!Number.isSafeInteger(from) || !Number.isSafeInteger(to) || to <= from) {
     throw new RangeError('Delivery period must have a finite positive duration');
   }
-  const milliseconds = BigInt(to - from);
+  const milliseconds = BigInt(to) - BigInt(from);
   return { milliseconds, hours: decimal(milliseconds, HOUR_MS) };
 }
 
@@ -113,6 +113,37 @@ function percentRatio(percent: number): { numerator: bigint; denominator: bigint
   return exponent >= 0
     ? { numerator: BigInt(digits) * 10n ** BigInt(exponent), denominator: 100n }
     : { numerator: BigInt(digits), denominator: 100n * 10n ** BigInt(-exponent) };
+}
+
+/** Whether at least one triggered composition can satisfy the current integer product limits. */
+export function greenRuleLimitsCompatible(
+  mode: 'simple' | 'advanced',
+  percentage: number,
+  thermal: { minKwh: bigint; maxKwh: bigint },
+  green: { minKwh: bigint; maxKwh: bigint }
+): boolean {
+  const { numerator: share, denominator } = percentRatio(percentage);
+  const thermalMin = thermal.minKwh > 0n ? thermal.minKwh : 1n;
+  const thermalMax = thermal.maxKwh > 0n ? thermal.maxKwh : MAX_INT8;
+  const greenMin = green.minKwh > 0n ? green.minKwh : 1n;
+  const greenMax = green.maxKwh > 0n ? green.maxKwh : MAX_INT8;
+  if (share === 0n) return thermalMin <= thermalMax;
+  const remainder = denominator - share;
+  // Simple rounding can produce an all-green line; omitted thermal has no minimum check.
+  if (mode === 'simple' && greenMin <= greenMax && greenMin * remainder < denominator) return true;
+  if (remainder === 0n) return false;
+  const lower =
+    mode === 'advanced' ? (greenMin - 1n) * remainder : greenMin * remainder - denominator;
+  const requiredThermal = lower < 0n ? 1n : lower / share + 1n;
+  const quantity = requiredThermal > thermalMin ? requiredThermal : thermalMin;
+  const requiredGreen = divideCeil(quantity * share, remainder);
+  const greenQuantity = requiredGreen > greenMin ? requiredGreen : greenMin;
+  return (
+    quantity <= thermalMax &&
+    greenQuantity <= greenMax &&
+    quantity + greenQuantity <= MAX_INT8 &&
+    (mode === 'advanced' || greenQuantity * remainder - quantity * share < denominator)
+  );
 }
 
 export function checkGreenRule(input: {

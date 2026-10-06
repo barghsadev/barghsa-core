@@ -11,6 +11,44 @@ import {
   templateId,
 } from '../src/test/electricity-settings-fixtures';
 const base = '/api/admin/config';
+for (const locale of ['en', 'fa'] as const)
+  test(`electricity limit conflict is localized and permits disabling the rule (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    await reads(page);
+    await page.route(`**${base}/green-electricity-rules/safety-status`, (route) =>
+      route.fulfill({
+        json: { ...greenSafety, simpleOrder: { blocked: true, reasons: ['limits_incompatible'] } },
+      })
+    );
+    let config = structuredClone(greenConfig);
+    const writes: unknown[] = [];
+    await page.route(`**${base}/green-electricity-rules`, (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: config });
+      config = route.request().postDataJSON();
+      writes.push(config);
+      return route.fulfill({ json: config });
+    });
+    const label = (key: string) => t(`admin.green.${key}`, locale);
+    await page.goto('/admin/electricity-rules');
+    await expect(page.getByRole('alert')).toContainText(label('limits_incompatible'));
+    const save = page.getByRole('button', { name: label('save'), exact: true });
+    await save.click();
+    await expect(page.locator('#simpleOrder-enabled')).toBeFocused();
+    expect(writes).toEqual([]);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.locator('#simpleOrder-enabled').uncheck();
+    await save.click();
+    const dialog = page.getByRole('dialog');
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(dialog).toHaveCount(0);
+    expect(writes).toEqual([
+      { ...greenConfig, simpleOrder: { ...greenConfig.simpleOrder, mandatoryGreenEnabled: false } },
+    ]);
+  });
 async function reads(page: Page) {
   await page.route(`**${base}/green-electricity-rules`, (route) =>
     route.fulfill({ json: greenConfig })

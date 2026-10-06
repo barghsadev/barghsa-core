@@ -83,6 +83,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 import { z } from 'zod';
+import { greenRuleLimitsCompatible } from '../electricity/electricity-calculation.js';
 
 /**
  * Supported activation methods for new staff users.
@@ -1903,6 +1904,61 @@ export class AdminService {
         400
       );
     }
+    if (!GREEN_ELECTRICITY_ORDER_MODES.some((mode) => config[mode].mandatoryGreenEnabled)) return;
+    const limits = await this.getGreenRuleProductLimits(client);
+    for (const mode of GREEN_ELECTRICITY_ORDER_MODES) {
+      if (
+        config[mode].mandatoryGreenEnabled &&
+        !greenRuleLimitsCompatible(
+          mode === 'simpleOrder' ? 'simple' : 'advanced',
+          config[mode].mandatoryGreenSharePercent,
+          limits.thermal,
+          limits.green
+        )
+      )
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message:
+              'Cannot activate: product quantity limits cannot satisfy the configured green percentage.',
+            details: { mode, reasons: ['limits_incompatible'] },
+          },
+          400
+        );
+    }
+  }
+
+  private async getGreenRuleProductLimits(client?: PoolClient) {
+    const executor = client ?? getDbPool();
+    const keys = ['thermal', ...GREEN_ELECTRICITY_SYSTEM_KEYS];
+    if (client) {
+      // Catalogue writers lock their product before changing its limits. Keep that lock order.
+      await client.query(
+        'SELECT id FROM products WHERE system_key=ANY($1::text[]) ORDER BY id FOR SHARE',
+        [keys]
+      );
+      // Covers first insertion/deletion as well as updates of an existing limit row.
+      await client.query('LOCK TABLE electricity_product_limits IN SHARE MODE');
+    }
+    const rows = (
+      await executor.query<{ system_key: string; min_kwh: string; max_kwh: string }>(
+        `SELECT p.system_key,COALESCE(l.min_kwh,0)::text AS min_kwh,
+                COALESCE(l.max_kwh,0)::text AS max_kwh
+         FROM products p LEFT JOIN electricity_product_limits l ON l.product_id=p.id
+         WHERE p.system_key=ANY($1::text[])`,
+        [keys]
+      )
+    ).rows;
+    const read = (key: 'thermal' | 'green') => {
+      const row = rows.find((row) =>
+        key === 'thermal'
+          ? row.system_key === key
+          : GREEN_ELECTRICITY_SYSTEM_KEYS.includes(row.system_key)
+      );
+      return { minKwh: BigInt(row?.min_kwh ?? '0'), maxKwh: BigInt(row?.max_kwh ?? '0') };
+    };
+    return { thermal: read('thermal'), green: read('green') };
   }
 
   /**
@@ -1960,10 +2016,31 @@ export class AdminService {
     ]);
     const simpleOrder = evaluateGreenRuleEnforcement(config, 'simpleOrder', productState);
     const advancedOrder = evaluateGreenRuleEnforcement(config, 'advancedOrder', productState);
+    const states = { simpleOrder, advancedOrder };
+    const result = {
+      simpleOrder: { ...simpleOrder, reasons: [...simpleOrder.reasons] as string[] },
+      advancedOrder: { ...advancedOrder, reasons: [...advancedOrder.reasons] as string[] },
+    };
+    if (Object.values(states).some((state) => state.ruleActive && !state.blocked)) {
+      const limits = await this.getGreenRuleProductLimits();
+      for (const mode of GREEN_ELECTRICITY_ORDER_MODES) {
+        if (
+          states[mode].ruleActive &&
+          !greenRuleLimitsCompatible(
+            mode === 'simpleOrder' ? 'simple' : 'advanced',
+            config[mode].mandatoryGreenSharePercent,
+            limits.thermal,
+            limits.green
+          )
+        ) {
+          result[mode].blocked = true;
+          result[mode].reasons.push('limits_incompatible');
+        }
+      }
+    }
     return {
       product: productState,
-      simpleOrder: { ...simpleOrder, reasons: [...simpleOrder.reasons] },
-      advancedOrder: { ...advancedOrder, reasons: [...advancedOrder.reasons] },
+      ...result,
     };
   }
 

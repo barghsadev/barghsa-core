@@ -255,6 +255,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     const { pool, mockConnect, mockQuery } = await loadService();
     const { client } = mockClient();
     mockConnect.mockResolvedValue(client);
+    mockQuery.mockResolvedValue({ rows: [] });
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 1_000_000 }],
     }); // green product state (activatable → gate passes)
@@ -264,6 +265,9 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
       .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
+      .mockResolvedValueOnce({ rows: [] }) // ordered thermal/green product locks
+      .mockResolvedValueOnce({ rows: [] }) // lock limits, including absent rows
+      .mockResolvedValueOnce({ rows: [] }) // unlimited quantity limits
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
@@ -279,13 +283,13 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     expect(mockConnect).toHaveBeenCalledTimes(1);
     const queries = client.query.mock.calls.map((c: unknown[]) => String(c[0]));
     expect(queries[0]!).toMatch(/BEGIN/);
-    expect(queries[3]!).toMatch(/SELECT.*app_config.*FOR UPDATE/);
-    expect(queries[4]!).toMatch(/INSERT INTO app_config/);
-    expect(queries[5]!).toMatch(/config_version/);
-    expect(queries[6]!).toMatch(/audit_log/);
-    expect(queries[7]!).toMatch(/COMMIT/);
+    expect(queries[6]!).toMatch(/SELECT.*app_config.*FOR UPDATE/);
+    expect(queries[7]!).toMatch(/INSERT INTO app_config/);
+    expect(queries[8]!).toMatch(/config_version/);
+    expect(queries[9]!).toMatch(/audit_log/);
+    expect(queries[10]!).toMatch(/COMMIT/);
 
-    const appConfigQuery = client.query.mock.calls[4]!;
+    const appConfigQuery = client.query.mock.calls[7]!;
     expect((appConfigQuery[1] as unknown[])[0]).toBe(GREEN_ELECTRICITY_CONFIG_KEY);
     const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string);
     expect(stored).toEqual({
@@ -301,7 +305,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       },
     });
 
-    const auditQuery = client.query.mock.calls[6]!;
+    const auditQuery = client.query.mock.calls[9]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata).toEqual({
       key: GREEN_ELECTRICITY_CONFIG_KEY,
@@ -312,9 +316,9 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     });
 
     expect(client.release).toHaveBeenCalledTimes(1);
-    // pool.query runs exactly once for the T-09.10.03 green product state
+    // pool.query reads both green product state and quantity limits for the
     // check (the GET config read path does not run during set).
-    expect(pool.query).toHaveBeenCalledTimes(1);
+    expect(pool.query).toHaveBeenCalledTimes(2);
     expect(pool.query).toHaveBeenCalledWith(
       expect.stringContaining('FROM products WHERE system_key'),
       [['green', 'green_electricity']]
@@ -325,6 +329,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     const { mockConnect, mockQuery } = await loadService();
     const { client } = mockClient();
     mockConnect.mockResolvedValue(client);
+    mockQuery.mockResolvedValue({ rows: [] });
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 1_000_000 }],
     }); // green product state (activatable → gate passes)
@@ -332,6 +337,9 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
       .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
+      .mockResolvedValueOnce({ rows: [] }) // ordered thermal/green product locks
+      .mockResolvedValueOnce({ rows: [] }) // lock limits, including absent rows
+      .mockResolvedValueOnce({ rows: [] }) // unlimited quantity limits
       .mockResolvedValueOnce({
         rows: [
           {
@@ -362,7 +370,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       '127.0.0.1'
     );
 
-    const auditQuery = client.query.mock.calls[6]!;
+    const auditQuery = client.query.mock.calls[9]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata.key).toBe(GREEN_ELECTRICITY_CONFIG_KEY);
     expect(auditMetadata.previousVersion).toBe(3);
@@ -385,6 +393,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     const { mockConnect, mockQuery } = await loadService();
     const { client } = mockClient();
     mockConnect.mockResolvedValue(client);
+    mockQuery.mockResolvedValue({ rows: [] });
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 1_000_000 }],
     }); // green product state (activatable → gate passes)
@@ -392,6 +401,9 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
       .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
+      .mockResolvedValueOnce({ rows: [] }) // ordered thermal/green product locks
+      .mockResolvedValueOnce({ rows: [] }) // lock limits, including absent rows
+      .mockResolvedValueOnce({ rows: [] }) // unlimited quantity limits
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version

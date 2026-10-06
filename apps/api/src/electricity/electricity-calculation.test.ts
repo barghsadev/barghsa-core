@@ -41,6 +41,12 @@ const product = (
 });
 
 describe('exact electricity calculations', () => {
+  it('keeps the exact duration when valid endpoint milliseconds span beyond the safe number range', () => {
+    expect(
+      calculateDuration(new Date(-8_640_000_000_000_000), new Date(8_639_999_999_999_999))
+        .milliseconds
+    ).toBe(17_279_999_999_999_999n);
+  });
   it('keeps exact milliseconds for threshold decisions and multiplies large IRR values as bigint', () => {
     expect(calculateDuration(period.start, new Date('2026-09-23T01:30:00Z'))).toEqual({
       milliseconds: 5_400_000n,

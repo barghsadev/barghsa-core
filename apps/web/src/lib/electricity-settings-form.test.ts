@@ -68,6 +68,12 @@ it('retention is a whole localized value and template selection must remain elig
     expect(template.safeParse({ versionId }).success).toBe(false);
 });
 it('rejects malformed reads and verifies all captured save values', () => {
+  expect(
+    validGreenSafety({
+      ...greenSafety,
+      simpleOrder: { blocked: true, reasons: ['limits_incompatible'] },
+    })
+  ).toBe(true);
   expect(validGreenConfig(greenConfig)).toBe(true);
   expect(
     validGreenConfig({

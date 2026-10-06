@@ -49,7 +49,7 @@ export function validGreenSafety(value: unknown): value is GreenSafety {
         typeof row.blocked === 'boolean' &&
         Array.isArray(row.reasons) &&
         row.reasons.every((reason) =>
-          ['missing', 'inactive', 'archived', 'unpriced'].includes(reason)
+          ['missing', 'inactive', 'archived', 'unpriced', 'limits_incompatible'].includes(reason)
         ) &&
         (!row.blocked || row.reasons.length > 0)
       );
