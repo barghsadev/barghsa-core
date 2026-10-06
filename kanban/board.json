@@ -17398,7 +17398,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Inventory live staging legacy solar rows lacking complete recorded address snapshots; preserve unknown historical values and old signed replay hashes instead of manufacturing past address fields. Current electricity, saving and both solar intake types have source-bound selection/creation and copied-field evidence."
+        "Read-only staging inventory found three legacy solar requests without signed reviews (two household). Prevent current saved addresses being presented as historical addresses; show an explicit localized unknown value while retaining legacy rows and replay hashes."
       ],
       "owner": null,
       "depends_on": [],
@@ -17797,6 +17797,15 @@
             "Older solar rows may lack full field snapshots; do not invent historical values or re-sign old receipts. Inventory remains in generic address acceptance.",
             "Hosted CI is independent and has unresolved historical failures recorded separately; local checks do not certify hosted checks or staging deployment."
           ]
+        },
+        "staging_legacy_inventory": {
+          "date": "2026-10-06",
+          "read_only": true,
+          "solar_requests": 3,
+          "missing_signed_review": 3,
+          "legacy_household_without_recorded_address": 2,
+          "full_recorded_address_snapshots": 0,
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staging-legacy-address-inventory/command.json"
         }
       }
     },
@@ -20975,12 +20984,10 @@
         "story": "02-auth-users-admin.md#spec-74a759a3825a"
       },
       "requirement": "**T-08.01.01 — Dashboard page layout**\n\n- Description: `/app/dashboard` — overview of everything related to current active profile. Summary cards: wallet balance, active orders, pending invoices, open tickets, contract status.\n- Technical notes: GET `/api/dashboard` returns aggregated data for active profile. Data scoped by active profile only. Refresh on profile switch.\n- UI/UX: Welcome message with profile name. Cards in responsive grid. Each card is clickable (navigates to relevant section). \"Quick actions\" section. Profile badge.\n- Dependencies: T-03.01.01\n- Complexity: M",
-      "status": "partial",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Wallet, profile identity, error recovery and profile-switch behavior are verified. Contract summaries still derive from confirmed orders; future order/contract list consumers remain incomplete."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -21056,7 +21063,104 @@
           "apps/web/e2e/profile-switch.spec.ts"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-current-profile-dashboard",
+          "reviewed_sha": "5ab90f24b18552c337d61cc6301165977ae3e928",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/dashboard/dashboard.controller.ts",
+              "sha256": "e6cc7add939c33abfd75683fd81ac21d68cb63a1eceeccf938fa572920e2a729"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.ts",
+              "sha256": "627d04336ae64b6289adc4162e3bafb7ab04809dd929971bbd1c808a021e41db"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.test.ts",
+              "sha256": "ca201896f318f7e06f06003fb9e9bf0824eba2197102c1fa467e1c7cab9acf94"
+            },
+            {
+              "path": "apps/api/src/profiles/context-http.integration.test.ts",
+              "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
+              "sha256": "75bf3782b9e0ef889f03148f8f1056aeaf23a092b0e46b06cc406996f7a55e25"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "4f0b7fea53452eaa1c394163ce7dad9cfffdedb2564ce33239e43cbf68daf8c2"
+            },
+            {
+              "path": "apps/web/src/components/WalletBalanceCard.tsx",
+              "sha256": "4ecc8334e22dda309a4b69b901194a6189bbc854d94a2bc3d4e8163e93d5649a"
+            },
+            {
+              "path": "apps/web/src/components/QuickStatusCards.tsx",
+              "sha256": "e232fdd739b5bda6e5476c120a163c0ce60e18083a12ff1035688c214cabceb9"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/hooks/useAsyncData.ts",
+              "sha256": "433359696135beade241500b58690374b592cd03f335c7e0f20e569e36564744"
+            },
+            {
+              "path": "apps/web/src/routes/_app/dashboard.tsx",
+              "sha256": "ee3f25866165e17be196a67abf9e8a30c437a9644f1b97826de6ad50ffce3615"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "696a68b346ca3b47d7f7bbb70a8182120db954e4423d88d9ec0c7172afa8f717"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-entry.spec.ts",
+              "sha256": "d0756ebc9e57a3cf1c48345b74a8182bcd3744dbbaa37194d04ee2470335ad35"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "97d14ee5219e5b7e908257d6c9626572175ece47016c8b2cc3b4eed0125b9854"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-fixture.ts",
+              "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/components/Currency.tsx",
+              "sha256": "53872379b863489ce8c81ca5c94c4551ddf3b3b1f55942281856775ec071ea8f"
+            }
+          ],
+          "checks": [
+            "Inspected existing profile welcome/header/sidebar badge, independent responsive wallet/status/invoice/order/contract widgets, capability filtering, scoped widget reads and quick actions. Dedicated Active contract count now reads published contracts; pending electricity/saving/generic orders are counted without duplicate legacy rows. Source replaces obsolete missing-module limitations.",
+            "29 selected cases pass across dashboard service, actual profile-context HTTP and upcoming-invoice HTTP fixtures. Covers exact >safe-integer money, due/unpaid liabilities, permissions, selected-profile-only aggregation, no fallback after removal/archive, stale/revoked ownership and query errors. api.json.",
+            "32 distinct zero-retry Chromium/mobile Safari cases pass across dashboard entry/widget loading and profile switching. EN/FA independent widget retry keeps grid positions, explicit font/frame readiness retains no-overflow assertion at390/900/1440 and axe finds no violations. All five status links retain exact filtered paths/query parameters. browser-reconciled.json.",
+            "Profile default/current selection, required first profile, acceptance refresh with original invitation role/profile receipt and rotated CSRF, cross-tab refresh and late old-profile/notification responses pass. Invalid acknowledgement/current-denial protections remain. Invitation fixture corrected to UUIDs and a real typed receipt; a failed decision requires an explicit resource retry before another decision.",
+            "Four unchanged Chromium entry and two unchanged Chromium settings cases reused from stopped runs; stopped/unrun cases are not green. Widget final4, profile16 and mobile entry/settings6 finish the unique32. Intermediate diagnostic-only pass is not acceptance. Sources/compiled build bindings in browser-source.json.",
+            "Changed-file lint/formatting and board validation pass. Existing production dashboard source is unchanged; matching final security-patch web build, monorepo types and85budgets are reused. Wallet card source shows exact IRR/toman, reservation/posted values, charge link and low-balance/due-invoice warning."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dashboard-profile-acceptance",
+          "limitations": [
+            "Local source and fixture-backed browser/HTTP evidence does not certify production deployment or other original tasks."
+          ]
+        }
       }
     },
     {
@@ -21070,12 +21174,10 @@
         "story": "02-auth-users-admin.md#spec-74a759a3825a"
       },
       "requirement": "**T-08.01.02 — Wallet balance card**\n\n- Description: Shows available wallet balance in IRR and toman. Link to wallet page. Alert if balance is low relative to pending invoices.\n- Technical notes: Calls wallet service for balance. Format IRR with locale-aware number formatting.\n- UI/UX: Card with balance prominently displayed. Currency label (IRR/تومان). Button: \"Charge wallet\". Warning banner if low balance for due invoices.\n- Dependencies: wallet module\n- Complexity: S",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -21154,7 +21256,104 @@
           "apps/web/e2e/profile-switch.spec.ts"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-current-profile-dashboard",
+          "reviewed_sha": "5ab90f24b18552c337d61cc6301165977ae3e928",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/dashboard/dashboard.controller.ts",
+              "sha256": "e6cc7add939c33abfd75683fd81ac21d68cb63a1eceeccf938fa572920e2a729"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.ts",
+              "sha256": "627d04336ae64b6289adc4162e3bafb7ab04809dd929971bbd1c808a021e41db"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.test.ts",
+              "sha256": "ca201896f318f7e06f06003fb9e9bf0824eba2197102c1fa467e1c7cab9acf94"
+            },
+            {
+              "path": "apps/api/src/profiles/context-http.integration.test.ts",
+              "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
+              "sha256": "75bf3782b9e0ef889f03148f8f1056aeaf23a092b0e46b06cc406996f7a55e25"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "4f0b7fea53452eaa1c394163ce7dad9cfffdedb2564ce33239e43cbf68daf8c2"
+            },
+            {
+              "path": "apps/web/src/components/WalletBalanceCard.tsx",
+              "sha256": "4ecc8334e22dda309a4b69b901194a6189bbc854d94a2bc3d4e8163e93d5649a"
+            },
+            {
+              "path": "apps/web/src/components/QuickStatusCards.tsx",
+              "sha256": "e232fdd739b5bda6e5476c120a163c0ce60e18083a12ff1035688c214cabceb9"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/hooks/useAsyncData.ts",
+              "sha256": "433359696135beade241500b58690374b592cd03f335c7e0f20e569e36564744"
+            },
+            {
+              "path": "apps/web/src/routes/_app/dashboard.tsx",
+              "sha256": "ee3f25866165e17be196a67abf9e8a30c437a9644f1b97826de6ad50ffce3615"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "696a68b346ca3b47d7f7bbb70a8182120db954e4423d88d9ec0c7172afa8f717"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-entry.spec.ts",
+              "sha256": "d0756ebc9e57a3cf1c48345b74a8182bcd3744dbbaa37194d04ee2470335ad35"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "97d14ee5219e5b7e908257d6c9626572175ece47016c8b2cc3b4eed0125b9854"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-fixture.ts",
+              "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/components/Currency.tsx",
+              "sha256": "53872379b863489ce8c81ca5c94c4551ddf3b3b1f55942281856775ec071ea8f"
+            }
+          ],
+          "checks": [
+            "Inspected existing profile welcome/header/sidebar badge, independent responsive wallet/status/invoice/order/contract widgets, capability filtering, scoped widget reads and quick actions. Dedicated Active contract count now reads published contracts; pending electricity/saving/generic orders are counted without duplicate legacy rows. Source replaces obsolete missing-module limitations.",
+            "29 selected cases pass across dashboard service, actual profile-context HTTP and upcoming-invoice HTTP fixtures. Covers exact >safe-integer money, due/unpaid liabilities, permissions, selected-profile-only aggregation, no fallback after removal/archive, stale/revoked ownership and query errors. api.json.",
+            "32 distinct zero-retry Chromium/mobile Safari cases pass across dashboard entry/widget loading and profile switching. EN/FA independent widget retry keeps grid positions, explicit font/frame readiness retains no-overflow assertion at390/900/1440 and axe finds no violations. All five status links retain exact filtered paths/query parameters. browser-reconciled.json.",
+            "Profile default/current selection, required first profile, acceptance refresh with original invitation role/profile receipt and rotated CSRF, cross-tab refresh and late old-profile/notification responses pass. Invalid acknowledgement/current-denial protections remain. Invitation fixture corrected to UUIDs and a real typed receipt; a failed decision requires an explicit resource retry before another decision.",
+            "Four unchanged Chromium entry and two unchanged Chromium settings cases reused from stopped runs; stopped/unrun cases are not green. Widget final4, profile16 and mobile entry/settings6 finish the unique32. Intermediate diagnostic-only pass is not acceptance. Sources/compiled build bindings in browser-source.json.",
+            "Changed-file lint/formatting and board validation pass. Existing production dashboard source is unchanged; matching final security-patch web build, monorepo types and85budgets are reused. Wallet card source shows exact IRR/toman, reservation/posted values, charge link and low-balance/due-invoice warning."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dashboard-profile-acceptance",
+          "limitations": [
+            "Local source and fixture-backed browser/HTTP evidence does not certify production deployment or other original tasks."
+          ]
+        }
       }
     },
     {
@@ -21168,12 +21367,10 @@
         "story": "02-auth-users-admin.md#spec-74a759a3825a"
       },
       "requirement": "**T-08.01.03 — Quick status cards**\n\n- Description: Cards showing counts: \"Active contracts\", \"Pending orders\", \"Open tickets\", \"Unpaid invoices\". Each with link to relevant list page.\n- Technical notes: Aggregated queries across modules, scoped to active profile.\n- UI/UX: Icon + count + label. Color coding: green (good), yellow (attention), red (action needed). Click navigates to filtered list.\n- Dependencies: T-08.01.01\n- Complexity: M\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Reconcile the historical limitations below with the linked later batches and current code; do not rebuild the former missing module."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -21254,7 +21451,104 @@
           "2026-09-24-dashboard-live-status",
           "2026-09-24-dashboard-open-tickets"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-current-profile-dashboard",
+          "reviewed_sha": "5ab90f24b18552c337d61cc6301165977ae3e928",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/dashboard/dashboard.controller.ts",
+              "sha256": "e6cc7add939c33abfd75683fd81ac21d68cb63a1eceeccf938fa572920e2a729"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.ts",
+              "sha256": "627d04336ae64b6289adc4162e3bafb7ab04809dd929971bbd1c808a021e41db"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.test.ts",
+              "sha256": "ca201896f318f7e06f06003fb9e9bf0824eba2197102c1fa467e1c7cab9acf94"
+            },
+            {
+              "path": "apps/api/src/profiles/context-http.integration.test.ts",
+              "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
+              "sha256": "75bf3782b9e0ef889f03148f8f1056aeaf23a092b0e46b06cc406996f7a55e25"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "4f0b7fea53452eaa1c394163ce7dad9cfffdedb2564ce33239e43cbf68daf8c2"
+            },
+            {
+              "path": "apps/web/src/components/WalletBalanceCard.tsx",
+              "sha256": "4ecc8334e22dda309a4b69b901194a6189bbc854d94a2bc3d4e8163e93d5649a"
+            },
+            {
+              "path": "apps/web/src/components/QuickStatusCards.tsx",
+              "sha256": "e232fdd739b5bda6e5476c120a163c0ce60e18083a12ff1035688c214cabceb9"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/hooks/useAsyncData.ts",
+              "sha256": "433359696135beade241500b58690374b592cd03f335c7e0f20e569e36564744"
+            },
+            {
+              "path": "apps/web/src/routes/_app/dashboard.tsx",
+              "sha256": "ee3f25866165e17be196a67abf9e8a30c437a9644f1b97826de6ad50ffce3615"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "696a68b346ca3b47d7f7bbb70a8182120db954e4423d88d9ec0c7172afa8f717"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-entry.spec.ts",
+              "sha256": "d0756ebc9e57a3cf1c48345b74a8182bcd3744dbbaa37194d04ee2470335ad35"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "97d14ee5219e5b7e908257d6c9626572175ece47016c8b2cc3b4eed0125b9854"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-fixture.ts",
+              "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/components/Currency.tsx",
+              "sha256": "53872379b863489ce8c81ca5c94c4551ddf3b3b1f55942281856775ec071ea8f"
+            }
+          ],
+          "checks": [
+            "Inspected existing profile welcome/header/sidebar badge, independent responsive wallet/status/invoice/order/contract widgets, capability filtering, scoped widget reads and quick actions. Dedicated Active contract count now reads published contracts; pending electricity/saving/generic orders are counted without duplicate legacy rows. Source replaces obsolete missing-module limitations.",
+            "29 selected cases pass across dashboard service, actual profile-context HTTP and upcoming-invoice HTTP fixtures. Covers exact >safe-integer money, due/unpaid liabilities, permissions, selected-profile-only aggregation, no fallback after removal/archive, stale/revoked ownership and query errors. api.json.",
+            "32 distinct zero-retry Chromium/mobile Safari cases pass across dashboard entry/widget loading and profile switching. EN/FA independent widget retry keeps grid positions, explicit font/frame readiness retains no-overflow assertion at390/900/1440 and axe finds no violations. All five status links retain exact filtered paths/query parameters. browser-reconciled.json.",
+            "Profile default/current selection, required first profile, acceptance refresh with original invitation role/profile receipt and rotated CSRF, cross-tab refresh and late old-profile/notification responses pass. Invalid acknowledgement/current-denial protections remain. Invitation fixture corrected to UUIDs and a real typed receipt; a failed decision requires an explicit resource retry before another decision.",
+            "Four unchanged Chromium entry and two unchanged Chromium settings cases reused from stopped runs; stopped/unrun cases are not green. Widget final4, profile16 and mobile entry/settings6 finish the unique32. Intermediate diagnostic-only pass is not acceptance. Sources/compiled build bindings in browser-source.json.",
+            "Changed-file lint/formatting and board validation pass. Existing production dashboard source is unchanged; matching final security-patch web build, monorepo types and85budgets are reused. Wallet card source shows exact IRR/toman, reservation/posted values, charge link and low-balance/due-invoice warning."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dashboard-profile-acceptance",
+          "limitations": [
+            "Local source and fixture-backed browser/HTTP evidence does not certify production deployment or other original tasks."
+          ]
+        }
       }
     },
     {
@@ -66360,7 +66654,7 @@
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
           "address_flow": "Saving keyed creation and quoted final review accepted. Both solar intake types now select/create addresses; new submissions store complete signed address snapshots while old receipts replay unchanged. Profile CRUD uses soft delete with retained rows and localized history warning. Legacy staging solar inventory remains.",
-          "dashboard": "Current context and five widget readers plus permission-scoped contract/order/ticket/invoice counts exist; historical missing-module claims require current reconciliation.",
+          "dashboard": "All three dashboard originals accepted against current independent widgets, dedicated published-contract counts, exact wallet liability summary, filtered links,32distinct browser and29API/source cases. Other identity/four-service originals remain to reconcile.",
           "policy": "Existing six unanswered owner questions remain unchanged; no approval inferred."
         },
         "ci_checkpoint": {
@@ -66472,6 +66766,103 @@
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches",
           "limitations": [
             "Hosted CI remains independent and no staging release has been accepted or deployed by this maintenance batch."
+          ]
+        },
+        "dashboard_checkpoint": {
+          "reviewed_sha": "5ab90f24b18552c337d61cc6301165977ae3e928",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/dashboard/dashboard.controller.ts",
+              "sha256": "e6cc7add939c33abfd75683fd81ac21d68cb63a1eceeccf938fa572920e2a729"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.ts",
+              "sha256": "627d04336ae64b6289adc4162e3bafb7ab04809dd929971bbd1c808a021e41db"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard.service.test.ts",
+              "sha256": "ca201896f318f7e06f06003fb9e9bf0824eba2197102c1fa467e1c7cab9acf94"
+            },
+            {
+              "path": "apps/api/src/profiles/context-http.integration.test.ts",
+              "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
+            },
+            {
+              "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
+              "sha256": "75bf3782b9e0ef889f03148f8f1056aeaf23a092b0e46b06cc406996f7a55e25"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "4f0b7fea53452eaa1c394163ce7dad9cfffdedb2564ce33239e43cbf68daf8c2"
+            },
+            {
+              "path": "apps/web/src/components/WalletBalanceCard.tsx",
+              "sha256": "4ecc8334e22dda309a4b69b901194a6189bbc854d94a2bc3d4e8163e93d5649a"
+            },
+            {
+              "path": "apps/web/src/components/QuickStatusCards.tsx",
+              "sha256": "e232fdd739b5bda6e5476c120a163c0ce60e18083a12ff1035688c214cabceb9"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/hooks/useAsyncData.ts",
+              "sha256": "433359696135beade241500b58690374b592cd03f335c7e0f20e569e36564744"
+            },
+            {
+              "path": "apps/web/src/routes/_app/dashboard.tsx",
+              "sha256": "ee3f25866165e17be196a67abf9e8a30c437a9644f1b97826de6ad50ffce3615"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "696a68b346ca3b47d7f7bbb70a8182120db954e4423d88d9ec0c7172afa8f717"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-entry.spec.ts",
+              "sha256": "d0756ebc9e57a3cf1c48345b74a8182bcd3744dbbaa37194d04ee2470335ad35"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "97d14ee5219e5b7e908257d6c9626572175ece47016c8b2cc3b4eed0125b9854"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-fixture.ts",
+              "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/components/Currency.tsx",
+              "sha256": "53872379b863489ce8c81ca5c94c4551ddf3b3b1f55942281856775ec071ea8f"
+            }
+          ],
+          "checks": [
+            "Inspected existing profile welcome/header/sidebar badge, independent responsive wallet/status/invoice/order/contract widgets, capability filtering, scoped widget reads and quick actions. Dedicated Active contract count now reads published contracts; pending electricity/saving/generic orders are counted without duplicate legacy rows. Source replaces obsolete missing-module limitations.",
+            "29 selected cases pass across dashboard service, actual profile-context HTTP and upcoming-invoice HTTP fixtures. Covers exact >safe-integer money, due/unpaid liabilities, permissions, selected-profile-only aggregation, no fallback after removal/archive, stale/revoked ownership and query errors. api.json.",
+            "32 distinct zero-retry Chromium/mobile Safari cases pass across dashboard entry/widget loading and profile switching. EN/FA independent widget retry keeps grid positions, explicit font/frame readiness retains no-overflow assertion at390/900/1440 and axe finds no violations. All five status links retain exact filtered paths/query parameters. browser-reconciled.json.",
+            "Profile default/current selection, required first profile, acceptance refresh with original invitation role/profile receipt and rotated CSRF, cross-tab refresh and late old-profile/notification responses pass. Invalid acknowledgement/current-denial protections remain. Invitation fixture corrected to UUIDs and a real typed receipt; a failed decision requires an explicit resource retry before another decision.",
+            "Four unchanged Chromium entry and two unchanged Chromium settings cases reused from stopped runs; stopped/unrun cases are not green. Widget final4, profile16 and mobile entry/settings6 finish the unique32. Intermediate diagnostic-only pass is not acceptance. Sources/compiled build bindings in browser-source.json.",
+            "Changed-file lint/formatting and board validation pass. Existing production dashboard source is unchanged; matching final security-patch web build, monorepo types and85budgets are reused. Wallet card source shows exact IRR/toman, reservation/posted values, charge link and low-balance/due-invoice warning."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dashboard-profile-acceptance",
+          "limitations": [
+            "Local source and fixture-backed browser/HTTP evidence does not certify production deployment or other original tasks."
           ]
         }
       }
@@ -73507,14 +73898,12 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-identity-acceptance",
+    "id": "release-0.2-legacy-address-history",
     "release": "0.2.0",
-    "goal": "Inspect current identity/admin permission and document recovery failures; repair demonstrated defects with focused checks. Inventory staging legacy address rows and renew dashboard/authentication acceptance. Preserve later-release security checkpoints and dependency order.",
+    "goal": "Remove mutable saved-address fallback from legacy solar history and display missing recorded addresses explicitly in both languages. Preserve all three staging legacy rows and prior signed/replay boundaries, then continue original identity/four-service acceptance.",
     "task_keys": [
-      "release-readiness#R-01.01",
       "02-auth-users-admin.md#T-03.04.02",
-      "02-auth-users-admin.md#T-08.01.01",
-      "02-auth-users-admin.md#T-08.01.03"
+      "release-readiness#R-01.01"
     ]
   },
   "launch_forecast": {

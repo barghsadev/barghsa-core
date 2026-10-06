@@ -2,6 +2,7 @@ import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { dashboardText } from '@barghsa/i18n/dashboard';
 import { t } from '@barghsa/i18n/app';
+import { tSaving } from '@barghsa/i18n/saving';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 
 const profileId = '74000000-0000-4000-8000-000000000001';
@@ -82,6 +83,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(
         wallet.getByText(formatCurrencyIrr('9007199254740993', locale), { exact: true }).first()
       ).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
       const position = (element: Element) => {
         const box = element.getBoundingClientRect();
         const grid = element.parentElement!.getBoundingClientRect();
@@ -110,12 +112,35 @@ for (const locale of ['en', 'fa'] as const) {
         expect(invoiceAfter[key]).toBeCloseTo(invoiceBefore[key], 2);
       }
       await expect(orders).toHaveCSS('direction', locale === 'fa' ? 'rtl' : 'ltr');
+      const statusCards = page.getByRole('region', { name: dashboardText('status.title', locale) });
+      for (const [label, pathname, parameters] of [
+        [t('dashboard.overview.contractStatus', locale), '/contracts', { state: 'Active' }],
+        [
+          t('dashboard.overview.openTickets', locale),
+          '/tickets',
+          { status: 'active', scope: 'active' },
+        ],
+        [t('dashboard.overview.pendingInvoices', locale), '/invoices', { status: 'unpaid' }],
+        [t('electricity.orders.title', locale), '/electricity/orders', { status: 'pending' }],
+        [tSaving('orders', locale), '/savings/orders', { status: 'pending' }],
+      ] as const) {
+        const href = await statusCards.getByRole('link', { name: label }).getAttribute('href');
+        const target = new URL(href!, 'https://dashboard.test');
+        expect(target.pathname).toBe(pathname);
+        expect(Object.fromEntries(target.searchParams)).toEqual(parameters);
+      }
       for (const [width, columns] of [
         [390, 1],
         [900, 2],
         [1440, 3],
       ] as const) {
         await page.setViewportSize({ width, height: 1000 });
+        await page.evaluate(
+          () =>
+            new Promise<void>((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+            )
+        );
         const count = await wallet.evaluate(
           (card) => getComputedStyle(card.parentElement!).gridTemplateColumns.split(' ').length
         );
@@ -126,8 +151,28 @@ for (const locale of ['en', 'fa'] as const) {
             .locator('[data-slot="card-content"]')
             .evaluate((body) => body.scrollHeight <= body.clientHeight)
         ).toBe(true);
+        const overflow = await page.evaluate(() => {
+          if (document.documentElement.scrollWidth <= innerWidth) return [];
+          return [...document.querySelectorAll('body *')].flatMap((element) => {
+            const box = element.getBoundingClientRect();
+            if (box.width && (box.right > innerWidth + 1 || box.left < -1))
+              return [
+                {
+                  tag: element.tagName,
+                  slot: element.getAttribute('data-slot'),
+                  className: element.className,
+                  text: element.textContent?.slice(0, 90),
+                  left: box.left,
+                  right: box.right,
+                  width: box.width,
+                },
+              ];
+            return [];
+          });
+        });
         expect(
-          await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+          await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+          `Dashboard overflow at ${width}px (${locale}): ${JSON.stringify(overflow)}`
         ).toBe(true);
       }
       const accessibility = await new AxeBuilder({ page }).include('main').analyze();

@@ -3,6 +3,7 @@ import { fulfillDashboard } from './dashboard-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect, type Page } from './coverage-fixture';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { t } from '@barghsa/i18n/app';
 
 const profile = (id: string) => ({
   id,
@@ -181,6 +182,8 @@ for (const locale of ['fa', 'en'] as const) {
     await page
       .context()
       .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'before-accept' }]);
+    const invitationId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const invitedProfileId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
     let accepted = false,
       attempts = 0,
       active = 'existing';
@@ -191,8 +194,8 @@ for (const locale of ['fa', 'en'] as const) {
             ? []
             : [
                 {
-                  id: 'invite-cookie',
-                  profileId: 'invited',
+                  id: invitationId,
+                  profileId: invitedProfileId,
                   profileName: 'Inviting company',
                   role: 'Finance',
                   invitedBy: 'owner',
@@ -207,7 +210,7 @@ for (const locale of ['fa', 'en'] as const) {
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
         json: {
-          profiles: [profile('existing'), ...(accepted ? [profile('invited')] : [])],
+          profiles: [profile('existing'), ...(accepted ? [profile(invitedProfileId)] : [])],
           activeProfileId: active,
           hasDefault: true,
         },
@@ -224,20 +227,31 @@ for (const locale of ['fa', 'en'] as const) {
         },
       })
     );
-    await page.route('**/api/invitations/invite-cookie/accept', (route) => {
+    await page.route(`**/api/invitations/${invitationId}/accept`, (route) => {
       expect(route.request().headers()['x-csrf-token']).toBe('before-accept');
+      expect(route.request().postDataJSON()).toEqual({
+        expectedProfileId: invitedProfileId,
+        expectedRole: 'Finance',
+      });
       attempts++;
       if (attempts === 1)
         return route.fulfill({ status: 409, json: { error: { code: 'CONFLICT:STATE' } } });
       accepted = true;
       return cookieResponse(route, {
         headers: { 'Set-Cookie': 'barghsa_csrf=after-accept; Path=/; SameSite=Strict' },
-        json: { message: 'Invitation accepted successfully.' },
+        json: {
+          invitation: {
+            id: invitationId,
+            profileId: invitedProfileId,
+            role: 'Finance',
+            status: 'Accepted',
+          },
+        },
       });
     });
-    await page.route('**/api/profiles/switch/invited', (route) => {
+    await page.route(`**/api/profiles/switch/${invitedProfileId}`, (route) => {
       expect(route.request().headers()['x-csrf-token']).toBe('after-accept');
-      active = 'invited';
+      active = invitedProfileId;
       return route.fulfill({ json: { activeProfileId: active } });
     });
     await page.goto('/dashboard');
@@ -251,6 +265,12 @@ for (const locale of ['fa', 'en'] as const) {
         exact: true,
       })
     ).toBeVisible();
+    await expect(accept).toBeDisabled();
+    await page
+      .getByRole('alert')
+      .filter({ hasText: t('invitation.banner.error', locale) })
+      .getByRole('button', { name: t('team.retry', locale), exact: true })
+      .click();
     await expect(accept).toBeEnabled();
     expect(
       (await page.context().cookies()).find((cookie) => cookie.name === 'barghsa_csrf')?.value
@@ -266,12 +286,12 @@ for (const locale of ['fa', 'en'] as const) {
     const selector = page.getByRole('combobox', {
       name: locale === 'fa' ? 'تغییر پروفایل فعال' : 'Switch active profile',
     });
-    await expect(selector.locator('option[value="invited"]')).toHaveCount(1);
-    await selector.selectOption('invited');
+    await expect(selector.locator(`option[value="${invitedProfileId}"]`)).toHaveCount(1);
+    await selector.selectOption(invitedProfileId);
     const menu = page.locator('button[aria-controls="dashboard-navigation"]');
     if (await menu.isVisible()) await expect(menu).toHaveAttribute('aria-expanded', 'false');
     await openProfileMenu(page);
-    await expect(selector).toHaveValue('invited');
+    await expect(selector).toHaveValue(invitedProfileId);
     await expect(page).toHaveURL(/\/app$/);
     expect(attempts).toBe(2);
   });

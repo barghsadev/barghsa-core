@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 19 | Accepted with unchanged source bindings. |
-| verify | 1285 | Existing work may be complete; inspect evidence before building. |
-| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 22 | Accepted with unchanged source bindings. |
+| verify | 1284 | Existing work may be complete; inspect evidence before building. |
+| partial | 51 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current identity/admin permission and document recovery failures; repair demonstrated defects with focused checks. Inventory staging legacy address rows and renew dashboard/authentication acceptance. Preserve later-release security checkpoints and dependency order.
+Remove mutable saved-address fallback from legacy solar history and display missing recorded addresses explicitly in both languages. Preserve all three staging legacy rows and prior signed/replay boundaries, then continue original identity/four-service acceptance.
 
-- `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 - `02-auth-users-admin.md#T-03.04.02`: Address in order flow
-- `02-auth-users-admin.md#T-08.01.01`: Dashboard page layout
-- `02-auth-users-admin.md#T-08.01.03`: Quick status cards
+- `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
 
@@ -96,9 +94,9 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-04.01.02` | verify | Earlier acceptance_verified | TOS acceptance storage |
 | `02-auth-users-admin.md#T-04.01.03` | verify | Earlier acceptance_verified | TOS re-acceptance flow |
 | `02-auth-users-admin.md#T-07.01.02` | superseded | Earlier partial | API-based auto-verification integration |
-| `02-auth-users-admin.md#T-08.01.01` | partial | Earlier partial | Dashboard page layout |
-| `02-auth-users-admin.md#T-08.01.02` | verify | Earlier acceptance_verified | Wallet balance card |
-| `02-auth-users-admin.md#T-08.01.03` | partial | Earlier partial | Quick status cards |
+| `02-auth-users-admin.md#T-08.01.01` | done | Earlier partial | Dashboard page layout |
+| `02-auth-users-admin.md#T-08.01.02` | done | Earlier acceptance_verified | Wallet balance card |
+| `02-auth-users-admin.md#T-08.01.03` | done | Earlier partial | Quick status cards |
 | `02-auth-users-admin.md#T-11.01.01` | verify | Recorded batch work | Account/profile closure request and blocker evaluation |
 | `02-auth-users-admin.md#T-11.01.02` | verify | Recorded batch work | Portable customer data export |
 | `02-auth-users-admin.md#T-11.01.03` | verify | Inventory needed | Closure execution, revocation, retention and anonymization |
