@@ -17,6 +17,10 @@ import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
+import { useSettingsCommand } from '../hooks/useSettingsCommand.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { addressReceipt } from '../lib/settings-form.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 
 interface Product {
@@ -206,7 +210,6 @@ export function SavingsOrderPage() {
     cities.some((city) => city.id === cityId);
   const [fullAddress, setFullAddress] = fields.field('fullAddress');
   const [postalCode, setPostalCode] = fields.field('postalCode');
-  const [savingAddress, setSavingAddress] = useState(false);
   const [agreementAccepted, setAgreementAccepted] = fields.field('agreementAccepted');
   const [giftCode, setGiftCode] = fields.field('giftCode');
   const [appliedGiftCode, setAppliedGiftCode] = fields.field('appliedGiftCode');
@@ -221,6 +224,19 @@ export function SavingsOrderPage() {
   const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
   const hydratedProfile = useRef<string | null>(null);
   const [addressError, setAddressError] = useState(false);
+  const actorId = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  const addressCommand = useSettingsCommand(
+    JSON.stringify([actorId, contextRevision, profileId]),
+    () => {
+      setLoadError(true);
+      setAddresses([]);
+      setAddressId('');
+      setAddingAddress(false);
+    },
+    () => !!profileId && !loadError && getProfileContextRevision() === contextRevision
+  );
+  const savingAddress = addressCommand.busy;
   const [draftSaved, setDraftSaved] = useState(false);
   const draftKey = profileId
     ? `/api/saving/orders/draft?profileId=${encodeURIComponent(profileId)}`
@@ -348,40 +364,40 @@ export function SavingsOrderPage() {
       !profileId ||
       !addressLocationReady ||
       !fullAddress.trim() ||
-      !/^[0-9]{10}$/.test(postalCode)
+      !/^[0-9]{10}$/.test(postalCode) ||
+      protection.busy ||
+      addressCommand.coordination.isLocked()
     )
       return;
-    await protection.run(async (current, alive) => {
-      setSavingAddress(true);
+    await protection.run(async () => {
+      if (!addressCommand.coordination.claim('address')) return;
       setAddressError(false);
-      try {
-        const address = await postJson<Address>(`/api/profiles/${profileId}/addresses`, {
-          provinceId,
-          cityId,
-          fullAddress: fullAddress.trim(),
-          postalCode,
-        });
-        uuidReference(address?.id);
-        if (
-          address.fullAddress !== fullAddress.trim() ||
-          address.postalCode !== postalCode ||
-          address.provinceId !== provinceId ||
-          address.cityId !== cityId
-        )
-          throw new Error('Invalid address receipt');
-        if (!current()) return;
-        setAddresses((values) => [...values, address]);
-        setAddressId(address.id);
-        setAddingAddress(false);
-        setProvinceId('');
-        setCityId('');
-        setFullAddress('');
-        setPostalCode('');
-      } catch {
-        if (current()) setAddressError(true);
-      } finally {
-        if (alive()) setSavingAddress(false);
-      }
+      const patch = { provinceId, cityId, fullAddress: fullAddress.trim(), postalCode };
+      await addressCommand.submit({
+        owner: 'address',
+        path: `/api/profiles/${profileId}/addresses`,
+        method: 'POST',
+        status: 201,
+        keyed: true,
+        body: { ...patch, idempotencyKey: crypto.randomUUID() },
+        receipt: (value) => addressReceipt(value, profileId, null, patch),
+        fields: (names) => {
+          if (!names.length || !names.every((name) => Object.keys(patch).includes(String(name))))
+            return false;
+          setAddressError(true);
+          return true;
+        },
+        accepted: (value) => {
+          const address = value as Address;
+          setAddresses((values) => [...values.filter((row) => row.id !== address.id), address]);
+          setAddressId(address.id);
+          setAddingAddress(false);
+          setProvinceId('');
+          setCityId('');
+          setFullAddress('');
+          setPostalCode('');
+        },
+      });
     });
   }
   async function verifyBill() {
@@ -638,6 +654,21 @@ export function SavingsOrderPage() {
       )}
       {draftLoading && profileId && <p role="status">{copy('loading')}</p>}
       {!loading && !profileId && <p role="alert">{copy('profileRequired')}</p>}
+      {addressCommand.phase !== 'ready' && (
+        <div role="alert" className="space-y-2">
+          <p>{copy('addressUnconfirmed')}</p>
+          <Button
+            disabled={addressCommand.busy || protection.busy}
+            onClick={() =>
+              void protection.run(async () => {
+                await addressCommand.send();
+              })
+            }
+          >
+            {copy('retryAddress')}
+          </Button>
+        </div>
+      )}
       {addressDirty && step !== 4 && (
         <div role="alert" className="space-y-2">
           <p>{t('electricity.order.unsaved.address', locale)}</p>
@@ -661,6 +692,7 @@ export function SavingsOrderPage() {
             loadError ||
             draftLoading ||
             !!draftError ||
+            !!addressCommand.locked ||
             !profileId ||
             protection.busy ||
             protection.completed.current ||
@@ -719,7 +751,12 @@ export function SavingsOrderPage() {
               <CardContent className="space-y-5 pt-6">
                 <fieldset
                   className="min-w-0 space-y-5"
-                  disabled={pending || protection.busy || protection.completed.current}
+                  disabled={
+                    pending ||
+                    protection.busy ||
+                    protection.completed.current ||
+                    !!addressCommand.locked
+                  }
                 >
                   {step === 1 && (
                     <section className="space-y-3">

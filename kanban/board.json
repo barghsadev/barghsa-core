@@ -17073,11 +17073,11 @@
         "story": "02-auth-users-admin.md#spec-851ce038c50a"
       },
       "requirement": "**T-03.04.01 — Address CRUD for current profile**\n\n- Description: Customers can manage addresses under their active profile. Main address (from onboarding) shown. Can add, edit, delete, or set as main. Only one address can be main. Addresses filtered by current active profile only.\n- Technical notes: GET/POST/PUT/DELETE `/api/profiles/:profileId/addresses`. Main address flag is unique per profile. Deleting the main address requires selecting a new main address first. Addresses linked to orders cannot be deleted (soft delete + warn).\n- UI/UX: Address list with main badge. Add/edit modal form with province/city selects. Set as main action via star/radio. Confirmation on delete.\n- Dependencies: T-03.02.02 (address schema), T-03.03.01\n- Complexity: M",
-      "status": "verify",
+      "status": "partial",
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
+        "Current CRUD, role/profile isolation, main-address uniqueness, confirmed original retries and retained soft-deleted rows pass. Reconcile the literal linked-order deletion restriction with the implemented soft-delete-and-warning behavior before accepting this whole task."
       ],
       "owner": null,
       "depends_on": [],
@@ -17178,7 +17178,108 @@
           "apps/web/e2e/form-accessibility.spec.ts"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "address_checkpoint": {
+          "base_commit": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "fa37ab7fdc0fa9c533b8e09a575e0c017d3c79c513e1550a661190643a7bb0fa"
+            },
+            {
+              "path": "apps/web/src/pages/saving-order.test.tsx",
+              "sha256": "bdfedcc900af6fbf28572e51522619aab5952679d2a363915f07da513149a366"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "f14e2a0d4c1203525f24e74546b7fe77f55bd9f0f6e52a59daea7df7b2f4f338"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "d31e736696b28986744004dbd72b606ccc6259425dfb8550a90db282121e7986"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+              "sha256": "2b0e3f29e1c67e1050509326e1499979cbb66ca0157656bbdd90cd91c0c74b23"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsCommand.ts",
+              "sha256": "5f54b895e4ea2f1e1ef96f5c7f2a09b628d5ec73c3fcfaa5c614179769eea306"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "de6d00937bcd67ab47cdef30447d00ed30594bf2f46bbc1032c8ef43a5dd88e3"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "41 distinct web source cases pass: 35 across saving/electricity/settings command/wizard protection and 6 selected native address-form cases. Four other native-form cases were deliberately skipped; saving six re-run on final source. Receipts source.json, native-forms.json, saving-source-final.json.",
+            "18 real PostgreSQL address HTTP cases pass, covering current role/session boundaries, main-address concurrency, exact keyed replay, rollback, retained soft-deleted rows and order snapshots. addresses-http.json.",
+            "Two targeted real PostgreSQL order HTTP cases pass (saving atomic quoted submission and advanced electricity bundle); 47 other cases deliberately skipped. API prebuilt reuse is limited to matching unchanged API/shared/db/worker artifacts. order-http.json and browser-source.json.",
+            "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
+            "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets."
+          ],
+          "limitations": [
+            "Fixture-backed browser journeys do not certify production deployment or every address criterion.",
+            "No linked-order soft-delete rejection is claimed; existing deletion retains rows and snapshots.",
+            "Solar household address selection/full snapshots and saving quoted-address review remain open."
+          ]
+        }
       }
     },
     {
@@ -17196,9 +17297,8 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Renew existing saved-address CRUD acceptance under 02-auth-users-admin.md#T-03.04.01.",
-        "Verify electricity and saving saved-address selection/creation and immutable order snapshots against current source/HTTP/browser checks. Solar add-address visibility and submitted-address display gaps are repaired; its eight journeys and two HTTP cases pass.",
-        "Legacy solar rows without a submission review retain compatibility fallback to the current address. Current submissions retain their recorded site address; no historical backfill or production evidence is inferred."
+        "Solar household intake has no address selection/creation; non-household intake records only the address string in its signed review, leaving complete address-field snapshots and older rows without a recorded review to reconcile.",
+        "Saving final review shows the cached selected address while the authoritative quote already contains address data. Confirm this with a focused regression and display the quoted snapshot."
       ],
       "owner": null,
       "depends_on": [],
@@ -17305,6 +17405,107 @@
             }
           ],
           "receipt": "/Users/majid/.local/state/barghsa-manual-batches/solar-address-history/review.json"
+        },
+        "address_checkpoint": {
+          "base_commit": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "fa37ab7fdc0fa9c533b8e09a575e0c017d3c79c513e1550a661190643a7bb0fa"
+            },
+            {
+              "path": "apps/web/src/pages/saving-order.test.tsx",
+              "sha256": "bdfedcc900af6fbf28572e51522619aab5952679d2a363915f07da513149a366"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "f14e2a0d4c1203525f24e74546b7fe77f55bd9f0f6e52a59daea7df7b2f4f338"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "d31e736696b28986744004dbd72b606ccc6259425dfb8550a90db282121e7986"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+              "sha256": "2b0e3f29e1c67e1050509326e1499979cbb66ca0157656bbdd90cd91c0c74b23"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsCommand.ts",
+              "sha256": "5f54b895e4ea2f1e1ef96f5c7f2a09b628d5ec73c3fcfaa5c614179769eea306"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "de6d00937bcd67ab47cdef30447d00ed30594bf2f46bbc1032c8ef43a5dd88e3"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "41 distinct web source cases pass: 35 across saving/electricity/settings command/wizard protection and 6 selected native address-form cases. Four other native-form cases were deliberately skipped; saving six re-run on final source. Receipts source.json, native-forms.json, saving-source-final.json.",
+            "18 real PostgreSQL address HTTP cases pass, covering current role/session boundaries, main-address concurrency, exact keyed replay, rollback, retained soft-deleted rows and order snapshots. addresses-http.json.",
+            "Two targeted real PostgreSQL order HTTP cases pass (saving atomic quoted submission and advanced electricity bundle); 47 other cases deliberately skipped. API prebuilt reuse is limited to matching unchanged API/shared/db/worker artifacts. order-http.json and browser-source.json.",
+            "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
+            "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets."
+          ],
+          "limitations": [
+            "Fixture-backed browser journeys do not certify production deployment or every address criterion.",
+            "No linked-order soft-delete rejection is claimed; existing deletion retains rows and snapshots.",
+            "Solar household address selection/full snapshots and saving quoted-address review remain open."
+          ]
         }
       }
     },
@@ -42634,12 +42835,10 @@
         "story": "03-core-business.md#spec-b4f2ba0d7645"
       },
       "requirement": "| **T-03.09.03.01** | 📋 Step 4: Address selection — choose from profile's existing addresses or add new one inside the flow. Must select installation address. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -42648,7 +42847,104 @@
         "batches": [
           "2026-09-23-saving-order-intake"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-saving-installation-address-selection",
+          "reviewed_sha": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "fa37ab7fdc0fa9c533b8e09a575e0c017d3c79c513e1550a661190643a7bb0fa"
+            },
+            {
+              "path": "apps/web/src/pages/saving-order.test.tsx",
+              "sha256": "bdfedcc900af6fbf28572e51522619aab5952679d2a363915f07da513149a366"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "f14e2a0d4c1203525f24e74546b7fe77f55bd9f0f6e52a59daea7df7b2f4f338"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "d31e736696b28986744004dbd72b606ccc6259425dfb8550a90db282121e7986"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+              "sha256": "2b0e3f29e1c67e1050509326e1499979cbb66ca0157656bbdd90cd91c0c74b23"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsCommand.ts",
+              "sha256": "5f54b895e4ea2f1e1ef96f5c7f2a09b628d5ec73c3fcfaa5c614179769eea306"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "de6d00937bcd67ab47cdef30447d00ed30594bf2f46bbc1032c8ef43a5dd88e3"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "41 distinct web source cases pass: 35 across saving/electricity/settings command/wizard protection and 6 selected native address-form cases. Four other native-form cases were deliberately skipped; saving six re-run on final source. Receipts source.json, native-forms.json, saving-source-final.json.",
+            "18 real PostgreSQL address HTTP cases pass, covering current role/session boundaries, main-address concurrency, exact keyed replay, rollback, retained soft-deleted rows and order snapshots. addresses-http.json.",
+            "Two targeted real PostgreSQL order HTTP cases pass (saving atomic quoted submission and advanced electricity bundle); 47 other cases deliberately skipped. API prebuilt reuse is limited to matching unchanged API/shared/db/worker artifacts. order-http.json and browser-source.json.",
+            "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
+            "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
+        }
       }
     },
     {
@@ -65329,7 +65625,7 @@
         "batches": [],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
-          "address_flow": "Solar add-address visibility and submitted-site-address display repaired and accepted under T-03.11.02.03; profile CRUD/electricity/saving acceptance is next. Full cross-service generic address criterion remains partial.",
+          "address_flow": "Solar non-household add-address visibility and submitted street-address display accepted. Saving inline creation now holds original keyed commands across lost/malformed acknowledgements and preserves wizard navigation fencing. Current profile CRUD/electricity checks pass. Generic address acceptance still requires household solar selection/full snapshots and saving authoritative review data.",
           "dashboard": "Current context and five widget readers plus permission-scoped contract/order/ticket/invoice counts exist; historical missing-module claims require current reconciliation.",
           "policy": "Existing six unanswered owner questions remain unchanged; no approval inferred."
         }
@@ -72365,13 +72661,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-address-acceptance",
+    "id": "release-0.2-authoritative-address-review",
     "release": "0.2.0",
-    "goal": "Verify existing profile address CRUD and electricity/saving address creation and snapshots using exact current criteria. Reuse final solar checks and matching web build; then continue identity/four-service acceptance.",
+    "goal": "Use existing backend quote snapshots in the saving final review, then complete solar household address selection and immutable field snapshots. Preserve existing product engines and acceptance evidence.",
     "task_keys": [
-      "02-auth-users-admin.md#T-03.04.01",
+      "03-core-business.md#T-03.09.03.03",
       "02-auth-users-admin.md#T-03.04.02",
-      "03-core-business.md#T-03.09.03.01",
+      "02-auth-users-admin.md#T-03.04.01",
       "release-readiness#R-01.01"
     ]
   },

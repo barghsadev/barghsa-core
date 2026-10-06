@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 15 | Accepted with unchanged source bindings. |
-| verify | 1289 | Existing work may be complete; inspect evidence before building. |
-| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 16 | Accepted with unchanged source bindings. |
+| verify | 1287 | Existing work may be complete; inspect evidence before building. |
+| partial | 54 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing profile address CRUD and electricity/saving address creation and snapshots using exact current criteria. Reuse final solar checks and matching web build; then continue identity/four-service acceptance.
+Use existing backend quote snapshots in the saving final review, then complete solar household address selection and immutable field snapshots. Preserve existing product engines and acceptance evidence.
 
-- `02-auth-users-admin.md#T-03.04.01`: Address CRUD for current profile
+- `03-core-business.md#T-03.09.03.03`: Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals.
 - `02-auth-users-admin.md#T-03.04.02`: Address in order flow
-- `03-core-business.md#T-03.09.03.01`: Step 4: Address selection — choose from profile's existing addresses or add new one inside the flow. Must select installation address.
+- `02-auth-users-admin.md#T-03.04.01`: Address CRUD for current profile
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -90,7 +90,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-03.03.04` | verify | Earlier acceptance_verified | Username/contact changes |
 | `02-auth-users-admin.md#T-03.03.05` | verify | Earlier acceptance_verified | Notification channel preferences |
 | `02-auth-users-admin.md#T-03.03.06` | verify | Earlier acceptance_verified | Timezone settings |
-| `02-auth-users-admin.md#T-03.04.01` | verify | Earlier acceptance_verified | Address CRUD for current profile |
+| `02-auth-users-admin.md#T-03.04.01` | partial | Earlier acceptance_verified | Address CRUD for current profile |
 | `02-auth-users-admin.md#T-03.04.02` | partial | Earlier partial | Address in order flow |
 | `02-auth-users-admin.md#T-04.01.01` | verify | Earlier acceptance_verified | Public TOS page |
 | `02-auth-users-admin.md#T-04.01.02` | verify | Earlier acceptance_verified | TOS acceptance storage |
@@ -253,7 +253,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.09.02.06` | verify | Inventory needed | Create `BillVerificationProvider` abstraction with adapter interface for Iranian bill-data APIs: `verify(billIdentifier) → { verified: boolean, data?: object, error?: string }`. Include timeout, bounded retry with jitter, and circuit breaker. |
 | `03-core-business.md#T-03.09.02.07` | verify | Inventory needed | Add `verification_result` JSONB column to `saving_orders` table to persist verification attempt metadata: source provider, timestamp, verification status, raw result, error details. |
 | `03-core-business.md#T-03.09.02.08` | verify | Inventory needed | Bill verification provider failure (timeout, auth error, provider unavailable) must not erase the draft. Customer can retry or submit for manual staff review. Failed verification state is persisted in `verification_result`; explicit "submit for staff review" action advances the order. |
-| `03-core-business.md#T-03.09.03.01` | verify | Recorded batch work | Step 4: Address selection — choose from profile's existing addresses or add new one inside the flow. Must select installation address. |
+| `03-core-business.md#T-03.09.03.01` | done | Recorded batch work | Step 4: Address selection — choose from profile's existing addresses or add new one inside the flow. Must select installation address. |
 | `03-core-business.md#T-03.09.03.02` | verify | Inventory needed | Step 5: Agreement — display admin-editable saving plan agreement title and body. Require explicit "I accept" action. Record accepted version. |
 | `03-core-business.md#T-03.09.03.03` | verify | Inventory needed | Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals. |
 | `03-core-business.md#T-03.09.03.04` | verify | Recorded batch work | Submission: `POST /saving/orders` — idempotent. Atomic transaction creates: saving order, linked draft contract, linked unpaid invoice. Snapshots: installation address, selected prices, accepted agreement version. Redirects to order detail. |

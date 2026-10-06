@@ -97,19 +97,32 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
       },
     })
   );
-  await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
-    route.fulfill({
-      json: {
-        addresses: [
-          {
-            id: addressId,
-            fullAddress: 'Saving Street',
-            postalCode: '1234567890',
-            mainAddress: true,
-          },
-        ],
-      },
-    })
+  const provinceId = '55555555-5555-4555-8555-555555555555';
+  const cityId = '66666666-6666-4666-8666-666666666666';
+  const addressWrites: Array<Record<string, unknown>> = [];
+  const savedAddress = {
+    id: addressId,
+    profileId,
+    provinceId,
+    cityId,
+    fullAddress: 'Saving Street',
+    postalCode: '1234567890',
+    mainAddress: true,
+    createdAt: submittedAt,
+    updatedAt: submittedAt,
+  };
+  await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+    if (route.request().method() === 'POST') {
+      addressWrites.push(route.request().postDataJSON() as Record<string, unknown>);
+      return route.fulfill({ status: 201, json: addressWrites.length === 1 ? {} : savedAddress });
+    }
+    return route.fulfill({ json: { addresses: addressWrites.length ? [savedAddress] : [] } });
+  });
+  await page.route('**/api/geography/provinces', (route) =>
+    route.fulfill({ json: [{ id: provinceId, nameFa: 'استان', nameEn: 'Province' }] })
+  );
+  await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) =>
+    route.fulfill({ json: [{ id: cityId, provinceId, nameFa: 'شهر', nameEn: 'City' }] })
   );
   await page.route('**/api/saving/orders/draft?*', (route) => {
     if (route.request().method() === 'PUT') {
@@ -431,7 +444,28 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('button', { name: 'Check identifier' }).click();
   await expect(next).toBeEnabled();
   await next.click();
+  await page.getByRole('button', { name: 'Add an address', exact: true }).click();
+  await page.locator('#saving-address-province').selectOption(provinceId);
+  await page.locator('#saving-address-city').selectOption(cityId);
+  await page
+    .getByRole('textbox', { name: 'Full address', exact: true })
+    .fill(savedAddress.fullAddress);
+  await page
+    .getByRole('textbox', { name: 'Postal code', exact: true })
+    .fill(savedAddress.postalCode);
+  await page.getByRole('button', { name: 'Save address', exact: true }).click();
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'The address may have been saved.' })
+  ).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Full address', exact: true })).toBeDisabled();
+  await expect(next).toBeDisabled();
+  expect(addressWrites).toHaveLength(1);
+  expect(addressWrites[0]!.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
+  await page.getByRole('button', { name: 'Retry the original address', exact: true }).click();
   await expect(page.getByText('Saving Street')).toBeVisible();
+  expect(addressWrites).toHaveLength(2);
+  expect(addressWrites[1]).toEqual(addressWrites[0]);
+  await expect(page.locator(`input[name=addressId][value="${addressId}"]`)).toBeChecked();
   await next.click();
   await page.getByRole('checkbox', { name: 'I accept this agreement' }).check();
   await next.click();

@@ -58,6 +58,9 @@ const en: Record<string, string> = {
   fullAddress: 'Full address',
   postalCode: 'Postal code',
   saveAddress: 'Save address',
+  addressUnconfirmed:
+    'The address may have been saved. Retry the original address before continuing.',
+  retryAddress: 'Retry the original address',
   acceptAgreement: 'I accept this agreement',
   subtotal: 'Subtotal',
   discount: 'Discount',
@@ -279,6 +282,9 @@ const fa: Record<string, string> = {
   fullAddress: 'نشانی کامل',
   postalCode: 'کد پستی',
   saveAddress: 'ذخیره نشانی',
+  addressUnconfirmed:
+    'ممکن است نشانی ذخیره شده باشد. پیش از ادامه، ذخیره همان نشانی را دوباره بررسی کنید.',
+  retryAddress: 'تلاش دوباره برای همان نشانی',
   acceptAgreement: 'این توافق‌نامه را می‌پذیرم',
   subtotal: 'جمع جزء',
   discount: 'تخفیف',
