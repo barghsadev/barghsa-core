@@ -84,7 +84,17 @@ test('solar request moves from customer upload through staff review and postal r
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
   await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
-    route.fulfill({ json: { addresses: [] } })
+    route.fulfill({
+      json: {
+        addresses: [
+          {
+            id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+            fullAddress: 'Household installation site',
+            postalCode: '1234567890',
+          },
+        ],
+      },
+    })
   );
   await page.route('**/api/solar/requests/draft?*', (route) => {
     if (route.request().method() === 'PUT') {
@@ -106,7 +116,14 @@ test('solar request moves from customer upload through staff review and postal r
         hash: 'a'.repeat(64),
         data: {
           submission: route.request().postDataJSON(),
-          siteAddress: null,
+          siteAddress: 'Household installation site',
+          siteAddressSnapshot: {
+            id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+            province_id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+            city_id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+            full_address: 'Household installation site',
+            postal_code: '1234567890',
+          },
           agreementVersion: 'solar-construction-request-v1',
           agreementText: 'شرایط ثبت قرارداد را می‌پذیرم.',
           createsContract: false,
@@ -509,192 +526,218 @@ test('solar request moves from customer upload through staff review and postal r
 
 for (const locale of ['en', 'fa'] as const)
   for (const existing of [false, true])
-    test(`solar intake returns from address setup with its saved site details (${locale}, existing=${existing})`, async ({
-      page,
-    }) => {
-      await page.addInitScript(
-        (language) => localStorage.setItem('barghsa.locale', language),
-        locale
-      );
-      const siteAddress = {
-        id: '99999999-9999-4999-8999-999999999999',
-        profileId,
-        provinceId: '33333333-3333-4333-8333-333333333333',
-        cityId: '44444444-4444-4444-8444-444444444444',
-        fullAddress: 'Solar Field Road',
-        postalCode: '9876543210',
-        mainAddress: !existing,
-        createdAt: submittedAt,
-        updatedAt: submittedAt,
-      };
-      const addresses: Array<typeof siteAddress> = existing
-        ? [
-            {
-              ...siteAddress,
-              id: '88888888-8888-4888-8888-888888888888',
-              fullAddress: 'Original site',
-              mainAddress: true,
-            },
-          ]
-        : [];
-      let draft: Record<string, unknown> | null = null;
-      let submission: Record<string, unknown> | null = null;
-
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
-      await page.route('**/api/upload/policy/*', (route) =>
-        route.fulfill({
-          json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
-        })
-      );
-      await page.route('**/api/auth/user', (route) =>
-        route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
-      );
-      await page.route('**/api/profiles', (route) =>
-        route.fulfill({
-          json: {
-            profiles: [
+    for (const buildingType of ['non_household', 'building_apartment'] as const)
+      test(`solar intake returns from address setup with its saved site details (${locale}, existing=${existing}, ${buildingType})`, async ({
+        page,
+      }) => {
+        await page.addInitScript(
+          (language) => localStorage.setItem('barghsa.locale', language),
+          locale
+        );
+        const siteAddress = {
+          id: '99999999-9999-4999-8999-999999999999',
+          profileId,
+          provinceId: '33333333-3333-4333-8333-333333333333',
+          cityId: '44444444-4444-4444-8444-444444444444',
+          fullAddress: 'Solar Field Road',
+          postalCode: '9876543210',
+          mainAddress: !existing,
+          createdAt: submittedAt,
+          updatedAt: submittedAt,
+        };
+        const addresses: Array<typeof siteAddress> = existing
+          ? [
               {
-                id: profileId,
-                profileType: 'INDIVIDUAL',
-                title: 'Buyer',
-                isDefault: true,
-                status: 'ACTIVE',
-                firstName: 'Solar',
-                lastName: 'Buyer',
-                nationalId: '1234567890',
+                ...siteAddress,
+                id: '88888888-8888-4888-8888-888888888888',
+                fullAddress: 'Original site',
+                mainAddress: true,
+              },
+            ]
+          : [];
+        let draft: Record<string, unknown> | null = null;
+        let submission: Record<string, unknown> | null = null;
+
+        await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+        await page.route('**/api/upload/policy/*', (route) =>
+          route.fulfill({
+            json: documentUploadPolicy(new URL(route.request().url()).pathname.split('/').at(-1)),
+          })
+        );
+        await page.route('**/api/auth/user', (route) =>
+          route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
+        );
+        await page.route('**/api/profiles', (route) =>
+          route.fulfill({
+            json: {
+              profiles: [
+                {
+                  id: profileId,
+                  profileType: 'INDIVIDUAL',
+                  title: 'Buyer',
+                  isDefault: true,
+                  status: 'ACTIVE',
+                  firstName: 'Solar',
+                  lastName: 'Buyer',
+                  nationalId: '1234567890',
+                },
+              ],
+              activeProfileId: profileId,
+              hasDefault: true,
+            },
+          })
+        );
+        await page.route('**/api/user/settings/timezone', (route) =>
+          route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+        );
+        await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+          if (route.request().method() === 'POST') {
+            addresses.push(siteAddress);
+            return route.fulfill({ status: 201, json: siteAddress });
+          }
+          return route.fulfill({ json: { addresses } });
+        });
+        await page.route('**/api/geography/provinces', (route) =>
+          route.fulfill({
+            json: [{ id: siteAddress.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }],
+          })
+        );
+        await page.route(`**/api/geography/provinces/${siteAddress.provinceId}/cities`, (route) =>
+          route.fulfill({
+            json: [
+              {
+                id: siteAddress.cityId,
+                provinceId: siteAddress.provinceId,
+                nameFa: 'تهران',
+                nameEn: 'Tehran',
               },
             ],
-            activeProfileId: profileId,
-            hasDefault: true,
-          },
-        })
-      );
-      await page.route('**/api/user/settings/timezone', (route) =>
-        route.fulfill({ json: { timezone: 'Asia/Tehran' } })
-      );
-      await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
-        if (route.request().method() === 'POST') {
-          addresses.push(siteAddress);
-          return route.fulfill({ status: 201, json: siteAddress });
-        }
-        return route.fulfill({ json: { addresses } });
-      });
-      await page.route('**/api/geography/provinces', (route) =>
-        route.fulfill({ json: [{ id: siteAddress.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }] })
-      );
-      await page.route(`**/api/geography/provinces/${siteAddress.provinceId}/cities`, (route) =>
-        route.fulfill({
-          json: [
-            {
-              id: siteAddress.cityId,
-              provinceId: siteAddress.provinceId,
-              nameFa: 'تهران',
-              nameEn: 'Tehran',
+          })
+        );
+        await page.route('**/api/solar/requests/draft?*', (route) => {
+          if (route.request().method() === 'PUT') {
+            draft = route.request().postDataJSON() as Record<string, unknown>;
+            return route.fulfill({ json: { ...draft, updatedAt: submittedAt } });
+          }
+          return route.fulfill({
+            json: {
+              currentStep: draft?.currentStep ?? 1,
+              data: draft?.data ?? null,
+              updatedAt: draft ? submittedAt : null,
             },
-          ],
-        })
-      );
-      await page.route('**/api/solar/requests/draft?*', (route) => {
-        if (route.request().method() === 'PUT') {
-          draft = route.request().postDataJSON() as Record<string, unknown>;
-          return route.fulfill({ json: { ...draft, updatedAt: submittedAt } });
+          });
+        });
+        await page.route('**/api/solar/requests/review', (route) =>
+          route.fulfill({
+            status: 201,
+            json: {
+              hash: 'b'.repeat(64),
+              data: {
+                submission: route.request().postDataJSON(),
+                siteAddress: siteAddress.fullAddress,
+                siteAddressSnapshot: {
+                  id: siteAddress.id,
+                  province_id: siteAddress.provinceId,
+                  city_id: siteAddress.cityId,
+                  full_address: siteAddress.fullAddress,
+                  postal_code: siteAddress.postalCode,
+                },
+                agreementVersion: 'solar-construction-request-v1',
+                agreementText: 'شرایط ثبت قرارداد را می‌پذیرم.',
+                createsContract: false,
+                createsInvoice: false,
+              },
+            },
+          })
+        );
+        await page.route('**/api/solar/requests', (route) => {
+          submission = route.request().postDataJSON() as Record<string, unknown>;
+          return route.fulfill({ status: 201, json: { requestId } });
+        });
+
+        await page.goto('/solar/requests/new');
+
+        await page.locator(`input[value="${buildingType}"]`).check();
+        if (buildingType === 'non_household') await page.locator('#solar-area').fill('250');
+        else {
+          await page.getByLabel(tSolar('propertyForm', locale)).selectOption('villa');
+          await page.locator('#solar-completion').fill('2020-01-01');
         }
-        return route.fulfill({
-          json: {
-            currentStep: draft?.currentStep ?? 1,
-            data: draft?.data ?? null,
-            updatedAt: draft ? submittedAt : null,
-          },
+        await page
+          .getByRole('link', { name: tSolar(existing ? 'addAddress' : 'noAddresses', locale) })
+          .click();
+        await expect(page).toHaveURL(/\/settings\/addresses\?/);
+        expect(draft?.data).toMatchObject({
+          buildingType,
+          ...(buildingType === 'non_household'
+            ? { usableAreaSqm: '250' }
+            : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
+        });
+
+        await page.getByRole('button', { name: t('settings.addresses.add', locale) }).click();
+        await page.locator('#addresses-field-1').selectOption(siteAddress.provinceId);
+        await page.locator('#addresses-field-2').selectOption(siteAddress.cityId);
+        await page.locator('#addresses-field-3').fill(siteAddress.fullAddress);
+        await page.locator('#addresses-field-4').fill(siteAddress.postalCode);
+        await page
+          .getByRole('button', { name: t('settings.addresses.form.save', locale), exact: true })
+          .click();
+        await expect(
+          page.getByRole('dialog', { name: t('settings.addresses.form.title', locale) })
+        ).toBeHidden();
+        await expect(page.getByText(siteAddress.fullAddress, { exact: true })).toBeVisible();
+        await page
+          .getByRole('link', { name: t('settings.addresses.returnToSolarRequest', locale) })
+          .click();
+        await expect(page).toHaveURL(/\/solar\/requests\/new\?step=1$/);
+        if (buildingType === 'non_household')
+          await expect(page.locator('#solar-area')).toHaveValue('250');
+        else await expect(page.locator('#solar-completion')).toHaveValue('2020-01-01');
+        await page.getByLabel(tSolar('address', locale)).selectOption(siteAddress.id);
+        await expect(page.getByLabel(tSolar('address', locale))).toHaveValue(siteAddress.id);
+        expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+          true
+        );
+        if (locale === 'fa')
+          await expect(page.locator('main').last().locator('[dir=rtl]').first()).toBeVisible();
+        if (locale === 'fa' && existing && process.env.BARGHSA_SCREENSHOT_DIR)
+          await page
+            .locator('[data-slot=card]')
+            .filter({ has: page.getByLabel(tSolar('address', locale)) })
+            .screenshot({
+              path: `${process.env.BARGHSA_SCREENSHOT_DIR}/solar-address-restored-${test.info().project.name}.png`,
+            });
+        await page
+          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
+          .click();
+        await page.getByLabel(tSolar('offGrid', locale)).check();
+        await page
+          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
+          .click();
+        await page.getByLabel(tSolar('agreement', locale)).check();
+        await page
+          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
+          .click();
+        await expect(
+          page.getByRole('heading', { name: tSolar('reviewTitle', locale) })
+        ).toBeVisible();
+        await expect(page.getByText(siteAddress.fullAddress)).toBeVisible();
+        await expect(page.locator('[data-review-section=property]')).toContainText(
+          siteAddress.postalCode
+        );
+        await page.getByRole('button', { name: tSolar('submit', locale) }).click();
+        await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
+        expect(submission).toMatchObject({
+          buildingType,
+          ...(buildingType === 'non_household'
+            ? { usableAreaSqm: 250 }
+            : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
+          siteAddressId: siteAddress.id,
+          gridType: 'off_grid',
+          expectedReviewHash: 'b'.repeat(64),
         });
       });
-      await page.route('**/api/solar/requests/review', (route) =>
-        route.fulfill({
-          status: 201,
-          json: {
-            hash: 'b'.repeat(64),
-            data: {
-              submission: route.request().postDataJSON(),
-              siteAddress: siteAddress.fullAddress,
-              agreementVersion: 'solar-construction-request-v1',
-              agreementText: 'شرایط ثبت قرارداد را می‌پذیرم.',
-              createsContract: false,
-              createsInvoice: false,
-            },
-          },
-        })
-      );
-      await page.route('**/api/solar/requests', (route) => {
-        submission = route.request().postDataJSON() as Record<string, unknown>;
-        return route.fulfill({ status: 201, json: { requestId } });
-      });
-
-      await page.goto('/solar/requests/new');
-
-      await page.locator('input[value="non_household"]').check();
-      await page.locator('#solar-area').fill('250');
-      await page
-        .getByRole('link', { name: tSolar(existing ? 'addAddress' : 'noAddresses', locale) })
-        .click();
-      await expect(page).toHaveURL(/\/settings\/addresses\?/);
-      expect(draft?.data).toMatchObject({ buildingType: 'non_household', usableAreaSqm: '250' });
-
-      await page.getByRole('button', { name: t('settings.addresses.add', locale) }).click();
-      await page.locator('#addresses-field-1').selectOption(siteAddress.provinceId);
-      await page.locator('#addresses-field-2').selectOption(siteAddress.cityId);
-      await page.locator('#addresses-field-3').fill(siteAddress.fullAddress);
-      await page.locator('#addresses-field-4').fill(siteAddress.postalCode);
-      await page
-        .getByRole('button', { name: t('settings.addresses.form.save', locale), exact: true })
-        .click();
-      await expect(
-        page.getByRole('dialog', { name: t('settings.addresses.form.title', locale) })
-      ).toBeHidden();
-      await expect(page.getByText(siteAddress.fullAddress, { exact: true })).toBeVisible();
-      await page
-        .getByRole('link', { name: t('settings.addresses.returnToSolarRequest', locale) })
-        .click();
-      await expect(page).toHaveURL(/\/solar\/requests\/new\?step=1$/);
-      await expect(page.locator('#solar-area')).toHaveValue('250');
-      await page.getByLabel(tSolar('address', locale)).selectOption(siteAddress.id);
-      await expect(page.getByLabel(tSolar('address', locale))).toHaveValue(siteAddress.id);
-      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
-        true
-      );
-      if (locale === 'fa')
-        await expect(page.locator('main').last().locator('[dir=rtl]').first()).toBeVisible();
-      if (locale === 'fa' && existing && process.env.BARGHSA_SCREENSHOT_DIR)
-        await page
-          .locator('[data-slot=card]')
-          .filter({ has: page.getByLabel(tSolar('address', locale)) })
-          .screenshot({
-            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/solar-address-restored-${test.info().project.name}.png`,
-          });
-      await page
-        .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
-        .click();
-      await page.getByLabel(tSolar('offGrid', locale)).check();
-      await page
-        .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
-        .click();
-      await page.getByLabel(tSolar('agreement', locale)).check();
-      await page
-        .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
-        .click();
-      await expect(
-        page.getByRole('heading', { name: tSolar('reviewTitle', locale) })
-      ).toBeVisible();
-      await expect(page.getByText(siteAddress.fullAddress)).toBeVisible();
-      await page.getByRole('button', { name: tSolar('submit', locale) }).click();
-      await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
-      expect(submission).toMatchObject({
-        buildingType: 'non_household',
-        usableAreaSqm: 250,
-        siteAddressId: siteAddress.id,
-        gridType: 'off_grid',
-        expectedReviewHash: 'b'.repeat(64),
-      });
-    });
 
 test('staff confirms the reviewed solar contract and exact initial invoice', async ({ page }) => {
   let reviewed: SolarCommand | null = null;

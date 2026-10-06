@@ -90,6 +90,8 @@ it.each(['fa', 'en'] as const)(
       );
       expect(container.querySelector('#solar-bill')).toBeNull();
       expect(container.querySelector('#solar-units')).not.toBeNull();
+      expect(container.querySelector('select[name=siteAddressId]')).not.toBeNull();
+      expect(container.querySelector('a[href="/settings/addresses"]')).not.toBeNull();
       expect(container.querySelector('ol')?.children).toHaveLength(4);
       const submit = Array.from(container.querySelectorAll('button')).find(
         (button) => button.textContent === (locale === 'fa' ? 'ادامه' : 'Continue')

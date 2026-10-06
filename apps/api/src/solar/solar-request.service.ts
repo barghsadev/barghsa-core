@@ -68,15 +68,34 @@ export class SolarRequestService {
   }
 
   private async siteAddress(client: PoolClient, input: SolarSubmissionReviewInput) {
-    if (input.buildingType !== 'non_household') return null;
+    if (!input.siteAddressId) throw new BadRequestException('Select an address for this profile');
     const address = (
-      await client.query<{ full_address: string }>(
-        'SELECT full_address FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR SHARE',
+      await client.query<{
+        id: string;
+        province_id: string;
+        city_id: string;
+        full_address: string;
+        postal_code: string;
+      }>(
+        'SELECT id,province_id,city_id,full_address,postal_code FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR SHARE',
         [input.siteAddressId, input.profileId]
       )
     ).rows[0];
     if (!address) throw new BadRequestException('Select an address for this profile');
-    return address.full_address;
+    return address;
+  }
+
+  private async submissionReviewData(client: PoolClient, submission: SolarSubmissionReviewInput) {
+    const address = await this.siteAddress(client, submission);
+    return {
+      submission,
+      siteAddress: address?.full_address ?? null,
+      siteAddressSnapshot: address,
+      agreementVersion: SOLAR_AGREEMENT_VERSION,
+      agreementText: SOLAR_AGREEMENT_TEXT,
+      createsContract: false,
+      createsInvoice: false,
+    };
   }
 
   async review(actor: Actor, input: SolarSubmissionReviewInput) {
@@ -100,14 +119,10 @@ export class SolarRequestService {
         throw new ConflictException('Submission key belongs to another request');
       const review = existing
         ? this.assertReplay(existing.submission_review, input)
-        : this.reviews.create(this.reviewScope(input), {
-            submission: input,
-            siteAddress: await this.siteAddress(client, input),
-            agreementVersion: SOLAR_AGREEMENT_VERSION,
-            agreementText: SOLAR_AGREEMENT_TEXT,
-            createsContract: false,
-            createsInvoice: false,
-          });
+        : this.reviews.create(
+            this.reviewScope(input),
+            await this.submissionReviewData(client, input)
+          );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return review;
@@ -235,14 +250,10 @@ export class SolarRequestService {
         return { requestId: existing.id, status: 'submitted' as const };
       }
       await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
-      const review = this.reviews.create(this.reviewScope(submission), {
-        submission,
-        siteAddress: await this.siteAddress(client, submission),
-        agreementVersion: SOLAR_AGREEMENT_VERSION,
-        agreementText: SOLAR_AGREEMENT_TEXT,
-        createsContract: false,
-        createsInvoice: false,
-      });
+      const review = this.reviews.create(
+        this.reviewScope(submission),
+        await this.submissionReviewData(client, submission)
+      );
       this.reviews.assertConfirmed(review, expectedReviewHash);
       const id = uuidv7();
       await client.query(

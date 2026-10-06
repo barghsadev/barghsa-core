@@ -14,6 +14,8 @@ const address = {
   id: '44444444-4444-4444-8444-444444444444',
   fullAddress: 'Saved Site Street',
   postalCode: '1234567890',
+  provinceId: '77777777-7777-4777-8777-777777777777',
+  cityId: '88888888-8888-4888-8888-888888888888',
   mainAddress: true,
 };
 const receiptId = '66666666-6666-4666-8666-666666666666';
@@ -52,6 +54,7 @@ async function fixture(page: Page, mode: Mode, locale: Locale, savedStep = 1) {
     saves: [] as Record<string, unknown>[],
     orders: [] as Record<string, unknown>[],
     reviews: [] as Record<string, unknown>[],
+    badSite: false,
     mismatch: false,
     saveStatus: 200,
     saveGate: null as Promise<void> | null,
@@ -227,6 +230,13 @@ async function fixture(page: Page, mode: Mode, locale: Locale, savedStep = 1) {
         data: {
           submission: state.badReview ? { ...input, profileId: receiptId } : input,
           siteAddress: address.fullAddress,
+          siteAddressSnapshot: {
+            id: state.badSite ? receiptId : address.id,
+            province_id: address.provinceId,
+            city_id: address.cityId,
+            full_address: address.fullAddress,
+            postal_code: address.postalCode,
+          },
           agreementVersion: 'solar-construction-request-v1',
           agreementText: 'شرایط ثبت قرارداد را می‌پذیرم.',
           createsContract: false,
@@ -546,6 +556,24 @@ test('solar rejects an authoritative review for another profile', async ({ page 
   await expect(page.getByRole('alert')).toContainText(tSolar('submitError', 'en'));
   await expect(page).toHaveURL(/step=3$/);
   expect(state.orders).toHaveLength(0);
+});
+
+test('solar rejects an address snapshot for another site and retains the selected request', async ({
+  page,
+}) => {
+  const state = await fixture(page, 'solar', 'en');
+  state.badSite = true;
+  await review(page, 'solar', 'en');
+  await expect(page).toHaveURL(/step=3$/);
+  await expect(page.getByRole('alert')).toContainText(tSolar('submitError', 'en'));
+  expect(state.reviews).toHaveLength(1);
+  expect(state.reviews[0]).toMatchObject({ siteAddressId: address.id });
+  expect(state.orders).toHaveLength(0);
+  state.badSite = false;
+  await button(page, 'electricity.order.next', 'en').click();
+  await expect(page).toHaveURL(/step=4$/);
+  await expect(page.locator('[data-review-section=property]')).toContainText(address.postalCode);
+  expect(state.reviews[1]).toEqual(state.reviews[0]);
 });
 
 test('saving does not claim an unfinished new address was saved', async ({ page }) => {

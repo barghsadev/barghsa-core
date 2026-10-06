@@ -25,6 +25,13 @@ interface SolarReview {
   data: {
     submission: Record<string, string | number | boolean>;
     siteAddress: string | null;
+    siteAddressSnapshot: {
+      id: string;
+      province_id: string;
+      city_id: string;
+      full_address: string;
+      postal_code: string;
+    };
     agreementVersion: string;
     agreementText: string;
     createsContract: false;
@@ -128,14 +135,14 @@ export function SolarRequestPage() {
       .superRefine((value, context) => {
         const invalid = (name: keyof typeof value) =>
           context.addIssue({ code: 'custom', path: [name], message: invalidField });
+        if (!addresses.some((address) => address.id === value.siteAddressId))
+          invalid('siteAddressId');
         if (value.buildingType === 'building_apartment') {
           if (!completionDateValid(value.buildingCompletionDate)) invalid('buildingCompletionDate');
           if (value.propertyForm === 'apartment' && !unitsValid(value.totalUnits))
             invalid('totalUnits');
         } else {
           if (!areaValid(value.usableAreaSqm)) invalid('usableAreaSqm');
-          if (!addresses.some((address) => address.id === value.siteAddressId))
-            invalid('siteAddressId');
         }
         if (
           value.gridType === 'on_grid' &&
@@ -276,11 +283,11 @@ export function SolarRequestPage() {
   });
   const fingerprint = JSON.stringify([profileId, currentDraft, agreementAccepted]);
   const propertyValid = (value: SolarDraft) =>
-    value.buildingType === 'non_household'
-      ? areaValid(value.usableAreaSqm) &&
-        addresses.some((address) => address.id === value.siteAddressId)
+    addresses.some((address) => address.id === value.siteAddressId) &&
+    (value.buildingType === 'non_household'
+      ? areaValid(value.usableAreaSqm)
       : completionDateValid(value.buildingCompletionDate) &&
-        (value.propertyForm === 'villa' || unitsValid(value.totalUnits));
+        (value.propertyForm === 'villa' || unitsValid(value.totalUnits)));
   const gridValid = (value: SolarDraft) =>
     value.gridType === 'off_grid' ||
     /^[0-9]{6,13}$/.test(normalizeProfileDigits(value.billIdentifier));
@@ -379,6 +386,7 @@ export function SolarRequestPage() {
       const base = {
         profileId,
         gridType,
+        siteAddressId,
         ...(gridType === 'on_grid'
           ? { billIdentifier: normalizeProfileDigits(billIdentifier) }
           : {}),
@@ -398,7 +406,6 @@ export function SolarRequestPage() {
               siteCategory,
               installationSurface,
               usableAreaSqm: Number(usableAreaSqm),
-              siteAddressId,
               siteRelationship,
               ...(siteDescription.trim() ? { siteDescription: siteDescription.trim() } : {}),
             };
@@ -426,7 +433,17 @@ export function SolarRequestPage() {
           !receipt.data.agreementVersion ||
           typeof receipt.data.agreementText !== 'string' ||
           !receipt.data.agreementText ||
-          (receipt.data.siteAddress !== null && typeof receipt.data.siteAddress !== 'string')
+          typeof receipt.data.siteAddress !== 'string' ||
+          !receipt.data.siteAddress.trim() ||
+          !receipt.data.siteAddressSnapshot ||
+          receipt.data.siteAddressSnapshot.id !== siteAddressId ||
+          receipt.data.siteAddressSnapshot.full_address !== receipt.data.siteAddress ||
+          typeof receipt.data.siteAddressSnapshot.province_id !== 'string' ||
+          !receipt.data.siteAddressSnapshot.province_id ||
+          typeof receipt.data.siteAddressSnapshot.city_id !== 'string' ||
+          !receipt.data.siteAddressSnapshot.city_id ||
+          typeof receipt.data.siteAddressSnapshot.postal_code !== 'string' ||
+          !/^[0-9]{10}$/.test(receipt.data.siteAddressSnapshot.postal_code)
         )
           throw new Error('Invalid review');
         try {
@@ -553,6 +570,7 @@ export function SolarRequestPage() {
           fields={[
             [
               { name: 'buildingType', label: copy('instruction') },
+              { name: 'siteAddressId', label: copy('address') },
               ...(buildingType === 'building_apartment'
                 ? [
                     { name: 'propertyForm' as const, label: copy('propertyForm') },
@@ -566,7 +584,6 @@ export function SolarRequestPage() {
                     { name: 'siteCategory' as const, label: copy('siteCategory') },
                     { name: 'installationSurface' as const, label: copy('installationSurface') },
                     { name: 'usableAreaSqm' as const, label: copy('usableArea') },
-                    { name: 'siteAddressId' as const, label: copy('address') },
                     { name: 'siteRelationship' as const, label: copy('relationship') },
                     { name: 'siteDescription' as const, label: copy('description') },
                   ]),
@@ -686,9 +703,7 @@ export function SolarRequestPage() {
                           </div>
                           {age !== null && (
                             <p className="text-sm text-muted-foreground">
-                              {locale === 'fa'
-                                ? `عمر تقریبی ساختمان: ${age} سال`
-                                : `Approximate building age: ${age} years`}
+                              {copy('buildingAge').replace('{years}', String(age))}
                             </p>
                           )}
                           {propertyForm === 'apartment' && (
@@ -758,34 +773,6 @@ export function SolarRequestPage() {
                             />
                           </div>
                           <label className="block space-y-1">
-                            <span>{copy('address')}</span>
-                            <select
-                              className="w-full rounded-md border bg-background p-2"
-                              {...fields.bind('siteAddressId')}
-                              value={siteAddressId}
-                              onChange={(e) => setSiteAddressId(e.target.value)}
-                              required
-                            >
-                              <option value="">—</option>
-                              {addresses.map((address) => (
-                                <option key={address.id} value={address.id}>
-                                  {address.fullAddress}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-                          <Link
-                            className="inline-flex min-h-11 items-center text-sm underline"
-                            to="/settings/addresses"
-                            aria-disabled={protection.busy}
-                            onClick={(event) => {
-                              event.preventDefault();
-                              if (!protection.busy) void leaveForAddress();
-                            }}
-                          >
-                            {copy(addresses.length ? 'addAddress' : 'noAddresses')}
-                          </Link>
-                          <label className="block space-y-1">
                             <span>{copy('relationship')}</span>
                             <select
                               className="w-full rounded-md border bg-background p-2"
@@ -816,6 +803,34 @@ export function SolarRequestPage() {
                           </label>
                         </>
                       )}
+                      <label className="block space-y-1">
+                        <span>{copy('address')}</span>
+                        <select
+                          className="w-full rounded-md border bg-background p-2"
+                          {...fields.bind('siteAddressId')}
+                          value={siteAddressId}
+                          onChange={(e) => setSiteAddressId(e.target.value)}
+                          required
+                        >
+                          <option value="">—</option>
+                          {addresses.map((address) => (
+                            <option key={address.id} value={address.id}>
+                              {address.fullAddress}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <Link
+                        className="inline-flex min-h-11 items-center text-sm underline"
+                        to="/settings/addresses"
+                        aria-disabled={protection.busy}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          if (!protection.busy) void leaveForAddress();
+                        }}
+                      >
+                        {copy(addresses.length ? 'addAddress' : 'noAddresses')}
+                      </Link>
                     </CardContent>
                   </Card>
                 </>
@@ -940,6 +955,14 @@ export function SolarRequestPage() {
                               ),
                               ...(review.data.siteAddress
                                 ? [{ label: copy('address'), value: review.data.siteAddress }]
+                                : []),
+                              ...(review.data.siteAddressSnapshot?.postal_code
+                                ? [
+                                    {
+                                      label: t('electricity.order.postalCode', locale),
+                                      value: review.data.siteAddressSnapshot.postal_code,
+                                    },
+                                  ]
                                 : []),
                               ...(review.data.submission.siteRelationship
                                 ? [

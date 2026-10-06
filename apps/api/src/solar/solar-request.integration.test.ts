@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let customerHeaders: Record<string, string>;
@@ -171,6 +172,7 @@ it('submits both solar request types, captures agreement, and creates no contrac
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
+    siteAddressId: addressId,
     propertyForm: 'apartment',
     structuralFrame: 'steel',
     buildingCompletionDate: '2018-01-01',
@@ -184,15 +186,50 @@ it('submits both solar request types, captures agreement, and creates no contrac
     billIdentifier: undefined,
   });
   expect(badBill.status).toBe(400);
+  expect(
+    (
+      await request('/api/solar/requests/review', 'POST', {
+        ...buildingInput,
+        siteAddressId: undefined,
+      })
+    ).status
+  ).toBe(400);
   expect((await request('/api/solar/requests', 'POST', buildingInput)).status).toBe(400);
   expect(
     (await request('/api/solar/requests/review', 'POST', buildingInput, otherHeaders)).status
   ).toBe(404);
   const buildingPreview = await request('/api/solar/requests/review', 'POST', buildingInput);
   expect(buildingPreview.status, http.logs()).toBe(201);
-  expect(await buildingPreview.json()).toMatchObject({
-    data: { createsContract: false, createsInvoice: false },
+  const householdPreview = (await buildingPreview.json()) as { hash: string };
+  expect(householdPreview).toMatchObject({
+    data: {
+      createsContract: false,
+      createsInvoice: false,
+      siteAddress: 'Test solar site',
+      siteAddressSnapshot: {
+        id: addressId,
+        full_address: 'Test solar site',
+        postal_code: '1234567890',
+        province_id: expect.any(String),
+        city_id: expect.any(String),
+      },
+    },
   });
+  await http.pool.query("UPDATE addresses SET postal_code='9876543210' WHERE id=$1", [addressId]);
+  expect(
+    (
+      await request('/api/solar/requests', 'POST', {
+        ...buildingInput,
+        expectedReviewHash: householdPreview.hash,
+      })
+    ).status
+  ).toBe(409);
+  await http.pool.query("UPDATE addresses SET postal_code='1234567890' WHERE id=$1", [addressId]);
+  const badHouseholdAddress = await request('/api/solar/requests/review', 'POST', {
+    ...buildingInput,
+    siteAddressId: randomUUID(),
+  });
+  expect(badHouseholdAddress.status).toBe(400);
   const buildingResponse = await submitReviewed(buildingInput);
   expect(buildingResponse.status, http.logs()).toBe(201);
   const building = (await buildingResponse.json()) as { requestId: string; status: string };
@@ -274,6 +311,21 @@ it('submits both solar request types, captures agreement, and creates no contrac
   expect(
     ((await historicalDetail.json()) as { request: Record<string, unknown> }).request.site_address
   ).toBe('Test solar site');
+  const householdHistory = await request(`/api/solar/requests/${building.requestId}`, 'GET');
+  expect(await householdHistory.json()).toMatchObject({
+    request: {
+      site_address: 'Test solar site',
+      submission_review: {
+        data: {
+          siteAddressSnapshot: {
+            id: addressId,
+            full_address: 'Test solar site',
+            postal_code: '1234567890',
+          },
+        },
+      },
+    },
+  });
   const replayPreview = await request('/api/solar/requests/review', 'POST', siteInput);
   expect(replayPreview.status, http.logs()).toBe(201);
   expect((await replayPreview.json()) as { hash: string }).toMatchObject({
@@ -447,6 +499,12 @@ it('submits both solar request types, captures agreement, and creates no contrac
       "INSERT INTO profiles(user_id,profile_type,status) VALUES('solar-customer','LEGAL','ACTIVE') RETURNING id"
     )
   ).rows[0]!.id;
+  const otherAddressId = (
+    await http.pool.query<{ id: string }>(
+      'INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) SELECT $1,province_id,city_id,full_address,postal_code,true FROM addresses WHERE id=$2 RETURNING id',
+      [otherProfile, addressId]
+    )
+  ).rows[0]!.id;
   await http.pool.query(
     "INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,'solar-other','Manager')",
     [otherProfile]
@@ -454,6 +512,7 @@ it('submits both solar request types, captures agreement, and creates no contrac
   const independent = await submitReviewed({
     ...buildingInput,
     profileId: otherProfile,
+    siteAddressId: otherAddressId,
     submissionKey: randomUUID(),
   });
   expect(independent.status, http.logs()).toBe(201);
@@ -469,12 +528,66 @@ it('submits both solar request types, captures agreement, and creates no contrac
     submitReviewed({
       ...buildingInput,
       profileId: otherProfile,
+      siteAddressId: otherAddressId,
       submissionKey: randomUUID(),
     }),
     submitReviewed(
-      { ...buildingInput, profileId: otherProfile, submissionKey: randomUUID() },
+      {
+        ...buildingInput,
+        profileId: otherProfile,
+        siteAddressId: otherAddressId,
+        submissionKey: randomUUID(),
+      },
       otherHeaders
     ),
   ]);
   expect(simultaneous.map((response) => response.status).sort(), http.logs()).toEqual([201, 429]);
+}, 60_000);
+
+it('replays a legacy household signed receipt without adding address fields or changing its hash', async () => {
+  const input = {
+    profileId,
+    submissionKey: randomUUID(),
+    buildingType: 'building_apartment',
+    propertyForm: 'villa',
+    structuralFrame: 'concrete',
+    buildingCompletionDate: '2020-01-01',
+    gridType: 'off_grid',
+    agreementAccepted: true,
+  };
+  const stored = new ReviewSnapshotService().create(
+    { action: 'solar.request.submit', profileId, resourceId: input.submissionKey },
+    {
+      submission: input,
+      siteAddress: null,
+      agreementVersion: 'solar-construction-request-v1',
+      agreementText: 'شرایط ثبت قرارداد را می‌پذیرم.',
+      createsContract: false,
+      createsInvoice: false,
+    }
+  );
+  const row = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO solar_construction_requests(profile_id,submitted_by,submission_key,status,building_type,grid_type,property_form,structural_frame,building_completion_date,agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at,submission_review)
+     VALUES($1,'solar-customer',$2,'submitted','building_apartment','off_grid','villa','concrete','2020-01-01',true,'solar-construction-request-v1','شرایط ثبت قرارداد را می‌پذیرم.',NOW(),$3::jsonb) RETURNING id`,
+      [profileId, input.submissionKey, JSON.stringify(stored)]
+    )
+  ).rows[0]!;
+  const preview = await request('/api/solar/requests/review', 'POST', input);
+  expect(preview.status, http.logs()).toBe(201);
+  expect(await preview.json()).toEqual(stored);
+  const replay = await request('/api/solar/requests', 'POST', {
+    ...input,
+    expectedReviewHash: stored.hash,
+  });
+  expect(replay.status, http.logs()).toBe(201);
+  expect(await replay.json()).toEqual({ requestId: row.id, status: 'submitted' });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT submission_review FROM solar_construction_requests WHERE id=$1',
+        [row.id]
+      )
+    ).rows[0]!.submission_review
+  ).toEqual(stored);
 }, 60_000);

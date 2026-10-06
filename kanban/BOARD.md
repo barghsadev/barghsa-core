@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 17 | Accepted with unchanged source bindings. |
-| verify | 1286 | Existing work may be complete; inspect evidence before building. |
-| partial | 54 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 19 | Accepted with unchanged source bindings. |
+| verify | 1285 | Existing work may be complete; inspect evidence before building. |
+| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Complete solar household address selection and persist full immutable address fields in existing signed review storage. Preserve legacy signed receipts/replays; reconcile retained-row deletion behavior with address requirements, then continue identity/four-service acceptance.
+Inspect current identity/admin permission and document recovery failures; repair demonstrated defects with focused checks. Inventory staging legacy address rows and renew dashboard/authentication acceptance. Preserve later-release security checkpoints and dependency order.
 
-- `02-auth-users-admin.md#T-03.04.02`: Address in order flow
-- `02-auth-users-admin.md#T-03.04.01`: Address CRUD for current profile
-- `03-core-business.md#T-03.11.02.02`: Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected)
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
+- `02-auth-users-admin.md#T-03.04.02`: Address in order flow
+- `02-auth-users-admin.md#T-08.01.01`: Dashboard page layout
+- `02-auth-users-admin.md#T-08.01.03`: Quick status cards
 
 ## v0.2.0: Complete customer journeys
 
@@ -90,7 +90,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-03.03.04` | verify | Earlier acceptance_verified | Username/contact changes |
 | `02-auth-users-admin.md#T-03.03.05` | verify | Earlier acceptance_verified | Notification channel preferences |
 | `02-auth-users-admin.md#T-03.03.06` | verify | Earlier acceptance_verified | Timezone settings |
-| `02-auth-users-admin.md#T-03.04.01` | partial | Earlier acceptance_verified | Address CRUD for current profile |
+| `02-auth-users-admin.md#T-03.04.01` | done | Earlier acceptance_verified | Address CRUD for current profile |
 | `02-auth-users-admin.md#T-03.04.02` | partial | Earlier partial | Address in order flow |
 | `02-auth-users-admin.md#T-04.01.01` | verify | Earlier acceptance_verified | Public TOS page |
 | `02-auth-users-admin.md#T-04.01.02` | verify | Earlier acceptance_verified | TOS acceptance storage |
@@ -268,7 +268,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.11.01.02` | verify | Inventory needed | Create `solar_construction_documents` table: `id`, `request_id` (FK), `document_id` (FK — documents/storage), `file_name`, `staff_status` (enum: `pending`, `approved`, `rejected`), `staff_reason` (text nullable), `staff_reviewed_by` (FK nullable), `staff_reviewed_at`, `uploaded_by` (FK), `uploaded_at` |
 | `03-core-business.md#T-03.11.01.03` | verify | Inventory needed | Create `solar_construction_postal` table: `id`, `request_id` (FK), `status` (enum: `waiting_for_shipment`, `shipped`, `received`, `incomplete`, `not_received`), `courier` (text nullable), `tracking_number` (text nullable), `send_date` (timestamptz nullable), `receipt_image_id` (FK nullable), `staff_confirmed_by` (FK nullable), `staff_confirmed_at`, `staff_notes` (text nullable) |
 | `03-core-business.md#T-03.11.02.01` | verify | Recorded batch work | Screen 1: Persian instruction: `نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.` — Two option cards: "Building and apartment" and "Non-household" |
-| `03-core-business.md#T-03.11.02.02` | verify | Inventory needed | Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected) |
+| `03-core-business.md#T-03.11.02.02` | done | Inventory needed | Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected) |
 | `03-core-business.md#T-03.11.02.03` | done | Recorded batch work | Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description |
 | `03-core-business.md#T-03.11.02.04` | verify | Inventory needed | Grid type selection: "On-Grid" (sell to grid) or "Off-Grid" (self-consumption) |
 | `03-core-business.md#T-03.11.02.05` | verify | Inventory needed | On-Grid only: electricity bill identifier field (required) |

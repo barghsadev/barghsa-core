@@ -20,6 +20,8 @@ function submissionSchema(confirm: boolean) {
       fields
         .extend({
           buildingType: z.literal('building_apartment'),
+          // Older household receipts have no address reference; retain their exact replays.
+          siteAddressId: z.string().uuid().optional(),
           propertyForm: z.enum(['apartment', 'villa']),
           structuralFrame: z.enum(['concrete', 'steel', 'other']),
           buildingCompletionDate: z.iso.date(),

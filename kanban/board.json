@@ -17073,12 +17073,10 @@
         "story": "02-auth-users-admin.md#spec-851ce038c50a"
       },
       "requirement": "**T-03.04.01 — Address CRUD for current profile**\n\n- Description: Customers can manage addresses under their active profile. Main address (from onboarding) shown. Can add, edit, delete, or set as main. Only one address can be main. Addresses filtered by current active profile only.\n- Technical notes: GET/POST/PUT/DELETE `/api/profiles/:profileId/addresses`. Main address flag is unique per profile. Deleting the main address requires selecting a new main address first. Addresses linked to orders cannot be deleted (soft delete + warn).\n- UI/UX: Address list with main badge. Add/edit modal form with province/city selects. Set as main action via star/radio. Confirmation on delete.\n- Dependencies: T-03.02.02 (address schema), T-03.03.01\n- Complexity: M",
-      "status": "partial",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Current CRUD, role/profile isolation, main-address uniqueness, confirmed original retries and retained soft-deleted rows pass. Reconcile the literal linked-order deletion restriction with the implemented soft-delete-and-warning behavior before accepting this whole task."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17178,7 +17176,109 @@
           "apps/web/e2e/form-accessibility.spec.ts"
         ],
         "batches": [],
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "verified-active-profile-address-crud",
+          "reviewed_sha": "4ba5c0c734e58c80f5e5dfcece453eda6630e643",
+          "source_evidence": [
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "d31e736696b28986744004dbd72b606ccc6259425dfb8550a90db282121e7986"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+              "sha256": "2b0e3f29e1c67e1050509326e1499979cbb66ca0157656bbdd90cd91c0c74b23"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsCommand.ts",
+              "sha256": "5f54b895e4ea2f1e1ef96f5c7f2a09b628d5ec73c3fcfaa5c614179769eea306"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "de6d00937bcd67ab47cdef30447d00ed30594bf2f46bbc1032c8ef43a5dd88e3"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.controller.ts",
+              "sha256": "50c6f942b0677ec6b276d66e158b4bb204a00a6abb3a8f3af8664bcb143f116d"
+            },
+            {
+              "path": "packages/db/src/schema/addresses.ts",
+              "sha256": "dc372575f421db116a85dc8102ce11a11c7a7316c059053f2f9e6249f8a12879"
+            },
+            {
+              "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
+              "sha256": "2bc3a50f31c5fab9548992be2d06741e8d5da86c53fab3be86ec85075a74dff8"
+            },
+            {
+              "path": "packages/i18n/src/addresses.ts",
+              "sha256": "dd00f1d5d8eae271822bd7e78790a581573e851ae04d0e57c539a3489c1f7f45"
+            }
+          ],
+          "checks": [
+            "41 distinct web source cases pass: 35 across saving/electricity/settings command/wizard protection and 6 selected native address-form cases. Four other native-form cases were deliberately skipped; saving six re-run on final source. Receipts source.json, native-forms.json, saving-source-final.json.",
+            "18 real PostgreSQL address HTTP cases pass, covering current role/session boundaries, main-address concurrency, exact keyed replay, rollback, retained soft-deleted rows and order snapshots. addresses-http.json.",
+            "Two targeted real PostgreSQL order HTTP cases pass (saving atomic quoted submission and advanced electricity bundle); 47 other cases deliberately skipped. API prebuilt reuse is limited to matching unchanged API/shared/db/worker artifacts. order-http.json and browser-source.json.",
+            "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
+            "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets.",
+            "Deletion criterion uses the specified soft-delete-and-warning behavior: no physical DELETE in the customer command, retained rows/order snapshots, current main-address replacement required, localized history warning in confirmation. Does not claim a separate linked-order soft-delete prohibition. Related 18 address HTTP cases and EN/FA native-form browser/source receipts remain valid for unchanged profile/address methods."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
+        },
         "address_checkpoint": {
           "base_commit": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
           "source_evidence": [
@@ -17297,7 +17397,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Solar household intake has no address selection/creation; non-household intake records only the address string in its signed review, leaving complete address-field snapshots and older rows without a recorded review to reconcile."
+        "Inventory live staging legacy solar rows lacking complete recorded address snapshots; preserve unknown historical values and old signed replay hashes instead of manufacturing past address fields. Current electricity, saving and both solar intake types have source-bound selection/creation and copied-field evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -17606,6 +17706,96 @@
             "Backend quote hashing, ownership locks, monetary totals and immutable address persistence are unchanged. Prior two targeted saving/electricity PostgreSQL cases and 18 profile-address HTTP cases remain valid for these unchanged service methods; no claim of a fresh full API suite."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review"
+        },
+        "solar_snapshot_checkpoint": {
+          "base_commit": "4ba5c0c734e58c80f5e5dfcece453eda6630e643",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "e4d5eb11c091dc295d1aa5ab5134c148ab702b6b0e90eb7d367bf4964bb408c4"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "d32bd3f28f18a98f9494400081aebaf74d6a56e05d7daa6f681cd4f8bf40ae5b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "7cf776a00da92b119cd72e5f8abebfd68149116d134c932ec6590ea7e8a765ae"
+            },
+            {
+              "path": "apps/api/src/finance/review-snapshot.service.ts",
+              "sha256": "9086d57b289880cac84a08b280c0b682cd6537c0b4f865ccd722a9bde6e255ec"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "e8be5f591fcc04e7a81b9af30884ca078192e971f4ca628faa8cd9d586a51837"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "81e8ea3efa8c84e60a0006e0837d739c7f17094253d792287147efc0150d8993"
+            },
+            {
+              "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+              "sha256": "b86dde027e7dd32cf8b5350349530f939384e0b3ab184e5b10877d083f99f47a"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "aeafbf304def209a8649395baa1e8d23a963c8f440106f93af10484cbc49e954"
+            },
+            {
+              "path": "apps/web/src/hooks/useFormDraft.ts",
+              "sha256": "7e19f48cbacfd8b1d972514fa01bc95def8a0178f0fa4b8dc7971325e6b28700"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "20 distinct source cases pass across solar intake, retained drafts and wizard navigation protection. EN/FA household forms expose saved-address selection and the existing add-address return link. source-accepted.json.",
+            "Three PostgreSQL HTTP intake cases pass: all draft semantics; both request types, complete signed address fields, invalid/missing current address rejection, postcode-only stale review conflict, immutable historical display, ownership and concurrent profile limits; old signed household receipt replay retains its original hash/data. api-required-address.json.",
+            "Two targeted downstream PostgreSQL/HTTP cases pass for document decisions/postal handoff and atomic linked solar contract/invoice creation/replay. Seven other cases deliberately skipped. Test setup now supplies owned installation addresses. callers-required-address.json.",
+            "34 final production browser cases pass with zero retries/skips on Chromium/mobile Safari: EN/FA household/non-household intake with/without existing addresses, retained address creation/return and signed postcode summary, customer-staff upload/postal journey, wrong-profile/wrong-site review refusal and recovery, final receipt retry, edit-and-renew-review and pending navigation fencing. browser-accepted-report.json.",
+            "Final web/API types, i18n build, changed-file lint/formatting, production web build and all 85 unchanged route budgets pass. browser-source.json verifies 18 source/config/lock bindings and 980 compiled web/i18n files.",
+            "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots",
+          "limitations": [
+            "Older solar rows may lack full field snapshots; do not invent historical values or re-sign old receipts. Inventory remains in generic address acceptance.",
+            "Hosted CI is independent and has unresolved historical failures recorded separately; local checks do not certify hosted checks or staging deployment."
+          ]
         }
       }
     },
@@ -43186,7 +43376,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "776b4944baa80b2f14b776a7255e21a6a033f8a7945c1295f4d0457282584057"
+              "sha256": "b86dde027e7dd32cf8b5350349530f939384e0b3ab184e5b10877d083f99f47a"
             }
           ],
           "checks": [
@@ -43194,7 +43384,8 @@
             "16 distinct zero-retry production browser cases pass: one Chromium full saving/customer-staff journey retained from the stopped initial run, 14 EN/FA address recovery, final receipt, navigation-fencing and edit-and-requote cases on Chromium/mobile Safari, plus one mobile Safari full journey. browser-report.json, browser-fixed-report.json, browser-mobile-report.json. Initial run stopped at one obsolete retry-control fixture; 14 unrun cases were not counted as passes.",
             "The affected address fixture now returns status 201/profile/timestamps and tests deliberate exact keyed retry after a wrong-city receipt. All original requested city/body assertions remain and exact-key equality is added.",
             "Final web types, changed-file lint/formatting, production build and all 85 unchanged route budgets pass. browser-source.json binds final source/config/lock and compiled assets.",
-            "Backend quote hashing, ownership locks, monetary totals and immutable address persistence are unchanged. Prior two targeted saving/electricity PostgreSQL cases and 18 profile-address HTTP cases remain valid for these unchanged service methods; no claim of a fresh full API suite."
+            "Backend quote hashing, ownership locks, monetary totals and immutable address persistence are unchanged. Prior two targeted saving/electricity PostgreSQL cases and 18 profile-address HTTP cases remain valid for these unchanged service methods; no claim of a fresh full API suite.",
+            "Scoped source reuse at 4ba5c0c: service-wizard fixture changes add complete geography identifiers and solar-only snapshot/recovery cases. Saving handlers and assertions, quoted street/postcode and plan/agreement display are unchanged. Prior six saving source/16 browser checks remain valid for this unchanged behavior; no fresh full saving-suite claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review"
         }
@@ -43999,19 +44190,108 @@
         "story": "03-core-business.md#spec-eac60821db88"
       },
       "requirement": "| **T-03.11.02.02** | 📋 Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-solar-building-form-and-address-snapshots",
+          "reviewed_sha": "4ba5c0c734e58c80f5e5dfcece453eda6630e643",
+          "base_commit": "4ba5c0c734e58c80f5e5dfcece453eda6630e643",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "e4d5eb11c091dc295d1aa5ab5134c148ab702b6b0e90eb7d367bf4964bb408c4"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "d32bd3f28f18a98f9494400081aebaf74d6a56e05d7daa6f681cd4f8bf40ae5b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "7cf776a00da92b119cd72e5f8abebfd68149116d134c932ec6590ea7e8a765ae"
+            },
+            {
+              "path": "apps/api/src/finance/review-snapshot.service.ts",
+              "sha256": "9086d57b289880cac84a08b280c0b682cd6537c0b4f865ccd722a9bde6e255ec"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "e8be5f591fcc04e7a81b9af30884ca078192e971f4ca628faa8cd9d586a51837"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "81e8ea3efa8c84e60a0006e0837d739c7f17094253d792287147efc0150d8993"
+            },
+            {
+              "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+              "sha256": "b86dde027e7dd32cf8b5350349530f939384e0b3ab184e5b10877d083f99f47a"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "aeafbf304def209a8649395baa1e8d23a963c8f440106f93af10484cbc49e954"
+            },
+            {
+              "path": "apps/web/src/hooks/useFormDraft.ts",
+              "sha256": "7e19f48cbacfd8b1d972514fa01bc95def8a0178f0fa4b8dc7971325e6b28700"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "20 distinct source cases pass across solar intake, retained drafts and wizard navigation protection. EN/FA household forms expose saved-address selection and the existing add-address return link. source-accepted.json.",
+            "Three PostgreSQL HTTP intake cases pass: all draft semantics; both request types, complete signed address fields, invalid/missing current address rejection, postcode-only stale review conflict, immutable historical display, ownership and concurrent profile limits; old signed household receipt replay retains its original hash/data. api-required-address.json.",
+            "Two targeted downstream PostgreSQL/HTTP cases pass for document decisions/postal handoff and atomic linked solar contract/invoice creation/replay. Seven other cases deliberately skipped. Test setup now supplies owned installation addresses. callers-required-address.json.",
+            "34 final production browser cases pass with zero retries/skips on Chromium/mobile Safari: EN/FA household/non-household intake with/without existing addresses, retained address creation/return and signed postcode summary, customer-staff upload/postal journey, wrong-profile/wrong-site review refusal and recovery, final receipt retry, edit-and-renew-review and pending navigation fencing. browser-accepted-report.json.",
+            "Final web/API types, i18n build, changed-file lint/formatting, production web build and all 85 unchanged route budgets pass. browser-source.json verifies 18 source/config/lock bindings and 980 compiled web/i18n files.",
+            "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots",
+          "limitations": [
+            "Older solar rows may lack full field snapshots; do not invent historical values or re-sign old receipts. Inventory remains in generic address acceptance.",
+            "Hosted CI is independent and has unresolved historical failures recorded separately; local checks do not certify hosted checks or staging deployment."
+          ]
+        }
       }
     },
     {
@@ -44038,32 +44318,53 @@
           "2026-09-24-solar-address-return"
         ],
         "current_acceptance": {
-          "kind": "verified-non-household-solar-form",
-          "reviewed_sha": "a0f3067b5994beeed5df4b955cfc1cfdde6c67e0",
+          "kind": "verified-solar-building-form-and-address-snapshots",
+          "reviewed_sha": "4ba5c0c734e58c80f5e5dfcece453eda6630e643",
+          "base_commit": "4ba5c0c734e58c80f5e5dfcece453eda6630e643",
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "e29806903f6baf5dd2275f44bee774d46c9425f9e95c2a6be0bf0d3be65f5e26"
+              "sha256": "e4d5eb11c091dc295d1aa5ab5134c148ab702b6b0e90eb7d367bf4964bb408c4"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "d1632cbc45ca85455c66b80c5e1cc8c14d36c6865c1d3b6b58e6a0342142843b"
+              "sha256": "d32bd3f28f18a98f9494400081aebaf74d6a56e05d7daa6f681cd4f8bf40ae5b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "7cf776a00da92b119cd72e5f8abebfd68149116d134c932ec6590ea7e8a765ae"
+            },
+            {
+              "path": "apps/api/src/finance/review-snapshot.service.ts",
+              "sha256": "9086d57b289880cac84a08b280c0b682cd6537c0b4f865ccd722a9bde6e255ec"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8831ae67f87b94eebc4ebc70bd9d63f682ef18c1a172de443544b2c0ae3667a4"
+              "sha256": "e8be5f591fcc04e7a81b9af30884ca078192e971f4ca628faa8cd9d586a51837"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
-              "sha256": "a5a9cb5e4e77dca538bbbce981b31cf90e8e35de8f15e99ed9e644f835929709"
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "6954a71739489182fd6faf87719ac1a04a420a28ee8019d10d64705d11314bbf"
+              "sha256": "81e8ea3efa8c84e60a0006e0837d739c7f17094253d792287147efc0150d8993"
+            },
+            {
+              "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+              "sha256": "b86dde027e7dd32cf8b5350349530f939384e0b3ab184e5b10877d083f99f47a"
             },
             {
               "path": "packages/i18n/src/solar.ts",
-              "sha256": "993b6c1272a0a9d01f56673a1e39d4fbea158d4ae18ba774de6f7c4c67ceaa52"
+              "sha256": "aeafbf304def209a8649395baa1e8d23a963c8f440106f93af10484cbc49e954"
             },
             {
               "path": "apps/web/src/hooks/useFormDraft.ts",
@@ -44082,12 +44383,12 @@
               "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
             },
             {
-              "path": "scripts/run-production-browser.mjs",
-              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
-            },
-            {
               "path": "apps/web/e2e/global-setup.ts",
               "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -44095,13 +44396,18 @@
             }
           ],
           "checks": [
-            "Inspected non-household site category, all installation-surface/relationship options, bounded area, profile address selection and optional bounded description. Existing fields retained.",
-            "20 distinct related web source cases pass across solar intake, draft retention and the actual wizard-protection files. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/review.json",
-            "Eight distinct zero-retry production browser cases pass on Chromium/mobile Safari, both languages, with/without saved addresses. Existing-site add-address creation returns to the saved wizard and selects the new site before review/submission; RTL, no viewport overflow and axe assertions pass. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/browser-report.json",
-            "Two real PostgreSQL/HTTP integration cases pass, including immutable submitted site-address display after saved-address edit, unchanged signed review hash/replay and no initial contract/invoice. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/api.json",
-            "Web/API types, i18n build, changed-file lint/formatting, final web build and all 85 original route budgets pass. /Users/majid/.local/state/barghsa-manual-batches/solar-address-history/browser-source.json"
+            "20 distinct source cases pass across solar intake, retained drafts and wizard navigation protection. EN/FA household forms expose saved-address selection and the existing add-address return link. source-accepted.json.",
+            "Three PostgreSQL HTTP intake cases pass: all draft semantics; both request types, complete signed address fields, invalid/missing current address rejection, postcode-only stale review conflict, immutable historical display, ownership and concurrent profile limits; old signed household receipt replay retains its original hash/data. api-required-address.json.",
+            "Two targeted downstream PostgreSQL/HTTP cases pass for document decisions/postal handoff and atomic linked solar contract/invoice creation/replay. Seven other cases deliberately skipped. Test setup now supplies owned installation addresses. callers-required-address.json.",
+            "34 final production browser cases pass with zero retries/skips on Chromium/mobile Safari: EN/FA household/non-household intake with/without existing addresses, retained address creation/return and signed postcode summary, customer-staff upload/postal journey, wrong-profile/wrong-site review refusal and recovery, final receipt retry, edit-and-renew-review and pending navigation fencing. browser-accepted-report.json.",
+            "Final web/API types, i18n build, changed-file lint/formatting, production web build and all 85 unchanged route budgets pass. browser-source.json verifies 18 source/config/lock bindings and 980 compiled web/i18n files.",
+            "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten."
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-address-history"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots",
+          "limitations": [
+            "Older solar rows may lack full field snapshots; do not invent historical values or re-sign old receipts. Inventory remains in generic address acceptance.",
+            "Hosted CI is independent and has unresolved historical failures recorded separately; local checks do not certify hosted checks or staging deployment."
+          ]
         }
       }
     },
@@ -51029,7 +51335,18 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "ci_checkpoint": {
+          "reviewed_sha": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
+          "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/37452402620",
+          "findings": [
+            "SCA: source-map-js high GHSA-68fv-2mgg-jv7q (fixed >=1.2.2); proxy-addr critical GHSA-jqcg-44mw-7w3h (fixed >=2.0.8).",
+            "History secret scan: two generic-api-key findings in d613fd9 kanban/board.json digest metadata, lines25/107. Verify exact digest provenance before scoped false-positive exclusions; do not ignore the board wholesale.",
+            "Hosted web suite: document-list-recovery.test.tsx three failures and admin-boundaries.test.tsx eleven malformed-permission failures. API profiles.service.test.ts showed two failures before the overall run stopped; investigate actual current reproduction.",
+            "Coverage fast-mode job failed because test/integrity prerequisites failed. No independent passing coverage claim."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots/ci-artifacts"
+        }
       }
     },
     {
@@ -51055,7 +51372,18 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "ci_checkpoint": {
+          "reviewed_sha": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
+          "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/37452402620",
+          "findings": [
+            "SCA: source-map-js high GHSA-68fv-2mgg-jv7q (fixed >=1.2.2); proxy-addr critical GHSA-jqcg-44mw-7w3h (fixed >=2.0.8).",
+            "History secret scan: two generic-api-key findings in d613fd9 kanban/board.json digest metadata, lines25/107. Verify exact digest provenance before scoped false-positive exclusions; do not ignore the board wholesale.",
+            "Hosted web suite: document-list-recovery.test.tsx three failures and admin-boundaries.test.tsx eleven malformed-permission failures. API profiles.service.test.ts showed two failures before the overall run stopped; investigate actual current reproduction.",
+            "Coverage fast-mode job failed because test/integrity prerequisites failed. No independent passing coverage claim."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots/ci-artifacts"
+        }
       }
     },
     {
@@ -65826,9 +66154,20 @@
         "batches": [],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
-          "address_flow": "Solar non-household add-address visibility and submitted street-address display accepted. Saving inline creation now holds original keyed commands across lost/malformed acknowledgements and preserves wizard navigation fencing. Current profile CRUD/electricity checks pass. Generic address acceptance still requires household solar selection/full snapshots and saving authoritative review data.",
+          "address_flow": "Saving keyed creation and quoted final review accepted. Both solar intake types now select/create addresses; new submissions store complete signed address snapshots while old receipts replay unchanged. Profile CRUD uses soft delete with retained rows and localized history warning. Legacy staging solar inventory remains.",
           "dashboard": "Current context and five widget readers plus permission-scoped contract/order/ticket/invoice counts exist; historical missing-module claims require current reconciliation.",
           "policy": "Existing six unanswered owner questions remain unchanged; no approval inferred."
+        },
+        "ci_checkpoint": {
+          "reviewed_sha": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
+          "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/37452402620",
+          "findings": [
+            "SCA: source-map-js high GHSA-68fv-2mgg-jv7q (fixed >=1.2.2); proxy-addr critical GHSA-jqcg-44mw-7w3h (fixed >=2.0.8).",
+            "History secret scan: two generic-api-key findings in d613fd9 kanban/board.json digest metadata, lines25/107. Verify exact digest provenance before scoped false-positive exclusions; do not ignore the board wholesale.",
+            "Hosted web suite: document-list-recovery.test.tsx three failures and admin-boundaries.test.tsx eleven malformed-permission failures. API profiles.service.test.ts showed two failures before the overall run stopped; investigate actual current reproduction.",
+            "Coverage fast-mode job failed because test/integrity prerequisites failed. No independent passing coverage claim."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots/ci-artifacts"
         }
       }
     },
@@ -72862,14 +73201,14 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-solar-address-snapshots",
+    "id": "release-0.2-identity-acceptance",
     "release": "0.2.0",
-    "goal": "Complete solar household address selection and persist full immutable address fields in existing signed review storage. Preserve legacy signed receipts/replays; reconcile retained-row deletion behavior with address requirements, then continue identity/four-service acceptance.",
+    "goal": "Inspect current identity/admin permission and document recovery failures; repair demonstrated defects with focused checks. Inventory staging legacy address rows and renew dashboard/authentication acceptance. Preserve later-release security checkpoints and dependency order.",
     "task_keys": [
+      "release-readiness#R-01.01",
       "02-auth-users-admin.md#T-03.04.02",
-      "02-auth-users-admin.md#T-03.04.01",
-      "03-core-business.md#T-03.11.02.02",
-      "release-readiness#R-01.01"
+      "02-auth-users-admin.md#T-08.01.01",
+      "02-auth-users-admin.md#T-08.01.03"
     ]
   },
   "launch_forecast": {

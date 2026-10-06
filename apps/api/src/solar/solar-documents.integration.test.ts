@@ -18,6 +18,7 @@ let minio: StartedTestContainer;
 let s3: InstanceType<typeof S3Client>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string;
+let siteAddressId: string;
 let requestId: string;
 const headers: Record<string, Record<string, string>> = {};
 
@@ -140,10 +141,20 @@ beforeAll(async () => {
       "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('solar-buyer','INDIVIDUAL','ACTIVE',true) RETURNING id"
     )
   ).rows[0]!.id;
+  siteAddressId = (
+    await http.pool.query<{ id: string }>(
+      `WITH p AS (INSERT INTO provinces(name_fa,name_en) VALUES('استان نصب','Installation Province') RETURNING id),
+     c AS (INSERT INTO cities(province_id,name_fa,name_en) SELECT id,'شهر نصب','Installation City' FROM p RETURNING id,province_id)
+     INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address)
+     SELECT $1,province_id,id,'Installation site','1234567890',true FROM c RETURNING id`,
+      [profileId]
+    )
+  ).rows[0]!.id;
   const created = await submitSolar({
     profileId,
     submissionKey: randomUUID(),
     buildingType: 'building_apartment',
+    siteAddressId,
     propertyForm: 'villa',
     structuralFrame: 'concrete',
     buildingCompletionDate: '2020-01-01',
