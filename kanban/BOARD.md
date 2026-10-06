@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 16 | Accepted with unchanged source bindings. |
-| verify | 1287 | Existing work may be complete; inspect evidence before building. |
+| done | 17 | Accepted with unchanged source bindings. |
+| verify | 1286 | Existing work may be complete; inspect evidence before building. |
 | partial | 54 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Use existing backend quote snapshots in the saving final review, then complete solar household address selection and immutable field snapshots. Preserve existing product engines and acceptance evidence.
+Complete solar household address selection and persist full immutable address fields in existing signed review storage. Preserve legacy signed receipts/replays; reconcile retained-row deletion behavior with address requirements, then continue identity/four-service acceptance.
 
-- `03-core-business.md#T-03.09.03.03`: Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals.
 - `02-auth-users-admin.md#T-03.04.02`: Address in order flow
 - `02-auth-users-admin.md#T-03.04.01`: Address CRUD for current profile
+- `03-core-business.md#T-03.11.02.02`: Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected)
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -255,7 +255,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.09.02.08` | verify | Inventory needed | Bill verification provider failure (timeout, auth error, provider unavailable) must not erase the draft. Customer can retry or submit for manual staff review. Failed verification state is persisted in `verification_result`; explicit "submit for staff review" action advances the order. |
 | `03-core-business.md#T-03.09.03.01` | done | Recorded batch work | Step 4: Address selection — choose from profile's existing addresses or add new one inside the flow. Must select installation address. |
 | `03-core-business.md#T-03.09.03.02` | verify | Inventory needed | Step 5: Agreement — display admin-editable saving plan agreement title and body. Require explicit "I accept" action. Record accepted version. |
-| `03-core-business.md#T-03.09.03.03` | verify | Inventory needed | Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals. |
+| `03-core-business.md#T-03.09.03.03` | done | Inventory needed | Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals. |
 | `03-core-business.md#T-03.09.03.04` | verify | Recorded batch work | Submission: `POST /saving/orders` — idempotent. Atomic transaction creates: saving order, linked draft contract, linked unpaid invoice. Snapshots: installation address, selected prices, accepted agreement version. Redirects to order detail. |
 | `03-core-business.md#T-03.09.03.05` | verify | Inventory needed | Idempotency prevents duplicate orders, contracts, or invoices. Use idempotency key on submission. |
 | `03-core-business.md#T-03.09.03.06` | verify | Inventory needed | Backend enforces: active profile must be Individual (residential). Legal Entity profiles are rejected. |

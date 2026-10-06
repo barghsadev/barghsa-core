@@ -183,6 +183,21 @@ async function fixture(page: Page, mode: Mode, locale: Locale, savedStep = 1) {
     r.fulfill({
       json: {
         reviewDigest: 'a'.repeat(64),
+        plan: { id: planId, title: { en: 'Home plan', fa: 'طرح خانه' } },
+        hardware: { id: hardwareId, title: { en: 'Device', fa: 'دستگاه' } },
+        billIdentifier: r.request().postDataJSON().billIdentifier,
+        address: {
+          id: address.id,
+          province_id: address.provinceId,
+          city_id: address.cityId,
+          full_address: address.fullAddress,
+          postal_code: address.postalCode,
+        },
+        agreement: {
+          versionId: '55555555-5555-4555-8555-555555555555',
+          title: 'Terms',
+          body: 'Plan terms',
+        },
         subtotalIrR: '300000',
         discountIrR: '0',
         vatIrR: '0',
@@ -274,11 +289,15 @@ for (const locale of ['en', 'fa'] as const)
       const body = route.request().postDataJSON();
       writes.push(body);
       return route.fulfill({
+        status: 201,
         json: {
           id: receiptId,
           ...body,
+          profileId,
           cityId: writes.length === 1 ? 'wrong-city' : cityId,
           mainAddress: false,
+          createdAt: '2026-10-06T10:00:00Z',
+          updatedAt: '2026-10-06T10:00:00Z',
         },
       });
     });
@@ -304,17 +323,19 @@ for (const locale of ['en', 'fa'] as const)
       'Retained new address'
     );
     await expect(button(page, 'electricity.order.next', locale)).toBeDisabled();
-    await save.click();
+    await expect(save).toBeDisabled();
+    await page.getByRole('button', { name: tSaving('retryAddress', locale), exact: true }).click();
     await expect(page.locator('#saving-address-city')).toHaveCount(0);
     await expect(page.locator('main')).toContainText('Retained new address');
-    expect(writes).toEqual(
-      Array(2).fill({
-        provinceId,
-        cityId,
-        fullAddress: 'Retained new address',
-        postalCode: '2345678901',
-      })
-    );
+    expect(writes).toHaveLength(2);
+    expect(writes[0]).toEqual({
+      provinceId,
+      cityId,
+      fullAddress: 'Retained new address',
+      postalCode: '2345678901',
+      idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
+    });
+    expect(writes[1]).toEqual(writes[0]);
     expect(state.orders).toHaveLength(0);
   });
 async function leave(page: Page, mode: Mode) {

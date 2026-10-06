@@ -222,6 +222,35 @@ for (const locale of ['en', 'fa'] as const)
             );
           if (url === '/api/saving/orders/duplicate')
             return Response.json({ duplicate: false, preventActiveDuplicates: false });
+          if (url === '/api/saving/orders/quote')
+            return Response.json({
+              reviewDigest: 'a'.repeat(64),
+              plan: { id: planId, title: { en: 'Quoted plan', fa: 'طرح استعلام‌شده' } },
+              hardware: {
+                id: hardwareId,
+                title: { en: 'Quoted device', fa: 'دستگاه استعلام‌شده' },
+              },
+              billIdentifier: '12345678',
+              address: {
+                id: address.id,
+                province_id: provinceId,
+                city_id: cityId,
+                full_address: 'Updated quoted installation site',
+                postal_code: '9876543210',
+              },
+              agreement: {
+                versionId: 'agreement-1',
+                title: 'Quoted terms',
+                body: 'Quoted agreement body',
+              },
+              lines: [],
+              subtotalIrR: '300000',
+              discountIrR: '0',
+              vatIrR: '0',
+              totalIrR: '300000',
+            });
+          if (url === `/api/wallet/${profileId}`)
+            return Response.json({ availableBalance: '500000' });
           if (url === '/api/geography/provinces')
             return Response.json([{ id: provinceId, nameFa: 'استان', nameEn: 'Province' }]);
           if (url === `/api/geography/provinces/${provinceId}/cities`)
@@ -293,6 +322,22 @@ for (const locale of ['en', 'fa'] as const)
         );
         expect(container.querySelector('input[name=fullAddress]')).toBeNull();
         expect(button(tSaving('next', locale)).disabled).toBe(false);
+        await act(async () => button(tSaving('next', locale)).click());
+        await act(async () =>
+          container.querySelector<HTMLInputElement>('input[name=agreementAccepted]')!.click()
+        );
+        await act(async () => button(tSaving('next', locale)).click());
+        await vi.waitFor(() => expect(container.textContent).toContain('300000 IRR'));
+        expect(container.textContent).toContain('Updated quoted installation site');
+        expect(container.textContent).toContain('9876543210');
+        expect(container.textContent).not.toContain(address.fullAddress);
+        expect(container.textContent).toContain(
+          locale === 'fa' ? 'طرح استعلام‌شده' : 'Quoted plan'
+        );
+        expect(container.textContent).toContain(
+          locale === 'fa' ? 'دستگاه استعلام‌شده' : 'Quoted device'
+        );
+        expect(container.textContent).toContain('Quoted agreement body');
       } finally {
         await act(async () => root.unmount());
         container.remove();

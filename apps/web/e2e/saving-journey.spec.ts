@@ -141,6 +141,24 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     route.fulfill({
       json: {
         reviewDigest: 'a'.repeat(64),
+        plan: { id: planId, title: { en: 'Quoted home saving plan', fa: 'طرح استعلام‌شده خانه' } },
+        hardware: {
+          id: hardwareId,
+          title: { en: 'Quoted efficient device', fa: 'دستگاه استعلام‌شده' },
+        },
+        billIdentifier: '1234567890123',
+        address: {
+          id: addressId,
+          province_id: provinceId,
+          city_id: cityId,
+          full_address: 'Updated quoted Saving Street',
+          postal_code: '9876543210',
+        },
+        agreement: {
+          versionId: agreementVersionId,
+          title: 'Quoted terms',
+          body: 'The quoted agreement body.',
+        },
         subtotalIrR: '300000',
         discountIrR: '0',
         vatIrR: '0',
@@ -473,6 +491,11 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   const financialReview = page.getByRole('region', { name: 'Review', exact: true });
   await expect(financialReview).toContainText('Subtotal');
   await expect(financialReview).toContainText('300,000');
+  await expect(financialReview).toContainText('Updated quoted Saving Street');
+  await expect(financialReview).toContainText('9876543210');
+  await expect(financialReview).toContainText('Quoted home saving plan');
+  await expect(financialReview).toContainText('Quoted efficient device');
+  await expect(financialReview).toContainText('The quoted agreement body.');
   await page.getByRole('checkbox', { name: 'Submit for staff review' }).check();
   await page.getByRole('button', { name: 'Submit order', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));

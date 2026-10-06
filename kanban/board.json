@@ -17297,8 +17297,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Solar household intake has no address selection/creation; non-household intake records only the address string in its signed review, leaving complete address-field snapshots and older rows without a recorded review to reconcile.",
-        "Saving final review shows the cached selected address while the authoritative quote already contains address data. Confirm this with a focused regression and display the quoted snapshot."
+        "Solar household intake has no address selection/creation; non-household intake records only the address string in its signed review, leaving complete address-field snapshots and older rows without a recorded review to reconcile."
       ],
       "owner": null,
       "depends_on": [],
@@ -17506,6 +17505,107 @@
             "No linked-order soft-delete rejection is claimed; existing deletion retains rows and snapshots.",
             "Solar household address selection/full snapshots and saving quoted-address review remain open."
           ]
+        },
+        "saving_review_checkpoint": {
+          "base_commit": "a9c2fc2f77b8bb5ef457a8c24f51f45cba68c2db",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "178542b4bd32e225256808af974695c312d1e0d05b98e893e043179b74952634"
+            },
+            {
+              "path": "apps/web/src/pages/saving-order.test.tsx",
+              "sha256": "a87b34cb197c7909562c75ff381280bea6d55a75401bbebba658d3a74153f3df"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "8ce7db5d4d0ea3059796d7ea18284e02448749056cb63da11109ec131ddf2011"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "d31e736696b28986744004dbd72b606ccc6259425dfb8550a90db282121e7986"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+              "sha256": "2b0e3f29e1c67e1050509326e1499979cbb66ca0157656bbdd90cd91c0c74b23"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsCommand.ts",
+              "sha256": "5f54b895e4ea2f1e1ef96f5c7f2a09b628d5ec73c3fcfaa5c614179769eea306"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "de6d00937bcd67ab47cdef30447d00ed30594bf2f46bbc1032c8ef43a5dd88e3"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            },
+            {
+              "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+              "sha256": "776b4944baa80b2f14b776a7255e21a6a033f8a7945c1295f4d0457282584057"
+            }
+          ],
+          "checks": [
+            "Six saving source cases pass. Four EN/FA lost/malformed address-acknowledgement cases also verify final review uses changed quoted address/postcode, quoted product names and agreement body rather than cached values. Baseline failed these four assertions; source.json passes final source.",
+            "16 distinct zero-retry production browser cases pass: one Chromium full saving/customer-staff journey retained from the stopped initial run, 14 EN/FA address recovery, final receipt, navigation-fencing and edit-and-requote cases on Chromium/mobile Safari, plus one mobile Safari full journey. browser-report.json, browser-fixed-report.json, browser-mobile-report.json. Initial run stopped at one obsolete retry-control fixture; 14 unrun cases were not counted as passes.",
+            "The affected address fixture now returns status 201/profile/timestamps and tests deliberate exact keyed retry after a wrong-city receipt. All original requested city/body assertions remain and exact-key equality is added.",
+            "Final web types, changed-file lint/formatting, production build and all 85 unchanged route budgets pass. browser-source.json binds final source/config/lock and compiled assets.",
+            "Backend quote hashing, ownership locks, monetary totals and immutable address persistence are unchanged. Prior two targeted saving/electricity PostgreSQL cases and 18 profile-address HTTP cases remain valid for these unchanged service methods; no claim of a fresh full API suite."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review"
         }
       }
     },
@@ -42849,19 +42949,19 @@
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
-          "reviewed_sha": "dd3abb2400f5ca2804384f33e9f2bc9c2be3c6f4",
+          "reviewed_sha": "a9c2fc2f77b8bb5ef457a8c24f51f45cba68c2db",
           "source_evidence": [
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "fa37ab7fdc0fa9c533b8e09a575e0c017d3c79c513e1550a661190643a7bb0fa"
+              "sha256": "178542b4bd32e225256808af974695c312d1e0d05b98e893e043179b74952634"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
-              "sha256": "bdfedcc900af6fbf28572e51522619aab5952679d2a363915f07da513149a366"
+              "sha256": "a87b34cb197c7909562c75ff381280bea6d55a75401bbebba658d3a74153f3df"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "f14e2a0d4c1203525f24e74546b7fe77f55bd9f0f6e52a59daea7df7b2f4f338"
+              "sha256": "8ce7db5d4d0ea3059796d7ea18284e02448749056cb63da11109ec131ddf2011"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -42941,7 +43041,8 @@
             "18 real PostgreSQL address HTTP cases pass, covering current role/session boundaries, main-address concurrency, exact keyed replay, rollback, retained soft-deleted rows and order snapshots. addresses-http.json.",
             "Two targeted real PostgreSQL order HTTP cases pass (saving atomic quoted submission and advanced electricity bundle); 47 other cases deliberately skipped. API prebuilt reuse is limited to matching unchanged API/shared/db/worker artifacts. order-http.json and browser-source.json.",
             "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
-            "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets."
+            "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets.",
+            "Source bindings renewed after final-review-only rendering change. Six saving source cases and 16 final browser cases revalidate original address retries/navigation and quote display. Earlier 35/6/18/2/22 receipts retain their recorded base scope; unchanged source/methods are reused. /Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
         }
@@ -42984,19 +43085,119 @@
         "story": "03-core-business.md#spec-b4f2ba0d7645"
       },
       "requirement": "| **T-03.09.03.03** | 📋 Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-saving-authoritative-final-review",
+          "reviewed_sha": "a9c2fc2f77b8bb5ef457a8c24f51f45cba68c2db",
+          "base_commit": "a9c2fc2f77b8bb5ef457a8c24f51f45cba68c2db",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "178542b4bd32e225256808af974695c312d1e0d05b98e893e043179b74952634"
+            },
+            {
+              "path": "apps/web/src/pages/saving-order.test.tsx",
+              "sha256": "a87b34cb197c7909562c75ff381280bea6d55a75401bbebba658d3a74153f3df"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "8ce7db5d4d0ea3059796d7ea18284e02448749056cb63da11109ec131ddf2011"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "d31e736696b28986744004dbd72b606ccc6259425dfb8550a90db282121e7986"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+              "sha256": "c13578624c66f97ffbba6d40fbeead512db18bad307109bf8d8d0212c1161b9c"
+            },
+            {
+              "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+              "sha256": "2b0e3f29e1c67e1050509326e1499979cbb66ca0157656bbdd90cd91c0c74b23"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsCommand.ts",
+              "sha256": "5f54b895e4ea2f1e1ef96f5c7f2a09b628d5ec73c3fcfaa5c614179769eea306"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+              "sha256": "d3d170d2392c484c5bc4ccdf523ebd6fdeb6756bafa634e5e7fcc063a25e571c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "de6d00937bcd67ab47cdef30447d00ed30594bf2f46bbc1032c8ef43a5dd88e3"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            },
+            {
+              "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+              "sha256": "776b4944baa80b2f14b776a7255e21a6a033f8a7945c1295f4d0457282584057"
+            }
+          ],
+          "checks": [
+            "Six saving source cases pass. Four EN/FA lost/malformed address-acknowledgement cases also verify final review uses changed quoted address/postcode, quoted product names and agreement body rather than cached values. Baseline failed these four assertions; source.json passes final source.",
+            "16 distinct zero-retry production browser cases pass: one Chromium full saving/customer-staff journey retained from the stopped initial run, 14 EN/FA address recovery, final receipt, navigation-fencing and edit-and-requote cases on Chromium/mobile Safari, plus one mobile Safari full journey. browser-report.json, browser-fixed-report.json, browser-mobile-report.json. Initial run stopped at one obsolete retry-control fixture; 14 unrun cases were not counted as passes.",
+            "The affected address fixture now returns status 201/profile/timestamps and tests deliberate exact keyed retry after a wrong-city receipt. All original requested city/body assertions remain and exact-key equality is added.",
+            "Final web types, changed-file lint/formatting, production build and all 85 unchanged route budgets pass. browser-source.json binds final source/config/lock and compiled assets.",
+            "Backend quote hashing, ownership locks, monetary totals and immutable address persistence are unchanged. Prior two targeted saving/electricity PostgreSQL cases and 18 profile-address HTTP cases remain valid for these unchanged service methods; no claim of a fresh full API suite."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review"
+        }
       }
     },
     {
@@ -72661,13 +72862,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-authoritative-address-review",
+    "id": "release-0.2-solar-address-snapshots",
     "release": "0.2.0",
-    "goal": "Use existing backend quote snapshots in the saving final review, then complete solar household address selection and immutable field snapshots. Preserve existing product engines and acceptance evidence.",
+    "goal": "Complete solar household address selection and persist full immutable address fields in existing signed review storage. Preserve legacy signed receipts/replays; reconcile retained-row deletion behavior with address requirements, then continue identity/four-service acceptance.",
     "task_keys": [
-      "03-core-business.md#T-03.09.03.03",
       "02-auth-users-admin.md#T-03.04.02",
       "02-auth-users-admin.md#T-03.04.01",
+      "03-core-business.md#T-03.11.02.02",
       "release-readiness#R-01.01"
     ]
   },

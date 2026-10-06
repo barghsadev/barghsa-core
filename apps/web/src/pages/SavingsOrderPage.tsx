@@ -47,6 +47,17 @@ interface Address {
 }
 interface Quote {
   reviewDigest: string;
+  plan: { id: string; title: Product['title'] };
+  hardware: { id: string; title: Product['title'] };
+  billIdentifier: string;
+  address: {
+    id: string;
+    province_id: string;
+    city_id: string;
+    full_address: string;
+    postal_code: string;
+  };
+  agreement: { versionId: string; title: string; body: string };
   subtotalIrR: string;
   discountIrR: string;
   vatIrR: string;
@@ -99,7 +110,8 @@ export function SavingsOrderPage() {
   const numbers = useNumberFormatting(locale);
   const navigate = useNavigate();
   const copy = (key: string) => tSaving(key, locale);
-  const title = (product: Product) => product.title[locale] || product.title.en || product.title.fa;
+  const title = (product: Pick<Product, 'title'>) =>
+    product.title[locale] || product.title.en || product.title.fa;
   const [profileId, setProfileId] = useState<string | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -1105,7 +1117,7 @@ export function SavingsOrderPage() {
                             rows: [
                               {
                                 label: copy('stepPlan'),
-                                value: selectedPlan && title(selectedPlan),
+                                value: quote?.plan && title(quote.plan),
                               },
                             ],
                           },
@@ -1116,7 +1128,7 @@ export function SavingsOrderPage() {
                             rows: [
                               {
                                 label: copy('stepHardware'),
-                                value: selectedHardware && title(selectedHardware),
+                                value: quote?.hardware && title(quote.hardware),
                               },
                             ],
                           },
@@ -1124,7 +1136,7 @@ export function SavingsOrderPage() {
                             id: 'bill',
                             title: copy('stepBill'),
                             step: 3,
-                            rows: [{ label: copy('billIdentifier'), value: billIdentifier }],
+                            rows: [{ label: copy('billIdentifier'), value: quote?.billIdentifier }],
                           },
                           {
                             id: 'address',
@@ -1133,11 +1145,11 @@ export function SavingsOrderPage() {
                             rows: [
                               {
                                 label: copy('stepAddress'),
-                                value: addresses.find((item) => item.id === addressId)?.fullAddress,
+                                value: quote?.address?.full_address,
                               },
                               {
                                 label: t('electricity.order.postalCode', locale),
-                                value: addresses.find((item) => item.id === addressId)?.postalCode,
+                                value: quote?.address?.postal_code,
                               },
                             ],
                           },
@@ -1148,10 +1160,10 @@ export function SavingsOrderPage() {
                             content: (
                               <div className="space-y-2 text-sm">
                                 <p className="font-medium">
-                                  <bdi>{selectedPlan?.agreement?.title}</bdi>
+                                  <bdi>{quote?.agreement?.title}</bdi>
                                 </p>
                                 <p className="whitespace-pre-wrap break-words">
-                                  <bdi>{selectedPlan?.agreement?.body}</bdi>
+                                  <bdi>{quote?.agreement?.body}</bdi>
                                 </p>
                               </div>
                             ),
