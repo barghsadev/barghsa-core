@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 23 | Accepted with unchanged source bindings. |
-| verify | 1284 | Existing work may be complete; inspect evidence before building. |
+| done | 31 | Accepted with unchanged source bindings. |
+| verify | 1276 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,16 +39,17 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Renew registration/shared auth layout, username normalization, versioned terms, submission/deduplication and registration OTP acceptance against existing code. Build only demonstrated gaps; preserve pending owner decisions and current typed/privacy boundaries.
+Renew login/password enforcement, login OTP, session cookies/revocation, recovery and rate limits against existing implementation. Reuse matching auth proofs and inspect remaining policy-dependent CSRF/step-up/recovery criteria without inferring owner approval.
 
-- `02-auth-users-admin.md#T-01.01.01`: Register route and shared auth layout
-- `02-auth-users-admin.md#T-01.01.02`: Unified username field (email or mobile)
-- `02-auth-users-admin.md#T-01.01.04`: TOS acceptance checkbox
-- `02-auth-users-admin.md#T-01.01.05`: "Back to login" and "Forgot password?" links
-- `02-auth-users-admin.md#T-01.01.06`: Registration form submission and error handling
-- `02-auth-users-admin.md#T-01.02.01`: OTP backend generation and sending
-- `02-auth-users-admin.md#T-01.02.02`: OTP input UI with resend
-- `02-auth-users-admin.md#T-01.02.03`: OTP verification and user creation
+- `02-auth-users-admin.md#T-02.01.01`: Login page UI
+- `02-auth-users-admin.md#T-02.01.02`: Login authentication flow
+- `02-auth-users-admin.md#T-02.01.03`: Login OTP verification
+- `02-auth-users-admin.md#T-02.01.04`: Password change enforcement on login
+- `02-auth-users-admin.md#T-02.02.01`: Session creation and cookie management
+- `02-auth-users-admin.md#T-02.02.02`: Session revocation
+- `02-auth-users-admin.md#T-02.03.01`: Forgot password request UI
+- `02-auth-users-admin.md#T-02.03.02`: OTP verification and password reset
+- `02-auth-users-admin.md#T-02.04.01`: Auth rate limit enforcement
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -62,15 +63,15 @@ All four services have a safe browse → intake → review → payment where app
 | `release-readiness#R-01.03` | done | Recorded batch work | Finish the already validated consultation history changes |
 | `release-readiness#R-01.04` | todo | Inventory needed | Verify four complete customer and staff intake journeys |
 | `release-readiness#R-01.05` | done | Inventory needed | Group release notes and screenshots into at most two Telegram posts |
-| `02-auth-users-admin.md#T-01.01.01` | verify | Earlier acceptance_verified | Register route and shared auth layout |
-| `02-auth-users-admin.md#T-01.01.02` | verify | Earlier acceptance_verified | Unified username field (email or mobile) |
+| `02-auth-users-admin.md#T-01.01.01` | done | Earlier acceptance_verified | Register route and shared auth layout |
+| `02-auth-users-admin.md#T-01.01.02` | done | Earlier acceptance_verified | Unified username field (email or mobile) |
 | `02-auth-users-admin.md#T-01.01.03` | done | Earlier acceptance_verified | Password field with visibility toggle and strength meter |
-| `02-auth-users-admin.md#T-01.01.04` | verify | Earlier acceptance_verified | TOS acceptance checkbox |
-| `02-auth-users-admin.md#T-01.01.05` | verify | Earlier acceptance_verified | "Back to login" and "Forgot password?" links |
-| `02-auth-users-admin.md#T-01.01.06` | verify | Earlier acceptance_verified | Registration form submission and error handling |
-| `02-auth-users-admin.md#T-01.02.01` | verify | Earlier acceptance_verified | OTP backend generation and sending |
-| `02-auth-users-admin.md#T-01.02.02` | verify | Earlier acceptance_verified | OTP input UI with resend |
-| `02-auth-users-admin.md#T-01.02.03` | verify | Earlier acceptance_verified | OTP verification and user creation |
+| `02-auth-users-admin.md#T-01.01.04` | done | Earlier acceptance_verified | TOS acceptance checkbox |
+| `02-auth-users-admin.md#T-01.01.05` | done | Earlier acceptance_verified | "Back to login" and "Forgot password?" links |
+| `02-auth-users-admin.md#T-01.01.06` | done | Earlier acceptance_verified | Registration form submission and error handling |
+| `02-auth-users-admin.md#T-01.02.01` | done | Earlier acceptance_verified | OTP backend generation and sending |
+| `02-auth-users-admin.md#T-01.02.02` | done | Earlier acceptance_verified | OTP input UI with resend |
+| `02-auth-users-admin.md#T-01.02.03` | done | Earlier acceptance_verified | OTP verification and user creation |
 | `02-auth-users-admin.md#T-02.01.01` | verify | Earlier acceptance_verified | Login page UI |
 | `02-auth-users-admin.md#T-02.01.02` | verify | Earlier acceptance_verified | Login authentication flow |
 | `02-auth-users-admin.md#T-02.01.03` | verify | Earlier acceptance_verified | Login OTP verification |

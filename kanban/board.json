@@ -13446,12 +13446,10 @@
         "story": "02-auth-users-admin.md#spec-ddb393a818c7"
       },
       "requirement": "**T-01.01.01 — Register route and shared auth layout**\n\n- Description: Create `/register` page with two-column auth layout: left column shows brand details (logo, title, slogan, value propositions); right column contains the registration form.\n- Technical notes: Shared auth layout component used by all auth pages (login, forgot-password). Responsive stack on mobile (single column). Brand column links to `/` for unauthenticated users.\n- UI/UX: Persian/English brand copy, full RTL/LTR support. Auth pages should not render the default app sidebar or navbar.\n- Dependencies: None\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -13491,7 +13489,119 @@
           "apps/web/src/routes/register/index.tsx"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -13505,12 +13615,10 @@
         "story": "02-auth-users-admin.md#spec-ddb393a818c7"
       },
       "requirement": "**T-01.01.02 — Unified username field (email or mobile)**\n\n- Description: Single text input with placeholder \"Email or Mobile number\". Must infer type from input: if it looks like an Iranian mobile number (starts with `09`, 11 digits), format to E.164 (`+98912...`) before sending to backend. If it's email, validate with standard email regex. Backend only accepts E.164 mobile or valid email.\n- Technical notes: Frontend normalizes: `09121234567` → `+989121234567`. Iranian mobile detection regex: `/^09\\d{9}$/`. On blur, display formatted preview. If user enters international format starting with `+`, accept as-is (must pass E.164 validation). Username max length 255 chars.\n- UI/UX: Validate on blur, inline error messages. Show the formatted number as a hint (e.g. `+98 912 123 4567`). Password field NOT revealed until username is valid.\n- Dependencies: T-01.01.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -13555,7 +13663,119 @@
         "batches": [
           "2026-10-05-registration-and-verification-native-forms"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -13660,12 +13880,10 @@
         "story": "02-auth-users-admin.md#spec-ddb393a818c7"
       },
       "requirement": "**T-01.01.04 — TOS acceptance checkbox**\n\n- Description: Checkbox with text \"By registering, I accept terms of use and policies\" — \"terms of use\" is a link to `/terms` (TOS page). Checkbox must be checked for submit to work.\n- Technical notes: Store the exact TOS version ID, content hash, and acceptance timestamp on user creation. Checkbox is required, cannot be pre-checked. TOS link opens in new tab (or in-page modal on mobile).\n- UI/UX: Error if not checked on submit. Link styled as inline anchor with underline.\n- Dependencies: E-04 (TOS admin management)\n- Complexity: S",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -13719,7 +13937,119 @@
           "apps/web/src/routes/terms.tsx"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -13733,12 +14063,10 @@
         "story": "02-auth-users-admin.md#spec-ddb393a818c7"
       },
       "requirement": "**T-01.01.05 — \"Back to login\" and \"Forgot password?\" links**\n\n- Description: Links below the form navigating to `/login` and `/forgot-password`.\n- Technical notes: Simple `<Link>` components. Track click for analytics (optional).\n- UI/UX: Secondary text styling, not buttons.\n- Dependencies: T-01.01.01\n- Complexity: XS",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -13773,7 +14101,119 @@
           "apps/web/src/routes/register/index.tsx"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -13787,12 +14227,10 @@
         "story": "02-auth-users-admin.md#spec-ddb393a818c7"
       },
       "requirement": "**T-01.01.06 — Registration form submission and error handling**\n\n- Description: Submit button sends POST to `/api/auth/register`. Payload: `{ username, password, tosVersionId }`. Backend validates username availability, password policy, and TOS version. Returns `{ challengeId }` to proceed to OTP step.\n- Technical notes: Idempotency key from client (or dedup by username+request hash). Rate limit: 3 registration attempts per IP per minute, 10 per hour per destination. Error codes: `USERNAME_TAKEN`, `INVALID_USERNAME`, `WEAK_PASSWORD`, `TOS_NOT_ACCEPTED`, `RATE_LIMITED`, `INTERNAL_ERROR`. All errors return localized safe messages and correlation ID. Backend should not reveal whether a username exists in error messages (use generic \"cannot process registration\" for rate-limited cases).\n- UI/UX: Loading spinner on submit, disable form during request. Server errors displayed as toast + form-level alert. Valid input preserved after error.\n- Dependencies: T-01.01.02, T-01.01.03, T-01.01.04\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -13841,7 +14279,119 @@
           "apps/web/src/routes/register/index.tsx"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -13855,12 +14405,10 @@
         "story": "02-auth-users-admin.md#spec-fd85b8cbd92e"
       },
       "requirement": "**T-01.02.01 — OTP backend generation and sending**\n\n- Description: On successful registration request, server generates 6-digit secure random OTP, hashes it with SHA-256 (or stores as Argon2id hash if replay risk analysis demands it), stores with expiry (default 5 min admin-configurable), challengeId, and attempt counter. Sends OTP via the user's destination (email or SMS).\n- Technical notes: OTP is a CSPRNG-generated 6-digit numeric code. In DEV, OTP printed to API console (`[DEV] OTP for +989121234567: 483921`). Single-use: consumed after successful verify or after max attempts. Rate limit: 1 OTP per destination per 60s, 5 per hour, 10 per day. Stricter IP/device aggregate limits also apply. OTPs are never logged, never returned in API responses beyond the DEV console.\n- UI/UX: N/A (backend)\n- Dependencies: T-01.01.06\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -13911,7 +14459,119 @@
         "batches": [
           "2026-10-04-verification-otp-forms"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -13925,12 +14585,10 @@
         "story": "02-auth-users-admin.md#spec-fd85b8cbd92e"
       },
       "requirement": "**T-01.02.02 — OTP input UI with resend**\n\n- Description: After successful registration request, show OTP input: 6 individual digit boxes or single masked input. Show destination hint (masked email/phone: `m***@example.com` or `+98***4567`). Resend button with 60s countdown timer. Auto-submit on 6 digits entered.\n- Technical notes: OTP input fields auto-advance. Resend sends same flow as initial send but with same challengeId (increments resend counter). After 5 failed attempts, invalidate the challengeId. On OTP expiry, redirect back to registration form with a message.\n- UI/UX: Digit input boxes with underline style, keyboard navigation between boxes. Countdown timer `0:59` → `0:00`, then button re-enables. Loading state on verify. Success: redirect to `/app`. Error: shake animation on OTP boxes, clear input, show error.\n- Dependencies: T-01.02.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -13979,7 +14637,119 @@
           "apps/web/src/routes/register/verify.tsx"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -13993,12 +14763,10 @@
         "story": "02-auth-users-admin.md#spec-fd85b8cbd92e"
       },
       "requirement": "**T-01.02.03 — OTP verification and user creation**\n\n- Description: POST `/api/auth/register/verify` with `{ challengeId, otp }`. Server verifies OTP hash, checks expiry, checks attempt count. On success: creates user record, creates session, sets a session cookie (HttpOnly, Secure in production, and the centralized SameSite policy from E-06), then rotates the CSRF token. On failure: increment attempts, return error.\n- Technical notes: User creation and OTP consumption are atomic (same transaction). Default session: idle timeout 30 min, absolute timeout 24h. If user has no profile, redirect to `/onboarding` (handled at app-level redirect, T-03.01.01). Session identifier rotated after OTP verification. Audit: user_created event recorded.\n- UI/UX: Redirect to `/app` (which checks for profiles).\n- Dependencies: T-01.02.01, T-01.02.02\n- Complexity: M\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -14051,7 +14819,119 @@
           "apps/api/src/session/session.service.ts"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-registration-consent-and-otp",
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
+        }
       }
     },
     {
@@ -67083,6 +67963,118 @@
           "limitations": [
             "These are local/source-bound candidate checks, not a staging deployment receipt. The three live legacy rows remain on the previous deployed version until an accepted milestone is deployed."
           ]
+        },
+        "registration_checkpoint": {
+          "reviewed_sha": "b9958768aad60d0994f60dba86d246260698200d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.ts",
+              "sha256": "f520f360b9532408741dc00e22f188f443e07b8546debbcd6bd9317f745c4161"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "08b08795ecddd6582a57eb7bcbd10396067ed31e0120f755a8e7edebb095a4e9"
+            },
+            {
+              "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+              "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+              "sha256": "35a74f19d779665563b618115a6fdcfcb9ec0920f68896d567cae79fa8b1937f"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "c9edc030b15c6115e351a808a6d743e036380c7489dac771be36faabfaed148d"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "fb09cd034d0dafb9dd0a79b651b8e1a09b5081ad9993acffbdb323d86b26a0ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/routes/registration-native-forms.test.tsx",
+              "sha256": "456256e5ff9f631d3ca3653257f6eacacb8fd0de67366507996aabc541f497f5"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+            },
+            {
+              "path": "apps/web/e2e/registration-consent.spec.ts",
+              "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+            },
+            {
+              "path": "apps/web/e2e/registration-recovery.spec.ts",
+              "sha256": "307b0bc4f8c529e464cedc7a32c29db79c26b10f9ddbc06c20b0c581a727637a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Inspected shared AuthLayout and register/verify routes: bilingual brand/logo/value proposition, desktop two-column/mobile stack, public navigation links and no app shell; username normalization/preview validates before revealing password; terms consent starts false, reloads on locale/terms changes, and blocks submission when absent/unavailable.",
+            "Inspected register service/controller: three/IP/min and ten/destination/hour, normalized-destination advisory lock, password/terms-bound existing challenge dedup, published version requirement, encrypted queued delivery and safe namespaced error mapping. Completion row-locks challenge and atomically creates user, immutable consent, language content hashes/audit, session/CSRF and OTP consumption; late deadline rechecked after writes.",
+            "63 registration/OTP cases pass across four selected files, including actual registration/dedup/OTP HTTP transactions plus OTP service units. Tests preserve audit/session rollback, concurrent one-time creation, wrong-code depletion, paired account-bound codes, stale/changed terms and normalized retry semantics. api.json.",
+            "40 delivery/configuration HTTP cases pass: received provider message can complete registration, encrypted payload is wiped after delivery, failure/unknown receipts and recovery remain bounded, send quotas/transaction rollback persist, admin TTL bounds/version/current authority/audit rollbacks and immediate issuance/resend lifetime apply. These use local test providers; no live external message or production delivery claim. delivery-config.json.",
+            "17 native form source cases pass. Captured request uncertainty, consent/version identity, invalid/missing receipts and field-level recovery preserve draft state and prevent duplicate mutation. source-command.json.",
+            "72 distinct zero-retry Chromium/mobile Safari registration/terms/recovery cases pass: both languages, destination masking, precise consent identity/fallback, public terms escaping/recovery, cooldown/resend exclusion, rejected-code clearing, expired redirect cancellation, invalid/incomplete session acknowledgements, onboarding redirect and native form behavior. browser-report.json.",
+            "OTP source uses CSPRNG six-digit code, SHA-256 hash, timing-safe hash comparison, five attempts,60s/5hour/10day destination limits plus IP/device limits. Lifetime defaults300s and is admin-configurable; resend does not reset attempts. Production never logs the code; explicit local development OTP_CONSOLE opt-in is separate.",
+            "All final23source/config/lock bindings and980compiled web/i18n files match source-manifest.json. Matching current API and prior production web build/types/85budgets reused; no product source change, new build or repeated browser suite for ledger edits."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
+          "limitations": [
+            "Source and local HTTP/provider/browser acceptance. Live provider operational receipts, production secrets and whole-release/launch gates remain separate.",
+            "Other authentication/profile criteria and six pending owner policy decisions are not certified by this batch."
+          ]
         }
       }
     },
@@ -74117,18 +75109,19 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-registration-acceptance",
+    "id": "release-0.2-login-session-acceptance",
     "release": "0.2.0",
-    "goal": "Renew registration/shared auth layout, username normalization, versioned terms, submission/deduplication and registration OTP acceptance against existing code. Build only demonstrated gaps; preserve pending owner decisions and current typed/privacy boundaries.",
+    "goal": "Renew login/password enforcement, login OTP, session cookies/revocation, recovery and rate limits against existing implementation. Reuse matching auth proofs and inspect remaining policy-dependent CSRF/step-up/recovery criteria without inferring owner approval.",
     "task_keys": [
-      "02-auth-users-admin.md#T-01.01.01",
-      "02-auth-users-admin.md#T-01.01.02",
-      "02-auth-users-admin.md#T-01.01.04",
-      "02-auth-users-admin.md#T-01.01.05",
-      "02-auth-users-admin.md#T-01.01.06",
-      "02-auth-users-admin.md#T-01.02.01",
-      "02-auth-users-admin.md#T-01.02.02",
-      "02-auth-users-admin.md#T-01.02.03",
+      "02-auth-users-admin.md#T-02.01.01",
+      "02-auth-users-admin.md#T-02.01.02",
+      "02-auth-users-admin.md#T-02.01.03",
+      "02-auth-users-admin.md#T-02.01.04",
+      "02-auth-users-admin.md#T-02.02.01",
+      "02-auth-users-admin.md#T-02.02.02",
+      "02-auth-users-admin.md#T-02.03.01",
+      "02-auth-users-admin.md#T-02.03.02",
+      "02-auth-users-admin.md#T-02.04.01",
       "release-readiness#R-01.01"
     ]
   },
