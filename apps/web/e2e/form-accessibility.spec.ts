@@ -1,5 +1,7 @@
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { fullNavigation } from './navigation-fixture';
+import { settingsProfileFixture, settingsProfileId } from './settings-profile-fixture';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { crmShell } from './crm-shell-fixture';
 import { dismissMessages } from './dismiss-messages';
 import { cookieResponse } from './cookie-response';
@@ -119,6 +121,26 @@ async function tosShell(page: Page, locale = 'en') {
     route.fulfill({ status: 404, json: {} })
   );
 }
+async function profileSettingsShell(page: Page, locale = 'en', profileType = 'INDIVIDUAL') {
+  await shell(page, locale);
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [
+          settingsProfileFixture({
+            id: settingsProfileId,
+            profileType,
+            status: 'ACTIVE',
+            title: 'Profile',
+          }),
+        ],
+        activeProfileId: settingsProfileId,
+        hasDefault: true,
+      },
+    })
+  );
+}
+
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
     localStorage.setItem('barghsa.locale', value);
@@ -879,11 +901,11 @@ test('legal document upload reports record failures and keeps successful files a
 test('legal profile settings show attachment names and refresh expiring download links', async ({
   page,
 }) => {
-  await shell(page);
-  await page.route('**/api/profiles/profile-one', (route) =>
+  await profileSettingsShell(page, 'en', 'LEGAL');
+  await page.route('**/api/profiles/01900000-0000-7000-8000-000000000001', (route) =>
     route.fulfill({
-      json: {
-        id: 'profile-one',
+      json: settingsProfileFixture({
+        id: '01900000-0000-7000-8000-000000000001',
         profileType: 'LEGAL',
         status: 'ACTIVE',
         title: 'Company',
@@ -897,11 +919,11 @@ test('legal profile settings show attachment names and refresh expiring download
           nationalIdentifier: '12345678901',
           registrationNumber: '123',
         },
-      },
+      }),
     })
   );
   let reads = 0;
-  await page.route('**/api/onboarding/documents/profile-one', (route) => {
+  await page.route('**/api/onboarding/documents/01900000-0000-7000-8000-000000000001', (route) => {
     reads++;
     return route.fulfill({
       json: {
@@ -1010,10 +1032,10 @@ for (const locale of ['en', 'fa']) {
   test(`profile settings save changed fields and reset dependent cities (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await profileSettingsShell(page, locale);
     const bodies: Record<string, unknown>[] = [];
     let detail = {
-      id: 'profile-one',
+      id: '01900000-0000-7000-8000-000000000001',
       profileType: 'INDIVIDUAL',
       status: 'VERIFIED',
       isDefault: true,
@@ -1024,38 +1046,48 @@ for (const locale of ['en', 'fa']) {
       canEditIdentity: true,
       addresses: [
         {
-          id: 'address-one',
-          provinceId: 'province-a',
-          cityId: 'city-a',
+          id: '01900000-0000-7000-8000-000000000010',
+          provinceId: '01900000-0000-7000-8000-000000000020',
+          cityId: '01900000-0000-7000-8000-000000000030',
           fullAddress: 'Old Street',
           postalCode: '1234567890',
           mainAddress: true,
         },
       ],
     };
-    await page.route('**/api/profiles/profile-one', async (route) => {
+    await page.route('**/api/profiles/01900000-0000-7000-8000-000000000001', async (route) => {
       if (route.request().method() === 'PUT') {
         const body = route.request().postDataJSON();
         bodies.push(body);
         detail = { ...detail, ...body };
         if (body.provinceId) detail.addresses = [{ ...detail.addresses[0], ...body }];
       }
-      await route.fulfill({ json: detail });
+      await route.fulfill({ json: settingsProfileFixture(detail) });
     });
     await page.route('**/api/geography/provinces', (route) =>
       route.fulfill({
         json: [
-          { id: 'province-a', nameEn: 'Province A', nameFa: 'استان الف' },
-          { id: 'province-b', nameEn: 'Province B', nameFa: 'استان ب' },
+          { id: '01900000-0000-7000-8000-000000000020', nameEn: 'Province A', nameFa: 'استان الف' },
+          { id: '01900000-0000-7000-8000-000000000021', nameEn: 'Province B', nameFa: 'استان ب' },
         ],
       })
     );
     await page.route('**/api/geography/provinces/*/cities', (route) =>
       route.fulfill({
         json: [
-          route.request().url().includes('province-a')
-            ? { id: 'city-a', nameEn: 'City A', nameFa: 'شهر الف' }
-            : { id: 'city-b', nameEn: 'City B', nameFa: 'شهر ب' },
+          route.request().url().includes('01900000-0000-7000-8000-000000000020')
+            ? {
+                id: '01900000-0000-7000-8000-000000000030',
+                provinceId: '01900000-0000-7000-8000-000000000020',
+                nameEn: 'City A',
+                nameFa: 'شهر الف',
+              }
+            : {
+                id: '01900000-0000-7000-8000-000000000031',
+                provinceId: '01900000-0000-7000-8000-000000000021',
+                nameEn: 'City B',
+                nameFa: 'شهر ب',
+              },
         ],
       })
     );
@@ -1075,7 +1107,9 @@ for (const locale of ['en', 'fa']) {
         exact: true,
       })
       .click();
-    await expect.poll(() => bodies).toEqual([{ firstName: 'Changed' }]);
+    await expect
+      .poll(() => bodies)
+      .toEqual([{ firstName: 'Changed', idempotencyKey: expect.any(String) }]);
     await expect(page.getByRole('dialog')).toBeHidden();
     await expect(firstName).toHaveValue('Changed');
     const province = page.locator('#profile-province');
@@ -1083,10 +1117,10 @@ for (const locale of ['en', 'fa']) {
     await expect(province.locator('option:checked')).toHaveText(
       locale === 'fa' ? 'استان الف' : 'Province A'
     );
-    await province.selectOption('province-b');
+    await province.selectOption('01900000-0000-7000-8000-000000000021');
     await expect(city).toHaveValue('');
     await expect(city).toBeEnabled();
-    await city.selectOption('city-b');
+    await city.selectOption('01900000-0000-7000-8000-000000000031');
     await page.locator('#profile-address').fill('New Street');
     await save.click();
     await page
@@ -1099,14 +1133,15 @@ for (const locale of ['en', 'fa']) {
     await expect
       .poll(() => bodies[1])
       .toEqual({
-        provinceId: 'province-b',
-        cityId: 'city-b',
+        provinceId: '01900000-0000-7000-8000-000000000021',
+        cityId: '01900000-0000-7000-8000-000000000031',
         fullAddress: 'New Street',
         postalCode: '1234567890',
+        idempotencyKey: expect.any(String),
       });
     await expect(page.locator('#profile-address')).toHaveValue('New Street');
     await page.reload();
-    await expect(city).toHaveValue('city-b');
+    await expect(city).toHaveValue('01900000-0000-7000-8000-000000000031');
     await expect(page.locator('#profile-address')).toHaveValue('New Street');
     detail.canEditIdentity = false;
     await page.reload();
@@ -1116,10 +1151,10 @@ for (const locale of ['en', 'fa']) {
 
 for (const locale of ['en', 'fa']) {
   test(`company identity is editable until verified (${locale})`, async ({ page }) => {
-    await shell(page, locale);
+    await profileSettingsShell(page, locale, 'LEGAL');
     const bodies: unknown[] = [];
     const detail = {
-      id: 'profile-one',
+      id: '01900000-0000-7000-8000-000000000001',
       profileType: 'LEGAL',
       status: 'ACTIVE',
       title: 'Company',
@@ -1130,16 +1165,16 @@ for (const locale of ['en', 'fa']) {
         registrationNumber: '123',
       },
     };
-    await page.route('**/api/profiles/profile-one', async (route) => {
+    await page.route('**/api/profiles/01900000-0000-7000-8000-000000000001', async (route) => {
       if (route.request().method() === 'PUT') {
         const body = route.request().postDataJSON();
         bodies.push(body);
         Object.assign(detail.legalInfo, body);
       }
-      await route.fulfill({ json: detail });
+      await route.fulfill({ json: settingsProfileFixture(detail) });
     });
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
-    await page.route('**/api/onboarding/documents/profile-one', (route) =>
+    await page.route('**/api/onboarding/documents/01900000-0000-7000-8000-000000000001', (route) =>
       route.fulfill({ json: { documents: [] } })
     );
     await page.goto('/settings/profile');
@@ -1164,7 +1199,13 @@ for (const locale of ['en', 'fa']) {
       .click();
     await expect
       .poll(() => bodies)
-      .toEqual([{ legalName: 'Changed Company', nationalIdentifier: '12345678902' }]);
+      .toEqual([
+        {
+          legalName: 'Changed Company',
+          nationalIdentifier: '12345678902',
+          idempotencyKey: expect.any(String),
+        },
+      ]);
     await expect(page.getByRole('dialog')).toBeHidden();
     await expect(name).toHaveValue('Changed Company');
     detail.status = 'VERIFIED';
@@ -3386,16 +3427,18 @@ for (const locale of ['en', 'fa']) {
   test(`profile save requires confirmation and a matching response (${locale})`, async ({
     page,
     baseURL,
+    browserName,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await shell(page, locale);
+    await profileSettingsShell(page, locale);
     await page
       .context()
       .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'browser-csrf' }]);
     let attempts = 0;
+    const writes: Record<string, unknown>[] = [];
     let release: (() => void) | undefined;
     const detail = {
-      id: 'profile-one',
+      id: '01900000-0000-7000-8000-000000000001',
       profileType: 'INDIVIDUAL',
       status: 'VERIFIED',
       isDefault: true,
@@ -3405,11 +3448,19 @@ for (const locale of ['en', 'fa']) {
       nationalId: '1234567891',
       addresses: [],
     };
-    await page.route('**/api/profiles/profile-one', async (route) => {
-      if (route.request().method() === 'GET') return route.fulfill({ json: detail });
+    await page.route('**/api/profiles/01900000-0000-7000-8000-000000000001', async (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill({ json: settingsProfileFixture(detail) });
       attempts++;
       expect(route.request().headers()['x-csrf-token']).toBe('browser-csrf');
-      expect(route.request().postDataJSON()).toEqual({ title: 'Changed' });
+      writes.push(route.request().postDataJSON());
+      expect(writes.at(-1)?.idempotencyKey).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      );
+      expect(route.request().postDataJSON()).toEqual({
+        title: 'Changed',
+        idempotencyKey: expect.any(String),
+      });
       if (attempts === 1)
         return route.fulfill({ json: { id: 'different-profile', profileType: 'INDIVIDUAL' } });
       if (attempts === 2)
@@ -3418,7 +3469,7 @@ for (const locale of ['en', 'fa']) {
         release = resolve;
       });
       detail.title = 'Changed';
-      return route.fulfill({ json: detail });
+      return route.fulfill({ json: settingsProfileFixture(detail) });
     });
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
     await page.goto('/settings/profile');
@@ -3447,9 +3498,10 @@ for (const locale of ['en', 'fa']) {
       exact: true,
     });
     await confirm.click();
-    await expect(dialog.getByRole('alert')).toHaveText(
-      locale === 'fa' ? 'خطا در ذخیره اطلاعات' : 'Failed to save profile information'
+    await expect(dialog.getByRole('alert')).toContainText(
+      tSettingsForms('uncertain', locale === 'fa' ? 'fa' : 'en')
     );
+    await expect(confirm).toBeDisabled();
     await expect(title).toHaveValue('Changed');
     await expect(
       page.getByText(
@@ -3459,11 +3511,24 @@ for (const locale of ['en', 'fa']) {
         { exact: true }
       )
     ).toHaveCount(0);
+    await dialog
+      .getByRole('button', {
+        name: tSettingsForms('resetCapture', locale === 'fa' ? 'fa' : 'en'),
+        exact: true,
+      })
+      .click();
+    await expect(dialog).toBeHidden();
+    await expect(title).toHaveValue('Changed');
+    await save.click();
     await confirm.click();
     await expect.poll(() => attempts).toBe(2);
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(dialog).not.toContainText('Internal backend text');
-    await confirm.evaluate((button: HTMLButtonElement) => {
+    const retry = dialog.getByRole('button', {
+      name: tSettingsForms('retryOriginal', locale === 'fa' ? 'fa' : 'en'),
+      exact: true,
+    });
+    await retry.evaluate((button: HTMLButtonElement) => {
       button.click();
       button.click();
     });
@@ -3475,6 +3540,8 @@ for (const locale of ['en', 'fa']) {
       await page.keyboard.press('Escape');
       await expect(dialog).toBeVisible();
       expect(attempts).toBe(3);
+      expect(writes[2]).toEqual(writes[1]);
+      expect(writes[0]?.idempotencyKey).not.toBe(writes[1]?.idempotencyKey);
     } finally {
       release?.();
     }
@@ -3493,7 +3560,8 @@ for (const locale of ['en', 'fa']) {
       })
       .first();
     await title.focus();
-    await page.keyboard.press('Tab');
+    // Safari uses Option-Tab to include clickable controls in keyboard navigation.
+    await page.keyboard.press(browserName === 'webkit' ? 'Alt+Tab' : 'Tab');
     await expect(lock).toBeFocused();
     await expect(lock).toHaveAttribute('title', (await lock.getAttribute('aria-label')) as string);
     await expect(

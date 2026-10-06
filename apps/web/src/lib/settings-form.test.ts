@@ -109,6 +109,21 @@ describe('settings forms confirm actual authorized receipts before clearing draf
     };
     expect(settingsContext(context)?.activeProfileId).toBe(profileId);
     expect(
+      settingsContext({
+        ...context,
+        profiles: [{ ...projection(profile), displayName: 'Current Company' }],
+      })?.profiles[0]?.displayName
+    ).toBe('Current Company');
+    expect(
+      settingsContext({ ...context, profiles: [{ ...projection(profile), displayName: null }] })
+    ).not.toBeNull();
+    expect(
+      settingsContext({
+        ...context,
+        profiles: [{ ...projection(profile), displayName: { name: 'Invalid' } }],
+      })
+    ).toBeNull();
+    expect(
       settingsContext({ ...context, profiles: [...context.profiles, ...context.profiles] })
     ).toBeNull();
     expect(settingsContext({ ...context, activeProfileId: otherId })).toBeNull();

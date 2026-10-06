@@ -10,6 +10,7 @@ import { useWizardStep } from '../hooks/useWizardStep.js';
 import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
@@ -140,14 +141,6 @@ function periodChoiceDate(option: PeriodOption, locale: 'fa' | 'en') {
   return `${format.format(start)} – ${format.format(end)}`;
 }
 
-function estimateDate(value: string, locale: 'fa' | 'en') {
-  return new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-ca-persian' : 'en-US', {
-    timeZone: 'Asia/Tehran',
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(value));
-}
-
 function quantityValid(value: string, product?: Product) {
   return (
     /^[1-9]\d*$/.test(value) &&
@@ -161,6 +154,7 @@ function quantityValid(value: string, product?: Product) {
 
 export function SimpleElectricityOrderPage() {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const navigate = useNavigate();
   const numbers = useNumberFormatting(locale);
 
@@ -1551,15 +1545,37 @@ export function SimpleElectricityOrderPage() {
                             </Button>
                             <p className="w-full text-xs text-muted-foreground">
                               {t('electricity.order.billDataSource', locale)} ·{' '}
-                              {billSuggestion.dataPeriod &&
-                                `${estimateDate(billSuggestion.dataPeriod.start, locale)} – ${estimateDate(billSuggestion.dataPeriod.end, locale)}`}{' '}
+                              {billSuggestion.dataPeriod && (
+                                <>
+                                  <time dateTime={billSuggestion.dataPeriod.start}>
+                                    {time.format(billSuggestion.dataPeriod.start, {
+                                      dateStyle: 'medium',
+                                      timeStyle: 'short',
+                                    })}
+                                  </time>
+                                  {' – '}
+                                  <time dateTime={billSuggestion.dataPeriod.end}>
+                                    {time.format(billSuggestion.dataPeriod.end, {
+                                      dateStyle: 'medium',
+                                      timeStyle: 'short',
+                                    })}
+                                  </time>
+                                </>
+                              )}{' '}
                               · {t('electricity.order.dataUpdated', locale)}:{' '}
-                              {billSuggestion.dataTimestamp &&
-                                estimateDate(billSuggestion.dataTimestamp, locale)}{' '}
+                              {billSuggestion.dataTimestamp && (
+                                <time dateTime={billSuggestion.dataTimestamp}>
+                                  {time.format(billSuggestion.dataTimestamp, {
+                                    dateStyle: 'medium',
+                                    timeStyle: 'short',
+                                  })}
+                                </time>
+                              )}{' '}
                               · {Math.round((billSuggestion.coverage ?? 0) * 100)}%{' '}
                               {t('electricity.order.coverage', locale)}.{' '}
                               {t('electricity.order.estimateDisclaimer', locale)}
                             </p>
+                            {time.notice}
                           </div>
                         ) : (
                           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 48 | Accepted with unchanged source bindings. |
-| verify | 1259 | Existing work may be complete; inspect evidence before building. |
+| done | 52 | Accepted with unchanged source bindings. |
+| verify | 1255 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,12 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Renew profile settings, verified contact/username changes, per-user notification preferences and timezone settings against current implementation and affected delivery/date callers. Preserve current identity/session authority and remaining owner-policy decisions.
+Renew public terms, immutable/versioned consent storage and required reacceptance against existing implementation. Reuse matching registration consent proofs; inspect private and public version identity, sanitized content, hashes, retry/CSRF/current-session boundaries and sensitive-action enforcement.
 
-- `02-auth-users-admin.md#T-03.03.03`: Profile settings page
-- `02-auth-users-admin.md#T-03.03.04`: Username/contact changes
-- `02-auth-users-admin.md#T-03.03.05`: Notification channel preferences
-- `02-auth-users-admin.md#T-03.03.06`: Timezone settings
+- `02-auth-users-admin.md#T-04.01.01`: Public TOS page
+- `02-auth-users-admin.md#T-04.01.02`: TOS acceptance storage
+- `02-auth-users-admin.md#T-04.01.03`: TOS re-acceptance flow
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -87,10 +86,10 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-03.02.04` | done | Earlier acceptance_verified | Onboarding completion and redirect |
 | `02-auth-users-admin.md#T-03.03.01` | done | Earlier acceptance_verified | Profile switcher in sidebar |
 | `02-auth-users-admin.md#T-03.03.02` | done | Earlier acceptance_verified | Default profile selection |
-| `02-auth-users-admin.md#T-03.03.03` | verify | Earlier acceptance_verified | Profile settings page |
-| `02-auth-users-admin.md#T-03.03.04` | verify | Earlier acceptance_verified | Username/contact changes |
-| `02-auth-users-admin.md#T-03.03.05` | verify | Earlier acceptance_verified | Notification channel preferences |
-| `02-auth-users-admin.md#T-03.03.06` | verify | Earlier acceptance_verified | Timezone settings |
+| `02-auth-users-admin.md#T-03.03.03` | done | Earlier acceptance_verified | Profile settings page |
+| `02-auth-users-admin.md#T-03.03.04` | done | Earlier acceptance_verified | Username/contact changes |
+| `02-auth-users-admin.md#T-03.03.05` | done | Earlier acceptance_verified | Notification channel preferences |
+| `02-auth-users-admin.md#T-03.03.06` | done | Earlier acceptance_verified | Timezone settings |
 | `02-auth-users-admin.md#T-03.04.01` | done | Earlier acceptance_verified | Address CRUD for current profile |
 | `02-auth-users-admin.md#T-03.04.02` | done | Earlier partial | Address in order flow |
 | `02-auth-users-admin.md#T-04.01.01` | verify | Earlier acceptance_verified | Public TOS page |

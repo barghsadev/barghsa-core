@@ -239,7 +239,8 @@ function SettingsProfilePage() {
             )}
             {availableProfiles.map((item) => (
               <option key={item.id} value={item.id}>
-                {[item.title, item.firstName, item.lastName].filter(Boolean).join(' ') ||
+                {item.displayName?.trim() ||
+                  [item.title, item.firstName, item.lastName].filter(Boolean).join(' ') ||
                   t('dashboard.profile.unnamed', locale)}
               </option>
             ))}

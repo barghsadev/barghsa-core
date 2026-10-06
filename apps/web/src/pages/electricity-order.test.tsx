@@ -104,10 +104,12 @@ let orderReply: () => Promise<Response>;
 let draftReply: (input: typeof draft) => Promise<Response>;
 let previewReply: () => Promise<Response>;
 let billDataReply: () => Promise<Response>;
+let accountTimezone: string;
 let catalogue: unknown;
 let draft: { currentStep: number; data: Record<string, string> | null };
 
 beforeEach(() => {
+  accountTimezone = 'Asia/Tehran';
   document.documentElement.lang = 'en';
   window.history.replaceState({}, '', '/electricity/order');
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -121,6 +123,7 @@ beforeEach(() => {
     response({ available: false, reason: 'unconfigured', manualEntryAllowed: true });
   fetchMock = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
+    if (url === '/api/user/settings/timezone') return response({ timezone: accountTimezone });
     if (url === '/api/profiles/verification-status')
       return response({
         activeProfileId: profileId,
@@ -254,6 +257,7 @@ it('shows manual entry, period dates and the server price before one submission'
 });
 
 it('retries an unavailable estimate without clearing a manual quantity', async () => {
+  accountTimezone = 'America/New_York';
   await mount();
   await advance();
   expect(container.textContent).toContain(t('electricity.order.manualQuantity', 'en'));
@@ -280,6 +284,14 @@ it('retries an unavailable estimate without clearing a manual quantity', async (
   expect(container.textContent).toContain('75% data coverage');
   expect(container.textContent).toContain('This is an estimate; you can change it.');
   expect(container.textContent).not.toContain('configured_bill_provider');
+  const expectedTimestamp = new Intl.DateTimeFormat('en-US', {
+    timeZone: accountTimezone,
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date('2026-09-20T23:00:00Z'));
+  expect(container.querySelector('time[datetime="2026-09-20T23:00:00Z"]')?.textContent).toBe(
+    expectedTimestamp
+  );
   expect(
     fetchMock.mock.calls.filter(([url]) =>
       String(url).startsWith(`/api/electricity/bill-data/${profileId}`)

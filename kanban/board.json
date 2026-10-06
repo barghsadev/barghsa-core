@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-06",
-  "source_commit": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+  "source_commit": "9088f8329e92798b2203b84ca5cfdb88d9c6c26b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -16093,7 +16093,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
             },
             {
               "path": "apps/web/e2e/session-cookies.spec.ts",
@@ -16122,7 +16122,8 @@
             "30 native login/recovery form source cases and156 distinct zero-retry Chromium/mobile Safari browser cases pass, FA/EN and light/dark: normalization, generic errors, forced-change and OTP stages, unknown receipt recovery, preserved captured inputs, session acknowledgements/onboarding, password-history UX, trust/revocation confirmation and approximate-location fallback.",
             "83 selected shared limiter cases and8 actual PostgreSQL rolling-window cases pass, including durable concurrency and Redis loss/recovery. Unchanged registration/OTP policy acceptance from2153725 is reused using matching source hashes rather than adding overlapping counts.",
             "Actual committed staging NGINX config passes isolated nginx -t and FA/EN auth-burst tests:10r/s burst5, forged X-Forwarded-For cannot bypass quota, Retry-After1/private-no-store/security headers, unaffected health, API-origin Retry-After60 retained,11MiB template upload, unbuffered SSE and WebSocket upgrade. Existing pilot TLS/routing/cache/upload/AI/auth checks also pass after fixture-runner extension.",
-            "Final source/config/test hashes and980 compiled web/i18n bindings saved in source-manifest.json; all1003 registration source/output bindings still match. Existing API/web production build/types/budgets reused because application/dependency sources are unchanged. Scoped script lint/format and board/diff checks pass."
+            "Final source/config/test hashes and980 compiled web/i18n bindings saved in source-manifest.json; all1003 registration source/output bindings still match. Existing API/web production build/types/budgets reused because application/dependency sources are unchanged. Scoped script lint/format and board/diff checks pass.",
+            "At account-preferences-acceptance, renewed apps/web/e2e/form-accessibility.spec.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -16323,7 +16324,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -16348,7 +16349,8 @@
             "30 native login/recovery form source cases and156 distinct zero-retry Chromium/mobile Safari browser cases pass, FA/EN and light/dark: normalization, generic errors, forced-change and OTP stages, unknown receipt recovery, preserved captured inputs, session acknowledgements/onboarding, password-history UX, trust/revocation confirmation and approximate-location fallback.",
             "83 selected shared limiter cases and8 actual PostgreSQL rolling-window cases pass, including durable concurrency and Redis loss/recovery. Unchanged registration/OTP policy acceptance from2153725 is reused using matching source hashes rather than adding overlapping counts.",
             "Actual committed staging NGINX config passes isolated nginx -t and FA/EN auth-burst tests:10r/s burst5, forged X-Forwarded-For cannot bypass quota, Retry-After1/private-no-store/security headers, unaffected health, API-origin Retry-After60 retained,11MiB template upload, unbuffered SSE and WebSocket upgrade. Existing pilot TLS/routing/cache/upload/AI/auth checks also pass after fixture-runner extension.",
-            "Final source/config/test hashes and980 compiled web/i18n bindings saved in source-manifest.json; all1003 registration source/output bindings still match. Existing API/web production build/types/budgets reused because application/dependency sources are unchanged. Scoped script lint/format and board/diff checks pass."
+            "Final source/config/test hashes and980 compiled web/i18n bindings saved in source-manifest.json; all1003 registration source/output bindings still match. Existing API/web production build/types/budgets reused because application/dependency sources are unchanged. Scoped script lint/format and board/diff checks pass.",
+            "At account-preferences-acceptance, renewed apps/web/e2e/form-accessibility.spec.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -17906,7 +17908,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -17937,7 +17939,8 @@
             "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
             "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
-            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
+            "At account-preferences-acceptance, renewed apps/web/e2e/form-accessibility.spec.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -18121,7 +18124,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -18148,7 +18151,8 @@
             "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
             "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
-            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
+            "At account-preferences-acceptance, renewed apps/web/e2e/form-accessibility.spec.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -18252,7 +18256,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -18283,7 +18287,8 @@
             "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
             "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
-            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
+            "At account-preferences-acceptance, renewed apps/web/e2e/form-accessibility.spec.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -18611,7 +18616,7 @@
             },
             {
               "path": "apps/web/src/routes/_app/settings/profile.tsx",
-              "sha256": "aa596ad596486c55bc8cfc8dd8ec029f1cc485e6e36916b26bc0b4661d1ef1b2"
+              "sha256": "e92ff2e38cdb2494ce51c9080f2c122447f0320b9f7612dd70d6855d18525ad1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -18626,7 +18631,8 @@
             "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
             "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
-            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
+            "At account-preferences-acceptance, renewed apps/web/src/routes/_app/settings/profile.tsx: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -18647,12 +18653,10 @@
         "story": "02-auth-users-admin.md#spec-14535d99cdf1"
       },
       "requirement": "**T-03.03.03 — Profile settings page**\n\n- Description: `/app/settings/profile` page showing current profile details. Some fields editable (address, contact info) while identity fields (first name, last name, national ID for individuals; legal name, national identifier for legal) are read-only after verification. Staff can always update their own individual profile.\n- Technical notes: If profile is verified, protected fields are not editable through normal UI. Changes to protected fields require a verification case (CRM staff action). PUT `/api/profiles/:id` with field-level validation. Address changes create new address record (historical addresses retained).\n- UI/UX: Editable fields show pencil icon. Read-only fields show lock icon with explanation tooltip. Save button with confirmation. Verification badge shows status.\n- Dependencies: T-03.03.01, E-06 (CRM profile details)\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18690,16 +18694,69 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/api/src/profiles/profiles.controller.ts",
-          "apps/api/src/profiles/profile-write-http.integration.test.ts",
-          "apps/web/src/routes/_app/settings/profile.tsx"
-        ],
+        "changed_paths": [],
         "batches": [
           "2026-10-05-profile-settings-saved-address-forms"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-account-preferences-and-timestamp-consumers",
+          "reviewed_sha": "9088f8329e92798b2203b84ca5cfdb88d9c6c26b",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+              "sha256": "e0f4b283f5838eda4f7430c2d5b5cb9c2b5a56d699230ebb241ecb8d4b968332"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.controller.ts",
+              "sha256": "50c6f942b0677ec6b276d66e158b4bb204a00a6abb3a8f3af8664bcb143f116d"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
+            },
+            {
+              "path": "apps/web/e2e/profile-settings-name.spec.ts",
+              "sha256": "cfa1a7425cc8e1fc229ea253df3e77fe113ce2b87894eeddb8750d88c078d56f"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.test.ts",
+              "sha256": "e352ee9323f6f6b9f4b1ffeeb12f92467cfc0a8a76e9dc82cda64b2190021053"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/profile.tsx",
+              "sha256": "e92ff2e38cdb2494ce51c9080f2c122447f0320b9f7612dd70d6855d18525ad1"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected profile settings UI/editor/controller/service: canonical default names, verification badge and pencils/read-only lock explanations, identity fields guarded after verification except staff own individual grant; complete address/geography changes append history, scoped private denial retires state. Confirmation and exact receipt/current read preserve draft/ownership and prevent duplicate or stale-state writes.",
+            "17 distinct real HTTP cases pass in three existing files (contact-session, notification-preferences and timezone). The initial command also listed nonexistent contact-http.integration.test.ts; no fourth suite or absent test is counted. Current session expiry/audit rollback, exact correlated commit/replay, destination ownership, channel availability and timezone validation/persistence are covered. api.json.",
+            "81 selected delivery-worker cases pass in five files: account preferences/verified destinations are enforced for queued email/SMS and rechecked after preparation, disabled/activation-pending recipients are denied, recipient identity/membership/marketing/suppression gates remain separate, in-app eligibility retained. Local providers only; no external notification claim. delivery-callers.json.",
+            "57 distinct native settings/account/preference/form/timezone source cases pass across seven files plus10 date-time formatter cases.19 overlapping settings/model cases rerun after optional displayName validation are not added.11 electricity ordering source cases pass after its bill timestamp change, including an independent America/New_York expected date. source.json, source-final.json, date-time.json, electricity-source.json.",
+            "52 distinct final scoped Chromium/mobile Safari browser cases pass with zero retries:50 profile settings/name/contact/preferences/timezone cases and2 full simple-electricity payment/contract journeys. Thirty-two earlier cases and intermediate partial runs overlap and are not added. Source for the50 settings cases is unchanged by the later electricity-only patch; final electricity journeys use the latest build. browser-final-report.json/electricity-browser-report.json.",
+            "Fixed settings default picker to consume canonical displayName before legacy person/title fields; optional null/missing legacy fields remain supported and invalid displayName objects are rejected. Actual company names and legacy personal fallback verified on both engines/languages.",
+            "Reconciled four bounded legacy profile browser groups with actual UUID/full-metadata/address-province relationships/idempotency and explicit ownership recovery. Original attachment refresh, verified identity lock/staff grant, dependent-city reset, confirmation/cancel/focus, no false success/backend detail leak, pending duplicate exclusion and retained drafts remain. Same-key retry and explicit recapture/new-key assertions are added. WebKit uses documented Option-Tab (https://support.apple.com/en-gb/guide/safari/cpsh003/mac) while retaining the exact lock-focus assertion.",
+            "Matching prior profile-write HTTP acceptance is reused narrowly using current controller/service manifest hashes plus immutable prior-baseline test Git blob (profile-write-reuse.json). No whole186-case rerun claim. Existing source rechecks account/session/profile ownership/type/verified-field permissions under lock and appends address history atomically with audit/idempotency.",
+            "Timezone consumer audit distinguishes authenticated instants from Iranian electricity civil-period rules and date-only receipt/postal calendars. Public terms explicitly fetch credentials:omit and use the product default in that unauthenticated view. Production electricity detail panels receive account formatters; admin catalogue/gift details gate timezone readiness. Found bill-source instants in simple ordering incorrectly fixed to Tehran; now use existing account formatter/loading/error retry. Exact original civil-period, totals/payment/contract assertions still pass in both journey engines.",
+            "Latest web production build/types, changed-file lint/format, all85 unchanged bundle budgets and strict SAST1804files/0findings/0errors/5rule fixtures pass. API/schema/dependencies unchanged. Final source/test/config hashes and980 compiled outputs are bound in source-manifest.json; earlier failed/incomplete commands are diagnostic evidence only."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
+          "limitations": [
+            "Local source/HTTP/browser/provider fixtures only. Live operational/whole-release acceptance remains separate.",
+            "No pending owner policy decision is approved by this batch."
+          ]
+        }
       }
     },
     {
@@ -18713,12 +18770,10 @@
         "story": "02-auth-users-admin.md#spec-14535d99cdf1"
       },
       "requirement": "**T-03.03.04 — Username/contact changes**\n\n- Description: User can change their username (email or mobile) with availability check and OTP verification. If registered with email, can add and verify a mobile number. If registered with mobile, can add one email address. Username change requires verifying both old and new destination (when applicable).\n- Technical notes: POST `/api/auth/change-username` with `{ newUsername, otpChallengeId, otp }`. OTP sent to new destination. Username uniqueness check. Rate limited. If user has both email and mobile, they can log in with either. Username change invalidates sessions except current one? (Design decision: invalidate all or keep current).\n- UI/UX: Settings page section: current username (masked), \"Change\" button. Flow: enter new username → OTP verify → confirmation. Add email/mobile: separate section. Success toast.\n- Dependencies: T-03.03.03, T-02.03.02\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18763,17 +18818,77 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/auth/auth.service.ts",
-          "apps/api/src/auth/auth.controller.ts",
-          "apps/api/src/auth/otp.service.ts",
-          "apps/web/src/routes/_app/settings/username.tsx",
-          "apps/web/e2e/username-pair.spec.ts"
-        ],
+        "changed_paths": [],
         "batches": [
           "2026-10-05-username-and-contact-settings-forms"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-account-preferences-and-timestamp-consumers",
+          "reviewed_sha": "9088f8329e92798b2203b84ca5cfdb88d9c6c26b",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e701dd415ed0c484f42944c76eec09bd3c5533307c7f06f91a152e2f2b5f5020"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
+              "sha256": "36def018116ef8327f18439ae24583dd3f0928a1c80193e32ae52ad9d87c4030"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "96b377d881325204cb6b92e62a65906e3a3f0205a2eb149e74821ddde626b626"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
+            },
+            {
+              "path": "apps/web/e2e/profile-settings-name.spec.ts",
+              "sha256": "cfa1a7425cc8e1fc229ea253df3e77fe113ce2b87894eeddb8750d88c078d56f"
+            },
+            {
+              "path": "apps/web/e2e/username-pair.spec.ts",
+              "sha256": "3585379bf4bc55c369e077e761863dc0c8199e9fd6de7684f6a2cc20588469be"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.test.ts",
+              "sha256": "e352ee9323f6f6b9f4b1ffeeb12f92467cfc0a8a76e9dc82cda64b2190021053"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/username.tsx",
+              "sha256": "68dafb06177017278573d51aa6625980121e3b6a5168e3de3f42be196dbc5eba"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected normalized paired old/new username OTPs with actor/session/purpose/destination/current account-version binding, availability/dedup/quotas and transactional uniqueness/audit/replay. Primary username changes retain the initiating session and revoke peers, matching recorded policy; adding verified secondary contact retains sessions. Verified email/mobile aliases support alternate login/recovery. Preserve these distinct policies; no new session-policy decision inferred.",
+            "17 distinct real HTTP cases pass in three existing files (contact-session, notification-preferences and timezone). The initial command also listed nonexistent contact-http.integration.test.ts; no fourth suite or absent test is counted. Current session expiry/audit rollback, exact correlated commit/replay, destination ownership, channel availability and timezone validation/persistence are covered. api.json.",
+            "81 selected delivery-worker cases pass in five files: account preferences/verified destinations are enforced for queued email/SMS and rechecked after preparation, disabled/activation-pending recipients are denied, recipient identity/membership/marketing/suppression gates remain separate, in-app eligibility retained. Local providers only; no external notification claim. delivery-callers.json.",
+            "57 distinct native settings/account/preference/form/timezone source cases pass across seven files plus10 date-time formatter cases.19 overlapping settings/model cases rerun after optional displayName validation are not added.11 electricity ordering source cases pass after its bill timestamp change, including an independent America/New_York expected date. source.json, source-final.json, date-time.json, electricity-source.json.",
+            "52 distinct final scoped Chromium/mobile Safari browser cases pass with zero retries:50 profile settings/name/contact/preferences/timezone cases and2 full simple-electricity payment/contract journeys. Thirty-two earlier cases and intermediate partial runs overlap and are not added. Source for the50 settings cases is unchanged by the later electricity-only patch; final electricity journeys use the latest build. browser-final-report.json/electricity-browser-report.json.",
+            "Fixed settings default picker to consume canonical displayName before legacy person/title fields; optional null/missing legacy fields remain supported and invalid displayName objects are rejected. Actual company names and legacy personal fallback verified on both engines/languages.",
+            "Reconciled four bounded legacy profile browser groups with actual UUID/full-metadata/address-province relationships/idempotency and explicit ownership recovery. Original attachment refresh, verified identity lock/staff grant, dependent-city reset, confirmation/cancel/focus, no false success/backend detail leak, pending duplicate exclusion and retained drafts remain. Same-key retry and explicit recapture/new-key assertions are added. WebKit uses documented Option-Tab (https://support.apple.com/en-gb/guide/safari/cpsh003/mac) while retaining the exact lock-focus assertion.",
+            "Matching prior profile-write HTTP acceptance is reused narrowly using current controller/service manifest hashes plus immutable prior-baseline test Git blob (profile-write-reuse.json). No whole186-case rerun claim. Existing source rechecks account/session/profile ownership/type/verified-field permissions under lock and appends address history atomically with audit/idempotency.",
+            "Timezone consumer audit distinguishes authenticated instants from Iranian electricity civil-period rules and date-only receipt/postal calendars. Public terms explicitly fetch credentials:omit and use the product default in that unauthenticated view. Production electricity detail panels receive account formatters; admin catalogue/gift details gate timezone readiness. Found bill-source instants in simple ordering incorrectly fixed to Tehran; now use existing account formatter/loading/error retry. Exact original civil-period, totals/payment/contract assertions still pass in both journey engines.",
+            "Latest web production build/types, changed-file lint/format, all85 unchanged bundle budgets and strict SAST1804files/0findings/0errors/5rule fixtures pass. API/schema/dependencies unchanged. Final source/test/config hashes and980 compiled outputs are bound in source-manifest.json; earlier failed/incomplete commands are diagnostic evidence only."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
+          "limitations": [
+            "Local source/HTTP/browser/provider fixtures only. Live operational/whole-release acceptance remains separate.",
+            "No pending owner policy decision is approved by this batch."
+          ]
+        }
       }
     },
     {
@@ -18787,12 +18902,10 @@
         "story": "02-auth-users-admin.md#spec-14535d99cdf1"
       },
       "requirement": "**T-03.03.05 — Notification channel preferences**\n\n- Description: User selects notification channels: SMS (if mobile present), Email (if present), both, or in-app only. In-app is always enabled.\n- Technical notes: Store as array/enum `['SMS', 'EMAIL', 'IN_APP']`. Default: all available. PUT `/api/user/settings/notifications`. Preferences applied per user, not per profile.\n- UI/UX: Toggle switches per channel. Note explaining recommended settings for security notifications.\n- Dependencies: T-03.03.03\n- Complexity: S",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18867,16 +18980,105 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/user-settings/user-settings.controller.ts",
-          "apps/web/src/routes/_app/settings/index.tsx",
-          "apps/worker/src/notifications/delivery-identity.integration.test.ts",
-          "apps/worker/src/notifications/outbox-runner.test.ts"
-        ],
+        "changed_paths": [],
         "batches": [
           "2026-10-05-notification-marketing-and-timezone-settings-forms"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-account-preferences-and-timestamp-consumers",
+          "reviewed_sha": "9088f8329e92798b2203b84ca5cfdb88d9c6c26b",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+              "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+            },
+            {
+              "path": "apps/api/src/user-settings/user-settings.controller.ts",
+              "sha256": "ae50b0b03f65adcfa2cfdd9ce74c63144d0043767573be09c0ab27f7d1404e06"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
+            },
+            {
+              "path": "apps/web/e2e/profile-settings-name.spec.ts",
+              "sha256": "cfa1a7425cc8e1fc229ea253df3e77fe113ce2b87894eeddb8750d88c078d56f"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.test.ts",
+              "sha256": "e352ee9323f6f6b9f4b1ffeeb12f92467cfc0a8a76e9dc82cda64b2190021053"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/index.tsx",
+              "sha256": "0aefd63e7791457e67908f3b980fccb29fdb716a09d9aaf1efb63646c6fa554c"
+            },
+            {
+              "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
+              "sha256": "cd54f453b6d1783a1ec657786fecd6b2e7c8f8b915e8da90030d7f6a82af8259"
+            },
+            {
+              "path": "apps/worker/src/notifications/channel-availability-loader.ts",
+              "sha256": "0668bcf3d06c6a889be84502c9202d482b6983f979a12080fb5fb4ee65d56ee2"
+            },
+            {
+              "path": "apps/worker/src/notifications/channel-availability.test.ts",
+              "sha256": "7c1ff1d89a2c876e0b3b4fff017b43fa8cc30542bd776ecc32e04087b08e4ef8"
+            },
+            {
+              "path": "apps/worker/src/notifications/channel-availability.ts",
+              "sha256": "c98745aa86e32e74513d6b8a58566b8166d1f0ac0a2189b84e06e81ca324b894"
+            },
+            {
+              "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+              "sha256": "91d0411e25aec5c5640e33c97db3a1980a0e6c57a835cbd5e8519cb152a9bc02"
+            },
+            {
+              "path": "apps/worker/src/notifications/email-transport.ts",
+              "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+              "sha256": "e597ce4fb2ede1548543022cbd7e5ea43ed3489a499ab10e1060c07d99c4bfa7"
+            },
+            {
+              "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+              "sha256": "c6c10741a0c719bdee7e307a635ba129329963f48de38b15fe70720be893a05d"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-transport.ts",
+              "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+            },
+            {
+              "path": "packages/i18n/src/preferences.ts",
+              "sha256": "2b505a2022a1fafe8f4242f4d5f38a9e3ed970ef7a22ba2edc7f20c12338a4ae"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected per-account default/all-available channels, currently verified primary/secondary destinations, always-IN_APP normalization, account/current-session row locks, before/after audit and final authority recheck. Native UI blocks unavailable channels, explains security recommendations, preserves companion choices and requires real saved receipts; dispatch and per-profile marketing consent remain independently enforced.",
+            "17 distinct real HTTP cases pass in three existing files (contact-session, notification-preferences and timezone). The initial command also listed nonexistent contact-http.integration.test.ts; no fourth suite or absent test is counted. Current session expiry/audit rollback, exact correlated commit/replay, destination ownership, channel availability and timezone validation/persistence are covered. api.json.",
+            "81 selected delivery-worker cases pass in five files: account preferences/verified destinations are enforced for queued email/SMS and rechecked after preparation, disabled/activation-pending recipients are denied, recipient identity/membership/marketing/suppression gates remain separate, in-app eligibility retained. Local providers only; no external notification claim. delivery-callers.json.",
+            "57 distinct native settings/account/preference/form/timezone source cases pass across seven files plus10 date-time formatter cases.19 overlapping settings/model cases rerun after optional displayName validation are not added.11 electricity ordering source cases pass after its bill timestamp change, including an independent America/New_York expected date. source.json, source-final.json, date-time.json, electricity-source.json.",
+            "52 distinct final scoped Chromium/mobile Safari browser cases pass with zero retries:50 profile settings/name/contact/preferences/timezone cases and2 full simple-electricity payment/contract journeys. Thirty-two earlier cases and intermediate partial runs overlap and are not added. Source for the50 settings cases is unchanged by the later electricity-only patch; final electricity journeys use the latest build. browser-final-report.json/electricity-browser-report.json.",
+            "Fixed settings default picker to consume canonical displayName before legacy person/title fields; optional null/missing legacy fields remain supported and invalid displayName objects are rejected. Actual company names and legacy personal fallback verified on both engines/languages.",
+            "Reconciled four bounded legacy profile browser groups with actual UUID/full-metadata/address-province relationships/idempotency and explicit ownership recovery. Original attachment refresh, verified identity lock/staff grant, dependent-city reset, confirmation/cancel/focus, no false success/backend detail leak, pending duplicate exclusion and retained drafts remain. Same-key retry and explicit recapture/new-key assertions are added. WebKit uses documented Option-Tab (https://support.apple.com/en-gb/guide/safari/cpsh003/mac) while retaining the exact lock-focus assertion.",
+            "Matching prior profile-write HTTP acceptance is reused narrowly using current controller/service manifest hashes plus immutable prior-baseline test Git blob (profile-write-reuse.json). No whole186-case rerun claim. Existing source rechecks account/session/profile ownership/type/verified-field permissions under lock and appends address history atomically with audit/idempotency.",
+            "Timezone consumer audit distinguishes authenticated instants from Iranian electricity civil-period rules and date-only receipt/postal calendars. Public terms explicitly fetch credentials:omit and use the product default in that unauthenticated view. Production electricity detail panels receive account formatters; admin catalogue/gift details gate timezone readiness. Found bill-source instants in simple ordering incorrectly fixed to Tehran; now use existing account formatter/loading/error retry. Exact original civil-period, totals/payment/contract assertions still pass in both journey engines.",
+            "Latest web production build/types, changed-file lint/format, all85 unchanged bundle budgets and strict SAST1804files/0findings/0errors/5rule fixtures pass. API/schema/dependencies unchanged. Final source/test/config hashes and980 compiled outputs are bound in source-manifest.json; earlier failed/incomplete commands are diagnostic evidence only."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
+          "limitations": [
+            "Local source/HTTP/browser/provider fixtures only. Live operational/whole-release acceptance remains separate.",
+            "No pending owner policy decision is approved by this batch."
+          ]
+        }
       }
     },
     {
@@ -18890,12 +19092,10 @@
         "story": "02-auth-users-admin.md#spec-14535d99cdf1"
       },
       "requirement": "**T-03.03.06 — Timezone settings**\n\n- Description: User can change their timezone. Default: Iran Standard Time (UTC+3:30).\n- Technical notes: Store as IANA timezone string. Used for all date/time displays (not for calendar selection — calendar is language-based Jalali/Gregorian). PUT `/api/user/settings/timezone`.\n- UI/UX: Searchable select/timezone picker. Show current time in selected timezone for preview.\n- Dependencies: T-03.03.03\n- Complexity: S",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -19150,54 +19350,315 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/web/e2e/branding-theme.spec.ts",
-          "apps/web/e2e/consumer-theme.spec.ts",
-          "apps/web/e2e/terms-theme.spec.ts",
-          "apps/web/e2e/theme-components.spec.ts",
-          "apps/web/e2e/timezone-settings.spec.ts",
-          "apps/web/src/components/AssignmentFallbackEditor.tsx",
-          "apps/web/src/components/DeadLetterPanel.tsx",
-          "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-          "apps/web/src/components/NotificationBell.tsx",
-          "apps/web/src/components/NotificationRow.tsx",
-          "apps/web/src/components/QuickStatusCards.tsx",
-          "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "apps/web/src/components/TemplatePreviewPanel.tsx",
-          "apps/web/src/components/WalletBalanceCard.tsx",
-          "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
-          "apps/web/src/pages/AIChat.tsx",
-          "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-          "apps/web/src/pages/AdminContractLimitsPage.tsx",
-          "apps/web/src/pages/AdminDashboard.tsx",
-          "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-          "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "apps/web/src/pages/AdminFailedJobsPage.tsx",
-          "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "apps/web/src/pages/AdminReconciliationPage.tsx",
-          "apps/web/src/pages/AdminServiceTargetsPage.tsx",
-          "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-          "apps/web/src/pages/AdminTosPage.tsx",
-          "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
-          "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-          "apps/web/src/pages/CrmProfileDetail.tsx",
-          "apps/web/src/pages/DashboardLayout.tsx",
-          "apps/web/src/pages/DashboardPage.tsx",
-          "apps/web/src/pages/DocumentsPage.tsx",
-          "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-          "apps/web/src/pages/InvoicesPage.tsx",
-          "apps/web/src/pages/NotificationCenterPage.tsx",
-          "apps/web/src/pages/TosPreview.tsx",
-          "apps/web/src/pages/TosRichText.tsx",
-          "apps/web/src/pages/WalletPage.tsx",
-          "apps/web/src/routes/_app/electricity/index.tsx",
-          "apps/web/src/routes/_app/savings.tsx",
-          "apps/web/src/routes/_app/settings/index.tsx",
-          "apps/web/src/routes/_app/settings/profile.tsx",
-          "packages/ui/src/styles.css"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-account-preferences-and-timestamp-consumers",
+          "reviewed_sha": "9088f8329e92798b2203b84ca5cfdb88d9c6c26b",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/branding-theme.spec.ts",
+              "sha256": "3dcf8fec53a0a4c49c53da5eb635cf1d8c8f5a9e745ef3b3e0690d754f67da04"
+            },
+            {
+              "path": "apps/web/e2e/consumer-theme.spec.ts",
+              "sha256": "54884aa2f3d7f463efb7df5aedcf536010350075d7f70dc78c7ab76299a47163"
+            },
+            {
+              "path": "apps/web/e2e/direction-component.spec.ts",
+              "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+            },
+            {
+              "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
+              "sha256": "199a60f9b94e3e70ecf1b47f29a9d283951ea1adf27900ed9018f600e86c8de9"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "4bb99d9aa229ca99a9baabb8b13a959ba6f5fce517654293a6c67245cb4500c3"
+            },
+            {
+              "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+              "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+            },
+            {
+              "path": "apps/web/e2e/profile-settings-name.spec.ts",
+              "sha256": "cfa1a7425cc8e1fc229ea253df3e77fe113ce2b87894eeddb8750d88c078d56f"
+            },
+            {
+              "path": "apps/web/e2e/terms-theme.spec.ts",
+              "sha256": "a76c5fdf52a49ae314ccd4cbc6b79a80af6b08c6462c5b8ac9c9906602721c0f"
+            },
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "f4fbd257ea77c8ae07e706418fa6a93fdcc4bf09485b17e7b7d243b100137b54"
+            },
+            {
+              "path": "apps/web/e2e/timezone-settings.spec.ts",
+              "sha256": "95638515e9440b4847bc341a7290ef64eca3c0a121504e090d77fca5b84e9785"
+            },
+            {
+              "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+              "sha256": "911fb3cc2f705803d3b6ccfbedd31f0b58354e0ec130dd87bb25a243d55213ba"
+            },
+            {
+              "path": "apps/web/src/components/DeadLetterPanel.tsx",
+              "sha256": "f503a0562b9f4fe1952f587d576401a29369f95714ff330be3c17dc6037a1b78"
+            },
+            {
+              "path": "apps/web/src/components/DefaultProfileModal.tsx",
+              "sha256": "cc015e84fe7efac5cd45ffca30b64faa3d2ae7845c92e368c44c0021d9371cc4"
+            },
+            {
+              "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+              "sha256": "5c47e3ab90eaf82a90baa230e2f820172c4c81f4340e22b7e073fe5d3d5e898a"
+            },
+            {
+              "path": "apps/web/src/components/NotificationBell.tsx",
+              "sha256": "634d3e5fc98cb646e49fadf2faf3a24cbcaf2cd96e5c62b7f440e5f136ca4ebc"
+            },
+            {
+              "path": "apps/web/src/components/NotificationRow.tsx",
+              "sha256": "4e98294f316ab72ef0c869fd3ab43fb427fc88b0de4b41d526e62db320581888"
+            },
+            {
+              "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+              "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+            },
+            {
+              "path": "apps/web/src/components/ProfileSwitcher.tsx",
+              "sha256": "1afb5fbcab262d05c64498bdb9fe7c98a609d4ef9f8d1df87a6c46c6baa3a4ad"
+            },
+            {
+              "path": "apps/web/src/components/QuickStatusCards.tsx",
+              "sha256": "e232fdd739b5bda6e5476c120a163c0ce60e18083a12ff1035688c214cabceb9"
+            },
+            {
+              "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+              "sha256": "a041d265baaa367b1f246832b32aedcfb067dfc738661bea1ab7b3ea611dc9bc"
+            },
+            {
+              "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+              "sha256": "fd1c29f8f6f0570ff10f853bd11537045b2956928fb27421da8ea25690a07795"
+            },
+            {
+              "path": "apps/web/src/components/WalletBalanceCard.tsx",
+              "sha256": "4ecc8334e22dda309a4b69b901194a6189bbc854d94a2bc3d4e8163e93d5649a"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+              "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useDirection.ts",
+              "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/hooks/useTimezone.ts",
+              "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.test.ts",
+              "sha256": "e352ee9323f6f6b9f4b1ffeeb12f92467cfc0a8a76e9dc82cda64b2190021053"
+            },
+            {
+              "path": "apps/web/src/lib/settings-form.ts",
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "d041fe3eed75fae3813d86ae269023d30840b1b4309a89d208981084bb78d18d"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "6f791c0e5612cebc1a98f1c8ecfc0af3d39d6c3a784e67171dd4cb548efa9ea4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+              "sha256": "b0508f19bc81d5fa3834eca2919c3faf94a3043ec88d58b8686e1f581a8be2b6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+              "sha256": "7ae1dd4d68d4552a3be4074e892f2d50e62cf2d0ed07873f08ddc3f8908e4db3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.tsx",
+              "sha256": "5924aea47c88060882c276f3a0f29d5b9db3c808de7f3574a247fe25d73f8499"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+            },
+            {
+              "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+              "sha256": "53d2ae6a512ce4dc028467c30cc903f9ec503e8a5e41f6106c8daf34d8cfec2e"
+            },
+            {
+              "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+              "sha256": "753ffc95c68791683ea2afcfd0689dc6f75e13b3a36e7c1d4c69ef179f427485"
+            },
+            {
+              "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+              "sha256": "d2af85c6259bd3df98996123bd8333b360ed99a6944ecbb8eccb03721e2ae89a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+              "sha256": "a258fd38bb11869d710f273a977704c8305d79f11b547067cb2cd18e342f3035"
+            },
+            {
+              "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+              "sha256": "a6a935e3d42cd89b825be85582872ad466770aa6e3a7ea780619e26c574a0395"
+            },
+            {
+              "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+              "sha256": "9841a050ee12762ffd054816d817cac82414043c3a3cf1c75e3ea431dc9359e4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+              "sha256": "865c0e0a537722060519d01d29a74688116058e899dee04618b56d624f932ea2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminTosPage.tsx",
+              "sha256": "a5bb9ebf4e5d4ad335bffbef3171e89ba9666292f2432e7abf84deed5d8683ff"
+            },
+            {
+              "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+              "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "143786921ef55380f04f91b9edb8456ca6b79c69064fa8d564e9f4d8620de383"
+            },
+            {
+              "path": "apps/web/src/pages/ChartsPage.tsx",
+              "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "4079d7b6fe9b38cdd47cdc59c1221cdc7da8ed197a59c6318859c04f7839b554"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardLayout.tsx",
+              "sha256": "d05c2127cfab42502d8556f5ebaca9a7db81e6698c8e251c6540809d9e12b25d"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "4f0b7fea53452eaa1c394163ce7dad9cfffdedb2564ce33239e43cbf68daf8c2"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "f6d3da549142db14627e0724ba8f8a463631522b662fba6e4314ff0b0e91bbe5"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+              "sha256": "6204d1d8fed35d68f0ef924fcc4f996d015663769f98e499bd6226724b2bd3a0"
+            },
+            {
+              "path": "apps/web/src/pages/InvoicesPage.tsx",
+              "sha256": "b49f33efe1a27b98ed9ef2f639b0f40920d026b37487e9904fd2d039ec754d61"
+            },
+            {
+              "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+              "sha256": "d381d63cb0215297d8d8c08c32add64b31ed97b15c8fad42fcbf00fb8a0de15e"
+            },
+            {
+              "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+              "sha256": "fbc26cef9dff4d24bad625d860d6dea92f4c082f4b84b58e4c3cec3d7d4049a9"
+            },
+            {
+              "path": "apps/web/src/pages/TosPreview.tsx",
+              "sha256": "e2ba9a09049614fa4251b06fdbb0a41bb058ba69b8c0d5d8f87909b2f8b29cd9"
+            },
+            {
+              "path": "apps/web/src/pages/TosRichText.tsx",
+              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+            },
+            {
+              "path": "apps/web/src/pages/VideosPage.tsx",
+              "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f50d69b3240a87957a8bda0c5f92da4814431e0e40d7504496dd077563b2280d"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-order.test.tsx",
+              "sha256": "f66d76f70cd0954107b5165c5cd53ec5e42adb6979bb7dad8c278c9969a7c9ca"
+            },
+            {
+              "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+              "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/index.tsx",
+              "sha256": "a4e8319b74346f621542a313f05433830ee0c55767d5534c726e73b8d180e785"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.tsx",
+              "sha256": "87b3c86fc54370f1bc581c4251905624f759541214423a83c57b2c684eb94561"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/index.tsx",
+              "sha256": "0aefd63e7791457e67908f3b980fccb29fdb716a09d9aaf1efb63646c6fa554c"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/profile.tsx",
+              "sha256": "e92ff2e38cdb2494ce51c9080f2c122447f0320b9f7612dd70d6855d18525ad1"
+            },
+            {
+              "path": "apps/web/src/routes/terms.tsx",
+              "sha256": "16ddcb8050f9fef40fbf793f0d1f92f6c7602fe4ea426e13014900b7b40bbec7"
+            },
+            {
+              "path": "packages/i18n/src/date-time.test.ts",
+              "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+            },
+            {
+              "path": "packages/i18n/src/date-time.ts",
+              "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "a39425759aad68bfb97f538fc2bceeb633d8e54fcf0ccc74f474f0183a8e2c2f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected strict saved IANA timezone validation/default Asia/Tehran, account-scoped audited persistence and current-session recheck; searchable picker/current preview/recovery/reload. Locale selects calendars independently. Authenticated instant displays use saved zone with readiness/error handling; fixed bill source/measurement instants in simple ordering. Iranian service-period civil boundaries and date-only fields retain domain semantics.",
+            "17 distinct real HTTP cases pass in three existing files (contact-session, notification-preferences and timezone). The initial command also listed nonexistent contact-http.integration.test.ts; no fourth suite or absent test is counted. Current session expiry/audit rollback, exact correlated commit/replay, destination ownership, channel availability and timezone validation/persistence are covered. api.json.",
+            "81 selected delivery-worker cases pass in five files: account preferences/verified destinations are enforced for queued email/SMS and rechecked after preparation, disabled/activation-pending recipients are denied, recipient identity/membership/marketing/suppression gates remain separate, in-app eligibility retained. Local providers only; no external notification claim. delivery-callers.json.",
+            "57 distinct native settings/account/preference/form/timezone source cases pass across seven files plus10 date-time formatter cases.19 overlapping settings/model cases rerun after optional displayName validation are not added.11 electricity ordering source cases pass after its bill timestamp change, including an independent America/New_York expected date. source.json, source-final.json, date-time.json, electricity-source.json.",
+            "52 distinct final scoped Chromium/mobile Safari browser cases pass with zero retries:50 profile settings/name/contact/preferences/timezone cases and2 full simple-electricity payment/contract journeys. Thirty-two earlier cases and intermediate partial runs overlap and are not added. Source for the50 settings cases is unchanged by the later electricity-only patch; final electricity journeys use the latest build. browser-final-report.json/electricity-browser-report.json.",
+            "Fixed settings default picker to consume canonical displayName before legacy person/title fields; optional null/missing legacy fields remain supported and invalid displayName objects are rejected. Actual company names and legacy personal fallback verified on both engines/languages.",
+            "Reconciled four bounded legacy profile browser groups with actual UUID/full-metadata/address-province relationships/idempotency and explicit ownership recovery. Original attachment refresh, verified identity lock/staff grant, dependent-city reset, confirmation/cancel/focus, no false success/backend detail leak, pending duplicate exclusion and retained drafts remain. Same-key retry and explicit recapture/new-key assertions are added. WebKit uses documented Option-Tab (https://support.apple.com/en-gb/guide/safari/cpsh003/mac) while retaining the exact lock-focus assertion.",
+            "Matching prior profile-write HTTP acceptance is reused narrowly using current controller/service manifest hashes plus immutable prior-baseline test Git blob (profile-write-reuse.json). No whole186-case rerun claim. Existing source rechecks account/session/profile ownership/type/verified-field permissions under lock and appends address history atomically with audit/idempotency.",
+            "Timezone consumer audit distinguishes authenticated instants from Iranian electricity civil-period rules and date-only receipt/postal calendars. Public terms explicitly fetch credentials:omit and use the product default in that unauthenticated view. Production electricity detail panels receive account formatters; admin catalogue/gift details gate timezone readiness. Found bill-source instants in simple ordering incorrectly fixed to Tehran; now use existing account formatter/loading/error retry. Exact original civil-period, totals/payment/contract assertions still pass in both journey engines.",
+            "Latest web production build/types, changed-file lint/format, all85 unchanged bundle budgets and strict SAST1804files/0findings/0errors/5rule fixtures pass. API/schema/dependencies unchanged. Final source/test/config hashes and980 compiled outputs are bound in source-manifest.json; earlier failed/incomplete commands are diagnostic evidence only."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
+          "limitations": [
+            "Local source/HTTP/browser/provider fixtures only. Live operational/whole-release acceptance remains separate.",
+            "No pending owner policy decision is approved by this batch."
+          ]
+        }
       }
     },
     {
@@ -19352,7 +19813,7 @@
             },
             {
               "path": "apps/web/src/lib/settings-form.ts",
-              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
             },
             {
               "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
@@ -19414,7 +19875,8 @@
             "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
             "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets.",
             "Deletion criterion uses the specified soft-delete-and-warning behavior: no physical DELETE in the customer command, retained rows/order snapshots, current main-address replacement required, localized history warning in confirmation. Does not claim a separate linked-order soft-delete prohibition. Related 18 address HTTP cases and EN/FA native-form browser/source receipts remain valid for unchanged profile/address methods.",
-            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
+            "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
         },
@@ -19710,7 +20172,7 @@
             },
             {
               "path": "apps/web/src/lib/settings-form.ts",
-              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -19773,7 +20235,8 @@
             "Ten distinct zero-retry Chromium/mobile Safari production browser cases pass: four bilingual unsigned legacy-detail cases with no overflow/axe findings, two full customer/staff upload/postal journeys with a recorded address, and four current household/non-household add-address return/review/submission regressions. browser-report.json and intake-report.json.",
             "Web/API types, changed-file lint/formatting, production web build and all85 unchanged route budgets pass. Dictionary dist includes both new literal messages. Final source/assets match browser-source.json; the formatting-only API rebuild reproduces exact tested JavaScript bytes, so HTTP/browser evidence is retained rather than repeated. api-formatting-reuse.json.",
             "Inspected final detail SQL: historical address comes only from recorded review data; mutable address join removed. New copied-field storage and role/session checks are unchanged. Legacy rows without recorded values display a localized unknown message; schema and signed receipts are preserved.",
-            "Earlier address checkpoints retain exact criteria/evidence: scoped native CRUD/retries, electricity saved/new address and immutable order fields, saving exact keyed creation plus authoritative quote snapshot, and both solar types with complete signed JSON. Final changes are confined to legacy solar detail projection/wording; prior unaffected intake/form methods and dictionary keys are retained. Dependency security patches were separately verified with136boundary cases and identical client assets."
+            "Earlier address checkpoints retain exact criteria/evidence: scoped native CRUD/retries, electricity saved/new address and immutable order fields, saving exact keyed creation plus authoritative quote snapshot, and both solar types with complete signed JSON. Final changes are confined to legacy solar detail projection/wording; prior unaffected intake/form methods and dictionary keys are retained. Dependency security patches were separately verified with136boundary cases and identical client assets.",
+            "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "related_evidence": [
             "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance/review.json",
@@ -45779,7 +46242,7 @@
             },
             {
               "path": "apps/web/src/lib/settings-form.ts",
-              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
             },
             {
               "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
@@ -45825,7 +46288,8 @@
             "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
             "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets.",
             "Source bindings renewed after final-review-only rendering change. Six saving source cases and 16 final browser cases revalidate original address retries/navigation and quote display. Earlier 35/6/18/2/22 receipts retain their recorded base scope; unchanged source/methods are reused. /Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review/review.json",
-            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
+            "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
         }
@@ -45929,7 +46393,7 @@
             },
             {
               "path": "apps/web/src/lib/settings-form.ts",
-              "sha256": "39c5ed18e63ad4efc65bb80e8b8dfab00c57e1b8c8be4b7b4dee776e46db3e24"
+              "sha256": "08b1dec8f4ec1efcb64250859b10ea3f952b48409126147a6372f92680a9badf"
             },
             {
               "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
@@ -45979,7 +46443,8 @@
             "Final web types, changed-file lint/formatting, production build and all 85 unchanged route budgets pass. browser-source.json binds final source/config/lock and compiled assets.",
             "Backend quote hashing, ownership locks, monetary totals and immutable address persistence are unchanged. Prior two targeted saving/electricity PostgreSQL cases and 18 profile-address HTTP cases remain valid for these unchanged service methods; no claim of a fresh full API suite.",
             "Scoped source reuse at 4ba5c0c: service-wizard fixture changes add complete geography identifiers and solar-only snapshot/recovery cases. Saving handlers and assertions, quoted street/postcode and plan/agreement display are unchanged. Prior six saving source/16 browser checks remain valid for this unchanged behavior; no fresh full saving-suite claim.",
-            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
+            "At account-preferences-acceptance, renewed apps/web/src/lib/settings-form.ts: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review"
         }
@@ -76367,14 +76832,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-account-preferences-acceptance",
+    "id": "release-0.2-terms-acceptance",
     "release": "0.2.0",
-    "goal": "Renew profile settings, verified contact/username changes, per-user notification preferences and timezone settings against current implementation and affected delivery/date callers. Preserve current identity/session authority and remaining owner-policy decisions.",
+    "goal": "Renew public terms, immutable/versioned consent storage and required reacceptance against existing implementation. Reuse matching registration consent proofs; inspect private and public version identity, sanitized content, hashes, retry/CSRF/current-session boundaries and sensitive-action enforcement.",
     "task_keys": [
-      "02-auth-users-admin.md#T-03.03.03",
-      "02-auth-users-admin.md#T-03.03.04",
-      "02-auth-users-admin.md#T-03.03.05",
-      "02-auth-users-admin.md#T-03.03.06",
+      "02-auth-users-admin.md#T-04.01.01",
+      "02-auth-users-admin.md#T-04.01.02",
+      "02-auth-users-admin.md#T-04.01.03",
       "release-readiness#R-01.01"
     ]
   },

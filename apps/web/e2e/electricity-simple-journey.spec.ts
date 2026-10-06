@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { t } from '@barghsa/i18n/app';
 import { electricityPaymentReview } from './electricity-payment-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
@@ -116,6 +117,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   let reviewComplete = false;
   let paid = false;
   let accepted = false;
+  let billAvailable = false;
   const orderSubmissions: Array<Record<string, unknown>> = [];
   const payments: Array<Record<string, unknown>> = [];
   const contractAcceptances: Array<Record<string, unknown>> = [];
@@ -156,7 +158,7 @@ test('simple electricity order moves from reviewed quote through payment and con
     })
   );
   await page.route('**/api/user/settings/timezone', (route) =>
-    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    route.fulfill({ json: { timezone: 'America/New_York' } })
   );
   await page.route('**/api/products/electricity', (route) => route.fulfill({ json: products }));
   await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
@@ -182,7 +184,19 @@ test('simple electricity order moves from reviewed quote through payment and con
     route.fulfill({ json: { ...route.request().postDataJSON(), updatedAt: submittedAt } })
   );
   await page.route(`**/api/electricity/bill-data/${profileId}*`, (route) =>
-    route.fulfill({ json: { available: false, reason: 'unconfigured', manualEntryAllowed: true } })
+    route.fulfill({
+      json: billAvailable
+        ? {
+            available: true,
+            suggestedKwh: '24',
+            dataSource: 'configured_bill_provider',
+            dataPeriod: { start: '2026-09-20T00:00:00Z', end: '2026-09-21T00:00:00Z' },
+            dataTimestamp: '2026-09-20T23:00:00Z',
+            coverage: 0.75,
+            manualEntryAllowed: true,
+          }
+        : { available: false, reason: 'unconfigured', manualEntryAllowed: true },
+    })
   );
   await page.route(`**/api/wallet/${profileId}`, (route) =>
     route.fulfill({ json: { balance: '2000000', currency: 'IRR' } })
@@ -550,6 +564,19 @@ test('simple electricity order moves from reviewed quote through payment and con
     page.getByText('Bill data is unavailable. Enter your usage manually.')
   ).toBeVisible();
   await page.locator('#electricity-kwh').fill('10');
+  billAvailable = true;
+  await page
+    .getByRole('button', { name: t('electricity.order.retryBillData', 'en'), exact: true })
+    .click();
+  const expectedTimestamp = await page.evaluate(() =>
+    new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(new Date('2026-09-20T23:00:00Z'))
+  );
+  await expect(page.locator('time[datetime="2026-09-20T23:00:00Z"]')).toHaveText(expectedTimestamp);
+  await expect(page.locator('#electricity-kwh')).toHaveValue('10');
   await next.click();
   await expect(page.locator('main')).toContainText('Green electricity');
   await expect(page.locator('main')).toContainText('1,250,000');

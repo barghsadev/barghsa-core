@@ -16,6 +16,7 @@ export type SavedAddress = {
 export type SettingsProfileSummary = {
   id: string;
   profileType: 'INDIVIDUAL' | 'LEGAL';
+  displayName?: string | null;
   isDefault: boolean;
   status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED';
   title: string | null;
@@ -96,6 +97,7 @@ const profileRow = (v: unknown): v is SettingsProfileSummary & Record<string, un
   object(v) &&
   settingsUuid(v.id) &&
   (v.profileType === 'INDIVIDUAL' || v.profileType === 'LEGAL') &&
+  (v.displayName === undefined || nullableText(v.displayName)) &&
   typeof v.isDefault === 'boolean' &&
   typeof v.status === 'string' &&
   ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED', 'SUSPENDED'].includes(v.status) &&
