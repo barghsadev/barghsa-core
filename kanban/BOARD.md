@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 168 | Accepted with unchanged source bindings. |
-| verify | 1137 | Existing work may be complete; inspect evidence before building. |
+| done | 184 | Accepted with unchanged source bindings. |
+| verify | 1121 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,24 +39,20 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing advanced delivery dates/lead limits, four-product composition, green-rule ownership, financial review, strict inputs and safe draft/submission recovery. Reuse source-bound foundation/order evidence and20 current shared advanced browser cases. Resume two simple representation criteria when the pending owner answer arrives. Build only demonstrated gaps.
+Verify existing electricity commercial/financial state projection, staff decision permissions/queues, contract acceptance/payment prerequisites and paid cancellation/rejection refund obligations. Reuse valid order/payment and current simple/advanced journey evidence. Inspect before rebuilding. Resume pending simple naming criteria when the owner replies.
 
-- `03-core-business.md#T-03.06.01.01`: UI: Start date and end date pickers (Jalali calendar with time). Start cannot be in the past. End must be after start.
-- `03-core-business.md#T-03.06.01.02`: Validate: duration ≤ admin-configured max (default 24 Jalali months). Validate lead time (default 0 days — start can be today).
-- `03-core-business.md#T-03.06.01.03`: Calculate exact hours between start and end timestamps for average power calculation.
-- `03-core-business.md#T-03.06.02.01`: UI: For each of the 4 electricity products (thermal, green, free-market, energy-saving), show:
-- `03-core-business.md#T-03.06.02.02`: `POST /electricity/preview/advanced` — accepts date range, per-product quantities, gift code. Returns:
-- `03-core-business.md#T-03.06.02.03`: When advanced green rule is enabled: green quantity is derived from thermal quantity (read-only display). Customer cannot edit green quantity; changing thermal recalculates green. When disabled: customer freely enters any allowed green quantity.
-- `03-core-business.md#T-03.06.02.04`: When thermal quantity is zero and mandatory green is enabled: calculated mandatory green quantity is zero. Customer cannot manually add separate green quantity.
-- `03-core-business.md#T-03.06.03.01`: `POST /electricity/orders/advanced` — idempotent submission:
-- `03-core-business.md#T-03.06.03.02`: Advanced order creates one contract and one initial invoice for the complete bundle. No installment or multiple invoice generation.
-- `03-core-business.md#T-03.06.03.03`: Backend performs authoritative calculation of bundle totals: never trust frontend-computed amounts.
-- `03-core-business.md#T-03.06.04.01`: Step 1: Date range selection with Jalali date pickers, duration display
-- `03-core-business.md#T-03.06.04.02`: Step 2: Bundle builder — 4 product quantity inputs with line totals, automatic green derivation when rule enabled
-- `03-core-business.md#T-03.06.04.03`: Step 3: Price preview with full breakdown: per-product, bundle totals, average power, green status
-- `03-core-business.md#T-03.06.04.04`: Step 4: Optional gift code
-- `03-core-business.md#T-03.06.04.05`: Step 5: Review & submit — full snapshot, wallet balance, explicit confirm
-- `03-core-business.md#T-03.06.04.06`: Lead time must be enforced: start date cannot violate lead days setting.
+- `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
+- `03-core-business.md#T-03.07.01.02`: Financial state machine for electricity orders:
+- `03-core-business.md#T-03.07.01.03`: Order detail page: display both commercial and financial statuses separately with distinct labels. Never combine into one ambiguous status.
+- `03-core-business.md#T-03.07.01.04`: Show next action clearly for each status pair. For customer: what they need to do. For staff: what action is pending their review.
+- `03-core-business.md#T-03.07.02.01`: Staff API: `POST /staff/electricity/orders/:id/approve` — approve preliminary contract. Notify customer.
+- `03-core-business.md#T-03.07.02.02`: Staff API: `POST /staff/electricity/orders/:id/request-changes` — with reason. Notify customer.
+- `03-core-business.md#T-03.07.02.03`: Staff API: `POST /staff/electricity/orders/:id/reject` — with reason. If paid, trigger automatic refund workflow.
+- `03-core-business.md#T-03.07.02.04`: Staff UI: electricity order review work queue — list of orders awaiting staff review with priority/age
+- `03-core-business.md#T-03.07.02.05`: Staff UI: order detail view — customer info, period, product breakdown, prices, contract snapshot, decision buttons (approve/request changes/reject)
+- `03-core-business.md#T-03.07.04.01`: Customer order list: all profile-scoped electricity orders with commercial + financial status, period, total kWh, total price, submission date, next action callout
+- `03-core-business.md#T-03.07.04.02`: Order detail: full submitted data snapshot, per-product breakdown, contract reference, invoice reference and status, payment status, review timeline, comments
+- `03-core-business.md#T-03.07.04.03`: No dead ends: always show current state, what happened, next available action, who is responsible, how to get help.
 - `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
 - `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at`
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
@@ -229,22 +225,22 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.05.04.05` | done | Recorded batch work | Step 5: Review page — full summary including profile, period, quantities, prices, discount, VAT, total, wallet balance, contract preview, cancellation/refund rules. Explicit "Submit" button. |
 | `03-core-business.md#T-03.05.04.06` | done | Recorded batch work | Order confirmation page — redirects to order detail. Shows order ID, contract reference, invoice reference, payment options. |
 | `03-core-business.md#T-03.05.04.07` | done | Recorded batch work | Multi-step form saves server-side draft after each completed step. Resumable safely. Validation errors identify exact field without clearing valid input. |
-| `03-core-business.md#T-03.06.01.01` | verify | Inventory needed | UI: Start date and end date pickers (Jalali calendar with time). Start cannot be in the past. End must be after start. |
-| `03-core-business.md#T-03.06.01.02` | verify | Inventory needed | Validate: duration ≤ admin-configured max (default 24 Jalali months). Validate lead time (default 0 days — start can be today). |
-| `03-core-business.md#T-03.06.01.03` | verify | Inventory needed | Calculate exact hours between start and end timestamps for average power calculation. |
-| `03-core-business.md#T-03.06.02.01` | verify | Inventory needed | UI: For each of the 4 electricity products (thermal, green, free-market, energy-saving), show: |
-| `03-core-business.md#T-03.06.02.02` | verify | Inventory needed | `POST /electricity/preview/advanced` — accepts date range, per-product quantities, gift code. Returns: |
-| `03-core-business.md#T-03.06.02.03` | verify | Recorded batch work | When advanced green rule is enabled: green quantity is derived from thermal quantity (read-only display). Customer cannot edit green quantity; changing thermal recalculates green. When disabled: customer freely enters any allowed green quantity. |
-| `03-core-business.md#T-03.06.02.04` | verify | Recorded batch work | When thermal quantity is zero and mandatory green is enabled: calculated mandatory green quantity is zero. Customer cannot manually add separate green quantity. |
-| `03-core-business.md#T-03.06.03.01` | verify | Inventory needed | `POST /electricity/orders/advanced` — idempotent submission: |
-| `03-core-business.md#T-03.06.03.02` | verify | Inventory needed | Advanced order creates one contract and one initial invoice for the complete bundle. No installment or multiple invoice generation. |
-| `03-core-business.md#T-03.06.03.03` | verify | Inventory needed | Backend performs authoritative calculation of bundle totals: never trust frontend-computed amounts. |
-| `03-core-business.md#T-03.06.04.01` | verify | Recorded batch work | Step 1: Date range selection with Jalali date pickers, duration display |
-| `03-core-business.md#T-03.06.04.02` | verify | Inventory needed | Step 2: Bundle builder — 4 product quantity inputs with line totals, automatic green derivation when rule enabled |
-| `03-core-business.md#T-03.06.04.03` | verify | Inventory needed | Step 3: Price preview with full breakdown: per-product, bundle totals, average power, green status |
-| `03-core-business.md#T-03.06.04.04` | verify | Inventory needed | Step 4: Optional gift code |
-| `03-core-business.md#T-03.06.04.05` | verify | Recorded batch work | Step 5: Review & submit — full snapshot, wallet balance, explicit confirm |
-| `03-core-business.md#T-03.06.04.06` | verify | Inventory needed | Lead time must be enforced: start date cannot violate lead days setting. |
+| `03-core-business.md#T-03.06.01.01` | done | Recorded batch work | UI: Start date and end date pickers (Jalali calendar with time). Start cannot be in the past. End must be after start. |
+| `03-core-business.md#T-03.06.01.02` | done | Recorded batch work | Validate: duration ≤ admin-configured max (default 24 Jalali months). Validate lead time (default 0 days — start can be today). |
+| `03-core-business.md#T-03.06.01.03` | done | Recorded batch work | Calculate exact hours between start and end timestamps for average power calculation. |
+| `03-core-business.md#T-03.06.02.01` | done | Recorded batch work | UI: For each of the 4 electricity products (thermal, green, free-market, energy-saving), show: |
+| `03-core-business.md#T-03.06.02.02` | done | Recorded batch work | `POST /electricity/preview/advanced` — accepts date range, per-product quantities, gift code. Returns: |
+| `03-core-business.md#T-03.06.02.03` | done | Recorded batch work | When advanced green rule is enabled: green quantity is derived from thermal quantity (read-only display). Customer cannot edit green quantity; changing thermal recalculates green. When disabled: customer freely enters any allowed green quantity. |
+| `03-core-business.md#T-03.06.02.04` | done | Recorded batch work | When thermal quantity is zero and mandatory green is enabled: calculated mandatory green quantity is zero. Customer cannot manually add separate green quantity. |
+| `03-core-business.md#T-03.06.03.01` | done | Recorded batch work | `POST /electricity/orders/advanced` — idempotent submission: |
+| `03-core-business.md#T-03.06.03.02` | done | Recorded batch work | Advanced order creates one contract and one initial invoice for the complete bundle. No installment or multiple invoice generation. |
+| `03-core-business.md#T-03.06.03.03` | done | Recorded batch work | Backend performs authoritative calculation of bundle totals: never trust frontend-computed amounts. |
+| `03-core-business.md#T-03.06.04.01` | done | Recorded batch work | Step 1: Date range selection with Jalali date pickers, duration display |
+| `03-core-business.md#T-03.06.04.02` | done | Recorded batch work | Step 2: Bundle builder — 4 product quantity inputs with line totals, automatic green derivation when rule enabled |
+| `03-core-business.md#T-03.06.04.03` | done | Recorded batch work | Step 3: Price preview with full breakdown: per-product, bundle totals, average power, green status |
+| `03-core-business.md#T-03.06.04.04` | done | Recorded batch work | Step 4: Optional gift code |
+| `03-core-business.md#T-03.06.04.05` | done | Recorded batch work | Step 5: Review & submit — full snapshot, wallet balance, explicit confirm |
+| `03-core-business.md#T-03.06.04.06` | done | Recorded batch work | Lead time must be enforced: start date cannot violate lead days setting. |
 | `03-core-business.md#T-03.07.01.01` | verify | Recorded batch work | Commercial state machine for electricity orders: |
 | `03-core-business.md#T-03.07.01.02` | verify | Recorded batch work | Financial state machine for electricity orders: |
 | `03-core-business.md#T-03.07.01.03` | verify | Inventory needed | Order detail page: display both commercial and financial statuses separately with distinct labels. Never combine into one ambiguous status. |

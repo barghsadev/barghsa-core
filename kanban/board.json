@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-06",
-  "source_commit": "a1b3210f664646b90fc5f879a29e6c3d497e97ab",
+  "source_commit": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -69692,19 +69692,101 @@
         "story": "03-core-business.md#spec-9f6091cdac56"
       },
       "requirement": "| **T-03.06.01.01** | 📋 UI: Start date and end date pickers (Jalali calendar with time). Start cannot be in the past. End must be after start. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Existing Iran-time Jalali datetime pickers validate parsed start/end, start not past, end after start, and contextual lead/max duration. Existing date helper and invalid-period component behavior inspected; localized browser ranges pass.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69718,19 +69800,101 @@
         "story": "03-core-business.md#spec-9f6091cdac56"
       },
       "requirement": "| **T-03.06.01.02** | 🔧 Validate: duration ≤ admin-configured max (default 24 Jalali months). Validate lead time (default 0 days — start can be today). | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Current server validates configured lead days and maximum Jalali months from locked settings, default0/24. Pure period tests prove same-day lead denial, exact24-month allowed bound and extra-minute rejection.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69744,19 +69908,101 @@
         "story": "03-core-business.md#spec-9f6091cdac56"
       },
       "requirement": "| **T-03.06.01.03** | 🔧 Calculate exact hours between start and end timestamps for average power calculation. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Duration and power use exact bigint milliseconds; decimal hours/power are display values. Current precise endpoint subtraction and cross-multiplication criteria remain source-bound from foundation.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69770,19 +70016,101 @@
         "story": "03-core-business.md#spec-98e4f30a2cd2"
       },
       "requirement": "| **T-03.06.02.01** | 📋 UI: For each of the 4 electricity products (thermal, green, free-market, energy-saving), show:\n  - Product title, unit price, current availability\n  - Quantity input (kWh) — zero means omitted from bundle\n  - Min/max indicators per product limits\n  - Line total calculation | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Existing four canonical product cards show localized title, price, availability, zero/positive quantity, min/max and authoritative quoted line subtotal. Unavailable/derived-green inputs are disabled. Source and current journey inspected.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69796,19 +70124,101 @@
         "story": "03-core-business.md#spec-98e4f30a2cd2"
       },
       "requirement": "| **T-03.06.02.02** | 🔧 `POST /electricity/preview/advanced` — accepts date range, per-product quantities, gift code. Returns:\n  - Per-product line: quantity, unit price, line total\n  - Total bundle kWh, exact duration hours, average power kW\n  - Green rule applicability\n  - Subtotal, discount, VAT, total\n  - Wallet balance | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Existing advanced preview returns server-period, line quantities/prices/subtotal/discount/VAT/total, total kWh, duration/power, green status, available wallet balance and review digest. No frontend amounts are accepted.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69822,21 +70232,102 @@
         "story": "03-core-business.md#spec-98e4f30a2cd2"
       },
       "requirement": "| **T-03.06.02.03** | ⚠️ When advanced green rule is enabled: green quantity is derived from thermal quantity (read-only display). Customer cannot edit green quantity; changing thermal recalculates green. When disabled: customer freely enters any allowed green quantity. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-advanced-electricity-effective-quantities"
+          "2026-09-23-advanced-electricity-effective-quantities",
+          "release-0.2-advanced-electricity-ordering"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Enabled advanced rule forces green payload0 and shows the authoritative derived line read-only; thermal changes requote. Restored manual green is ignored under the enabled rule. Disabled configuration permits independent green.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69850,21 +70341,102 @@
         "story": "03-core-business.md#spec-98e4f30a2cd2"
       },
       "requirement": "| **T-03.06.02.04** | ⚠️ When thermal quantity is zero and mandatory green is enabled: calculated mandatory green quantity is zero. Customer cannot manually add separate green quantity. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-advanced-electricity-effective-quantities"
+          "2026-09-23-advanced-electricity-effective-quantities",
+          "release-0.2-advanced-electricity-ordering"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Thermal0 yields required green0 under mandatory rule. A direct positive manual green is rejected; unrelated positive free-market/energy-saving lines can remain. Pure composition and real advanced HTTP cases retained.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69878,19 +70450,101 @@
         "story": "03-core-business.md#spec-5e7f7d8d1952"
       },
       "requirement": "| **T-03.06.03.01** | 🔧 `POST /electricity/orders/advanced` — idempotent submission:\n  - All validations from simple order plus:\n  - Bundle composition must include at least one product with positive quantity\n  - Per-product minimums/maximums\n  - Green rule applied correctly (derived or free)\n  - Atomic transaction: order + contract + invoice\n  - Create bundle with all selected products as order lines | XL |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Shared authorized submission recalculates period/settings/products/gift, validates at least one positive product and each limit, binds review and actor/request hash, then creates order/contract/invoice/lines/snapshots/audit/receipt in one transaction. All sources/runtime paths remain unchanged.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69904,19 +70558,101 @@
         "story": "03-core-business.md#spec-5e7f7d8d1952"
       },
       "requirement": "| **T-03.06.03.02** | ⚠️ Advanced order creates one contract and one initial invoice for the complete bundle. No installment or multiple invoice generation. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Whole four-product bundle creates one contract relation and one initial invoice. Uniqueness, concurrent replay and returned references verified by real foundation HTTP and current payment/activation journeys.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69930,19 +70666,101 @@
         "story": "03-core-business.md#spec-5e7f7d8d1952"
       },
       "requirement": "| **T-03.06.03.03** | ⚠️ Backend performs authoritative calculation of bundle totals: never trust frontend-computed amounts. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Strict schema rejects client totals/unknown products/fields. Server exact multiplication/discount/VAT/overflow and digest revalidation govern submission; stale rule/price denies and rolls back.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69956,21 +70774,102 @@
         "story": "03-core-business.md#spec-7b87ae18a4c0"
       },
       "requirement": "| **T-03.06.04.01** | 📋 Step 1: Date range selection with Jalali date pickers, duration display | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-24-advanced-electricity-draft-recovery"
+          "2026-09-24-advanced-electricity-draft-recovery",
+          "release-0.2-advanced-electricity-ordering"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Existing step1 has Jalali datetime pickers and duration context. Both language journeys show the selected custom range; back/resume keeps raw inputs.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -69984,19 +70883,101 @@
         "story": "03-core-business.md#spec-7b87ae18a4c0"
       },
       "requirement": "| **T-03.06.04.02** | 📋 Step 2: Bundle builder — 4 product quantity inputs with line totals, automatic green derivation when rule enabled | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Existing step2 includes all four product inputs and line totals, with disabled derived green and retained unselected zero quantities. Local validation links/focuses invalid fields and preserves corrections.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -70010,19 +70991,101 @@
         "story": "03-core-business.md#spec-7b87ae18a4c0"
       },
       "requirement": "| **T-03.06.04.03** | 📋 Step 3: Price preview with full breakdown: per-product, bundle totals, average power, green status | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Existing preview displays every selected line and bundle totals/average power/green disclosure; errors withdraw stale quote and provide safe retry/support paths.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -70036,19 +71099,101 @@
         "story": "03-core-business.md#spec-7b87ae18a4c0"
       },
       "requirement": "| **T-03.06.04.04** | 📋 Step 4: Optional gift code | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Optional gift entry triggers server quote validation; the exact applied value enters the review snapshot and is atomically revalidated/redeemed at submit.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -70062,12 +71207,10 @@
         "story": "03-core-business.md#spec-7b87ae18a4c0"
       },
       "requirement": "| **T-03.06.04.05** | 📋 Step 5: Review & submit — full snapshot, wallet balance, explicit confirm | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -70078,9 +71221,92 @@
           "2026-09-24-advanced-electricity-review",
           "2026-09-24-advanced-review-amounts",
           "2026-09-24-electricity-advanced-browser-journey",
-          "2026-09-24-electricity-contract-terms-preview"
+          "2026-09-24-electricity-contract-terms-preview",
+          "release-0.2-advanced-electricity-ordering"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Final review is read-only and contains captured profile/address/dates/bundle financials/contract terms/current quoted wallet availability. Explicit submit waits for code, preserves input on failure and reuses idempotency key until all original references confirm.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -70094,19 +71320,101 @@
         "story": "03-core-business.md#spec-7b87ae18a4c0"
       },
       "requirement": "| **T-03.06.04.06** | ⚠️ Lead time must be enforced: start date cannot violate lead days setting. | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-advanced-electricity-ordering"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
+          "reviewed_sha": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+            },
+            {
+              "path": "apps/web/src/lib/jalali-date-time.ts",
+              "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance/advanced-browser.json"
+          ],
+          "criterion_result": "Client Iran civil-day lead validation and server authoritative current-time/lead-limit checks both apply. No customer timezone or frontend amount can bypass server calendar limits.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance"
+        }
       }
     },
     {
@@ -94586,7 +95894,8 @@
         "Replace stale absent-module statements with exact current remaining criteria and bound check evidence.",
         "Consultation lifecycle16 tasks accepted with final source/build-bound evidence; continue electricity, saving, solar and remaining identity/operational gates before whole milestone acceptance.",
         "Electricity foundation17 tasks accepted with exact source/build-bound calculations, settings and activation-limit evidence. Complete simple/advanced intake, saving/solar and remaining identity/operational criteria before milestone acceptance.",
-        "Simple electricity22 tasks accepted; two naming/representation decisions remain partial. Continue advanced intake and saving/solar plus identity/operational gates before milestone acceptance."
+        "Simple electricity22 tasks accepted; two naming/representation decisions remain partial. Continue advanced intake and saving/solar plus identity/operational gates before milestone acceptance.",
+        "Advanced electricity16 tasks accepted from final unchanged source/runtime evidence; electricity lifecycle and saving/solar plus pending identity/operational criteria remain."
       ],
       "owner": null,
       "depends_on": [],
@@ -102873,6 +104182,105 @@
           "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
         }
       ]
+    },
+    "release-0.2-advanced-electricity-ordering": {
+      "title": "Advanced electricity bundle, dates, confirmation and recovery acceptance",
+      "task_keys": [
+        "03-core-business.md#T-03.06.01.01",
+        "03-core-business.md#T-03.06.01.02",
+        "03-core-business.md#T-03.06.01.03",
+        "03-core-business.md#T-03.06.02.01",
+        "03-core-business.md#T-03.06.02.02",
+        "03-core-business.md#T-03.06.02.03",
+        "03-core-business.md#T-03.06.02.04",
+        "03-core-business.md#T-03.06.03.01",
+        "03-core-business.md#T-03.06.03.02",
+        "03-core-business.md#T-03.06.03.03",
+        "03-core-business.md#T-03.06.04.01",
+        "03-core-business.md#T-03.06.04.02",
+        "03-core-business.md#T-03.06.04.03",
+        "03-core-business.md#T-03.06.04.04",
+        "03-core-business.md#T-03.06.04.05",
+        "03-core-business.md#T-03.06.04.06"
+      ],
+      "summary": "Accepted16 original advanced tasks from existing implementation, without rebuilding the engines or duplicate suites. New six localized production-browser journeys pass; related source/runtime-bound evidence reused. No whole milestone publication.",
+      "validation": [
+        "Inspected exact requirements and current advanced page, controller, options/quote/submission and period/calculation sources before acceptance. Reviewed once; no demonstrated missing behavior.",
+        "Six current Chromium/mobile Safari localized advanced payment/contract and cross-page language journeys pass with zero retries.20 unchanged current advanced navigation cases,14 unchanged component cases,7 exact Iran/Jalali period cases and45 unchanged HTTP order scenarios retain their scoped final evidence.982 web/i18n outputs match.",
+        "Server settings/availability/quantity/green/gift/price/VAT/wallet and review digest remain authoritative; strict request fields, same actor/request idempotency, profile/legal/verification admission, one bundle contract/invoice, audit and rollback retained. Current client forbids positive manual green when mandatory and derives zero when thermal is omitted.",
+        "No product, dictionary, schema, migration or build changes. Existing appropriate types/contract/lint/budgets retain their unchanged bindings. Pending simple mode/snapshot/bill-route owner question remains recorded; no approval fabricated."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/advanced-electricity-acceptance",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.controller.ts",
+          "sha256": "ce1127b13d7f2a983478986b77142b6eeac7972564b1ea2f9b0f339b7b856db8"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.ts",
+          "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+          "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-periods.ts",
+          "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-periods.test.ts",
+          "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "65ba323e4b696d7454e2d6a7465b999871301d61101585dc174212984cf9e3af"
+        },
+        {
+          "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+          "sha256": "e7d937fb9b856677b5595644068cf22915e9b4ec40856bd868eab975cc9b654e"
+        },
+        {
+          "path": "apps/web/src/lib/jalali-date-time.ts",
+          "sha256": "792feed944a843b4ebb4d8cc30eeb19fa446e803b5757a13d3913dda57b610e8"
+        },
+        {
+          "path": "apps/web/e2e/electricity-journey.spec.ts",
+          "sha256": "2e97ba41f7264829b9d7340219e2f3faaed99b148a45b89bff3a10f2f4861ba8"
+        },
+        {
+          "path": "apps/web/e2e/electricity-payment-fixture.ts",
+          "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "fab0e0e41d0fe9862053a10fc347d5826372b99d107b4db5b32b069e03780779"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -102912,26 +104320,22 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-advanced-electricity-ordering",
+    "id": "release-0.2-electricity-lifecycle",
     "release": "0.2.0",
-    "goal": "Verify existing advanced delivery dates/lead limits, four-product composition, green-rule ownership, financial review, strict inputs and safe draft/submission recovery. Reuse source-bound foundation/order evidence and20 current shared advanced browser cases. Resume two simple representation criteria when the pending owner answer arrives. Build only demonstrated gaps.",
+    "goal": "Verify existing electricity commercial/financial state projection, staff decision permissions/queues, contract acceptance/payment prerequisites and paid cancellation/rejection refund obligations. Reuse valid order/payment and current simple/advanced journey evidence. Inspect before rebuilding. Resume pending simple naming criteria when the owner replies.",
     "task_keys": [
-      "03-core-business.md#T-03.06.01.01",
-      "03-core-business.md#T-03.06.01.02",
-      "03-core-business.md#T-03.06.01.03",
-      "03-core-business.md#T-03.06.02.01",
-      "03-core-business.md#T-03.06.02.02",
-      "03-core-business.md#T-03.06.02.03",
-      "03-core-business.md#T-03.06.02.04",
-      "03-core-business.md#T-03.06.03.01",
-      "03-core-business.md#T-03.06.03.02",
-      "03-core-business.md#T-03.06.03.03",
-      "03-core-business.md#T-03.06.04.01",
-      "03-core-business.md#T-03.06.04.02",
-      "03-core-business.md#T-03.06.04.03",
-      "03-core-business.md#T-03.06.04.04",
-      "03-core-business.md#T-03.06.04.05",
-      "03-core-business.md#T-03.06.04.06",
+      "03-core-business.md#T-03.07.01.01",
+      "03-core-business.md#T-03.07.01.02",
+      "03-core-business.md#T-03.07.01.03",
+      "03-core-business.md#T-03.07.01.04",
+      "03-core-business.md#T-03.07.02.01",
+      "03-core-business.md#T-03.07.02.02",
+      "03-core-business.md#T-03.07.02.03",
+      "03-core-business.md#T-03.07.02.04",
+      "03-core-business.md#T-03.07.02.05",
+      "03-core-business.md#T-03.07.04.01",
+      "03-core-business.md#T-03.07.04.02",
+      "03-core-business.md#T-03.07.04.03",
       "03-core-business.md#T-03.05.01.04",
       "03-core-business.md#T-03.05.03.02",
       "release-readiness#R-01.01"
