@@ -624,6 +624,8 @@ export const fa: I18nDictionary = {
   'settings.privacy.blocker.activeProductWorkflow': 'درخواست‌های محصول در جریان',
   'settings.privacy.blocker.pendingProfileAccess': 'دعوت یا انتقال مالکیت در انتظار',
   'settings.privacy.blocker.securityReview': 'بررسی امنیتی',
+  'settings.privacy.blocker.pendingExport': 'خروجی داده هنوز آماده نیست',
+  'settings.privacy.blocker.profileOwnershipChanged': 'مالکیت پروفایل تغییر کرده است',
   'tickets.closure.review': 'بررسی نهایی بستن پروفایل',
   'tickets.closure.consequences':
     'پروفایل بایگانی می‌شود، دسترسی‌های فعال آن قطع می‌شود و نشست‌های مالک لغو می‌شوند. فایل خروجی باید پیش از تأیید دریافت شود؛ پس از بستن، دریافت آن در دسترس نیست. مالک می‌تواند دوباره وارد شود و با پشتیبانی تماس بگیرد.',
@@ -668,6 +670,7 @@ export const fa: I18nDictionary = {
   'settings.privacy.step.settleWallet': 'برای تسویه مانده کیف پول با امور مالی هماهنگ کنید.',
   'settings.privacy.step.completeContract': 'برای تکمیل یا خاتمه قرارداد با پشتیبانی گفتگو کنید.',
   'settings.privacy.step.staffReview': 'پشتیبانی هویت و دسترسی‌ها را پیش از بستن بررسی می‌کند.',
+  'settings.privacy.step.prepareExport': 'پیش از تأیید بستن، خروجی داده را آماده و دریافت کنید.',
   'tickets.priority': 'اولویت',
   'tickets.normal': 'عادی',
   'tickets.high': 'بالا',
@@ -2390,6 +2393,8 @@ export const en: I18nDictionary = {
   'settings.privacy.blocker.activeProductWorkflow': 'Active product requests',
   'settings.privacy.blocker.pendingProfileAccess': 'Pending invitation or ownership transfer',
   'settings.privacy.blocker.securityReview': 'Security review',
+  'settings.privacy.blocker.pendingExport': 'Data export is not ready',
+  'settings.privacy.blocker.profileOwnershipChanged': 'Profile ownership has changed',
   'tickets.closure.review': 'Final profile closure review',
   'tickets.closure.consequences':
     'The profile will be archived, active access to it will end, and the owner’s sessions will be revoked. Download any export before approval; it cannot be downloaded after closure. The owner can sign in again and contact support.',
@@ -2433,6 +2438,8 @@ export const en: I18nDictionary = {
   'settings.privacy.step.settleWallet': 'Arrange wallet settlement with Finance.',
   'settings.privacy.step.completeContract': 'Contact support to complete or close the contract.',
   'settings.privacy.step.staffReview': 'Support will verify identity and access before closure.',
+  'settings.privacy.step.prepareExport':
+    'Prepare and download the data export before closure approval.',
   'tickets.priority': 'Priority',
   'tickets.normal': 'Normal',
   'tickets.high': 'High',

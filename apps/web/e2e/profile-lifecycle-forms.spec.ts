@@ -1,7 +1,14 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
-import { setupTicketForms, ticketId, profileId, customerActor } from './ticket-forms-fixture';
+import {
+  setupTicketForms,
+  initialTicket,
+  ticketId,
+  otherTicketId,
+  profileId,
+  customerActor,
+} from './ticket-forms-fixture';
 import {
   actualLifecyclePreview,
   actualClosurePreview,
@@ -278,5 +285,95 @@ for (const locale of ['en', 'fa'] as const) {
       page.locator('[data-slot=ticket-status-form]'),
       info.outputPath('closure-confirmed.png')
     );
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  for (const code of ['pendingExport', 'profileOwnershipChanged'] as const) {
+    test(`closure blocks ${code} with owner and next step (${locale})`, async ({ page }, info) => {
+      const f = await setupTicketForms(page, locale, true);
+      const value = {
+        ...actualClosurePreview(),
+        ticketId,
+        profileId,
+        ownerUserId: customerActor,
+        eligible: false,
+      };
+      value.blockers = value.blockers.map((b) => (b.code === code ? { ...b, count: 1 } : b));
+      await page.route(`**/api/staff/tickets/${ticketId}/closure-preview`, (r) =>
+        r.fulfill({ json: value })
+      );
+      await page.goto('/admin/tickets?ticketId=' + ticketId);
+      const owner = page.locator('[data-slot=profile-closure-review]');
+      await expect(owner).toContainText(t(`settings.privacy.blocker.${code}`, locale));
+      await expect(owner).toContainText(
+        t(
+          code === 'pendingExport'
+            ? 'settings.privacy.owner.customer'
+            : 'settings.privacy.owner.privacy',
+          locale
+        )
+      );
+      await expect(owner).toContainText(
+        t(
+          code === 'pendingExport'
+            ? 'settings.privacy.step.prepareExport'
+            : 'settings.privacy.step.staffReview',
+          locale
+        )
+      );
+      await expect(
+        owner.getByRole('button', { name: t('tickets.closure.execute', locale), exact: true })
+      ).toHaveCount(0);
+      await expect(owner.locator('input[type=password]')).toHaveCount(0);
+      expect(f.state.closureWrites).toBe(0);
+      expect(f.state.stepUpWrites).toBe(0);
+      await quality(page, 'profile-closure-review');
+      await capture(page, owner, info.outputPath(code + '-blocked.png'));
+    });
+  }
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`closed profile keeps its support and export request references without an active profile (${locale})`, async ({
+    page,
+  }) => {
+    const f = await setupTicketForms(page, locale, false);
+    f.tickets.set(ticketId, initialTicket(ticketId, false));
+    f.tickets.set(otherTicketId, initialTicket(otherTicketId, false));
+    const closed = f.tickets.get(ticketId)!;
+    closed.category = 'privacy';
+    closed.privacyRequestType = 'closure';
+    closed.status = 'closed';
+    closed.privacyClosureCompletedAt = lifecycleInstant;
+    closed.privacyClosureAnonymized = false;
+    closed.privacyClosureRetained = { wallets: 1 };
+    closed.privacyClosureExportTicketId = otherTicketId;
+    await page.route('**/api/profiles', (r) =>
+      r.fulfill({ json: { profiles: [], activeProfileId: null, hasDefault: false } })
+    );
+    await page.route(`**/api/tickets/${otherTicketId}`, (r) =>
+      r.fulfill({
+        json: {
+          ...f.tickets.get(otherTicketId),
+          category: 'privacy',
+          privacyRequestType: 'export',
+        },
+      })
+    );
+    await page.goto('/tickets?ticketId=' + ticketId);
+    const article = page.locator('article');
+    await expect(article).toContainText(t('tickets.closure.completed', locale));
+    await expect(article).toContainText(t('tickets.closure.supportHistory', locale));
+    await expect(article).toContainText(t('tickets.closure.consequences', locale));
+    const reference = article.getByRole('link', {
+      name: t('tickets.closure.export', locale) + ' · ' + otherTicketId,
+      exact: true,
+    });
+    await expect(reference).toHaveAttribute('href', '/tickets?ticketId=' + otherTicketId);
+    await reference.click();
+    await expect(page).toHaveURL('/tickets?ticketId=' + otherTicketId);
+    await expect(page.locator('article')).toContainText('Other ticket source');
+    expect(f.state.closureWrites).toBe(0);
   });
 }

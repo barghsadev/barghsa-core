@@ -76,7 +76,7 @@ interface Comment {
   updatedAt: string;
 }
 export const privateText = 'PRIVATE-NOTE-MUST-NOT-ENTER-CUSTOMER-DOM';
-const initialTicket = (id: string, staff: boolean): Ticket => ({
+export const initialTicket = (id: string, staff: boolean): Ticket => ({
   id,
   userId: customerActor,
   subject: id === ticketId ? 'Ticket form journey' : 'Other ticket source',

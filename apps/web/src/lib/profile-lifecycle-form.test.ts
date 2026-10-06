@@ -66,3 +66,25 @@ it('confirms actual initial and replayed closures without demanding the pre-effe
   expect(closureReceipt({ ...receipt, profileId: jobId }, source)).toBeNull();
   expect(closureReceipt({ ...receipt, previewVersion: 'b'.repeat(64) }, source)).toBeNull();
 });
+
+it('requires both completion blockers with their exact owners and resolution steps', () => {
+  const value = actualClosurePreview();
+  expect(value.blockers).toHaveLength(13);
+  expect(closurePreview(value, ticketId)).toEqual(value);
+  for (const key of ['pendingExport', 'profileOwnershipChanged']) {
+    expect(
+      closurePreview({ ...value, blockers: value.blockers.filter((b) => b.code !== key) }, ticketId)
+    ).toBeNull();
+    expect(
+      closurePreview(
+        {
+          ...value,
+          blockers: value.blockers.map((b) =>
+            b.code === key ? { ...b, nextStep: 'contactSupport' } : b
+          ),
+        },
+        ticketId
+      )
+    ).toBeNull();
+  }
+});

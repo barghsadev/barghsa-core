@@ -8,7 +8,6 @@ import type { TicketCoordination, TicketOwner } from '../lib/ticket-form.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import {
   actualClosurePreview,
-  actualBlockers,
   actualStepUp,
   lifecycleInstant,
   lifecycleTicketId as ticketId,
@@ -50,7 +49,7 @@ it('shows blockers and retained records without offering approval', async () => 
       json: async () => ({
         ...basePreview,
         eligible: false,
-        blockers: actualBlockers().map((b) =>
+        blockers: actualClosurePreview().blockers.map((b) =>
           b.code === 'unpaidInvoice' ? { ...b, count: 1 } : b
         ),
       }),

@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 58 | Accepted with unchanged source bindings. |
+| done | 59 | Accepted with unchanged source bindings. |
 | verify | 1246 | Existing work may be complete; inspect evidence before building. |
-| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue unfinished lifecycle/context acceptance: preserve a usable closure export reference with exact retained-record ownership and store original acting context for four-service business history. Inspect requirements/current sources first; preserve live profile ownership, privacy/financial/audit holds, expiry, immutable history, retry and transactional boundaries.
+Continue unfinished operating-context acceptance. Inspect analogous four-service business histories, preserve validated original acting context for new events, represent unknown historical context honestly, and prove that later role/context changes cannot rewrite attribution. Preserve permissions, immutable events, actor identity, migrations, financial/retry boundaries and all prior local acceptances.
 
-- `02-auth-users-admin.md#T-11.01.03`: Closure execution, revocation, retention and anonymization
 - `02-auth-users-admin.md#T-11.02.01`: Explicit operating context in session and authorization policy
 - `02-auth-users-admin.md#T-11.02.02`: Context-isolation integration and E2E tests
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
@@ -101,7 +100,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-08.01.03` | done | Earlier partial | Quick status cards |
 | `02-auth-users-admin.md#T-11.01.01` | done | Recorded batch work | Account/profile closure request and blocker evaluation |
 | `02-auth-users-admin.md#T-11.01.02` | done | Recorded batch work | Portable customer data export |
-| `02-auth-users-admin.md#T-11.01.03` | partial | Inventory needed | Closure execution, revocation, retention and anonymization |
+| `02-auth-users-admin.md#T-11.01.03` | done | Inventory needed | Closure execution, revocation, retention and anonymization |
 | `02-auth-users-admin.md#T-11.02.01` | partial | Recorded batch work | Explicit operating context in session and authorization policy |
 | `02-auth-users-admin.md#T-11.02.02` | partial | Recorded batch work | Context-isolation integration and E2E tests |
 | `02-auth-users-admin.md#T-11.03.01` | done | Inventory needed | Atomic staff user/profile creation without customer onboarding |

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-06",
-  "source_commit": "5558bb1a26855ed7388a4f58f1f423bc30bb0429",
+  "source_commit": "f96d425945e6459a09501a5b5e384fa8e5a7e6d8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -41804,7 +41804,7 @@
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
-          "reviewed_sha": "5558bb1a26855ed7388a4f58f1f423bc30bb0429",
+          "reviewed_sha": "f96d425945e6459a09501a5b5e384fa8e5a7e6d8",
           "source_evidence": [
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -41820,7 +41820,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "a80298034ed9f094d6dce51c583186830421bf8f5ee14473cb08749f9cca9f36"
+              "sha256": "68b7cf5b32f2eb7fc8236514cf29e322f7ea07e3d7b3e7c985e2fba0a4a13345"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -41832,7 +41832,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
-              "sha256": "d8411ecb8bb33ae50119da998c9c4938021670e5b317352effb953e79cb71333"
+              "sha256": "96bfc1d589dfac358c1ba0d68a5f1db6ba68b5af7ea51d15083d9ee4421bba79"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
@@ -41844,15 +41844,15 @@
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.ts",
-              "sha256": "2ab822939c8242b4194999cd360b29b5e46cbe24f21ce319aeb69e261e924f01"
+              "sha256": "015735107b504174b47b000b65ef8d1966719e133e0e6a6684a4ae9938e1f028"
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
-              "sha256": "4c6948d97dc0eead8b86e375de9e844dab59b196ded1894ca9bb660c5af735a0"
+              "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "daa058189ffe6716dbce77aeb3a1e9b8990e0d7a8759744b155e86ee10b55975"
+              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -41860,7 +41860,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "bdfc3bd0e0f1154202547429577c9f0398f27066e514d02a6a22998cf6047de8"
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -41872,11 +41872,11 @@
             },
             {
               "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
-              "sha256": "c9418f77d7a493baf146e13a1e9a77701bc11c7d07453806dd5c11de41cf9f6f"
+              "sha256": "0632db7007eac560883c9a204df2f6b9eacf894df07f46a1dc319c3715ca257a"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "098259107740d1139e7ba966cbac623e47933474bd2ed917499b3c94c05d6711"
+              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -41896,7 +41896,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "1aeb5ef8061b6adf02f483d465173bba87b47832bf4462601f89878256babc3e"
+              "sha256": "78083b316348ccd3697744043689eb38556322d4bf05831d46012171d7a26855"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -42016,7 +42016,8 @@
             "78 distinct API/unit cases pass in eleven existing files:40 lifecycle/closure/operating context/staff creation/jobs/owned profile/AI availability cases plus38 storage URL/upload context/policy cases. Current migrated PostgreSQL proves scoped/audited/idempotent requests, closure blocker and audit rollback, session revocation/support history, staff sole verified addressless Individual profile/creation rollback/authorship retention, rotated session/refresh/CSRF and cleared step-up, stale credentials and staff/customer/AI/job/file isolation. api.json/api-files.json.",
             "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
             "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
-            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim."
+            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim.",
+            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -42051,7 +42052,7 @@
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
-          "reviewed_sha": "5558bb1a26855ed7388a4f58f1f423bc30bb0429",
+          "reviewed_sha": "f96d425945e6459a09501a5b5e384fa8e5a7e6d8",
           "source_evidence": [
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -42067,7 +42068,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "a80298034ed9f094d6dce51c583186830421bf8f5ee14473cb08749f9cca9f36"
+              "sha256": "68b7cf5b32f2eb7fc8236514cf29e322f7ea07e3d7b3e7c985e2fba0a4a13345"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -42079,7 +42080,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
-              "sha256": "d8411ecb8bb33ae50119da998c9c4938021670e5b317352effb953e79cb71333"
+              "sha256": "96bfc1d589dfac358c1ba0d68a5f1db6ba68b5af7ea51d15083d9ee4421bba79"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
@@ -42091,15 +42092,15 @@
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.ts",
-              "sha256": "2ab822939c8242b4194999cd360b29b5e46cbe24f21ce319aeb69e261e924f01"
+              "sha256": "015735107b504174b47b000b65ef8d1966719e133e0e6a6684a4ae9938e1f028"
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
-              "sha256": "4c6948d97dc0eead8b86e375de9e844dab59b196ded1894ca9bb660c5af735a0"
+              "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "daa058189ffe6716dbce77aeb3a1e9b8990e0d7a8759744b155e86ee10b55975"
+              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -42107,7 +42108,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "bdfc3bd0e0f1154202547429577c9f0398f27066e514d02a6a22998cf6047de8"
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -42119,11 +42120,11 @@
             },
             {
               "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
-              "sha256": "c9418f77d7a493baf146e13a1e9a77701bc11c7d07453806dd5c11de41cf9f6f"
+              "sha256": "0632db7007eac560883c9a204df2f6b9eacf894df07f46a1dc319c3715ca257a"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "098259107740d1139e7ba966cbac623e47933474bd2ed917499b3c94c05d6711"
+              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -42143,7 +42144,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "1aeb5ef8061b6adf02f483d465173bba87b47832bf4462601f89878256babc3e"
+              "sha256": "78083b316348ccd3697744043689eb38556322d4bf05831d46012171d7a26855"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -42263,7 +42264,8 @@
             "78 distinct API/unit cases pass in eleven existing files:40 lifecycle/closure/operating context/staff creation/jobs/owned profile/AI availability cases plus38 storage URL/upload context/policy cases. Current migrated PostgreSQL proves scoped/audited/idempotent requests, closure blocker and audit rollback, session revocation/support history, staff sole verified addressless Individual profile/creation rollback/authorship retention, rotated session/refresh/CSRF and cleared step-up, stale credentials and staff/customer/AI/job/file isolation. api.json/api-files.json.",
             "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
             "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
-            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim."
+            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim.",
+            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -42284,12 +42286,10 @@
         "story": "02-auth-users-admin.md#spec-806ec9cc8614"
       },
       "requirement": "**T-11.01.03 — Closure execution, revocation, retention and anonymization**\n\n- Description: After approval and blocker resolution, revoke access/sessions, close eligible profiles, anonymize data when allowed, and retain records under legal/financial/audit holds.\n- Technical notes: Use one auditable workflow with explicit dry-run/preview, step-up authentication for staff approval, idempotency, and rollback/compensation for partial failure.\n- UI/UX: Final review explains consequences and retained records; completion provides support access and export reference.\n- Dependencies: T-11.01.01, T-11.01.02, T-02.02.02\n- Complexity: L",
-      "status": "partial",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Make the completion export reference usable with exact retained-record ownership: downloadProfileExport currently calls activeOwnedProfile and rejects the archived profile, while closureExecutionPreview can accept an unfinished export reference and closure makes its worker unauthorized. Preserve ordinary active-profile/expiry/context/isolation boundaries and prove preview freshness, pending-export handling, completed archive access and support access after closure."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -42297,136 +42297,16 @@
         "changed_paths": [],
         "batches": [],
         "current_acceptance": {
-          "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
-          "reviewed_sha": "5558bb1a26855ed7388a4f58f1f423bc30bb0429",
+          "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
+          "reviewed_sha": "f96d425945e6459a09501a5b5e384fa8e5a7e6d8",
           "source_evidence": [
             {
-              "path": "apps/web/src/components/ProfileMenu.tsx",
-              "sha256": "a40578e12602623b84defeac711537a44e1c2b212cd1c50df0d28207d8740feb"
-            },
-            {
-              "path": "apps/web/src/components/OperatingContextSwitch.tsx",
-              "sha256": "64ca9e56f51a3895e65b880f12f14fc20e8ce2a0072f47b3a4c249d8b0125cb5"
-            },
-            {
-              "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "845807f1c108c2094f3ab83cb696af8ca9ba93b805b9497c8df86d061cd9deb8"
-            },
-            {
-              "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "a80298034ed9f094d6dce51c583186830421bf8f5ee14473cb08749f9cca9f36"
-            },
-            {
-              "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
-            },
-            {
-              "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
-              "sha256": "28e171a60604ea137d893d52523fb940eeb921d2cd225e91e05719f4b7f7157c"
-            },
-            {
-              "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
-              "sha256": "d8411ecb8bb33ae50119da998c9c4938021670e5b317352effb953e79cb71333"
-            },
-            {
-              "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
-              "sha256": "a0daa42bb119d73a1d2b51835d635f2245de928170d19adcf15a6b1fd3680532"
-            },
-            {
-              "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "4b21178cbd75ad53cf02061465cba44b1f59808da971573adc4c2efd09baa9d4"
-            },
-            {
-              "path": "apps/web/src/lib/profile-lifecycle-form.ts",
-              "sha256": "2ab822939c8242b4194999cd360b29b5e46cbe24f21ce319aeb69e261e924f01"
-            },
-            {
-              "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
-              "sha256": "4c6948d97dc0eead8b86e375de9e844dab59b196ded1894ca9bb660c5af735a0"
-            },
-            {
-              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "daa058189ffe6716dbce77aeb3a1e9b8990e0d7a8759744b155e86ee10b55975"
-            },
-            {
-              "path": "apps/web/e2e/operating-context.spec.ts",
-              "sha256": "cdc848fba5d0801b0c6b3fc6cd3e3f5326ddb929fe922a4a55aeef34946e611a"
-            },
-            {
-              "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "bdfc3bd0e0f1154202547429577c9f0398f27066e514d02a6a22998cf6047de8"
-            },
-            {
-              "path": "apps/web/e2e/navigation-fixture.ts",
-              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
-            },
-            {
-              "path": "apps/web/e2e/coverage-fixture.ts",
-              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
-            },
-            {
-              "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
-              "sha256": "c9418f77d7a493baf146e13a1e9a77701bc11c7d07453806dd5c11de41cf9f6f"
-            },
-            {
-              "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "098259107740d1139e7ba966cbac623e47933474bd2ed917499b3c94c05d6711"
-            },
-            {
-              "path": "apps/api/src/tickets/tickets.controller.ts",
-              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
-            },
-            {
-              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
-              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
-            },
-            {
-              "path": "apps/api/src/tickets/ticket-actor.ts",
-              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
-            },
-            {
-              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
-              "sha256": "0313df2115fe8c95dcea6d139f57cd6a11602cbb4222cd8808d2890ed21931dc"
-            },
-            {
-              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "1aeb5ef8061b6adf02f483d465173bba87b47832bf4462601f89878256babc3e"
-            },
-            {
-              "path": "apps/api/src/session/session-step-up.ts",
-              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
-            },
-            {
-              "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
-            },
-            {
-              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
-            },
-            {
-              "path": "apps/api/src/session/session.service.ts",
-              "sha256": "fcd4ecb530a72a8b3c2238b9ceb442974c087d575cee544817f07c6b6cc101e1"
-            },
-            {
-              "path": "apps/api/src/session/session.guard.ts",
-              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
-            },
-            {
-              "path": "apps/api/src/session/staff-permissions.ts",
-              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
-            },
-            {
-              "path": "apps/api/src/session/staff-permissions.test.ts",
-              "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
               "sha256": "d92d0850c8f5189ba8603471fe0dce4da6b3f9d2ee09d66a65b7928e4dcf56ff"
-            },
-            {
-              "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -42437,6 +42317,14 @@
               "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
             },
             {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "b7768b39ef594183c33be1b6902d4eb80bfbe81cfd15628622c6b395c9d60e72"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-request.service.ts",
+              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+            },
+            {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
               "sha256": "51b8afd3583b1085f71133554a92b7753f8ecb8ac5baf89e2c9b2bc6b01632e2"
             },
@@ -42445,12 +42333,60 @@
               "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
             },
             {
-              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "b7768b39ef594183c33be1b6902d4eb80bfbe81cfd15628622c6b395c9d60e72"
+              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+            },
+            {
+              "path": "apps/api/src/session/operating-context.ts",
+              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "738e3ebeadd140e9c3242028b340f12f48300f0f40ea05fbbaee9344aeabf4a9"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "fcd4ecb530a72a8b3c2238b9ceb442974c087d575cee544817f07c6b6cc101e1"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.test.ts",
+              "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
               "sha256": "6e87fbd695c2f3af40a7551e93d5d54837ccd2590aebf0bd802fae85c5a4a2c9"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "0313df2115fe8c95dcea6d139f57cd6a11602cbb4222cd8808d2890ed21931dc"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "78083b316348ccd3697744043689eb38556322d4bf05831d46012171d7a26855"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -42461,24 +42397,96 @@
               "sha256": "06c0985be504019735f627c8e32096a123d056c2c00ad76fdb4984b9509b4e16"
             },
             {
-              "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
             },
             {
-              "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
             },
             {
-              "path": "apps/worker/src/jobs/async-runner.ts",
-              "sha256": "a4451a44decdb22f867ec2ae4738bf6f39b707bbd03e7273c00ade06c9591125"
+              "path": "apps/web/e2e/operating-context.spec.ts",
+              "sha256": "cdc848fba5d0801b0c6b3fc6cd3e3f5326ddb929fe922a4a55aeef34946e611a"
+            },
+            {
+              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
+              "sha256": "a0daa42bb119d73a1d2b51835d635f2245de928170d19adcf15a6b1fd3680532"
+            },
+            {
+              "path": "apps/web/src/components/OperatingContextSwitch.tsx",
+              "sha256": "64ca9e56f51a3895e65b880f12f14fc20e8ce2a0072f47b3a4c249d8b0125cb5"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
+              "sha256": "96bfc1d589dfac358c1ba0d68a5f1db6ba68b5af7ea51d15083d9ee4421bba79"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.tsx",
+              "sha256": "68b7cf5b32f2eb7fc8236514cf29e322f7ea07e3d7b3e7c985e2fba0a4a13345"
+            },
+            {
+              "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
+              "sha256": "28e171a60604ea137d893d52523fb940eeb921d2cd225e91e05719f4b7f7157c"
+            },
+            {
+              "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+              "sha256": "845807f1c108c2094f3ab83cb696af8ca9ba93b805b9497c8df86d061cd9deb8"
+            },
+            {
+              "path": "apps/web/src/components/ProfileMenu.tsx",
+              "sha256": "a40578e12602623b84defeac711537a44e1c2b212cd1c50df0d28207d8740feb"
+            },
+            {
+              "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
+              "sha256": "4b21178cbd75ad53cf02061465cba44b1f59808da971573adc4c2efd09baa9d4"
+            },
+            {
+              "path": "apps/web/src/components/jobs/JobProgress.tsx",
+              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+            },
+            {
+              "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
+              "sha256": "0632db7007eac560883c9a204df2f6b9eacf894df07f46a1dc319c3715ca257a"
+            },
+            {
+              "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
+              "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
+            },
+            {
+              "path": "apps/web/src/lib/profile-lifecycle-form.ts",
+              "sha256": "015735107b504174b47b000b65ef8d1966719e133e0e6a6684a4ae9938e1f028"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
               "sha256": "7788f26a8c3fb3d37d1584988ee01c991bf524c4f3a64adc4aa175a077c17813"
             },
             {
-              "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "47c8c2cecbdf320b6401e92fd01bdf90b355fd5e4a71c0fa37f9a7b50ed012c1"
+              "path": "apps/worker/src/jobs/async-runner.ts",
+              "sha256": "a4451a44decdb22f867ec2ae4738bf6f39b707bbd03e7273c00ade06c9591125"
+            },
+            {
+              "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "sha256": "d23c448eb6ff908397b196ca2c1bc3b4a712ef95c3fc885d155fae5882ed8c05"
+            },
+            {
+              "path": "apps/worker/src/privacy/profile-export.ts",
+              "sha256": "db01e2432f32f9f33270573490b6daa0b3ba36bfdd5570a5ac5cff8b433686a4"
+            },
+            {
+              "path": "packages/db/src/schema/consultation-requests.ts",
+              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
@@ -42489,33 +42497,36 @@
               "sha256": "987943951c19b917c5f580d39f9e0ae2f0d6b85a1045b3621d1d4adec4daadca"
             },
             {
-              "path": "packages/db/src/schema/consultation-requests.ts",
-              "sha256": "9115a1aead3ef5d26f4462624d722820d021d1dca6948fc7eee1cad6039ed193"
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "668d97d7244a4c4adbdaa81ea5d490e741469e0a06204e7a55ad393105caa225"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
             },
             {
-              "path": "apps/web/playwright.config.ts",
-              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
-            },
-            {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
             }
           ],
           "checks": [
-            "Inspected exact six task requirements and current profile-scoped privacy/controller/service/worker/UI/session/staff implementations. Reused closure/session/profile engines; changed only a demonstrated missing all-service export projection and persistent operating-mode badge.",
-            "78 distinct API/unit cases pass in eleven existing files:40 lifecycle/closure/operating context/staff creation/jobs/owned profile/AI availability cases plus38 storage URL/upload context/policy cases. Current migrated PostgreSQL proves scoped/audited/idempotent requests, closure blocker and audit rollback, session revocation/support history, staff sole verified addressless Individual profile/creation rollback/authorship retention, rotated session/refresh/CSRF and cleared step-up, stale credentials and staff/customer/AI/job/file isolation. api.json/api-files.json.",
-            "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
-            "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
-            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim."
+            "Read the exact closure and export requirements plus established bilingual final-review policy. Corrected the previous inference: completion promises a support/export request reference, while actual export downloads require an active owned profile. Existing consequences explicitly state downloads end at closure; this boundary stays enforced and is directly tested, not waived.",
+            "Added pendingExport and profileOwnershipChanged to the complete staff closure preview. The preview binds account/profile owner, job identity, archive key and expiry. Requested exports must complete and remain unexpired; ownership changes deny stale closure. Hold the export request row and check its actual database clock after closure writes/audit. A late expiry rolls back archive/redaction/context/session/audit changes atomically. Existing serializable/session/step-up/self-approval/financial/legal retention/replay boundaries preserved.",
+            "109 distinct API/service cases pass:103 existing ticket HTTP/service callers,2 lifecycle HTTP cases, and4 closure HTTP cases. Four closure cases are assembled from three successes in closure-api-current.json and the final one-case ownership-api-final.json; its3 selected-out cases are not claimed rerun. Original fixtures/assertions retained. Five-second clock-wait case has a15-second timeout because the intentional wait exceeds the old5-second ceiling. Text session IDs use their actual text-array type; the new ownership case has independent accounts. Failed/time-limited commands remain diagnostics.",
+            "Closure HTTP proves active-owner signed download with positive TTL<=300 and no-store, ready archive then expiry during reached audit wait causes409 with no archive/revocation/closure/audit effects; complete closure retains wallet identity/history/reference and revokes sessions once. After re-login both closure and export support records are readable, while archived-profile download remains403. Changed ownership leaves both accounts/session claims/profile fields untouched.",
+            "23 distinct frontend component/model cases pass:7 unchanged lifecycle-panel cases from web-source.json plus16 final closure/model cases from web-source-current.json. Exact11 lifecycle blockers retained; closure requires all13 codes with exact owners/steps and rejects missing/foreign metadata. Staff blocked-state renders bilingual owner and next step; no approval/password UI is offered.",
+            "28 distinct Chromium/mobile Safari cases pass with zero retries:16 original lifecycle cases,8 new pending-export/ownership blocker cases, and4 completed support/reference cases with no active profile, in both FA/EN. browser-report.json/blocker-browser-report.json/support-reference-browser-current-report.json. Original test body bytes and existing fixture factory are unchanged; the factory is only exported for new cases (browser-reuse-proof.json). A synthetic customer fixture first lacked seeded history and was corrected; no failed run is accepted.",
+            "25 message dictionary cases pass (one actual messages.test.ts file; the listed app.test.ts does not exist and contributes no cases). Six new entries are the only dictionary delta, proven by exact byte projection. API/i18n/web builds,11 type/build tasks, scoped lint/format/diff, exact generated contract,85 unchanged budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. Production sources match the scans/builds; final test-only factory export retains its exact body. Source-manifest.json binds53 sources and2982 required outputs; stale emitted test-only API files are excluded from reuse.",
+            "Local source/HTTP/browser/provider fixtures only. All-four-service blocker SQL reviewed with terminal dispositions, including solar close-no-contract mapping to cancelled. No whole-release, external legal policy, staging or Telegram completion is inferred. Acting-context history remains partial in its own two tasks."
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
           "limitations": [
-            "Local source/HTTP/browser/provider fixtures only. Whole-release coverage/operational/staging acceptance remains separate.",
-            "Closure completion export access and immutable business acting-context attribution remain explicitly partial in their own tasks."
+            "Local fixtures/source acceptance only; operational and whole-release/coverage gates remain separate.",
+            "Downloads continue to require an active owned profile. Completion retains the owned support/export-request reference as specified and warned in existing final-review copy."
           ]
         }
       }
@@ -43043,7 +43054,7 @@
         "batches": [],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
-          "reviewed_sha": "5558bb1a26855ed7388a4f58f1f423bc30bb0429",
+          "reviewed_sha": "f96d425945e6459a09501a5b5e384fa8e5a7e6d8",
           "source_evidence": [
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -43059,7 +43070,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "a80298034ed9f094d6dce51c583186830421bf8f5ee14473cb08749f9cca9f36"
+              "sha256": "68b7cf5b32f2eb7fc8236514cf29e322f7ea07e3d7b3e7c985e2fba0a4a13345"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -43071,7 +43082,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
-              "sha256": "d8411ecb8bb33ae50119da998c9c4938021670e5b317352effb953e79cb71333"
+              "sha256": "96bfc1d589dfac358c1ba0d68a5f1db6ba68b5af7ea51d15083d9ee4421bba79"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.test.tsx",
@@ -43083,15 +43094,15 @@
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.ts",
-              "sha256": "2ab822939c8242b4194999cd360b29b5e46cbe24f21ce319aeb69e261e924f01"
+              "sha256": "015735107b504174b47b000b65ef8d1966719e133e0e6a6684a4ae9938e1f028"
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
-              "sha256": "4c6948d97dc0eead8b86e375de9e844dab59b196ded1894ca9bb660c5af735a0"
+              "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "daa058189ffe6716dbce77aeb3a1e9b8990e0d7a8759744b155e86ee10b55975"
+              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -43099,7 +43110,7 @@
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
-              "sha256": "bdfc3bd0e0f1154202547429577c9f0398f27066e514d02a6a22998cf6047de8"
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -43111,11 +43122,11 @@
             },
             {
               "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
-              "sha256": "c9418f77d7a493baf146e13a1e9a77701bc11c7d07453806dd5c11de41cf9f6f"
+              "sha256": "0632db7007eac560883c9a204df2f6b9eacf894df07f46a1dc319c3715ca257a"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "098259107740d1139e7ba966cbac623e47933474bd2ed917499b3c94c05d6711"
+              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -43135,7 +43146,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "1aeb5ef8061b6adf02f483d465173bba87b47832bf4462601f89878256babc3e"
+              "sha256": "78083b316348ccd3697744043689eb38556322d4bf05831d46012171d7a26855"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -43255,7 +43266,8 @@
             "78 distinct API/unit cases pass in eleven existing files:40 lifecycle/closure/operating context/staff creation/jobs/owned profile/AI availability cases plus38 storage URL/upload context/policy cases. Current migrated PostgreSQL proves scoped/audited/idempotent requests, closure blocker and audit rollback, session revocation/support history, staff sole verified addressless Individual profile/creation rollback/authorship retention, rotated session/refresh/CSRF and cleared step-up, stale credentials and staff/customer/AI/job/file isolation. api.json/api-files.json.",
             "Eight worker cases pass:three unchanged async-runner cases from worker.json andfive final export cases from export-boundaries.json (overlapping earlier export cases not added). Real migrated PostgreSQL/ZIP proves customer document bytes and all-four-service projections; saving pricing/lines and consultation fee preserve9007199254740993 exactly as strings; same-user other-profile portfolio, provider verification secrets, raw solar review metadata, postal internal notes and assignment metadata absent. Lease change and audit failure after upload cannot publish an archive and reclaim uploaded objects; staff jobs/current-profile switches denied;24h expiry/cleanup retained. Earlier setup failures followed actual draft-to-active agreement and complete order snapshot constraints; no skipped case claimed passed.",
             "26 unchanged frontend model/component cases and22 final production Chromium/mobile Safari cases pass with zero retries. Native privacy blockers, exact original key/ticket/job retry, changed closure-review consent, confirmation/step-up/ownership/idempotent replay, bilingual context rotations/onboarding prohibition and persistent visible mode before opening the menu. Original strict assertions retained; obsolete context fixture now supplies canonical navigation/active profile/timezone. web-source.json/browser-current-report.json.",
-            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim."
+            "Latest matching web/worker production builds,11 workspace type/build checks plus final worker typecheck, scoped lint/format/diff,85 unchanged bundle budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. No API contract/schema/dependency/product-version change. Source-manifest.json binds51 current sources and required generated outputs; local fixtures only, no deployment/whole-release claim.",
+            "Closure compatibility renewal against f96d425945e6459a09501a5b5e384fa8e5a7e6d8: TicketsService has35 unchanged method ASTs, including lifecycle requests, queue/download and customer ticket readers. Only closure preview/execution change;109 ticket/lifecycle/closure API cases,23 frontend and28 browser cases pass. Prior worker export/staff creation methods are unchanged; old acceptance evidence retained narrowly. renewal-proof.json/browser-reuse-proof.json and /Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -71204,7 +71216,8 @@
         "current_acceptance": null,
         "batches": [
           "release-0.2-terms-acceptance",
-          "release-0.2-account-lifecycle-context"
+          "release-0.2-account-lifecycle-context",
+          "release-0.2-closure-completion"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -78625,6 +78638,25 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
       "scope_limit": "No v0.2.0 milestone or staging/Telegram receipt is claimed."
+    },
+    "release-0.2-closure-completion": {
+      "title": "Closure expiry/ownership guards and retained support reference acceptance",
+      "task_keys": [
+        "02-auth-users-admin.md#T-11.01.03"
+      ],
+      "summary": "Accepted exact closure task; pending exports and changed profile ownership deny closure. Late export expiry rolls back all effects. Existing active-profile download boundary and retained support reference verified; prior affected feature bindings renewed with scoped proofs.",
+      "validation": [
+        "Read the exact closure and export requirements plus established bilingual final-review policy. Corrected the previous inference: completion promises a support/export request reference, while actual export downloads require an active owned profile. Existing consequences explicitly state downloads end at closure; this boundary stays enforced and is directly tested, not waived.",
+        "Added pendingExport and profileOwnershipChanged to the complete staff closure preview. The preview binds account/profile owner, job identity, archive key and expiry. Requested exports must complete and remain unexpired; ownership changes deny stale closure. Hold the export request row and check its actual database clock after closure writes/audit. A late expiry rolls back archive/redaction/context/session/audit changes atomically. Existing serializable/session/step-up/self-approval/financial/legal retention/replay boundaries preserved.",
+        "109 distinct API/service cases pass:103 existing ticket HTTP/service callers,2 lifecycle HTTP cases, and4 closure HTTP cases. Four closure cases are assembled from three successes in closure-api-current.json and the final one-case ownership-api-final.json; its3 selected-out cases are not claimed rerun. Original fixtures/assertions retained. Five-second clock-wait case has a15-second timeout because the intentional wait exceeds the old5-second ceiling. Text session IDs use their actual text-array type; the new ownership case has independent accounts. Failed/time-limited commands remain diagnostics.",
+        "Closure HTTP proves active-owner signed download with positive TTL<=300 and no-store, ready archive then expiry during reached audit wait causes409 with no archive/revocation/closure/audit effects; complete closure retains wallet identity/history/reference and revokes sessions once. After re-login both closure and export support records are readable, while archived-profile download remains403. Changed ownership leaves both accounts/session claims/profile fields untouched.",
+        "23 distinct frontend component/model cases pass:7 unchanged lifecycle-panel cases from web-source.json plus16 final closure/model cases from web-source-current.json. Exact11 lifecycle blockers retained; closure requires all13 codes with exact owners/steps and rejects missing/foreign metadata. Staff blocked-state renders bilingual owner and next step; no approval/password UI is offered.",
+        "28 distinct Chromium/mobile Safari cases pass with zero retries:16 original lifecycle cases,8 new pending-export/ownership blocker cases, and4 completed support/reference cases with no active profile, in both FA/EN. browser-report.json/blocker-browser-report.json/support-reference-browser-current-report.json. Original test body bytes and existing fixture factory are unchanged; the factory is only exported for new cases (browser-reuse-proof.json). A synthetic customer fixture first lacked seeded history and was corrected; no failed run is accepted.",
+        "25 message dictionary cases pass (one actual messages.test.ts file; the listed app.test.ts does not exist and contributes no cases). Six new entries are the only dictionary delta, proven by exact byte projection. API/i18n/web builds,11 type/build tasks, scoped lint/format/diff, exact generated contract,85 unchanged budgets and strict SAST1806files/0findings/0errors/5rule fixtures pass. Production sources match the scans/builds; final test-only factory export retains its exact body. Source-manifest.json binds53 sources and2982 required outputs; stale emitted test-only API files are excluded from reuse.",
+        "Local source/HTTP/browser/provider fixtures only. All-four-service blocker SQL reviewed with terminal dispositions, including solar close-no-contract mapping to cancelled. No whole-release, external legal policy, staging or Telegram completion is inferred. Acting-context history remains partial in its own two tasks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
+      "scope_limit": "No release/deployment/notification claim; acting-context history and other v0.2.0 gates remain open."
     }
   },
   "historical_improvements": [
@@ -78664,11 +78696,10 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-lifecycle-completion-and-acting-context",
+    "id": "release-0.2-business-history-acting-context",
     "release": "0.2.0",
-    "goal": "Continue unfinished lifecycle/context acceptance: preserve a usable closure export reference with exact retained-record ownership and store original acting context for four-service business history. Inspect requirements/current sources first; preserve live profile ownership, privacy/financial/audit holds, expiry, immutable history, retry and transactional boundaries.",
+    "goal": "Continue unfinished operating-context acceptance. Inspect analogous four-service business histories, preserve validated original acting context for new events, represent unknown historical context honestly, and prove that later role/context changes cannot rewrite attribution. Preserve permissions, immutable events, actor identity, migrations, financial/retry boundaries and all prior local acceptances.",
     "task_keys": [
-      "02-auth-users-admin.md#T-11.01.03",
       "02-auth-users-admin.md#T-11.02.01",
       "02-auth-users-admin.md#T-11.02.02",
       "release-readiness#R-01.01"

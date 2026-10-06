@@ -12,9 +12,14 @@ export const lifecycleBlockers = {
   pendingProfileAccess: ['privacy', 'staffReview'],
   securityReview: ['privacy', 'staffReview'],
 } as const;
+export const closureBlockers = {
+  ...lifecycleBlockers,
+  pendingExport: ['customer', 'prepareExport'],
+  profileOwnershipChanged: ['privacy', 'staffReview'],
+} as const;
 export type LifecycleType = 'export' | 'closure';
 export interface LifecycleBlocker {
-  code: keyof typeof lifecycleBlockers;
+  code: keyof typeof closureBlockers;
   count: number;
   owner: string;
   nextStep: string;
@@ -75,20 +80,23 @@ const date = (v: unknown): v is string =>
   Number.isFinite(Date.parse(v));
 const count = (v: unknown) => typeof v === 'number' && Number.isSafeInteger(v) && v >= 0;
 const nullable = (v: unknown, valid: (v: unknown) => boolean) => v === null || valid(v);
-function blockers(v: unknown): v is LifecycleBlocker[] {
-  if (!Array.isArray(v) || v.length !== Object.keys(lifecycleBlockers).length) return false;
+function blockers(
+  v: unknown,
+  definition: Readonly<Record<string, readonly [string, string]>> = lifecycleBlockers
+): v is LifecycleBlocker[] {
+  if (!Array.isArray(v) || v.length !== Object.keys(definition).length) return false;
   const seen = new Set<string>();
   return v.every((b) => {
     if (
       !object(b) ||
       typeof b.code !== 'string' ||
       seen.has(b.code) ||
-      !Object.hasOwn(lifecycleBlockers, b.code) ||
+      !Object.hasOwn(definition, b.code) ||
       !count(b.count)
     )
       return false;
     seen.add(b.code);
-    const [owner, next] = lifecycleBlockers[b.code as keyof typeof lifecycleBlockers];
+    const [owner, next] = definition[b.code]!;
     return b.owner === owner && b.nextStep === next;
   });
 }
@@ -153,7 +161,7 @@ export function closurePreview(v: unknown, ticketId: string): ClosurePreview | n
     !nullable(v.completedAt, date) ||
     !nullable(v.anonymized, (b) => typeof b === 'boolean') ||
     typeof v.eligible !== 'boolean' ||
-    !blockers(v.blockers) ||
+    !blockers(v.blockers, closureBlockers) ||
     !object(v.retained) ||
     !retainedRecords.every((key) => count((v.retained as Record<string, unknown>)[key])) ||
     typeof v.anonymizeProfile !== 'boolean' ||

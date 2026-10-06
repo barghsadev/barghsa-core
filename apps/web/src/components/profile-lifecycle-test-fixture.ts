@@ -1,4 +1,8 @@
-import { lifecycleBlockers, retainedRecords } from '../lib/profile-lifecycle-form.js';
+import {
+  lifecycleBlockers,
+  closureBlockers,
+  retainedRecords,
+} from '../lib/profile-lifecycle-form.js';
 export const lifecycleProfileId = '11111111-1111-4111-8111-111111111112';
 export const lifecycleTicketId = '11111111-1111-4111-8111-111111111111';
 export const lifecycleJobId = '11111111-1111-4111-8111-111111111113';
@@ -18,7 +22,12 @@ export const actualClosurePreview = () => ({
   completedAt: null as string | null,
   anonymized: null as boolean | null,
   anonymizeProfile: false,
-  blockers: actualBlockers(),
+  blockers: Object.entries(closureBlockers).map(([code, [owner, nextStep]]) => ({
+    code,
+    count: code === 'securityReview' ? 1 : 0,
+    owner,
+    nextStep,
+  })),
   retained: Object.fromEntries(retainedRecords.map((key) => [key, key === 'invoices' ? 1 : 0])),
   exportTicketId: null,
   exportExpiresAt: null,

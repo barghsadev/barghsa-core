@@ -34,7 +34,7 @@ const execute = (previewVersion: string) =>
   });
 
 beforeAll(async () => {
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, 'http://127.0.0.1:9999');
   await http.pool.query(
     `INSERT INTO users(user_id,username,password_hash,is_admin)
      VALUES('closure-owner','closure-owner@example.test','test-only',false),
@@ -233,6 +233,114 @@ it('retains profile identity and a zero-balance wallet as linked financial histo
   });
   expect(created.status, http.logs()).toBe(201);
   const id = ((await created.json()) as { ticketId: string }).ticketId;
+  const pendingPreview = await fetch(`${http.base}/api/staff/tickets/${id}/closure-preview`, {
+    headers: staffHeaders,
+  });
+  const pendingReview = (await pendingPreview.json()) as {
+    eligible: boolean;
+    previewVersion: string;
+    blockers: unknown[];
+  };
+  expect(pendingReview.eligible).toBe(false);
+  expect(pendingReview.blockers).toContainEqual({
+    code: 'pendingExport',
+    count: 1,
+    owner: 'customer',
+    nextStep: 'prepareExport',
+  });
+  const executeRetained = (version: string) =>
+    fetch(`${http.base}/api/staff/tickets/${id}/execute-closure`, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ previewVersion: version, confirmation: 'CLOSE_PROFILE' }),
+    });
+  expect((await executeRetained(pendingReview.previewVersion)).status).toBe(409);
+  const queued = await fetch(
+    `${http.base}/api/tickets/lifecycle-requests/${exportTicketId}/export`,
+    { method: 'POST', headers: ownerHeaders }
+  );
+  expect(queued.status, http.logs()).toBe(202);
+  const jobId = ((await queued.json()) as { jobId: string }).jobId;
+  await http.pool.query(
+    "UPDATE async_jobs SET status='completed',progress_pct=100,result_url=$2,completed_at=now() WHERE id=$1",
+    [jobId, `/api/tickets/lifecycle-requests/${exportTicketId}/export`]
+  );
+  await http.pool.query(
+    "UPDATE tickets SET privacy_export_storage_key=$2,privacy_export_expires_at=clock_timestamp()+interval '24 hours' WHERE id=$1",
+    [exportTicketId, `tmp/profile-exports/${exportTicketId}/owned.zip`]
+  );
+  const downloaded = await fetch(
+    `${http.base}/api/tickets/lifecycle-requests/${exportTicketId}/export`,
+    { headers: ownerHeaders, redirect: 'manual' }
+  );
+  expect(downloaded.status, await downloaded.clone().text()).toBe(302);
+  expect(downloaded.headers.get('cache-control')).toBe('private, no-store');
+  const privateUrl = new URL(downloaded.headers.get('location')!);
+  expect(privateUrl.pathname).toContain(`tmp/profile-exports/${exportTicketId}/owned.zip`);
+  expect(Number(privateUrl.searchParams.get('X-Amz-Expires'))).toBeLessThanOrEqual(300);
+  expect(Number(privateUrl.searchParams.get('X-Amz-Expires'))).toBeGreaterThan(0);
+
+  // The export can expire during closure writes. Reach the audit first, then
+  // prove the final clock check rolls back archive/revocation/audit together.
+  await http.pool.query(
+    "UPDATE tickets SET privacy_export_expires_at=clock_timestamp()+interval '4 seconds' WHERE id=$1",
+    [exportTicketId]
+  );
+  const expiring = (await (
+    await fetch(`${http.base}/api/staff/tickets/${id}/closure-preview`, { headers: staffHeaders })
+  ).json()) as { eligible: boolean; previewVersion: string };
+  expect(expiring.eligible).toBe(true);
+  await http.pool.query(`CREATE SEQUENCE closure_export_audit_reached;
+    CREATE FUNCTION wait_for_export_expiry() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN IF NEW.event='profile_closure_executed' THEN
+      PERFORM nextval('closure_export_audit_reached'); PERFORM pg_sleep(5);
+    END IF; RETURN NEW; END $$;
+    CREATE TRIGGER wait_for_export_expiry BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION wait_for_export_expiry()`);
+  try {
+    const closing = executeRetained(expiring.previewVersion);
+    await expect
+      .poll(
+        async () =>
+          (await http.pool.query('SELECT is_called FROM closure_export_audit_reached')).rows[0]
+            .is_called
+      )
+      .toBe(true);
+    expect((await closing).status).toBe(409);
+    expect(
+      (
+        await http.pool.query('SELECT archived,first_name FROM profiles WHERE id=$1', [
+          retainedProfileId,
+        ])
+      ).rows[0]
+    ).toMatchObject({ archived: false, first_name: 'Retained' });
+    expect(
+      (await http.pool.query('SELECT privacy_closure_completed_at FROM tickets WHERE id=$1', [id]))
+        .rows[0].privacy_closure_completed_at
+    ).toBeNull();
+    expect(
+      (
+        await http.pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [
+          ownerHeaders.Cookie!.split('=')[1],
+        ])
+      ).rows[0].revoked_at
+    ).toBeNull();
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE event='profile_closure_executed' AND metadata::jsonb->>'ticketId'=$1",
+          [id]
+        )
+      ).rows
+    ).toEqual([]);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER wait_for_export_expiry ON audit_log; DROP FUNCTION wait_for_export_expiry(); DROP SEQUENCE closure_export_audit_reached'
+    );
+  }
+  await http.pool.query(
+    "UPDATE tickets SET privacy_export_expires_at=clock_timestamp()+interval '24 hours' WHERE id=$1",
+    [exportTicketId]
+  );
   const dryRun = await fetch(`${http.base}/api/staff/tickets/${id}/closure-preview`, {
     headers: staffHeaders,
   });
@@ -276,4 +384,115 @@ it('retains profile identity and a zero-balance wallet as linked financial histo
     privacy_closure_retained: { wallets: 1 },
     privacy_closure_export_ticket_id: exportTicketId,
   });
+  await session('closure-owner', ownerHeaders);
+  const retainedExport = await fetch(`${http.base}/api/tickets/${exportTicketId}`, {
+    headers: ownerHeaders,
+  });
+  expect(retainedExport.status, http.logs()).toBe(200);
+  expect(await retainedExport.json()).toMatchObject({
+    id: exportTicketId,
+    privacyRequestType: 'export',
+  });
+  const completedRecord = await fetch(`${http.base}/api/tickets/${id}`, { headers: ownerHeaders });
+  expect(completedRecord.status, http.logs()).toBe(200);
+  expect(await completedRecord.json()).toMatchObject({
+    privacyClosureExportTicketId: exportTicketId,
+  });
+  // Closure retains support references; downloads still require an active owned profile.
+  expect(
+    (
+      await fetch(`${http.base}/api/tickets/lifecycle-requests/${exportTicketId}/export`, {
+        headers: ownerHeaders,
+        redirect: 'manual',
+      })
+    ).status
+  ).toBe(403);
+}, 15000);
+
+it('refuses to close a profile after its ownership changes, without touching either account', async () => {
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES('closure-new-owner','new-owner@example.test','test-only'),('closure-transfer-owner','transfer-owner@example.test','test-only')"
+  );
+  const changedProfile = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status,is_default,first_name) VALUES('closure-transfer-owner','INDIVIDUAL','ACTIVE',true,'Changed owner profile') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const transferHeaders: Record<string, string> = {};
+  const transferSession = await session('closure-transfer-owner', transferHeaders);
+  const newOwnerHeaders: Record<string, string> = {};
+  const newOwnerSession = await session('closure-new-owner', newOwnerHeaders);
+  await http.pool.query(
+    "INSERT INTO user_profile_contexts(user_id,profile_id) VALUES('closure-transfer-owner',$1)",
+    [changedProfile]
+  );
+  const created = await fetch(`${http.base}/api/tickets/lifecycle-requests`, {
+    method: 'POST',
+    headers: transferHeaders,
+    body: JSON.stringify({ type: 'closure', idempotencyKey: randomUUID(), locale: 'en' }),
+  });
+  expect(created.status, http.logs()).toBe(201);
+  const ticketId = ((await created.json()) as { ticketId: string }).ticketId;
+  const before = (await (
+    await fetch(`${http.base}/api/staff/tickets/${ticketId}/closure-preview`, {
+      headers: staffHeaders,
+    })
+  ).json()) as { previewVersion: string; eligible: boolean };
+  expect(before.eligible).toBe(true);
+  await http.pool.query(
+    "UPDATE profiles SET user_id='closure-new-owner',updated_at=clock_timestamp() WHERE id=$1",
+    [changedProfile]
+  );
+  const current = (await (
+    await fetch(`${http.base}/api/staff/tickets/${ticketId}/closure-preview`, {
+      headers: staffHeaders,
+    })
+  ).json()) as { eligible: boolean; blockers: unknown[] };
+  expect(current.eligible).toBe(false);
+  expect(current.blockers).toContainEqual({
+    code: 'profileOwnershipChanged',
+    count: 1,
+    owner: 'privacy',
+    nextStep: 'staffReview',
+  });
+  const result = await fetch(`${http.base}/api/staff/tickets/${ticketId}/execute-closure`, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify({ previewVersion: before.previewVersion, confirmation: 'CLOSE_PROFILE' }),
+  });
+  expect(result.status, http.logs()).toBe(409);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT session_id FROM sessions WHERE session_id=ANY($1::text[]) AND revoked_at IS NULL',
+        [[transferSession, newOwnerSession]]
+      )
+    ).rows
+  ).toHaveLength(2);
+  expect(
+    (
+      await http.pool.query('SELECT archived,user_id,first_name FROM profiles WHERE id=$1', [
+        changedProfile,
+      ])
+    ).rows[0]
+  ).toMatchObject({
+    archived: false,
+    user_id: 'closure-new-owner',
+    first_name: 'Changed owner profile',
+  });
+  expect(
+    (
+      await http.pool.query('SELECT privacy_closure_completed_at FROM tickets WHERE id=$1', [
+        ticketId,
+      ])
+    ).rows[0].privacy_closure_completed_at
+  ).toBeNull();
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='profile_closure_executed' AND metadata::jsonb->>'ticketId'=$1",
+        [ticketId]
+      )
+    ).rows
+  ).toEqual([]);
 });

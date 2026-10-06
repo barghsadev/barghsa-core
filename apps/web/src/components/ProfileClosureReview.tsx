@@ -336,6 +336,10 @@ function ClosureReview({
                     .map((item) => (
                       <li key={item.code}>
                         {t(`settings.privacy.blocker.${item.code}`, locale)}: {item.count}
+                        <p className="text-sm text-muted-foreground">
+                          {t(`settings.privacy.owner.${item.owner}`, locale)} ·{' '}
+                          {t(`settings.privacy.step.${item.nextStep}`, locale)}
+                        </p>
                       </li>
                     ))}
                 </ul>

@@ -142,7 +142,9 @@ export interface ClosureBlocker {
     | 'pendingWalletTransaction'
     | 'activeProductWorkflow'
     | 'pendingProfileAccess'
-    | 'securityReview';
+    | 'securityReview'
+    | 'pendingExport'
+    | 'profileOwnershipChanged';
   count: number;
   owner: 'legal' | 'finance' | 'customer' | 'contracts' | 'privacy';
   nextStep: string;
@@ -657,9 +659,11 @@ export class TicketsService {
         profile_type: 'INDIVIDUAL' | 'LEGAL';
         archived: boolean;
         profile_updated_at: Date;
+        profile_owner_user_id: string;
       }>(
         `SELECT t.id,t.user_id,t.profile_id,t.status,t.privacy_closure_completed_at,
-           t.privacy_closure_anonymized,p.profile_type,p.archived,p.updated_at AS profile_updated_at
+           t.privacy_closure_anonymized,p.profile_type,p.archived,p.updated_at AS profile_updated_at,
+           p.user_id AS profile_owner_user_id
          FROM tickets t JOIN profiles p ON p.id=t.profile_id
          WHERE t.id=$1 AND t.privacy_request_type='closure'`,
         [ticketId]
@@ -701,13 +705,37 @@ export class TicketsService {
       )
     ).rows[0]!;
     const exportRequest = (
-      await client.query<{ id: string; privacy_export_expires_at: Date | null }>(
-        `SELECT id,privacy_export_expires_at FROM tickets
-         WHERE profile_id=$1 AND user_id=$2 AND privacy_request_type='export'
-         ORDER BY created_at DESC,id DESC LIMIT 1`,
+      await client.query<{
+        id: string;
+        privacy_export_expires_at: Date | null;
+        privacy_export_job_id: string | null;
+        privacy_export_storage_key: string | null;
+        ready: boolean;
+      }>(
+        `SELECT t.id,t.privacy_export_expires_at,t.privacy_export_job_id,t.privacy_export_storage_key,
+           (j.status='completed' AND t.privacy_export_storage_key IS NOT NULL
+             AND t.privacy_export_expires_at>clock_timestamp()) IS TRUE AS ready
+         FROM tickets t LEFT JOIN async_jobs j ON j.id=t.privacy_export_job_id
+         WHERE t.profile_id=$1 AND t.user_id=$2 AND t.privacy_request_type='export'
+         ORDER BY t.created_at DESC,t.id DESC LIMIT 1 FOR SHARE OF t`,
         [request.profile_id, request.user_id]
       )
     ).rows[0];
+    blockers.push(
+      {
+        code: 'pendingExport',
+        count:
+          !request.privacy_closure_completed_at && exportRequest && !exportRequest.ready ? 1 : 0,
+        owner: 'customer',
+        nextStep: 'prepareExport',
+      },
+      {
+        code: 'profileOwnershipChanged',
+        count: request.profile_owner_user_id !== request.user_id ? 1 : 0,
+        owner: 'privacy',
+        nextStep: 'staffReview',
+      }
+    );
     const anonymizeProfile =
       request.profile_type === 'INDIVIDUAL' &&
       Object.values(retained).every((count) => count === 0);
@@ -726,6 +754,10 @@ export class TicketsService {
           blockers,
           retained,
           exportTicketId: exportRequest?.id ?? null,
+          exportJobId: exportRequest?.privacy_export_job_id ?? null,
+          exportExpiresAt: exportRequest?.privacy_export_expires_at ?? null,
+          exportStorageKey: exportRequest?.privacy_export_storage_key ?? null,
+          profileOwnerUserId: request.profile_owner_user_id,
         })
       )
       .digest('hex');
@@ -848,6 +880,19 @@ export class TicketsService {
           }),
         ]
       );
+      // Recheck the clock after all writes/lock waits; an expired export must not
+      // be stranded by a newly committed closure. The export request row is held.
+      if (preview.exportTicketId) {
+        const ready = await client.query(
+          `SELECT t.id FROM tickets t JOIN async_jobs j ON j.id=t.privacy_export_job_id
+           WHERE t.id=$1 AND t.profile_id=$2 AND t.user_id=$3 AND t.privacy_request_type='export'
+             AND j.status='completed' AND t.privacy_export_storage_key IS NOT NULL
+             AND t.privacy_export_expires_at>clock_timestamp()`,
+          [preview.exportTicketId, preview.profileId, preview.ownerUserId]
+        );
+        if (ready.rowCount !== 1)
+          throw new HttpException('Export expired; refresh the closure preview', 409);
+      }
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       return { ...preview, completedAt: now, anonymized: preview.anonymizeProfile, created: true };
