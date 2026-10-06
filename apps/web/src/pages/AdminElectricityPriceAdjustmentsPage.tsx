@@ -1,9 +1,27 @@
+import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { Button, Card, CardContent, FinancialReviewSummary, Input, ListPage } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  FinancialReviewSummary,
+  Input,
+  ListPage,
+  TextCell,
+  DateCell,
+  CurrencyCell,
+  LinkCell,
+  StatusCell,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -68,13 +86,15 @@ interface CapturedPriceAction {
   rejected: boolean;
 }
 const emptyDraft: PriceDraft = { percentage: '', effectiveFrom: '', reason: '', basis: '' };
-function bpsToPercent(value: string, locale: 'en' | 'fa') {
+function bpsToPercent(value: string, format: ReturnType<typeof useNumberFormatting>['number']) {
   const signed = BigInt(value);
   const absolute = signed < 0n ? -signed : signed;
-  const whole = new Intl.NumberFormat(locale).format(absolute / 100n);
+  const whole = format(absolute / 100n);
   const fraction = absolute % 100n;
   const decimals = fraction
-    ? `${locale === 'fa' ? '٫' : '.'}${new Intl.NumberFormat(locale, { minimumIntegerDigits: 2, useGrouping: false }).format(fraction)}`
+    ? format(Number(fraction) / 100, { minimumFractionDigits: 2, useGrouping: false }).slice(
+        format(0n, { useGrouping: false }).length
+      )
     : '';
   return `${signed < 0n ? '-' : ''}${whole}${decimals}%`;
 }
@@ -126,7 +146,7 @@ export default function AdminElectricityPriceAdjustmentsPage({
     owner.current?.stage === 'command' && (owner.current.attempted || owner.current.uncertain);
   const heldContract = selectionLocked ? owner.current!.contractId : contractId;
   return (
-    <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <section className="min-w-0 space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">{copy('title')}</h1>
         <p className="text-muted-foreground">{copy('description')}</p>
@@ -254,6 +274,13 @@ function PriceWorkspace({
   currentScope.current = scope;
   const mounted = useRef(false);
   const [data, setData] = useState<StaffPriceState | null>(null);
+  const [inspectionId, setInspectionId] = useState<string | null>(null);
+  const inspected = data?.adjustments.find((row) => row.adjustmentId === inspectionId) ?? null;
+  useEffect(() => {
+    if (inspectionId && !inspected)
+      setInspectionId((current) => (current === inspectionId ? null : current));
+  }, [inspectionId, inspected]);
+
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<'load' | 'forbidden' | null>(null);
@@ -518,6 +545,7 @@ function PriceWorkspace({
       currentScope.current !== scope
     )
       return;
+    setInspectionId(null);
     const source = data;
     const raw = JSON.stringify(form.getValues());
     const generation = ++reviewGeneration.current;
@@ -642,6 +670,7 @@ function PriceWorkspace({
       !data.adjustments.some((row) => row === adjustment)
     )
       return;
+    setInspectionId(null);
     const token: WorkspaceOwner = {
       actor,
       contractId,
@@ -847,51 +876,209 @@ function PriceWorkspace({
             loadingView={null}
             errorView={null}
           >
-            <div className="space-y-3">
-              {data.adjustments.map((adjustment) => (
-                <Card key={adjustment.adjustmentId}>
-                  <CardContent className="space-y-3 pt-6 text-sm">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h2 className="font-semibold">{copy('adjustment')}</h2>
-                      <span>{copy(`status.${adjustment.status}`)}</span>
-                    </div>
-                    <p>
-                      {copy('effective')}: {time.format(adjustment.effectiveFrom)}
-                    </p>
-                    <p>
-                      {copy('reason')}: {adjustment.reason}
-                    </p>
-                    <p>
-                      {copy('basis')}: {adjustment.contractualBasis}
-                    </p>
-                    <p>
-                      {copy('oldFuture')}:{' '}
-                      {numbers.irrDigits(adjustment.calculation.quote.oldFutureIrR)} IRR
-                    </p>
-                    <p>
-                      {copy('newFuture')}:{' '}
-                      {numbers.irrDigits(adjustment.calculation.quote.newFutureIrR)} IRR
-                    </p>
-                    <p>
-                      {copy('amount')}: {numbers.irrDigits(adjustment.adjustmentAmountIrR)} IRR
-                    </p>
-                    {adjustment.adjustmentInvoiceId ? (
-                      <p>
-                        {copy('invoice')}:{' '}
-                        <a
-                          className="text-primary underline"
-                          href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.adjustmentInvoiceId)}`}
-                        >
-                          <bdi dir="ltr" className="break-all">
+            {data.adjustments.length > 0 ? (
+              <OperationalQueueTable
+                locale={locale}
+                rows={data.adjustments.map((adjustment) => ({
+                  id: adjustment.adjustmentId,
+                  adjustment,
+                }))}
+                caption={copy('directory')}
+                scrollLabel={copy('directory')}
+                nameHeader={copy('adjustment')}
+                renderName={({ adjustment }) => (
+                  <>
+                    <TextCell value={copy('adjustment')} />
+                    <span className="block font-mono text-xs font-normal">
+                      <TextCell value={adjustment.adjustmentId} />
+                    </span>
+                  </>
+                )}
+                fields={[
+                  {
+                    id: 'status',
+                    label: copy('statusLabel'),
+                    render: ({ adjustment }) => (
+                      <StatusCell
+                        state={adjustment.status}
+                        label={copy(`status.${adjustment.status}`)}
+                      />
+                    ),
+                  },
+                  {
+                    id: 'percentage',
+                    label: copy('percentage'),
+                    render: ({ adjustment }) => (
+                      <div className="space-y-1">
+                        <TextCell value={bpsToPercent(adjustment.percentageBps, numbers.number)} />
+                        <p className="text-xs text-muted-foreground">
+                          {copy(adjustment.calculation.quote.kind)}
+                        </p>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'effective',
+                    label: copy('effective'),
+                    render: ({ adjustment }) => (
+                      <DateCell
+                        value={adjustment.effectiveFrom}
+                        format={(value) => time.format(value)}
+                      />
+                    ),
+                  },
+                  {
+                    id: 'end',
+                    label: copy('termEnds'),
+                    render: ({ adjustment }) => (
+                      <DateCell
+                        value={adjustment.periodEnd}
+                        format={(value) => time.format(value)}
+                      />
+                    ),
+                  },
+                  {
+                    id: 'history',
+                    label: copy('history'),
+                    render: ({ adjustment }) => (
+                      <div className="space-y-2">
+                        <p>
+                          {copy('proposedAt')}:{' '}
+                          <DateCell
+                            value={adjustment.proposedAt}
+                            format={(value) => time.format(value)}
+                          />
+                        </p>
+                        {adjustment.finalizedAt ? (
+                          <p>
+                            {copy('finalizedAt')}:{' '}
+                            <DateCell
+                              value={adjustment.finalizedAt}
+                              format={(value) => time.format(value)}
+                            />
+                          </p>
+                        ) : null}
+                        {adjustment.cancelledAt ? (
+                          <p>
+                            {copy('cancelledAt')}:{' '}
+                            <DateCell
+                              value={adjustment.cancelledAt}
+                              format={(value) => time.format(value)}
+                            />
+                          </p>
+                        ) : null}
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'terms',
+                    label: copy('terms'),
+                    render: ({ adjustment }) => (
+                      <div className="max-w-sm space-y-2">
+                        <div>
+                          <p className="font-medium">{copy('reason')}</p>
+                          <TextCell value={adjustment.reason} />
+                        </div>
+                        <div>
+                          <p className="font-medium">{copy('basis')}</p>
+                          <TextCell value={adjustment.contractualBasis} />
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: 'old',
+                    label: copy('oldFuture'),
+                    render: ({ adjustment }) => (
+                      <CurrencyCell
+                        amount={adjustment.calculation.quote.oldFutureIrR}
+                        format={numbers.money}
+                      />
+                    ),
+                  },
+                  {
+                    id: 'new',
+                    label: copy('newFuture'),
+                    render: ({ adjustment }) => (
+                      <CurrencyCell
+                        amount={adjustment.calculation.quote.newFutureIrR}
+                        format={numbers.money}
+                      />
+                    ),
+                  },
+                  {
+                    id: 'amount',
+                    label: copy('amount'),
+                    render: ({ adjustment }) => (
+                      <CurrencyCell
+                        amount={adjustment.adjustmentAmountIrR}
+                        format={numbers.money}
+                      />
+                    ),
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('invoice'),
+                    render: ({ adjustment }) =>
+                      adjustment.adjustmentInvoiceId ? (
+                        <div className="space-y-1">
+                          <div>
+                            <StatusCell
+                              state={adjustment.adjustmentInvoiceState ?? ''}
+                              label={
+                                appText(
+                                  `invoices.state.${adjustment.adjustmentInvoiceState}`,
+                                  locale
+                                ) === `invoices.state.${adjustment.adjustmentInvoiceState}`
+                                  ? (adjustment.adjustmentInvoiceState ?? '—')
+                                  : appText(
+                                      `invoices.state.${adjustment.adjustmentInvoiceState}`,
+                                      locale
+                                    )
+                              }
+                            />
+                          </div>
+                          <LinkCell
+                            href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.adjustmentInvoiceId)}`}
+                          >
                             {adjustment.adjustmentInvoiceId}
-                          </bdi>
-                        </a>
-                      </p>
-                    ) : null}
+                          </LinkCell>
+                        </div>
+                      ) : (
+                        <TextCell value={copy('noInvoice')} />
+                      ),
+                  },
+                ]}
+                actionHeader={copy('actions')}
+                renderActions={({ adjustment }) => (
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      data-price-inspection={adjustment.adjustmentId}
+                      type="button"
+                      variant="outline"
+                      className="min-h-11"
+                      disabled={loading || !!loadError || commandLocked()}
+                      onClick={() => {
+                        if (
+                          currentScope.current !== scope ||
+                          loading ||
+                          loadError ||
+                          accessDenied.current ||
+                          commandLocked() ||
+                          !data.adjustments.some((row) => row === adjustment)
+                        )
+                          return;
+                        setInspectionId(adjustment.adjustmentId);
+                      }}
+                    >
+                      {copy('viewCalculation')}
+                      <span className="sr-only">: {adjustment.adjustmentId}</span>
+                    </Button>
                     {adjustment.status === 'proposed' ? (
-                      <div className="flex flex-wrap gap-2">
+                      <>
                         {data.canFinalize ? (
                           <Button
+                            className="min-h-11"
                             disabled={loading || !!loadError || commandLocked()}
                             onClick={() => confirm(adjustment, 'finalize')}
                           >
@@ -903,20 +1090,65 @@ function PriceWorkspace({
                         {data.canCancel ? (
                           <Button
                             variant="outline"
+                            className="min-h-11"
                             disabled={loading || !!loadError || commandLocked()}
                             onClick={() => confirm(adjustment, 'cancel')}
                           >
                             {copy('cancel')}
                           </Button>
                         ) : null}
-                      </div>
+                      </>
                     ) : null}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </div>
+                )}
+                cardHeading="h2"
+                loading={loading}
+                emptyMessage={copy('empty')}
+                tableClassName="min-w-[96rem]"
+              />
+            ) : null}
           </ListPage.Content>
         </div>
+      ) : null}
+      {inspected && !action ? (
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open)
+              setInspectionId((current) => (current === inspected.adjustmentId ? null : current));
+          }}
+        >
+          <DialogContent
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+            className="max-h-[85svh] overflow-y-auto sm:max-w-3xl"
+            closeLabel={copy('closeCalculation')}
+            finalFocus={() =>
+              Array.from(
+                document.querySelectorAll<HTMLElement>(
+                  `[data-price-inspection="${inspected.adjustmentId}"]`
+                )
+              ).find((button) => button.getClientRects().length > 0) ?? null
+            }
+          >
+            <DialogHeader>
+              <DialogTitle>{copy('viewCalculation')}</DialogTitle>
+              <DialogDescription>{copy('calculationDescription')}</DialogDescription>
+            </DialogHeader>
+            <p className="font-mono text-xs">
+              <TextCell value={inspected.adjustmentId} />
+            </p>
+            <PriceAdjustmentFinancialReview
+              calculation={inspected.calculation}
+              profileId={data!.profileId}
+              {...(inspected.calculation.quote.components[0]
+                ? { periodStart: inspected.calculation.quote.components[0].periodStart }
+                : {})}
+              periodEnd={inspected.periodEnd}
+              locale={locale}
+              formatTime={(value) => time.format(value)}
+            />
+          </DialogContent>
+        </Dialog>
       ) : null}
       {action && command && live(command) ? (
         <TeamActionDialog
@@ -1002,7 +1234,8 @@ function PriceAdjustmentFinancialReview({
   locale: 'en' | 'fa';
 }) {
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
-  const money = (value: string) => `${new Intl.NumberFormat(locale).format(BigInt(value))} IRR`;
+  const numbers = useNumberFormatting(locale);
+  const money = numbers.money;
   const { quote } = calculation;
   return (
     <FinancialReviewSummary
@@ -1030,14 +1263,54 @@ function PriceAdjustmentFinancialReview({
         {
           id: 'percentage',
           label: copy('percentage'),
-          value: bpsToPercent(quote.percentageBps, locale),
+          value: bpsToPercent(quote.percentageBps, numbers.number),
         },
         { id: 'old', label: copy('oldFuture'), value: money(quote.oldFutureIrR) },
         { id: 'new', label: copy('newFuture'), value: money(quote.newFutureIrR) },
         ...quote.components.map((component, index) => ({
           id: `component-${index}`,
-          label: `${copy('basisComponent')} ${index + 1} · ${component.invoiceId}`,
-          value: `${money(component.basisIrR)} → ${money(component.changeIrR)}`,
+          label: `${copy('basisComponent')} ${index + 1}`,
+          value: (
+            <div className="space-y-2">
+              <p className="break-all font-mono text-xs">
+                <bdi dir="ltr">{component.invoiceId}</bdi>
+              </p>
+              <p>{copy(`source.${component.source}`)}</p>
+              <p>
+                {copy('basisPrice')}: <CurrencyCell amount={component.basisIrR} format={money} />
+              </p>
+              <p>
+                {copy('oldFuture')}: <CurrencyCell amount={component.oldFutureIrR} format={money} />
+              </p>
+              <p>
+                {copy('newFuture')}: <CurrencyCell amount={component.newFutureIrR} format={money} />
+              </p>
+              <p>
+                {copy('amount')}: <CurrencyCell amount={component.changeIrR} format={money} />
+              </p>
+              <p>
+                {copy('termStarts')}:{' '}
+                <DateCell
+                  value={component.periodStart}
+                  format={(value) => formatTime(String(value))}
+                />
+              </p>
+              <p>
+                {copy('termEnds')}:{' '}
+                <DateCell
+                  value={component.periodEnd}
+                  format={(value) => formatTime(String(value))}
+                />
+              </p>
+              <p>
+                {copy('effective')}:{' '}
+                <DateCell
+                  value={component.eligibleFrom}
+                  format={(value) => formatTime(String(value))}
+                />
+              </p>
+            </div>
+          ),
         })),
       ]}
       total={{ label: copy('amount'), value: money(quote.amountIrR) }}

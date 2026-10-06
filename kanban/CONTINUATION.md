@@ -12,11 +12,21 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: electricity increase queue and adjustment dates for v0.1.24 (October 6, 2026)
+## Latest manual batch: electricity price-adjustment history for v0.1.25 (October 6, 2026)
+
+Staff price-adjustment history now has shared desktop tables/mobile cards with exact percentages and amounts, status, reason/basis, account-zone lifecycle/effective/end dates and invoice references. Every status has a read-only saved-calculation view showing all component source/basis/old/new/delta values and eligible periods. Invoice identities have LTR isolation. Visible-action focus restoration works after resizing; original DTO references preserve financial authorization. Protected ownership, command/hash/key/receipt engines remain intact. Current denial withdraws read-only data; transient failure retains accepted history and recovery does not reopen a withdrawn calculation.
+
+All **185** related source/dictionary cases and **24** final-build Chromium/mobile Safari cases pass, 12 per engine, with zero retries. Build/types/lint, contract/suppression, strict SAST with 1,798 files and no findings/errors, five fixtures and all 85 unchanged budgets pass. Two original Persian light/dark captures are reviewed. See `kanban/batches/2026-10-06-electricity-price-history.md` and external evidence for final source/dependency/assets/report bindings. Stale compiled translations and duplicate responsive IDs were corrected; component invoice display is isolated for RTL.
+
+This advances domain adoption under `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`, retaining `03-core-business.md#T-03.08.02.01` through `#T-03.08.02.04`. Global tasks remain partial; no recount of existing price engines. No API, migration, shared-component, dependency, CI, budget or supervisor-state change. Continue direct-main batches with immediate independent deployment enqueue after exact remote readback.
+
+## Previous manual batch: electricity increase queue and adjustment dates for v0.1.24 (October 6, 2026)
 
 Pending/expired increases now use shared desktop tables and mobile cards, with exact quantities/percentage, contract and order links, account-zone dates/status and expired invoice/payment/finance follow-up. Review request focuses the exact existing decision card; per-request forms/drafts and captured commands remain outside both presentations. Both increase and price-adjustment effective dates now resolve in the saved account timezone. Unknown zones block preparation, invalid/DST-gap times fail validation, and changed zones fence obsolete previews while captured ISO commands remain intact.
 
 All **207** related source/dictionary cases and **52 distinct** Chromium/mobile Safari cases pass, 26 per engine, with zero retries. Build/types/lint, contract/suppression, strict SAST with 1,798 files and zero findings/errors, five fixtures and all 85 unchanged budgets pass. Two original Persian directory captures are reviewed. See `kanban/batches/2026-10-06-electricity-increase-queue.md` and external evidence for the final layout/build/report binding.
+
+v0.1.24 completed at `2026-10-05T23:59:50.517470+00:00`, deployed at `48c3c826c328ece20dbcd2aeecd1fdc0e5b8b45e`; Persian Telegram note `72` and images `73`, `74` are confirmed. The report and external completion receipt bind the actual result.
 
 This advances `03-core-business.md#T-03.08.01.04` and domain shared-table adoption under `07-ui-ux-design.md#T-07.24.01.01` through `#T-07.24.01.04`, retaining existing approval/rejection/price engines. Broad-task completion remains partial; price-adjustment list presentation is separate. No API, migration, dependency, CI, budget or supervisor-state change. Continue direct-main batches with immediate independent deployment enqueue after exact remote readback.
 

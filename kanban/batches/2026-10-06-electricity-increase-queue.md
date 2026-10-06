@@ -25,6 +25,10 @@ No API, database, shared-component, dependency, permission-model, CI or budget c
 
 Failed attempts remain external. Checks caught missing shared-cell props and the second effective-date helper caller; both are corrected. Existing mocked formatters now include exact money/numeral preferences and verified account time. Source focus checks await asynchronous validation focus without weakening the assertions. Browser expectations preserve exact values while allowing localized grouping and the browser engine's Intl punctuation. Visual review separates the expired invoice badge/reference. No test retries, forced clicks, guard relaxation or budget changes.
 
+## Deployment confirmation
+
+`v0.1.24` completed at `2026-10-05T23:59:50.517470+00:00`, with exact healthy live commit `48c3c826c328ece20dbcd2aeecd1fdc0e5b8b45e`. Persian Telegram note `72` and captures `73`, `74` are confirmed. The external `completion.json` records the verified job/live metadata, confirmation lines and original frozen image hashes.
+
 ## Prior release confirmations
 
 `v0.1.22` completed at `2026-10-05T23:28:21.385967+00:00`, with exact healthy live commit `824075a5279d02e6d15e80b944fe85a132ae28e3`; Persian Telegram note `67` and captures `68`, `69` are confirmed. `v0.1.23` completed at `2026-10-05T23:37:56.723877+00:00`, with exact healthy live commit `5757a0b600db101d7cefb2504fdb566364bc19e3`; note `70` and capture `71` are confirmed. Their reports and external completion receipts record these results.

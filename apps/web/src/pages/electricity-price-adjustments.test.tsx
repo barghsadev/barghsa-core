@@ -17,7 +17,23 @@ import {
 } from '../test/electricity-price-adjustment-fixtures.js';
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ irrDigits: String, number: String }),
+  useNumberFormatting: () => ({
+    irrDigits: String,
+    number: (value: bigint, options?: Intl.NumberFormatOptions) =>
+      new Intl.NumberFormat('en', options).format(value),
+    money: (value: string) => `${new Intl.NumberFormat('en').format(BigInt(value))} IRR`,
+    numberStyle: 'western',
+  }),
+}));
+vi.mock('../hooks/useAccountTime.js', () => ({
+  useAccountTime: () => ({
+    status: 'ready',
+    timezone: 'Asia/Tehran',
+    loading: false,
+    error: null,
+    retry: vi.fn(),
+    format: (value: string) => value,
+  }),
 }));
 const h = vi.hoisted(() => ({ action: null as { path: string; body?: unknown } | null }));
 vi.mock('../components/TeamActionDialog.js', () => ({

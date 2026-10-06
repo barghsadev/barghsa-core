@@ -238,7 +238,7 @@ for (const [locale, theme] of [
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(
-      page.locator(`a[href="/admin/invoices?invoiceId=${linkedCreditId}"]`)
+      page.locator(`a[href="/admin/invoices?invoiceId=${linkedCreditId}"]:visible`)
     ).toBeVisible();
     expect(state.writes.slice(-2)).toEqual([finalCommand, finalCommand]);
     expect(state.rows.find((row) => row.adjustmentId === creditAdjustmentId)!.status).toBe(
