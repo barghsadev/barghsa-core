@@ -100,10 +100,9 @@ export class ElectricityBillDataService {
     private readonly provider: HttpBillDataProvider
   ) {}
 
-  async get(
+  private async authorize(
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    profileId: string,
-    selected: SimplePeriod
+    profileId: string
   ) {
     const client = await getDbPool().connect();
     try {
@@ -119,6 +118,21 @@ export class ElectricityBillDataService {
     } finally {
       client.release();
     }
+  }
+
+  async get(
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    profileId: string,
+    selected: SimplePeriod
+  ) {
+    await this.authorize(actor, profileId);
+    const result = await this.estimate(profileId, selected);
+    // The provider wait must not outlive ownership or the authenticated session.
+    await this.authorize(actor, profileId);
+    return result;
+  }
+
+  private async estimate(profileId: string, selected: SimplePeriod) {
     const now = new Date();
     const period = (
       {

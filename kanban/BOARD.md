@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 146 | Accepted with unchanged source bindings. |
-| verify | 1161 | Existing work may be complete; inspect evidence before building. |
-| partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 168 | Accepted with unchanged source bindings. |
+| verify | 1137 | Existing work may be complete; inspect evidence before building. |
+| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,32 +39,26 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing simple electricity period/bill-data/manual quantity, exact preview/gift/VAT, legal/verified profile admission, confirmation/snapshots and interruption recovery. Inspect existing code first and reuse final calculation/period/submission evidence; implement only demonstrated gaps.
+Verify existing advanced delivery dates/lead limits, four-product composition, green-rule ownership, financial review, strict inputs and safe draft/submission recovery. Reuse source-bound foundation/order evidence and20 current shared advanced browser cases. Resume two simple representation criteria when the pending owner answer arrives. Build only demonstrated gaps.
 
-- `03-core-business.md#T-03.05.01.01`: Customer UI: period type selector — "Weekly" or "Monthly"
-- `03-core-business.md#T-03.05.01.02`: Monthly period selector: dropdown with "Current month" and "Next month" (Jalali month names displayed). Pre-calculate and display exact start/end dates in Jalali and Gregorian.
-- `03-core-business.md#T-03.05.01.03`: Weekly period selector: options for "Current week", "Next week", "Week after next" (max 2 weeks ahead). Display Saturday-to-Friday range in Jalali.
+- `03-core-business.md#T-03.06.01.01`: UI: Start date and end date pickers (Jalali calendar with time). Start cannot be in the past. End must be after start.
+- `03-core-business.md#T-03.06.01.02`: Validate: duration ≤ admin-configured max (default 24 Jalali months). Validate lead time (default 0 days — start can be today).
+- `03-core-business.md#T-03.06.01.03`: Calculate exact hours between start and end timestamps for average power calculation.
+- `03-core-business.md#T-03.06.02.01`: UI: For each of the 4 electricity products (thermal, green, free-market, energy-saving), show:
+- `03-core-business.md#T-03.06.02.02`: `POST /electricity/preview/advanced` — accepts date range, per-product quantities, gift code. Returns:
+- `03-core-business.md#T-03.06.02.03`: When advanced green rule is enabled: green quantity is derived from thermal quantity (read-only display). Customer cannot edit green quantity; changing thermal recalculates green. When disabled: customer freely enters any allowed green quantity.
+- `03-core-business.md#T-03.06.02.04`: When thermal quantity is zero and mandatory green is enabled: calculated mandatory green quantity is zero. Customer cannot manually add separate green quantity.
+- `03-core-business.md#T-03.06.03.01`: `POST /electricity/orders/advanced` — idempotent submission:
+- `03-core-business.md#T-03.06.03.02`: Advanced order creates one contract and one initial invoice for the complete bundle. No installment or multiple invoice generation.
+- `03-core-business.md#T-03.06.03.03`: Backend performs authoritative calculation of bundle totals: never trust frontend-computed amounts.
+- `03-core-business.md#T-03.06.04.01`: Step 1: Date range selection with Jalali date pickers, duration display
+- `03-core-business.md#T-03.06.04.02`: Step 2: Bundle builder — 4 product quantity inputs with line totals, automatic green derivation when rule enabled
+- `03-core-business.md#T-03.06.04.03`: Step 3: Price preview with full breakdown: per-product, bundle totals, average power, green status
+- `03-core-business.md#T-03.06.04.04`: Step 4: Optional gift code
+- `03-core-business.md#T-03.06.04.05`: Step 5: Review & submit — full snapshot, wallet balance, explicit confirm
+- `03-core-business.md#T-03.06.04.06`: Lead time must be enforced: start date cannot violate lead days setting.
 - `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
-- `03-core-business.md#T-03.05.01.05`: Energy suggestion calculation: `suggestedKwh = avgHourlyConsumption × selectedPeriodHours`. Return `{ suggestedKwh, dataSource, dataPeriod, dataTimestamp, coverage}`.
-- `03-core-business.md#T-03.05.01.06`: UI: show suggested quantity labeled "Estimate" with source, period coverage, and timestamp disclaimer. Editable input field.
-- `03-core-business.md#T-03.05.01.07`: If bill data is unavailable/inaccessible/fails, customer enters kWh manually. Missing data never blocks manual entry. Show warning but allow proceed.
-- `03-core-business.md#T-03.05.02.01`: UI: kWh input field with numeric validation, min/max based on thermal product limits. Simple mode — only thermal quantity is user-selectable.
-- `03-core-business.md#T-03.05.02.02`: Real-time price preview API: `POST /electricity/preview/simple` — accepts period type, period selection, total kWh, gift code. Returns:
-- `03-core-business.md#T-03.05.02.03`: Preview UI: display thermal/green breakdown, unit prices, subtotals, discount, VAT, total. Must disclose mandatory green composition and price of each component before submission.
-- `03-core-business.md#T-03.05.02.04`: Gift code input with separate "Apply" action triggering validation API. Display validity and discount before submission. Re-validate atomically at submission.
-- `03-core-business.md#T-03.05.03.01`: `POST /electricity/orders/simple` — idempotent submission endpoint:
 - `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at`
-- `03-core-business.md#T-03.05.03.03`: Create `electricity_order_lines` table: `id`, `order_id` (FK), `product_id` (FK), `quantity_kwh`, `unit_price`, `line_total`
-- `03-core-business.md#T-03.05.03.04`: Create `electricity_contracts` table: `id`, `order_id` (FK), `contract_id` (FK — to Contracts module), `status` (draft/active/completed/cancelled/etc.)
-- `03-core-business.md#T-03.05.03.05`: Idempotency key required on submission. Retrying a timed-out request returns original result without creating duplicates.
-- `03-core-business.md#T-03.05.03.06`: Validate: simple mode selects only thermal electricity. Other products cannot be manually selected. Backend must reject any other product composition.
-- `03-core-business.md#T-03.05.04.01`: Step 1: Period type and period selection with Jalali calendar display
-- `03-core-business.md#T-03.05.04.02`: Step 2: kWh entry with bill-data suggestion (when available) and estimate label
-- `03-core-business.md#T-03.05.04.03`: Step 3: Price preview with mandatory green composition breakdown
-- `03-core-business.md#T-03.05.04.04`: Step 4: Optional gift code entry and validation
-- `03-core-business.md#T-03.05.04.05`: Step 5: Review page — full summary including profile, period, quantities, prices, discount, VAT, total, wallet balance, contract preview, cancellation/refund rules. Explicit "Submit" button.
-- `03-core-business.md#T-03.05.04.06`: Order confirmation page — redirects to order detail. Shows order ID, contract reference, invoice reference, payment options.
-- `03-core-business.md#T-03.05.04.07`: Multi-step form saves server-side draft after each completed step. Resumable safely. Validation errors identify exact field without clearing valid input.
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -211,30 +205,30 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.04.04.02` | done | Recorded batch work | Handle 29-, 30-, and 31-day Jalali months correctly. Handle Jalali leap years. |
 | `03-core-business.md#T-03.04.04.03` | done | Recorded batch work | Current-week period starts at current time in Iran (not at Saturday 00:00 if already past it). Week boundaries use Iran official timezone, not customer's configured timezone. |
 | `03-core-business.md#T-03.04.04.04` | done | Recorded batch work | Current-month period: starts at current time, ends at first instant of following Jalali month. Next-month period: covers the full next month `[start_of_month, start_of_following_month)`. |
-| `03-core-business.md#T-03.05.01.01` | verify | Inventory needed | Customer UI: period type selector — "Weekly" or "Monthly" |
-| `03-core-business.md#T-03.05.01.02` | verify | Inventory needed | Monthly period selector: dropdown with "Current month" and "Next month" (Jalali month names displayed). Pre-calculate and display exact start/end dates in Jalali and Gregorian. |
-| `03-core-business.md#T-03.05.01.03` | verify | Inventory needed | Weekly period selector: options for "Current week", "Next week", "Week after next" (max 2 weeks ahead). Display Saturday-to-Friday range in Jalali. |
-| `03-core-business.md#T-03.05.01.04` | verify | Recorded batch work | Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data. |
-| `03-core-business.md#T-03.05.01.05` | verify | Inventory needed | Energy suggestion calculation: `suggestedKwh = avgHourlyConsumption × selectedPeriodHours`. Return `{ suggestedKwh, dataSource, dataPeriod, dataTimestamp, coverage}`. |
-| `03-core-business.md#T-03.05.01.06` | verify | Recorded batch work | UI: show suggested quantity labeled "Estimate" with source, period coverage, and timestamp disclaimer. Editable input field. |
-| `03-core-business.md#T-03.05.01.07` | verify | Inventory needed | If bill data is unavailable/inaccessible/fails, customer enters kWh manually. Missing data never blocks manual entry. Show warning but allow proceed. |
-| `03-core-business.md#T-03.05.02.01` | verify | Inventory needed | UI: kWh input field with numeric validation, min/max based on thermal product limits. Simple mode — only thermal quantity is user-selectable. |
-| `03-core-business.md#T-03.05.02.02` | verify | Inventory needed | Real-time price preview API: `POST /electricity/preview/simple` — accepts period type, period selection, total kWh, gift code. Returns: |
-| `03-core-business.md#T-03.05.02.03` | verify | Recorded batch work | Preview UI: display thermal/green breakdown, unit prices, subtotals, discount, VAT, total. Must disclose mandatory green composition and price of each component before submission. |
-| `03-core-business.md#T-03.05.02.04` | verify | Inventory needed | Gift code input with separate "Apply" action triggering validation API. Display validity and discount before submission. Re-validate atomically at submission. |
-| `03-core-business.md#T-03.05.03.01` | verify | Inventory needed | `POST /electricity/orders/simple` — idempotent submission endpoint: |
-| `03-core-business.md#T-03.05.03.02` | verify | Inventory needed | Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at` |
-| `03-core-business.md#T-03.05.03.03` | verify | Inventory needed | Create `electricity_order_lines` table: `id`, `order_id` (FK), `product_id` (FK), `quantity_kwh`, `unit_price`, `line_total` |
-| `03-core-business.md#T-03.05.03.04` | verify | Inventory needed | Create `electricity_contracts` table: `id`, `order_id` (FK), `contract_id` (FK — to Contracts module), `status` (draft/active/completed/cancelled/etc.) |
-| `03-core-business.md#T-03.05.03.05` | verify | Inventory needed | Idempotency key required on submission. Retrying a timed-out request returns original result without creating duplicates. |
-| `03-core-business.md#T-03.05.03.06` | verify | Inventory needed | Validate: simple mode selects only thermal electricity. Other products cannot be manually selected. Backend must reject any other product composition. |
-| `03-core-business.md#T-03.05.04.01` | verify | Inventory needed | Step 1: Period type and period selection with Jalali calendar display |
-| `03-core-business.md#T-03.05.04.02` | verify | Inventory needed | Step 2: kWh entry with bill-data suggestion (when available) and estimate label |
-| `03-core-business.md#T-03.05.04.03` | verify | Inventory needed | Step 3: Price preview with mandatory green composition breakdown |
-| `03-core-business.md#T-03.05.04.04` | verify | Inventory needed | Step 4: Optional gift code entry and validation |
-| `03-core-business.md#T-03.05.04.05` | verify | Recorded batch work | Step 5: Review page — full summary including profile, period, quantities, prices, discount, VAT, total, wallet balance, contract preview, cancellation/refund rules. Explicit "Submit" button. |
-| `03-core-business.md#T-03.05.04.06` | verify | Inventory needed | Order confirmation page — redirects to order detail. Shows order ID, contract reference, invoice reference, payment options. |
-| `03-core-business.md#T-03.05.04.07` | verify | Inventory needed | Multi-step form saves server-side draft after each completed step. Resumable safely. Validation errors identify exact field without clearing valid input. |
+| `03-core-business.md#T-03.05.01.01` | done | Recorded batch work | Customer UI: period type selector — "Weekly" or "Monthly" |
+| `03-core-business.md#T-03.05.01.02` | done | Recorded batch work | Monthly period selector: dropdown with "Current month" and "Next month" (Jalali month names displayed). Pre-calculate and display exact start/end dates in Jalali and Gregorian. |
+| `03-core-business.md#T-03.05.01.03` | done | Recorded batch work | Weekly period selector: options for "Current week", "Next week", "Week after next" (max 2 weeks ahead). Display Saturday-to-Friday range in Jalali. |
+| `03-core-business.md#T-03.05.01.04` | partial | Recorded batch work | Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data. |
+| `03-core-business.md#T-03.05.01.05` | done | Recorded batch work | Energy suggestion calculation: `suggestedKwh = avgHourlyConsumption × selectedPeriodHours`. Return `{ suggestedKwh, dataSource, dataPeriod, dataTimestamp, coverage}`. |
+| `03-core-business.md#T-03.05.01.06` | done | Recorded batch work | UI: show suggested quantity labeled "Estimate" with source, period coverage, and timestamp disclaimer. Editable input field. |
+| `03-core-business.md#T-03.05.01.07` | done | Recorded batch work | If bill data is unavailable/inaccessible/fails, customer enters kWh manually. Missing data never blocks manual entry. Show warning but allow proceed. |
+| `03-core-business.md#T-03.05.02.01` | done | Recorded batch work | UI: kWh input field with numeric validation, min/max based on thermal product limits. Simple mode — only thermal quantity is user-selectable. |
+| `03-core-business.md#T-03.05.02.02` | done | Recorded batch work | Real-time price preview API: `POST /electricity/preview/simple` — accepts period type, period selection, total kWh, gift code. Returns: |
+| `03-core-business.md#T-03.05.02.03` | done | Recorded batch work | Preview UI: display thermal/green breakdown, unit prices, subtotals, discount, VAT, total. Must disclose mandatory green composition and price of each component before submission. |
+| `03-core-business.md#T-03.05.02.04` | done | Recorded batch work | Gift code input with separate "Apply" action triggering validation API. Display validity and discount before submission. Re-validate atomically at submission. |
+| `03-core-business.md#T-03.05.03.01` | done | Recorded batch work | `POST /electricity/orders/simple` — idempotent submission endpoint: |
+| `03-core-business.md#T-03.05.03.02` | partial | Recorded batch work | Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at` |
+| `03-core-business.md#T-03.05.03.03` | done | Recorded batch work | Create `electricity_order_lines` table: `id`, `order_id` (FK), `product_id` (FK), `quantity_kwh`, `unit_price`, `line_total` |
+| `03-core-business.md#T-03.05.03.04` | done | Recorded batch work | Create `electricity_contracts` table: `id`, `order_id` (FK), `contract_id` (FK — to Contracts module), `status` (draft/active/completed/cancelled/etc.) |
+| `03-core-business.md#T-03.05.03.05` | done | Recorded batch work | Idempotency key required on submission. Retrying a timed-out request returns original result without creating duplicates. |
+| `03-core-business.md#T-03.05.03.06` | done | Recorded batch work | Validate: simple mode selects only thermal electricity. Other products cannot be manually selected. Backend must reject any other product composition. |
+| `03-core-business.md#T-03.05.04.01` | done | Recorded batch work | Step 1: Period type and period selection with Jalali calendar display |
+| `03-core-business.md#T-03.05.04.02` | done | Recorded batch work | Step 2: kWh entry with bill-data suggestion (when available) and estimate label |
+| `03-core-business.md#T-03.05.04.03` | done | Recorded batch work | Step 3: Price preview with mandatory green composition breakdown |
+| `03-core-business.md#T-03.05.04.04` | done | Recorded batch work | Step 4: Optional gift code entry and validation |
+| `03-core-business.md#T-03.05.04.05` | done | Recorded batch work | Step 5: Review page — full summary including profile, period, quantities, prices, discount, VAT, total, wallet balance, contract preview, cancellation/refund rules. Explicit "Submit" button. |
+| `03-core-business.md#T-03.05.04.06` | done | Recorded batch work | Order confirmation page — redirects to order detail. Shows order ID, contract reference, invoice reference, payment options. |
+| `03-core-business.md#T-03.05.04.07` | done | Recorded batch work | Multi-step form saves server-side draft after each completed step. Resumable safely. Validation errors identify exact field without clearing valid input. |
 | `03-core-business.md#T-03.06.01.01` | verify | Inventory needed | UI: Start date and end date pickers (Jalali calendar with time). Start cannot be in the past. End must be after start. |
 | `03-core-business.md#T-03.06.01.02` | verify | Inventory needed | Validate: duration ≤ admin-configured max (default 24 Jalali months). Validate lead time (default 0 days — start can be today). |
 | `03-core-business.md#T-03.06.01.03` | verify | Inventory needed | Calculate exact hours between start and end timestamps for average power calculation. |
