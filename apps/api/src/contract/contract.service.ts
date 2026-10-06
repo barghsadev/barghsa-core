@@ -320,7 +320,13 @@ export class ContractService {
         );
         await this.insertVersion(client, id, versionId, 1, input, actor);
         await this.activationContext(client, versionId, input.activationContext);
-        await auditContract(client, id, versionId, 'contract.created', actor, ip);
+        await auditContract(client, id, versionId, 'contract.created', actor, ip, {
+          entity: 'contract',
+          entityId: id,
+          fromState: null,
+          toState: 'Draft',
+          reason: input.changeDescription ?? null,
+        });
         return this.get(id, client);
       });
     });
@@ -574,6 +580,11 @@ export class ContractService {
             actor
           );
           await auditContract(client, id, versionId, 'contract.created', actor, ip, {
+            entity: 'contract',
+            entityId: id,
+            fromState: null,
+            toState: 'Draft',
+            reason: input.changeDescription ?? null,
             solarRequestId: input.requestId,
             source: input.source,
           });
@@ -770,13 +781,25 @@ export class ContractService {
             versionId,
           ]);
           await this.activationContext(client, versionId, input.activationContext);
-          await auditContract(client, id, versionId, 'contract.version_created', actor, ip);
+          await auditContract(client, id, versionId, 'contract.version_created', actor, ip, {
+            entity: 'contract',
+            entityId: id,
+            fromState: row.state,
+            toState: row.state,
+            reason: input.changeDescription ?? null,
+          });
           if (row.state === 'ChangesRequested') {
             await client.query(
               "UPDATE contracts SET state='AwaitingStaffReview',submitted_at=clock_timestamp() WHERE id=$1",
               [id]
             );
-            await auditContract(client, id, versionId, 'contract.resubmitted', actor, ip);
+            await auditContract(client, id, versionId, 'contract.resubmitted', actor, ip, {
+              entity: 'contract',
+              entityId: id,
+              fromState: row.state,
+              toState: 'AwaitingStaffReview',
+              reason: input.changeDescription ?? null,
+            });
             await notifyContractReview(client, id, 'resubmitted');
           }
           return this.get(id, client);
@@ -845,6 +868,11 @@ export class ContractService {
           );
           await this.activationContext(client, versionId, input.activationContext);
           await auditContract(client, id, versionId, 'contract.amendment_created', actor, ip, {
+            entity: 'contract_amendment',
+            entityId: versionId,
+            fromState: null,
+            toState: 'Draft',
+            reason: input.changeDescription ?? null,
             baseVersionId: row.current_version_id,
           });
           return this.get(id, client);

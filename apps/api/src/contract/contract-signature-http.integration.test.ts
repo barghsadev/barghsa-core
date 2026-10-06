@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
@@ -410,6 +411,24 @@ it('records real approved customer bytes once and preserves recorder, uploader a
     },
   });
   expect(evidence.signature).not.toHaveProperty('recordedBy');
+  await expectCoreAudit(http.pool, 'contract.signature_requested', f.row.id, {
+    entity: 'contract',
+    fromState: 'Accepted',
+    toState: 'AwaitingSignature',
+    reason: null,
+    actor: 'signature-legal',
+    context: 'staff',
+  });
+
+  await expectCoreAudit(http.pool, 'contract.signed_copy_recorded', f.row.id, {
+    entity: 'contract',
+    fromState: 'AwaitingSignature',
+    toState: 'Signed',
+    reason: null,
+    actor: f.user,
+    context: 'customer',
+  });
+
   expect(await (await record(f, body)).json()).toEqual(evidence);
   const staff = (await (
     await send(
@@ -588,6 +607,22 @@ it('applies a solar amendment only after its accepted PDF has an approved signed
     idempotencyKey: randomUUID(),
   });
   expect(signed.status, await signed.clone().text()).toBe(200);
+  await expectCoreAudit(http.pool, 'contract.signature_requested', pendingVersionId, {
+    entity: 'contract_amendment',
+    fromState: 'AwaitingSignature',
+    toState: 'AwaitingSignature',
+    reason: null,
+    actor: 'signature-legal',
+    context: 'staff',
+  });
+  await expectCoreAudit(http.pool, 'contract.signed_copy_recorded', pendingVersionId, {
+    entity: 'contract_amendment',
+    fromState: 'AwaitingSignature',
+    toState: 'Applied',
+    reason: null,
+    actor: f.user,
+    context: 'customer',
+  });
   expect(await signed.json()).toMatchObject({
     state: 'Signed',
     isCurrent: true,

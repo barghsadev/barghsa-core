@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
@@ -418,6 +419,33 @@ it('publishes and accepts an unsigned amendment while the active base remains ef
     f.owner
   );
   const acceptedBody = await accepted.json();
+  await expectCoreAudit(http.pool, 'contract.amendment_created', pending.versionId, {
+    entity: 'contract_amendment',
+    fromState: null,
+    toState: 'Draft',
+    reason: 'Extend the savings term',
+    actor: 'review-legal',
+    context: 'staff',
+  });
+
+  await expectCoreAudit(http.pool, 'contract.amendment_published', pending.versionId, {
+    entity: 'contract_amendment',
+    fromState: 'Draft',
+    toState: 'AwaitingCustomerAcceptance',
+    reason: null,
+    actor: 'review-legal',
+    context: 'staff',
+  });
+
+  await expectCoreAudit(http.pool, 'contract.amendment_accepted', pending.versionId, {
+    entity: 'contract_amendment',
+    fromState: 'AwaitingCustomerAcceptance',
+    toState: 'Applied',
+    reason: null,
+    actor: f.owner,
+    context: 'customer',
+  });
+
   expect(accepted.status, JSON.stringify(acceptedBody)).toBe(200);
   expect(acceptedBody).toMatchObject({
     state: 'Active',
@@ -557,6 +585,15 @@ it('keeps the accepted solar version effective while its amendment awaits signin
     pendingAmendment: { state: 'AwaitingSignature', versionId: pending.versionId },
   });
   expect((await listed(f, 'contracts', f.owner))?.pendingAmendmentState).toBe('AwaitingSignature');
+  await expectCoreAudit(http.pool, 'contract.amendment_accepted', pending.versionId, {
+    entity: 'contract_amendment',
+    fromState: 'AwaitingCustomerAcceptance',
+    toState: 'AwaitingSignature',
+    reason: null,
+    actor: f.owner,
+    context: 'customer',
+  });
+
   expect((await listed(f, 'admin/contracts?profileId=' + f.profile))?.pendingAmendmentState).toBe(
     'AwaitingSignature'
   );
@@ -745,6 +782,38 @@ it('requests changes with a durable reason, revises, and publishes without expos
   const row = (await changed.json()) as ContractDto;
   expect(row.state).toBe('AwaitingStaffReview');
   expect(row.currentVersion.versionNumber).toBe(2);
+  await expectCoreAudit(http.pool, 'contract.submitted', f.row.id, {
+    entity: 'contract',
+    fromState: 'Draft',
+    toState: 'AwaitingStaffReview',
+    reason: null,
+    actor: 'review-legal',
+    context: 'staff',
+  });
+  await expectCoreAudit(http.pool, 'contract.changes_requested', f.row.id, {
+    entity: 'contract',
+    fromState: 'AwaitingStaffReview',
+    toState: 'ChangesRequested',
+    reason: 'Correct the price',
+    actor: 'review-legal',
+    context: 'staff',
+  });
+  await expectCoreAudit(http.pool, 'contract.version_created', f.row.id, {
+    entity: 'contract',
+    fromState: 'ChangesRequested',
+    toState: 'ChangesRequested',
+    reason: 'Corrected price',
+    actor: 'review-legal',
+    context: 'staff',
+  });
+  await expectCoreAudit(http.pool, 'contract.resubmitted', f.row.id, {
+    entity: 'contract',
+    fromState: 'ChangesRequested',
+    toState: 'AwaitingStaffReview',
+    reason: 'Corrected price',
+    actor: 'review-legal',
+    context: 'staff',
+  });
   expect((await action(row.id, 'publish', command(f.row.currentVersionId))).status).toBe(409);
   expect((await action(row.id, 'publish', command(row.currentVersionId))).status).toBe(200);
   expect((await customer(f, '/versions/' + f.row.currentVersionId)).status).toBe(404);

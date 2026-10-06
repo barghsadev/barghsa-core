@@ -139,7 +139,14 @@ export class ContractReviewService {
             'contract.amendment_published',
             actor,
             ip,
-            { baseVersionId: row.base_version_id }
+            {
+              entity: 'contract_amendment',
+              entityId: input.expectedVersionId,
+              fromState: row.amendment_state,
+              toState: 'AwaitingCustomerAcceptance',
+              reason: input.reason ?? null,
+              baseVersionId: row.base_version_id,
+            }
           );
           await notifyContractReview(client, id, 'published');
           return this.contracts.get(id, client);
@@ -223,15 +230,19 @@ export class ContractReviewService {
               throw new ConflictException('A changes request requires a reason');
             await client.query("UPDATE contracts SET state='ChangesRequested' WHERE id=$1", [id]);
           }
-          await auditContract(
-            client,
-            id,
-            input.expectedVersionId,
-            'contract.' + event,
-            actor,
-            ip,
-            input.reason ? { reason: input.reason } : {}
-          );
+          await auditContract(client, id, input.expectedVersionId, 'contract.' + event, actor, ip, {
+            ...(input.reason ? { reason: input.reason } : {}),
+            entity: 'contract',
+            entityId: id,
+            fromState: row.state,
+            toState:
+              action === 'submit'
+                ? 'AwaitingStaffReview'
+                : action === 'publish'
+                  ? 'AwaitingCustomerAcceptance'
+                  : 'ChangesRequested',
+            reason: input.reason ?? null,
+          });
           await notifyContractReview(client, id, event, input.reason);
           return this.contracts.get(id, client);
         }
@@ -466,6 +477,12 @@ export class ContractReviewService {
               'INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,$3)',
               [id, input.expectedVersionId, actor.userId]
             );
+            const auditState = (
+              await client.query<{ contract_state: string; amendment_state: string | null }>(
+                'SELECT c.state AS contract_state,a.state AS amendment_state FROM contracts c LEFT JOIN contract_amendments a ON a.contract_id=c.id AND a.version_id=$2 WHERE c.id=$1',
+                [id, input.expectedVersionId]
+              )
+            ).rows[0]!;
             await auditContract(
               client,
               id,
@@ -473,7 +490,18 @@ export class ContractReviewService {
               row.amendment_state ? 'contract.amendment_accepted' : 'contract.accepted',
               actor,
               ip,
-              financialReview ? { financialReview } : {}
+              {
+                ...(financialReview ? { financialReview } : {}),
+                entity: row.amendment_state ? 'contract_amendment' : 'contract',
+                entityId: row.amendment_state ? input.expectedVersionId : id,
+                fromState: row.amendment_state ?? row.state,
+                toState: row.amendment_state
+                  ? auditState.amendment_state
+                  : auditState.contract_state,
+                reason: null,
+                contractFromState: row.state,
+                contractToState: auditState.contract_state,
+              }
             );
             await notifyContractReview(client, id, 'accepted');
             return {

@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -131,6 +132,15 @@ it('creates only a staff review request, preserves exact retries and exposes it 
     preferredDestination: 'external_bank',
   });
   expect(await (await submit(f, body)).json()).toEqual(request);
+  await expectCoreAudit(http.pool, 'contract.cancellation_requested', request.id, {
+    entity: 'contract_cancellation_request',
+    fromState: null,
+    toState: 'Pending',
+    reason: body.reason,
+    actor: f.owner,
+    context: 'customer',
+  });
+
   expect((await submit(f)).status).toBe(409);
   expect(
     (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [f.row.id])).rows[0].state
@@ -215,6 +225,15 @@ it('rejects with an explanation, keeps service unchanged and permits a new reque
     canRequest: true,
   });
   expect((await reject(r.id)).status).toBe(409);
+  await expectCoreAudit(http.pool, 'contract.cancellation_request_rejected', r.id, {
+    entity: 'contract_cancellation_request',
+    fromState: 'Pending',
+    toState: 'Rejected',
+    reason: 'Please contact support',
+    actor: 'request-legal',
+    context: 'staff',
+  });
+
   expect((await submit(f)).status).toBe(201);
   expect(
     (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [f.row.id])).rows[0].state
@@ -252,6 +271,33 @@ it('fulfills a bound request only after cancellation and mandatory wallet obliga
   ).toBe(200);
   const result = await execute(f, intent.id);
   expect(result.status, await result.clone().text()).toBe(201);
+  await expectCoreAudit(http.pool, 'approval_request_created', intent.approvalRequestId!, {
+    entity: 'approval_request',
+    fromState: null,
+    toState: 'pending',
+    reason: 'Approved customer request',
+    actor: 'request-legal',
+    context: 'staff',
+  });
+
+  await expectCoreAudit(http.pool, 'contract.cancellation_request_fulfilled', r.id, {
+    entity: 'contract_cancellation_request',
+    fromState: 'Pending',
+    toState: 'Fulfilled',
+    reason: 'Approved customer request',
+    actor: 'request-legal',
+    context: 'staff',
+  });
+
+  await expectCoreAudit(http.pool, 'contract.cancelled', f.row.id, {
+    entity: 'contract',
+    fromState: 'AwaitingCustomerAcceptance',
+    toState: 'Cancelled',
+    reason: 'Approved customer request',
+    actor: 'request-legal',
+    context: 'staff',
+  });
+
   expect(await result.json()).toMatchObject({
     state: 'Cancelled',
     refunds: [{ destination: 'wallet', amount: '100' }],

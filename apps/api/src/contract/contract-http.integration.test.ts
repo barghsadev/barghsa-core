@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -386,12 +387,34 @@ it('creates and reads exact full snapshots and immutable version metadata', asyn
   const changed = await send('/' + row.id, 'PATCH', edit(row));
   expect(changed.status).toBe(200);
   const next = (await changed.json()) as ContractDto;
+  await expectCoreAudit(http.pool, 'contract.created', row.id, {
+    entity: 'contract',
+    fromState: null,
+    toState: 'Draft',
+    reason: 'Initial draft',
+    actor: 'contract-legal',
+    context: 'staff',
+  });
+
+  await expectCoreAudit(http.pool, 'contract.version_created', row.id, {
+    entity: 'contract',
+    fromState: 'Draft',
+    toState: 'Draft',
+    reason: 'Reprice draft',
+    actor: 'contract-legal',
+    context: 'staff',
+  });
+
   expect(next.currentVersion).toMatchObject({ versionNumber: 2, content: { price: '200' } });
   const old = await send('/' + row.id + '/versions/' + row.currentVersionId);
   expect(await old.json()).toEqual({
     ...row.currentVersion,
     history: [
-      expect.objectContaining({ event: 'contract.created', actorType: 'staff', reason: null }),
+      expect.objectContaining({
+        event: 'contract.created',
+        actorType: 'staff',
+        reason: 'Initial draft',
+      }),
     ],
     historyTruncated: false,
   });
@@ -515,7 +538,7 @@ it('rejects competing edits and preserves the winning full snapshot', async () =
       expect.objectContaining({
         event: 'contract.version_created',
         actorType: 'staff',
-        reason: null,
+        reason: 'Reprice draft',
       }),
     ],
     historyTruncated: false,
@@ -661,7 +684,11 @@ it('rolls back the version, current pointer and idempotency result when audit fa
   expect(await (await send('/' + row.id)).json()).toEqual({
     ...row,
     history: [
-      expect.objectContaining({ event: 'contract.created', actorType: 'staff', reason: null }),
+      expect.objectContaining({
+        event: 'contract.created',
+        actorType: 'staff',
+        reason: 'Initial draft',
+      }),
     ],
     historyTruncated: false,
   });

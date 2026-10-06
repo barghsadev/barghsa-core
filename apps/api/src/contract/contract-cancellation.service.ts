@@ -124,6 +124,10 @@ export class ContractCancellationService {
             actor,
             ip,
             {
+              entity: 'contract',
+              entityId: id,
+              fromState: snapshot.state,
+              toState: snapshot.state,
               intentId,
               reason: input.reason,
               refundDecision: decision,
@@ -141,6 +145,11 @@ export class ContractCancellationService {
               actor,
               ip,
               {
+                entity: 'approval_request',
+                entityId: approvalId,
+                fromState: null,
+                toState: 'pending',
+                reason: input.reason,
                 requestId: approvalId,
                 intentId,
                 actionType: 'contract_cancellation',
@@ -332,6 +341,10 @@ export class ContractCancellationService {
               ['Completed', 'Confirmed'].includes(payment.state)
             );
             await auditContract(client, id, intent.version_id, 'refund.requested', actor, ip, {
+              entity: 'refund',
+              entityId: refundId,
+              fromState: null,
+              toState: 'Requested',
               refundId,
               invoiceId: line.invoiceId,
               profileId: snapshot.profileId,
@@ -346,6 +359,10 @@ export class ContractCancellationService {
             });
             await client.query("UPDATE refunds SET state='Approved' WHERE id=$1", [refundId]);
             await auditContract(client, id, intent.version_id, 'refund.approved', actor, ip, {
+              entity: 'refund',
+              entityId: refundId,
+              fromState: 'Requested',
+              toState: 'Approved',
               refundId,
               invoiceId: line.invoiceId,
               intentId: intent.id,
@@ -406,11 +423,23 @@ export class ContractCancellationService {
               'contract.cancellation_request_fulfilled',
               actor,
               ip,
-              { requestId: intent.customer_request_id, intentId: intent.id, reason: intent.reason }
+              {
+                entity: 'contract_cancellation_request',
+                entityId: intent.customer_request_id,
+                fromState: 'Pending',
+                toState: 'Fulfilled',
+                requestId: intent.customer_request_id,
+                intentId: intent.id,
+                reason: intent.reason,
+              }
             );
             await notifyContractReview(client, id, 'cancellation_request_fulfilled', intent.reason);
           }
           await auditContract(client, id, intent.version_id, 'contract.cancelled', actor, ip, {
+            entity: 'contract',
+            entityId: id,
+            fromState: snapshot.state,
+            toState: 'Cancelled',
             intentId: intent.id,
             reason: intent.reason,
             refundDecision: intent.refund_decision,

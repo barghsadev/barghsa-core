@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T20:29:28Z",
-  "source_commit": "260b08e3c06552cbdc77ba2721a4008bdeb85f9f",
+  "updated": "2026-10-06T20:41:58Z",
+  "source_commit": "075edfc5a176bca9747e963bb3952b8a25ba3af5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -58943,11 +58943,11 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "60444e3bae6d632b44ca19d8e330536d4ccc87c8dc9e72d0deb155160480aee0"
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
-              "sha256": "24d1b0c4448ab4d4f999448a8d22af51db4c689693a4534dad3f2805b0a98726"
+              "sha256": "2557ffb75a1ff9f1b0b9c6a3b34c53d0c3e550bdce753d0ed563406d9799035c"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -59079,7 +59079,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/review.json"
           ],
           "criteria": [
             "Unpaid restoration uses policy-conditioned consumed-to-released update in cancellation transaction. Enabled/disabled policy and replacement behavior retain exact counts/history; restored slot can be redeemed again."
@@ -59161,6 +59166,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/renewal-proof.json",
             "scope": "Actor/audit boundaries hardened; unchanged eligibility/limits/discount/restoration logic and all other service AST verified, with149 related current outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "contract_audit_renewal": {
+            "base_commit": "075edfc5a176bca9747e963bb3952b8a25ba3af5",
+            "changed_paths": [
+              "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "apps/api/src/contract/contract-cancellation.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/renewal-proof.json",
+            "scope": "Manual contract audit metadata only plus read-only post-trigger state read; original non-audit production AST, authorization/financial logic and 730 expect calls preserved, with173 related passing outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -59210,11 +59224,11 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "60444e3bae6d632b44ca19d8e330536d4ccc87c8dc9e72d0deb155160480aee0"
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
-              "sha256": "24d1b0c4448ab4d4f999448a8d22af51db4c689693a4534dad3f2805b0a98726"
+              "sha256": "2557ffb75a1ff9f1b0b9c6a3b34c53d0c3e550bdce753d0ed563406d9799035c"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -59346,7 +59360,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/review.json"
           ],
           "criteria": [
             "Existing paid cancellation integration checks verify restore_after_payment false/true. No paid restoration without both enabled cancellation policy and explicit paid opt-in."
@@ -59428,6 +59447,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/renewal-proof.json",
             "scope": "Actor/audit boundaries hardened; unchanged eligibility/limits/discount/restoration logic and all other service AST verified, with149 related current outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "contract_audit_renewal": {
+            "base_commit": "075edfc5a176bca9747e963bb3952b8a25ba3af5",
+            "changed_paths": [
+              "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "apps/api/src/contract/contract-cancellation.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/renewal-proof.json",
+            "scope": "Manual contract audit metadata only plus read-only post-trigger state read; original non-audit production AST, authorization/financial logic and 730 expect calls preserved, with173 related passing outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -59478,11 +59506,11 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "60444e3bae6d632b44ca19d8e330536d4ccc87c8dc9e72d0deb155160480aee0"
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
-              "sha256": "24d1b0c4448ab4d4f999448a8d22af51db4c689693a4534dad3f2805b0a98726"
+              "sha256": "2557ffb75a1ff9f1b0b9c6a3b34c53d0c3e550bdce753d0ed563406d9799035c"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -59614,7 +59642,12 @@
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/compiled-delta.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/review.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/review.json"
           ],
           "criteria": [
             "Consumed-only restoration cannot release twice. Repeated cancellation preserves the first restored_at exactly and no duplicate usage is returned; command receipt/state guards retained."
@@ -59696,6 +59729,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/renewal-proof.json",
             "scope": "Actor/audit boundaries hardened; unchanged eligibility/limits/discount/restoration logic and all other service AST verified, with149 related current outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "contract_audit_renewal": {
+            "base_commit": "075edfc5a176bca9747e963bb3952b8a25ba3af5",
+            "changed_paths": [
+              "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "apps/api/src/contract/contract-cancellation.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/renewal-proof.json",
+            "scope": "Manual contract audit metadata only plus read-only post-trigger state read; original non-audit production AST, authorization/financial logic and 730 expect calls preserved, with173 related passing outcomes. Original criteria retained; no unrelated acceptance inferred."
           }
         }
       }
@@ -94897,7 +94939,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Normalize and verify contract authoring/review/accept/reject/cancellation and automatic activation/completion audit transitions, plus remaining electricity revision/cancellation/increase, saving fulfillment/change and solar progress/final/postal event families. Consultation automatic paid settlement remains separate from the accepted workflow/fee helpers."
+        "Normalize and verify automatic contract activation/completion audit transitions, plus remaining electricity revision/cancellation/increase, saving fulfillment/change and solar progress/final/postal event families. Consultation automatic paid settlement remains separate from the accepted workflow/fee helpers."
       ],
       "owner": null,
       "depends_on": [],
@@ -94910,11 +94952,12 @@
           "release-0.2-pre-active-rejection",
           "release-0.2-audit-append-only-integration",
           "release-0.2-financial-document-audit-metadata",
-          "release-0.2-gift-redemption-audit"
+          "release-0.2-gift-redemption-audit",
+          "release-0.2-contract-transition-audit"
         ],
         "current_acceptance": {
-          "kind": "accepted-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
-          "reviewed_sha": "260b08e3c06552cbdc77ba2721a4008bdeb85f9f",
+          "kind": "accepted-manual-contract-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
+          "reviewed_sha": "075edfc5a176bca9747e963bb3952b8a25ba3af5",
           "source_evidence": [
             {
               "path": "README.md",
@@ -95199,6 +95242,46 @@
             {
               "path": "apps/api/src/admin/gift-redemption-audit.integration.test.ts",
               "sha256": "e6f124a6bb2db5fef6e4f679b6e34ce8e67ef472d893c6fd1354ec4b715da9b6"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
+              "sha256": "b2c958a0faa733041358f4e6970c8bae9f843bf69763632f00260c9374737732"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-request.service.ts",
+              "sha256": "910dee2e3770cdbe7041fe340c0c9ff9c2aa06bb15af3e0cc6fac785606c2684"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "2557ffb75a1ff9f1b0b9c6a3b34c53d0c3e550bdce753d0ed563406d9799035c"
+            },
+            {
+              "path": "apps/api/src/contract/contract-http.integration.test.ts",
+              "sha256": "ce6764ed06358d4c6730f1367b0840b5a500b2393b8b674c9f3965658851e291"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review-http.integration.test.ts",
+              "sha256": "9cca4811781a2eb25092200a2f5b146c588ff23bd9cffb6d465030075a8d4f36"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review.service.ts",
+              "sha256": "625abccba9aeaefd2f9da00c0f097483f951e2d91df8da467ee23a5a368d78c6"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+              "sha256": "f8cb46b19a57545600f3f390f5a2027f78d7cb46296fad236a8051333a02b722"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature.service.ts",
+              "sha256": "a8eb573625c889f112a8256cee2754b45cbd042439f77aa493c95534fae3a47d"
+            },
+            {
+              "path": "apps/api/src/contract/contract.service.ts",
+              "sha256": "4aeaaa6fcd6aaab890eb46c178a9fb4a4a90819c6b5a96a863a95d04e3ba8be3"
             }
           ],
           "checks": [
@@ -95281,9 +95364,24 @@
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/lint.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/sast.json",
             "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/format.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/contract.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/gift-redemption-audit/contract.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/compiled-delta.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/http-corrected.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/review-signature-final.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/signature-isolated.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/callers.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/final-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/format.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/sast.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/contract.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit/build.json"
           ],
-          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open.",
+          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
           "submission_audit_renewal": {
             "base_commit": "ed058a6c37f6ee3692e2934d21e3456399705134",
@@ -128647,6 +128745,63 @@
           "sha256": "e6f124a6bb2db5fef6e4f679b6e34ce8e67ef472d893c6fd1354ec4b715da9b6"
         }
       ]
+    },
+    "release-0.2-contract-transition-audit": {
+      "title": "Manual contract transition audit states with amendment and refund identities",
+      "task_keys": [
+        "03-core-business.md#T-03.90.03"
+      ],
+      "summary": "Accepted manual contract authoring/review/acceptance/signature/cancellation audit metadata subcriteria; overall audit task remains partial.",
+      "validation": [
+        "18 existing transactional audit calls now record entity/entityId/fromState/toState/reason. Amendment version, cancellation request, approval and refund entities use their own persisted status models, retaining contractId/versionId associations. Acceptance reads post-trigger parent/amendment states in the same locked transaction. Creation/version/amendment reasons use the supplied changeDescription; staff history shows that reason while customer prepublication filtering remains unchanged.",
+        "Complete non-audit production AST is identical after removing only new metadata and one read-only post-acceptance SELECT. Existing auth/profile/session locks, calculations, commands, errors, transaction/idempotency boundaries, approval policies, refunds, notifications and DTO assembly remain intact. SQL trigger definitions verify amendment/parent state effects; actual HTTP assertions cover unsigned and signed amendments, cancellation replay, refunds and second approvals.",
+        "173 distinct passed outcomes selected truthfully from source-identical targeted receipts, including 23 additional exact audit checks. 730 original expect calls remain; three staff history expectations now require the supplied authoring reason. No assertions removed or weakened. Current strict types, changed-file lint/format, 5-file/5-rule SAST and OpenAPI pass.",
+        "Only the five contract production JS outputs differ from prior source-bound evidence. Frontend, shared/database exports, migrations and dependencies are unchanged; their browser, route budget and immutable audit checks remain applicable. API production build completed before consumers; no outputs rewritten during tests.",
+        "Automatic contract activation/completion, other domain/postal transitions and automatic consultation settlement remain open. No accepted milestone, staging enqueue, Telegram delivery or production approval claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-transition-audit",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+          "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
+          "sha256": "b2c958a0faa733041358f4e6970c8bae9f843bf69763632f00260c9374737732"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-request.service.ts",
+          "sha256": "910dee2e3770cdbe7041fe340c0c9ff9c2aa06bb15af3e0cc6fac785606c2684"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.service.ts",
+          "sha256": "2557ffb75a1ff9f1b0b9c6a3b34c53d0c3e550bdce753d0ed563406d9799035c"
+        },
+        {
+          "path": "apps/api/src/contract/contract-http.integration.test.ts",
+          "sha256": "ce6764ed06358d4c6730f1367b0840b5a500b2393b8b674c9f3965658851e291"
+        },
+        {
+          "path": "apps/api/src/contract/contract-review-http.integration.test.ts",
+          "sha256": "9cca4811781a2eb25092200a2f5b146c588ff23bd9cffb6d465030075a8d4f36"
+        },
+        {
+          "path": "apps/api/src/contract/contract-review.service.ts",
+          "sha256": "625abccba9aeaefd2f9da00c0f097483f951e2d91df8da467ee23a5a368d78c6"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+          "sha256": "f8cb46b19a57545600f3f390f5a2027f78d7cb46296fad236a8051333a02b722"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature.service.ts",
+          "sha256": "a8eb573625c889f112a8256cee2754b45cbd042439f77aa493c95534fae3a47d"
+        },
+        {
+          "path": "apps/api/src/contract/contract.service.ts",
+          "sha256": "4aeaaa6fcd6aaab890eb46c178a9fb4a4a90819c6b5a96a863a95d04e3ba8be3"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -128688,7 +128843,7 @@
   "next_batch": {
     "id": "release-0.2-terminal-audit-wallet-gaps",
     "release": "0.2.0",
-    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; normalize and verify remaining audit event families. General audit immutability is installed and accepted. Reuse accepted engines and preserve unanswered owner decisions.",
+    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify automatic contract activation/completion, remaining electricity/saving/solar/postal and consultation settlement audits. Manual contract audit transitions and general immutability are accepted. Reuse accepted engines and preserve unanswered owner decisions.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.90.03",

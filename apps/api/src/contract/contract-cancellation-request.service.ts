@@ -144,7 +144,15 @@ export class ContractCancellationRequestService {
               'contract.cancellation_requested',
               actor,
               ip,
-              { requestId, reason: input.reason, preferredDestination: input.preferredDestination }
+              {
+                entity: 'contract_cancellation_request',
+                entityId: requestId,
+                fromState: null,
+                toState: 'Pending',
+                requestId,
+                reason: input.reason,
+                preferredDestination: input.preferredDestination,
+              }
             );
             await notifyContractReview(client, id, 'cancellation_requested', input.reason);
             return requestId;
@@ -216,7 +224,14 @@ export class ContractCancellationRequestService {
               'contract.cancellation_request_rejected',
               actor,
               ip,
-              { requestId, reason: input.reason }
+              {
+                entity: 'contract_cancellation_request',
+                entityId: requestId,
+                fromState: request.status,
+                toState: 'Rejected',
+                requestId,
+                reason: input.reason,
+              }
             );
             await notifyContractReview(
               client,

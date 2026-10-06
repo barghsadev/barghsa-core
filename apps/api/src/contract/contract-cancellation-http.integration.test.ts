@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
@@ -137,6 +138,49 @@ it.each([
       refunds: [{ invoiceId: f.invoice, amount: paid, destination: 'wallet' }],
     });
     expect(await (await execute(f, intent, key)).json()).toEqual(result);
+    await expectCoreAudit(http.pool, 'contract.cancellation_prepared', f.contract.id, {
+      entity: 'contract',
+      fromState: 'Draft',
+      toState: 'Draft',
+      reason: f.body.reason,
+      actor: 'cancel-legal',
+      context: 'staff',
+    });
+
+    await expectCoreAudit(http.pool, 'contract.cancelled', f.contract.id, {
+      entity: 'contract',
+      fromState: 'Draft',
+      toState: 'Cancelled',
+      reason: f.body.reason,
+      actor: 'cancel-legal',
+      context: 'staff',
+    });
+
+    const refundId = (
+      await http.pool.query(
+        'SELECT refund_id FROM contract_refund_obligations WHERE contract_id=$1',
+        [f.contract.id]
+      )
+    ).rows[0].refund_id;
+
+    await expectCoreAudit(http.pool, 'refund.requested', refundId, {
+      entity: 'refund',
+      fromState: null,
+      toState: 'Requested',
+      reason: f.body.reason,
+      actor: 'cancel-legal',
+      context: 'staff',
+    });
+
+    await expectCoreAudit(http.pool, 'refund.approved', refundId, {
+      entity: 'refund',
+      fromState: 'Requested',
+      toState: 'Approved',
+      reason: 'Committed contract cancellation obligation',
+      actor: 'cancel-legal',
+      context: 'staff',
+    });
+
     expect(
       (
         await http.pool.query(
