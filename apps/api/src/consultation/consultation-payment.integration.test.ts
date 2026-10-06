@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -497,6 +498,21 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     )
   ).rows[0];
   expect(stored?.metadata.financialReview.hash).toBe(creditReview.hash);
+  await expectCoreAudit(
+    http.pool,
+    'consultation.fee.adjusted',
+    requestId,
+    {
+      entity: 'consultation_request',
+      fromState: 'offer_accepted',
+      toState: 'offer_accepted',
+      reason: creditInput.reason,
+      actor: 'consultation-finance',
+      context: 'staff',
+    },
+    undefined,
+    creditInput.idempotencyKey
+  );
   expect(
     (
       await post(`${root}/paid-fee`, 'consultation-finance', {
@@ -714,6 +730,14 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     )
   ).rows;
   expect(savedClosure).toHaveLength(1);
+  await expectCoreAudit(http.pool, 'consultation.paid.closed', requestId, {
+    entity: 'consultation_request',
+    fromState: 'offer_accepted',
+    toState: 'rejected',
+    reason: 'Service cannot be provided',
+    actor: 'consultation-finance',
+    context: 'staff',
+  });
   const finalRefunds = (
     await http.pool.query<{ amount: string }>(
       'SELECT amount::text FROM refunds r JOIN invoices i ON i.id=r.invoice_id WHERE i.consultation_id=$1',
@@ -797,6 +821,21 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   };
   expect(recovered.refundIds).toHaveLength(1);
   expect(recovered.financialReview.hash).toBe(recoveryReview.hash);
+  await expectCoreAudit(
+    http.pool,
+    'consultation.refund.recovered',
+    requestId,
+    {
+      entity: 'consultation_request',
+      fromState: 'rejected',
+      toState: 'rejected',
+      reason: recoveryInput.reason,
+      actor: 'consultation-finance',
+      context: 'staff',
+    },
+    undefined,
+    recoveryInput.idempotencyKey
+  );
   expect(
     (await resolvePaid(`${root}/refund-recovery`, 'consultation-finance', recoveryInput)).status
   ).toBe(200);

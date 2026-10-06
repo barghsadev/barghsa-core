@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -157,6 +158,34 @@ it('moves a consultation through staff assignment, customer information, and a r
     reason: 'The planned capacity is 5 MW.',
   });
   expect(supplied.status, http.logs()).toBe(200);
+  await expectCoreAudit(
+    http.pool,
+    'consultation.request.changed',
+    requestId,
+    {
+      entity: 'consultation_request',
+      fromState: 'under_review',
+      toState: 'awaiting_customer_info',
+      reason: 'Please provide the planned station capacity.',
+      actor: 'reviewer',
+      context: 'staff',
+    },
+    'request-info'
+  );
+  await expectCoreAudit(
+    http.pool,
+    'consultation.request.changed',
+    requestId,
+    {
+      entity: 'consultation_request',
+      fromState: 'awaiting_customer_info',
+      toState: 'under_review',
+      reason: 'The planned capacity is 5 MW.',
+      actor: 'customer',
+      context: 'customer',
+    },
+    'provided_info'
+  );
   const rejected = await post(`${root}/reject`, 'reviewer', {
     reason: 'Site is outside the service area.',
   });
@@ -557,6 +586,20 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
     )
   ).rows[0];
   expect(storedReview?.metadata.financialReview.hash).toBe(reviewed.hash);
+  await expectCoreAudit(
+    http.pool,
+    'consultation.request.changed',
+    requestId,
+    {
+      entity: 'consultation_request',
+      fromState: 'under_review',
+      toState: 'offer_pending',
+      reason: null,
+      actor: 'reviewer',
+      context: 'staff',
+    },
+    'fee_offer_review'
+  );
   const replayed = await post(`${root}/fee`, 'reviewer', {
     ...firstOffer,
     expectedReviewHash: reviewed.hash,
@@ -565,6 +608,20 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   expect(await replayed.json()).toMatchObject({ invoiceId: firstId });
   const acceptance = await decide(`/api/consultations/requests/${requestId}/accept`, 'customer');
   expect(acceptance.status, http.logs()).toBe(200);
+  await expectCoreAudit(
+    http.pool,
+    'consultation.request.changed',
+    requestId,
+    {
+      entity: 'consultation_request',
+      fromState: 'offer_pending',
+      toState: 'offer_pending',
+      reason: null,
+      actor: 'customer',
+      context: 'customer',
+    },
+    'offer_accepted_pending_payment'
+  );
   const firstInvoice = (
     await http.pool.query(
       'SELECT consultation_id,profile_id,state,total_amount FROM invoices WHERE id=$1',

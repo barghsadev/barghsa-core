@@ -1,3 +1,4 @@
+import { expectDocumentAuditHistory } from '../test/core-audit.js';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { createHash, randomUUID } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
@@ -381,6 +382,8 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
   ).json()) as DocumentDownload;
   expect(await (await fetch(archive.url)).text()).toBe(pdf.toString());
   expect((await send(`admin/documents/${document.id}/preview`, 'document-legal')).status).toBe(409);
+  await expectDocumentAuditHistory(http.pool, document.id);
+  await expectDocumentAuditHistory(http.pool, current.id);
 });
 
 it('holds a configured-scanner upload in PendingScan with a durable worker job', async () => {
@@ -871,6 +874,7 @@ it('requires a rejection reason, permits changes and resubmission, and blocks st
   document = await act(document, 'submit', f.user);
   document = await act(document, 'reject', 'document-legal', true, 'Unreadable copy');
   expect(document).toMatchObject({ state: 'Rejected', rejectionReason: 'Unreadable copy' });
+  await expectDocumentAuditHistory(http.pool, document.id);
 });
 
 it('isolates profiles, enforces staff capabilities and blocks quarantined downloads', async () => {

@@ -403,6 +403,11 @@ export class ElectricityPriceAdjustmentService {
                 actor,
                 ip,
                 {
+                  entity: 'electricity_price_adjustment',
+                  entityId: id,
+                  fromState: null,
+                  toState: 'proposed',
+                  reason: input.reason,
                   adjustmentId: id,
                   percentageBps: input.percentageBps,
                   amountIrR: quote.amountIrR.toString(),
@@ -532,6 +537,11 @@ export class ElectricityPriceAdjustmentService {
                 actor,
                 ip,
                 {
+                  entity: 'electricity_price_adjustment',
+                  entityId: adjustmentId,
+                  fromState: proposal.status,
+                  toState: 'finalized',
+                  reason: proposal.reason,
                   adjustmentId,
                   invoiceId: invoice.adjustmentInvoiceId,
                   amountIrR: quote.amountIrR.toString(),
@@ -608,7 +618,14 @@ export class ElectricityPriceAdjustmentService {
                 'electricity.price_cancelled',
                 actor,
                 ip,
-                { adjustmentId }
+                {
+                  entity: 'electricity_price_adjustment',
+                  entityId: adjustmentId,
+                  fromState: proposal.status,
+                  toState: 'cancelled',
+                  reason: null,
+                  adjustmentId,
+                }
               );
               await notifyContractReview(client, contract.id, 'electricity_price_cancelled');
               return adjustmentId;

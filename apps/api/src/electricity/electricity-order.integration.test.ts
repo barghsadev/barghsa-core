@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
@@ -4141,6 +4142,14 @@ it.each(['charge', 'credit'] as const)(
       [proposed.adjustmentId]
     );
     expect(reviewAudit.rows[0]?.metadata.financialReview.hash).toBe(proposalReview.hash);
+    await expectCoreAudit(http.pool, 'electricity.price_proposed', proposed.adjustmentId, {
+      entity: 'electricity_price_adjustment',
+      fromState: null,
+      toState: 'proposed',
+      reason: proposalInput.reason,
+      actor: 'reviewer',
+      context: 'staff',
+    });
     expect(proposed.adjustmentAmountIrR).toBe(kind === 'charge' ? '50000' : '-50000');
     expect(((await (await propose()).json()) as { adjustmentId: string }).adjustmentId).toBe(
       proposed.adjustmentId
@@ -4209,6 +4218,14 @@ it.each(['charge', 'credit'] as const)(
       [proposed.adjustmentId]
     );
     expect(finalAudit.rows[0]?.metadata.calculationSha256).toBe(proposed.calculationSha256);
+    await expectCoreAudit(http.pool, 'electricity.price_finalized', proposed.adjustmentId, {
+      entity: 'electricity_price_adjustment',
+      fromState: 'proposed',
+      toState: 'finalized',
+      reason: proposalInput.reason,
+      actor: 'reviewer',
+      context: 'staff',
+    });
     expect(
       (
         (await (
@@ -4285,6 +4302,14 @@ it.each(['charge', 'credit'] as const)(
     expect(cancelled.status, http.logs()).toBe(201);
     const cancelledRow = await cancelled.json();
     expect(cancelledRow).toMatchObject({ status: 'cancelled' });
+    await expectCoreAudit(http.pool, 'electricity.price_cancelled', secondId, {
+      entity: 'electricity_price_adjustment',
+      fromState: 'proposed',
+      toState: 'cancelled',
+      reason: null,
+      actor: 'reviewer',
+      context: 'staff',
+    });
     const beforeCancelledReplay = await priceSnapshot();
     const cancelledReplay = await fetch(
       `${http.base}/api/staff/electricity/price-adjustments/${secondId}/cancel`,
