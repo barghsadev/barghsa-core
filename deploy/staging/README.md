@@ -52,17 +52,23 @@ Screenshots are optional. This command returns immediately and starts a detached
 worker. Continue building the next batch. CI remains informational for this disposable
 test environment; neither CI results nor deployment completion block building.
 The worker runs `./deploy/staging/deploy.sh` from an isolated checkout of the exact
-pushed commit, then attaches the captured screenshots. It serializes releases through
-the Telegram confirmation, so a newer rollout cannot replace an older release mid-post.
+pushed commit, then attaches the captured screenshots. The main Persian announcement
+and exact live release are required. An optional screenshot failure records a
+`screenshot_warning` and rechecks the main announcement without retrying images;
+it cannot block later deployments after those required confirmations pass. Unknown
+image outcomes remain unconfirmed in the notification receipts. It serializes releases
+through the required Telegram confirmation, so a newer rollout cannot replace an older release mid-post.
 The caller's branch, working files and subsequent commits do not affect the release.
 
 Queue jobs, frozen screenshots, worker code and logs live outside the checkout in
 `~/.local/state/barghsa-staging-queue`. Run `python3 deploy/staging/release-queue.py status`
 to inspect them. A failed or interrupted job stops the deployment queue while building
 can continue. Inspect that job's `deploy.log`, resolve the failure and explicitly run
-`python3 deploy/staging/release-queue.py retry --commit <full-sha>`. Unknown Telegram
-results still require channel inspection and the notifier's explicit recovery before
-retrying; the queue never bypasses that guard. A restarted machine resumes queued work
+`python3 deploy/staging/release-queue.py retry --commit <full-sha>`. Unknown results for the main Telegram message still require channel inspection and
+the notifier's explicit recovery
+before retrying; the queue never bypasses that guard. An optional image warning never
+claims that every screenshot was delivered; inspect the channel before recovering an
+unknown image, and verify that its original release is still live. A restarted machine resumes queued work
 with `python3 deploy/staging/release-queue.py work`. It does not auto-replay interrupted
 deployments. The worker uses lower CPU priority to favor ongoing builds.
 

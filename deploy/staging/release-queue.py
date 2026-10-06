@@ -112,7 +112,17 @@ def deploy(job, state):
         args = ["python3", "deploy/staging/notify-release.py", "--commit", job["commit"]]
         for name in job["screenshots"]:
             args.extend(["--screenshot", str(directory / name)])
-        command(checkout, *args)
+        job.pop("screenshot_warning", None)
+        try:
+            command(checkout, *args)
+        except subprocess.CalledProcessError as error:
+            # Images are optional; the exact deployed release and main note are required.
+            # Recheck without images, preserving unknown-send receipts and their retry guard.
+            command(checkout, "python3", "deploy/staging/notify-release.py", "--commit", job["commit"])
+            job["screenshot_warning"] = {
+                "exit_code": error.returncode,
+                "message": "Optional screenshots could not all be confirmed; inspect notification receipts and the channel before retrying unknown images.",
+            }
     # Read deployed identity back; command exit status alone never completes a job.
     with urllib.request.urlopen("https://stg.barghsa.com/release.json", timeout=30) as response:
         live = json.load(response)

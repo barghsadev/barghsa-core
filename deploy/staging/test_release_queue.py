@@ -94,6 +94,58 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         self.assertEqual(Path(notifications[1][3]).read_bytes(), self.image.read_bytes())
         self.assertFalse((self.state / "jobs" / self.commit / "checkout").exists())
 
+    def test_optional_screenshot_failure_keeps_required_confirmation_and_advances_queue(self):
+        queue.enqueue(self.repo, self.state, self.commit, [self.image])
+        newer = self.publish("0.1.4")
+        queue.enqueue(self.repo, self.state, newer, [])
+        original = queue.command
+        calls = []
+        def invoke(repo, *args, **kwargs):
+            calls.append(args)
+            if "--screenshot" in args:
+                raise subprocess.CalledProcessError(1, list(args))
+            return original(repo, *args, **kwargs)
+        def live(*args, **kwargs):
+            deployed = (self.capture / "deployed-head").read_text().strip()
+            return io.BytesIO(json.dumps({
+                "commit": deployed, "version": "0.1.3" if deployed == self.commit else "0.1.4",
+            }).encode())
+        with patch.object(queue, "command", side_effect=invoke), patch.object(queue.urllib.request, "urlopen", side_effect=live):
+            self.assertEqual(queue.work(self.state), 0)
+        jobs = queue.jobs(self.state)
+        self.assertEqual([job["phase"] for job in jobs], ["completed", "completed"])
+        self.assertEqual(jobs[0]["screenshot_warning"]["exit_code"], 1)
+        self.assertNotIn("screenshot_warning", jobs[1])
+        self.assertIn(("python3", "deploy/staging/notify-release.py", "--commit", self.commit), calls)
+        self.assertEqual(sum("--screenshot" in call for call in calls), 1)
+        self.assertFalse(any("--retry-unknown" in call for call in calls))
+        self.assertEqual((self.capture / "deployed-head").read_text().strip(), newer)
+
+    def test_optional_failure_cannot_bypass_required_announcement_confirmation(self):
+        queue.enqueue(self.repo, self.state, self.commit, [self.image])
+        newer = self.publish("0.1.4")
+        queue.enqueue(self.repo, self.state, newer, [])
+        original = queue.command
+        def invoke(repo, *args, **kwargs):
+            if args[:2] == ("python3", "deploy/staging/notify-release.py"):
+                raise subprocess.CalledProcessError(1, list(args))
+            return original(repo, *args, **kwargs)
+        with patch.object(queue, "command", side_effect=invoke), self.live():
+            self.assertEqual(queue.work(self.state), 1)
+        self.assertEqual([job["phase"] for job in queue.jobs(self.state)], ["failed", "queued"])
+
+    def test_optional_screenshot_failure_cannot_bypass_live_identity(self):
+        queue.enqueue(self.repo, self.state, self.commit, [self.image])
+        original = queue.command
+        def invoke(repo, *args, **kwargs):
+            if "--screenshot" in args:
+                raise subprocess.CalledProcessError(1, list(args))
+            return original(repo, *args, **kwargs)
+        with patch.object(queue, "command", side_effect=invoke), self.live("a" * 40):
+            self.assertEqual(queue.work(self.state), 1)
+        self.assertEqual(queue.jobs(self.state)[0]["phase"], "failed")
+        self.assertIn("Live release", queue.jobs(self.state)[0]["error"])
+
     def test_failed_release_stops_queue_without_automatic_retry_or_success(self):
         queue.enqueue(self.repo, self.state, self.commit, [])
         newer = self.publish("0.1.4")

@@ -12,7 +12,15 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: customer invoice-history ownership for v0.1.27 (October 6, 2026)
+## Latest manual batch: optional release screenshots for v0.1.28 (October 6, 2026)
+
+A failed optional image can no longer block later staging releases after the main Persian announcement and exact live release are verified. The worker records a durable `screenshot_warning` and rechecks the main note without images. It never retries an unknown image automatically or claims unconfirmed delivery. Required announcement/deployment failures and wrong live identity still stop the queue. All **21** release/notifier tests pass, including real isolated Git/deployment fixtures and three new queue/required-confirmation/live-identity cases. Production web build and both version metadata files, all 85 budgets, formatting and backlog checks pass. No UI or business-engine change; no kanban engine recount. See `kanban/batches/2026-10-06-optional-release-screenshots.md`.
+
+`v0.1.26` is healthy on staging at `84a551d371ce8911a6a25300db948417b057d4bf`. Persian note `78` and restored-profile image `79` are confirmed. Its other image receipt is unknown and remains unconfirmed. This optional error left the old queue failed, so pushed `v0.1.27` remains queued. The private channel's active webhook prevents read-only `getUpdates` inspection; no webhook or unknown-send guard was changed. Human channel confirmation is pending. Preserve the original failure receipts, enqueue this pushed release, then explicitly retry only the diagnosed failed v0.1.26 through the new runner; it must verify required notes/live identity before progressing to v0.1.27 and v0.1.28.
+
+Continue the next customer bank-receipt ownership batch without waiting for CI or deployment. Its scope omits the account and its more-page catch retains private rows after definitive denial; confirm a failing boundary before repairing the native compound-cursor list. Preserve receipt/payment engines and update publication outcomes from external receipts when available.
+
+## Previous manual batch: customer invoice-history ownership for v0.1.27 (October 6, 2026)
 
 Customer invoices now reuse account/profile/query-owned history. Current 401/403 withdraws every page and cursor; explicit retry starts from page one with unpaid/status/search/date/exact amount criteria intact. Account/profile changes mask old rows and fence late replies. Transient/malformed reads retain accepted same-scope pages. An explicit shared-reader option preserves the invoice API's server-session profile selection; the three service APIs retain their explicit profile parameters.
 
