@@ -10,11 +10,11 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 12 | Accepted with unchanged source bindings. |
+| done | 13 | Accepted with unchanged source bindings. |
 | verify | 1290 | Existing work may be complete; inspect evidence before building. |
 | partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 14 | New, concrete work or release checks. |
-| in_progress | 1 | Existing work to finish. |
+| in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 1 | Explicit approved scope disposition. |
 
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish the validated consultation patch, inspect wallet history for a confirmed ownership defect, and inventory the four existing journeys. Reuse matching checks; do not reopen completed business engines.
+Inspect native wallet history ownership, then renew identity and four-service acceptance using current implementation and matching evidence.
 
-- `release-readiness#R-01.03`: Finish the already validated consultation history changes
 - `release-readiness#R-01.02`: Inspect and repair customer wallet history ownership
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
@@ -53,7 +52,7 @@ All four services have a safe browse → intake → review → payment where app
 | --- | --- | --- | --- |
 | `release-readiness#R-01.01` | todo | Inventory needed | Renew identity and all-four-service journey acceptance |
 | `release-readiness#R-01.02` | todo | Inventory needed | Inspect and repair customer wallet history ownership |
-| `release-readiness#R-01.03` | in_progress | Recorded batch work | Finish the already validated consultation history changes |
+| `release-readiness#R-01.03` | done | Recorded batch work | Finish the already validated consultation history changes |
 | `release-readiness#R-01.04` | todo | Inventory needed | Verify four complete customer and staff intake journeys |
 | `release-readiness#R-01.05` | done | Inventory needed | Group release notes and screenshots into at most two Telegram posts |
 | `02-auth-users-admin.md#T-01.01.01` | verify | Earlier acceptance_verified | Register route and shared auth layout |

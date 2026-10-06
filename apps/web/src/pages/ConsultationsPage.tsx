@@ -51,6 +51,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
 import type { SwitcherProfile } from '../components/ProfileSwitcher.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 
 interface Product {
   id: string;
@@ -71,6 +72,15 @@ interface RequestRow {
   accepted_at: string | null;
   offer_valid_until: string | null;
   refund_pending: boolean;
+}
+
+class ConsultationReadError extends Error {
+  constructor(
+    readonly source: 'profile' | 'history',
+    readonly status: number
+  ) {
+    super('Consultation read unavailable');
+  }
 }
 
 export function ConsultationsPage({
@@ -109,12 +119,22 @@ export function ConsultationsPage({
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const actorId = useAccountUser();
-  const [acceptedActor, setAcceptedActor] = useState(actorId);
-  const [profileState, setProfile] = useState<SwitcherProfile | null>(null);
-  const profile = acceptedActor === actorId ? profileState : null;
+  const contextRevision = useProfileContextRevision();
+  const identity = JSON.stringify([actorId, contextRevision]);
+  const currentIdentity = useRef(identity);
+  currentIdentity.current = identity;
+  const currentContext = () =>
+    currentIdentity.current === identity && getProfileContextRevision() === contextRevision;
+  const [profileState, setProfileState] = useState<{
+    owner: string;
+    value: SwitcherProfile | null;
+  }>({ owner: identity, value: null });
+  const profile = profileState.owner === identity ? profileState.value : null;
+  const setProfile = (value: SwitcherProfile | null) => setProfileState({ owner: identity, value });
+  const scope = JSON.stringify([identity, profile?.id ?? null]);
   const [productState, setProducts] = useState<Product[]>([]);
   const [productsScope, setProductsScope] = useState('');
-  const products = productsScope === `${actorId ?? ''}:${profile?.id ?? ''}` ? productState : [];
+  const products = productsScope === scope ? productState : [];
   const statusOptions: Parameters<typeof StatusFilter>[0]['options'] =
     CONSULTATION_REQUEST_STATUSES.map((value) => ({
       value,
@@ -122,21 +142,34 @@ export function ConsultationsPage({
       tone: statusFilterTone(value),
     }));
   const statusesKey = statuses.join(',');
-  const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
+  const historyScope = JSON.stringify([
+    scope,
+    statusesKey,
+    dateRange.from ?? null,
+    dateRange.to ?? null,
+    query.q,
+    query.sort,
+  ]);
+  const historyIdentity = useRef(historyScope);
+  historyIdentity.current = historyScope;
   const {
     items: requests,
     before,
     nextBefore,
     acceptPage,
     loadMore,
-  } = useCursorHistory<RequestRow>(
-    `${profile?.id ?? ''}:${statusesKey}:${rangeKey}:${query.q}:${query.sort}`
-  );
-  const [requestsLoading, setRequestsLoading] = useState(true);
-  const [requestsError, setRequestsError] = useState(false);
+    clear,
+    reset,
+  } = useCursorHistory<RequestRow>(historyScope);
+  const [requestRead, setRequestRead] = useState({
+    scope: historyScope,
+    status: 'loading' as 'loading' | 'ready' | 'error' | 'denied',
+  });
+  const requestStatus = requestRead.scope === historyScope ? requestRead.status : 'loading';
+  const requestsLoading = requestStatus === 'loading';
+  const requestsError = requestStatus === 'error' || requestStatus === 'denied';
   const [requestRevision, setRequestRevision] = useState(0);
   const generation = useRef(0);
-  const scope = `${actorId ?? ''}:${profile?.id ?? ''}`;
   const acceptedScope = useRef(scope);
   if (acceptedScope.current !== scope) {
     acceptedScope.current = scope;
@@ -150,7 +183,7 @@ export function ConsultationsPage({
   const intake = useZodForm<ConsultationIntakeDraft>(
     async () => {
       const schemas = await import('../lib/consultation-form-schemas.js');
-      return schemaGeneration === generation.current
+      return schemaGeneration === generation.current && currentContext()
         ? schemas.intakeSchema(intakeMessages)
         : schemas.inactiveIntakeSchema;
     },
@@ -165,8 +198,13 @@ export function ConsultationsPage({
     copy('submitError')
   );
   const selectedProductId = intake.watch('productId');
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(false);
+  const [profileRead, setProfileRead] = useState({
+    owner: identity,
+    status: 'loading' as 'loading' | 'ready' | 'error' | 'denied',
+  });
+  const profileStatus = profileRead.owner === identity ? profileRead.status : 'loading';
+  const loading = profileStatus === 'loading';
+  const loadError = profileStatus === 'error' || profileStatus === 'denied';
   const [submitError, setSubmitError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const submissionKey = useRef<string | null>(null);
@@ -215,34 +253,54 @@ export function ConsultationsPage({
     catalogue.current.loading = true;
     setProductsRevision((value) => value + 1);
   }
+  async function readProfile(controller: AbortController): Promise<SwitcherProfile | null> {
+    const response = await fetch('/api/profiles', {
+      credentials: 'include',
+      signal: controller.signal,
+    });
+    if (controller.signal.aborted || !currentContext()) throw new Error('Obsolete profile read');
+    if (!response.ok) throw new ConsultationReadError('profile', response.status);
+    const data: unknown = await response.json();
+    if (controller.signal.aborted || !currentContext()) throw new Error('Obsolete profile read');
+    if (
+      !data ||
+      typeof data !== 'object' ||
+      Array.isArray(data) ||
+      !('activeProfileId' in data) ||
+      !('profiles' in data) ||
+      !Array.isArray(data.profiles) ||
+      !(
+        data.activeProfileId === null ||
+        (typeof data.activeProfileId === 'string' && data.activeProfileId.length > 0)
+      )
+    )
+      throw new Error('Invalid profile read');
+    if (data.activeProfileId === null) return null;
+    const selected = data.profiles.find(
+      (row: unknown) =>
+        row && typeof row === 'object' && 'id' in row && row.id === data.activeProfileId
+    );
+    if (!selected) throw new Error('Invalid active profile');
+    return selected as SwitcherProfile;
+  }
+  const denied = (error: unknown) =>
+    error instanceof ConsultationReadError && [401, 403].includes(error.status);
   useEffect(() => {
     const controller = new AbortController();
-    setLoading(true);
-    setLoadError(false);
-    void fetch('/api/profiles', { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('profile');
-        return response.json() as Promise<{
-          activeProfileId: string | null;
-          profiles: SwitcherProfile[];
-        }>;
+    setProfileRead({ owner: identity, status: 'loading' });
+    void readProfile(controller)
+      .then((value) => {
+        if (controller.signal.aborted || !currentContext()) return;
+        setProfile(value);
+        setProfileRead({ owner: identity, status: 'ready' });
       })
-      .then((data) => {
-        if (controller.signal.aborted) return;
-        setAcceptedActor(actorId);
-        setProfile(data.profiles.find((item) => item.id === data.activeProfileId) ?? null);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) {
-          setProfile(null);
-          setLoadError(true);
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+      .catch((error: unknown) => {
+        if (controller.signal.aborted || !currentContext()) return;
+        setProfile(null);
+        setProfileRead({ owner: identity, status: denied(error) ? 'denied' : 'error' });
       });
     return () => controller.abort();
-  }, [profileRevision, actorId]);
+  }, [profileRevision, identity]);
   useEffect(() => {
     if (!profile) return;
     ++catalogueRevision.current;
@@ -260,7 +318,8 @@ export function ConsultationsPage({
         return response.json() as Promise<{ products: Product[] }>;
       })
       .then((data) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || !currentContext() || acceptedScope.current !== scope)
+          return;
         if (
           !Array.isArray(data.products) ||
           !data.products.every(
@@ -275,7 +334,8 @@ export function ConsultationsPage({
         setProductsScope(scope);
       })
       .catch((cause: unknown) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || !currentContext() || acceptedScope.current !== scope)
+          return;
         if (cause instanceof Error && ['401', '403', '404'].includes(cause.message)) {
           setProducts([]);
           setProductsDenied(true);
@@ -286,7 +346,8 @@ export function ConsultationsPage({
         } else setProductsError(true);
       })
       .finally(() => {
-        if (!controller.signal.aborted) setProductsLoading(false);
+        if (!controller.signal.aborted && currentContext() && acceptedScope.current === scope)
+          setProductsLoading(false);
       });
     return () => controller.abort();
   }, [profile, productsRevision]);
@@ -305,49 +366,63 @@ export function ConsultationsPage({
   useEffect(() => {
     if (!profile) return;
     const controller = new AbortController();
-    setRequestsLoading(true);
-    setRequestsError(false);
-    const queryParams = new URLSearchParams({ profileId: profile.id });
-    if (before) queryParams.set('before', before);
-    if (statusesKey) queryParams.set('statuses', statusesKey);
-    if (dateRange.from) queryParams.set('from', dateRange.from);
-    if (dateRange.to) queryParams.set('to', dateRange.to);
-    if (query.q) queryParams.set('q', query.q);
-    if (query.sort !== DEFAULT_HISTORY_SORT) queryParams.set('sort', query.sort);
-    void fetch(`/api/consultations/requests?${queryParams}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('requests');
-        return response.json() as Promise<{ requests: RequestRow[]; nextBefore: string | null }>;
-      })
-      .then((result) => {
-        if (!controller.signal.aborted) {
-          acceptPage(result.requests, result.nextBefore);
-        }
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setRequestsError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setRequestsLoading(false);
+    const fresh = () =>
+      !controller.signal.aborted && currentContext() && historyIdentity.current === historyScope;
+    setRequestRead({ scope: historyScope, status: 'loading' });
+    void (async () => {
+      const selected = await readProfile(controller);
+      if (!fresh()) return;
+      if (selected?.id !== profile.id) {
+        ++generation.current;
+        clear();
+        setProfile(selected);
+        setProfileRead({ owner: identity, status: 'ready' });
+        return;
+      }
+      const queryParams = new URLSearchParams({ profileId: profile.id });
+      if (before) queryParams.set('before', before);
+      if (statusesKey) queryParams.set('statuses', statusesKey);
+      if (dateRange.from) queryParams.set('from', dateRange.from);
+      if (dateRange.to) queryParams.set('to', dateRange.to);
+      if (query.q) queryParams.set('q', query.q);
+      if (query.sort !== DEFAULT_HISTORY_SORT) queryParams.set('sort', query.sort);
+      const response = await fetch(`/api/consultations/requests?${queryParams}`, {
+        credentials: 'include',
+        signal: controller.signal,
       });
+      if (!fresh()) return;
+      if (!response.ok) throw new ConsultationReadError('history', response.status);
+      const result = (await response.json()) as {
+        requests: RequestRow[];
+        nextBefore: string | null;
+      };
+      if (!fresh()) return;
+      if (
+        !Array.isArray(result.requests) ||
+        result.requests.some((row) => !row || typeof row.id !== 'string' || !row.id) ||
+        (result.nextBefore !== null && typeof result.nextBefore !== 'string')
+      )
+        throw new Error('Invalid consultation history');
+      acceptPage(result.requests, result.nextBefore);
+      setRequestRead({ scope: historyScope, status: 'ready' });
+    })().catch((error: unknown) => {
+      if (!fresh()) return;
+      if (denied(error)) {
+        clear();
+        if (error instanceof ConsultationReadError && error.source === 'profile') {
+          ++generation.current;
+          setProfile(null);
+          setProfileRead({ owner: identity, status: 'denied' });
+        }
+      }
+      setRequestRead({ scope: historyScope, status: denied(error) ? 'denied' : 'error' });
+    });
     return () => controller.abort();
-  }, [
-    profile,
-    before,
-    requestRevision,
-    statusesKey,
-    dateRange.from,
-    dateRange.to,
-    query.q,
-    query.sort,
-    acceptPage,
-  ]);
+  }, [profile, before, requestRevision, historyScope, acceptPage, clear]);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     if (
+      !currentContext() ||
       !profile ||
       productsLoading ||
       productsError ||
@@ -363,6 +438,7 @@ export function ConsultationsPage({
     const capturedProfile = profile.id;
     void intake.handleSubmit(async (draft) => {
       if (
+        !currentContext() ||
         capturedGeneration !== generation.current ||
         capturedCatalogue !== catalogueRevision.current ||
         catalogue.current.loading ||
@@ -391,7 +467,7 @@ export function ConsultationsPage({
           body: JSON.stringify(body),
         });
         const result = await response.json().catch(() => null);
-        if (capturedGeneration !== generation.current) return;
+        if (!currentContext() || capturedGeneration !== generation.current) return;
         if (!response.ok) {
           if (
             response.status === 400 &&
@@ -424,12 +500,13 @@ export function ConsultationsPage({
           params: { requestId: result.requestId },
         });
       } catch {
-        if (capturedGeneration === generation.current) {
+        if (currentContext() && capturedGeneration === generation.current) {
           setSubmitError(true);
           setIntakeUnconfirmed(true);
         }
       } finally {
-        if (capturedGeneration === generation.current && !completed) setSubmitting(false);
+        if (currentContext() && capturedGeneration === generation.current && !completed)
+          setSubmitting(false);
       }
     })(event);
   }
@@ -541,7 +618,11 @@ export function ConsultationsPage({
       {loading && <p role="status">{copy('loading')}</p>}
       {loadError && (
         <div role="alert" className="space-y-2">
-          <p>{copy('profileLoadError')}</p>
+          <p>
+            {profileStatus === 'denied'
+              ? t('historyPagination.accessDenied', locale)
+              : copy('profileLoadError')}
+          </p>
           <Button variant="outline" onClick={() => setProfileRevision((value) => value + 1)}>
             {copy('retry')}
           </Button>
@@ -805,10 +886,18 @@ export function ConsultationsPage({
                 loadingView={<p role="status">{copy('loading')}</p>}
                 errorView={
                   <div className="space-y-2">
-                    <p role="alert">{copy('loadError')}</p>
+                    <p role="alert">
+                      {requestStatus === 'denied'
+                        ? t('historyPagination.accessDenied', locale)
+                        : copy('loadError')}
+                    </p>
                     <Button
                       variant="outline"
-                      onClick={() => setRequestRevision((value) => value + 1)}
+                      onClick={() => {
+                        if (!currentContext() || historyIdentity.current !== historyScope) return;
+                        if (requestStatus === 'denied') reset();
+                        setRequestRevision((value) => value + 1);
+                      }}
                     >
                       {copy('retry')}
                     </Button>
@@ -865,7 +954,8 @@ export function ConsultationsPage({
                               </span>
                             )}
                             <span className="block break-all text-xs text-muted-foreground">
-                              {t('historySearch.reference', locale)}: <bdi>{request.id}</bdi>
+                              {t('historySearch.reference', locale)}:{' '}
+                              <bdi dir="ltr">{request.id}</bdi>
                             </span>
                             <time
                               className="mt-2 block text-xs text-muted-foreground"

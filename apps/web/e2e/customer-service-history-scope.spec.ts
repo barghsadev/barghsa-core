@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
+import { tConsultation } from '@barghsa/i18n/consultation';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
@@ -16,6 +17,7 @@ const domains = {
   saving: { path: '/savings/orders', api: '/api/saving/orders', items: 'orders' },
   solar: { path: '/solar/requests', api: '/api/solar/requests', items: 'requests' },
   invoice: { path: '/invoices', api: '/api/invoices', items: 'invoices' },
+  consultation: { path: '/consultations', api: '/api/consultations/requests', items: 'requests' },
   receipt: { path: '/invoices/receipts', api: '/api/invoices/bank-receipts', items: 'items' },
 } as const;
 function row(id: string) {
@@ -45,6 +47,14 @@ function row(id: string) {
     totalKwh: '10',
     totalIrR: '9007199254740993',
     total_amount: '9007199254740993',
+    product_snapshot: { title: { en: 'Consultation', fa: 'مشاوره' } },
+    staff_owner_username: null,
+    staff_team: null,
+    expected_next_step: null,
+    accepted_at: null,
+    offer_valid_until: null,
+    refund_pending: false,
+    invoice_state: null,
     plan_title: { en: 'Saving plan', fa: 'طرح صرفه‌جویی' },
     hardware_title: { en: 'Device', fa: 'تجهیز' },
     bill_identifier: '12345678',
@@ -166,7 +176,11 @@ for (const locale of ['en', 'fa'] as const)
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto(`${config.path}?statuses=${status}`);
       const main = page.getByRole('main').last();
-      const content = main.locator('[data-slot=list-content]');
+      const historyRegion =
+        kind === 'consultation'
+          ? main.getByRole('region', { name: tConsultation('myRequests', locale), exact: true })
+          : main;
+      const content = historyRegion.locator('[data-slot=list-content]');
       const record = (id: string) => content.getByText(id, { exact: true }).first();
       const more = () =>
         main
@@ -220,17 +234,17 @@ for (const locale of ['en', 'fa'] as const)
       ).toEqual([]);
       if (
         locale === 'fa' &&
-        kind === 'receipt' &&
+        kind === 'consultation' &&
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
         await page.setViewportSize({ width: 430, height: 1500 });
         await page.evaluate(() => document.fonts.ready);
-        await main
+        await historyRegion
           .locator('[data-slot=list-page]')
           .locator('..')
           .screenshot({
-            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/receipt-history-denied-fa.png`,
+            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/consultation-history-denied-fa.png`,
           });
         await page.setViewportSize({ width: 390, height: 844 });
       }
@@ -263,6 +277,8 @@ for (const locale of ['en', 'fa'] as const)
       expect(fresh[0]!.get('statuses')).toBe(status);
       await currentHeld!.fulfill({ json: response(current, null) });
       await expect(record(current)).toBeVisible();
+      if (kind === 'consultation')
+        await expect(main).toContainText(locale === 'fa' ? 'پروفایل B' : 'Profile B');
       await obsolete.fulfill({ json: response(older, null) });
       await expect(record(first)).toHaveCount(0);
       await expect(record(older)).toHaveCount(0);
@@ -297,17 +313,17 @@ for (const locale of ['en', 'fa'] as const)
       ).toEqual([]);
       if (
         locale === 'fa' &&
-        kind === 'receipt' &&
+        kind === 'consultation' &&
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
         await page.setViewportSize({ width: 430, height: 1500 });
         await page.evaluate(() => document.fonts.ready);
-        await main
+        await historyRegion
           .locator('[data-slot=list-page]')
           .locator('..')
           .screenshot({
-            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/receipt-history-profile-fa.png`,
+            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/consultation-history-profile-fa.png`,
           });
       }
     });

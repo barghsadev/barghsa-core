@@ -2564,7 +2564,7 @@
       "version": "0.2.0",
       "title": "Complete customer journeys",
       "goal": "All four services have a safe browse → intake → review → payment where applicable → status path, with correct account/profile ownership and clear next actions.",
-      "status": "planned",
+      "status": "in_progress",
       "depends_on": [],
       "gates": [
         "Four customer/staff journeys pass against production builds in Persian and English.",
@@ -65281,18 +65281,49 @@
         "Reuse its 40 source and 30 distinct browser passes only where final source and fixtures still match.",
         "Review and commit the patch into this milestone; do not publish a separate per-batch v0.1.30."
       ],
-      "status": "in_progress",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Preserve the uncommitted changes from the former v0.1.30 batch.",
-        "Reuse its 40 source and 30 distinct browser passes only where final source and fixtures still match.",
-        "Review and commit the patch into this milestone; do not publish a separate per-batch v0.1.30."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "reviewed-preserved-patch",
+          "reviewed_sha": "fa117bc6faa679ae009c6e2db3af74aadde1fbd7",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/ConsultationsPage.tsx",
+              "sha256": "afa72e3c7598f3a8ee2decd52aed61204242e74e3f93b1bee2a8ce8c2a6c53a5"
+            },
+            {
+              "path": "apps/web/src/pages/customer-consultation-history-scope.test.tsx",
+              "sha256": "2284034d860b30bdaf41c32a9c1de828ee6f6c24627bbdf62821abc7217e27c9"
+            },
+            {
+              "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
+              "sha256": "26ea8f5e3e992151e8a9d6bf029fe92d8aff7ba0d1dad2f290e3e6368af3fe7d"
+            },
+            {
+              "path": "apps/web/e2e/customer-service-history-scope.spec.ts",
+              "sha256": "4c3ca43f3ee94e4a3076eaecafd3548642ac1a1084ca3e31272add86ad3ef93a"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "6e5c69eb627956b64752b25f840981ee2b9c481b65afbbbd192371d49e11bf99"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorHistory.ts",
+              "sha256": "d3dc62a9ae2db9fddfeb790d12be0762eebaa02edb187017a6a1925d365ab8e0"
+            }
+          ],
+          "checks": [
+            "40 actual source cases passed in five files; unchanged product/test/config/lock sources since fcd7678 allow reuse. Receipt: /Users/majid/.local/state/barghsa-manual-batches/customer-consultation-history-scope/source-final.json",
+            "30 distinct Chromium/mobile Safari cases reconciled from 28 retained passes and two final targeted passes; stopped suites are not claimed green. All 495 compiled assets and the i18n dictionary match. Receipt: /Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation/reuse.json",
+            "Existing web typecheck, focused/root lint, build, route budgets and formatting receipts inspected and reused for unchanged application source. Whole consultation task acceptance remains separately scoped."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
+        },
         "batches": [
           "2026-10-06-customer-consultation-history-scope"
         ]
@@ -72172,7 +72203,7 @@
   ],
   "pending_work": {
     "former_version": "0.1.30",
-    "disposition": "Uncommitted validated consultation patch; finish inside 0.2.0. Preserve application/version/fixture work while this planning cleanup is committed independently.",
+    "disposition": "Consultation history application patch reviewed and included in the v0.2.0 workstream. Unpublished v0.1.30 package/notes and recovery patch archived externally; root version remains last released 0.1.29 until milestone acceptance.",
     "validation": "40 source cases; 30 distinct browser cases from retained 28 passes and final two targeted passes. Both Persian images reviewed. No push or release enqueue occurred.",
     "external_evidence": "~/.local/state/barghsa-manual-batches/customer-consultation-history-scope/",
     "source_hashes": {
@@ -72183,20 +72214,13 @@
       "package.json": "0881aa80fd3ca44a27c4afd700415253e38573f57b54bb20d175db85e9f1c5a1",
       "releases/0.1.30.md": "97b262ddf4deae0c6d767ed2d06f56dad98cb20bbb05d63541598aad824acb36"
     },
-    "recovery_patch": {
-      "path": "kanban/pending/consultation-history.patch.gz",
-      "sha256": "e3ef41eababc7c2852f718a8107b0ba09cb54c6006f129cd4b6de5584ecd607c",
-      "base_commit": "fcd7678ba742fbbaa7cd0907471f3f2aec86bb82",
-      "instruction": "Owner checkout already contains these changes. Elsewhere decompress with gzip -dc, then git apply --check before applying. Remove recovery artifact when the actual source is committed into v0.2.0.",
-      "uncompressed_sha256": "92cd29abbb7118430c885a4c0adb0cc99e25bf90b3153bf26cb554d63b965c36"
-    }
+    "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
     "id": "release-0.2-history-and-acceptance",
     "release": "0.2.0",
-    "goal": "Finish the validated consultation patch, inspect wallet history for a confirmed ownership defect, and inventory the four existing journeys. Reuse matching checks; do not reopen completed business engines.",
+    "goal": "Inspect native wallet history ownership, then renew identity and four-service acceptance using current implementation and matching evidence.",
     "task_keys": [
-      "release-readiness#R-01.03",
       "release-readiness#R-01.02",
       "release-readiness#R-01.01"
     ]

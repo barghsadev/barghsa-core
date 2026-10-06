@@ -632,3 +632,63 @@ it.each(['denied-write', 'malformed-read'] as const)(
     }
   }
 );
+
+it('history denial preserves an unconfirmed intake and its exact original retry body', async () => {
+  const writes: unknown[] = [];
+  let denied = false;
+  const view = await mount(ConsultationsPage, async (url, options) => {
+    if (options?.method === 'POST') {
+      writes.push(JSON.parse(String(options.body)));
+      return Response.json(
+        writes.length === 1 ? {} : { requestId: browseRequestId, status: 'submitted' }
+      );
+    }
+    if (url.includes('/requests?'))
+      return denied
+        ? new Response('{}', { status: 403 })
+        : Response.json({
+            requests: [
+              {
+                id: browseRequestId,
+                status: 'submitted',
+                product_snapshot: { title: browseConsultation.title },
+                submitted_at: '2026-10-01T09:00:00Z',
+                staff_owner_username: null,
+                staff_team: null,
+                expected_next_step: null,
+                invoice_id: null,
+                invoice_state: null,
+                accepted_at: null,
+                offer_valid_until: null,
+                refund_pending: false,
+              },
+            ],
+            nextBefore: browseRequestId,
+          });
+    return Response.json(read(url));
+  });
+  try {
+    await view.select();
+    await view.submit();
+    await vi.waitFor(() => expect(view.host.textContent).toContain(copy('intakeUnconfirmed')));
+    denied = true;
+    await act(async () =>
+      view.host.querySelector<HTMLButtonElement>('nav[aria-label="History pages"] button')!.click()
+    );
+    await vi.waitFor(() =>
+      expect(view.host.querySelector('[data-slot=list-content] [role=alert]')).not.toBeNull()
+    );
+    expect(view.host.textContent).toContain(copy('intakeUnconfirmed'));
+    expect(view.host.querySelector('input[type=radio]')?.hasAttribute('disabled')).toBe(true);
+    expect(writes).toHaveLength(1);
+    await view.submit();
+    await vi.waitFor(() => expect(writes).toHaveLength(2));
+    expect(writes[1]).toEqual(writes[0]);
+    expect(routing.navigate).toHaveBeenCalledWith({
+      to: '/consultations/$requestId',
+      params: { requestId: browseRequestId },
+    });
+  } finally {
+    await view.close();
+  }
+});
