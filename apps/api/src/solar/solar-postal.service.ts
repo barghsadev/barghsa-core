@@ -44,7 +44,14 @@ async function audit(
   await client.query(
     `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
      VALUES($1,$2,$3,$4::jsonb,$5,$6)`,
-    [uuidv7(), actor.userId, event, JSON.stringify(metadata), uuidv7(), ip]
+    [
+      uuidv7(),
+      actor.userId,
+      event,
+      JSON.stringify({ actor: actor.userId, ...metadata }),
+      uuidv7(),
+      ip,
+    ]
   );
 }
 
@@ -69,11 +76,13 @@ export class SolarPostalService {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'admin:catalogue:edit');
       await requireSessionStepUp(client, actor);
-      await client.query(
+      const savedGuidance = await client.query<{ version: number }>(
         `INSERT INTO app_config(key,value,version,updated_at) VALUES($1,$2::jsonb,1,NOW())
-         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=app_config.version+1,updated_at=NOW()`,
+         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=app_config.version+1,updated_at=NOW() RETURNING version`,
         [GUIDANCE_KEY, JSON.stringify(value)]
       );
+      const guidanceVersion = savedGuidance.rows[0]?.version;
+      if (!guidanceVersion) throw new ConflictException('Postal guidance was not saved');
       await client.query(
         "UPDATE config_version SET version=version+1,updated_at=NOW() WHERE id='global'"
       );
@@ -81,7 +90,14 @@ export class SolarPostalService {
         client,
         actor,
         'solar.postal_guidance.updated',
-        { originals: value.originals.length },
+        {
+          entity: 'app_config',
+          entityId: GUIDANCE_KEY,
+          fromState: guidanceVersion === 1 ? null : guidanceVersion - 1,
+          toState: guidanceVersion,
+          reason: null,
+          originals: value.originals.length,
+        },
         ip
       );
       await client.query('COMMIT');
@@ -168,8 +184,8 @@ export class SolarPostalService {
       if (request.status !== 'waiting_for_postal_submission')
         throw new ConflictException('Postal submission is not available');
       const postal = (
-        await client.query<{ status: string }>(
-          'SELECT status FROM solar_construction_postal WHERE request_id=$1 FOR UPDATE',
+        await client.query<{ id: string; status: string }>(
+          'SELECT id,status FROM solar_construction_postal WHERE request_id=$1 FOR UPDATE',
           [requestId]
         )
       ).rows[0];
@@ -208,6 +224,14 @@ export class SolarPostalService {
         actor,
         'solar.postal.shipped',
         {
+          entity: 'solar_construction_postal',
+          entityId: postal.id,
+          fromState: postal.status,
+          toState: 'shipped',
+          reason: null,
+          profileId: request.profile_id,
+          requestFromState: request.status,
+          requestToState: request.status,
           requestId,
           courier: input.courier,
           trackingNumber: input.trackingNumber,
@@ -296,13 +320,14 @@ export class SolarPostalService {
       throw new ConflictException('Postal review is not active');
     const postal = (
       await client.query<{
+        id: string;
         status: string;
         courier: string | null;
         tracking_number: string | null;
         send_date: string | null;
         receipt_image_id: string | null;
       }>(
-        `SELECT status,courier,tracking_number,send_date::date::text AS send_date,receipt_image_id
+        `SELECT id,status,courier,tracking_number,send_date::date::text AS send_date,receipt_image_id
          FROM solar_construction_postal WHERE request_id=$1 FOR ${lock}`,
         [requestId]
       )
@@ -329,7 +354,7 @@ export class SolarPostalService {
         createsInvoice: false,
       }
     );
-    return { request, review, decisionReason, requestOutcome };
+    return { request, postal, review, decisionReason, requestOutcome };
   }
 
   async reviewDecision(
@@ -372,13 +397,8 @@ export class SolarPostalService {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
       await requireSessionStepUp(client, actor);
-      const { request, review, decisionReason, requestOutcome } = await this.postalDecisionSnapshot(
-        client,
-        requestId,
-        decision,
-        reason,
-        'UPDATE'
-      );
+      const { request, postal, review, decisionReason, requestOutcome } =
+        await this.postalDecisionSnapshot(client, requestId, decision, reason, 'UPDATE');
       this.reviews.assertConfirmed(review, expectedReviewHash);
       await client.query(
         `UPDATE solar_construction_postal SET status=$2,staff_notes=$3,
@@ -423,7 +443,18 @@ export class SolarPostalService {
         client,
         actor,
         `solar.postal.${decision}`,
-        { requestId, reason: decisionReason ?? null, financialReview: review },
+        {
+          entity: 'solar_construction_postal',
+          entityId: postal.id,
+          fromState: postal.status,
+          toState: decision,
+          profileId: request.profile_id,
+          requestFromState: request.status,
+          requestToState: requestOutcome,
+          requestId,
+          reason: decisionReason ?? null,
+          financialReview: review,
+        },
         ip
       );
       await client.query('COMMIT');

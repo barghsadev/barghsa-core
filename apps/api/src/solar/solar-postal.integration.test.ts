@@ -1,3 +1,8 @@
+import {
+  expectSolarAudit,
+  expectSolarPostalAudit,
+  expectSolarAuditRollback,
+} from '../test/solar-audit.js';
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
@@ -1094,10 +1099,21 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     contactDetails: '+1 555 0100',
     originals: [{ fa: 'سند', en: 'Deed' }],
   };
+  await expectSolarAuditRollback(http.pool, 'solar.postal_guidance.updated', () =>
+    send('postal-reviewer', 'admin/solar/postal-guidance', 'PUT', guidance)
+  );
   expect(
     (await send('postal-reviewer', 'admin/solar/postal-guidance', 'PUT', guidance)).status,
     http.logs()
   ).toBe(200);
+  await expectSolarAudit(http.pool, 'solar.postal_guidance.updated', 'solar.postal_guidance', {
+    entity: 'app_config',
+    fromState: null,
+    toState: 1,
+    reason: null,
+    actor: 'postal-reviewer',
+    originals: 1,
+  });
   expect(
     await (await send('postal-buyer', `solar/requests/${requestId}/postal`)).json()
   ).toMatchObject({ guidance, postal: { status: 'waiting_for_shipment' } });
@@ -1146,6 +1162,9 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       })
     ).status
   ).toBe(400);
+  await expectSolarAuditRollback(http.pool, 'solar.postal.shipped', () =>
+    send('postal-buyer', `solar/requests/${requestId}/postal/shipment`, 'POST', shipment)
+  );
   const shipped = await send(
     'postal-buyer',
     `solar/requests/${requestId}/postal/shipment`,
@@ -1222,6 +1241,12 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       )
     ).status
   ).toBe(409);
+  await expectSolarAuditRollback(http.pool, 'solar.postal.incomplete', () =>
+    send('postal-reviewer', `admin/solar/requests/${requestId}/postal/mark-incomplete`, 'POST', {
+      reason: 'Please send the signed original.',
+      expectedReviewHash: incompleteReview.hash,
+    })
+  );
   const incomplete = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/mark-incomplete`,
@@ -1229,6 +1254,15 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     { reason: 'Please send the signed original.', expectedReviewHash: incompleteReview.hash }
   );
   expect(incomplete.status, http.logs()).toBe(200);
+  await expectSolarPostalAudit(http.pool, 'solar.postal.incomplete', requestId, {
+    fromState: 'shipped',
+    toState: 'incomplete',
+    reason: 'Please send the signed original.',
+    actor: 'postal-reviewer',
+    profileId,
+    requestFromState: 'waiting_for_postal_submission',
+    requestToState: 'waiting_for_postal_submission',
+  });
   expect(
     await (await send('postal-buyer', `solar/requests/${requestId}/postal`)).json()
   ).toMatchObject({
@@ -1298,6 +1332,11 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     trackingNumber: 'TRACK-789',
     requestOutcome: 'postal_documents_received',
   });
+  await expectSolarAuditRollback(http.pool, 'solar.postal.received', () =>
+    send('postal-reviewer', `admin/solar/requests/${requestId}/postal/confirm-received`, 'POST', {
+      expectedReviewHash: receivedReview.hash,
+    })
+  );
   const received = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/confirm-received`,
@@ -1305,6 +1344,36 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     { expectedReviewHash: receivedReview.hash }
   );
   expect(received.status, http.logs()).toBe(200);
+  await expectSolarPostalAudit(http.pool, 'solar.postal.received', requestId, {
+    fromState: 'shipped',
+    toState: 'received',
+    reason: null,
+    actor: 'postal-reviewer',
+    profileId,
+    requestFromState: 'waiting_for_postal_submission',
+    requestToState: 'postal_documents_received',
+  });
+  await expectSolarPostalAudit(http.pool, 'solar.postal.not_received', requestId, {
+    fromState: 'shipped',
+    toState: 'not_received',
+    reason: 'Courier could not locate it.',
+    actor: 'postal-reviewer',
+  });
+  for (const [fromState, trackingNumber] of [
+    ['waiting_for_shipment', 'TRACK-123'],
+    ['incomplete', 'TRACK-456'],
+    ['not_received', 'TRACK-789'],
+  ])
+    await expectSolarPostalAudit(http.pool, 'solar.postal.shipped', requestId, {
+      fromState,
+      toState: 'shipped',
+      reason: null,
+      actor: 'postal-buyer',
+      trackingNumber,
+      profileId,
+      requestFromState: 'waiting_for_postal_submission',
+      requestToState: 'waiting_for_postal_submission',
+    });
   expect(await received.json()).toMatchObject({
     status: 'received',
     requestStatus: 'postal_documents_received',
@@ -1343,12 +1412,22 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     (await send('postal-buyer', `admin/solar/requests/${requestId}/start-final-review`, 'POST'))
       .status
   ).toBe(403);
+  await expectSolarAuditRollback(http.pool, 'solar.final.review_started', () =>
+    send('postal-reviewer', `admin/solar/requests/${requestId}/start-final-review`, 'POST')
+  );
   const reviewStarted = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/start-final-review`,
     'POST'
   );
   expect(reviewStarted.status, http.logs()).toBe(200);
+  await expectSolarAudit(http.pool, 'solar.final.review_started', requestId, {
+    entity: 'solar_construction_request',
+    fromState: 'postal_documents_received',
+    toState: 'final_review',
+    reason: null,
+    actor: 'postal-reviewer',
+  });
   expect(await reviewStarted.json()).toMatchObject({ status: 'final_review' });
   expect(await (await send('postal-buyer', `solar/requests/${requestId}`)).json()).toMatchObject({
     request: { status: 'final_review' },
@@ -1404,6 +1483,11 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       })
     ).status
   ).toBe(409);
+  await expectSolarAuditRollback(http.pool, 'solar.final.approve', () =>
+    send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST', {
+      expectedReviewHash: approvalReview.hash,
+    })
+  );
   const approved = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/final-approve`,
@@ -1411,6 +1495,13 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     { expectedReviewHash: approvalReview.hash }
   );
   expect(approved.status, http.logs()).toBe(200);
+  await expectSolarAudit(http.pool, 'solar.final.approve', requestId, {
+    entity: 'solar_construction_request',
+    fromState: 'final_review',
+    toState: 'approved',
+    reason: null,
+    actor: 'postal-reviewer',
+  });
   expect(await approved.json()).toMatchObject({ status: 'approved' });
   expect(
     await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
@@ -1447,6 +1538,12 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   ).toBe(409);
   const closeReview = await reviewFinal(requestId, 'close-no-contract', 'Site cannot proceed.');
   expect(closeReview.data).toMatchObject({ currentStatus: 'approved', outcome: 'cancelled' });
+  await expectSolarAuditRollback(http.pool, 'solar.final.close-no-contract', () =>
+    send('postal-reviewer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
+      reason: 'Site cannot proceed.',
+      expectedReviewHash: closeReview.hash,
+    })
+  );
   const closed = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/close-no-contract`,
@@ -1454,6 +1551,13 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     { reason: 'Site cannot proceed.', expectedReviewHash: closeReview.hash }
   );
   expect(closed.status, http.logs()).toBe(200);
+  await expectSolarAudit(http.pool, 'solar.final.close-no-contract', requestId, {
+    entity: 'solar_construction_request',
+    fromState: 'approved',
+    toState: 'cancelled',
+    reason: 'Site cannot proceed.',
+    actor: 'postal-reviewer',
+  });
   expect(await closed.json()).toMatchObject({ status: 'cancelled' });
   expect(await (await send('postal-buyer', `solar/requests/${requestId}`)).json()).toMatchObject({
     request: {
@@ -1565,6 +1669,12 @@ it('rejects a final solar request with a customer-visible reason after postal re
       })
     ).status
   ).toBe(409);
+  await expectSolarAuditRollback(http.pool, 'solar.final.reject', () =>
+    send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
+      reason: '  The project cannot proceed.  ',
+      expectedReviewHash: rejectionReview.hash,
+    })
+  );
   const rejected = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/final-reject`,
@@ -1575,6 +1685,13 @@ it('rejects a final solar request with a customer-visible reason after postal re
     }
   );
   expect(rejected.status, http.logs()).toBe(200);
+  await expectSolarAudit(http.pool, 'solar.final.reject', id, {
+    entity: 'solar_construction_request',
+    fromState: 'final_review',
+    toState: 'rejected',
+    reason: 'The project cannot proceed.',
+    actor: 'postal-reviewer',
+  });
   expect(await rejected.json()).toMatchObject({ status: 'rejected' });
   expect(await (await send('postal-buyer', `solar/requests/${id}`)).json()).toMatchObject({
     request: {
@@ -1656,3 +1773,51 @@ it('pages more than 100 postal requests without repeating tied timestamps', asyn
   expect(secondPage.nextBefore).toBeNull();
   expect(firstPage.requests.some((row) => row.id === secondPage.requests[0]!.id)).toBe(false);
 }, 90_000);
+
+it('audits guidance version changes and rolls back skipped writes and audit failures before a corrected retry', async () => {
+  const guidance = {
+    fa: 'ارسال اصل مدارک',
+    en: 'Send original documents',
+    destinationAddress: 'Updated office',
+    contactDetails: 'Support',
+    originals: [{ fa: 'اصل سند', en: 'Original deed' }],
+  };
+  const snapshot = async () =>
+    (
+      await http.pool.query(
+        `SELECT (SELECT to_jsonb(c) FROM app_config c WHERE key='solar.postal_guidance') AS guidance,(SELECT to_jsonb(c) FROM config_version c WHERE id='global') AS global,(SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM audit_log a WHERE event='solar.postal_guidance.updated') AS audits`
+      )
+    ).rows[0];
+  const before = await snapshot();
+  await http.pool.query(
+    `CREATE FUNCTION skip_postal_guidance_write() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.key='solar.postal_guidance' THEN RETURN NULL; END IF; RETURN NEW; END $$;CREATE TRIGGER skip_postal_guidance_write BEFORE INSERT ON app_config FOR EACH ROW EXECUTE FUNCTION skip_postal_guidance_write()`
+  );
+  try {
+    const response = await send('postal-reviewer', 'admin/solar/postal-guidance', 'PUT', guidance);
+    expect(response.status, http.logs()).toBe(409);
+    expect(await snapshot()).toEqual(before);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER skip_postal_guidance_write ON app_config;DROP FUNCTION skip_postal_guidance_write()'
+    );
+  }
+  await expectSolarAuditRollback(http.pool, 'solar.postal_guidance.updated', () =>
+    send('postal-reviewer', 'admin/solar/postal-guidance', 'PUT', guidance)
+  );
+  expect(
+    (await send('postal-reviewer', 'admin/solar/postal-guidance', 'PUT', guidance)).status,
+    http.logs()
+  ).toBe(200);
+  await expectSolarAudit(http.pool, 'solar.postal_guidance.updated', 'solar.postal_guidance', {
+    entity: 'app_config',
+    fromState: before.guidance.version,
+    toState: before.guidance.version + 1,
+    reason: null,
+    actor: 'postal-reviewer',
+    originals: 1,
+  });
+  const after = await snapshot();
+  expect(after.guidance.value).toEqual(guidance);
+  expect(after.global.version).toBe(before.global.version + 1);
+  expect(after.audits.slice(0, -1)).toEqual(before.audits);
+});

@@ -1,3 +1,4 @@
+import { expectSolarAudit, expectSolarAuditRollback } from '../test/solar-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -200,8 +201,22 @@ it('records three ordered milestones and exposes the same authorized customer ti
   );
   for (const [revision, stage] of ['in_progress', 'delivered', 'installed'].entries()) {
     const input = await preview(f, command(revision, stage));
+    if (revision === 0)
+      await expectSolarAuditRollback(http.pool, 'solar.construction.recorded', () =>
+        record(f, input)
+      );
     const response = await record(f, input);
     expect(response.status, (await response.clone().text()) + http.logs()).toBe(200);
+    await expectSolarAudit(http.pool, 'solar.construction.recorded', f.request, {
+      entity: 'solar_construction_progress',
+      fromState: revision === 0 ? null : ['in_progress', 'delivered'][revision - 1],
+      toState: stage,
+      reason: input.note,
+      actor: f.actor,
+      profileId: f.profile,
+      revision: revision + 1,
+      operationId: input.operationId,
+    });
     const value = (await response.json()) as Progress;
     expect(value.revision).toBe(revision + 1);
     expect(value.events.at(-1)).toMatchObject({

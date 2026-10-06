@@ -1,3 +1,4 @@
+import { expectSolarAudit, expectSolarAuditRollback } from '../test/solar-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import type { SolarPostalTrackingCommand } from './solar-postal-tracking.validation.js';
@@ -194,8 +195,26 @@ it('records a reviewed public update once, preserves the shipment stage, and exp
     createsContract: false,
     collectsPayment: false,
   });
+  await expectSolarAuditRollback(http.pool, 'solar.postal.tracking_updated', () =>
+    record(f, input)
+  );
   const saved = await record(f, input);
   expect(saved.status, (await saved.clone().text()) + http.logs()).toBe(200);
+  await expectSolarAudit(http.pool, 'solar.postal.tracking_updated', f.request, {
+    entity: 'solar_postal_tracking',
+    fromState: { revision: 0, estimatedArrivalDate: null, trackingUrl: null, note: null },
+    toState: {
+      revision: 1,
+      estimatedArrivalDate: input.estimatedArrivalDate,
+      trackingUrl: input.trackingUrl,
+      note: input.note,
+    },
+    reason: input.note,
+    actor: f.actor,
+    profileId: f.profile,
+    postalFromState: 'shipped',
+    postalToState: 'shipped',
+  });
   const result = await saved.json();
   expect(result).toMatchObject({
     revision: 1,

@@ -264,6 +264,12 @@ export class SolarProgressService {
               uuidv7(),
               actor.userId,
               JSON.stringify({
+                entity: 'solar_construction_progress',
+                entityId: id,
+                fromState: review.data.previousStage,
+                toState: command.stage,
+                reason: command.note,
+                actor: actor.userId,
                 requestId: id,
                 profileId: request.profile_id,
                 stage: command.stage,

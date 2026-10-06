@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T21:43:36Z",
-  "source_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+  "updated": "2026-10-06T21:51:09Z",
+  "source_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -20533,7 +20533,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -20777,6 +20777,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-postal.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         },
         "solar_address_checkpoint": {
@@ -43474,7 +43482,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -43586,6 +43594,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -43729,7 +43745,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-progress.integration.test.ts",
-              "sha256": "77a667acb89237aa1726a68c2c59f686d706a1bce877f636ef53f6c66aea0e0d"
+              "sha256": "d11a3acf995d11493050876ef8c440117c26002c42ef3a7045bf826019956a4f"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -44212,6 +44228,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
             "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-progress.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -44355,7 +44379,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-progress.integration.test.ts",
-              "sha256": "77a667acb89237aa1726a68c2c59f686d706a1bce877f636ef53f6c66aea0e0d"
+              "sha256": "d11a3acf995d11493050876ef8c440117c26002c42ef3a7045bf826019956a4f"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -44838,6 +44862,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
             "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-progress.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -95780,15 +95812,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -95924,6 +95956,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -95965,15 +96007,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -96109,6 +96151,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -96150,15 +96202,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -96294,6 +96346,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -96337,15 +96399,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -96481,6 +96543,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -96529,7 +96601,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/finance/review-snapshot.service.ts",
@@ -96656,6 +96728,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-postal.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -96706,7 +96786,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/finance/review-snapshot.service.ts",
@@ -96833,6 +96913,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-postal.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -96874,15 +96962,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -97018,6 +97106,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -97059,15 +97157,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -97203,6 +97301,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -97244,15 +97352,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -97388,6 +97496,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -97430,15 +97548,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -97574,6 +97692,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -97616,15 +97744,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -97760,6 +97888,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -97803,15 +97941,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -97947,6 +98085,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -97994,15 +98142,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -98138,6 +98286,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -98179,15 +98337,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -98323,6 +98481,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -98364,15 +98532,15 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -98508,6 +98676,16 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/renewal-proof.json",
             "scope": "Existing criteria, handlers, captured commands and customer funding default preserved; new read-only wallet disclosure/current finance gate verified by affected checks. No unrelated criterion or task acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts",
+              "apps/api/src/solar/solar-postal.integration.test.ts",
+              "apps/api/src/solar/solar-postal.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -99816,12 +99994,10 @@
         "story": "03-core-business.md#spec-1f864f6cdb9b"
       },
       "requirement": "| **T-03.90.03** | Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata. | L |",
-      "status": "partial",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Normalize and verify solar progress/final/postal audit families."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -99840,11 +100016,12 @@
           "release-0.2-electricity-system-audit",
           "release-0.2-saving-transition-audit",
           "release-0.2-saving-system-audit",
-          "release-0.2-consultation-settlement-audit"
+          "release-0.2-consultation-settlement-audit",
+          "release-0.2-solar-transition-audit"
         ],
         "current_acceptance": {
-          "kind": "accepted-saving-system-manual-electricity-contract-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
-          "reviewed_sha": "83497b35b6b4ed8cdf739cb02be627e3a45db219",
+          "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
+          "reviewed_sha": "ced68204f6ea701c3260859d0fb0da01c175bde5",
           "source_evidence": [
             {
               "path": "README.md",
@@ -99872,7 +100049,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-state.ts",
-              "sha256": "c12d0a1d7471340ccf6f611a7b815dc155a57c2a254e309671a1a6c614509ef2"
+              "sha256": "ff346d1d1dbed8433f3b5d4510d238951c9c2ce17cdf6cb1ad3520f38bf8e086"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -99884,7 +100061,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order-status.ts",
-              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+              "sha256": "bcb8520565e30d24642802e57bd3ab9e5fc8c429fc8bdf10e2778221296bcc7e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -100217,6 +100394,46 @@
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
               "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
+              "sha256": "f31d220851bc2ef03260c8eb659f458274051a72c37c61fada23acf00869a0d6"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "812b1a0f8139cb2ce180baf23a73f0bdc4c196277a7555713da70ef8389c0576"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress.integration.test.ts",
+              "sha256": "d11a3acf995d11493050876ef8c440117c26002c42ef3a7045bf826019956a4f"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress.service.ts",
+              "sha256": "fdc2fd327a7dad27453f5a9d0183ec5eb979a04d8e2eff90c9cf92badf6f52fd"
+            },
+            {
+              "path": "apps/api/src/test/solar-audit.ts",
+              "sha256": "b18cd34156300ab3987b9d9315dc14445f6ab4992fc3158deea63be341f3fa8f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/common/business-transition.ts",
+              "sha256": "80d32fbfc43a8dc8551b4b87de4238eb01435fa9bddf6d220394c1ffd31a546d"
             }
           ],
           "checks": [
@@ -100384,9 +100601,25 @@
             "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/sast.json",
             "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/contract.json",
             "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/review.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/build-reviewed.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/http-reviewed.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/http-postal-final.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/types-accepted.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/lint-reviewed.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/lint-postal-final.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/format.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/sast.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/sast-progress.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/contract.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/models.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/accepted-outcomes.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/state-model-renewal-proof.json"
           ],
-          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open. Paid consultation settlement now records consultation entity/id, actual locked offer_pending→offer_accepted state, acceptance/payment actor, profile and reason alongside existing invoice/acceptedBy provenance.11 payment/workflow outcomes preserve135 original payment-test expects; both payment/acceptance orders verify mandatory-audit rollback/retry and duplicate/unmatched/unaccepted no-op boundaries. Only solar progress/final/postal audit families remain open.",
+          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open. Paid consultation settlement now records consultation entity/id, actual locked offer_pending→offer_accepted state, acceptance/payment actor, profile and reason alongside existing invoice/acceptedBy provenance.11 payment/workflow outcomes preserve135 original payment-test expects; both payment/acceptance orders verify mandatory-audit rollback/retry and duplicate/unmatched/unaccepted no-op boundaries. Only solar progress/final/postal audit families remain open. Solar progress/final/postal/shipment/tracking and versioned guidance audit families now record actual entity/key and prior/new state with actor/reason and existing timestamp/correlation provenance. Postal records use their actual locked UUID; progress/tracking aggregates use their actual request key.27 solar and4 model cases pass, with11 audit-failure rollback/retries plus a skipped guidance write probe.362 original expectations retained. Historical state bindings renewed through exact-hash lookup and324 valid-pair comparisons. All explicitly remaining audit families are accepted; this task does not certify broader service journey, schema, identity, operational or release gates.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
           "submission_audit_renewal": {
             "base_commit": "ed058a6c37f6ee3692e2934d21e3456399705134",
@@ -100472,6 +100705,11 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
             "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
+          },
+          "state_model_audit_binding_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/state-model-renewal-proof.json",
+            "checks": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/models.json",
+            "scope": "Exact historical hashes located.243 valid consultation actor/state pairs unchanged;81 electricity pairs differ only by previously accepted draft rejection/cancellation edges. Invalid runtime states/actors reject. No new acceptance of broader terminal or schema requirements."
           }
         }
       }
@@ -102363,7 +102601,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-state.ts",
@@ -102492,6 +102730,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -103366,7 +103612,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-final.service.ts",
-              "sha256": "e211e88d01377fe993eb260d276b6272e98fe968bcc7aa2589a51536eae4271d"
+              "sha256": "5339fdd89620aaaf3a1d28b56a0d77b9feab64b198c9b1d91c9699d1ea1e65bb"
             },
             {
               "path": "apps/api/src/solar/solar-state.ts",
@@ -103495,6 +103741,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-transition-audit/renewal-proof.json",
             "scope": "Manual saving metadata and required audits of actual stage events/resets, with skipped-write acknowledgements. All original financial/auth/command/DTO behavior, SQL write inputs and438 expect calls retained;38 final related outcomes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "solar_transition_audit_renewal": {
+            "base_commit": "ced68204f6ea701c3260859d0fb0da01c175bde5",
+            "changed_paths": [
+              "apps/api/src/solar/solar-final.service.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit/renewal-proof.json",
+            "scope": "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred."
           }
         }
       }
@@ -134432,6 +134686,22 @@
         "General audit task remains partial for solar progress/final/postal. No milestone accepted, staging enqueue/Telegram receipt or production deployment."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit"
+    },
+    "release-0.2-solar-transition-audit": {
+      "title": "Solar progress, final review and postal audit acceptance",
+      "task_keys": [
+        "03-core-business.md#T-03.90.03"
+      ],
+      "summary": "Accepted the remaining solar audit families and completed the core business audit task against cumulative source-bound event-family evidence. Broader release gates remain unresolved.",
+      "validation": [
+        "Six solar audit payloads plus postal actor metadata. Actual locked postal UUID/state and request transition, progress/tracking aggregate keys and previous/new field/milestone state retained. Original362 test expects and public DTOs, write inputs, financial/auth/lock/idempotency behavior preserved;2 postal id projections/private provenance and guidance RETURNING/acknowledgement only other changes.31 distinct related cases plus324 state-model comparisons; no unrelated terminal/schema/release acceptance inferred.",
+        "Guidance UPSERT returns actual version; absent write acknowledgement rejects before global version/audit. Both creation null→1 and later version increment, skipped INSERT and failed audit recovery preserve prior immutable rows. Shipments record locked postal UUID and actual waiting/incomplete/not_received→shipped states. Receipt/issues retain actual shipped→decision plus old/new request status. Final review/approve/reject/close state comes from existing locked request/financial review. Progress/tracking state comes from locked revision and reviewed previous milestone or exact tracking values.",
+        "27 distinct solar cases:12 progress,8 tracking,7 postal.11 same-transaction audit-failure probes and1 skipped-write probe preserve requests/postal/events/config/global version/contracts/invoices/audits/notices/idempotency, then original corrected commands continue. Existing concurrency, no-op/lost-response retries, authority/context/profile isolation, CSRF and financial snapshot assertions retained.4 state-model cases pass;324 valid actor/state combinations compared against exact old hashes, only already accepted draft terminal edges differ.",
+        "Initial combined suite failed in postal/progress due misplaced additions, with all8 unchanged tracking cases passing. Affected18 cases rerun after diagnosis and source correction; added guidance case checked in final7-case postal scope. Tracking8 and progress12 evidence reused on valid unchanged scope; earlier passing duplicates are not additional outcomes. Failed suite is never claimed green.",
+        "API build/types, changed-file lint/format,4-target5-rule SAST with changed progress-only renewal, and OpenAPI pass. Four production JS modules change; four existing test JS refreshed. New test-helper JS/maps separately bound. Schema/migrations/dependencies/shared/browser/worker outputs unchanged; no build during consumers.",
+        "235 v0.2 tasks now accepted. Audit completion does not accept terminal electricity matrix, unanswered owner schema/security/identity choices, provider/operational launch evidence or release readiness. No milestone accepted, staging enqueue, Telegram receipt or production deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-transition-audit"
     }
   },
   "historical_improvements": [
@@ -134471,12 +134741,11 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-terminal-audit-wallet-gaps",
+    "id": "release-0.2-terminal-acceptance",
     "release": "0.2.0",
-    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify solar progress/final/postal audit families. Saving inventory/upgrade, consultation settlement and other accepted audit transitions retain current source-bound evidence. Preserve unanswered owner decisions.",
+    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; renew all-four-service journey evidence after effective criteria are accepted. Core business audit families are accepted. Preserve unanswered owner decisions and operational prerequisites.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
-      "03-core-business.md#T-03.90.03",
       "03-core-business.md#T-03.09.01.01",
       "03-core-business.md#T-03.05.01.04",
       "03-core-business.md#T-03.05.03.02",
@@ -134486,7 +134755,7 @@
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "234 v0.2 tasks accepted. Terminal rejection/cancellation matrix and solar progress/final/postal audit families remain. Unanswered owner schema/security/identity decisions and operational/provider evidence prevent a defensible launch date."
+    "method": "235 v0.2 tasks accepted. Terminal electricity rejection/cancellation matrix remains independent implementation work. Unanswered owner schema/security/identity decisions and operational/provider evidence prevent a defensible launch date."
   },
   "capabilities": [
     {
