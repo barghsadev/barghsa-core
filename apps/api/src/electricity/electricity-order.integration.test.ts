@@ -100,6 +100,42 @@ async function cancellationReview(orderId: string, reason: string) {
   };
 }
 
+async function expectSystemIncreaseAudit(
+  event: string,
+  id: string,
+  expected: {
+    entity: string;
+    fromState: string;
+    toState: string;
+    reason: string | null;
+    context: null;
+  }
+) {
+  const rows = (
+    await http.pool.query(
+      `SELECT user_id,operating_context,created_at,correlation_id,metadata::jsonb AS metadata FROM audit_log WHERE event=$1 AND metadata::jsonb->>'entityId'=$2`,
+      [event, id]
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  const row = rows[0]!;
+  expect(row.user_id).toBe('buyer');
+  expect(row.operating_context).toBe(expected.context);
+  expect(row.created_at).toBeInstanceOf(Date);
+  expect(row.correlation_id).toMatch(/^[0-9a-f-]{36}$/);
+  expect(row.metadata).toMatchObject({
+    entity: expected.entity,
+    entityId: id,
+    fromState: expected.fromState,
+    toState: expected.toState,
+    reason: expected.reason,
+    actor: 'system',
+    actorType: 'system',
+    profileId: input.profileId,
+    affectedUserId: 'buyer',
+  });
+}
+
 async function priceProposalReview(contractId: string, body: Record<string, unknown>) {
   const response = await fetch(
     `${http.base}/api/staff/electricity/contracts/${contractId}/price-adjustments/review`,
@@ -3079,6 +3115,14 @@ it.each([
         [result.requestId, new Date(new Date(result.periodEnd).getTime() + 60_000)]
       );
       expect(disposition.rows[0]?.disposition).toBe('unsigned');
+      await expectSystemIncreaseAudit('electricity.increase_expired', result.requestId, {
+        entity: 'electricity_quantity_increase_request',
+        fromState: 'pending',
+        toState: 'expired',
+        reason: 'Electricity increase delivery period ended',
+        context: null,
+      });
+
       expect(await (await fetch(path, { headers })).json()).toMatchObject({
         request: { status: 'expired', adjustmentInvoiceId: null },
       });
@@ -3233,6 +3277,14 @@ it.each([
           [result.requestId, expiredAt]
         );
         expect(disposition.rows[0]?.disposition).toBe('unsigned');
+        await expectSystemIncreaseAudit('electricity.increase_expired', result.requestId, {
+          entity: 'electricity_quantity_increase_request',
+          fromState: 'awaiting_signature',
+          toState: 'expired',
+          reason: 'Electricity increase delivery period ended',
+          context: null,
+        });
+
         expect(await (await fetch(path, { headers })).json()).toMatchObject({
           request: { status: 'expired', amendmentSha256: amendment.amendmentSha256 },
         });
@@ -3390,6 +3442,22 @@ it.each([
           [result.requestId, expiredAt]
         );
         expect(disposition.rows[0]?.disposition).toBe('invoice_cancelled');
+        await expectSystemIncreaseAudit('electricity.increase_expired', result.requestId, {
+          entity: 'electricity_quantity_increase_request',
+          fromState: 'awaiting_payment',
+          toState: 'expired',
+          reason: 'Electricity increase delivery period ended',
+          context: null,
+        });
+
+        await expectSystemIncreaseAudit('invoice.cancel', signedRequest.adjustmentInvoiceId, {
+          entity: 'invoice',
+          fromState: 'Unpaid',
+          toState: 'Cancelled',
+          reason: 'Electricity increase delivery period ended',
+          context: null,
+        });
+
         expect(await (await fetch(path, { headers })).json()).toMatchObject({
           request: {
             status: 'expired',
@@ -3426,6 +3494,14 @@ it.each([
           [result.requestId, expiredAt]
         );
         expect(disposition.rows[0]?.disposition).toBe('finance_review');
+        await expectSystemIncreaseAudit('electricity.increase_expired', result.requestId, {
+          entity: 'electricity_quantity_increase_request',
+          fromState: 'awaiting_payment',
+          toState: 'expired',
+          reason: 'Electricity increase delivery period ended',
+          context: null,
+        });
+
         expect(await (await fetch(path, { headers })).json()).toMatchObject({
           request: { status: 'expired', adjustmentInvoiceState: 'Paid', financialFollowUp: true },
         });
@@ -3479,6 +3555,14 @@ it.each([
           [result.requestId]
         )
       ).rows.map((row: { event: string }) => row.event);
+
+      await expectSystemIncreaseAudit('electricity.increase_effective', result.requestId, {
+        entity: 'electricity_quantity_increase_request',
+        fromState: 'awaiting_payment',
+        toState: 'effective',
+        reason: null,
+        context: null,
+      });
       expect(events).toEqual([
         'electricity.increase_requested',
         'electricity.increase_approved',

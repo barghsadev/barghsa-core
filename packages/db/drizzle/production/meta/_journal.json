@@ -1198,6 +1198,13 @@
       "when": 1791331202261,
       "tag": "0250_contract_system_audit",
       "breakpoints": true
+    },
+    {
+      "idx": 251,
+      "version": "7",
+      "when": 1791331202262,
+      "tag": "0251_electricity_increase_audit",
+      "breakpoints": true
     }
   ]
 }
