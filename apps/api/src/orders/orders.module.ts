@@ -15,6 +15,7 @@ import {
 } from '../electricity/electricity-bill-data.service.js';
 import { ElectricityDraftService } from '../electricity/electricity-draft.service.js';
 import { ElectricityStaffReviewController } from '../electricity/electricity-staff-review.controller.js';
+import { ElectricityRawDraftService } from '../electricity/electricity-raw-draft.service.js';
 import { ElectricityStaffReviewService } from '../electricity/electricity-staff-review.service.js';
 import {
   ElectricityCommentsController,
@@ -115,6 +116,7 @@ import { StaffAssignmentModule } from '../staff-assignment/staff-assignment.modu
     HttpBillDataProvider,
     ElectricityDraftService,
     ElectricityStaffReviewService,
+    ElectricityRawDraftService,
     ReviewSnapshotService,
     ElectricityCommentsService,
     ElectricityIncreaseService,

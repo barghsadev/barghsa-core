@@ -5,6 +5,30 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'electricity.rawDraft.title': 'پیش\u200cنویس\u200cهای ناقص قدیمی',
+  'electricity.rawDraft.description':
+    'فقط رکوردهای ارسال\u200cنشدهٔ سفارش بدون سابقهٔ تجاری یا پرداخت نمایش داده می\u200cشوند. اطلاعات فرم ذخیره\u200cشدهٔ مشتری خصوصی می\u200cماند.',
+  'electricity.rawDraft.empty': 'پیش\u200cنویس ناقص قابل رسیدگی وجود ندارد.',
+  'electricity.rawDraft.order': 'شناسه سفارش',
+  'electricity.rawDraft.profile': 'شناسه پرونده',
+  'electricity.rawDraft.created': 'زمان ایجاد',
+  'electricity.rawDraft.actions': 'عملیات',
+  'electricity.rawDraft.reject': 'رد پیش\u200cنویس',
+  'electricity.rawDraft.cancel': 'لغو پیش\u200cنویس',
+  'electricity.rawDraft.reason': 'دلیل',
+  'electricity.rawDraft.review': 'بررسی تصمیم',
+  'electricity.rawDraft.summary':
+    'این تصمیم پیش\u200cنویس را پایان می\u200cدهد و قرارداد یا صورت\u200cحسابی ایجاد نمی\u200cکند. اطلاعات فرم ذخیره\u200cشدهٔ مشتری تغییر نمی\u200cکند.',
+  'electricity.rawDraft.failed':
+    'دریافت یا بررسی پیش\u200cنویس ممکن نشد. دوباره اطلاعات را دریافت کنید.',
+  'electricity.rawDraft.denied': 'دسترسی فعلی اجازهٔ این تصمیم را نمی\u200cدهد.',
+  'electricity.rawDraft.changed': 'پیش\u200cنویس تغییر کرده است. تصمیم را دوباره بررسی کنید.',
+  'electricity.rawDraft.retry': 'دریافت دوباره',
+  'electricity.rawDraft.next': 'صفحه بعد',
+  'electricity.rawDraft.reasonInvalid': 'دلیل را با ۱ تا ۱۰۰۰ نویسه وارد کنید.',
+  'electricity.rawDraft.simple': 'ساده',
+  'electricity.rawDraft.advanced': 'پیشرفته',
+  'electricity.rawDraft.mode': 'نوع سفارش',
   'history.context.staff': 'حالت کارمندی',
   'history.context.customer': 'حالت مشتری',
   'history.context.unknown': 'زمینه فعالیت ثبت نشده',
@@ -1772,6 +1796,30 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'electricity.rawDraft.title': 'Incomplete legacy drafts',
+  'electricity.rawDraft.description':
+    'Only unsubmitted order records without business or payment history are shown. Saved customer form contents remain private.',
+  'electricity.rawDraft.empty': 'No incomplete drafts need attention.',
+  'electricity.rawDraft.order': 'Order ID',
+  'electricity.rawDraft.profile': 'Profile ID',
+  'electricity.rawDraft.created': 'Created at',
+  'electricity.rawDraft.actions': 'Actions',
+  'electricity.rawDraft.reject': 'Reject draft',
+  'electricity.rawDraft.cancel': 'Cancel draft',
+  'electricity.rawDraft.reason': 'Reason',
+  'electricity.rawDraft.review': 'Review decision',
+  'electricity.rawDraft.summary':
+    'This decision ends the draft without creating a contract or invoice. Saved customer form progress stays unchanged.',
+  'electricity.rawDraft.failed':
+    'Could not load or review the draft. Reload its current information.',
+  'electricity.rawDraft.denied': 'Your current permissions do not allow this decision.',
+  'electricity.rawDraft.changed': 'The draft changed. Review the decision again.',
+  'electricity.rawDraft.retry': 'Reload',
+  'electricity.rawDraft.next': 'Next page',
+  'electricity.rawDraft.reasonInvalid': 'Enter a reason between 1 and 1000 characters.',
+  'electricity.rawDraft.simple': 'Simple',
+  'electricity.rawDraft.advanced': 'Advanced',
+  'electricity.rawDraft.mode': 'Order mode',
   'history.context.staff': 'Staff mode',
   'history.context.customer': 'Customer mode',
   'history.context.unknown': 'Context not recorded',

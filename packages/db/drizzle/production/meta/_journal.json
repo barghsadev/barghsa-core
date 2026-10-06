@@ -1212,6 +1212,13 @@
       "when": 1791331202263,
       "tag": "0252_saving_inventory_upgrade_audit",
       "breakpoints": true
+    },
+    {
+      "idx": 253,
+      "version": "7",
+      "when": 1791331202264,
+      "tag": "0253_electricity_raw_draft_terminal",
+      "breakpoints": true
     }
   ]
 }

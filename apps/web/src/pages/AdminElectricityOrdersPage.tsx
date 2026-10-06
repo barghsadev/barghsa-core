@@ -1,3 +1,4 @@
+import { ElectricityRawDraftQueue } from '../components/ElectricityRawDraftQueue.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -645,6 +646,7 @@ export default function AdminElectricityOrdersPage({
           <p className="text-muted-foreground">{copy('description')}</p>
         </div>
       </header>
+      <ElectricityRawDraftQueue />
       <ListPage>
         <ListPage.Toolbar
           filters={

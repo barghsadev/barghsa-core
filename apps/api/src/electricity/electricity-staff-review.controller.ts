@@ -18,12 +18,22 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { ElectricityRawDraftService } from './electricity-raw-draft.service.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import {
   ElectricityStaffReviewService,
   type StaffReviewAction,
 } from './electricity-staff-review.service.js';
 
+const rawDraftReviewInput = z
+  .object({ action: z.enum(['reject', 'cancel']), reason: z.string().trim().min(1).max(1000) })
+  .strict();
+const rawDraftTerminalInput = rawDraftReviewInput
+  .extend({
+    idempotencyKey: z.string().uuid(),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+  })
+  .strict();
 const baseInput = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -68,7 +78,10 @@ function parseReasonForm<S extends z.ZodType>(
 @Controller('api/staff/electricity/orders')
 @UseGuards(SessionAuthGuard, StepUpGuard)
 export class ElectricityStaffReviewController {
-  constructor(private readonly service: ElectricityStaffReviewService) {}
+  constructor(
+    private readonly service: ElectricityStaffReviewService,
+    private readonly drafts: ElectricityRawDraftService
+  ) {}
 
   private requirePermission(req: AuthenticatedRequest, write: boolean) {
     if (
@@ -99,6 +112,57 @@ export class ElectricityStaffReviewController {
     if (after && !z.string().uuid().safeParse(after).success)
       throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
     return this.service.conversations(after);
+  }
+
+  @Get('drafts')
+  @RateLimit({ namespace: 'electricity:raw-drafts:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'List unlinked electricity draft records without saved wizard contents',
+  })
+  @ApiQuery({ name: 'after', required: false, format: 'uuid' })
+  rawDrafts(@Req() req: AuthenticatedRequest, @Query('after') after?: string) {
+    this.requirePermission(req, false);
+    if (after && !z.string().uuid().safeParse(after).success)
+      throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
+    return this.drafts.queue(req.session, after);
+  }
+
+  @Post(':id/draft-terminal/review')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:raw-draft-review:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Review rejection or cancellation of an unlinked electricity draft' })
+  @ApiZodBody(rawDraftReviewInput)
+  rawDraftReview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown
+  ) {
+    this.requirePermission(req, true);
+    const input = parseReasonForm(rawDraftReviewInput, body, true);
+    return this.drafts.review(id, input.action, input.reason, req.session);
+  }
+
+  @Post(':id/draft-terminal')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'electricity:raw-draft-end:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({
+    summary:
+      'End the exact reviewed unlinked draft without creating financial or submission records',
+  })
+  @ApiZodBody(rawDraftTerminalInput)
+  rawDraftTerminate(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown
+  ) {
+    this.requirePermission(req, true);
+    return this.drafts.terminate(
+      id,
+      parseReasonForm(rawDraftTerminalInput, body, true),
+      req.session,
+      req.ip ?? 'unknown'
+    );
   }
 
   @Get(':id')

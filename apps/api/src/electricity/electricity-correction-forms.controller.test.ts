@@ -44,7 +44,7 @@ function fixture() {
     customerService,
     staffService,
     customer: new ElectricityOrderController(customerService as never, {} as never, {} as never),
-    staff: new ElectricityStaffReviewController(staffService as never),
+    staff: new ElectricityStaffReviewController(staffService as never, {} as never),
   };
 }
 function failure(call: () => unknown) {

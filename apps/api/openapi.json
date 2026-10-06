@@ -29680,6 +29680,31 @@
         ]
       }
     },
+    "/api/staff/electricity/orders/drafts": {
+      "get": {
+        "operationId": "ElectricityStaffReviewController_rawDrafts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List unlinked electricity draft records without saved wizard contents",
+        "tags": [
+          "Staff · Electricity orders"
+        ]
+      }
+    },
     "/api/staff/electricity/orders/{id}": {
       "get": {
         "operationId": "ElectricityStaffReviewController_detail",
@@ -29755,6 +29780,123 @@
           }
         },
         "summary": "Approve the exact current preliminary electricity contract",
+        "tags": [
+          "Staff · Electricity orders"
+        ]
+      }
+    },
+    "/api/staff/electricity/orders/{id}/draft-terminal": {
+      "post": {
+        "operationId": "ElectricityStaffReviewController_rawDraftTerminate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "reject",
+                      "cancel"
+                    ],
+                    "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "reason",
+                  "idempotencyKey",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "End the exact reviewed unlinked draft without creating financial or submission records",
+        "tags": [
+          "Staff · Electricity orders"
+        ]
+      }
+    },
+    "/api/staff/electricity/orders/{id}/draft-terminal/review": {
+      "post": {
+        "operationId": "ElectricityStaffReviewController_rawDraftReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "reject",
+                      "cancel"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Review rejection or cancellation of an unlinked electricity draft",
         "tags": [
           "Staff · Electricity orders"
         ]
