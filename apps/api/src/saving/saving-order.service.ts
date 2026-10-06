@@ -1,3 +1,4 @@
+import { auditContract } from '../contract/contract-transactions.js';
 import {
   literalSearchPattern,
   DEFAULT_HISTORY_SORT,
@@ -899,12 +900,44 @@ export class SavingOrderService {
         await client.query("UPDATE orders SET status='PENDING',updated_at=NOW() WHERE id=$1", [
           context.order_id,
         ]);
-        await client.query(
+        const resetStages = (
+          await client.query<{ id: string; stage: string; status: string }>(
+            "SELECT id,stage,status FROM saving_fulfillment_stages WHERE order_id=$1 AND stage IN ('request_confirmation','product_delivery') ORDER BY id FOR UPDATE",
+            [savingOrderId]
+          )
+        ).rows;
+        const resetStageUpdate = await client.query(
           `UPDATE saving_fulfillment_stages SET status='pending',started_at=NULL,
              completed_at=NULL,completed_by=NULL,explanation=NULL,updated_at=NOW()
            WHERE order_id=$1 AND stage IN ('request_confirmation','product_delivery')`,
           [savingOrderId]
         );
+        if (resetStageUpdate.rowCount !== resetStages.length)
+          throw new ConflictException('Saving fulfillment stages changed');
+        for (const stage of resetStages) {
+          if (stage.status === 'pending') continue;
+          await auditContract(
+            client,
+            context.contract_id,
+            versionId,
+            'saving.fulfillment.stage_reset',
+            actor,
+            ip,
+            {
+              entity: 'saving_fulfillment_stage',
+              entityId: stage.id,
+              fromState: stage.status,
+              toState: 'pending',
+              reason: null,
+              savingOrderId,
+              orderId: context.order_id,
+              profileId: context.profile_id,
+              stage: stage.stage,
+              source: 'customer_revision',
+              previousVersionId: context.current_version_id,
+            }
+          );
+        }
       }
       for (const line of [
         ['plan_price', quote.plan.title.fa, totals.lines[0]!.amountIrR],
@@ -1017,6 +1050,16 @@ export class SavingOrderService {
           uuidv7(),
           actor.userId,
           JSON.stringify({
+            entity: 'saving_order',
+            entityId: savingOrderId,
+            fromState: context.status,
+            toState: 'awaiting_staff_review',
+            reason: null,
+            contractId: context.contract_id,
+            contractFromState: context.contract_state,
+            contractToState: 'AwaitingStaffReview',
+            versionId,
+            previousVersionId: context.current_version_id,
             savingOrderId,
             invoiceId: context.invoice_id,
             from: prior,

@@ -1,3 +1,4 @@
+import { expectCoreAudit } from '../test/core-audit.js';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
@@ -149,6 +150,152 @@ async function savingOperationsSnapshot(id: string) {
     )
   ).rows[0];
   return { resource: await savingHardwareSnapshot(id), effects };
+}
+
+async function expectSavingStageAudits(id: string) {
+  const events = (
+    await http.pool.query(
+      `SELECT e.*,s.id AS stage_id FROM saving_fulfillment_events e JOIN saving_fulfillment_stages s ON s.order_id=e.order_id AND s.stage=e.stage WHERE e.order_id=$1`,
+      [id]
+    )
+  ).rows;
+  const audits = (
+    await http.pool.query(
+      `SELECT user_id,operating_context,created_at,correlation_id,metadata::jsonb AS metadata FROM audit_log WHERE event='saving.fulfillment.stage_changed' AND metadata::jsonb->>'savingOrderId'=$1`,
+      [id]
+    )
+  ).rows;
+  expect(events.length).toBeGreaterThan(0);
+  expect(audits).toHaveLength(events.length);
+  for (const event of events) {
+    const matches = audits.filter((a) => a.metadata.eventId === event.id);
+    expect(matches).toHaveLength(1);
+    const audit = matches[0]!;
+    expect(audit.user_id).toBe(event.actor_user_id);
+    expect(audit.operating_context).toBe(event.actor_context);
+    expect(audit.created_at).toBeInstanceOf(Date);
+    expect(audit.correlation_id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(audit.metadata).toMatchObject({
+      entity: 'saving_fulfillment_stage',
+      entityId: event.stage_id,
+      fromState: event.from_status,
+      toState: event.to_status,
+      reason: event.explanation,
+      stage: event.stage,
+      handoverDescription: event.handover_description,
+    });
+    if (
+      event.stage !== 'request_confirmation' &&
+      ['completed', 'skipped'].includes(event.to_status)
+    ) {
+      const core = (
+        await http.pool.query(
+          `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event=$1 AND metadata::jsonb->>'entityId'=$2 AND metadata::jsonb->>'stage'=$3`,
+          [
+            'saving.fulfillment.' + (event.to_status === 'skipped' ? 'skip' : 'complete'),
+            id,
+            event.stage,
+          ]
+        )
+      ).rows;
+      expect(core).toHaveLength(1);
+      expect(core[0].metadata).toMatchObject({
+        entity: 'saving_order',
+        entityId: id,
+        fromState: event.stage === 'product_delivery' ? 'approved' : 'in_progress',
+        toState: event.stage === 'process_completion' ? 'completed' : 'in_progress',
+        reason: event.explanation,
+      });
+    }
+  }
+}
+
+async function expectSavingRevisionStageAuditRollback(id: string, work: () => Promise<Response>) {
+  const before = await savingOperationsSnapshot(id);
+  await http.pool.query(
+    `CREATE FUNCTION reject_saving_stage_reset_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='saving.fulfillment.stage_reset' THEN RAISE EXCEPTION 'revision stage audit unavailable'; END IF; RETURN NEW; END $$; CREATE TRIGGER reject_saving_stage_reset_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_saving_stage_reset_audit()`
+  );
+  try {
+    const response = await work();
+    expect(response.status, http.logs()).toBe(500);
+    expect(await savingOperationsSnapshot(id)).toEqual(before);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER reject_saving_stage_reset_audit ON audit_log;DROP FUNCTION reject_saving_stage_reset_audit()'
+    );
+  }
+}
+async function expectSavingStageResetAudits(
+  id: string,
+  before: { id: string; stage: string; status: string }[],
+  versionId: string,
+  previousVersionId: string
+) {
+  const rows = (
+    await http.pool.query(
+      `SELECT user_id,operating_context,created_at,correlation_id,metadata::jsonb AS metadata FROM audit_log WHERE event='saving.fulfillment.stage_reset' AND metadata::jsonb->>'savingOrderId'=$1`,
+      [id]
+    )
+  ).rows;
+  const changed = before.filter((s) => s.status !== 'pending');
+  expect(changed).toHaveLength(2);
+  expect(rows).toHaveLength(changed.length);
+  for (const stage of changed) {
+    const matches = rows.filter((r) => r.metadata.entityId === stage.id);
+    expect(matches).toHaveLength(1);
+    const audit = matches[0]!;
+    expect(audit.user_id).toBe('saving-order-buyer');
+    expect(audit.operating_context).toBe('customer');
+    expect(audit.created_at).toBeInstanceOf(Date);
+    expect(audit.correlation_id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(audit.metadata).toMatchObject({
+      entity: 'saving_fulfillment_stage',
+      entityId: stage.id,
+      fromState: stage.status,
+      toState: 'pending',
+      reason: null,
+      stage: stage.stage,
+      source: 'customer_revision',
+      versionId,
+      previousVersionId,
+    });
+  }
+}
+
+async function expectSavingStageWriteRollback(
+  id: string,
+  stage: string,
+  work: () => Promise<Response>
+) {
+  const before = await savingOperationsSnapshot(id);
+  await http.pool.query(
+    `CREATE FUNCTION skip_saving_stage_update() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF OLD.stage='${stage}' THEN RETURN NULL; END IF; RETURN NEW; END $$; CREATE TRIGGER skip_saving_stage_update BEFORE UPDATE ON saving_fulfillment_stages FOR EACH ROW EXECUTE FUNCTION skip_saving_stage_update()`
+  );
+  try {
+    const response = await work();
+    expect(response.status, http.logs()).toBe(409);
+    expect(await savingOperationsSnapshot(id)).toEqual(before);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER skip_saving_stage_update ON saving_fulfillment_stages;DROP FUNCTION skip_saving_stage_update()'
+    );
+  }
+}
+
+async function expectSavingStageAuditRollback(id: string, work: () => Promise<Response>) {
+  const before = await savingOperationsSnapshot(id);
+  await http.pool.query(
+    `CREATE FUNCTION reject_saving_stage_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='saving.fulfillment.stage_changed' THEN RAISE EXCEPTION 'stage audit unavailable'; END IF; RETURN NEW; END $$; CREATE TRIGGER reject_saving_stage_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_saving_stage_audit()`
+  );
+  try {
+    const response = await work();
+    expect(response.status, http.logs()).toBe(500);
+    expect(await savingOperationsSnapshot(id)).toEqual(before);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER reject_saving_stage_audit ON audit_log;DROP FUNCTION reject_saving_stage_audit()'
+    );
+  }
 }
 
 async function rejectedSavingOperations(
@@ -1204,6 +1351,12 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     approvalReview.data.invoiceId,
     originalInvoiceState,
   ]);
+  await expectSavingStageWriteRollback(result.savingOrderId, 'request_confirmation', () =>
+    request(approvePath, 'POST', approval, staffHeaders)
+  );
+  await expectSavingStageAuditRollback(result.savingOrderId, () =>
+    request(approvePath, 'POST', approval, staffHeaders)
+  );
   const approved = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
@@ -1217,6 +1370,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   ).rows[0];
   expect(decisionAudit?.metadata.reviewHash).toBe(approvalReview.hash);
   expect(decisionAudit?.metadata.financialReview.hash).toBe(approvalReview.hash);
+  await expectCoreAudit(http.pool, 'saving.order_review.approve', result.savingOrderId, {
+    entity: 'saving_order',
+    fromState: 'awaiting_staff_review',
+    toState: 'approved',
+    reason: '',
+    actor: 'saving-order-staff',
+    context: 'staff',
+  });
+
   const publishedContract = await request(`/api/contracts/${result.contractId}`, 'GET');
   expect(publishedContract.status, http.logs()).toBe(200);
   expect(await publishedContract.json()).toMatchObject({
@@ -1689,6 +1851,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     )
   ).rows[0];
   expect(hardwareAudit?.metadata.reviewHash).toBe(initialHardwareReview.hash);
+  await expectCoreAudit(http.pool, 'saving.hardware_amended', result.savingOrderId, {
+    entity: 'saving_order',
+    fromState: 'approved',
+    toState: 'approved',
+    reason: hardwareInput.reason,
+    actor: 'saving-order-staff',
+    context: 'staff',
+  });
+
   expect((await request(hardwarePath, 'POST', hardwareInput, staffHeaders)).status).toBe(201);
   expect(
     (
@@ -1959,6 +2130,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     )
   ).rows[0];
   expect(addressAudit?.metadata.reviewHash).toBe(addressReview.hash);
+  await expectCoreAudit(http.pool, 'saving.address_amended', result.savingOrderId, {
+    entity: 'saving_order',
+    fromState: 'approved',
+    toState: 'approved',
+    reason: amendmentInput.reason,
+    actor: 'saving-order-staff',
+    context: 'staff',
+  });
+
   const beforeAddressReplay = await savingChangeSnapshot(result.savingOrderId);
   const addressReplay = await request(amendPath, 'POST', amendmentInput, staffHeaders);
   expect(addressReplay.status, http.logs()).toBe(201);
@@ -2056,6 +2236,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     status: string;
   };
   expect(upgrade.status).toBe('awaiting_payment');
+  await expectCoreAudit(http.pool, 'saving.hardware_upgrade_requested', upgrade.upgradeId, {
+    entity: 'saving_hardware_upgrade_request',
+    fromState: null,
+    toState: 'awaiting_payment',
+    reason: upgradeInput.reason,
+    actor: 'saving-order-staff',
+    context: 'staff',
+  });
+
   expect(BigInt(upgrade.priceDeltaIrR)).toBeGreaterThan(0n);
   expect((await request(hardwarePath, 'POST', upgradeInput, staffHeaders)).status).toBe(201);
   expect(
@@ -2247,6 +2436,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     )
   ).rows[0];
   expect(cancellationAudit?.metadata.reviewHash).toBe(cancellationSnapshot.hash);
+  await expectCoreAudit(http.pool, 'saving.hardware_upgrade_cancelled', upgrade.upgradeId, {
+    entity: 'saving_hardware_upgrade_request',
+    fromState: 'awaiting_payment',
+    toState: 'cancelled',
+    reason: cancelUpgradeInput.reason,
+    actor: 'saving-order-staff',
+    context: 'staff',
+  });
+
   expect((await request(cancelUpgradePath, 'POST', cancelUpgradeInput, staffHeaders)).status).toBe(
     200
   );
@@ -2404,6 +2602,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).status
   ).toBe(400);
+  await expectSavingStageWriteRollback(
+    result.savingOrderId,
+    'installation_and_document_upload',
+    () => request(stagePath('product_delivery'), 'POST', deliveryInput, staffHeaders)
+  );
+  await expectSavingStageAuditRollback(result.savingOrderId, () =>
+    request(stagePath('product_delivery'), 'POST', deliveryInput, staffHeaders)
+  );
   const delivered = await request(
     stagePath('product_delivery'),
     'POST',
@@ -2588,6 +2794,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     eventsTruncated: boolean;
   };
   expect(staffHistory.events).toHaveLength(9);
+  await expectSavingStageAudits(result.savingOrderId);
+
   expect(staffHistory.eventsTruncated).toBe(false);
   expect(staffHistory.events.every((event) => event.actor_context === 'staff')).toBe(true);
   expect(
@@ -2718,6 +2926,15 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(rejected.status, http.logs()).toBe(200);
   expect(await rejected.json()).toMatchObject({ status: 'rejected' });
+  await expectCoreAudit(http.pool, 'saving.order_review.reject', discountedOrder.savingOrderId, {
+    entity: 'saving_order',
+    fromState: 'awaiting_staff_review',
+    toState: 'rejected',
+    reason: 'Device unavailable',
+    actor: 'saving-order-staff',
+    context: 'staff',
+  });
+
   expect(
     (
       await http.pool.query<{ reserved_count: number }>(
@@ -3342,6 +3559,15 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     ...addressQuote,
   });
   expect(firstRevision.contractVersionId).not.toBe(priorVersionId);
+  await expectCoreAudit(http.pool, 'saving.order.changed', order.savingOrderId, {
+    entity: 'saving_order',
+    fromState: 'awaiting_staff_review',
+    toState: 'awaiting_staff_review',
+    reason: null,
+    actor: 'saving-order-buyer',
+    context: 'customer',
+  });
+
   const beforeRevisionReplay = await savingChangeSnapshot(order.savingOrderId);
   const retry = await request(`${path}/change`, 'POST', addressSubmission);
   expect(retry.status, http.logs()).toBe(201);
@@ -3474,6 +3700,29 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
   });
   expect(approvedQuoteResponse.status, http.logs()).toBe(201);
   const approvedQuote = (await approvedQuoteResponse.json()) as { reviewDigest: string };
+  const revisionStagesBefore = (
+    await http.pool.query<{ id: string; stage: string; status: string }>(
+      "SELECT id,stage,status FROM saving_fulfillment_stages WHERE order_id=$1 AND stage IN ('request_confirmation','product_delivery') ORDER BY id",
+      [order.savingOrderId]
+    )
+  ).rows;
+  await expectSavingStageWriteRollback(order.savingOrderId, 'request_confirmation', () =>
+    request(`${path}/change`, 'POST', {
+      hardwareProductId: alternateId,
+      installationAddressId: input.installationAddressId,
+      idempotencyKey: randomUUID(),
+      expectedQuoteDigest: approvedQuote.reviewDigest,
+    })
+  );
+  await expectSavingRevisionStageAuditRollback(order.savingOrderId, () =>
+    request(`${path}/change`, 'POST', {
+      hardwareProductId: alternateId,
+      installationAddressId: input.installationAddressId,
+      idempotencyKey: randomUUID(),
+      expectedQuoteDigest: approvedQuote.reviewDigest,
+    })
+  );
+
   const reopened = await request(`${path}/change`, 'POST', {
     hardwareProductId: alternateId,
     installationAddressId: input.installationAddressId,
@@ -3481,6 +3730,13 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     expectedQuoteDigest: approvedQuote.reviewDigest,
   });
   expect(reopened.status, http.logs()).toBe(201);
+  await expectSavingStageResetAudits(
+    order.savingOrderId,
+    revisionStagesBefore,
+    ((await reopened.clone().json()) as { contractVersionId: string }).contractVersionId,
+    currentVersion
+  );
+
   expect(await (await request(path, 'GET')).json()).toMatchObject({
     can_edit: true,
     status: 'awaiting_staff_review',

@@ -482,13 +482,40 @@ export class SavingFulfillmentService {
     from: StageRow['status'],
     to: StageRow['status'],
     actor: Actor,
+    ip: string,
     explanation: string,
     handoverDescription?: string
   ) {
-    await client.query(
-      `INSERT INTO saving_fulfillment_events(id,order_id,stage,from_status,to_status,
-         actor_user_id,explanation,handover_description) VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
-      [uuidv7(), row.id, stage, from, to, actor.userId, explanation, handoverDescription ?? null]
+    const stored = (
+      await client.query<{ id: string; stage_id: string }>(
+        `INSERT INTO saving_fulfillment_events(id,order_id,stage,from_status,to_status,
+         actor_user_id,explanation,handover_description) VALUES($1,$2,$3,$4,$5,$6,$7,$8)
+         RETURNING id,(SELECT id FROM saving_fulfillment_stages WHERE order_id=$2 AND stage=$3) AS stage_id`,
+        [uuidv7(), row.id, stage, from, to, actor.userId, explanation, handoverDescription ?? null]
+      )
+    ).rows[0];
+    if (!stored?.id || !stored.stage_id)
+      throw new ConflictException('Saving fulfillment stage is unavailable');
+    await auditContract(
+      client,
+      row.contract_id,
+      row.version_id,
+      'saving.fulfillment.stage_changed',
+      actor,
+      ip,
+      {
+        entity: 'saving_fulfillment_stage',
+        entityId: stored.stage_id,
+        fromState: from,
+        toState: to,
+        reason: explanation,
+        eventId: stored.id,
+        savingOrderId: row.id,
+        orderId: row.order_id,
+        profileId: row.profile_id,
+        stage,
+        handoverDescription: handoverDescription ?? null,
+      }
     );
   }
 
@@ -687,12 +714,14 @@ export class SavingFulfillmentService {
                     "UPDATE saving_orders SET status='approved',updated_at=NOW() WHERE id=$1",
                     [id]
                   );
-                  await client.query(
+                  const confirmedStage = await client.query(
                     `UPDATE saving_fulfillment_stages SET status='completed',started_at=NOW(),
                 completed_at=NOW(),completed_by=$2,explanation='Staff approved request',updated_at=NOW()
                 WHERE order_id=$1 AND stage='request_confirmation' AND status='pending'`,
                     [id, actor.userId]
                   );
+                  if (confirmedStage.rowCount !== 1)
+                    throw new ConflictException('Saving fulfillment stage is unavailable');
                   await this.event(
                     client,
                     row,
@@ -700,13 +729,16 @@ export class SavingFulfillmentService {
                     'pending',
                     'completed',
                     actor,
+                    ip,
                     'Staff approved request'
                   );
-                  await client.query(
+                  const deliveryStage = await client.query(
                     `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
                 WHERE order_id=$1 AND stage='product_delivery' AND status='pending'`,
                     [id]
                   );
+                  if (deliveryStage.rowCount !== 1)
+                    throw new ConflictException('Saving fulfillment stage is unavailable');
                   await this.event(
                     client,
                     row,
@@ -714,6 +746,7 @@ export class SavingFulfillmentService {
                     'pending',
                     'in_progress',
                     actor,
+                    ip,
                     'Request approved'
                   );
                 } else {
@@ -766,6 +799,13 @@ export class SavingFulfillmentService {
                   actor,
                   ip,
                   {
+                    entity: 'saving_order',
+                    entityId: id,
+                    fromState: row.status,
+                    toState: status,
+                    contractFromState: row.contract_state,
+                    contractToState:
+                      action === 'approve' ? 'AwaitingCustomerAcceptance' : 'Rejected',
                     savingOrderId: id,
                     reason,
                     refundId,
@@ -986,6 +1026,10 @@ export class SavingFulfillmentService {
               actor,
               ip,
               {
+                entity: 'saving_order',
+                entityId: id,
+                fromState: row.status,
+                toState: row.status,
                 savingOrderId: id,
                 amendmentId,
                 reason: input.reason,
@@ -1325,6 +1369,11 @@ export class SavingFulfillmentService {
                   actor,
                   ip,
                   {
+                    entity: 'saving_hardware_upgrade_request',
+                    entityId: upgradeId,
+                    fromState: null,
+                    toState: 'awaiting_payment',
+                    reason: input.reason,
                     savingOrderId: id,
                     upgradeId,
                     hardwareProductId: hardware.id,
@@ -1399,6 +1448,10 @@ export class SavingFulfillmentService {
                 actor,
                 ip,
                 {
+                  entity: 'saving_order',
+                  entityId: id,
+                  fromState: row.status,
+                  toState: row.status,
                   savingOrderId: id,
                   amendmentId,
                   reason: input.reason,
@@ -1589,6 +1642,10 @@ export class SavingFulfillmentService {
               actor,
               ip,
               {
+                entity: 'saving_hardware_upgrade_request',
+                entityId: upgrade.id,
+                fromState: 'awaiting_payment',
+                toState: 'cancelled',
                 savingOrderId: id,
                 upgradeId: upgrade.id,
                 reason: input.reason,
@@ -1749,12 +1806,14 @@ export class SavingFulfillmentService {
             const { review, explanation, handover, nextStatus, nextStage, commercialStatus } =
               await this.advanceReviewForRow(client, row, stage, action, input, 'UPDATE');
             this.reviews.assertConfirmed(review, input.expectedReviewHash);
-            await client.query(
+            const completedStage = await client.query(
               `UPDATE saving_fulfillment_stages SET status=$3,completed_at=NOW(),completed_by=$4,
               explanation=$5,handover_description=$6,updated_at=NOW()
               WHERE order_id=$1 AND stage=$2`,
               [id, stage, nextStatus, actor.userId, explanation, handover ?? null]
             );
+            if (completedStage.rowCount !== 1)
+              throw new ConflictException('Saving fulfillment stage is unavailable');
             await this.event(
               client,
               row,
@@ -1762,16 +1821,19 @@ export class SavingFulfillmentService {
               'in_progress',
               nextStatus,
               actor,
+              ip,
               explanation,
               handover
             );
             const next = nextStage;
             if (next) {
-              await client.query(
+              const nextStageUpdate = await client.query(
                 `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
                 WHERE order_id=$1 AND stage=$2 AND status='pending'`,
                 [id, next]
               );
+              if (nextStageUpdate.rowCount !== 1)
+                throw new ConflictException('Saving fulfillment stage is unavailable');
               await this.event(
                 client,
                 row,
@@ -1779,6 +1841,7 @@ export class SavingFulfillmentService {
                 'pending',
                 'in_progress',
                 actor,
+                ip,
                 'Previous stage finished'
               );
             }
@@ -1794,6 +1857,11 @@ export class SavingFulfillmentService {
               actor,
               ip,
               {
+                entity: 'saving_order',
+                entityId: id,
+                fromState: row.status,
+                toState: commercialStatus,
+                reason: explanation,
                 savingOrderId: id,
                 stage,
                 from: 'in_progress',
