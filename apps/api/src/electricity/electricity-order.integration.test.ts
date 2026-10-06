@@ -1569,6 +1569,15 @@ it('requests changes with a reason and returns the order to the customer', async
   expect(result).toMatchObject({ status: 'awaiting_staff_review' });
   expect(result.versionId).not.toBe(versionId);
   expect((await resubmit()).status).toBe(200);
+  await expectCoreAudit(http.pool, 'electricity.order_resubmitted', order.orderId, {
+    entity: 'electricity_order',
+    fromState: 'changes_requested',
+    toState: 'awaiting_staff_review',
+    reason: corrected.responseNote,
+    actor: 'buyer',
+    context: 'customer',
+  });
+
   expect(
     (
       await http.pool.query(
@@ -1663,6 +1672,15 @@ it('revises an unpaid order with a new quote, invoice and immutable line history
   expect(result.versionId).not.toBe(before.versionId);
   expect(result.invoiceId).not.toBe(order.invoiceId);
   expect(await (await resubmit()).json()).toEqual(result);
+  await expectCoreAudit(http.pool, 'electricity.order_resubmitted', order.orderId, {
+    entity: 'electricity_order',
+    fromState: 'changes_requested',
+    toState: 'awaiting_staff_review',
+    reason: amendment.responseNote,
+    actor: 'buyer',
+    context: 'customer',
+  });
+
   const detail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
   expect(await detail.json()).toMatchObject({
     versionId: result.versionId,
@@ -2542,6 +2560,15 @@ it('lists only the customer profile orders and cancels an unpublished order once
   const first = await cancel();
   expect(first.status, http.logs()).toBe(200);
   expect(await first.json()).toMatchObject({ status: 'cancelled', refundId: null });
+  await expectCoreAudit(http.pool, 'electricity.order_cancelled', order.orderId, {
+    entity: 'electricity_order',
+    fromState: 'awaiting_staff_review',
+    toState: 'cancelled',
+    reason: request.reason,
+    actor: 'buyer',
+    context: 'customer',
+  });
+
   expect((await cancel()).status).toBe(200);
   const decisionAudit = (
     await http.pool.query<{ metadata: { reviewHash: string } }>(
@@ -2952,6 +2979,15 @@ it.each([
     const submitted = await fetch(path, { method: 'POST', headers, body: JSON.stringify(request) });
     expect(submitted.status, http.logs()).toBe(201);
     const result = (await submitted.json()) as { requestId: string; periodEnd: string };
+    await expectCoreAudit(http.pool, 'electricity.increase_requested', result.requestId, {
+      entity: 'electricity_quantity_increase_request',
+      fromState: null,
+      toState: 'pending',
+      reason: null,
+      actor: 'buyer',
+      context: 'customer',
+    });
+
     if (decision === 'reject') {
       const staffPath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}`;
       const command = { idempotencyKey: randomUUID(), expectedReviewHash: 'a'.repeat(64) };
@@ -3141,6 +3177,15 @@ it.each([
       ).rows[0];
       expect(approvalAudit?.metadata.reviewHash).toBe(approvalReview.hash);
       expect(approvalAudit?.metadata.financialReview.hash).toBe(approvalReview.hash);
+      await expectCoreAudit(http.pool, 'electricity.increase_approved', result.requestId, {
+        entity: 'electricity_quantity_increase_request',
+        fromState: 'pending',
+        toState: 'awaiting_signature',
+        reason: null,
+        actor: 'reviewer',
+        context: 'staff',
+      });
+
       const canonicalDocument = JSON.stringify(
         Object.fromEntries(
           Object.entries(amendment.amendmentDocument).sort(([left], [right]) =>
@@ -3259,6 +3304,15 @@ it.each([
         body: JSON.stringify(signature),
       });
       expect(signed.status, http.logs()).toBe(201);
+
+      await expectCoreAudit(http.pool, 'electricity.increase_signed', result.requestId, {
+        entity: 'electricity_quantity_increase_request',
+        fromState: 'awaiting_signature',
+        toState: 'awaiting_payment',
+        reason: null,
+        actor: 'buyer',
+        context: 'customer',
+      });
       const signedRequest = (await signed.json()) as {
         status: string;
         adjustmentInvoiceId: string;
@@ -3541,6 +3595,15 @@ it.each([
     ).rows[0];
     expect(rejectionAudit?.metadata.reviewHash).toBe(rejectReview.hash);
     expect(rejectionAudit?.metadata.financialReview.hash).toBe(rejectReview.hash);
+    await expectCoreAudit(http.pool, 'electricity.increase_rejected', result.requestId, {
+      entity: 'electricity_quantity_increase_request',
+      fromState: 'pending',
+      toState: 'rejected',
+      reason: rejectionCommand.reason,
+      actor: 'reviewer',
+      context: 'staff',
+    });
+
     expect(await (await fetch(path, { headers })).json()).toMatchObject({
       canRequest: false,
       request: { status: 'rejected', reviewReason: 'Outside approved capacity' },

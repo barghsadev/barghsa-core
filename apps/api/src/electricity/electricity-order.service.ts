@@ -748,6 +748,12 @@ export class ElectricityOrderService {
             [
               actor.userId,
               JSON.stringify({
+                entity: 'electricity_order',
+                entityId: orderId,
+                fromState: row.status,
+                toState: 'cancelled',
+                contractFromState: row.contract_state,
+                contractToState: 'Rejected',
                 orderId,
                 contractId: row.contract_id,
                 invoiceId: row.invoice_id,
@@ -888,6 +894,13 @@ export class ElectricityOrderService {
             [
               actor.userId,
               JSON.stringify({
+                entity: 'electricity_order',
+                entityId: orderId,
+                fromState: row.status,
+                toState: 'awaiting_staff_review',
+                reason: input.responseNote.trim(),
+                contractFromState: row.contract_state,
+                contractToState: 'AwaitingStaffReview',
                 orderId,
                 contractId: row.contract_id,
                 versionId,
@@ -1238,6 +1251,13 @@ export class ElectricityOrderService {
             [
               actor.userId,
               JSON.stringify({
+                entity: 'electricity_order',
+                entityId: orderId,
+                fromState: row.status,
+                toState: 'awaiting_staff_review',
+                reason: input.responseNote.trim(),
+                contractFromState: row.contract_state,
+                contractToState: 'AwaitingStaffReview',
                 orderId,
                 contractId: row.contract_id,
                 versionId,
