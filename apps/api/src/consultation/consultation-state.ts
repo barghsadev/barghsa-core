@@ -1,4 +1,5 @@
 import { CONSULTATION_REQUEST_STATUSES } from '@barghsa/shared/validation';
+import { canTransitionState } from '../common/business-transition.js';
 export const CONSULTATION_STATUSES = CONSULTATION_REQUEST_STATUSES;
 export type ConsultationStatus = (typeof CONSULTATION_STATUSES)[number];
 
@@ -16,21 +17,27 @@ export function canTransitionConsultation(
   to: ConsultationStatus,
   actor: ConsultationActor
 ): boolean {
+  if (!CONSULTATION_STATUSES.includes(from) || !CONSULTATION_STATUSES.includes(to)) return false;
   if (terminal.has(from)) return false;
   if (actor === 'staff' && (to === 'cancelled' || to === 'rejected')) return true;
   if (actor === 'staff') {
-    return (
-      (from === 'submitted' && to === 'under_review') ||
-      (from === 'under_review' && (to === 'awaiting_customer_info' || to === 'offer_pending')) ||
-      (from === 'offer_pending' && to === 'under_review') ||
-      (from === 'offer_accepted' && to === 'completed')
+    return canTransitionState(
+      {
+        submitted: ['under_review'],
+        under_review: ['awaiting_customer_info', 'offer_pending'],
+        offer_pending: ['under_review'],
+        offer_accepted: ['completed'],
+      },
+      from,
+      to
     );
   }
   if (actor === 'customer') {
-    return (
-      (from === 'awaiting_customer_info' && to === 'under_review') ||
-      (from === 'offer_pending' && to === 'offer_declined')
+    return canTransitionState(
+      { awaiting_customer_info: ['under_review'], offer_pending: ['offer_declined'] },
+      from,
+      to
     );
   }
-  return from === 'offer_pending' && to === 'offer_accepted';
+  return actor === 'payment' && canTransitionState({ offer_pending: ['offer_accepted'] }, from, to);
 }

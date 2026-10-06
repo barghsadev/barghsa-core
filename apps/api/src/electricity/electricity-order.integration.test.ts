@@ -1273,6 +1273,72 @@ const staffPost = async (id: string, decision: string, body: unknown) => {
   });
 };
 
+it('rolls back transition effects and receipt when notification fails, then retries the exact command', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  const before = await correctionSnapshot(order.orderId, order.contractId);
+  const command = { expectedVersionId: versionId, idempotencyKey: randomUUID() };
+  await http.pool.query(
+    `CREATE FUNCTION fail_transition_notice() RETURNS trigger LANGUAGE plpgsql AS $$
+     BEGIN RAISE EXCEPTION 'Test notification failure'; END $$;
+     CREATE TRIGGER fail_transition_notice BEFORE INSERT ON in_app_notifications
+     FOR EACH ROW EXECUTE FUNCTION fail_transition_notice()`
+  );
+  try {
+    expect((await staffPost(order.orderId, 'approve', command)).status).toBe(500);
+    expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(before);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT count(*)::int AS count FROM contract_publications WHERE contract_id=$1',
+          [order.contractId]
+        )
+      ).rows[0].count
+    ).toBe(0);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT count(*)::int AS count FROM idempotency_keys WHERE entity_type='electricity_staff_review' AND idempotency_key=$1",
+          [command.idempotencyKey]
+        )
+      ).rows[0].count
+    ).toBe(0);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_transition_notice ON in_app_notifications; DROP FUNCTION fail_transition_notice()'
+    );
+  }
+  const response = await staffPost(order.orderId, 'approve', command);
+  expect(response.status, http.logs()).toBe(200);
+  expect(await response.json()).toMatchObject({ orderId: order.orderId, status: 'approved' });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS count FROM contract_publications WHERE contract_id=$1',
+        [order.contractId]
+      )
+    ).rows[0].count
+  ).toBe(1);
+  const notices = (
+    await http.pool.query(
+      "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
+    )
+  ).rows[0].count;
+  expect(notices).toBe(1);
+  expect((await staffPost(order.orderId, 'approve', command)).status).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
+      )
+    ).rows[0].count
+  ).toBe(notices);
+});
+
 it('requires the exact locked staff decision review and audits the confirmed snapshot', async () => {
   const order = await submittedOrder();
   const detail = (await (

@@ -1,4 +1,5 @@
 import { activityNames } from '../common/activity-identity.js';
+import { runBusinessTransition } from '../common/business-transition.js';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
@@ -481,106 +482,120 @@ export class ElectricityStaffReviewService {
           if (row.version_id !== input.expectedVersionId)
             throw new ConflictException('Order review changed; reload before deciding');
           const reason = input.reason?.trim() ?? '';
-          const review = this.reviewForRow(row, action, reason);
-          this.reviews.assertConfirmed(review, input.expectedReviewHash);
           const status =
             action === 'approve'
               ? 'approved'
               : action === 'request-changes'
                 ? 'changes_requested'
                 : 'rejected';
-          let refundId: string | null = null;
-          if (action === 'approve') {
-            await client.query(
-              'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
-              [row.contract_id, row.version_id, actor.userId]
-            );
-            await client.query(
-              "UPDATE contracts SET state='AwaitingCustomerAcceptance' WHERE id=$1",
-              [row.contract_id]
-            );
-          } else if (action === 'request-changes') {
-            await client.query("UPDATE contracts SET state='ChangesRequested' WHERE id=$1", [
-              row.contract_id,
-            ]);
-          } else {
-            const paid = BigInt(row.paid_amount),
-              refunded = BigInt(row.refunded_amount);
-            if (paid > refunded) {
-              refundId = await createElectricityRefundObligation(client, {
-                orderId: id,
-                contractId: row.contract_id,
-                invoiceId: row.invoice_id,
-                profileId: row.profile_id,
-                paidAmount: row.paid_amount,
-                refundedAmount: row.refunded_amount,
-                authorizedBy: actor.userId,
-                reason,
-              });
-            } else if (BigInt(row.pending_refund_amount) > 0n) {
-              throw new ConflictException('Resolve existing refund before rejection');
-            } else if (['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
-              await this.invoices.transition(
-                row.invoice_id,
-                row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
-                'Cancelled',
+          return runBusinessTransition({
+            from: row.commercial_status,
+            to: status,
+            canTransition: canTransitionElectricityOrder,
+            conflict: 'Order review changed; reload before deciding',
+            guard: () => {
+              const review = this.reviewForRow(row, action, reason);
+              this.reviews.assertConfirmed(review, input.expectedReviewHash);
+              return review;
+            },
+            effect: async (review) => {
+              let refundId: string | null = null;
+              if (action === 'approve') {
+                await client.query(
+                  'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
+                  [row.contract_id, row.version_id, actor.userId]
+                );
+                await client.query(
+                  "UPDATE contracts SET state='AwaitingCustomerAcceptance' WHERE id=$1",
+                  [row.contract_id]
+                );
+              } else if (action === 'request-changes') {
+                await client.query("UPDATE contracts SET state='ChangesRequested' WHERE id=$1", [
+                  row.contract_id,
+                ]);
+              } else {
+                const paid = BigInt(row.paid_amount),
+                  refunded = BigInt(row.refunded_amount);
+                if (paid > refunded) {
+                  refundId = await createElectricityRefundObligation(client, {
+                    orderId: id,
+                    contractId: row.contract_id,
+                    invoiceId: row.invoice_id,
+                    profileId: row.profile_id,
+                    paidAmount: row.paid_amount,
+                    refundedAmount: row.refunded_amount,
+                    authorizedBy: actor.userId,
+                    reason,
+                  });
+                } else if (BigInt(row.pending_refund_amount) > 0n) {
+                  throw new ConflictException('Resolve existing refund before rejection');
+                } else if (['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
+                  await this.invoices.transition(
+                    row.invoice_id,
+                    row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
+                    'Cancelled',
+                    {
+                      actorUserId: actor.userId,
+                      reason,
+                      ip,
+                      client,
+                      financials: {
+                        paidAmount: 0n,
+                        refundedAmount: 0n,
+                        totalAmount: BigInt(row.total_amount),
+                      },
+                    }
+                  );
+                }
+                await client.query("UPDATE contracts SET state='Rejected' WHERE id=$1", [
+                  row.contract_id,
+                ]);
+                await client.query(
+                  "UPDATE electricity_contracts SET status='cancelled',updated_at=NOW() WHERE order_id=$1",
+                  [id]
+                );
+                await client.query(
+                  "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1",
+                  [id]
+                );
+                if (paid === 0n && row.gift_code_id)
+                  await this.giftCodes.releaseByOrder(id, client, {
+                    actorUserId: actor.userId,
+                    ip,
+                  });
+              }
+              await client.query(
+                'UPDATE electricity_orders SET status=$2,updated_at=NOW() WHERE id=$1',
+                [id, status]
+              );
+              await auditContract(
+                client,
+                row.contract_id,
+                row.version_id,
+                `electricity.order_review.${action}`,
+                actor,
+                ip,
                 {
-                  actorUserId: actor.userId,
+                  orderId: id,
+                  from: 'awaiting_staff_review',
+                  to: status,
                   reason,
-                  ip,
-                  client,
-                  financials: {
-                    paidAmount: 0n,
-                    refundedAmount: 0n,
-                    totalAmount: BigInt(row.total_amount),
-                  },
+                  invoiceId: row.invoice_id,
+                  refundId,
+                  reviewHash: review.hash,
+                  financialReview: review,
                 }
               );
-            }
-            await client.query("UPDATE contracts SET state='Rejected' WHERE id=$1", [
-              row.contract_id,
-            ]);
-            await client.query(
-              "UPDATE electricity_contracts SET status='cancelled',updated_at=NOW() WHERE order_id=$1",
-              [id]
-            );
-            await client.query(
-              "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1",
-              [id]
-            );
-            if (paid === 0n && row.gift_code_id)
-              await this.giftCodes.releaseByOrder(id, client, { actorUserId: actor.userId, ip });
-          }
-          await client.query(
-            'UPDATE electricity_orders SET status=$2,updated_at=NOW() WHERE id=$1',
-            [id, status]
-          );
-          await auditContract(
-            client,
-            row.contract_id,
-            row.version_id,
-            `electricity.order_review.${action}`,
-            actor,
-            ip,
-            {
-              orderId: id,
-              from: 'awaiting_staff_review',
-              to: status,
-              reason,
-              invoiceId: row.invoice_id,
-              refundId,
-              reviewHash: review.hash,
-              financialReview: review,
-            }
-          );
-          await this.notifyCustomer(client, row, action, reason);
-          return {
-            orderId: id,
-            status,
-            contractId: row.contract_id,
-            invoiceId: row.invoice_id,
-            refundId,
-          };
+              return {
+                orderId: id,
+                status,
+                contractId: row.contract_id,
+                invoiceId: row.invoice_id,
+                refundId,
+              };
+            },
+            notify: () => this.notifyCustomer(client, row, action, reason),
+          });
         }
       )
     );

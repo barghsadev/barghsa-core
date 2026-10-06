@@ -5,6 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import { runBusinessTransition } from '../common/business-transition.js';
+import { canTransitionSavingOrder } from './saving-state.js';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { GiftCodeService } from '../admin/gift-code.service.js';
@@ -655,129 +657,140 @@ export class SavingFulfillmentService {
             if (row.version_id !== input.expectedVersionId)
               throw new ConflictException('Saving order review changed; reload before deciding');
             const reason = input.reason?.trim() ?? '';
-            const review = this.decisionReviewForRow(row, action, reason);
-            this.reviews.assertConfirmed(review, input.expectedReviewHash);
-            let refundId: string | null = null;
-            if (action === 'approve') {
-              await client.query(
-                'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
-                [row.contract_id, row.version_id, actor.userId]
-              );
-              await client.query(
-                "UPDATE contracts SET state='AwaitingCustomerAcceptance' WHERE id=$1",
-                [row.contract_id]
-              );
-              await client.query(
-                "UPDATE orders SET status='CONFIRMED',updated_at=NOW() WHERE id=$1",
-                [row.order_id]
-              );
-              await client.query(
-                "UPDATE saving_orders SET status='approved',updated_at=NOW() WHERE id=$1",
-                [id]
-              );
-              await client.query(
-                `UPDATE saving_fulfillment_stages SET status='completed',started_at=NOW(),
+            const status = action === 'approve' ? 'approved' : 'rejected';
+            return runBusinessTransition({
+              from: row.status,
+              to: status,
+              canTransition: canTransitionSavingOrder,
+              conflict: 'Saving order review changed; reload before deciding',
+              guard: () => {
+                const review = this.decisionReviewForRow(row, action, reason);
+                this.reviews.assertConfirmed(review, input.expectedReviewHash);
+                return review;
+              },
+              effect: async (review) => {
+                let refundId: string | null = null;
+                if (action === 'approve') {
+                  await client.query(
+                    'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
+                    [row.contract_id, row.version_id, actor.userId]
+                  );
+                  await client.query(
+                    "UPDATE contracts SET state='AwaitingCustomerAcceptance' WHERE id=$1",
+                    [row.contract_id]
+                  );
+                  await client.query(
+                    "UPDATE orders SET status='CONFIRMED',updated_at=NOW() WHERE id=$1",
+                    [row.order_id]
+                  );
+                  await client.query(
+                    "UPDATE saving_orders SET status='approved',updated_at=NOW() WHERE id=$1",
+                    [id]
+                  );
+                  await client.query(
+                    `UPDATE saving_fulfillment_stages SET status='completed',started_at=NOW(),
                 completed_at=NOW(),completed_by=$2,explanation='Staff approved request',updated_at=NOW()
                 WHERE order_id=$1 AND stage='request_confirmation' AND status='pending'`,
-                [id, actor.userId]
-              );
-              await this.event(
-                client,
-                row,
-                'request_confirmation',
-                'pending',
-                'completed',
-                actor,
-                'Staff approved request'
-              );
-              await client.query(
-                `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
-                WHERE order_id=$1 AND stage='product_delivery' AND status='pending'`,
-                [id]
-              );
-              await this.event(
-                client,
-                row,
-                'product_delivery',
-                'pending',
-                'in_progress',
-                actor,
-                'Request approved'
-              );
-              await this.notify(
-                client,
-                row,
-                'سفارش صرفه‌جویی شما تأیید شد. قرارداد و فاکتور را بررسی کنید.',
-                'Your power-saving order was approved. Review the contract and invoice.'
-              );
-            } else {
-              refundId = await this.createRefund(client, row, actor, reason);
-              if (refundId) {
-                await client.query(
-                  "UPDATE saving_orders SET financial_status='refund_pending' WHERE id=$1",
-                  [id]
-                );
-              } else if (['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
-                await this.invoices.transition(
-                  row.invoice_id,
-                  row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
-                  'Cancelled',
-                  {
-                    actorUserId: actor.userId,
-                    reason,
-                    ip,
+                    [id, actor.userId]
+                  );
+                  await this.event(
                     client,
-                    financials: {
-                      paidAmount: 0n,
-                      refundedAmount: 0n,
-                      totalAmount: BigInt(row.total_amount),
-                    },
+                    row,
+                    'request_confirmation',
+                    'pending',
+                    'completed',
+                    actor,
+                    'Staff approved request'
+                  );
+                  await client.query(
+                    `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
+                WHERE order_id=$1 AND stage='product_delivery' AND status='pending'`,
+                    [id]
+                  );
+                  await this.event(
+                    client,
+                    row,
+                    'product_delivery',
+                    'pending',
+                    'in_progress',
+                    actor,
+                    'Request approved'
+                  );
+                } else {
+                  refundId = await this.createRefund(client, row, actor, reason);
+                  if (refundId) {
+                    await client.query(
+                      "UPDATE saving_orders SET financial_status='refund_pending' WHERE id=$1",
+                      [id]
+                    );
+                  } else if (['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
+                    await this.invoices.transition(
+                      row.invoice_id,
+                      row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
+                      'Cancelled',
+                      {
+                        actorUserId: actor.userId,
+                        reason,
+                        ip,
+                        client,
+                        financials: {
+                          paidAmount: 0n,
+                          refundedAmount: 0n,
+                          totalAmount: BigInt(row.total_amount),
+                        },
+                      }
+                    );
+                  }
+                  await client.query("UPDATE contracts SET state='Rejected' WHERE id=$1", [
+                    row.contract_id,
+                  ]);
+                  await client.query(
+                    "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1",
+                    [row.order_id]
+                  );
+                  await client.query(
+                    "UPDATE saving_orders SET status='rejected',updated_at=NOW() WHERE id=$1",
+                    [id]
+                  );
+                  if (BigInt(row.paid_amount) === 0n && row.gift_code_id)
+                    await this.giftCodes.releaseByOrder(row.order_id, client, {
+                      actorUserId: actor.userId,
+                      ip,
+                    });
+                }
+                await auditContract(
+                  client,
+                  row.contract_id,
+                  row.version_id,
+                  `saving.order_review.${action}`,
+                  actor,
+                  ip,
+                  {
+                    savingOrderId: id,
+                    reason,
+                    refundId,
+                    reviewHash: review.hash,
+                    financialReview: review,
                   }
                 );
-              }
-              await client.query("UPDATE contracts SET state='Rejected' WHERE id=$1", [
-                row.contract_id,
-              ]);
-              await client.query(
-                "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1",
-                [row.order_id]
-              );
-              await client.query(
-                "UPDATE saving_orders SET status='rejected',updated_at=NOW() WHERE id=$1",
-                [id]
-              );
-              if (BigInt(row.paid_amount) === 0n && row.gift_code_id)
-                await this.giftCodes.releaseByOrder(row.order_id, client, {
-                  actorUserId: actor.userId,
-                  ip,
-                });
-              await this.notify(
-                client,
-                row,
-                `سفارش صرفه‌جویی شما رد شد. دلیل: ${reason}`,
-                `Your power-saving order was rejected. Reason: ${reason}`
-              );
-            }
-            await auditContract(
-              client,
-              row.contract_id,
-              row.version_id,
-              `saving.order_review.${action}`,
-              actor,
-              ip,
-              {
-                savingOrderId: id,
-                reason,
-                refundId,
-                reviewHash: review.hash,
-                financialReview: review,
-              }
-            );
-            return {
-              savingOrderId: id,
-              status: action === 'approve' ? 'approved' : 'rejected',
-              refundId,
-            };
+                return {
+                  savingOrderId: id,
+                  status,
+                  refundId,
+                };
+              },
+              notify: () =>
+                this.notify(
+                  client,
+                  row,
+                  action === 'approve'
+                    ? 'سفارش صرفه‌جویی شما تأیید شد. قرارداد و فاکتور را بررسی کنید.'
+                    : `سفارش صرفه‌جویی شما رد شد. دلیل: ${reason}`,
+                  action === 'approve'
+                    ? 'Your power-saving order was approved. Review the contract and invoice.'
+                    : `Your power-saving order was rejected. Reason: ${reason}`
+                ),
+            });
           }
         )
       );

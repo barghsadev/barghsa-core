@@ -5,6 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import { runBusinessTransition } from '../common/business-transition.js';
+import { canTransitionSolarRequest } from './solar-state.js';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
@@ -225,65 +227,76 @@ export class SolarFinalService {
         outcome: status,
         decisionReason,
       } = await this.decisionSnapshot(client, requestId, decision, reason, 'UPDATE');
-      this.reviews.assertConfirmed(review, expectedReviewHash);
-      await client.query(
-        `UPDATE solar_construction_requests SET status=$2,status_reason=$3,support_path=$4,
+      const result = await runBusinessTransition({
+        from: request.status,
+        to: status,
+        canTransition: canTransitionSolarRequest,
+        conflict: 'Request is not ready for final decision',
+        guard: () => this.reviews.assertConfirmed(review, expectedReviewHash),
+        effect: async () => {
+          await client.query(
+            `UPDATE solar_construction_requests SET status=$2,status_reason=$3,support_path=$4,
          updated_at=NOW() WHERE id=$1`,
-        [
-          requestId,
-          status,
-          decision === 'approve' ? null : decisionReason,
-          decision === 'approve' ? null : '/tickets',
-        ]
-      );
-      await new NotificationsService().create(
-        {
-          userId: request.user_id,
-          profileId: request.profile_id,
-          operatingContext: 'customer',
-          type: 'general',
-          title:
-            decision === 'approve'
-              ? 'Solar request approved'
-              : decision === 'reject'
-                ? 'Solar request rejected'
-                : 'Solar request closed',
-          localizedContent: {
-            fa: {
-              title: 'درخواست نیروگاه خورشیدی',
-              body:
-                decision === 'approve'
-                  ? 'درخواست شما تأیید شد و قرارداد توسط کارشناس آماده می‌شود.'
-                  : decision === 'reject'
-                    ? `درخواست شما رد شد. دلیل: ${decisionReason}`
-                    : `درخواست بدون قرارداد بسته شد: ${decisionReason}`,
-            },
-            en: {
-              title: 'Solar request',
-              body:
-                decision === 'approve'
-                  ? 'Your request was approved. Staff will prepare the contract.'
-                  : decision === 'reject'
-                    ? `Your request was rejected. Reason: ${decisionReason}`
-                    : `The request was closed without a contract: ${decisionReason}`,
-            },
-          },
+            [
+              requestId,
+              status,
+              decision === 'approve' ? null : decisionReason,
+              decision === 'approve' ? null : '/tickets',
+            ]
+          );
+          await audit(
+            client,
+            actor,
+            `solar.final.${decision}`,
+            requestId,
+            request.status,
+            status,
+            decisionReason ?? null,
+            ip,
+            review
+          );
+          return { status };
         },
-        client
-      );
-      await audit(
-        client,
-        actor,
-        `solar.final.${decision}`,
-        requestId,
-        request.status,
-        status,
-        decisionReason ?? null,
-        ip,
-        review
-      );
+        notify: async () => {
+          await new NotificationsService().create(
+            {
+              userId: request.user_id,
+              profileId: request.profile_id,
+              operatingContext: 'customer',
+              type: 'general',
+              title:
+                decision === 'approve'
+                  ? 'Solar request approved'
+                  : decision === 'reject'
+                    ? 'Solar request rejected'
+                    : 'Solar request closed',
+              localizedContent: {
+                fa: {
+                  title: 'درخواست نیروگاه خورشیدی',
+                  body:
+                    decision === 'approve'
+                      ? 'درخواست شما تأیید شد و قرارداد توسط کارشناس آماده می‌شود.'
+                      : decision === 'reject'
+                        ? `درخواست شما رد شد. دلیل: ${decisionReason}`
+                        : `درخواست بدون قرارداد بسته شد: ${decisionReason}`,
+                },
+                en: {
+                  title: 'Solar request',
+                  body:
+                    decision === 'approve'
+                      ? 'Your request was approved. Staff will prepare the contract.'
+                      : decision === 'reject'
+                        ? `Your request was rejected. Reason: ${decisionReason}`
+                        : `The request was closed without a contract: ${decisionReason}`,
+                },
+              },
+            },
+            client
+          );
+        },
+      });
       await client.query('COMMIT');
-      return { status };
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

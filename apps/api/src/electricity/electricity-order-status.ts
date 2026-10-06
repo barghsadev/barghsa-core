@@ -1,10 +1,11 @@
 import { ELECTRICITY_ORDER_STATUSES } from '@barghsa/shared/validation';
+import { canTransitionState } from '../common/business-transition.js';
 
 export const electricityCommercialStatuses = ['draft', ...ELECTRICITY_ORDER_STATUSES] as const;
 export type ElectricityCommercialStatus = (typeof electricityCommercialStatuses)[number];
 
 const transitions: Record<ElectricityCommercialStatus, readonly ElectricityCommercialStatus[]> = {
-  draft: ['submitted'],
+  draft: ['submitted', 'rejected', 'cancelled'],
   submitted: ['awaiting_staff_review', 'rejected', 'cancelled'],
   awaiting_staff_review: ['changes_requested', 'approved', 'rejected', 'cancelled'],
   changes_requested: ['submitted', 'rejected', 'cancelled'],
@@ -15,11 +16,8 @@ const transitions: Record<ElectricityCommercialStatus, readonly ElectricityComme
   cancelled: [],
 };
 
-export function canTransitionElectricityOrder(
-  from: ElectricityCommercialStatus,
-  to: ElectricityCommercialStatus
-) {
-  return transitions[from].includes(to);
+export function canTransitionElectricityOrder(from: string, to: string) {
+  return canTransitionState(transitions, from, to);
 }
 
 export type ElectricityFinancialStatus =

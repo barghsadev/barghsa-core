@@ -24,6 +24,7 @@ import { settlePaidConsultation } from './consultation-payment.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { canTransitionConsultation, type ConsultationStatus } from './consultation-state.js';
+import { runBusinessTransition } from '../common/business-transition.js';
 import {
   parseConsultationFeeReview,
   type ConsultationFeeReview,
@@ -311,73 +312,94 @@ export class ConsultationWorkflowService {
               : action === 'cancel'
                 ? 'cancelled'
                 : 'completed';
-      if (!canTransitionConsultation(request.status, next, 'staff'))
-        throw new ConflictException('Consultation status changed; refresh before acting');
-      if (action === 'complete' && !request.invoice_id)
-        throw new ConflictException('Consultation offer has no invoice');
-      if (request.invoice_id) {
-        if (action === 'complete') {
-          const funding = (
-            await client.query<{ available: string }>(
-              `SELECT (COALESCE(SUM(i.paid_amount-i.refunded_amount),0) -
+      return runBusinessTransition({
+        from: request.status,
+        to: next,
+        canTransition: () => canTransitionConsultation(request.status, next, 'staff'),
+        conflict: 'Consultation status changed; refresh before acting',
+        guard: async () => {
+          let cancelInvoice: { state: InvoiceState; reason: string } | null = null;
+          if (action === 'complete' && !request.invoice_id)
+            throw new ConflictException('Consultation offer has no invoice');
+          if (request.invoice_id) {
+            if (action === 'complete') {
+              const funding = (
+                await client.query<{ available: string }>(
+                  `SELECT (COALESCE(SUM(i.paid_amount-i.refunded_amount),0) -
                 COALESCE((SELECT SUM(r.amount) FROM refunds r JOIN invoices ri ON ri.id=r.invoice_id
                   WHERE ri.consultation_id=$1 AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
                FROM invoices i WHERE i.consultation_id=$1 AND i.adjustment_kind IS DISTINCT FROM 'credit'`,
-              [id]
-            )
-          ).rows[0];
-          if (!request.fee || BigInt(funding?.available ?? '0') < BigInt(request.fee))
-            throw new ConflictException('Consultation fee is not fully funded');
-        } else {
-          if (action !== 'reject' && action !== 'cancel')
-            throw new ConflictException('Resolve the consultation invoice first');
-          if (!reason?.trim()) throw new BadRequestException('A reason is required');
-          await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
-          await requireSessionStepUp(client, actor);
-          const invoice = (
-            await client.query<{
-              state: InvoiceState;
-              paid_amount: string;
-              consultation_id: string | null;
-              profile_id: string;
-            }>('SELECT state,paid_amount,consultation_id,profile_id FROM invoices WHERE id=$1', [
+                  [id]
+                )
+              ).rows[0];
+              if (!request.fee || BigInt(funding?.available ?? '0') < BigInt(request.fee))
+                throw new ConflictException('Consultation fee is not fully funded');
+            } else {
+              if (action !== 'reject' && action !== 'cancel')
+                throw new ConflictException('Resolve the consultation invoice first');
+              if (!reason?.trim()) throw new BadRequestException('A reason is required');
+              await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+              await requireSessionStepUp(client, actor);
+              const invoice = (
+                await client.query<{
+                  state: InvoiceState;
+                  paid_amount: string;
+                  consultation_id: string | null;
+                  profile_id: string;
+                }>(
+                  'SELECT state,paid_amount,consultation_id,profile_id FROM invoices WHERE id=$1',
+                  [request.invoice_id]
+                )
+              ).rows[0];
+              if (
+                !invoice ||
+                invoice.consultation_id !== id ||
+                invoice.profile_id !== request.profile_id
+              )
+                throw new ConflictException('Consultation invoice linkage is invalid');
+              const paidHistory = (
+                await client.query<{ paid: boolean }>(
+                  'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
+                  [id]
+                )
+              ).rows[0]?.paid;
+              if (paidHistory)
+                throw new ConflictException('Paid consultation requires a refund review');
+              if (
+                BigInt(invoice.paid_amount) > 0n ||
+                !['Draft', 'Unpaid', 'Overdue'].includes(invoice.state)
+              )
+                throw new ConflictException(
+                  'Paid consultation invoice requires adjustment or refund'
+                );
+              cancelInvoice = { state: invoice.state, reason };
+            }
+          }
+          return cancelInvoice;
+        },
+        effect: async (cancelInvoice) => {
+          if (cancelInvoice && request.invoice_id) {
+            await this.invoiceStates.transition(
               request.invoice_id,
-            ])
-          ).rows[0];
-          if (
-            !invoice ||
-            invoice.consultation_id !== id ||
-            invoice.profile_id !== request.profile_id
-          )
-            throw new ConflictException('Consultation invoice linkage is invalid');
-          const paidHistory = (
-            await client.query<{ paid: boolean }>(
-              'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-              [id]
-            )
-          ).rows[0]?.paid;
-          if (paidHistory)
-            throw new ConflictException('Paid consultation requires a refund review');
-          if (
-            BigInt(invoice.paid_amount) > 0n ||
-            !['Draft', 'Unpaid', 'Overdue'].includes(invoice.state)
-          )
-            throw new ConflictException('Paid consultation invoice requires adjustment or refund');
-          await this.invoiceStates.transition(request.invoice_id, invoice.state, 'Cancelled', {
-            actorUserId: actor.userId,
-            reason,
-            ip,
-            client,
-          });
-        }
-      }
-      await client.query(
-        `UPDATE consultation_requests SET status=$2,expected_next_step=$3,updated_at=NOW() WHERE id=$1`,
-        [id, next, next === 'awaiting_customer_info' ? reason : null]
-      );
-      await this.event(client, id, next, actor.userId, reason ?? null);
-      await this.notify(client, request, next);
-      return { requestId: id, status: next };
+              cancelInvoice.state,
+              'Cancelled',
+              {
+                actorUserId: actor.userId,
+                reason: cancelInvoice.reason,
+                ip,
+                client,
+              }
+            );
+          }
+          await client.query(
+            `UPDATE consultation_requests SET status=$2,expected_next_step=$3,updated_at=NOW() WHERE id=$1`,
+            [id, next, next === 'awaiting_customer_info' ? reason : null]
+          );
+          await this.event(client, id, next, actor.userId, reason ?? null);
+          return { requestId: id, status: next };
+        },
+        notify: () => this.notify(client, request, next),
+      });
     });
   }
 
