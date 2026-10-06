@@ -44,7 +44,18 @@ export async function settlePaidConsultation(
     [
       uuidv7(),
       paymentActorId,
-      JSON.stringify({ requestId: row.id, invoiceId, acceptedBy: row.accepted_by }),
+      JSON.stringify({
+        entity: 'consultation_request',
+        entityId: row.id,
+        fromState: row.status,
+        toState: 'offer_accepted',
+        reason: 'Accepted offer paid',
+        actor: paymentActorId,
+        profileId: row.profile_id,
+        requestId: row.id,
+        invoiceId,
+        acceptedBy: row.accepted_by,
+      }),
       uuidv7(),
     ]
   );

@@ -73,6 +73,73 @@ function post(path: string, user: string, body: unknown) {
   });
 }
 
+async function expectSettlementAudit(requestId: string, invoiceId: string) {
+  const rows = (
+    await http.pool.query(
+      `SELECT *,metadata::jsonb AS parsed FROM audit_log WHERE event='consultation.offer.paid' AND metadata::jsonb->>'entityId'=$1`,
+      [requestId]
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  const row = rows[0]!;
+  expect(row.user_id).toBe('consultation-payer');
+  expect(row.created_at).toBeInstanceOf(Date);
+  expect(row.correlation_id).toMatch(/^[0-9a-f-]{36}$/);
+  expect(row.parsed).toMatchObject({
+    entity: 'consultation_request',
+    entityId: requestId,
+    fromState: 'offer_pending',
+    toState: 'offer_accepted',
+    reason: 'Accepted offer paid',
+    actor: 'consultation-payer',
+    profileId,
+    requestId,
+    invoiceId,
+    acceptedBy: 'consultation-payer',
+  });
+}
+
+async function expectSettlementNoOp(requestId: string, invoiceId: string) {
+  const { settlePaidConsultation } = await import('./consultation-payment.js');
+  const before = await consultationFeeEffects(http.pool, requestId),
+    client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    expect(await settlePaidConsultation(client, requestId, invoiceId, 'consultation-payer')).toBe(
+      false
+    );
+    await client.query('COMMIT');
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+  expect(await consultationFeeEffects(http.pool, requestId)).toEqual(before);
+}
+
+async function expectSettlementFailure(requestId: string, work: () => Promise<Response>) {
+  const snapshot = async () => ({
+    domain: await consultationFeeEffects(http.pool, requestId),
+    money: (
+      await http.pool.query(
+        `SELECT (SELECT jsonb_agg(to_jsonb(w) ORDER BY profile_id) FROM wallets w) AS wallets,(SELECT jsonb_agg(to_jsonb(t) ORDER BY id) FROM wallet_transactions t) AS transactions,(SELECT jsonb_agg(to_jsonb(k) ORDER BY entity_type,idempotency_key) FROM idempotency_keys k) AS keys`
+      )
+    ).rows[0],
+  });
+  const before = await snapshot();
+  await http.pool.query(
+    `CREATE FUNCTION reject_consultation_settlement_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='consultation.offer.paid' THEN RAISE EXCEPTION 'settlement audit unavailable'; END IF; RETURN NEW; END $$;CREATE TRIGGER reject_consultation_settlement_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_consultation_settlement_audit()`
+  );
+  try {
+    const response = await work();
+    expect(response.status, http.logs()).toBe(500);
+    expect(await snapshot()).toEqual(before);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER reject_consultation_settlement_audit ON audit_log;DROP FUNCTION reject_consultation_settlement_audit()'
+    );
+  }
+}
+
 async function offerFee(path: string, user: string, body: Record<string, unknown>) {
   const { idempotencyKey: _key, ...terms } = body;
   const preview = await post(path.replace(/\/fee$/, '/fee-review'), user, terms);
@@ -223,6 +290,13 @@ it('settles a reviewed offer with a real wallet payment, then allows staff compl
     review: { hash: string };
   };
   expect(context).toMatchObject({ remainingAmount: '500000', canPay: true });
+  await expectSettlementFailure(requestId, () =>
+    post(`/api/invoices/${invoiceId}/wallet-payment`, 'consultation-payer', {
+      idempotencyKey: randomUUID(),
+      expectedRemainingAmount: context.remainingAmount,
+      expectedReviewHash: context.review.hash,
+    })
+  );
   const payment = await post(`/api/invoices/${invoiceId}/wallet-payment`, 'consultation-payer', {
     idempotencyKey: randomUUID(),
     expectedRemainingAmount: context.remainingAmount,
@@ -230,6 +304,8 @@ it('settles a reviewed offer with a real wallet payment, then allows staff compl
   });
   expect(payment.status, http.logs()).toBe(200);
   expect(await payment.json()).toMatchObject({ state: 'Paid', invoiceId });
+  await expectSettlementAudit(requestId, invoiceId);
+  await expectSettlementNoOp(requestId, invoiceId);
   const after = await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
     headers: headers['consultation-payer']!,
   });
@@ -1079,6 +1155,18 @@ it('accepts a previously paid invoice without losing the consultation status', a
     (await http.pool.query('SELECT status FROM consultation_requests WHERE id=$1', [requestId]))
       .rows[0]
   ).toMatchObject({ status: 'offer_pending' });
+  await expectSettlementFailure(requestId, () =>
+    decide(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})
+  );
+  const absentAudit = (
+    await http.pool.query(
+      "SELECT * FROM audit_log WHERE event='consultation.offer.paid' AND metadata::jsonb->>'requestId'=$1",
+      [requestId]
+    )
+  ).rows;
+  expect(absentAudit).toHaveLength(0);
+  await expectSettlementNoOp(requestId, invoiceId);
+  await expectSettlementNoOp(requestId, randomUUID());
   const accepted = await decide(
     `/api/consultations/requests/${requestId}/accept`,
     'consultation-payer',
@@ -1086,4 +1174,6 @@ it('accepts a previously paid invoice without losing the consultation status', a
   );
   expect(accepted.status, http.logs()).toBe(200);
   expect(await accepted.json()).toMatchObject({ status: 'offer_accepted', paymentRequired: false });
+  await expectSettlementAudit(requestId, invoiceId);
+  await expectSettlementNoOp(requestId, invoiceId);
 });

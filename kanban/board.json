@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T21:41:04Z",
-  "source_commit": "ed24ad04ef890bd0a961903a1e069fe9f1745c7a",
+  "updated": "2026-10-06T21:43:36Z",
+  "source_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -63178,11 +63178,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -63546,6 +63546,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -63624,11 +63633,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -63992,6 +64001,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -64066,11 +64084,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -64434,6 +64452,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -64507,11 +64534,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -64875,6 +64902,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -64949,11 +64985,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -65317,6 +65353,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -65391,11 +65436,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -65759,6 +65804,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -65838,11 +65892,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -66206,6 +66260,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -66283,11 +66346,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -66651,6 +66714,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -66726,11 +66798,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -67094,6 +67166,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -67172,11 +67253,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -67540,6 +67621,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -67620,11 +67710,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -67988,6 +68078,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -68063,11 +68162,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -68431,6 +68530,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -68505,11 +68613,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -68873,6 +68981,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -68948,11 +69065,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -69316,6 +69433,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -69391,11 +69517,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -69759,6 +69885,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -69835,11 +69970,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.ts",
-              "sha256": "461f91f85f4f4cd4a943f2bbd373ff6133c30b96fd5c115b6b35067da5e23485"
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.controller.ts",
@@ -70203,6 +70338,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/financial-document-audit-metadata/renewal-proof.json",
             "scope": "Only audit metadata/reason plumbing and additive HTTP assertions; original business/test ASTs preserved with current affected checks. No unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts",
+              "apps/api/src/consultation/consultation-payment.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -99676,7 +99820,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Normalize and verify solar progress/final/postal audit families. Consultation automatic paid settlement remains separate from the accepted workflow/fee helpers."
+        "Normalize and verify solar progress/final/postal audit families."
       ],
       "owner": null,
       "depends_on": [],
@@ -99695,7 +99839,8 @@
           "release-0.2-electricity-transition-audit",
           "release-0.2-electricity-system-audit",
           "release-0.2-saving-transition-audit",
-          "release-0.2-saving-system-audit"
+          "release-0.2-saving-system-audit",
+          "release-0.2-consultation-settlement-audit"
         ],
         "current_acceptance": {
           "kind": "accepted-saving-system-manual-electricity-contract-submission-staff-price-consultation-document-gift-and-audit-immutability-subcriteria",
@@ -99947,7 +100092,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
-              "sha256": "d76403a992ea7e030d4590260c3e0b9827e9298ead6a034e4a3666c4824397ff"
+              "sha256": "46e78f849c12a345363cea8587d2fbf008db1417eb1ea9d18931b188e347dc30"
             },
             {
               "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
@@ -100068,6 +100213,10 @@
             {
               "path": "packages/db/src/saving-system-audit.migrated.test.ts",
               "sha256": "6a0479b84aeaadacb34644362caf67b9293c1c83089ffe3eb9907107a6929b6c"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-payment.ts",
+              "sha256": "f6ad3559f9df3f699b5dfb97da8ba56c0af7b7242e409f9fdc65f26458d33958"
             }
           ],
           "checks": [
@@ -100226,9 +100375,18 @@
             "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/format.json",
             "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/snapshot.json",
             "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/review.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/build.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/http.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/format.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/sast.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/contract.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json"
           ],
-          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open.",
+          "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open. Paid consultation settlement now records consultation entity/id, actual locked offer_pending→offer_accepted state, acceptance/payment actor, profile and reason alongside existing invoice/acceptedBy provenance.11 payment/workflow outcomes preserve135 original payment-test expects; both payment/acceptance orders verify mandatory-audit rollback/retry and duplicate/unmatched/unaccepted no-op boundaries. Only solar progress/final/postal audit families remain open.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
           "submission_audit_renewal": {
             "base_commit": "ed058a6c37f6ee3692e2934d21e3456399705134",
@@ -100306,6 +100464,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit/renewal-proof.json",
             "scope": "252 adds actual reservation row audits, observed legacy stock actions and2 upgrade audit metadata prefixes. All old journal/SQL, financial/locking/control flow, schema and3140 compiled outputs unchanged;462 original API expects and AST retained.9 DB plus7 HTTP final outcomes,7 rollback probes. Original criteria retained; no unrelated acceptance inferred."
+          },
+          "consultation_settlement_audit_renewal": {
+            "base_commit": "bec13323d638cbf2ced7314566f7d8b2d6285374",
+            "changed_paths": [
+              "apps/api/src/consultation/consultation-payment.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit/renewal-proof.json",
+            "scope": "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred."
           }
         }
       }
@@ -134251,6 +134417,21 @@
         "No accepted milestone, staging enqueue, Telegram receipt or production authorization claimed."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-system-audit"
+    },
+    "release-0.2-consultation-settlement-audit": {
+      "title": "Consultation paid-settlement audit metadata",
+      "task_keys": [
+        "03-core-business.md#T-03.90.03"
+      ],
+      "summary": "Accepted paid consultation settlement audit subcriterion. Solar progress/final/postal audit families remain open.",
+      "validation": [
+        "Seven paid-settlement audit metadata fields only; original production AST,135 original payment-test expect calls and all old test AST preserved.11 current payment/workflow HTTP cases plus2 audit-failure rollbacks and4 no-op checks. Only consultation-payment.js production output changes; schema/SQL/dependencies and caller logic retained. No unrelated acceptance inferred.",
+        "Both callers retained: authenticated invoice Paid transition and customer acceptance of previously-paid offer. The existing paymentActorId remains the audit user and explicit actor; acceptedBy and invoiceId distinguish offer acceptance from payment. No fabricated system user or new payment behavior.",
+        "11 payment/workflow cases pass. Real wallet payment after acceptance and acceptance after payment each assert exactly one canonical paid-settlement audit, actual old/new state/reason/profile and identity.2 audit-failure500 probes preserve request/events/invoice/refunds/jobs/audits/notices/wallet/transactions/idempotency then original successful commands continue.4 direct no-op checks preserve all domain effects after completed settlement, before acceptance and with mismatched invoice; premature paid offer produces no settlement audit.",
+        "Current API build/types/lint/format,1-target5-rule SAST and generated OpenAPI contract pass. Only consultation-payment.js among production outputs changes; consultation/saving test JS refreshed. All3140 outputs compared with prior bound evidence; no build during consumers.",
+        "General audit task remains partial for solar progress/final/postal. No milestone accepted, staging enqueue/Telegram receipt or production deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/consultation-settlement-audit"
     }
   },
   "historical_improvements": [
@@ -134292,7 +134473,7 @@
   "next_batch": {
     "id": "release-0.2-terminal-audit-wallet-gaps",
     "release": "0.2.0",
-    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify solar/postal and automatic consultation settlement audit families. Saving SQL inventory/upgrade and manual stage resets, electricity and contract audit transitions are accepted. Reuse existing engines and preserve unanswered owner decisions.",
+    "goal": "Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; verify solar progress/final/postal audit families. Saving inventory/upgrade, consultation settlement and other accepted audit transitions retain current source-bound evidence. Preserve unanswered owner decisions.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.90.03",
@@ -134305,7 +134486,7 @@
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "234 v0.2 tasks accepted. Terminal rejection/cancellation matrix and solar/postal plus automatic consultation audit families remain. Unanswered owner schema/security/identity decisions and operational/provider evidence prevent a defensible launch date."
+    "method": "234 v0.2 tasks accepted. Terminal rejection/cancellation matrix and solar progress/final/postal audit families remain. Unanswered owner schema/security/identity decisions and operational/provider evidence prevent a defensible launch date."
   },
   "capabilities": [
     {
