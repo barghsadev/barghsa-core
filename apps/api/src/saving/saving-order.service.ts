@@ -405,6 +405,13 @@ export class SavingOrderService {
   }
 
   async verifyBill(actor: Actor, profileId: string, billIdentifier: string) {
+    await this.authorizeBillRequest(actor, profileId);
+    const result = await this.billProvider.verify(billIdentifier);
+    await this.authorizeBillRequest(actor, profileId);
+    return result;
+  }
+
+  private async authorizeBillRequest(actor: Actor, profileId: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -418,7 +425,6 @@ export class SavingOrderService {
     } finally {
       client.release();
     }
-    return this.billProvider.verify(billIdentifier);
   }
 
   async duplicate(actor: Actor, profileId: string, savingPlanId: string, billIdentifier: string) {
