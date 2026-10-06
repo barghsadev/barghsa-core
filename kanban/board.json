@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06",
+  "updated": "2026-10-06T17:41:47Z",
   "source_commit": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -71428,11 +71428,11 @@
         "story": "03-core-business.md#spec-86c84991f06c"
       },
       "requirement": "| **T-03.07.01.01** | 🔄 Commercial state machine for electricity orders:\n  - `draft` (multi-step form in progress, not yet submitted)\n  - `submitted` → `awaiting_staff_review` (initial after submission)\n  - `awaiting_staff_review` → `changes_requested` (staff requests corrections)\n  - `changes_requested` → `submitted` (customer resubmits amended order)\n  - `awaiting_staff_review` → `approved` (contract approved)\n  - `approved` → `active` (contract signed, payment confirmed, prerequisites met)\n  - `active` → `completed` (period ends)\n  - Any pre-active → `rejected` (staff rejects with reason)\n  - Any pre-active → `cancelled` (staff cancels with reason)\n  - ⚠️ `Rejected`/`Cancelled` paid orders auto-enter refund pending | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Implement all-pre-active staff rejection/cancellation with required reason, current permissions, immutable review confirmation, concurrency/idempotency and paid refund safeguards; include explicit draft terminal handling. Staff rejection currently permits only awaiting_staff_review/AwaitingStaffReview; draft map permits only submitted."
       ],
       "owner": null,
       "depends_on": [],
@@ -71442,9 +71442,89 @@
         "batches": [
           "2026-09-23-electricity-term-completion",
           "2026-09-24-electricity-order-revisions",
-          "2026-09-24-electricity-staff-revision-review"
+          "2026-09-24-electricity-staff-revision-review",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle-with-explicit-commercial-gap",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Verified submitted/review/revision/approval/paid+accepted activation, paid terminal refund obligation and atomic term completion with rollback/upgrade evidence. Partial: any-pre-active rejection/cancellation is not completely implemented; draft permits only submitted, and staff rejection requires awaiting_staff_review/AwaitingStaffReview. No disposition waives these criteria.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71458,21 +71538,99 @@
         "story": "03-core-business.md#spec-86c84991f06c"
       },
       "requirement": "| **T-03.07.01.02** | 🔄 Financial state machine for electricity orders:\n  - `unpaid` (initial — invoice created but not settled)\n  - `payment_under_review` (bank payment submitted, awaiting confirmation)\n  - `partially_funded` (bank payments cover part of the invoice)\n  - `paid` (full settlement confirmed)\n  - `refund_pending` (automatic after rejection/cancellation of paid order)\n  - `partially_refunded`\n  - `refunded` (terminal) | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-electricity-invoice-replacement"
+          "2026-09-23-electricity-invoice-replacement",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Seven distinct financial projections derive exact bigint paid/refunded/pending ledger amounts; invalid totals fail. Payment review, partial payment, paid and refund retry/completion scenarios remain bound to real HTTP receipts.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71486,19 +71644,98 @@
         "story": "03-core-business.md#spec-86c84991f06c"
       },
       "requirement": "| **T-03.07.01.03** | 📋 Order detail page: display **both** commercial and financial statuses separately with distinct labels. Never combine into one ambiguous status. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-electricity-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Customer and staff detail use DualStatusDisplay with separate commercial and financial labels, tones and dictionary keys. Current staff browser/light/dark/locales and retained customer cases verify presentation.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71512,12 +71749,10 @@
         "story": "03-core-business.md#spec-86c84991f06c"
       },
       "requirement": "| **T-03.07.01.04** | 📋 Show next action clearly for each status pair. For customer: what they need to do. For staff: what action is pending their review. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -71526,9 +71761,89 @@
         "batches": [
           "2026-09-23-electricity-invoice-return",
           "2026-09-23-electricity-next-action-links",
-          "2026-09-23-electricity-payment-review-status"
+          "2026-09-23-electricity-payment-review-status",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Current audience-aware actions distinguish customer review wait/resubmit/pay/accept from staff review/await payment/await acceptance/refund processing. Customer banner identifies responsible party and actionable reference links.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71542,19 +71857,98 @@
         "story": "03-core-business.md#spec-b43335e9e791"
       },
       "requirement": "| **T-03.07.02.01** | 🔧 Staff API: `POST /staff/electricity/orders/:id/approve` — approve preliminary contract. Notify customer. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-electricity-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Guarded staff approve endpoint confirms locked version/review hash and current permission/step-up, publishes once, audits and creates localized profile-scoped customer notification transactionally; replay and stale review denial verified.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71568,21 +71962,99 @@
         "story": "03-core-business.md#spec-b43335e9e791"
       },
       "requirement": "| **T-03.07.02.02** | 🔧 Staff API: `POST /staff/electricity/orders/:id/request-changes` — with reason. Notify customer. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-04-electricity-correction-resubmission-forms"
+          "2026-10-04-electricity-correction-resubmission-forms",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Request-changes requires a trimmed reason, locked awaiting-review state and confirmed financial snapshot; paid changes require financial correction. Transaction updates state, audit and localized notification; customer revision returns to review with immutable history.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71596,19 +72068,98 @@
         "story": "03-core-business.md#spec-b43335e9e791"
       },
       "requirement": "| **T-03.07.02.03** | 🔧 Staff API: `POST /staff/electricity/orders/:id/reject` — with reason. If paid, trigger automatic refund workflow. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-electricity-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Reject requires reason and confirmation, denies pending payment/refund conflict, closes unpaid invoice or atomically creates paid residual refund obligation and retry job, with exact idempotency, notification and audit. Real paid rejection proves worker completion and one wallet credit; failed retries stay visible until finance restores credit.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71622,12 +72173,10 @@
         "story": "03-core-business.md#spec-b43335e9e791"
       },
       "requirement": "| **T-03.07.02.04** | 📋 Staff UI: electricity order review work queue — list of orders awaiting staff review with priority/age | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -71635,9 +72184,89 @@
         "changed_paths": [],
         "batches": [
           "2026-09-23-electricity-staff-review-pagination",
-          "2026-10-06-electricity-staff-queue-tables"
+          "2026-10-06-electricity-staff-queue-tables",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Staff queue selects awaiting_staff_review only, ascending submission/id, cursor after50, derives ageHours and normal/high/urgent age priority. Current browser covers localized table/mobile facts, single decision owner, auth withdrawal/retry and accessibility.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71651,12 +72280,10 @@
         "story": "03-core-business.md#spec-b43335e9e791"
       },
       "requirement": "| **T-03.07.02.05** | 📋 Staff UI: order detail view — customer info, period, product breakdown, prices, contract snapshot, decision buttons (approve/request changes/reject) | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -71668,9 +72295,89 @@
           "2026-09-24-staff-electricity-contract-preview",
           "2026-09-24-staff-electricity-order-lookup",
           "2026-09-24-staff-electricity-price-breakdown",
-          "2026-10-04-electricity-correction-resubmission-forms"
+          "2026-10-04-electricity-correction-resubmission-forms",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Existing staff detail contains customer, period, quantities/prices, contract snapshot and reference, invoice/financial status, version/revision history and approve/change/reject controls. Current reason-form browser proves captured command, explicit confirmed review and lost-response replay.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71866,12 +72573,10 @@
         "story": "03-core-business.md#spec-6bd49ba0c4e8"
       },
       "requirement": "| **T-03.07.04.01** | 📋 Customer order list: all profile-scoped electricity orders with commercial + financial status, period, total kWh, total price, submission date, next action callout | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -71882,9 +72587,89 @@
           "2026-09-23-electricity-order-history",
           "2026-09-24-electricity-order-next-actions",
           "2026-09-30-electricity-history-filters",
-          "2026-10-06-customer-service-history-scope"
+          "2026-10-06-customer-service-history-scope",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Profile-authorized API list/history and current ElectricityOrdersPage show separate statuses, reference, period, total kWh/IRR, submitted timestamp and next action/link. Real HTTP profile isolation, cancellation and history filters plus unchanged source-bound customer UI evidence retained.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71898,12 +72683,10 @@
         "story": "03-core-business.md#spec-6bd49ba0c4e8"
       },
       "requirement": "| **T-03.07.04.02** | 📋 Order detail: full submitted data snapshot, per-product breakdown, contract reference, invoice reference and status, payment status, review timeline, comments | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -71917,9 +72700,89 @@
           "2026-09-24-electricity-order-snapshot",
           "2026-09-24-electricity-refund-clarity",
           "2026-10-04-electricity-correction-resubmission-forms",
-          "2026-10-05-order-comment-forms"
+          "2026-10-05-order-comment-forms",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "Detail returns submitted settings/pricing/profile/address and immutable line/contract snapshots, invoice/contract references, payment status, review timeline and customer-visible comments. Staff-only comments remain isolated; authorized opted-in names only. Current/retained component and real HTTP evidence cover it.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -71933,12 +72796,10 @@
         "story": "03-core-business.md#spec-6bd49ba0c4e8"
       },
       "requirement": "| **T-03.07.04.03** | 📋 No dead ends: always show current state, what happened, next available action, who is responsible, how to get help. | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -71953,9 +72814,89 @@
           "2026-09-24-electricity-order-revisions",
           "2026-09-24-electricity-refund-clarity",
           "2026-10-04-electricity-correction-resubmission-forms",
-          "2026-10-05-order-comment-forms"
+          "2026-10-05-order-comment-forms",
+          "release-0.2-electricity-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-electricity-lifecycle",
+          "reviewed_sha": "b778d534ac450b88bfd5ddbf93a258c078c03a91",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+              "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+              "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+              "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+              "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/reuse-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-source.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-db.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-upgrade.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/completion-worker.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance/lifecycle-browser.json"
+          ],
+          "criterion_result": "WorkflowStatusBanner displays state, latest event, next action, responsible party and support; pending payment/refund/activation and terminal states keep understandable status/help. Reference/action/retry paths remain available; unavailable authority withdraws private detail.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -104281,6 +105222,92 @@
           "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
         }
       ]
+    },
+    "release-0.2-electricity-lifecycle": {
+      "title": "Electricity staff review, financial projection and term completion acceptance",
+      "task_keys": [
+        "03-core-business.md#T-03.07.01.01",
+        "03-core-business.md#T-03.07.01.02",
+        "03-core-business.md#T-03.07.01.03",
+        "03-core-business.md#T-03.07.01.04",
+        "03-core-business.md#T-03.07.02.01",
+        "03-core-business.md#T-03.07.02.02",
+        "03-core-business.md#T-03.07.02.03",
+        "03-core-business.md#T-03.07.02.04",
+        "03-core-business.md#T-03.07.02.05",
+        "03-core-business.md#T-03.07.04.01",
+        "03-core-business.md#T-03.07.04.02",
+        "03-core-business.md#T-03.07.04.03"
+      ],
+      "summary": "Accepted11 exact tasks; retained commercial state task partial with concrete any-pre-active terminal gap. No product changes or milestone publication.",
+      "validation": [
+        "39 current API, database, worker and component cases plus20 current Chromium/mobile Safari cases pass with zero browser retries.",
+        "Retained45 related real HTTP cases and unchanged customer journey evidence through checked source, migration and3121 non-map compiled output hashes. Only bill handler differs from foundation; it is outside reused lifecycle paths.",
+        "Reviewed once. Staff rejection only supports awaiting review; draft lacks rejection/cancellation. Record unfinished criteria without waiver. Upgrade reconciliation, completion rollback, permissions, step-up, reasons, review digests, idempotency, refunds and notifications inspected."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-order-status.test.ts",
+          "sha256": "62aeab752eb4434c32c808f6dd71ed5fb772631293f5b4a769bb3d76e0a5e6dc"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order-status.ts",
+          "sha256": "0bd115dc0cb6c203dd4a9623e8867a26377e6767200f1a18675575bf1f7b5825"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "ac421f2e4c73d792fc45d99adbdf6d0f123e34d02dbfe8d5d05a6ecf17f2ea0c"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "12a0c23de5106dea2b7be1a6674d450a71075e50cb267ffe661a4157c9ac6b3b"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+          "sha256": "800c9447c4f12668ebe87044c3ca145445d8d90ae856f16e3d6209deccff3d5d"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+          "sha256": "8a10bdb7af9e76af83d57ad8c0f6b3ae81cd2af71dc3efd5ff0d779632896745"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
+          "sha256": "c1385dcc5ee8425724be69b151c2552637ba727ade1268b54bde63347ce1de3f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+          "sha256": "ba8d5334226dc1d727dccda3e85bac2cdda90412fc0f4b1dd4fa103a81f1fc90"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+          "sha256": "4e85d471f11bb46a9f6df043d7cf007dba77e3d389869e2718a6e55460b43e27"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+          "sha256": "3a1469c2b098541c3525ccb345643e5ff590e98b164ddcbf3713a47318d24b8a"
+        },
+        {
+          "path": "apps/worker/src/contracts/completion-runner.ts",
+          "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+        },
+        {
+          "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
+          "sha256": "6c2d0777273daa78efbc86452ac71b635d728732920b5da7b78346424df9e7eb"
+        },
+        {
+          "path": "packages/db/src/contract-completion.ts",
+          "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -104320,22 +105347,31 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-electricity-lifecycle",
+    "id": "release-0.2-saving-ordering",
     "release": "0.2.0",
-    "goal": "Verify existing electricity commercial/financial state projection, staff decision permissions/queues, contract acceptance/payment prerequisites and paid cancellation/rejection refund obligations. Reuse valid order/payment and current simple/advanced journey evidence. Inspect before rebuilding. Resume pending simple naming criteria when the owner replies.",
+    "goal": "Inspect existing saving schema, wizard/provider/manual-review, atomic submission, profile rules, financial projection and customer detail/change behavior. Build demonstrated gaps and bind exact criteria to related checks. Preserve unfinished electricity all-pre-active terminal operation and pending owner naming decision for subsequent work.",
     "task_keys": [
+      "03-core-business.md#T-03.09.01.01",
+      "03-core-business.md#T-03.09.01.02",
+      "03-core-business.md#T-03.09.01.03",
+      "03-core-business.md#T-03.09.02.01",
+      "03-core-business.md#T-03.09.02.02",
+      "03-core-business.md#T-03.09.02.03",
+      "03-core-business.md#T-03.09.02.04",
+      "03-core-business.md#T-03.09.02.05",
+      "03-core-business.md#T-03.09.02.06",
+      "03-core-business.md#T-03.09.02.07",
+      "03-core-business.md#T-03.09.02.08",
+      "03-core-business.md#T-03.09.03.02",
+      "03-core-business.md#T-03.09.03.04",
+      "03-core-business.md#T-03.09.03.05",
+      "03-core-business.md#T-03.09.03.06",
+      "03-core-business.md#T-03.09.04.01",
+      "03-core-business.md#T-03.09.04.02",
+      "03-core-business.md#T-03.09.04.03",
+      "03-core-business.md#T-03.09.04.04",
+      "03-core-business.md#T-03.09.04.05",
       "03-core-business.md#T-03.07.01.01",
-      "03-core-business.md#T-03.07.01.02",
-      "03-core-business.md#T-03.07.01.03",
-      "03-core-business.md#T-03.07.01.04",
-      "03-core-business.md#T-03.07.02.01",
-      "03-core-business.md#T-03.07.02.02",
-      "03-core-business.md#T-03.07.02.03",
-      "03-core-business.md#T-03.07.02.04",
-      "03-core-business.md#T-03.07.02.05",
-      "03-core-business.md#T-03.07.04.01",
-      "03-core-business.md#T-03.07.04.02",
-      "03-core-business.md#T-03.07.04.03",
       "03-core-business.md#T-03.05.01.04",
       "03-core-business.md#T-03.05.03.02",
       "release-readiness#R-01.01"

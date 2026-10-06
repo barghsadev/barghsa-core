@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-06. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-06T17:41:47Z. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 184 | Accepted with unchanged source bindings. |
-| verify | 1121 | Existing work may be complete; inspect evidence before building. |
-| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 195 | Accepted with unchanged source bindings. |
+| verify | 1109 | Existing work may be complete; inspect evidence before building. |
+| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,20 +39,29 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing electricity commercial/financial state projection, staff decision permissions/queues, contract acceptance/payment prerequisites and paid cancellation/rejection refund obligations. Reuse valid order/payment and current simple/advanced journey evidence. Inspect before rebuilding. Resume pending simple naming criteria when the owner replies.
+Inspect existing saving schema, wizard/provider/manual-review, atomic submission, profile rules, financial projection and customer detail/change behavior. Build demonstrated gaps and bind exact criteria to related checks. Preserve unfinished electricity all-pre-active terminal operation and pending owner naming decision for subsequent work.
 
+- `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
+- `03-core-business.md#T-03.09.01.02`: Create `saving_order_lines` table: `id`, `order_id` (FK), `description` (text), `amount` (bigint — IRR), `type` (enum: `plan_price`, `hardware_price`, `discount`, `vat`)
+- `03-core-business.md#T-03.09.01.03`: Create `saving_fulfillment_stages` table for tracking fulfillment progress per order
+- `03-core-business.md#T-03.09.02.01`: Step 1: Saving plan selection — display list of active saving plans with title, price, one-line description. Show inactive plans as unavailable.
+- `03-core-business.md#T-03.09.02.02`: Step 2: Hardware product selection — after plan selected, show assigned hardware products. Customer picks exactly one. Display title, price, full description. Require explicit confirmation checkbox.
+- `03-core-business.md#T-03.09.02.03`: Step 3: Electricity bill identifier input — single text field. Local format validation. Optional backend verification when provider configured.
+- `03-core-business.md#T-03.09.02.04`: Bill identifier local validation (format regex). If provider configured, async verification call. Provider failure does not erase draft — retry or submit for manual staff review.
+- `03-core-business.md#T-03.09.02.05`: Duplicate detection: admin can prevent duplicate active saving orders for same bill identifier + plan. If detected, link customer to existing order or support — do not silently allow a second order.
+- `03-core-business.md#T-03.09.02.06`: Create `BillVerificationProvider` abstraction with adapter interface for Iranian bill-data APIs: `verify(billIdentifier) → { verified: boolean, data?: object, error?: string }`. Include timeout, bounded retry with jitter, and circuit breaker.
+- `03-core-business.md#T-03.09.02.07`: Add `verification_result` JSONB column to `saving_orders` table to persist verification attempt metadata: source provider, timestamp, verification status, raw result, error details.
+- `03-core-business.md#T-03.09.02.08`: Bill verification provider failure (timeout, auth error, provider unavailable) must not erase the draft. Customer can retry or submit for manual staff review. Failed verification state is persisted in `verification_result`; explicit "submit for staff review" action advances the order.
+- `03-core-business.md#T-03.09.03.02`: Step 5: Agreement — display admin-editable saving plan agreement title and body. Require explicit "I accept" action. Record accepted version.
+- `03-core-business.md#T-03.09.03.04`: Submission: `POST /saving/orders` — idempotent. Atomic transaction creates: saving order, linked draft contract, linked unpaid invoice. Snapshots: installation address, selected prices, accepted agreement version. Redirects to order detail.
+- `03-core-business.md#T-03.09.03.05`: Idempotency prevents duplicate orders, contracts, or invoices. Use idempotency key on submission.
+- `03-core-business.md#T-03.09.03.06`: Backend enforces: active profile must be Individual (residential). Legal Entity profiles are rejected.
+- `03-core-business.md#T-03.09.04.01`: Saving order commercial states: `draft`, `submitted`, `awaiting_staff_review`, `approved`, `in_progress`, `completed`, `cancelled`, `rejected`
+- `03-core-business.md#T-03.09.04.02`: Saving order financial states: `unpaid`, `paid`, `refund_pending`, `refunded` (follows general invoice model)
+- `03-core-business.md#T-03.09.04.03`: Customer order list: all saving orders with status, plan name, hardware, price, date, next action
+- `03-core-business.md#T-03.09.04.04`: Customer order detail: submitted data, invoice status, contract status, payment options, fulfillment progress (5 stages), document upload, comments
+- `03-core-business.md#T-03.09.04.05`: Before payment: customer can request hardware/address change — recalculates draft invoice. After payment: only staff can apply changes via audited amendment.
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
-- `03-core-business.md#T-03.07.01.02`: Financial state machine for electricity orders:
-- `03-core-business.md#T-03.07.01.03`: Order detail page: display both commercial and financial statuses separately with distinct labels. Never combine into one ambiguous status.
-- `03-core-business.md#T-03.07.01.04`: Show next action clearly for each status pair. For customer: what they need to do. For staff: what action is pending their review.
-- `03-core-business.md#T-03.07.02.01`: Staff API: `POST /staff/electricity/orders/:id/approve` — approve preliminary contract. Notify customer.
-- `03-core-business.md#T-03.07.02.02`: Staff API: `POST /staff/electricity/orders/:id/request-changes` — with reason. Notify customer.
-- `03-core-business.md#T-03.07.02.03`: Staff API: `POST /staff/electricity/orders/:id/reject` — with reason. If paid, trigger automatic refund workflow.
-- `03-core-business.md#T-03.07.02.04`: Staff UI: electricity order review work queue — list of orders awaiting staff review with priority/age
-- `03-core-business.md#T-03.07.02.05`: Staff UI: order detail view — customer info, period, product breakdown, prices, contract snapshot, decision buttons (approve/request changes/reject)
-- `03-core-business.md#T-03.07.04.01`: Customer order list: all profile-scoped electricity orders with commercial + financial status, period, total kWh, total price, submission date, next action callout
-- `03-core-business.md#T-03.07.04.02`: Order detail: full submitted data snapshot, per-product breakdown, contract reference, invoice reference and status, payment status, review timeline, comments
-- `03-core-business.md#T-03.07.04.03`: No dead ends: always show current state, what happened, next available action, who is responsible, how to get help.
 - `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
 - `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at`
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
@@ -241,18 +250,18 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.06.04.04` | done | Recorded batch work | Step 4: Optional gift code |
 | `03-core-business.md#T-03.06.04.05` | done | Recorded batch work | Step 5: Review & submit — full snapshot, wallet balance, explicit confirm |
 | `03-core-business.md#T-03.06.04.06` | done | Recorded batch work | Lead time must be enforced: start date cannot violate lead days setting. |
-| `03-core-business.md#T-03.07.01.01` | verify | Recorded batch work | Commercial state machine for electricity orders: |
-| `03-core-business.md#T-03.07.01.02` | verify | Recorded batch work | Financial state machine for electricity orders: |
-| `03-core-business.md#T-03.07.01.03` | verify | Inventory needed | Order detail page: display both commercial and financial statuses separately with distinct labels. Never combine into one ambiguous status. |
-| `03-core-business.md#T-03.07.01.04` | verify | Recorded batch work | Show next action clearly for each status pair. For customer: what they need to do. For staff: what action is pending their review. |
-| `03-core-business.md#T-03.07.02.01` | verify | Inventory needed | Staff API: `POST /staff/electricity/orders/:id/approve` — approve preliminary contract. Notify customer. |
-| `03-core-business.md#T-03.07.02.02` | verify | Recorded batch work | Staff API: `POST /staff/electricity/orders/:id/request-changes` — with reason. Notify customer. |
-| `03-core-business.md#T-03.07.02.03` | verify | Inventory needed | Staff API: `POST /staff/electricity/orders/:id/reject` — with reason. If paid, trigger automatic refund workflow. |
-| `03-core-business.md#T-03.07.02.04` | verify | Recorded batch work | Staff UI: electricity order review work queue — list of orders awaiting staff review with priority/age |
-| `03-core-business.md#T-03.07.02.05` | verify | Recorded batch work | Staff UI: order detail view — customer info, period, product breakdown, prices, contract snapshot, decision buttons (approve/request changes/reject) |
-| `03-core-business.md#T-03.07.04.01` | verify | Recorded batch work | Customer order list: all profile-scoped electricity orders with commercial + financial status, period, total kWh, total price, submission date, next action callout |
-| `03-core-business.md#T-03.07.04.02` | verify | Recorded batch work | Order detail: full submitted data snapshot, per-product breakdown, contract reference, invoice reference and status, payment status, review timeline, comments |
-| `03-core-business.md#T-03.07.04.03` | verify | Recorded batch work | No dead ends: always show current state, what happened, next available action, who is responsible, how to get help. |
+| `03-core-business.md#T-03.07.01.01` | partial | Recorded batch work | Commercial state machine for electricity orders: |
+| `03-core-business.md#T-03.07.01.02` | done | Recorded batch work | Financial state machine for electricity orders: |
+| `03-core-business.md#T-03.07.01.03` | done | Recorded batch work | Order detail page: display both commercial and financial statuses separately with distinct labels. Never combine into one ambiguous status. |
+| `03-core-business.md#T-03.07.01.04` | done | Recorded batch work | Show next action clearly for each status pair. For customer: what they need to do. For staff: what action is pending their review. |
+| `03-core-business.md#T-03.07.02.01` | done | Recorded batch work | Staff API: `POST /staff/electricity/orders/:id/approve` — approve preliminary contract. Notify customer. |
+| `03-core-business.md#T-03.07.02.02` | done | Recorded batch work | Staff API: `POST /staff/electricity/orders/:id/request-changes` — with reason. Notify customer. |
+| `03-core-business.md#T-03.07.02.03` | done | Recorded batch work | Staff API: `POST /staff/electricity/orders/:id/reject` — with reason. If paid, trigger automatic refund workflow. |
+| `03-core-business.md#T-03.07.02.04` | done | Recorded batch work | Staff UI: electricity order review work queue — list of orders awaiting staff review with priority/age |
+| `03-core-business.md#T-03.07.02.05` | done | Recorded batch work | Staff UI: order detail view — customer info, period, product breakdown, prices, contract snapshot, decision buttons (approve/request changes/reject) |
+| `03-core-business.md#T-03.07.04.01` | done | Recorded batch work | Customer order list: all profile-scoped electricity orders with commercial + financial status, period, total kWh, total price, submission date, next action callout |
+| `03-core-business.md#T-03.07.04.02` | done | Recorded batch work | Order detail: full submitted data snapshot, per-product breakdown, contract reference, invoice reference and status, payment status, review timeline, comments |
+| `03-core-business.md#T-03.07.04.03` | done | Recorded batch work | No dead ends: always show current state, what happened, next available action, who is responsible, how to get help. |
 | `03-core-business.md#T-03.09.01.01` | verify | Recorded batch work | Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at` |
 | `03-core-business.md#T-03.09.01.02` | verify | Inventory needed | Create `saving_order_lines` table: `id`, `order_id` (FK), `description` (text), `amount` (bigint — IRR), `type` (enum: `plan_price`, `hardware_price`, `discount`, `vat`) |
 | `03-core-business.md#T-03.09.01.03` | verify | Inventory needed | Create `saving_fulfillment_stages` table for tracking fulfillment progress per order |
