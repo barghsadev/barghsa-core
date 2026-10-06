@@ -2,6 +2,8 @@
 
 Start with [current tasks](BOARD.md), [release plan](RELEASES.md), and [working process](WORKFLOW.md).
 
+For a sustained Codex run, use [the release goal prompt](GOAL-PROMPT.md). It defines release selection, proportional checks, independent deployment and completion boundaries.
+
 `board.json` is the only editable source of task status, release assignments, decisions and launch readiness. `BOARD.md` is generated from it. The seven `epics/` files and the product and architecture documents retain requirements; they do not record completion. Operational runbooks remain instructions, not status trackers.
 
 ```sh

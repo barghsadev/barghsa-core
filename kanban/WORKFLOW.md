@@ -13,15 +13,15 @@ This process replaces the serial Cursor/PR loop, audit dispatch and per-batch re
 
 ## Task states
 
-| State | Meaning |
-| --- | --- |
-| `verify` | Current acceptance is uncertain. Inspect existing code and evidence before building. |
-| `todo` | Concrete new build, verification or external work. |
-| `in_progress` | Selected work has started, including preserved unfinished changes. |
-| `partial` | Some criteria are accepted; exact remaining criteria must be reconciled with later fixes. |
-| `blocked` | A named policy, access or external prerequisite prevents completion. Record the blocker. |
-| `done` | Every effective criterion has current acceptance evidence and passing applicable checks. No remaining criteria. |
-| `superseded` | An explicit approved requirement change or duplicate resolution names the retained implementation or replacement. |
+| State         | Meaning                                                                                                           |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `verify`      | Current acceptance is uncertain. Inspect existing code and evidence before building.                              |
+| `todo`        | Concrete new build, verification or external work.                                                                |
+| `in_progress` | Selected work has started, including preserved unfinished changes.                                                |
+| `partial`     | Some criteria are accepted; exact remaining criteria must be reconciled with later fixes.                         |
+| `blocked`     | A named policy, access or external prerequisite prevents completion. Record the blocker.                          |
+| `done`        | Every effective criterion has current acceptance evidence and passing applicable checks. No remaining criteria.   |
+| `superseded`  | An explicit approved requirement change or duplicate resolution names the retained implementation or replacement. |
 
 Preserve earlier approvals as history. Renew affected acceptance when source bindings changed. A broad build, batch mention, merged PR, shared component or existing file cannot certify a whole task. Missing documentation does not prove code is absent. Do not use `superseded` to hide missing work.
 
@@ -34,6 +34,18 @@ Use codebase-memory and source checks to inspect current code. Reuse existing en
 Implement and review the complete batch diff. Run related tests and applicable package checks. Money, authorization, ownership, idempotency, concurrency, migrations and retry changes need real failure-boundary checks. UI retains Persian/English, RTL, accessibility and appropriate production-browser evidence. Preserve coverage floors, numeric budgets and financial assertions. Record stopped/failing runs truthfully; never claim an entire stopped suite passed.
 
 Update affected states, remaining criteria, dependencies and evidence. Bind passing checks and reviewed captures to final source bytes. Store complete execution logs outside the checkout. Mark `done` only after full effective acceptance. Validate the board and regenerate `BOARD.md`.
+
+### Keep validation small
+
+Choose exact affected test files and callers before editing. Confirm actual cases ran. Use changed-file lint and affected package checks. Documents/board edits need their validation and formatting, not application builds. Check API contracts or database snapshots when those interfaces change.
+
+At a release boundary, deduplicate related tests and acceptance journeys for that release. Reuse prior passing evidence only when sources, tests, fixtures, configuration, dependencies and required compiled outputs match. Rerun invalidated checks. A commit or handoff alone does not justify repeating them.
+
+Use repository-wide regression, full browser matrices and coverage runs for cross-cutting changes, explicit acceptance gates or the final launch rehearsal. Preserve coverage floors, budgets and critical assertions. Do not routinely run every workspace/browser test for a local feature change.
+
+Build shared outputs once before their consumers. Do not rebuild outputs while tests use them. Parallelize checks only when their resources are independent. Use verified prebuilt browser assets where supported and capture release images within related browser runs. Diagnose a stalled or failed check before retrying; rerun its affected scope, not every passing suite.
+
+Do not wait for or continuously poll hosted CI. The staging worker is independent. Check durable deployment receipts at useful build boundaries, then continue implementation. See [the release goal prompt](GOAL-PROMPT.md) for the full sustained-work instructions.
 
 Explicitly stage reviewed implementation and board changes, verify the staged diff, commit conventionally, normally push main and read back its exact remote SHA with `gh`. Never force-push. Hosted CI runs independently. Investigate failures, but do not wait for hosted CI to deploy this test environment. Continue the next batch. Do not increment versions, deploy or announce each batch.
 
