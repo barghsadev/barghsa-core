@@ -4,6 +4,7 @@ import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { expireSavingInventory } from '@barghsa/db/saving-inventory';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { expectSubmissionAudit } from '../test/submission-audit.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let customerHeaders: Record<string, string>;
@@ -523,6 +524,13 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const retry = await request('/api/saving/orders', 'POST', submission);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toEqual(result);
+  await expectSubmissionAudit(http.pool, {
+    event: 'order_created',
+    actor: 'saving-order-buyer',
+    entity: 'saving_order',
+    id: result.savingOrderId,
+    state: 'awaiting_staff_review',
+  });
   const archiveAuditBefore = (
     await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'")
   ).rows;

@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { expectSubmissionAudit } from '../test/submission-audit.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -116,6 +117,13 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
       )
     ).status
   ).toBe(404);
+  await expectSubmissionAudit(http.pool, {
+    event: 'consultation.request.submitted',
+    actor: 'individual',
+    entity: 'consultation_request',
+    id: created.requestId,
+    state: 'submitted',
+  });
   const detail = await fetch(`${http.base}/api/consultations/requests/${created.requestId}`, {
     headers: headers.individual!,
   });

@@ -216,7 +216,16 @@ export class ConsultationRequestService {
         [
           uuidv7(),
           actor.userId,
-          JSON.stringify({ requestId, profileId: input.profileId, productId: product.id }),
+          JSON.stringify({
+            requestId,
+            profileId: input.profileId,
+            productId: product.id,
+            entity: 'consultation_request',
+            entityId: requestId,
+            fromState: null,
+            toState: 'submitted',
+            reason: null,
+          }),
           uuidv7(),
           ip,
         ]

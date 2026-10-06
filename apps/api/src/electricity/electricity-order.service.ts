@@ -1757,7 +1757,16 @@ export class ElectricityOrderService {
          VALUES(uuid_generate_v7(),$1,'order_created',$2::jsonb,uuid_generate_v7(),$3)`,
         [
           actor.userId,
-          JSON.stringify({ orderId, profileId: input.profileId, status: 'PENDING' }),
+          JSON.stringify({
+            orderId,
+            profileId: input.profileId,
+            status: 'PENDING',
+            entity: 'electricity_order',
+            entityId: orderId,
+            fromState: null,
+            toState: 'awaiting_staff_review',
+            reason: null,
+          }),
           ip,
         ]
       );

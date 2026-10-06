@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { expectSubmissionAudit } from '../test/submission-audit.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -240,6 +241,13 @@ it('submits both solar request types, captures agreement, and creates no contrac
   const retry = await submitReviewed(buildingInput);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toMatchObject(building);
+  await expectSubmissionAudit(http.pool, {
+    event: 'solar.request.submitted',
+    actor: 'solar-customer',
+    entity: 'solar_construction_request',
+    id: building.requestId,
+    state: 'submitted',
+  });
   const detailsResponse = await request(`/api/solar/requests/${building.requestId}`, 'GET');
   expect(detailsResponse.status, http.logs()).toBe(200);
   const details = (await detailsResponse.json()) as { request: Record<string, unknown> };

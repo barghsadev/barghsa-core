@@ -4,6 +4,7 @@ import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-processing';
 import type { ElectricityPriceAdjustmentReview } from '@barghsa/shared/finance';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { expectSubmissionAudit } from '../test/submission-audit.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
@@ -3452,6 +3453,13 @@ it('previews and atomically submits an order, contract, lines and payable invoic
   const repeat = await post('orders/simple', input);
   expect(repeat.status, http.logs()).toBe(201);
   expect(await repeat.json()).toEqual(result);
+  await expectSubmissionAudit(http.pool, {
+    event: 'order_created',
+    actor: 'buyer',
+    entity: 'electricity_order',
+    id: result.orderId,
+    state: 'awaiting_staff_review',
+  });
   const altered = await post('orders/simple', { ...input, totalKwh: '11' });
   expect(altered.status).toBe(409);
   const saved = (
