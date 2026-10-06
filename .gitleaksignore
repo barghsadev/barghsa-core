@@ -129,3 +129,8 @@ a4fe3b5a20561f28755b4f060c2d49c84503ba70:audit/evidence/r01/route-security.csv:g
 44ea5935def05a5e969e5f65b81036cde41cb906:audit/evidence/r01/route-security.csv:generic-api-key:231
 44ea5935def05a5e969e5f65b81036cde41cb906:audit/evidence/r01/route-security.csv:generic-api-key:234
 544dcf29fb4234dbe380abf031023a4ca2f13dbd:audit/current-task-requirements.json:generic-api-key:8
+
+# Board inventory/source SHA-256 metadata, recomputed from d613fd9 task keys and epic bytes.
+# Only these exact historical findings; all other paths, commits and default rules remain scanned.
+d613fd9778aecf09bc64b72d465d2bec08bd4365:kanban/board.json:generic-api-key:25
+d613fd9778aecf09bc64b72d465d2bec08bd4365:kanban/board.json:generic-api-key:107

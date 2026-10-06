@@ -716,7 +716,9 @@ describe('ProfilesService', () => {
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
         .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
+        .mockResolvedValueOnce({ rows: [{ id: addressRow.id }] }) // lock current saved address
         .mockResolvedValueOnce({ rows: [{ ...addressRow, full_address: '456 New Street' }] }) // UPDATE
+        .mockResolvedValueOnce({ rows: [] }) // audit
         .mockResolvedValueOnce(undefined); // COMMIT
 
       mockPool.connect.mockResolvedValue(transactionalClient);
@@ -726,6 +728,14 @@ describe('ProfilesService', () => {
       });
 
       expect(result.fullAddress).toBe('456 New Street');
+      expect(mockClient.query).toHaveBeenCalledWith(
+        'SELECT id FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR UPDATE',
+        ['addr-1', 'prof-1']
+      );
+      expect(
+        mockClient.query.mock.calls.some(([sql]) => String(sql).includes("'address_updated'"))
+      ).toBe(true);
+      expect(mockClient.query).toHaveBeenLastCalledWith('COMMIT', undefined);
     });
 
     it('rejects when profile does not belong to the user', async () => {
@@ -764,6 +774,7 @@ describe('ProfilesService', () => {
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
         .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
+        .mockResolvedValueOnce({ rows: [{ id: addressRow.id }] }) // lock current saved address
         .mockResolvedValueOnce(undefined); // ROLLBACK
 
       mockPool.connect.mockResolvedValue(transactionalClient);
@@ -771,6 +782,10 @@ describe('ProfilesService', () => {
       await expect(service.updateAddress(addressActor, 'prof-1', 'addr-1', {})).rejects.toThrow(
         'No fields to update'
       );
+      expect(mockClient.query).toHaveBeenLastCalledWith('ROLLBACK', undefined);
+      expect(
+        mockClient.query.mock.calls.some(([sql]) => String(sql).startsWith('UPDATE addresses'))
+      ).toBe(false);
     });
   });
 

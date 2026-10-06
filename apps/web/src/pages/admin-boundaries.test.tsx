@@ -351,6 +351,8 @@ it.each(invalidEffective.map((data) => ({ data })))(
       )
     );
     await act(async () => root.render(<AdminRolesPage />));
+    const catalogueBidi = [...host.querySelectorAll('bdi')].map((item) => item.textContent);
+    const lookup = host.querySelector('#staffUserId')!.closest('section')!;
     await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
     await act(async () =>
       host
@@ -366,8 +368,11 @@ it.each(invalidEffective.map((data) => ({ data })))(
         ).toHaveLength(1)
       );
     });
-    expect(host.querySelector('[role=alert]')).not.toBeNull();
-    expect(host.querySelectorAll('bdi').length).toBeLessThanOrEqual(1);
+    expect(lookup.querySelector('[role=alert]')).not.toBeNull();
+    expect(lookup.querySelectorAll('bdi')).toHaveLength(0);
+    expect([...host.querySelectorAll('bdi')].map((item) => item.textContent)).toEqual(
+      catalogueBidi
+    );
   }
 );
 it.each([404, 503, 'network'] as const)(

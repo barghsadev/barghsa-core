@@ -51346,6 +51346,62 @@
             "Coverage fast-mode job failed because test/integrity prerequisites failed. No independent passing coverage claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots/ci-artifacts"
+        },
+        "current_scan_checkpoint": {
+          "reviewed_sha": "9362a74fae15f69af4f4f8713f78bbcd110fe363",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/document-list-recovery.test.tsx",
+              "sha256": "c233f48eb8c3fc2f7d0fcc2e47dbba056d11cc3c26a5f5961cbf5f054dcbd749"
+            },
+            {
+              "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+              "sha256": "47cc8d1e04be18d8cf22837793ca01860ec3d1b8f0eb84548aa4c4351cb1af8c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.test.ts",
+              "sha256": "c122aa01098fececa39d06251c7f8d436c6c467f33e5b43196836d9d9bcdbcd3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+              "sha256": "f6f8b9b4118703ec60fdd7e4180889f8981afd85ebcbc736eb177ceae0aa2f9a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminRolesPage.tsx",
+              "sha256": "a1aa8b6e6db0d551b8da6048b095efaf0c2e64036ea0c6ed7128080f20934075"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "scripts/check-secrets.py",
+              "sha256": "3f8308821355d3028a56fd9c35042f4d0775a78013a2eb80776cc6b15b9b023b"
+            },
+            {
+              "path": ".gitleaksignore",
+              "sha256": "9e3d7293c6dd2852a2915684bc472df7efa9d4654b0e01ad5c71f96f6a46b150"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "c72d7c8604365f15d8ac16b6a9c126c3285dc2fa6be1d1d9acd39dbe9ca10d24"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "391 distinct web source cases pass: 380 admin-boundary cases in web-source.json (that run still had three obsolete document selectors) and all 11 final document recovery cases in document-source.json. All current assertions retain independent denial/race/draft behavior; permission rejection now requires zero lookup bidi nodes and exact unchanged catalogue text.",
+            "40 profile service cases pass in profiles-accepted.json. Existing row lock and audit responses were missing from two unit transaction mocks; added those responses and explicit current-row lock, audit, final COMMIT/ROLLBACK and no-update-on-empty assertions. Production methods are unchanged.",
+            "Two history findings independently reproduced as SHA-256 of original task keys and exact epic bytes at d613fd9. Only their exact commit/path/rule/line fingerprints are excluded; no rule, entropy threshold or path exclusions added.",
+            "Pinned full scanner passes over all 2355 local Git commits, zero findings. Generated synthetic credential rejection and redaction self-test pass. secrets.json and secret-scan.json.",
+            "Changed-file lint/formatting and board validation pass. Source/tests/ignore metadata only; no production build/browser run required for unchanged product code. Hosted CI result remains independent and pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/ci-boundary-reconciliation",
+          "remaining": [
+            "SCA advisories source-map-js/proxy-addr remain unresolved; hosted CI cannot yet be claimed green."
+          ]
         }
       }
     },
@@ -51461,7 +51517,63 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "current_scan_checkpoint": {
+          "reviewed_sha": "9362a74fae15f69af4f4f8713f78bbcd110fe363",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/document-list-recovery.test.tsx",
+              "sha256": "c233f48eb8c3fc2f7d0fcc2e47dbba056d11cc3c26a5f5961cbf5f054dcbd749"
+            },
+            {
+              "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+              "sha256": "47cc8d1e04be18d8cf22837793ca01860ec3d1b8f0eb84548aa4c4351cb1af8c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.test.ts",
+              "sha256": "c122aa01098fececa39d06251c7f8d436c6c467f33e5b43196836d9d9bcdbcd3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+              "sha256": "f6f8b9b4118703ec60fdd7e4180889f8981afd85ebcbc736eb177ceae0aa2f9a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminRolesPage.tsx",
+              "sha256": "a1aa8b6e6db0d551b8da6048b095efaf0c2e64036ea0c6ed7128080f20934075"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "scripts/check-secrets.py",
+              "sha256": "3f8308821355d3028a56fd9c35042f4d0775a78013a2eb80776cc6b15b9b023b"
+            },
+            {
+              "path": ".gitleaksignore",
+              "sha256": "9e3d7293c6dd2852a2915684bc472df7efa9d4654b0e01ad5c71f96f6a46b150"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "c72d7c8604365f15d8ac16b6a9c126c3285dc2fa6be1d1d9acd39dbe9ca10d24"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "391 distinct web source cases pass: 380 admin-boundary cases in web-source.json (that run still had three obsolete document selectors) and all 11 final document recovery cases in document-source.json. All current assertions retain independent denial/race/draft behavior; permission rejection now requires zero lookup bidi nodes and exact unchanged catalogue text.",
+            "40 profile service cases pass in profiles-accepted.json. Existing row lock and audit responses were missing from two unit transaction mocks; added those responses and explicit current-row lock, audit, final COMMIT/ROLLBACK and no-update-on-empty assertions. Production methods are unchanged.",
+            "Two history findings independently reproduced as SHA-256 of original task keys and exact epic bytes at d613fd9. Only their exact commit/path/rule/line fingerprints are excluded; no rule, entropy threshold or path exclusions added.",
+            "Pinned full scanner passes over all 2355 local Git commits, zero findings. Generated synthetic credential rejection and redaction self-test pass. secrets.json and secret-scan.json.",
+            "Changed-file lint/formatting and board validation pass. Source/tests/ignore metadata only; no production build/browser run required for unchanged product code. Hosted CI result remains independent and pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/ci-boundary-reconciliation",
+          "remaining": [
+            "SCA advisories source-map-js/proxy-addr remain unresolved; hosted CI cannot yet be claimed green."
+          ]
+        }
       }
     },
     {
@@ -66168,6 +66280,62 @@
             "Coverage fast-mode job failed because test/integrity prerequisites failed. No independent passing coverage claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots/ci-artifacts"
+        },
+        "ci_boundary_checkpoint": {
+          "reviewed_sha": "9362a74fae15f69af4f4f8713f78bbcd110fe363",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/document-list-recovery.test.tsx",
+              "sha256": "c233f48eb8c3fc2f7d0fcc2e47dbba056d11cc3c26a5f5961cbf5f054dcbd749"
+            },
+            {
+              "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+              "sha256": "47cc8d1e04be18d8cf22837793ca01860ec3d1b8f0eb84548aa4c4351cb1af8c"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.test.ts",
+              "sha256": "c122aa01098fececa39d06251c7f8d436c6c467f33e5b43196836d9d9bcdbcd3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+              "sha256": "f6f8b9b4118703ec60fdd7e4180889f8981afd85ebcbc736eb177ceae0aa2f9a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminRolesPage.tsx",
+              "sha256": "a1aa8b6e6db0d551b8da6048b095efaf0c2e64036ea0c6ed7128080f20934075"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "scripts/check-secrets.py",
+              "sha256": "3f8308821355d3028a56fd9c35042f4d0775a78013a2eb80776cc6b15b9b023b"
+            },
+            {
+              "path": ".gitleaksignore",
+              "sha256": "9e3d7293c6dd2852a2915684bc472df7efa9d4654b0e01ad5c71f96f6a46b150"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "c72d7c8604365f15d8ac16b6a9c126c3285dc2fa6be1d1d9acd39dbe9ca10d24"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "391 distinct web source cases pass: 380 admin-boundary cases in web-source.json (that run still had three obsolete document selectors) and all 11 final document recovery cases in document-source.json. All current assertions retain independent denial/race/draft behavior; permission rejection now requires zero lookup bidi nodes and exact unchanged catalogue text.",
+            "40 profile service cases pass in profiles-accepted.json. Existing row lock and audit responses were missing from two unit transaction mocks; added those responses and explicit current-row lock, audit, final COMMIT/ROLLBACK and no-update-on-empty assertions. Production methods are unchanged.",
+            "Two history findings independently reproduced as SHA-256 of original task keys and exact epic bytes at d613fd9. Only their exact commit/path/rule/line fingerprints are excluded; no rule, entropy threshold or path exclusions added.",
+            "Pinned full scanner passes over all 2355 local Git commits, zero findings. Generated synthetic credential rejection and redaction self-test pass. secrets.json and secret-scan.json.",
+            "Changed-file lint/formatting and board validation pass. Source/tests/ignore metadata only; no production build/browser run required for unchanged product code. Hosted CI result remains independent and pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/ci-boundary-reconciliation",
+          "remaining": [
+            "SCA advisories source-map-js/proxy-addr remain unresolved; hosted CI cannot yet be claimed green."
+          ]
         }
       }
     },

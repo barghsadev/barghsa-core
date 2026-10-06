@@ -246,6 +246,15 @@ it('equivalent document filter props preserve upload work without another reques
 function templateData(url: string) {
   return url.includes('?') ? [templateRow] : templateDetail;
 }
+function openTemplate(host: ParentNode) {
+  const label = `Open ${templateRow.title}`;
+  const found = [...host.querySelectorAll('button')].find(
+    (item) => item.getAttribute('aria-label') === label
+  );
+  expect(found, label).toBeDefined();
+  expect(found!.textContent).toBe(templateRow.title);
+  return found!;
+}
 it('template list retry preserves metadata and version file drafts without rereading detail', async () => {
   let listStatus = 200;
   const calls: string[] = [];
@@ -260,7 +269,7 @@ it('template list retry preserves metadata and version file drafts without rerea
   );
   const { host, close } = await mount(<AdminDocumentTemplatesPage />);
   try {
-    await act(async () => button(host, templateRow.title + 'Contract · Versions: 1').click());
+    await act(async () => openTemplate(host).click());
     await act(async () => button(host, 'Edit template').click());
     await change(host, '#document-template-title', 'Metadata draft');
     await change(host, '#document-template-summary', 'Version draft');
@@ -311,7 +320,7 @@ it('template detail retry does not reload its list; newer versions drop obsolete
   );
   const { host, close } = await mount(<AdminDocumentTemplatesPage />);
   try {
-    await act(async () => button(host, templateRow.title + 'Contract · Versions: 1').click());
+    await act(async () => openTemplate(host).click());
     const count = calls.length;
     detailStatus = 200;
     await act(async () => button(host, 'Try again').click());
@@ -358,7 +367,7 @@ it('template permission denial rejects a racing download and a late command call
   );
   const { host, close } = await mount(<AdminDocumentTemplatesPage />);
   try {
-    await act(async () => button(host, templateRow.title + 'Contract · Versions: 1').click());
+    await act(async () => openTemplate(host).click());
     await act(async () => button(host, 'Get file link').click());
     status = 403;
     await change(host, '#document-template-search', 'Changed search');
