@@ -115,6 +115,27 @@ it.each(['create', 'update', 'archive', 'price'])(
     }
   }
 );
+it.each([null, '0', '0000', undefined])(
+  'rejects a hardware create with non-positive price %s without side effects',
+  async (price) => {
+    const before = (await http.pool.query('SELECT id FROM products ORDER BY id')).rows;
+    const prices = (await http.pool.query('SELECT id FROM product_price_versions ORDER BY id'))
+      .rows;
+    const response = await request('', 'POST', { ...createBody, price });
+    expect(response.status, http.logs()).toBe(400);
+    expect(await response.json()).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', fields: ['price'] },
+    });
+    expect((await http.pool.query('SELECT id FROM products ORDER BY id')).rows).toEqual(before);
+    expect(
+      (await http.pool.query('SELECT id FROM product_price_versions ORDER BY id')).rows
+    ).toEqual(prices);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+        .rows
+    ).toEqual([]);
+  }
+);
 it('creates exact large prices, adds price history and archives without deleting the product', async () => {
   const created = await request('', 'POST', createBody);
   expect(created.status).toBe(201);
@@ -623,4 +644,51 @@ it('queries literal bilingual titles, effective exact prices and bounded pages t
   expect(
     (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'")).rows
   ).toHaveLength(0);
+});
+
+it('waits for a concurrent plan association and refuses to archive the newly referenced hardware', async () => {
+  const hardware = await seed();
+  const plan = (
+    await http.pool.query(
+      "INSERT INTO products(type,title,price,status) VALUES('saving_plan','{\"en\":\"Concurrent plan\"}',1000,'inactive') RETURNING id"
+    )
+  ).rows[0].id;
+  const client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM products WHERE id=$1 FOR SHARE', [hardware]);
+    await client.query('INSERT INTO saving_plan_hardware(plan_id,hardware_id) VALUES($1,$2)', [
+      plan,
+      hardware,
+    ]);
+    pending = request(`/${hardware}`, 'DELETE');
+    let waiting = false;
+    for (let attempt = 0; attempt < 100; attempt++) {
+      const row = (
+        await http.pool.query(
+          "SELECT count(*)::int AS n FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM products%FOR UPDATE%'"
+        )
+      ).rows[0];
+      if (row.n > 0) {
+        waiting = true;
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    expect(waiting).toBe(true);
+    await client.query('COMMIT');
+    expect((await pending).status, http.logs()).toBe(409);
+    expect(
+      (await http.pool.query('SELECT status FROM products WHERE id=$1', [hardware])).rows[0].status
+    ).toBe('active');
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'"))
+        .rows
+    ).toEqual([]);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+  }
 });

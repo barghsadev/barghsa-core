@@ -523,6 +523,22 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const retry = await request('/api/saving/orders', 'POST', submission);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toEqual(result);
+  const archiveAuditBefore = (
+    await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'")
+  ).rows;
+  for (const productId of [input.savingPlanId, input.hardwareProductId]) {
+    const archive = await request(
+      `/api/admin/catalogue/products/${productId}`,
+      'DELETE',
+      undefined,
+      staffHeaders
+    );
+    expect(archive.status, http.logs()).toBe(409);
+  }
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'"))
+      .rows
+  ).toEqual(archiveAuditBefore);
   const detail = await request(`/api/saving/orders/${result.savingOrderId}`, 'GET');
   expect(detail.status, http.logs()).toBe(200);
   const invoiceDetails = await request(`/api/invoices/${result.invoiceId}`, 'GET');
@@ -2529,6 +2545,17 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(
     (await request(stagePath('process_completion'), 'POST', stageInput(), staffHeaders)).status
   ).toBe(409);
+  const completedPlanArchive = await request(
+    `/api/admin/catalogue/products/${input.savingPlanId}`,
+    'DELETE',
+    undefined,
+    staffHeaders
+  );
+  expect(completedPlanArchive.status, http.logs()).toBe(409);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'"))
+      .rows
+  ).toEqual(archiveAuditBefore);
   const customerProgress = await request(`/api/saving/orders/${result.savingOrderId}`, 'GET');
   expect(customerProgress.status, http.logs()).toBe(200);
   expect(await customerProgress.json()).toMatchObject({

@@ -71,7 +71,14 @@ export const CreateProductSchema = z
     categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
     hardwareIds: z.array(z.string().uuid()).min(1).max(100).optional(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (value) => value.type !== 'hardware' || (value.price != null && /[1-9]/.test(value.price)),
+    {
+      path: ['price'],
+      message: 'Hardware price must be a positive integer in IRR',
+    }
+  );
 
 export const UpdateProductSchema = z
   .object({

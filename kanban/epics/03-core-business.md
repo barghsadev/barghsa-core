@@ -47,7 +47,7 @@
 
 ## E-03.01: Product Catalog Management
 
-**Goal:** Admin CRUD for all product types (consultation, electricity, hardware, saving plans). Default seed data, versioned pricing, activation/deactivation, and catalog management.
+**Goal:** Admin CRUD for all product types (consultation, electricity, hardware, saving plans). Default seed data, versioned pricing, activation/deactivation, and catalog management. **Owner-approved design (2026-10-06):** Retain the existing unified catalogue model, canonical short electricity keys and generic catalogue API routes; reconcile these requirements to that design. Price, agreement, historical-reference, authorization and ordering requirements remain effective.
 
 **Complexity:** L
 **Depends on:** E-02 (Admin roles, permission model), E-01 (Database schema, migrations)
@@ -62,8 +62,8 @@
 | **T-03.01.01.02** | Create `product_price_versions` table for versioned pricing: `id`, `product_id` (FK), `price` (bigint), `vat_category_override` (FK nullable), `effective_from` (timestamptz), `effective_until` (timestamptz nullable), `created_by` (FK to users) | M |
 | **T-03.01.01.03** | Create `product_categories` table: `id`, `product_id` (FK), `category` (enum: `electricity_generation_station_consultation`, `electricity_saving_certificate_consultation`, `thermal_electricity`, `green_electricity`, `free_market_electricity`, `energy_saving_electricity`). Only for electricity and consultation types. | S |
 | **T-03.01.01.04** | Create `electricity_product_limits` table: `id`, `product_id` (FK to electricity products only), `min_kwh` (bigint, default 0 = no limit), `max_kwh` (bigint, default 0 = no limit) | S |
-| **T-03.01.01.05** | Create `saving_plans` table (separate from products, linked many-to-many to hardware products): `id`, `title` (localized JSONB), `description` (localized JSONB nullable), `price` (bigint), `agreement_title` (text), `agreement_body` (text, admin-editable), `status` (active/inactive), `created_at`, `updated_at` | M |
-| **T-03.01.01.06** | Create `saving_plan_hardware` junction table: `saving_plan_id` (FK), `hardware_product_id` (FK to products where type=hardware), unique constraint on pair | S |
+| **T-03.01.01.05** | Create saving-plan rows in the unified `products` table (`type=saving_plan`), linked many-to-many to hardware products: UUIDv7 `id`, localized `title`/nullable `description`, bigint `price` (nullable while unconfigured), `status`, timestamps. Store admin-editable agreement title/body separately in `saving_plan_agreement_versions`. Ordering requires a valid positive effective price and an active agreement | M |
+| **T-03.01.01.06** | Create `saving_plan_hardware` junction table: `plan_id` (FK to products where type=saving_plan), `hardware_id` (FK to products where type=hardware), unique constraint on pair | S |
 | **T-03.01.01.07** | Add database constraints: non-negative price enforcement at DB level for products and saving plans, unique `(type, system_key)` for system products, FK with ON DELETE RESTRICT for referenced products | M |
 
 ### S-03.01.02: Default Electricity Products — Seed Migration
@@ -71,10 +71,10 @@
 | ID | Task | Complexity |
 |----|------|------------|
 | **T-03.01.02.01** | Create idempotent seed migration that upserts four default electricity products by `system_key`:
-  - `thermal_electricity` (برق حرارتی)
-  - `green_electricity` (برق سبز)
-  - `free_market_electricity` (برق آزاد)
-  - `energy_saving_electricity` (برق صرفه‌جویی) | M |
+  - `thermal` (برق حرارتی)
+  - `green` (برق سبز)
+  - `free_market` (برق آزاد)
+  - `energy_saving` (برق صرفه‌جویی) | M |
 | **T-03.01.02.02** | Each default product gets: type=`electricity`, `system_key` set to the immutable key, `price`=null (unavailable until admin sets price), `status`=`inactive` by default | S |
 | **T-03.01.02.03** | Verify `pnpm db:seed` is idempotent — running it multiple times does not create duplicate system products (use ON CONFLICT on `system_key` with unique index) | S |
 | **T-03.01.02.04** | ⚠️ Admin cannot delete a system electricity product, cannot change its `system_key` or `type`, cannot create additional electricity-product types. Validate at both API and DB level. | M |
@@ -83,11 +83,11 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.01.03.01** | Admin API: `POST /admin/products/hardware` — create hardware product (title, description, price). Validate price > 0. | S |
-| **T-03.01.03.02** | Admin API: `GET /admin/products/hardware` — list with search, filter by status, sort, pagination | S |
-| **T-03.01.03.03** | Admin API: `GET /admin/products/hardware/:id` — detail view | S |
-| **T-03.01.03.04** | Admin API: `PATCH /admin/products/hardware/:id` — update. Price change creates a new versioned price record. | M |
-| **T-03.01.03.05** | Admin API: `DELETE /admin/products/hardware/:id` — archive only (soft delete). Reject if referenced by historical saving-plan associations. | S |
+| **T-03.01.03.01** | Admin API: `POST /admin/catalogue/products` with `type=hardware` — create hardware product (title, description, price). Validate price > 0. | S |
+| **T-03.01.03.02** | Admin API: `GET /admin/catalogue/products?type=hardware` — list with search, filter by status, sort, pagination | S |
+| **T-03.01.03.03** | Admin API: `GET /admin/catalogue/products/:id` — detail view | S |
+| **T-03.01.03.04** | Admin API: `PUT /admin/catalogue/products/:id` — update metadata. `POST /admin/catalogue/products/:id/prices` records an effective-dated price change with a new versioned price record. | M |
+| **T-03.01.03.05** | Admin API: `DELETE /admin/catalogue/products/:id` — archive only (soft delete). Reject if referenced by historical saving-plan associations. | S |
 | **T-03.01.03.06** | ⚠️ Hardware products are not directly orderable by customers. No customer-facing order flow creates hardware-only orders. | S |
 | **T-03.01.03.07** | ⚠️ Product without a valid positive price is not orderable in any context (saving plan, etc.) | S |
 
@@ -95,12 +95,12 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.01.04.01** | Admin API: `POST /admin/products/saving-plans` — create. Validate at least one hardware product selected (many-to-many). | M |
-| **T-03.01.04.02** | Admin API: `PATCH /admin/products/saving-plans/:id` — update title, description, price, agreement, hardware associations | M |
-| **T-03.01.04.03** | Admin API: `DELETE /admin/products/saving-plans/:id` — archive. Reject if referenced by active/paid orders. | S |
+| **T-03.01.04.01** | Admin API: `POST /admin/catalogue/products` with `type=saving_plan` — create. Validate at least one hardware product selected (many-to-many). | M |
+| **T-03.01.04.02** | Admin API: `PUT /admin/catalogue/products/:id` — update title, description and hardware associations. Change price through `POST /admin/catalogue/products/:id/prices`; edit agreement as a draft through `POST /admin/catalogue/saving-plans/:id/agreements/draft`, then explicitly activate the selected version | M |
+| **T-03.01.04.03** | Admin API: `DELETE /admin/catalogue/products/:id` — archive. Reject if referenced by active/paid orders. | S |
 | **T-03.01.04.04** | ⚠️ Saving plan agreement is admin-editable. Changes must be versioned. Orders snapshot the accepted agreement version at time of submission. | M |
-| **T-03.01.04.05** | 🔧 Create `saving_plan_agreement_versions` table: `id`, `saving_plan_id` (FK), `title` (text), `body` (text), `status` (enum: `draft`, `active`, `superseded`), `effective_from` (timestamptz), `created_by` (FK to users). Enforce at most one active version per plan at any time. | M |
-| **T-03.01.04.06** | 🔧 Implement Draft → Active → Superseded lifecycle for saving plan agreement versions. When admin edits agreement via T-03.01.04.02, the edit creates a new draft version; admin explicitly activates it with a separate action. | M |
+| **T-03.01.04.05** | 🔧 Create `saving_plan_agreement_versions` table: `id`, `plan_id` (FK to products where type=saving_plan), `title` (text), `body` (text), `status` (enum: `draft`, `active`, `superseded`), `effective_from` (timestamptz), `created_by` (FK to users). Enforce at most one active version per plan at any time. | M |
+| **T-03.01.04.06** | 🔧 Implement Draft → Active → Superseded lifecycle for saving plan agreement versions. Agreement editing uses `POST /admin/catalogue/saving-plans/:id/agreements/draft` to create/update the current draft; admin explicitly activates that exact version with `POST /admin/catalogue/saving-plans/:id/agreements/:versionId/activate`. | M |
 | **T-03.01.04.07** | ⚠️ On order submission (T-03.09.03.04), snapshot the full rendered agreement text (title + body) into the `agreement_snapshot` field, not just a version ID. The snapshot must be the exact verbatim text the customer accepted. | M |
 | **T-03.01.04.08** | 📋 Customer order detail page displays the accepted agreement snapshot verbatim. Show notice if agreement has been updated since acceptance. | S |
 

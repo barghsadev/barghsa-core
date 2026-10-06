@@ -97,6 +97,19 @@ it('configures a saving plan, publishes an immutable agreement, and discloses it
       }),
     ],
   });
+  const archiveAuditBefore = (
+    await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'")
+  ).rows;
+  const blockedArchive = await admin(`products/${hardware.id}`, 'DELETE');
+  expect(blockedArchive.status, http.logs()).toBe(409);
+  expect(await blockedArchive.json()).toMatchObject({ error: { code: 'CONFLICT:INVALID_STATE' } });
+  expect(
+    (await http.pool.query('SELECT status FROM products WHERE id=$1', [hardware.id])).rows[0].status
+  ).toBe('active');
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'"))
+      .rows
+  ).toEqual(archiveAuditBefore);
   expect((await admin(`products/${plan.id}`, 'PUT', { status: 'active' })).status).toBe(409);
 
   const draftResponse = await admin(`${path}/agreements/draft`, 'POST', {
@@ -186,3 +199,89 @@ it('configures a saving plan, publishes an immutable agreement, and discloses it
     http.pool.query("UPDATE products SET type='consultation' WHERE id=$1", [plan.id])
   ).rejects.toMatchObject({ code: '23514' });
 }, 40000);
+
+it('archives an unused plan while preserving its historical hardware association', async () => {
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=now() WHERE user_id='saving-editor'"
+  );
+  const hardwareResponse = await admin('products', 'POST', {
+    type: 'hardware',
+    title: { fa: 'تجهیز', en: 'Unused hardware' },
+    price: '1000',
+  });
+  expect(hardwareResponse.status, http.logs()).toBe(201);
+  const hardware = (await hardwareResponse.json()) as { id: string };
+  const planResponse = await admin('products', 'POST', {
+    type: 'saving_plan',
+    title: { fa: 'طرح', en: 'Unused plan' },
+    price: '1000',
+    hardwareIds: [hardware.id],
+  });
+  expect(planResponse.status, http.logs()).toBe(201);
+  const plan = (await planResponse.json()) as { id: string };
+  expect((await admin(`products/${plan.id}`, 'DELETE')).status, http.logs()).toBe(204);
+  expect((await admin(`products/${plan.id}`, 'DELETE')).status, http.logs()).toBe(204);
+  expect(
+    (await http.pool.query('SELECT status FROM products WHERE id=$1', [plan.id])).rows[0].status
+  ).toBe('archived');
+  expect(
+    (
+      await http.pool.query('SELECT hardware_id FROM saving_plan_hardware WHERE plan_id=$1', [
+        plan.id,
+      ])
+    ).rows
+  ).toEqual([{ hardware_id: hardware.id }]);
+  expect((await admin(`products/${hardware.id}`, 'DELETE')).status, http.logs()).toBe(409);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='catalogue_product_archived' AND metadata::jsonb->>'productId'=$1",
+        [plan.id]
+      )
+    ).rows
+  ).toHaveLength(1);
+});
+
+it('retains hardware reference history after a plan replaces its compatible devices', async () => {
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=now() WHERE user_id='saving-editor'"
+  );
+  const hardwareIds: string[] = [];
+  for (const suffix of ['Before', 'After']) {
+    const response = await admin('products', 'POST', {
+      type: 'hardware',
+      title: { fa: suffix, en: suffix },
+      price: '1000',
+    });
+    expect(response.status, http.logs()).toBe(201);
+    hardwareIds.push(((await response.json()) as { id: string }).id);
+  }
+  const response = await admin('products', 'POST', {
+    type: 'saving_plan',
+    title: { fa: 'طرح', en: 'Changed plan' },
+    price: '1000',
+    hardwareIds: [hardwareIds[0]],
+  });
+  expect(response.status, http.logs()).toBe(201);
+  const plan = ((await response.json()) as { id: string }).id;
+  expect(
+    (await admin(`products/${plan}`, 'PUT', { hardwareIds: [hardwareIds[1]] })).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await http.pool.query('SELECT hardware_id FROM saving_plan_hardware WHERE plan_id=$1', [plan]))
+      .rows
+  ).toEqual([{ hardware_id: hardwareIds[1] }]);
+  expect(
+    (await admin(`products/${hardwareIds[0]!.toUpperCase()}`, 'DELETE')).status,
+    http.logs()
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS facts FROM audit_log WHERE event='catalogue_product_updated' AND metadata::jsonb->>'productId'=$1",
+        [plan]
+      )
+    ).rows[0].facts
+  ).toMatchObject({ hardwareIds: [hardwareIds[1]], hardwareIdsBefore: [hardwareIds[0]] });
+});

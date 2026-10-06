@@ -77,6 +77,42 @@ describe('seed verification', () => {
     expect(countResult.rows[0]?.count).toBe(4);
   });
 
+  it('runs the workspace db:seed command twice against the isolated database without changing product identities', async () => {
+    const env: NodeJS.ProcessEnv = {
+      ...process.env,
+      DATABASE_URL: ctx.connectionString,
+      PGDIRECT_URL: ctx.connectionString,
+      PGPOOL_URL: ctx.connectionString,
+    };
+    for (const key of [
+      'ADMIN_BOOTSTRAP_SECRET',
+      'ADMIN_BOOTSTRAP_KEY',
+      'ADMIN_BOOTSTRAP_EMAIL',
+      'ADMIN_BOOTSTRAP_PASSWORD',
+    ])
+      delete env[key];
+    const before = (
+      await ctx.pool.query(
+        "SELECT id,system_key,price,status FROM products WHERE type='electricity' ORDER BY system_key"
+      )
+    ).rows;
+    const run = promisify(execFile);
+    for (let pass = 0; pass < 2; pass++) {
+      await run('pnpm', ['db:seed'], {
+        cwd: resolve(__dirname, '../../../..'),
+        env,
+        maxBuffer: 1024 * 1024,
+      });
+      expect(
+        (
+          await ctx.pool.query(
+            "SELECT id,system_key,price,status FROM products WHERE type='electricity' ORDER BY system_key"
+          )
+        ).rows
+      ).toEqual(before);
+    }
+  }, 30000);
+
   it('creates an admin user when bootstrap env vars are provided', async () => {
     const originalSecret = process.env['ADMIN_BOOTSTRAP_SECRET'];
     const originalKey = process.env['ADMIN_BOOTSTRAP_KEY'];

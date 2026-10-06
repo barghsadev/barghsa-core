@@ -419,6 +419,9 @@ export class CatalogueProductsService {
           title: input.title,
           status: input.status,
           ...(input.price !== null ? { initialPrice: input.price } : {}),
+          ...(input.hardwareIds
+            ? { hardwareIds: input.hardwareIds.map((id) => id.toLowerCase()) }
+            : {}),
         }
       );
       this.logger.log(
@@ -627,7 +630,12 @@ export class CatalogueProductsService {
               }
             : {}),
           ...(categoriesChanged ? { categories: input.categories } : {}),
-          ...(hardwareChanged ? { hardwareIds: input.hardwareIds } : {}),
+          ...(hardwareChanged
+            ? {
+                hardwareIds: input.hardwareIds!.map((id) => id.toLowerCase()),
+                hardwareIdsBefore: currentHardware,
+              }
+            : {}),
         }
       );
       this.logger.log(`Catalogue product updated: id=${id}, actor=${input.actorUserId}`);
@@ -661,6 +669,36 @@ export class CatalogueProductsService {
       if (current.status === 'archived') {
         // Already archived — no write, no audit.
         return;
+      }
+
+      // The locked product row serializes this decision with saving submissions
+      // and plan association changes, which lock the same catalogue rows.
+      if (current.type === 'hardware') {
+        const references = await q.query<{ referenced: boolean }>(
+          `SELECT EXISTS(SELECT 1 FROM saving_plan_hardware WHERE hardware_id=$1)
+             OR EXISTS(SELECT 1 FROM saving_orders WHERE hardware_product_id=$1)
+             OR EXISTS(SELECT 1 FROM saving_hardware_amendments WHERE hardware_id=$1 OR previous_hardware_id=$1)
+             OR EXISTS(SELECT 1 FROM saving_hardware_upgrade_requests WHERE hardware_id=$1 OR previous_hardware_id=$1)
+             OR EXISTS(SELECT 1 FROM audit_log WHERE event IN ('catalogue_product_created','catalogue_product_updated')
+               AND ((CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END)->'hardwareIds' ? $1::text
+                 OR (CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END)->'hardwareIdsBefore' ? $1::text))
+             AS referenced`,
+          [current.id]
+        );
+        if (references.rows[0]?.referenced)
+          throw new HttpException({ error: 'CATALOGUE_HARDWARE_REFERENCED' }, 409);
+      }
+      if (current.type === 'saving_plan') {
+        const references = await q.query<{ referenced: boolean }>(
+          `SELECT EXISTS(SELECT 1 FROM saving_orders s LEFT JOIN invoices i ON i.order_id=s.order_id
+             WHERE s.saving_plan_id=$1 AND
+               (s.status NOT IN ('completed','rejected','cancelled')
+                OR s.financial_status IN ('paid','refund_pending')
+                OR COALESCE(i.paid_amount,0)>COALESCE(i.refunded_amount,0))) AS referenced`,
+          [current.id]
+        );
+        if (references.rows[0]?.referenced)
+          throw new HttpException({ error: 'CATALOGUE_PLAN_REFERENCED' }, 409);
       }
 
       await q.query('UPDATE products SET status = $1, updated_at = NOW() WHERE id = $2', [

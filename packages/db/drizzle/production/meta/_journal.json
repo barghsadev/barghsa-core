@@ -1163,6 +1163,13 @@
       "when": 1791331202256,
       "tag": "0245_business_actor_context",
       "breakpoints": true
+    },
+    {
+      "idx": 246,
+      "version": "7",
+      "when": 1791331202257,
+      "tag": "0246_catalogue_foundation_guards",
+      "breakpoints": true
     }
   ]
 }

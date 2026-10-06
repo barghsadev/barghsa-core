@@ -3,6 +3,7 @@ import { createTable } from '../base-table';
 import { irrAmount, timestamptz } from '../types';
 import { products } from './products';
 import { users } from './users';
+import { vatConfigurations } from './vat-configurations';
 
 /**
  * Product price versions table.
@@ -17,10 +18,8 @@ import { users } from './users';
  *   (products with price history cannot be deleted).
  * - `price` — The price in IRR (smallest denomination / Rials) as bigint.
  *   Non-negative: must be >= 0 (enforced by CHECK constraint, see migration).
- * - `vat_category_override` — Optional FK to a VAT configuration. Added as
- *   a plain UUID column here since the `vat_configurations` table is created
- *   in a later task (T-03.02.05.01). The FK constraint should be added when
- *   that table exists.
+ * - `vat_category_override` — Optional FK to a VAT configuration. References
+ *   the immutable VAT configuration version with ON DELETE RESTRICT.
  * - `effective_from` — Timestamp from which this price takes effect (inclusive).
  * - `effective_until` — Timestamp after which this price is no longer effective
  *   (exclusive). Null means currently active / no known expiry.
@@ -42,10 +41,11 @@ export const productPriceVersions = createTable('product_price_versions', {
 
   /**
    * Optional FK to vat_configurations (created in T-03.02.05.01).
-   * Stored as plain uuid until the target table exists; FK constraint
-   * should be added in that task.
+   * A nullable FK retains unconfigured prices while preventing dangling overrides.
    */
-  vatCategoryOverride: uuid('vat_category_override'),
+  vatCategoryOverride: uuid('vat_category_override').references(() => vatConfigurations.id, {
+    onDelete: 'restrict',
+  }),
 
   /** Timestamp from which this price takes effect (inclusive). */
   effectiveFrom: timestamptz('effective_from').notNull(),

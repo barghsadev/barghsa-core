@@ -182,10 +182,10 @@ describe('CatalogueProductsController (T-09.12.01)', () => {
       });
     });
 
-    it('defaults an omitted status to inactive', async () => {
+    it('defaults an unpriced consultation with omitted status to inactive', async () => {
       mockCreate.mockResolvedValue(baseProduct({ status: 'inactive' }));
       await controller.create(adminReq, {
-        type: 'hardware',
+        type: 'consultation',
         title: { fa: 'دستگاه', en: 'Device' },
       } as never);
       expect(mockCreate).toHaveBeenCalledWith(

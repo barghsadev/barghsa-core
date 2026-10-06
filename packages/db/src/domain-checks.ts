@@ -4,6 +4,7 @@ import { check } from 'drizzle-orm/pg-core';
 /** Legacy domain checks restored by production migration 0104. Keep future schema generation aligned.
  * GiST exclusions and the immutable upload validator remain explicit migration SQL. */
 const definitions: Record<string, Array<[string, string]>> = {
+  products: [['products_price_nonnegative', '(price IS NULL OR price >= 0)']],
   notification_outbox: [
     [
       'chk_ob_status',
