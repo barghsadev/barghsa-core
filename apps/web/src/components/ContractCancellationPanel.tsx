@@ -26,6 +26,7 @@ function CancellationWorkspace({ id, versionId, staff, onChanged }: Cancellation
     [loading, setLoading] = useState(true),
     [reload, setReload] = useState(0),
     [open, setOpen] = useState(false),
+    [terminalAction, setTerminalAction] = useState<'cancel' | 'reject'>('cancel'),
     [customerRequestId, setCustomerRequestId] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
@@ -81,6 +82,7 @@ function CancellationWorkspace({ id, versionId, staff, onChanged }: Cancellation
               unavailable={loading || error}
               onChanged={onChanged}
               onReview={(request) => {
+                setTerminalAction('cancel');
                 setCustomerRequestId(request.id);
                 setOpen(true);
               }}
@@ -128,19 +130,36 @@ function CancellationWorkspace({ id, versionId, staff, onChanged }: Cancellation
                 disabled={loading || error}
                 variant="outline"
                 className="self-start"
-                aria-expanded={open}
+                aria-expanded={open && terminalAction === 'cancel'}
                 onClick={() => {
+                  setTerminalAction('cancel');
                   setCustomerRequestId(null);
-                  setOpen(!open);
+                  setOpen(terminalAction === 'cancel' ? !open : true);
                 }}
               >
                 {word('cancellationReview')}
               </Button>
+              {status.canReject ? (
+                <Button
+                  disabled={loading || error}
+                  variant="destructive"
+                  className="self-start"
+                  aria-expanded={open && terminalAction === 'reject'}
+                  onClick={() => {
+                    setTerminalAction('reject');
+                    setCustomerRequestId(null);
+                    setOpen(terminalAction === 'reject' ? !open : true);
+                  }}
+                >
+                  {word('rejectionTitle')}
+                </Button>
+              ) : null}
               {open ? (
                 <Suspense fallback={<PageLoading label={word('loading')} />}>
                   <CancellationEditor
-                    key={id + ':' + versionId + ':' + customerRequestId}
+                    key={id + ':' + versionId + ':' + customerRequestId + ':' + terminalAction}
                     id={id}
+                    terminalAction={terminalAction}
                     customerRequestId={customerRequestId}
                     canChooseRefund={status.canChooseRefund === true}
                     unavailable={loading || error}

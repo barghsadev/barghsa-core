@@ -33,6 +33,7 @@ export class StaffContractCancellationStatusController {
         hasStaffPermission(req, 'contracts:write') &&
         !['Completed', 'Cancelled', 'Rejected'].includes(status.state) &&
         !status.savingTerminal,
+      canReject: hasStaffPermission(req, 'contracts:write') && status.rejectionAvailable,
       canChooseRefund: hasStaffPermission(req, 'admin:financial:edit'),
     };
   }

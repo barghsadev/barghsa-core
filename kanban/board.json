@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T23:10:09Z",
+  "updated": "2026-10-06T23:24:06.117737+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -118,6 +118,13 @@
         "status": "awaiting_owner",
         "asked_once": "2026-10-06 in this goal chat via request_user_input_async; do not repeat.",
         "independent_work": "Continue solar, common and electricity terminal-operation criteria;19 saving tasks accepted."
+      },
+      {
+        "task_key": "03-core-business.md#T-03.07.01.01",
+        "question": "Saved electricity wizard progress is private and has no order, contract or invoice. Should acceptance use an owner-only discard action for that progress, with staff rejection/cancellation applying to actual order records?",
+        "status": "awaiting_owner",
+        "asked_once": "2026-10-07 in this goal chat via request_user_input_async; do not repeat.",
+        "independent_work": "Inspect and complete actual generic orphan DRAFT/gift/financial records and other milestone gates."
       }
     ],
     "catalogue_existing_design": {
@@ -43809,7 +43816,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -44414,6 +44421,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -44477,7 +44492,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -45082,6 +45097,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -60164,7 +60187,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -60441,6 +60464,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -60503,7 +60534,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -60780,6 +60811,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -60841,7 +60880,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -61118,6 +61157,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -61179,7 +61226,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -61456,6 +61503,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -61517,7 +61572,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -61794,6 +61849,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -61855,7 +61918,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -62132,6 +62195,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -62202,7 +62273,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -62485,6 +62556,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -62554,7 +62633,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -62837,6 +62916,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -62907,7 +62994,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -63190,6 +63277,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -71989,7 +72084,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -72318,6 +72413,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -72415,7 +72518,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -72744,6 +72847,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -72841,7 +72952,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -73170,6 +73281,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -73267,7 +73386,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -73596,6 +73715,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -73693,7 +73820,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -74022,6 +74149,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -74119,7 +74254,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -74448,6 +74583,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -74545,7 +74688,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -74874,6 +75017,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -74971,7 +75122,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -75300,6 +75451,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -75397,7 +75556,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -75726,6 +75885,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -75823,7 +75990,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -76152,6 +76319,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -76249,7 +76424,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -76578,6 +76753,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -76675,7 +76858,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -77004,6 +77187,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -77102,7 +77293,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -77431,6 +77622,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -77528,7 +77727,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -77857,6 +78056,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -77954,7 +78161,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -78283,6 +78490,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -78380,7 +78595,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -78709,6 +78924,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -78806,7 +79029,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -79135,6 +79358,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -79188,7 +79419,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -79431,6 +79662,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -79484,7 +79723,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -79727,6 +79966,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -79780,7 +80027,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -80023,6 +80270,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -80225,7 +80480,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -80468,6 +80723,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -80522,7 +80785,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -80765,6 +81028,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -80818,7 +81089,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -81061,6 +81332,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -81114,7 +81393,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -81357,6 +81636,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -81410,7 +81697,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -81653,6 +81940,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -81707,7 +82002,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -81950,6 +82245,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -82003,7 +82306,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -82246,6 +82549,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -82299,7 +82610,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -82542,6 +82853,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -82743,7 +83062,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -82986,6 +83305,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -83039,7 +83366,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -83282,6 +83609,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -83335,7 +83670,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -83578,6 +83913,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -83631,7 +83974,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -83874,6 +84217,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -83927,7 +84278,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -84170,6 +84521,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -84223,7 +84582,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -84466,6 +84825,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -84519,7 +84886,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -84762,6 +85129,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -84815,7 +85190,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -85058,6 +85433,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -85114,7 +85497,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -85357,6 +85740,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -85410,7 +85801,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -85653,6 +86044,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -85706,7 +86105,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-draft.service.ts",
@@ -85949,6 +86348,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -85990,7 +86397,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -86190,6 +86597,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -86231,7 +86646,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -86431,6 +86846,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -86472,7 +86895,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -86672,6 +87095,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -86713,7 +87144,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -86913,6 +87344,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -86954,7 +87393,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -87154,6 +87593,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -87196,7 +87643,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -87396,6 +87843,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -87438,7 +87893,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -87638,6 +88093,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -87679,7 +88142,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -87879,6 +88342,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -87920,7 +88391,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -88120,6 +88591,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -88161,7 +88640,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -88361,6 +88840,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -88403,7 +88890,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -88603,6 +89090,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -88644,7 +89139,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -88844,6 +89339,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -88885,7 +89388,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -89085,6 +89588,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -89126,7 +89637,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -89326,6 +89837,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -89372,7 +89891,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -89572,6 +90091,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -89613,7 +90140,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -89813,6 +90340,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -89832,7 +90367,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Finish financially associated orphan drafts without a contract and incomplete linked staff intake presentation. The reviewed terminal API now handles linked incomplete drafts without fabricated periods, pricing, submission, invoices or electricity linkage. Confirm purely saved wizard effective acceptance through existing owner-scoped handling; other customer private form progress stays untouched."
+        "Finish generic orphan electricity drafts, including actual DRAFT records and financially associated records without a contract. Incomplete versioned linked staff intake is accepted through the existing contract screen and reviewed terminal engine. Inspect unversioned links separately. Pure saved wizard disposition awaits the owner-only discard decision; other actors private progress remains untouched."
       ],
       "owner": null,
       "depends_on": [],
@@ -89847,7 +90382,8 @@
           "release-0.2-pre-active-rejection",
           "release-0.2-electricity-terminal-http",
           "release-0.2-electricity-raw-draft-terminal",
-          "release-0.2-electricity-reviewed-rejection"
+          "release-0.2-electricity-reviewed-rejection",
+          "release-0.2-electricity-linked-intake"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-lifecycle-and-pre-active-rejection-with-exact-remaining-flows",
@@ -89863,7 +90399,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -89999,7 +90535,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.ts",
-              "sha256": "79d5ae8e489f49e116775265881b368cc474702aeec89b0866793eaf880b338a"
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-validation.ts",
@@ -90035,11 +90571,11 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "460b53eb29a01f1bcc8788d9d9a29cee67d8b2a0afed67bccafde496c4f3ada8"
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
-              "sha256": "0e2c61618ad3e93c02aefd00af966b9bed476c7f85e9d976477e2db6e7217f40"
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
             },
             {
               "path": "apps/web/src/components/ElectricityRejectionPanel.tsx",
@@ -90047,7 +90583,7 @@
             },
             {
               "path": "apps/web/src/lib/contract-cancellation.ts",
-              "sha256": "019afaeb4783f984e9626369810d23f6931c97353f489341b3896898c299e663"
+              "sha256": "79d7429ec6a34c74371346e122572c95fedefb43de577bcfe0adc47b7301832f"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
@@ -90183,7 +90719,7 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/i18n-current.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/accepted-outcomes.json"
           ],
-          "criterion_result": "Real submitted/changes_requested/approved rejection with paid/unpaid snapshots, reason, one receipt/event and wallet refund completion is verified. Strict confirmation binds commercial state; shared policy/profile locks and fresh guard checks prevent stale valid confirmation bypass. Expand-only database rejection preserves signed/publication/acceptance/version evidence and saving rules, with rejected business record immutability. Full task remains partial for the listed draft, financial approval and full state-matrix flows. Direct HTTP rejection of Accepted/AwaitingSignature/Signed electricity contracts is accepted with both unpaid and paid ledgers, exact mandatory wallet return and retained signing/version/document history. The complete linked pre-active cancellation matrix is accepted across8 state pairs and2 payment states using existing immutable intents, stale fingerprint/version rejection, permissions/reason gates and concurrent once-only execution. Nullable retained draft submission timestamps now return null with35 related HTTP/UI outcomes and accurate client type. Raw/incomplete/private draft handling and second-approval/multi-invoice rejection remain explicit implementation gaps; full task stays partial. Raw unsubmitted/unlinked actual order records now have guarded reject/cancel routes and staff controls, with no invented submitted facts or financial records.271 related cases verify retained wizard privacy, exact reason/review fingerprint/idempotency, live authority, mandatory audit rollback, terminal history and future-association guards, production migration and affected consumers. Incomplete linked/funded drafts, saved wizard effective acceptance and advanced rejection remain open. Reviewed all-invoice rejection is accepted with the immutable target, second approval, exact full wallet return and current locked financial/profile facts.16 state/payment matrix cases plus3 boundary/legacy cases pass; signed/version/publication/document history retained, mandatory audit rollback and unknown concurrent replay verified.324 distinct related cases and applicable checks pass. Full lifecycle remains partial for orphan financial drafts, incomplete staff intake presentation and saved wizard acceptance.",
+          "criterion_result": "Real submitted/changes_requested/approved rejection with paid/unpaid snapshots, reason, one receipt/event and wallet refund completion is verified. Strict confirmation binds commercial state; shared policy/profile locks and fresh guard checks prevent stale valid confirmation bypass. Expand-only database rejection preserves signed/publication/acceptance/version evidence and saving rules, with rejected business record immutability. Full task remains partial for the listed draft, financial approval and full state-matrix flows. Direct HTTP rejection of Accepted/AwaitingSignature/Signed electricity contracts is accepted with both unpaid and paid ledgers, exact mandatory wallet return and retained signing/version/document history. The complete linked pre-active cancellation matrix is accepted across8 state pairs and2 payment states using existing immutable intents, stale fingerprint/version rejection, permissions/reason gates and concurrent once-only execution. Nullable retained draft submission timestamps now return null with35 related HTTP/UI outcomes and accurate client type. Raw/incomplete/private draft handling and second-approval/multi-invoice rejection remain explicit implementation gaps; full task stays partial. Raw unsubmitted/unlinked actual order records now have guarded reject/cancel routes and staff controls, with no invented submitted facts or financial records.271 related cases verify retained wizard privacy, exact reason/review fingerprint/idempotency, live authority, mandatory audit rollback, terminal history and future-association guards, production migration and affected consumers. Incomplete linked/funded drafts, saved wizard effective acceptance and advanced rejection remain open. Reviewed all-invoice rejection is accepted with the immutable target, second approval, exact full wallet return and current locked financial/profile facts.16 state/payment matrix cases plus3 boundary/legacy cases pass; signed/version/publication/document history retained, mandatory audit rollback and unknown concurrent replay verified.324 distinct related cases and applicable checks pass. Full lifecycle remains partial for orphan financial drafts, incomplete staff intake presentation and saved wizard acceptance. Incomplete versioned linked staff intake presentation is accepted: safe eligibility projection and existing contract screen reach the reviewed rejection editor without invented periods/pricing/invoices.100 related outcomes pass; generic orphan drafts, unversioned links and private wizard disposition remain open.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance",
           "submission_audit_renewal": {
             "base_commit": "ed058a6c37f6ee3692e2934d21e3456399705134",
@@ -90272,6 +90808,18 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "apps/api/src/contract/contract-cancellation-status.ts",
+              "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "apps/web/src/components/ContractCancellationPanel.tsx",
+              "apps/web/src/lib/contract-cancellation.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -90314,7 +90862,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -90542,6 +91090,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -90583,7 +91139,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -90811,6 +91367,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -90855,7 +91419,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -91083,6 +91647,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -91124,7 +91696,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -91352,6 +91924,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -91394,7 +91974,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -91622,6 +92202,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -91663,7 +92251,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -91891,6 +92479,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -91934,7 +92530,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -92162,6 +92758,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -92209,7 +92813,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -92437,6 +93041,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -92665,7 +93277,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -92893,6 +93505,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -92942,7 +93562,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -93170,6 +93790,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -93220,7 +93848,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -93448,6 +94076,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -103607,7 +104243,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
@@ -104062,6 +104698,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -105993,7 +106637,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
@@ -106165,6 +106809,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -107047,7 +107699,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
-              "sha256": "5b88969dae0a207130153eb9e274d96fc56d99f8a244887b2506ea095459124e"
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
             },
             {
               "path": "apps/api/src/electricity/electricity-staff-review.service.ts",
@@ -107219,6 +107871,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "linked_intake_renewal": {
+            "base_commit": "a6ec6f6b3a3923ad37fafcb5c015119fd0ccdec5",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-order.integration.test.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
+            "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
           }
         }
       }
@@ -138247,6 +138907,19 @@
         "Rollback boundary: retain the updated refund executor until every new rejected-contract obligation completes. The prior cancellation-only executor refuses this new debt type; the failure is recorded, and no full old-worker rollback compatibility is claimed."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection"
+    },
+    "release-0.2-electricity-linked-intake": {
+      "title": "Incomplete linked electricity intake reaches reviewed rejection",
+      "task_keys": [
+        "03-core-business.md#T-03.07.01.01"
+      ],
+      "summary": "Adds permission-bound rejection availability to the existing staff contract intake and reuses its reviewed terminal editor. No financial write engine or migration changes.",
+      "validation": [
+        "100 distinct passing cases:1 targeted real linked HTTP case (96 skipped are not counted),37 cancellation/customer-request HTTP,60 UI and2 production-browser en/fa cases.",
+        "API/web builds and types, contract drift, changed lint/format and4-file5-rule SAST pass. Existing API/UI assertions and status financial computation retained; source-bound renewal recorded.",
+        "The lifecycle remains partial for actual generic orphan DRAFT/gift/financial records, unversioned links and private wizard disposition. No release, deployment, notification or production accepted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake"
     }
   },
   "historical_improvements": [
@@ -138288,7 +138961,7 @@
   "next_batch": {
     "id": "release-0.2-terminal-acceptance",
     "release": "0.2.0",
-    "goal": "Finish orphan financially associated electricity draft termination, incomplete staff intake presentation and saved wizard effective acceptance. Reviewed second-approval/multi-invoice rejection, linked incomplete terminal API and raw unlinked termination are accepted. Preserve unanswered owner decisions and complete all-four-service milestone gates before release.",
+    "goal": "Finish actual generic orphan electricity DRAFT records and gift/financial associations without fabricated contracts or submission data. Versioned incomplete linked intake and reviewed terminal engine are accepted. Preserve private wizard owner decision and other unanswered representation decisions; complete all-four-service gates before release.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.09.01.01",

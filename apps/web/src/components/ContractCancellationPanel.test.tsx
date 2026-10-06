@@ -598,3 +598,25 @@ it('withdraws rejection when its authoritative preview is for cancellation', asy
   expect(container.querySelector('textarea')).toBeNull();
   expect(h.action).toBeNull();
 });
+
+for (const locale of ['en', 'fa'] as const)
+  it(locale + ': opens the reviewed rejection editor from the staff contract intake', async () => {
+    h.locale = locale;
+    const w = locale === 'en' ? en : fa;
+    h.status = { ...h.status!, state: 'Draft', canReject: true };
+    h.preview = { ...h.preview!, terminalAction: 'reject' };
+    h.result = { ...saved(), terminalAction: 'reject' };
+    await render();
+    await click(w.rejectionTitle);
+    await vi.waitFor(() => expect(container.querySelector('textarea')).not.toBeNull());
+    await input('textarea', 'End service');
+    await submitDecision();
+    expect(h.action?.body).toMatchObject({ terminalAction: 'reject', reason: 'End service' });
+    expect(h.action?.title).toBe(w.rejectionSave);
+  });
+it('does not offer staff rejection to a read-only actor', async () => {
+  h.status = { ...h.status!, state: 'Draft', canCancel: false, canReject: false };
+  await render();
+  expect(container.textContent).not.toContain(en.rejectionTitle);
+  expect(container.querySelector('textarea')).toBeNull();
+});

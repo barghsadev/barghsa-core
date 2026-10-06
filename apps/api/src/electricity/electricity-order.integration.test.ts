@@ -5245,6 +5245,16 @@ it('reviewed rejection ends an incomplete linked draft without inventing periods
   } finally {
     client.release();
   }
+  const intake = await fetch(`${http.base}/api/admin/contracts/${contractId}/cancellation-status`, {
+    headers: staffHeaders,
+  });
+  expect(intake.status, http.logs()).toBe(200);
+  expect(await intake.json()).toMatchObject({
+    serviceType: 'electricity',
+    canCancel: true,
+    canReject: true,
+    refundAmount: '0',
+  });
   const command = await rejectionCommand({ contractId, versionId }),
     prepared = await rejectionSend(contractId, '', command);
   expect(prepared.status, http.logs()).toBe(201);

@@ -13,6 +13,7 @@ export interface CancellationStatus {
   refundAmount: string;
   returnedAmount: string;
   canCancel?: boolean;
+  canReject?: boolean;
   canChooseRefund?: boolean;
   refunds: Array<
     CancellationRefund & { id: string; state: string; transactionState: string | null }

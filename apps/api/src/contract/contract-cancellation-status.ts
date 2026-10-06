@@ -18,6 +18,8 @@ export async function readCancellationStatus(
     await client.query<{
       id: string;
       state: string;
+      service_type: string;
+      rejection_available: boolean;
       cancelled_at: Date | null;
       recorded: boolean;
       pending_payments: boolean;
@@ -25,7 +27,12 @@ export async function readCancellationStatus(
       unbound_refunds: boolean;
       refunds: RefundStatus[];
     }>(
-      `SELECT c.id,c.state,c.cancelled_at,
+      `SELECT c.id,c.state,c.cancelled_at,c.service_type,
+  (c.service_type='electricity' AND c.current_version_id IS NOT NULL AND EXISTS(
+    SELECT 1 FROM electricity_orders e JOIN orders root ON root.id=e.id JOIN profiles owner ON owner.id=e.profile_id
+    WHERE e.id=c.order_id AND e.profile_id=c.profile_id AND root.profile_id=c.profile_id AND root.order_type='electricity' AND root.status<>'CANCELLED' AND NOT owner.archived
+      AND NOT EXISTS(SELECT 1 FROM electricity_contracts link WHERE link.order_id=e.id AND link.contract_id<>c.id)
+      AND ((e.status='draft' AND c.state='Draft') OR (e.status IN ('submitted','awaiting_staff_review') AND c.state='AwaitingStaffReview') OR (e.status='changes_requested' AND c.state='ChangesRequested') OR (e.status='approved' AND c.state IN ('AwaitingCustomerAcceptance','Accepted','AwaitingSignature','Signed'))))) AS rejection_available,
   EXISTS(SELECT 1 FROM contract_cancellations x WHERE x.contract_id=c.id) AS recorded,
   contract_has_pending_payments(c.id) AS pending_payments,
   EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id
@@ -64,6 +71,8 @@ export async function readCancellationStatus(
   return {
     contractId: row.id,
     state: row.state,
+    serviceType: row.service_type,
+    rejectionAvailable: row.rejection_available,
     savingTerminal: row.saving_terminal,
     cancelledAt: row.cancelled_at?.toISOString() ?? null,
     financialStatus,
