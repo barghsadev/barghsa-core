@@ -1,5 +1,7 @@
 # Intro
 
+Current development status and release planning: [kanban/README.md](kanban/README.md). The task board owns status; this document defines product requirements.
+
 Barghsa is an Iranian, AI-native energy platform for enterprise and individual customers.
 
 Legal entities use Barghsa to purchase electricity and manage related contracts, invoices, payments, agents, and documents. Individual customers use saving services and can request consultation or construction services for solar power stations. Barghsa staff and admins use the same platform to manage customers, operations, contracts, finance, support, products, and system configuration.

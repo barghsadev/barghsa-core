@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the deployed batch and announce it once, using only the Python standard library."""
+"""Verify a deployed release and announce one summary and at most one image album."""
 
 import argparse
 import fcntl
@@ -27,7 +27,7 @@ def release_details(root, commit):
     notes = (root / "releases" / f"{version}.md").read_text().strip()
     if not notes.startswith(f"برقسا نسخه {version}\n") or not re.search(r"(?m)^- \S", notes):
         raise ValueError("Release notes need the matching version heading and a list of changes")
-    text = f"{notes}\n\nشناسه کد: {commit}"
+    text = f"{notes}\n\nمحیط آزمایشی: {SITE}\nشناسه کد: {commit}"
     if len(text.encode("utf-16-le")) // 2 > 4096:
         raise ValueError("Release notes exceed Telegram's message length limit")
     return {"version": version, "commit": commit}, text
@@ -58,7 +58,11 @@ def request_json(url, payload=None, photo=None):
         parts = []
         for key, value in payload.items():
             parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode())
-        parts.extend([f'--{boundary}\r\nContent-Disposition: form-data; name="photo"; filename="screenshot.png"\r\nContent-Type: image/png\r\n\r\n'.encode(), photo, f'\r\n--{boundary}--\r\n'.encode()])
+        attachments = {f"image{i}": data for i, data in enumerate(photo)} if isinstance(photo, list) else {"photo": photo}
+        for name, data in attachments.items():
+            filename = "screenshot.png" if name == "photo" else f"{name}.png"
+            parts.extend([f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"; filename="{filename}"\r\nContent-Type: image/png\r\n\r\n'.encode(), data, b"\r\n"])
+        parts.append(f'--{boundary}--\r\n'.encode())
         request.data = b"".join(parts)
         request.add_header("Content-Type", f"multipart/form-data; boundary={boundary}")
     elif payload is not None:
@@ -76,7 +80,8 @@ def request_json(url, payload=None, photo=None):
 
 def telegram_call(token, method, payload, photo=None):
     result = request_json(f"https://api.telegram.org/bot{token}/{method}", payload, photo)
-    if not isinstance(result, dict) or result.get("ok") is not True or not isinstance(result.get("result"), dict):
+    result_type = list if method == "sendMediaGroup" else dict
+    if not isinstance(result, dict) or result.get("ok") is not True or not isinstance(result.get("result"), result_type):
         raise ValueError("Telegram did not confirm the request")
     return result["result"]
 
@@ -130,6 +135,8 @@ def screenshot_bytes(path):
 
 
 def announce_screenshots(metadata, token, destination, state_dir, images, retry_unknown=False):
+    if not 1 <= len(images) <= 10:
+        raise ValueError("Use one photo or one album of at most ten screenshots; link a gallery for extras")
     channel = telegram_call(token, "getChat", {"chat_id": destination})
     verify_channel(channel, destination)
     if request_json(f"{SITE}/release.json?commit={metadata['commit']}") != metadata:
@@ -137,25 +144,46 @@ def announce_screenshots(metadata, token, destination, state_dir, images, retry_
     state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
     with (state_dir / ".notification.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        for data in images:
-            receipt = {**metadata, "chat_id": channel["id"], "photo_sha256": hashlib.sha256(data).hexdigest()}
-            key = hashlib.sha256(json.dumps(receipt, sort_keys=True).encode()).hexdigest()
-            path = state_dir / f"photo-{key}.json"
-            if path.exists():
-                prior = json.loads(path.read_text())
-                if any(prior.get(field) != value for field, value in receipt.items()):
-                    raise ValueError("Saved screenshot receipt differs from this release")
-                if prior.get("status") == "sent":
-                    continue
-                if not retry_unknown:
-                    raise ValueError("Previous screenshot outcome is unknown; inspect the channel before using --retry-unknown")
-            path.write_text(json.dumps({**receipt, "status": "unknown"}) + "\n")
-            caption = f"تصویر محیط آزمایشی برقسا، نسخه {metadata['version']}"
-            sent = telegram_call(token, "sendPhoto", {"chat_id": channel["id"], "caption": caption}, data)
-            if type(sent.get("message_id")) is not int or sent["message_id"] <= 0 or sent.get("caption") != caption or sent.get("chat", {}).get("id") != channel["id"] or not sent.get("photo"):
-                raise ValueError("Telegram screenshot receipt did not match this release")
-            path.write_text(json.dumps({**receipt, "status": "sent", "message_id": sent["message_id"]}) + "\n")
-            print(f"Release screenshot confirmed as Telegram message {sent['message_id']}")
+        hashes = [hashlib.sha256(data).hexdigest() for data in images]
+        receipt = {**metadata, "chat_id": channel["id"], "photo_sha256": hashes}
+        key = hashlib.sha256(f"{channel['id']}:{metadata['commit']}".encode()).hexdigest()
+        path = state_dir / f"album-{key}.json"
+        if path.exists():
+            prior = json.loads(path.read_text())
+            if any(prior.get(field) != value for field, value in receipt.items()):
+                raise ValueError("Saved screenshot selection differs from this release; no additional post allowed")
+            if prior.get("status") == "sent":
+                print("Release screenshots already confirmed as one grouped update")
+                return
+            if not retry_unknown:
+                raise ValueError("Previous screenshot outcome is unknown; inspect the channel before using --retry-unknown")
+        else:
+            legacy = [json.loads(p.read_text()) for p in state_dir.glob("photo-*.json")]
+            legacy = [r for r in legacy if r.get("commit") == metadata['commit'] and r.get("chat_id") == channel['id']]
+            if legacy:
+                confirmed = {r['photo_sha256'] for r in legacy if r.get('status') == 'sent'}
+                if set(hashes) <= confirmed:
+                    print("Legacy release screenshots already confirmed; no new album sent")
+                    return
+                raise ValueError("Legacy screenshot receipts require channel inspection; no new album sent")
+        path.write_text(json.dumps({**receipt, "status": "unknown"}) + "\n")
+        caption = f"تصویر محیط آزمایشی برقسا، نسخه {metadata['version']}"
+        if len(images) == 1:
+            sent = [telegram_call(token, "sendPhoto", {"chat_id": channel["id"], "caption": caption}, images[0])]
+        else:
+            media = [{"type": "photo", "media": f"attach://image{i}", **({"caption": caption} if i == 0 else {})} for i in range(len(images))]
+            sent = telegram_call(token, "sendMediaGroup", {"chat_id": channel["id"], "media": json.dumps(media, ensure_ascii=False)}, images)
+        if not isinstance(sent, list) or len(sent) != len(images) or any(
+            not isinstance(row, dict) or type(row.get('message_id')) is not int or row['message_id'] <= 0
+            or not isinstance(row.get('chat'), dict) or row['chat'].get('id') != channel['id']
+            or not isinstance(row.get('photo'), list) or not row['photo'] for row in sent
+        ) or sent[0].get('caption') != caption or len({row['message_id'] for row in sent}) != len(sent):
+            raise ValueError("Telegram screenshot receipt did not match this release")
+        if len(images) > 1 and (not isinstance(sent[0].get('media_group_id'), str) or not sent[0]['media_group_id'] or any(row.get('media_group_id') != sent[0]['media_group_id'] for row in sent)):
+            raise ValueError("Telegram album receipt did not confirm one grouped update")
+        ids = [row['message_id'] for row in sent]
+        path.write_text(json.dumps({**receipt, "status": "sent", "message_ids": ids, "media_group_id": sent[0].get('media_group_id')}) + "\n")
+        print(f"Release screenshots confirmed as one grouped update, messages {ids}")
 
 
 def main():
@@ -172,6 +200,8 @@ def main():
         raise ValueError("Release checkout changed; commit the batch and retry from its exact HEAD")
     token, destination = telegram_config()
     images = [screenshot_bytes(path) for path in args.screenshot]
+    if len(images) > 10:
+        raise ValueError("At most ten screenshots can accompany one release update")
     if args.check:
         verify_channel(telegram_call(token, "getChat", {"chat_id": destination}), destination)
         print(f"Release preflight passed for v{metadata['version']}")

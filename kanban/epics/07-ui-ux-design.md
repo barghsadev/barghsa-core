@@ -1,7 +1,7 @@
 # Epic 07 — UI/UX Foundation & Design System
 
 > **Domain:** Shared UI Components, Theming, Accessibility, Layout & Design Patterns
-> **Status:** ✅ Ready — audited, gaps remediated, and cross-checked against `README.md` & `architecture.md`
+> **Implementation status:** See `../board.json`; this file is a requirement specification.
 > **Dependencies:** E-01 (Platform & Infrastructure — monorepo, shared packages), E-02 (Auth, Users, CRM & Admin — user-facing pages)
 > **Cross-references:** E-05 (Notifications, Documents & AI Orchestration — notification center, AI chat UI), E-03 (Core Business — order/consultation forms), E-04 (Invoices, Wallet, Payments & Contracts — financial data display)
 

@@ -1,7 +1,7 @@
 # Epic 03 — Core Business: Products, Electricity, Saving, Solar, Consultation
 
 > **Domain:** Products, Electricity Supply, Power Saving, Solar Power Station Construction, Consultation
-> **Status:** ✅ Drafted + remediated
+> **Implementation status:** See `../board.json`; this file is a requirement specification.
 > **Dependencies:** Epic 01 (Platform & Infrastructure), Epic 02 (Auth, Users, CRM & Admin)
 > **Cross-references:** Epic 04 (Invoices, Wallet, Payments & Contracts), Epic 05 (Notifications, Documents & AI Orchestration)
 

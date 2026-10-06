@@ -76,9 +76,9 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-      - name: Validate canonical task queue
-        run: python3 kanban/scripts/build_backlog.py --check
-      - name: Verify loop state and dispatch protocol
+      - name: Validate current task and release board
+        run: python3 kanban/scripts/board.py check
+      - name: Verify task inventory and acceptance safety
         run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
       - run: pnpm install --frozen-lockfile
       - name: Verify development watcher compatibility

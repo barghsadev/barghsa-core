@@ -1,7 +1,7 @@
 # Epic E-04: Invoices, Wallet, Payments & Contracts
 
 > **Domain:** Financial & Contractual Operations
-> **Status:** ✅ Audited — source gaps resolved as executable tasks
+> **Implementation status:** See `../board.json`; this file is a requirement specification.
 > **Dependencies:** E-01 (Platform), E-02 (Auth/Users/CRM), E-03 (Core Business — Products, Orders)
 > **Depended by:** E-05 (Notifications, Documents)
 

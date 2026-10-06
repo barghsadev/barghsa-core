@@ -72,11 +72,13 @@ unknown image, and verify that its original release is still live. A restarted m
 with `python3 deploy/staging/release-queue.py work`. It does not auto-replay interrupted
 deployments. The worker uses lower CPU priority to favor ongoing builds.
 
-Increment the root `package.json` version and add
-`releases/<version>.md` in the same batch commit. Use Semantic Versioning:
-PATCH for fixes and small compatible batches, MINOR for new functionality,
+Prepare the root `package.json` version and `releases/<version>.md` only when
+the planned release milestone and its gates are accepted. Batches within a milestone
+push to main without version bumps, deployments or announcements. See
+[the release plan](../../kanban/RELEASES.md) and [working process](../../kanban/WORKFLOW.md). Use Semantic Versioning:
+PATCH for necessary compatible hotfixes, MINOR for planned capability milestones,
 and MAJOR for breaking changes. The initial numbered release is `0.1.0`.
-Never reuse a published version for a different batch. The release notes are in Persian, start with `برقسا نسخه <version>` and list
+Never reuse a published version for a different release. The release notes are in Persian, start with `برقسا نسخه <version>` and list
 concrete changes as Markdown bullets. Screenshot captions are also Persian.
 
 The login page reads the root version at build time. Both web builds emit
@@ -165,7 +167,15 @@ python3 deploy/staging/notify-release.py --commit "$(git rev-parse HEAD)" \
   --screenshot /absolute/path/login-mobile.png
 ```
 
-The confirmed release text is not reposted. Each PNG image receives a Persian
-caption with the same release version, a verified Telegram receipt and its own
-duplicate/uncertain-outcome guard. Capture the deployed public UI or already
-reviewed task screenshots; keep image files outside the committed checkout.
+The confirmed Persian release text is not reposted. Screenshots use one photo or
+one grouped album of two to ten photos, with the release version in its Persian
+caption. Thus one release has at most one summary and one grouped visual update.
+[Telegram's album API](https://core.telegram.org/bots/api#sendmediagroup) accepts
+2–10 items; choose representative captures and link a gallery for extras.
+
+The image selection is immutable for a release. Saved receipts bind every input
+hash, the exact version/commit, channel, message IDs and album group ID. Unknown
+outcomes require channel inspection and cannot automatically resend. Legacy
+per-photo receipts are preserved and cannot trigger an extra album. Capture the
+actual deployed UI or reviewed matching source build, and keep originals outside
+the checkout. Never post every screenshot separately.

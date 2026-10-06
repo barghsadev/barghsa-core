@@ -51,6 +51,8 @@ Separate a module into a service only when it has a proven independent scaling, 
 
 ## Sources of truth
 
+Development task, release and launch status belongs only to `kanban/board.json`. See [working process](kanban/WORKFLOW.md). The retired automated loop and historical audit ledgers do not dispatch work.
+
 PostgreSQL is authoritative for business state, financial state, authorization, sessions/revocation, idempotency, audit, outbox, and jobs.
 
 Redis is optional and disposable. It may provide cache, distributed rate limiting, or short-lived coordination. Redis loss must not lose durable work, change a balance, grant access, or corrupt a state machine. Cache misses fall back to PostgreSQL.

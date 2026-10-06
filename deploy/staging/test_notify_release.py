@@ -140,6 +140,77 @@ class ReleaseNotificationTests(unittest.TestCase):
                 release.announce_screenshots(self.metadata, "synthetic", "@barghsa_releases", other, [data])
             self.assertEqual(api.call_count, 1)
 
+    def test_album_upload_binds_each_attachment_and_accepts_array_result(self):
+        images = [b'first original PNG bytes', b'second original PNG bytes']
+        payload = {'chat_id': -100123, 'media': json.dumps([
+            {'type': 'photo', 'media': 'attach://image0'},
+            {'type': 'photo', 'media': 'attach://image1'},
+        ])}
+        response = io.BytesIO(b'{"ok":true,"result":[{"message_id":21},{"message_id":22}]}')
+        with patch.object(release.urllib.request, 'urlopen', return_value=response) as api:
+            result = release.telegram_call('synthetic', 'sendMediaGroup', payload, images)
+        self.assertEqual([r['message_id'] for r in result], [21, 22])
+        request = api.call_args.args[0]
+        for i, data in enumerate(images):
+            self.assertIn(f'name="image{i}"'.encode(), request.data)
+            self.assertIn(f'attach://image{i}'.encode(), request.data)
+            self.assertIn(data, request.data)
+
+    def test_two_or_ten_screenshots_use_one_album_and_cannot_add_another(self):
+        for count in [2, 10]:
+            with self.subTest(count=count):
+                state = self.root / str(count)
+                images = [f'original {i}'.encode() for i in range(count)]
+                def send(token, method, payload, photo=None):
+                    if method == 'getChat': return self.channel
+                    self.assertEqual(method, 'sendMediaGroup')
+                    self.assertEqual(photo, images)
+                    media = json.loads(payload['media'])
+                    return [{'message_id': 100+i, 'chat': self.channel, 'photo': [{'file_id': f'photo-{i}'}],
+                             'media_group_id': 'one-album', **({'caption': media[0]['caption']} if i==0 else {})}
+                            for i in range(count)]
+                with patch.object(release, 'telegram_call', side_effect=send) as api, patch.object(release, 'request_json', return_value=self.metadata):
+                    for _ in range(2):
+                        release.announce_screenshots(self.metadata, 'synthetic', '@barghsa_releases', state, images)
+                    with self.assertRaisesRegex(ValueError, 'no additional post'):
+                        release.announce_screenshots(self.metadata, 'synthetic', '@barghsa_releases', state, [b'new capture'])
+                self.assertEqual(sum(c.args[1]=='sendMediaGroup' for c in api.call_args_list), 1)
+                receipt = json.loads(next(state.glob('album-*.json')).read_text())
+                self.assertEqual(receipt['status'], 'sent')
+                self.assertEqual(len(receipt['message_ids']), count)
+
+    def test_album_unknown_and_wrong_group_never_confirm_or_blindly_resend(self):
+        images = [b'first', b'second']
+        def send(token, method, payload, photo=None):
+            if method == 'getChat': return self.channel
+            media = json.loads(payload['media'])
+            return [{'message_id': 21+i, 'chat': self.channel, 'photo':[{'file_id':'photo'}],
+                     'caption':media[0]['caption'] if i==0 else '', 'media_group_id':str(i)} for i in range(2)]
+        with patch.object(release, 'telegram_call', side_effect=send) as api, patch.object(release, 'request_json', return_value=self.metadata):
+            with self.assertRaisesRegex(ValueError, 'one grouped update'):
+                release.announce_screenshots(self.metadata, 'synthetic', '@barghsa_releases', self.root, images)
+            with self.assertRaisesRegex(ValueError, 'outcome is unknown'):
+                release.announce_screenshots(self.metadata, 'synthetic', '@barghsa_releases', self.root, images)
+        self.assertEqual(sum(c.args[1]=='sendMediaGroup' for c in api.call_args_list), 1)
+        self.assertEqual(json.loads(next(self.root.glob('album-*.json')).read_text())['status'], 'unknown')
+
+    def test_album_limit_rejects_before_any_remote_call(self):
+        with patch.object(release, 'telegram_call') as api:
+            with self.assertRaisesRegex(ValueError, 'at most ten'):
+                release.announce_screenshots(self.metadata, 'synthetic', '@barghsa_releases', self.root, [b'photo']*11)
+            api.assert_not_called()
+
+    def test_legacy_receipts_do_not_create_an_extra_album(self):
+        import hashlib
+        image = b'legacy capture'
+        prior = {**self.metadata, 'chat_id':self.channel['id'], 'photo_sha256':hashlib.sha256(image).hexdigest(), 'status':'sent', 'message_id':13}
+        (self.root/'photo-legacy.json').write_text(json.dumps(prior))
+        with patch.object(release, 'telegram_call', return_value=self.channel) as api, patch.object(release, 'request_json', return_value=self.metadata):
+            release.announce_screenshots(self.metadata, 'synthetic', '@barghsa_releases', self.root, [image])
+            with self.assertRaisesRegex(ValueError, 'Legacy screenshot receipts'):
+                release.announce_screenshots(self.metadata, 'synthetic', '@barghsa_releases', self.root, [image,b'new'])
+        self.assertTrue(all(c.args[1]=='getChat' for c in api.call_args_list))
+
     def test_deployment_announces_only_after_success_and_preflight_precedes_images(self):
         # Execute the real deployment script against subprocess stubs, with no network or Docker writes.
         staging = self.root / "deploy/staging"

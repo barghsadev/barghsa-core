@@ -75,6 +75,16 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         with self.assertRaisesRegex(ValueError, "immutable"):
             queue.enqueue(self.repo, self.state, self.commit, [self.image])
 
+    def test_more_than_one_album_is_rejected_before_a_job_is_created(self):
+        images = []
+        for i in range(11):
+            path = self.root / f'image-{i}.png'
+            path.write_bytes(b'\x89PNG\r\n\x1a\n'+str(i).encode())
+            images.append(path)
+        with self.assertRaisesRegex(ValueError, 'At most ten'):
+            queue.enqueue(self.repo, self.state, self.commit, images)
+        self.assertFalse((self.state/'jobs'/self.commit/'job.json').exists())
+
     def test_deploy_uses_pushed_commit_while_builder_advances_and_has_dirty_files(self):
         queue.enqueue(self.repo, self.state, self.commit, [self.image])
         newer = self.publish("0.1.4")

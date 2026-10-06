@@ -149,4 +149,4 @@ The catalogue switches between Persian/English and light/dark, and includes cont
 
 ## Validation
 
-See [validation results](validation.md) for checked behavior and limitations, and `epic-07-coverage.md` for delivered scope and deferred acceptance criteria. Run the shared package tests, web typecheck and build, repository lint and the affected auth, theme, shell and profile-switch browser suites before changing these foundations.
+See [the current task board](../../kanban/BOARD.md) for accepted scope, linked evidence and exact remaining criteria. The old dated validation and epic-progress reports are retired. Run the shared package tests, web typecheck and build, repository lint and the affected auth, theme, shell and profile-switch browser suites before changing these foundations.

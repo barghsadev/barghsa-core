@@ -1,7 +1,0 @@
-# Manual invoice financial review
-
-This batch advances `04-invoices-wallet-contracts.md#T-04.CC.07.01`–`.04` for staff-created manual invoices. Before issue, staff see the current customer profile, every priced line and VAT amount, total, and configured due period in the shared bilingual financial review layout. The issue request must confirm the exact scoped snapshot hash. The server recalculates it in the issue transaction and rejects changed profiles, prices, or due rules; the confirmed review is retained in invoice metadata. Idempotent retries require the same stored review.
-
-The HTTP integration tests cover preview, confirmation, stale review rejection, stored snapshot, due-period changes, and retry. The browser flow covers Persian and English, light and dark modes, step-up, and an uncertain-result retry with the same request key and review hash. Existing internal invoice writers keep their service API while staff HTTP issuance requires confirmation. Cross-command financial review tasks remain partial.
-
-Validation: shared review parser and exports, manual invoice and due-period HTTP tests, manual invoice service and calculation replay integration tests, web manual-invoice component test, all four Chromium browser variants, API/web typechecks and builds, generated OpenAPI contract, lint, formatting, bundle budgets, and backlog validation. Remote CI runs after the direct push to `main`.

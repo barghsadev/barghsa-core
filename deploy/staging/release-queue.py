@@ -57,6 +57,8 @@ def enqueue(repo, state, commit, screenshots):
         if not data.startswith(b"\x89PNG\r\n\x1a\n") or len(data) > 10 * 1024 * 1024:
             raise ValueError("Release screenshots must be PNG files no larger than 10 MiB")
         images[hashlib.sha256(data).hexdigest() + ".png"] = data
+    if len(images) > 10:
+        raise ValueError("At most ten screenshots can accompany one release album")
     with locked(state, "queue.lock"):
         directory = state / "jobs" / commit
         path = directory / "job.json"

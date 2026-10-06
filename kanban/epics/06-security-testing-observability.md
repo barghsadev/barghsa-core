@@ -4,7 +4,7 @@
 >
 > **Epic ID:** E-06
 >
-> **Status:** ✅ Audited — gaps resolved
+> **Implementation status:** See `../board.json`; this file is a requirement specification.
 >
 > **Dependencies:** E-01 (Platform & Infrastructure), E-02 (Auth, Users, CRM & Admin), E-04 (Invoices, Wallet, Payments & Contracts)
 >
