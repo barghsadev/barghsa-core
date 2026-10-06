@@ -19,6 +19,7 @@ import { Label } from '@barghsa/ui';
 interface ProfileBrief {
   id: string;
   profileType: 'INDIVIDUAL' | 'LEGAL';
+  displayName?: string | null;
   title: string | null;
   firstName: string | null;
   lastName: string | null;
@@ -134,7 +135,9 @@ export function DefaultProfileModal() {
 
   function formatProfileName(profile: ProfileBrief): string {
     const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean);
-    const name = parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale);
+    const name =
+      profile.displayName?.trim() ||
+      (parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale));
     const type =
       profile.profileType === 'LEGAL'
         ? t('dashboard.profile.typeLegal', locale)

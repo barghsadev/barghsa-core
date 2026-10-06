@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-06",
-  "source_commit": "2153725ec0b2a60671810f2fb29447b9eb31be3d",
+  "source_commit": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17661,12 +17661,10 @@
         "story": "02-auth-users-admin.md#spec-b06435182065"
       },
       "requirement": "**T-03.01.01 — App-level profile check middleware**\n\n- Description: After login, app checks if user has any profiles. If none, redirect to `/onboarding`. If exactly one profile, set it as default and proceed to dashboard. If multiple, show profile selector to choose default, then proceed.\n- Technical notes: Implemented as client route guard/loader in TanStack Router, with independent API authorization. Query GET `/api/profiles` returns `{ profiles: [...], hasDefault: boolean, activeProfileId }`. Profile switch is persistent in DB (not just session). API must never return profiles belonging to another user.\n- UI/UX: Brief loading state while fetching profiles. If no profiles, redirect to `/onboarding`. If multiple profiles, show a selection modal/dropdown briefly.\n- Dependencies: T-01.02.03, T-04.01.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17712,15 +17710,69 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/api/src/profiles/agents.service.ts",
-          "apps/api/src/profiles/context-http.integration.test.ts",
-          "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
-          "apps/web/src/routes/__root.tsx"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "289544b2890ea94d506f63cb2eb38437882bf813c231a95af020e714936ec939"
+            },
+            {
+              "path": "apps/api/src/profiles/context-http.integration.test.ts",
+              "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+              "sha256": "6b9312f44f2988398553c27163b428ef86a0ab55fc8457b63a4ad6a7547db249"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/e2e/profile-display-name.spec.ts",
+              "sha256": "760edc3a65bce950d270cc5254d66bea82fce5aee44a38f47d0bab7ed76c72a6"
+            },
+            {
+              "path": "apps/web/src/components/DefaultProfileModal.tsx",
+              "sha256": "cc015e84fe7efac5cd45ffca30b64faa3d2ae7845c92e368c44c0021d9371cc4"
+            },
+            {
+              "path": "apps/web/src/components/ProfileSwitcher.tsx",
+              "sha256": "1afb5fbcab262d05c64498bdb9fe7c98a609d4ef9f8d1df87a6c46c6baa3a4ad"
+            },
+            {
+              "path": "apps/web/src/routes/__root.tsx",
+              "sha256": "cf0a8def503b2ae46959072e97b8a81b187d932359f97b5ca5d1a87b79ad428c"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected root beforeLoad/session/customer profile availability guard: unauthenticated->login, no profiles->onboarding; staff context bypasses customer onboarding only. Backend list selects owned profiles or current permitted legal memberships, never unrelated profiles; first creation persists default, missing explicit context requires selection.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -17734,12 +17786,10 @@
         "story": "02-auth-users-admin.md#spec-b06435182065"
       },
       "requirement": "**T-03.01.02 — Profile verification check after login**\n\n- Description: If active profile is NOT verified and system settings enforce verification, notify user. Show auto-verify button if verification method is `api`. Allow access to: profile correction/verification, invitations, notifications, tickets/support, security settings, existing records, financial/refund info. Block new commercial orders.\n- Technical notes: Block is on backend: order submission endpoints check `profile.verified || !adminRequiresVerification`. Blocking screen explains reason, required action, status, and support path. Does NOT prevent profile switching or access to non-commercial pages.\n- UI/UX: Banner at top of app: \"Your profile is not yet verified. [Verify now] [Learn more]\" with blocking overlay on commercial order flows. Non-intrusive on allowed pages.\n- Dependencies: T-03.01.01, E-07 (verification settings)\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17804,16 +17854,97 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/api/src/orders/orders.service.ts",
-          "apps/api/src/orders/orders.service.test.ts",
-          "apps/api/src/orders/order-access-http.integration.test.ts",
-          "apps/web/src/routes/_app/electricity/order.tsx",
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/consultation/consultation-request.service.ts",
+              "sha256": "ded3ba4b6b604a78d9de4efaa044a4c2d48e3d3b90ce96ef2eac8ffbf119bf68"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "7c92662fe3e9bd0aaf420ffae8491b40ed20e146a853bdb5bc30797f34833857"
+            },
+            {
+              "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+              "sha256": "76f1ebab6f975d6c180cb3ed42d56541792d5d4d43e5f8f22f115d312647d69d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.controller.test.ts",
+              "sha256": "dddfa67ba632d99082ffd4c43ddfe27ad11df4a5773b56110fd87cf9575eab7b"
+            },
+            {
+              "path": "apps/api/src/orders/orders.controller.ts",
+              "sha256": "1ee5451a2828fa4713160e93c0d98e5fa1201907a684f0c39ebd32fbf32ef226"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.test.ts",
+              "sha256": "3eaed5cd3e767532886d8468fba82910db148f18e07cd904d31144d471298061"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.ts",
+              "sha256": "fc78f413982579b96aa6801b4b9ab9b2414762938af42cb05f920c7764d2f0c1"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/verification-http.integration.test.ts",
+              "sha256": "32baac0d151eec8df6d6cc5aa2bff6d15d98a636e8115685a92dd780addfa704"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "de6d00937bcd67ab47cdef30447d00ed30594bf2f46bbc1032c8ef43a5dd88e3"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "70c6b97c92d93baf294637810dc460fcf402090908c206dc6b53f0e65bad01c6"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/e2e/verification-banner.spec.ts",
+              "sha256": "8bc9096cfe918eaa6a2ececcb7639b4e358732619e58aeab1ec651ac90cbb6dc"
+            },
+            {
+              "path": "apps/web/src/components/VerificationBanner.tsx",
+              "sha256": "6b99504500a83a1502b47c7fb050d461352259053273fa8178440b6f52034862"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/order.tsx",
+              "sha256": "622295a1d60d52de79b1cb74b1ec5215b7a3441cbef8274c6c8a7cc207ef66d4"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected banner/manual verification disposition and commercial authorization. OrdersService.mayManageOrders locks submitted profile/current legal Manager membership and policy; all electricity/saving/solar/consultation commercial entrypoints opt into this helper. Ten actual policy/status HTTP variants and profile/policy lock-wait tests pass. Existing records/support/security/refund paths retain access and switching is allowed. No approved identity provider exists; unavailable auto-verify is explained under the approved manual-verification disposition.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -17827,12 +17958,10 @@
         "story": "02-auth-users-admin.md#spec-dc3d1dd14993"
       },
       "requirement": "**T-03.02.01 — Profile type selection (Individual vs Legal)**\n\n- Description: Page displaying two cards/options: Individual and Legal. User selects one to proceed. Clear explanation of each type.\n- Technical notes: POST `/api/onboarding/start` with `{ profileType: 'INDIVIDUAL' | 'LEGAL' }`. Returns profileId (draft state). Profile starts in DRAFT state.\n- UI/UX: Two large cards with icons, title, short description in Persian/EN. Selected card highlighted.\n- Dependencies: T-03.01.01\n- Complexity: S",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17866,13 +17995,49 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/onboarding.controller.ts",
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/web/src/routes/onboarding/index.tsx"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/onboarding.controller.ts",
+              "sha256": "b3f0742f020b245c8646227a94239530126bd57301b52656393cac04d15aa7fe"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/index.tsx",
+              "sha256": "b5d3944c4c6806f86f21d25577c00038a412a556d47ac318f35949756637ee1b"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected bilingual type cards and start/journey endpoints: only Individual/Legal accepted, creating owned DRAFT profiles with atomic initial-default choice and deduplicated resumable setup. Both single and combined type selections/unknown receipt recovery are tested.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -17886,12 +18051,10 @@
         "story": "02-auth-users-admin.md#spec-dc3d1dd14993"
       },
       "requirement": "**T-03.02.02 — Individual profile form**\n\n- Description: Multi-field form for individual profile:\n  - Title: free text (Dr., Mr., etc.), optional\n  - First name: required, text, max 100 chars\n  - Last name: required, separate field, text, max 100 chars\n  - Province: required, selectable list of Iranian provinces fetched from API\n  - City: required, selectable list filtered by selected province, fetched from API\n  - Full address: required, textarea, max 500 chars\n  - Postal code: required, Iranian postal code validation (10 digits)\n  - National ID number: required, Iranian national ID validation (10 digits)\n- Technical notes: Province/city data from `GET /api/admin/geography/provinces` and `GET /api/admin/geography/provinces/:id/cities`. Address saved in addresses table, linked to profile. Server-side validation of national ID (checksum algorithm) and postal code. Server-side dedup of national ID among active profiles.\n- UI/UX: Two-column form on desktop, single column on mobile. City dropdown updates when province selected. Validation on blur per field. Step indicator if multi-step (but all on one page initially). \"Back\" goes to type selection.\n- Dependencies: T-03.02.01, T-09.04.01 (province/city management)\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17938,15 +18101,61 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/api/src/profiles/onboarding.controller.ts",
-          "apps/api/src/profiles/profiles.service.test.ts",
-          "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/onboarding.controller.ts",
+              "sha256": "b3f0742f020b245c8646227a94239530126bd57301b52656393cac04d15aa7fe"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.test.ts",
+              "sha256": "c122aa01098fececa39d06251c7f8d436c6c467f33e5b43196836d9d9bcdbcd3"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/src/lib/profile-digits.ts",
+              "sha256": "400784506ea1a48e4ed47d1917d6444bfb7a257cf948fb353695d3f8aa3a53db"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+              "sha256": "35bc0e6bbdecc8abe9f7233e25f6684623dffbe9e0bc55a8e31012e34ba3b557"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected individual route/DTO/service: optional honorific, separate required max100names, max500address, province/city IDs, national-ID checksum and10digit postal validation, active-identity dedup, owned DRAFT/optimistic-version/geography checks, retained historical main address and atomic identity/address/status/audit. Blur/step/final field validation and mobile/desktop layout are covered.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -17960,12 +18169,10 @@
         "story": "02-auth-users-admin.md#spec-dc3d1dd14993"
       },
       "requirement": "**T-03.02.03 — Legal profile form**\n\n- Description: All individual fields (for authorized representative) PLUS legal entity fields:\n  - Legal name: required\n  - National identifier (شناسه ملی): required, unique among active legal profiles, 11-digit validation\n  - Registration number: required\n  - Company/entity type: required (select from admin-managed types)\n  - Registration date: optional\n  - Economic code: optional initially, required by service when needed for invoicing\n  - Official phone: optional\n  - Official email: optional\n  - Official province, city, full address, postal code: required\n  - Authorized representative's title and relationship: required\n  - Optional document uploads: official gazette or registration docs\n- Technical notes: Same province/city pattern. National identifier uniqueness enforced at DB level (unique index, case-insensitive). Address saved in addresses table. Owner is set to the creating user. Legal profile starts in DRAFT until basic fields complete (verification is separate).\n- UI/UX: Tabbed or sectioned form: \"Individual Representative\" section + \"Legal Entity\" section. Upload area for documents (drag & drop). All form data saved as draft after each section completion (auto-save).\n- Dependencies: T-03.02.01, T-09.04.01, E-07 (verification settings)\n- Complexity: XL",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18021,16 +18228,69 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/legal-profiles.service.ts",
-          "apps/api/src/profiles/onboarding-drafts.service.ts",
-          "apps/api/src/profiles/legal-documents-http.integration.test.ts",
-          "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-          "apps/web/src/hooks/useOnboardingDraft.ts",
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+              "sha256": "3de1bde893692d4edef8dcb273ab6968be79f08d326c4ecbc570de38167ad776"
+            },
+            {
+              "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
+              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+            },
+            {
+              "path": "apps/api/src/profiles/legal-profiles.service.ts",
+              "sha256": "936cbf7b446683ba0e6911e1eb61a0d5e02aefcf1d189afd572c3b90ec0df50d"
+            },
+            {
+              "path": "apps/api/src/profiles/onboarding-drafts.service.ts",
+              "sha256": "6f522e3ae2a1feb68ec6f6a119cd30d487412f13ed21088f87dca3011d479474"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "107fd284446651642065286212f97468834b7a32b1684d2a08361492ebc9d062"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+              "sha256": "d06dd2473fd80b5828c2e8d899db423f141020f2828fc57818c3cdb5ee2bafa3"
+            },
+            {
+              "path": "apps/web/src/lib/profile-digits.ts",
+              "sha256": "400784506ea1a48e4ed47d1917d6444bfb7a257cf948fb353695d3f8aa3a53db"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+              "sha256": "558448dde69313029953c50fb9fe637d96c9cd9f649ec82efe3f583d9225aeda"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected legal service/form/draft hook: separate representative identity/address/title/relationship; entity name/11digit checksum uniqueness/registration/company type/date/optional economic/contact fields and official address; current geography and company type rechecked transactionally. Only owned scanned/sealed documents accepted; stage autosave/version expiry and attachment failures preserve drafts; completed identity/address/history/status/audit are atomic.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -18044,12 +18304,10 @@
         "story": "02-auth-users-admin.md#spec-dc3d1dd14993"
       },
       "requirement": "**T-03.02.04 — Onboarding completion and redirect**\n\n- Description: After profile creation, redirect to `/app`. If multiple profiles could be added, show option to \"Add another profile\" or \"Continue to app\".\n- Technical notes: Final POST `/api/onboarding/complete/:profileId` finalizes the profile (transitions from DRAFT to PENDING_VERIFICATION or ACTIVE depending on verification settings). Sets profile as default if first profile.\n- UI/UX: Success animation/confetti on completion. Two action buttons: \"Add another profile\" and \"Go to dashboard\".\n- Dependencies: T-03.02.02, T-03.02.03\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18083,13 +18341,49 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/api/src/profiles/onboarding.controller.ts",
-          "apps/web/src/routes/onboarding/complete.tsx"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/onboarding.controller.ts",
+              "sha256": "b3f0742f020b245c8646227a94239530126bd57301b52656393cac04d15aa7fe"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.tsx",
+              "sha256": "b5768ef22339160989ca0e683f35a798a70a21a284e4f67d4e8369c136d88bd7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected completion and journey finish: owned nonarchived typed profile locks validate complete identity/address/geography; DRAFT becomes ACTIVE or PENDING_VERIFICATION by setting, existing status preserved. Initial/default selection and audit are atomic; UI celebrates only valid receipt and offers add-another/dashboard, with explicit combined-journey default choice.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -18103,12 +18397,10 @@
         "story": "02-auth-users-admin.md#spec-14535d99cdf1"
       },
       "requirement": "**T-03.03.01 — Profile switcher in sidebar**\n\n- Description: Top section of dashboard sidebar displays current profile name, type badge, and a dropdown/selector to switch profiles. Shows all profiles user has access to (as owner or agent).\n- Technical notes: GET `/api/profiles` returns user's profiles with current active flag. Switch: POST `/api/profiles/switch/:profileId`. Backend updates activeProfileId on user record. On switch, client re-fetches all profile-scoped data. API enforces: user must have access to the target profile (as owner or active agent).\n- UI/UX: Compact dropdown showing profile name, type icon (person/building), current badge. Active profile marked. Quick switch without page reload (dashboard data refreshes). On mobile: collapsible accordion.\n- Dependencies: T-03.01.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18150,14 +18442,65 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/api/src/profiles/profiles.controller.ts",
-          "apps/web/src/lib/profile-context.ts",
-          "apps/web/e2e/profile-switch.spec.ts"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/profiles.controller.ts",
+              "sha256": "50c6f942b0677ec6b276d66e158b4bb204a00a6abb3a8f3af8664bcb143f116d"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/e2e/profile-display-name.spec.ts",
+              "sha256": "760edc3a65bce950d270cc5254d66bea82fce5aee44a38f47d0bab7ed76c72a6"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "97d14ee5219e5b7e908257d6c9626572175ece47016c8b2cc3b4eed0125b9854"
+            },
+            {
+              "path": "apps/web/src/components/DefaultProfileModal.tsx",
+              "sha256": "cc015e84fe7efac5cd45ffca30b64faa3d2ae7845c92e368c44c0021d9371cc4"
+            },
+            {
+              "path": "apps/web/src/components/ProfileSwitcher.tsx",
+              "sha256": "1afb5fbcab262d05c64498bdb9fe7c98a609d4ef9f8d1df87a6c46c6baa3a4ad"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "6e5c69eb627956b64752b25f840981ee2b9c481b65afbbbd192371d49e11bf99"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected switch controller/context service and client refresh: persistent per-user DB context admits only owned/current legal role access and audits changes. Sidebar uses canonical company/person name and type badge; acknowledged switch remounts profile state and broadcasts cross-tab revision. Failed/mismatched receipts keep existing selection; late old-profile data cannot replace new page/count.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -18171,12 +18514,10 @@
         "story": "02-auth-users-admin.md#spec-14535d99cdf1"
       },
       "requirement": "**T-03.03.02 — Default profile selection**\n\n- Description: On login, if user has multiple profiles but no default set, show profile selection. User can change default from profile settings.\n- Technical notes: `defaultProfileId` on user record. API: POST `/api/profiles/default/:profileId`. If user has exactly one profile, it is automatically the default.\n- UI/UX: Radio list of profiles with \"Set as default\" option. On first login with multiple profiles, modal forces selection before proceeding.\n- Dependencies: T-03.03.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18226,16 +18567,73 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [
-          "apps/api/src/profiles/profiles.service.ts",
-          "apps/api/src/profiles/profiles.controller.ts",
-          "apps/api/src/profiles/agents.service.ts",
-          "apps/api/src/profiles/context-http.integration.test.ts",
-          "apps/web/src/routes/_app/settings/profile.tsx",
-          "apps/web/e2e/profile-switch.spec.ts"
-        ],
+        "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-profile-onboarding-and-persistent-context",
+          "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "289544b2890ea94d506f63cb2eb38437882bf813c231a95af020e714936ec939"
+            },
+            {
+              "path": "apps/api/src/profiles/context-http.integration.test.ts",
+              "sha256": "3e79d66596b4ae4214f659bac5170f07979278c623f2218efed5a55d9b62dc1f"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.controller.ts",
+              "sha256": "50c6f942b0677ec6b276d66e158b4bb204a00a6abb3a8f3af8664bcb143f116d"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "5d61d8e2df961d604fbc8169581b70508f69ca51f74961fc9385d248522de281"
+            },
+            {
+              "path": "apps/web/e2e/profile-display-name.spec.ts",
+              "sha256": "760edc3a65bce950d270cc5254d66bea82fce5aee44a38f47d0bab7ed76c72a6"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "97d14ee5219e5b7e908257d6c9626572175ece47016c8b2cc3b4eed0125b9854"
+            },
+            {
+              "path": "apps/web/src/components/DefaultProfileModal.tsx",
+              "sha256": "cc015e84fe7efac5cd45ffca30b64faa3d2ae7845c92e368c44c0021d9371cc4"
+            },
+            {
+              "path": "apps/web/src/components/ProfileSwitcher.tsx",
+              "sha256": "1afb5fbcab262d05c64498bdb9fe7c98a609d4ef9f8d1df87a6c46c6baa3a4ad"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/profile.tsx",
+              "sha256": "aa596ad596486c55bc8cfc8dd8ec029f1cc485e6e36916b26bc0b4661d1ef1b2"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Inspected first-profile default and per-user saved context, forced nondismissible selection with initial radio choice, exact active-ID acknowledgement and settings default editor. Owner/agent contexts persist independently and unrelated profile selection is denied; fallback/remaining-profile selection and current company names are tested.",
+            "186 selected backend cases pass across10files: profile context/access, identity/address saves, legal document ownership/scanning, onboarding journeys/draft directory, verification policy and actual order access. Current authority/profile/policy after lock waits, draft optimistic versions, audit rollback, tenant isolation and existing-order access while verification is required are covered. api.json.",
+            "16 onboarding-profile/journey source cases pass.148 distinct zero-retry browser cases pass,74 per Chromium/mobile Safari, merged by file/title/project in browser-accepted-cases.json. Final71 Chromium onboarding/name/switch cases are reused; repaired banner3 and all74 mobile cases pass. Initial67-case baseline overlaps and is not added.",
+            "Browser acceptance covers FA/EN personal/company forms, current fields and invalid final fields, dependent geography failure/late replies, document-upload leave exclusion, explicit review-to-field edits, expired/conflicting drafts, browser history/leave dialogs, exact completion receipts, combined setup recovery/default choice, profile switch errors/late responses/cross-tab refresh, company names and verification/support banners.",
+            "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
+            "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
+            "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
+          "limitations": [
+            "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
+            "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
+          ]
+        }
       }
     },
     {
@@ -75969,18 +76367,14 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-profile-onboarding-acceptance",
+    "id": "release-0.2-account-preferences-acceptance",
     "release": "0.2.0",
-    "goal": "Renew profile middleware, verification routing, individual/legal onboarding, completion and profile/default switching. Inspect current scope/context/authority and preserve policy-dependent auth partial tasks pending owner decisions.",
+    "goal": "Renew profile settings, verified contact/username changes, per-user notification preferences and timezone settings against current implementation and affected delivery/date callers. Preserve current identity/session authority and remaining owner-policy decisions.",
     "task_keys": [
-      "02-auth-users-admin.md#T-03.01.01",
-      "02-auth-users-admin.md#T-03.01.02",
-      "02-auth-users-admin.md#T-03.02.01",
-      "02-auth-users-admin.md#T-03.02.02",
-      "02-auth-users-admin.md#T-03.02.03",
-      "02-auth-users-admin.md#T-03.02.04",
-      "02-auth-users-admin.md#T-03.03.01",
-      "02-auth-users-admin.md#T-03.03.02",
+      "02-auth-users-admin.md#T-03.03.03",
+      "02-auth-users-admin.md#T-03.03.04",
+      "02-auth-users-admin.md#T-03.03.05",
+      "02-auth-users-admin.md#T-03.03.06",
       "release-readiness#R-01.01"
     ]
   },

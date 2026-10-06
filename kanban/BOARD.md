@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 40 | Accepted with unchanged source bindings. |
-| verify | 1267 | Existing work may be complete; inspect evidence before building. |
+| done | 48 | Accepted with unchanged source bindings. |
+| verify | 1259 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,16 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Renew profile middleware, verification routing, individual/legal onboarding, completion and profile/default switching. Inspect current scope/context/authority and preserve policy-dependent auth partial tasks pending owner decisions.
+Renew profile settings, verified contact/username changes, per-user notification preferences and timezone settings against current implementation and affected delivery/date callers. Preserve current identity/session authority and remaining owner-policy decisions.
 
-- `02-auth-users-admin.md#T-03.01.01`: App-level profile check middleware
-- `02-auth-users-admin.md#T-03.01.02`: Profile verification check after login
-- `02-auth-users-admin.md#T-03.02.01`: Profile type selection (Individual vs Legal)
-- `02-auth-users-admin.md#T-03.02.02`: Individual profile form
-- `02-auth-users-admin.md#T-03.02.03`: Legal profile form
-- `02-auth-users-admin.md#T-03.02.04`: Onboarding completion and redirect
-- `02-auth-users-admin.md#T-03.03.01`: Profile switcher in sidebar
-- `02-auth-users-admin.md#T-03.03.02`: Default profile selection
+- `02-auth-users-admin.md#T-03.03.03`: Profile settings page
+- `02-auth-users-admin.md#T-03.03.04`: Username/contact changes
+- `02-auth-users-admin.md#T-03.03.05`: Notification channel preferences
+- `02-auth-users-admin.md#T-03.03.06`: Timezone settings
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -83,14 +79,14 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-02.03.02` | done | Earlier acceptance_verified | OTP verification and password reset |
 | `02-auth-users-admin.md#T-02.03.03` | partial | Earlier partial | Account recovery support path |
 | `02-auth-users-admin.md#T-02.04.01` | done | Earlier acceptance_verified | Auth rate limit enforcement |
-| `02-auth-users-admin.md#T-03.01.01` | verify | Earlier acceptance_verified | App-level profile check middleware |
-| `02-auth-users-admin.md#T-03.01.02` | verify | Earlier acceptance_verified | Profile verification check after login |
-| `02-auth-users-admin.md#T-03.02.01` | verify | Earlier acceptance_verified | Profile type selection (Individual vs Legal) |
-| `02-auth-users-admin.md#T-03.02.02` | verify | Earlier acceptance_verified | Individual profile form |
-| `02-auth-users-admin.md#T-03.02.03` | verify | Earlier acceptance_verified | Legal profile form |
-| `02-auth-users-admin.md#T-03.02.04` | verify | Earlier acceptance_verified | Onboarding completion and redirect |
-| `02-auth-users-admin.md#T-03.03.01` | verify | Earlier acceptance_verified | Profile switcher in sidebar |
-| `02-auth-users-admin.md#T-03.03.02` | verify | Earlier acceptance_verified | Default profile selection |
+| `02-auth-users-admin.md#T-03.01.01` | done | Earlier acceptance_verified | App-level profile check middleware |
+| `02-auth-users-admin.md#T-03.01.02` | done | Earlier acceptance_verified | Profile verification check after login |
+| `02-auth-users-admin.md#T-03.02.01` | done | Earlier acceptance_verified | Profile type selection (Individual vs Legal) |
+| `02-auth-users-admin.md#T-03.02.02` | done | Earlier acceptance_verified | Individual profile form |
+| `02-auth-users-admin.md#T-03.02.03` | done | Earlier acceptance_verified | Legal profile form |
+| `02-auth-users-admin.md#T-03.02.04` | done | Earlier acceptance_verified | Onboarding completion and redirect |
+| `02-auth-users-admin.md#T-03.03.01` | done | Earlier acceptance_verified | Profile switcher in sidebar |
+| `02-auth-users-admin.md#T-03.03.02` | done | Earlier acceptance_verified | Default profile selection |
 | `02-auth-users-admin.md#T-03.03.03` | verify | Earlier acceptance_verified | Profile settings page |
 | `02-auth-users-admin.md#T-03.03.04` | verify | Earlier acceptance_verified | Username/contact changes |
 | `02-auth-users-admin.md#T-03.03.05` | verify | Earlier acceptance_verified | Notification channel preferences |

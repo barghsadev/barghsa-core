@@ -9,6 +9,7 @@ import { Badge } from '@barghsa/ui';
 export interface SwitcherProfile {
   id: string;
   profileType: 'INDIVIDUAL' | 'LEGAL';
+  displayName?: string | null;
   isDefault: boolean;
   status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED';
   title: string | null;
@@ -106,7 +107,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
     const parts = [activeProfile.title, activeProfile.firstName, activeProfile.lastName].filter(
       Boolean
     );
-    return parts.length > 0 ? parts.join(' ') : null;
+    return activeProfile.displayName?.trim() || (parts.length > 0 ? parts.join(' ') : null);
   }, [activeProfile]);
 
   // Single profile (or none renderable) — no switching needed.
@@ -197,7 +198,9 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
 
 function formatProfileOption(profile: SwitcherProfile, locale: Locale): string {
   const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean);
-  const name = parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale);
+  const name =
+    profile.displayName?.trim() ||
+    (parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale));
   const type =
     profile.profileType === 'LEGAL'
       ? t('dashboard.profile.typeLegal', locale)
