@@ -17250,7 +17250,7 @@
             },
             {
               "path": "pnpm-lock.yaml",
-              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -17275,7 +17275,8 @@
             "Two targeted real PostgreSQL order HTTP cases pass (saving atomic quoted submission and advanced electricity bundle); 47 other cases deliberately skipped. API prebuilt reuse is limited to matching unchanged API/shared/db/worker artifacts. order-http.json and browser-source.json.",
             "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
             "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets.",
-            "Deletion criterion uses the specified soft-delete-and-warning behavior: no physical DELETE in the customer command, retained rows/order snapshots, current main-address replacement required, localized history warning in confirmation. Does not claim a separate linked-order soft-delete prohibition. Related 18 address HTTP cases and EN/FA native-form browser/source receipts remain valid for unchanged profile/address methods."
+            "Deletion criterion uses the specified soft-delete-and-warning behavior: no physical DELETE in the customer command, retained rows/order snapshots, current main-address replacement required, localized history warning in confirmation. Does not claim a separate linked-order soft-delete prohibition. Related 18 address HTTP cases and EN/FA native-form browser/source receipts remain valid for unchanged profile/address methods.",
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
         },
@@ -43223,7 +43224,7 @@
             },
             {
               "path": "pnpm-lock.yaml",
-              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
             }
           ],
           "checks": [
@@ -43232,7 +43233,8 @@
             "Two targeted real PostgreSQL order HTTP cases pass (saving atomic quoted submission and advanced electricity bundle); 47 other cases deliberately skipped. API prebuilt reuse is limited to matching unchanged API/shared/db/worker artifacts. order-http.json and browser-source.json.",
             "22 distinct final production browser cases pass with zero retries or skips on Chromium/mobile Safari. EN/FA electricity and native profile/address forms plus saving intake, original address retry, quote submission and staff fulfillment. browser-final-report.json.",
             "Final web types, focused lint, formatting, production build and all 85 unchanged route budgets pass. Final browser manifest verifies 21 source/config/lock paths and 496 compiled assets.",
-            "Source bindings renewed after final-review-only rendering change. Six saving source cases and 16 final browser cases revalidate original address retries/navigation and quote display. Earlier 35/6/18/2/22 receipts retain their recorded base scope; unchanged source/methods are reused. /Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review/review.json"
+            "Source bindings renewed after final-review-only rendering change. Six saving source cases and 16 final browser cases revalidate original address retries/navigation and quote display. Earlier 35/6/18/2/22 receipts retain their recorded base scope; unchanged source/methods are reused. /Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review/review.json",
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance"
         }
@@ -43372,7 +43374,7 @@
             },
             {
               "path": "pnpm-lock.yaml",
-              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -43385,7 +43387,8 @@
             "The affected address fixture now returns status 201/profile/timestamps and tests deliberate exact keyed retry after a wrong-city receipt. All original requested city/body assertions remain and exact-key equality is added.",
             "Final web types, changed-file lint/formatting, production build and all 85 unchanged route budgets pass. browser-source.json binds final source/config/lock and compiled assets.",
             "Backend quote hashing, ownership locks, monetary totals and immutable address persistence are unchanged. Prior two targeted saving/electricity PostgreSQL cases and 18 profile-address HTTP cases remain valid for these unchanged service methods; no claim of a fresh full API suite.",
-            "Scoped source reuse at 4ba5c0c: service-wizard fixture changes add complete geography identifiers and solar-only snapshot/recovery cases. Saving handlers and assertions, quoted street/postcode and plan/agreement display are unchanged. Prior six saving source/16 browser checks remain valid for this unchanged behavior; no fresh full saving-suite claim."
+            "Scoped source reuse at 4ba5c0c: service-wizard fixture changes add complete geography identifiers and solar-only snapshot/recovery cases. Saving handlers and assertions, quoted street/postcode and plan/agreement display are unchanged. Prior six saving source/16 browser checks remain valid for this unchanged behavior; no fresh full saving-suite claim.",
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review"
         }
@@ -44275,7 +44278,7 @@
             },
             {
               "path": "pnpm-lock.yaml",
-              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
             }
           ],
           "checks": [
@@ -44284,7 +44287,8 @@
             "Two targeted downstream PostgreSQL/HTTP cases pass for document decisions/postal handoff and atomic linked solar contract/invoice creation/replay. Seven other cases deliberately skipped. Test setup now supplies owned installation addresses. callers-required-address.json.",
             "34 final production browser cases pass with zero retries/skips on Chromium/mobile Safari: EN/FA household/non-household intake with/without existing addresses, retained address creation/return and signed postcode summary, customer-staff upload/postal journey, wrong-profile/wrong-site review refusal and recovery, final receipt retry, edit-and-renew-review and pending navigation fencing. browser-accepted-report.json.",
             "Final web/API types, i18n build, changed-file lint/formatting, production web build and all 85 unchanged route budgets pass. browser-source.json verifies 18 source/config/lock bindings and 980 compiled web/i18n files.",
-            "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten."
+            "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten.",
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots",
           "limitations": [
@@ -44392,7 +44396,7 @@
             },
             {
               "path": "pnpm-lock.yaml",
-              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
             }
           ],
           "checks": [
@@ -44401,7 +44405,8 @@
             "Two targeted downstream PostgreSQL/HTTP cases pass for document decisions/postal handoff and atomic linked solar contract/invoice creation/replay. Seven other cases deliberately skipped. Test setup now supplies owned installation addresses. callers-required-address.json.",
             "34 final production browser cases pass with zero retries/skips on Chromium/mobile Safari: EN/FA household/non-household intake with/without existing addresses, retained address creation/return and signed postcode summary, customer-staff upload/postal journey, wrong-profile/wrong-site review refusal and recovery, final receipt retry, edit-and-renew-review and pending navigation fencing. browser-accepted-report.json.",
             "Final web/API types, i18n build, changed-file lint/formatting, production web build and all 85 unchanged route budgets pass. browser-source.json verifies 18 source/config/lock bindings and 980 compiled web/i18n files.",
-            "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten."
+            "Inspected existing Apartment/Villa, structural frame, completion-date/age and conditional unit controls; retained bounds/conditional behavior. Building age copy moved into both language dictionaries. Complete address values are copied into signed JSON; household legacy relational schema and old signed JSON are not rewritten.",
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots",
           "limitations": [
@@ -51439,6 +51444,50 @@
             "Coverage fast-mode job failed because test/integrity prerequisites failed. No independent passing coverage claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-household-snapshots/ci-artifacts"
+        },
+        "current_dependency_checkpoint": {
+          "reviewed_sha": "ba890a55b9f1ef6fcc9be6a9cafeb13ed7d120b6",
+          "source_evidence": [
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.ts",
+              "sha256": "45c37bb5fe7e603a9b4478b6ab904bd7e19b899447668aa0c6721fb0caad1a57"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.test.ts",
+              "sha256": "6f9b4abdce2bcccf29d857fbac64dd4f5a1e361a7adee7dc403f5e960df464d6"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.test.ts",
+              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+            },
+            {
+              "path": "apps/api/src/admin/admin-audit-network-metadata.test.ts",
+              "sha256": "21aa3fec51fe6a3a1b6eb79d172ff4d4ec7904ccc6ab01e0495bab3ae77be704"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            }
+          ],
+          "checks": [
+            "Only proxy-addr2.0.7 ->2.0.8 and source-map-js1.2.1 ->1.2.2 plus their registry integrities/references change. Normalizing those fields reproduces the original lockfile byte-for-byte; all workspace links/unrelated resolutions retained. lock-delta.json.",
+            "Frozen-lock installation passes; actual Nest/Express runtime resolves proxy-addr2.0.8. Fresh unmuted audit reports zero advisories of every severity. audit-final.json.",
+            "136 targeted cases pass across explicit proxy-IP trust, actual HTTP forwarded/destination rate quotas, auth/session controllers, trusted audit network metadata and profile-address HTTP boundaries. Includes 20 real PostgreSQL HTTP cases (two proxy and18address). boundary-http.json.",
+            "All11 monorepo type/build dependencies pass, including seven existing UI export/runtime/strict-prop smoke checks. Final production web build and all85 original gzip budgets pass. types.json/build.json/budgets.json.",
+            "978 compiled web/i18n file hashes match the accepted final solar manifest. Only app/auth release.json metadata reflects the later Git SHA. Existing source-bound client browser evidence is reused for identical bundles; no repeated or falsely claimed fresh browser run. compiled-reuse.json."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches",
+          "limitations": [
+            "Hosted CI remains independent and no staging release has been accepted or deployed by this maintenance batch."
+          ]
         }
       }
     },
@@ -51677,7 +51726,51 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "current_dependency_checkpoint": {
+          "reviewed_sha": "ba890a55b9f1ef6fcc9be6a9cafeb13ed7d120b6",
+          "source_evidence": [
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.ts",
+              "sha256": "45c37bb5fe7e603a9b4478b6ab904bd7e19b899447668aa0c6721fb0caad1a57"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.test.ts",
+              "sha256": "6f9b4abdce2bcccf29d857fbac64dd4f5a1e361a7adee7dc403f5e960df464d6"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.test.ts",
+              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+            },
+            {
+              "path": "apps/api/src/admin/admin-audit-network-metadata.test.ts",
+              "sha256": "21aa3fec51fe6a3a1b6eb79d172ff4d4ec7904ccc6ab01e0495bab3ae77be704"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            }
+          ],
+          "checks": [
+            "Only proxy-addr2.0.7 ->2.0.8 and source-map-js1.2.1 ->1.2.2 plus their registry integrities/references change. Normalizing those fields reproduces the original lockfile byte-for-byte; all workspace links/unrelated resolutions retained. lock-delta.json.",
+            "Frozen-lock installation passes; actual Nest/Express runtime resolves proxy-addr2.0.8. Fresh unmuted audit reports zero advisories of every severity. audit-final.json.",
+            "136 targeted cases pass across explicit proxy-IP trust, actual HTTP forwarded/destination rate quotas, auth/session controllers, trusted audit network metadata and profile-address HTTP boundaries. Includes 20 real PostgreSQL HTTP cases (two proxy and18address). boundary-http.json.",
+            "All11 monorepo type/build dependencies pass, including seven existing UI export/runtime/strict-prop smoke checks. Final production web build and all85 original gzip budgets pass. types.json/build.json/budgets.json.",
+            "978 compiled web/i18n file hashes match the accepted final solar manifest. Only app/auth release.json metadata reflects the later Git SHA. Existing source-bound client browser evidence is reused for identical bundles; no repeated or falsely claimed fresh browser run. compiled-reuse.json."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches",
+          "limitations": [
+            "Hosted CI remains independent and no staging release has been accepted or deployed by this maintenance batch."
+          ]
+        }
       }
     },
     {
@@ -66336,6 +66429,50 @@
           "remaining": [
             "SCA advisories source-map-js/proxy-addr remain unresolved; hosted CI cannot yet be claimed green."
           ]
+        },
+        "dependency_security_checkpoint": {
+          "reviewed_sha": "ba890a55b9f1ef6fcc9be6a9cafeb13ed7d120b6",
+          "source_evidence": [
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.ts",
+              "sha256": "45c37bb5fe7e603a9b4478b6ab904bd7e19b899447668aa0c6721fb0caad1a57"
+            },
+            {
+              "path": "apps/api/src/common/proxy-trust.test.ts",
+              "sha256": "6f9b4abdce2bcccf29d857fbac64dd4f5a1e361a7adee7dc403f5e960df464d6"
+            },
+            {
+              "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+              "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.test.ts",
+              "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+            },
+            {
+              "path": "apps/api/src/admin/admin-audit-network-metadata.test.ts",
+              "sha256": "21aa3fec51fe6a3a1b6eb79d172ff4d4ec7904ccc6ab01e0495bab3ae77be704"
+            },
+            {
+              "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+              "sha256": "8092237e37b1cc1c43d37fa67c0f40e00c63c1e7b740deb32d3736bb79045761"
+            }
+          ],
+          "checks": [
+            "Only proxy-addr2.0.7 ->2.0.8 and source-map-js1.2.1 ->1.2.2 plus their registry integrities/references change. Normalizing those fields reproduces the original lockfile byte-for-byte; all workspace links/unrelated resolutions retained. lock-delta.json.",
+            "Frozen-lock installation passes; actual Nest/Express runtime resolves proxy-addr2.0.8. Fresh unmuted audit reports zero advisories of every severity. audit-final.json.",
+            "136 targeted cases pass across explicit proxy-IP trust, actual HTTP forwarded/destination rate quotas, auth/session controllers, trusted audit network metadata and profile-address HTTP boundaries. Includes 20 real PostgreSQL HTTP cases (two proxy and18address). boundary-http.json.",
+            "All11 monorepo type/build dependencies pass, including seven existing UI export/runtime/strict-prop smoke checks. Final production web build and all85 original gzip budgets pass. types.json/build.json/budgets.json.",
+            "978 compiled web/i18n file hashes match the accepted final solar manifest. Only app/auth release.json metadata reflects the later Git SHA. Existing source-bound client browser evidence is reused for identical bundles; no repeated or falsely claimed fresh browser run. compiled-reuse.json."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches",
+          "limitations": [
+            "Hosted CI remains independent and no staging release has been accepted or deployed by this maintenance batch."
+          ]
         }
       }
     },
@@ -66407,14 +66544,15 @@
             },
             {
               "path": "pnpm-lock.yaml",
-              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
             }
           ],
           "checks": [
             "83 actual source cases pass in four exact wallet history/presenter/query/hook files, including seven new regressions. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/source-reviewed.json",
             "Eight zero-retry production browser cases pass in Persian/English, light/dark and Chromium/mobile Safari; denial clears private content/pagination, exactly one deliberate recovery fetch starts page one, applied filters and unsubmitted bank draft remain. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/browser-reviewed.json",
             "Web production build/types, focused lint and all 85 unchanged numeric route/interaction budgets pass; 495 build assets bound. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/browser-source.json",
-            "Native amounts above Number.MAX_SAFE_INTEGER, original receipt recovery, keyboard and WCAG assertions retained. Reviewed original Persian captures and exact failed-check dispositions: /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/review.json"
+            "Native amounts above Number.MAX_SAFE_INTEGER, original receipt recovery, keyboard and WCAG assertions retained. Reviewed original Persian captures and exact failed-check dispositions: /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/review.json",
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope"
         },
