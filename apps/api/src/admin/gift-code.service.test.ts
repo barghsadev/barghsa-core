@@ -550,6 +550,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       service = await loadService(pool);
 
       const result = await service.redeem({
+        actorUserId: 'user-1',
         giftCode: ' sale10 ',
         profileId: 'prof-1',
         orderId: 'ord-1',
@@ -583,6 +584,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       service = await loadService(pool);
 
       const result = await service.redeem({
+        actorUserId: 'user-1',
         giftCode: 'PCT25',
         profileId: 'prof-1',
         orderId: 'ord-1',
@@ -600,6 +602,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       const err = await service
         .redeem({
+          actorUserId: 'user-1',
           giftCode: 'NOPE',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -617,6 +620,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -635,6 +639,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -653,6 +658,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -670,6 +676,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -692,6 +699,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       service = await loadService(pool);
 
       const result = await service.redeem({
+        actorUserId: 'user-1',
         giftCode: 'SALE10',
         profileId: 'prof-1',
         orderId: 'ord-1',
@@ -709,6 +717,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -726,6 +735,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -742,6 +752,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -758,6 +769,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await expect(
         service.redeem({
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -779,6 +791,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       // Caller passes its own transactional client (orders module flow).
       const result = await service.redeem(
         {
+          actorUserId: 'user-1',
           giftCode: 'SALE10',
           profileId: 'prof-1',
           orderId: 'ord-1',
@@ -814,6 +827,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       service = await loadService(pool);
 
       await service.redeem({
+        actorUserId: 'user-1',
         giftCode: 'SALE10',
         profileId: 'prof-1',
         orderId: 'ord-1',
@@ -851,7 +865,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       const audit = router.queries('INSERT INTO audit_log')[0]!;
       expect(JSON.parse(String(audit.values[2]))).toMatchObject({
-        entity: 'gift_code',
+        entity: 'gift_code_redemption',
         action: 'redeemed',
         orderId: 'ord-1',
       });
@@ -862,12 +876,18 @@ describe('GiftCodeService (T-09.12.03)', () => {
     it('flips consumed redemptions to released and reports the count', async () => {
       const { pool, router } = makeDb();
       router.on('UPDATE gift_code_redemptions', () => ({
-        rows: [],
+        rows: [
+          redemptionRow({ id: 'released-1', status: 'released' }),
+          redemptionRow({ id: 'released-2', status: 'released' }),
+        ],
         rowCount: 2,
       }));
       service = await loadService(pool);
 
-      const result = await service.releaseByOrder('ord-1');
+      const result = await service.releaseByOrder('ord-1', undefined, {
+        actorUserId: 'user-1',
+        ip: '127.0.0.1',
+      });
 
       expect(result).toEqual({ released: 2 });
       const update = router.queries('UPDATE gift_code_redemptions')[0]!;
@@ -882,7 +902,10 @@ describe('GiftCodeService (T-09.12.03)', () => {
       }));
       service = await loadService(pool);
 
-      const result = await service.releaseByOrder('ord-1');
+      const result = await service.releaseByOrder('ord-1', undefined, {
+        actorUserId: 'user-1',
+        ip: '127.0.0.1',
+      });
 
       expect(result).toEqual({ released: 0 });
     });
@@ -890,7 +913,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
     it('runs on a caller-provided executor and audits the release', async () => {
       const { pool, router } = makeDb();
       router.on('UPDATE gift_code_redemptions', () => ({
-        rows: [],
+        rows: [redemptionRow({ status: 'released' })],
         rowCount: 1,
       }));
       router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }));
@@ -906,7 +929,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       expect(router.calls.filter((c) => c.sql === 'BEGIN')).toHaveLength(0);
       const audit = router.queries('INSERT INTO audit_log')[0]!;
       expect(JSON.parse(String(audit.values[2]))).toMatchObject({
-        entity: 'gift_code',
+        entity: 'gift_code_redemption',
         action: 'released',
         orderId: 'ord-1',
       });
@@ -996,4 +1019,71 @@ describe('gift-code invalid edits and missing persisted acknowledgements', () =>
       expect(router.calls.at(-1)!.sql).toBe('ROLLBACK');
     }
   );
+});
+
+describe('mandatory gift redemption audit boundaries', () => {
+  it.each([undefined, '', '   '])(
+    'rejects missing actor %j without issuing SQL',
+    async (actorUserId) => {
+      const { pool, router } = makeDb();
+      const service = await loadService(pool);
+      await expect(
+        service.redeem({
+          giftCode: 'SALE10',
+          profileId: 'prof-1',
+          orderId: 'ord-1',
+          orderAmount: '1000',
+          category: 'electricity',
+          actorUserId: actorUserId as never,
+        })
+      ).rejects.toThrow('A redemption audit actor is required');
+      await expect(
+        service.releaseByOrder('ord-1', undefined, {
+          actorUserId: actorUserId as never,
+          ip: '127.0.0.1',
+        })
+      ).rejects.toThrow('A release audit actor is required');
+      expect(router.calls).toEqual([]);
+    }
+  );
+  it('audits every returned release identity on the same executor before commit', async () => {
+    const { pool, router } = makeDb();
+    const rows = [
+      redemptionRow({ id: 'release-1', status: 'released' }),
+      redemptionRow({ id: 'release-2', status: 'released' }),
+    ];
+    router.on('UPDATE gift_code_redemptions', () => ({ rows, rowCount: 2 }));
+    const service = await loadService(pool);
+    expect(
+      await service.releaseByOrder('ord-1', undefined, { actorUserId: 'user-1', ip: '127.0.0.1' })
+    ).toEqual({ released: 2 });
+    const audits = router.queries('INSERT INTO audit_log');
+    expect(audits).toHaveLength(2);
+    expect(audits.map((row) => JSON.parse(String(row.values[2])).entityId)).toEqual([
+      'release-1',
+      'release-2',
+    ]);
+    for (const audit of audits) {
+      expect(audit.executor).toBe('client');
+      expect(audit.values[1]).toBe('user-1');
+      expect(JSON.parse(String(audit.values[2]))).toMatchObject({
+        entity: 'gift_code_redemption',
+        fromState: 'consumed',
+        toState: 'released',
+        reason: 'unpaid_cancellation',
+      });
+    }
+    expect(router.calls.at(-1)?.sql).toBe('COMMIT');
+  });
+  it('refuses an incomplete release acknowledgement and rolls back', async () => {
+    const { pool, router } = makeDb();
+    router.on('UPDATE gift_code_redemptions', () => ({ rows: [], rowCount: 1 }));
+    const service = await loadService(pool);
+    await expect(
+      service.releaseByOrder('ord-1', undefined, { actorUserId: 'user-1', ip: '127.0.0.1' })
+    ).rejects.toThrow('Released gifts have no complete persisted audit identities');
+    expect(router.queries('INSERT INTO audit_log')).toHaveLength(0);
+    expect(router.calls.filter((row) => row.sql === 'COMMIT')).toHaveLength(0);
+    expect(router.calls.at(-1)?.sql).toBe('ROLLBACK');
+  });
 });

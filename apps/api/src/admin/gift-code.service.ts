@@ -2,7 +2,14 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
-import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  HttpException,
+  Inject,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import {
@@ -117,7 +124,7 @@ export interface RedeemGiftCodeInput {
   /** Authoritative pre-discount lines from the order service; preview lines are advisory. */
   lines?: readonly GiftCodeLine[];
   /** Actor (session user) for the redemption audit trail. */
-  actorUserId?: string;
+  actorUserId: string;
   ip?: string;
 }
 
@@ -858,6 +865,8 @@ export class GiftCodeService {
    * serialize against the total/per-profile limits (no oversell).
    */
   async redeem(input: RedeemGiftCodeInput, q?: DbExecutor): Promise<GiftCodeRedemptionDto> {
+    if (typeof input.actorUserId !== 'string' || !input.actorUserId.trim())
+      throw new BadRequestException('A redemption audit actor is required');
     const code = normalizeGiftCode(input.giftCode);
     const run = async (tx: DbExecutor): Promise<GiftCodeRedemptionDto> => {
       const gift = await this.loadRedeemableGift(tx, code, true);
@@ -870,24 +879,25 @@ export class GiftCodeService {
          RETURNING id, gift_code_id, profile_id, order_id, discount_amount, status, restored_at, created_at`,
         [uuidv7(), gift.id, input.profileId, input.orderId, discountAmount, new Date()]
       );
-      // The ledger row is the primary trace, mirroring the epic's audit
-      // posture with a change_recorded event (same executor → commits
-      // with the redemption, no out-of-band writes).
-      if (input.actorUserId !== undefined) {
-        await this.recordChange(tx, {
-          actorUserId: input.actorUserId,
-          ip: input.ip ?? 'system',
-          entity: 'gift_code',
-          action: 'redeemed',
-          meta: {
-            giftCodeId: gift.id,
-            code,
-            profileId: input.profileId,
-            orderId: input.orderId,
-            discountAmount,
-          },
-        });
-      }
+      const redemption = inserted.rows[0];
+      if (!redemption?.id) throw new ConflictException('Gift redemption has no persisted identity');
+      await this.recordChange(tx, {
+        actorUserId: input.actorUserId,
+        ip: input.ip ?? 'system',
+        entity: 'gift_code_redemption',
+        action: 'redeemed',
+        meta: {
+          entityId: redemption.id,
+          fromState: null,
+          toState: redemption.status,
+          reason: null,
+          giftCodeId: gift.id,
+          code,
+          profileId: input.profileId,
+          orderId: input.orderId,
+          discountAmount,
+        },
+      });
       this.logger.log(
         `Gift code redeemed: code=${code}, order=${input.orderId}, ` +
           `profile=${input.profileId}, discount=${discountAmount}`
@@ -921,12 +931,16 @@ export class GiftCodeService {
    */
   async releaseByOrder(
     orderId: string,
-    q?: DbExecutor,
-    audit?: { actorUserId: string; ip: string },
+    q: DbExecutor | undefined,
+    audit: { actorUserId: string; ip: string },
     reason: 'unpaid_cancellation' | 'paid_cancellation' | 'replacement' = 'unpaid_cancellation'
   ): Promise<{ released: number }> {
+    if (!audit || typeof audit.actorUserId !== 'string' || !audit.actorUserId.trim())
+      throw new BadRequestException('A release audit actor is required');
     const run = async (tx: DbExecutor): Promise<{ released: number }> => {
-      const result = await tx.query(
+      const result = await tx.query<
+        Pick<RedemptionRow, 'id' | 'gift_code_id' | 'profile_id' | 'order_id' | 'status'>
+      >(
         `UPDATE gift_code_redemptions AS redemption
             SET status = 'released', restored_at = clock_timestamp()
            FROM gift_codes AS code
@@ -934,18 +948,29 @@ export class GiftCodeService {
             AND redemption.status = 'consumed'
             AND redemption.gift_code_id = code.id
             AND ($2::text = 'replacement' OR code.restore_on_cancel)
-            AND ($2::text <> 'paid_cancellation' OR code.restore_after_payment)`,
+            AND ($2::text <> 'paid_cancellation' OR code.restore_after_payment)
+         RETURNING redemption.id,redemption.gift_code_id,redemption.profile_id,redemption.order_id,redemption.status`,
         [orderId, reason]
       );
       const released = result.rowCount ?? 0;
+      if (result.rows.length !== released)
+        throw new ConflictException('Released gifts have no complete persisted audit identities');
       if (released > 0) {
-        if (audit !== undefined) {
+        for (const redemption of result.rows) {
           await this.recordChange(tx, {
             actorUserId: audit.actorUserId,
             ip: audit.ip,
-            entity: 'gift_code',
+            entity: 'gift_code_redemption',
             action: 'released',
-            meta: { orderId, reason },
+            meta: {
+              entityId: redemption.id,
+              fromState: 'consumed',
+              toState: redemption.status,
+              orderId: redemption.order_id,
+              profileId: redemption.profile_id,
+              giftCodeId: redemption.gift_code_id,
+              reason,
+            },
           });
         }
         this.logger.log(`Gift code slot(s) released for cancelled order ${orderId}: ${released}`);
