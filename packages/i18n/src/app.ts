@@ -1598,6 +1598,12 @@ export const fa: I18nDictionary = {
   'currency.toman': 'تومان',
   'wallet.page.title': 'کیف پول',
   'wallet.page.returnToInvoice': 'بازگشت به فاکتور',
+  'wallet.funding.balance': 'موجودی قابل استفاده کیف پول',
+  'wallet.funding.refresh': 'دریافت موجودی به‌روز',
+  'wallet.funding.loading': 'در حال دریافت موجودی کیف پول…',
+  'wallet.funding.denied': 'دسترسی فعلی اجازه مشاهده موجودی کیف پول را نمی‌دهد.',
+  'wallet.funding.customerMethods':
+    'مشتری می‌تواند کیف پول همین پروفایل را آنلاین یا با ثبت رسید واریز بانکی شارژ کند.',
   'wallet.funding.shortfall': 'مبلغ موردنیاز برای شارژ کیف پول',
   'wallet.funding.unknown': 'موجودی کیف پول در دسترس نیست. پیش از پرداخت آن را بررسی کنید.',
   'wallet.funding.methods': 'شارژ آنلاین یا ثبت رسید واریز بانکی در کیف پول در دسترس است.',
@@ -3365,6 +3371,12 @@ export const en: I18nDictionary = {
   'currency.toman': 'Toman',
   'wallet.page.title': 'Wallet',
   'wallet.page.returnToInvoice': 'Return to invoice',
+  'wallet.funding.balance': 'Available wallet balance',
+  'wallet.funding.refresh': 'Refresh balance',
+  'wallet.funding.loading': 'Loading wallet balance…',
+  'wallet.funding.denied': 'Current access does not allow viewing this wallet balance.',
+  'wallet.funding.customerMethods':
+    'The customer can fund this profile wallet online or submit a bank deposit receipt.',
   'wallet.funding.shortfall': 'Wallet top-up needed',
   'wallet.funding.unknown': 'Wallet balance is unavailable. Check it before payment.',
   'wallet.funding.methods':

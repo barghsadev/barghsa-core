@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState } from 'react';
@@ -996,68 +997,75 @@ export default function AdminElectricityIncreasesPage({
           action={action}
           summary={
             decisionReview ? (
-              <FinancialReviewSummary
-                title={copy('reviewTitle')}
-                rows={[
-                  {
-                    id: 'contract',
-                    label: copy('contract'),
-                    value: decisionReview.data.contractId,
-                  },
-                  {
-                    id: 'quantity',
-                    label: copy('quantity'),
-                    value: `${numbers.irrDigits(decisionReview.data.originalKwh)} → ${numbers.irrDigits(decisionReview.data.requestedKwh)} kWh`,
-                  },
-                  {
-                    id: 'increment',
-                    label: copy('increment'),
-                    value: `${numbers.irrDigits(decisionReview.data.incrementalKwh)} kWh`,
-                  },
-                  {
-                    id: 'policy',
-                    label: copy('currentLimit'),
-                    value:
-                      decisionReview.data.maxPercentageAtDecision === null
-                        ? copy('notApplicable')
-                        : `${numbers.number(decisionReview.data.maxPercentageAtDecision)}%`,
-                  },
-                  {
-                    id: 'effective',
-                    label: copy('effective'),
-                    value: decisionReview.data.effectiveFrom
-                      ? time.format(decisionReview.data.effectiveFrom)
-                      : copy('notApplicable'),
-                  },
-                  {
-                    id: 'end',
-                    label: copy('end'),
-                    value: time.format(decisionReview.data.periodEnd),
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('originalInvoice'),
-                    value: `${copy(`invoice.${decisionReview.data.originalInvoiceState}`)} · ${numbers.irrDigits(decisionReview.data.originalInvoiceTotalIrR)} IRR`,
-                  },
-                  {
-                    id: 'paid',
-                    label: copy('paidAmount'),
-                    value: `${numbers.irrDigits(decisionReview.data.originalInvoicePaidIrR)} IRR`,
-                  },
-                  ...(decisionReview.data.reason
-                    ? [{ id: 'reason', label: copy('reason'), value: decisionReview.data.reason }]
-                    : []),
-                ]}
-                total={{
-                  label: copy('decisionOutcome'),
-                  value: copy(`outcome.${decisionReview.data.outcome}`),
-                }}
-                notice={
-                  decisionReview.data.action === 'approve' ? (
-                    <p>{copy('signingChargeNotice')}</p>
-                  ) : undefined
-                }
-              />
+              <>
+                <FinancialReviewSummary
+                  title={copy('reviewTitle')}
+                  rows={[
+                    {
+                      id: 'contract',
+                      label: copy('contract'),
+                      value: decisionReview.data.contractId,
+                    },
+                    {
+                      id: 'quantity',
+                      label: copy('quantity'),
+                      value: `${numbers.irrDigits(decisionReview.data.originalKwh)} → ${numbers.irrDigits(decisionReview.data.requestedKwh)} kWh`,
+                    },
+                    {
+                      id: 'increment',
+                      label: copy('increment'),
+                      value: `${numbers.irrDigits(decisionReview.data.incrementalKwh)} kWh`,
+                    },
+                    {
+                      id: 'policy',
+                      label: copy('currentLimit'),
+                      value:
+                        decisionReview.data.maxPercentageAtDecision === null
+                          ? copy('notApplicable')
+                          : `${numbers.number(decisionReview.data.maxPercentageAtDecision)}%`,
+                    },
+                    {
+                      id: 'effective',
+                      label: copy('effective'),
+                      value: decisionReview.data.effectiveFrom
+                        ? time.format(decisionReview.data.effectiveFrom)
+                        : copy('notApplicable'),
+                    },
+                    {
+                      id: 'end',
+                      label: copy('end'),
+                      value: time.format(decisionReview.data.periodEnd),
+                    },
+                    {
+                      id: 'invoice',
+                      label: copy('originalInvoice'),
+                      value: `${copy(`invoice.${decisionReview.data.originalInvoiceState}`)} · ${numbers.irrDigits(decisionReview.data.originalInvoiceTotalIrR)} IRR`,
+                    },
+                    {
+                      id: 'paid',
+                      label: copy('paidAmount'),
+                      value: `${numbers.irrDigits(decisionReview.data.originalInvoicePaidIrR)} IRR`,
+                    },
+                    ...(decisionReview.data.reason
+                      ? [{ id: 'reason', label: copy('reason'), value: decisionReview.data.reason }]
+                      : []),
+                  ]}
+                  total={{
+                    label: copy('decisionOutcome'),
+                    value: copy(`outcome.${decisionReview.data.outcome}`),
+                  }}
+                  notice={
+                    decisionReview.data.action === 'approve' ? (
+                      <p>{copy('signingChargeNotice')}</p>
+                    ) : undefined
+                  }
+                />
+                <OrderWalletBalance
+                  profileId={decisionReview.scope.profileId}
+                  scopeKey={decisionReview.hash}
+                  staff
+                />
+              </>
             ) : undefined
           }
           onClose={() => closeDecision(command, action)}

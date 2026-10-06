@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Card, CardContent } from '@barghsa/ui';
@@ -206,6 +207,10 @@ export function SavingOrderDetailPage() {
               )}
             </CardContent>
           </Card>
+          <OrderWalletBalance
+            profileId={detail.profile_id}
+            scopeKey={JSON.stringify([scope, detail.id, detail.contract_version_id])}
+          />
           {detail.can_edit && (
             <SavingOrderChangePanel
               key={detail.contract_version_id}

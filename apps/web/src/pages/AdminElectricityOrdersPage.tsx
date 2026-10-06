@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -1236,6 +1237,19 @@ export default function AdminElectricityOrdersPage({
                     {JSON.stringify(detail.contractSnapshot, null, 2)}
                   </pre>
                 </details>
+                <OrderWalletBalance
+                  profileId={detail.profileId}
+                  total={
+                    ['rejected', 'cancelled', 'completed'].includes(detail.commercialStatus) ||
+                    detail.invoiceState === 'PaymentUnderReview'
+                      ? '0'
+                      : detail.totalIrR
+                  }
+                  paid={detail.paidIrR}
+                  invoiceId={detail.invoiceId}
+                  scopeKey={JSON.stringify([scope, detail.orderId, detail.versionId])}
+                  staff
+                />
                 <ElectricityOrderComments
                   key={detail.orderId}
                   orderId={detail.orderId}

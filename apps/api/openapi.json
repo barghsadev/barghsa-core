@@ -30132,6 +30132,58 @@
         ]
       }
     },
+    "/api/staff/profiles/{profileId}/wallet-balance": {
+      "get": {
+        "operationId": "StaffWalletBalanceController_balance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "balance": {
+                      "pattern": "^(0|[1-9][0-9]*)$",
+                      "type": "string"
+                    },
+                    "currency": {
+                      "enum": [
+                        "IRR"
+                      ],
+                      "type": "string"
+                    },
+                    "profileId": {
+                      "format": "uuid",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "profileId",
+                    "currency",
+                    "balance"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read a profile wallet balance with current staff financial authorization",
+        "tags": [
+          "Staff · Wallet"
+        ]
+      }
+    },
     "/api/staff/saving/orders": {
       "get": {
         "operationId": "SavingFulfillmentController_queue",

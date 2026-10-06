@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { ListPage } from '@barghsa/ui';
 import {
@@ -801,6 +802,7 @@ export function ConsultationsPage({
                         </FormItem>
                       )}
                     />
+                    {profile?.id && <OrderWalletBalance profileId={profile.id} scopeKey={scope} />}
                     {submitError && (
                       <Alert variant="destructive">
                         <AlertDescription>

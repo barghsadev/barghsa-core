@@ -25,7 +25,7 @@ vi.mock('../lib/electricity-increase-form-schemas.js', async (importOriginal) =>
   return importOriginal<typeof IncreaseSchemas>();
 });
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ irrDigits: String }),
+  useNumberFormatting: () => ({ irrDigits: String, money: String }),
 }));
 let host: HTMLDivElement, root: Root;
 let requests: Mock<(path: string, init?: RequestInit) => Promise<Response>>;
@@ -40,20 +40,29 @@ beforeEach(() => {
   read = () => Response.json(eligibleState());
   write = () => Response.json(requestRow(), { status: 201 });
   requests = vi.fn(async (path: string, init?: RequestInit) =>
-    init?.method === 'POST'
-      ? write(path, JSON.parse(String(init.body)) as Record<string, unknown>)
-      : read()
+    /^\/api\/wallet\/[0-9a-f-]+$/.test(path)
+      ? Response.json({ currency: 'IRR', balance: '0' })
+      : init?.method === 'POST'
+        ? write(path, JSON.parse(String(init.body)) as Record<string, unknown>)
+        : read()
   );
   vi.stubGlobal('fetch', requests);
 });
 afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
+  for (const [path, init] of requests.mock.calls.filter(([, init]) => !init?.method)) {
+    expect(path).toMatch(
+      /^\/api\/(?:wallet\/[0-9a-f-]+|electricity\/contracts\/[0-9a-f-]+\/increase)$/
+    );
+    expect(init?.credentials).toBe('include');
+  }
   vi.unstubAllGlobals();
 });
 const input = () => host.querySelector<HTMLInputElement>('#electricity-increase-kwh')!;
 const posts = () => requests.mock.calls.filter(([, init]) => init?.method === 'POST');
-const reads = () => requests.mock.calls.filter(([, init]) => !init?.method);
+const reads = () =>
+  requests.mock.calls.filter(([path, init]) => !init?.method && path.endsWith('/increase'));
 const retry = () =>
   host.querySelector<HTMLButtonElement>(
     '[data-testid=electricity-increase-retry], [data-testid=electricity-increase-sign-retry]'

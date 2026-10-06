@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
@@ -538,6 +539,16 @@ export function ConsultationDetailPage() {
           )}
           {request.status === 'offer_pending' && (
             <section id="consultation-offer" className="space-y-3 rounded-xl border bg-card p-5">
+              <OrderWalletBalance
+                profileId={request.profile_id}
+                scopeKey={JSON.stringify([
+                  scope,
+                  requestId,
+                  request.fee,
+                  request.invoice_id,
+                  request.invoice_state,
+                ])}
+              />
               {offerExpired && <p role="status">{copy('offerExpired')}</p>}
               {request.invoice_state === 'PaymentUnderReview' ? (
                 <p>{copy('paymentUnderReview')}</p>
@@ -680,59 +691,72 @@ export function ConsultationDetailPage() {
             </DialogDescription>
           </DialogHeader>
           {decisionReview && (
-            <FinancialReviewSummary
-              title={copy('decisionReviewTitle')}
-              rows={[
-                {
-                  id: 'service',
-                  label: copy('details'),
-                  value: decisionReview.data.serviceTitle[locale],
-                },
-                { id: 'scope', label: copy('scope'), value: decisionReview.data.scope },
-                {
-                  id: 'deliverables',
-                  label: copy('deliverables'),
-                  value: decisionReview.data.deliverables,
-                },
-                {
-                  id: 'validity',
-                  label: copy('offerValidUntil'),
-                  value: time.format(decisionReview.data.validUntil),
-                },
-                {
-                  id: 'invoice',
-                  label: copy('decisionReviewInvoice'),
-                  value: decisionReview.data.invoice.id,
-                },
-                ...(decisionReview.data.invoice.adjustmentKind === 'charge'
-                  ? [
-                      {
-                        id: 'previous-fee',
-                        label: copy('decisionReviewPreviousFee'),
-                        value: numbers.money(decisionReview.data.previousFee),
-                      },
-                    ]
-                  : []),
-                {
-                  id: 'invoice-amount',
-                  label: copy('decisionReviewInvoiceAmount'),
-                  value: numbers.money(decisionReview.data.invoice.totalAmount),
-                },
-                {
-                  id: 'paid',
-                  label: copy('decisionReviewAlreadyPaid'),
-                  value: numbers.money(decisionReview.data.invoice.paidAmount),
-                },
-              ]}
-              total={{ label: copy('fee'), value: numbers.money(decisionReview.data.fee) }}
-              notice={copy(
-                decisionReview.data.outcome === 'cancel_unpaid_invoice'
-                  ? 'decisionReviewCancelOutcome'
-                  : decisionReview.data.outcome === 'accepted_paid'
-                    ? 'decisionReviewPaidOutcome'
-                    : 'decisionReviewPaymentOutcome'
-              )}
-            />
+            <>
+              <FinancialReviewSummary
+                title={copy('decisionReviewTitle')}
+                rows={[
+                  {
+                    id: 'service',
+                    label: copy('details'),
+                    value: decisionReview.data.serviceTitle[locale],
+                  },
+                  { id: 'scope', label: copy('scope'), value: decisionReview.data.scope },
+                  {
+                    id: 'deliverables',
+                    label: copy('deliverables'),
+                    value: decisionReview.data.deliverables,
+                  },
+                  {
+                    id: 'validity',
+                    label: copy('offerValidUntil'),
+                    value: time.format(decisionReview.data.validUntil),
+                  },
+                  {
+                    id: 'invoice',
+                    label: copy('decisionReviewInvoice'),
+                    value: decisionReview.data.invoice.id,
+                  },
+                  ...(decisionReview.data.invoice.adjustmentKind === 'charge'
+                    ? [
+                        {
+                          id: 'previous-fee',
+                          label: copy('decisionReviewPreviousFee'),
+                          value: numbers.money(decisionReview.data.previousFee),
+                        },
+                      ]
+                    : []),
+                  {
+                    id: 'invoice-amount',
+                    label: copy('decisionReviewInvoiceAmount'),
+                    value: numbers.money(decisionReview.data.invoice.totalAmount),
+                  },
+                  {
+                    id: 'paid',
+                    label: copy('decisionReviewAlreadyPaid'),
+                    value: numbers.money(decisionReview.data.invoice.paidAmount),
+                  },
+                ]}
+                total={{ label: copy('fee'), value: numbers.money(decisionReview.data.fee) }}
+                notice={copy(
+                  decisionReview.data.outcome === 'cancel_unpaid_invoice'
+                    ? 'decisionReviewCancelOutcome'
+                    : decisionReview.data.outcome === 'accepted_paid'
+                      ? 'decisionReviewPaidOutcome'
+                      : 'decisionReviewPaymentOutcome'
+                )}
+              />
+              <OrderWalletBalance
+                profileId={decisionReview.scope.profileId}
+                total={
+                  decisionReview.data.decision === 'accept'
+                    ? decisionReview.data.invoice.totalAmount
+                    : '0'
+                }
+                paid={decisionReview.data.invoice.paidAmount}
+                invoiceId={decisionReview.data.invoice.id}
+                scopeKey={decisionReview.hash}
+              />
+            </>
           )}
           <DialogFooter>
             <Button

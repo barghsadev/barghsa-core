@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
@@ -1025,6 +1026,10 @@ export function SolarRequestPage() {
                         ]}
                       />
                     )}
+                    <OrderWalletBalance
+                      profileId={profileId}
+                      scopeKey={review?.hash ?? fingerprint}
+                    />
                     <p className="rounded-md bg-muted p-3 text-sm">
                       {copy('reviewNoContractInvoice')}
                     </p>

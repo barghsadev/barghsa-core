@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from './OrderWalletBalance.js';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Button, Card, CardContent } from '@barghsa/ui';
@@ -510,6 +511,11 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
             <p className="font-semibold">
               {copy('total')}: <bdi>{numbers.money(quote.totalIrR)}</bdi>
             </p>
+            <OrderWalletBalance
+              profileId={props.profileId}
+              total={quote.totalIrR}
+              scopeKey={quote.reviewDigest}
+            />
             <details>
               <summary>{quote.agreement.title}</summary>
               <p className="whitespace-pre-wrap">{quote.agreement.body}</p>

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-06T19:10:50Z. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-06T19:56:22Z. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 243 | Accepted with unchanged source bindings. |
+| done | 244 | Accepted with unchanged source bindings. |
 | verify | 1058 | Existing work may be complete; inspect evidence before building. |
-| partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 55 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,11 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; complete remaining audit event metadata and wallet-review disclosure. Integrate preserved audit guard only after fixture changes and rebasing its journal index. Reuse accepted engines and preserve unanswered owner decisions.
+Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; complete remaining audit event metadata. Integrate preserved audit guard only after fixture changes and rebasing its journal index. Reuse accepted engines and preserve unanswered owner decisions.
 
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
 - `03-core-business.md#T-03.90.03`: Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata.
-- `03-core-business.md#T-03.90.02`: All order review/submission pages must display current wallet balance. Payment is through wallet. If insufficient, show top-up option (online or bank receipt).
 - `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
 - `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
 - `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at`
@@ -283,7 +282,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.11.04.02` | done | Recorded batch work | Document-level decisions do not automatically reject the overall request. Only one file may be rejected while others are approved. |
 | `03-core-business.md#T-03.11.04.03` | done | Recorded batch work | `Rejected` and `Cancelled` require reason and support path. `Approved` remains open until staff creates/linked contract or explicitly closes as "No contract required" with elevated permission and reason. |
 | `03-core-business.md#T-03.90.01` | done | Recorded batch work | Configure default contract template for electricity orders in admin settings. The template is used when creating the preliminary contract at order submission. |
-| `03-core-business.md#T-03.90.02` | partial | Recorded batch work | All order review/submission pages must display current wallet balance. Payment is through wallet. If insufficient, show top-up option (online or bank receipt). |
+| `03-core-business.md#T-03.90.02` | done | Recorded batch work | All order review/submission pages must display current wallet balance. Payment is through wallet. If insufficient, show top-up option (online or bank receipt). |
 | `03-core-business.md#T-03.90.03` | partial | Recorded batch work | Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata. |
 | `03-core-business.md#T-03.90.04` | done | Recorded batch work | Customer-facing history uses understandable labels. Internal notes and customer-visible comments are separate. Staff must choose visibility. |
 | `03-core-business.md#T-03.90.05` | done | Recorded batch work | Rate limit order/consultation submission: 5 per profile per minute, plus duplicate/idempotency protection. |

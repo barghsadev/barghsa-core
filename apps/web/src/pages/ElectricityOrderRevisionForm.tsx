@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import {
   useEffect,
   useMemo,
@@ -883,6 +884,11 @@ export function ElectricityOrderRevisionForm({
             {t('electricity.order.total', locale)}:{' '}
             <strong>{numbers.money(currentReview.totalIrR)}</strong>
           </p>
+          <OrderWalletBalance
+            profileId={order.profileId}
+            total={currentReview.totalIrR}
+            scopeKey={JSON.stringify([scopeKey, currentReview.reviewDigest])}
+          />
           <p className="text-sm text-muted-foreground">
             {t('electricity.order.revision.replacesInvoice', locale)}
           </p>

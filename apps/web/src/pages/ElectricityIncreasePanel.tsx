@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
@@ -443,61 +444,68 @@ export function ElectricityIncreasePanel({
             ) : null}
             {data.request.status === 'awaiting_signature' && data.quote && confirmedReview ? (
               <div className="space-y-3">
-                <FinancialReviewSummary
-                  title={t('electricity.increase.reviewTitle', locale)}
-                  rows={[
-                    {
-                      id: 'contract',
-                      label: t('electricity.increase.contractId', locale),
-                      value: confirmedReview.data.contractId,
-                    },
-                    {
-                      id: 'invoice',
-                      label: t('electricity.increase.originalInvoice', locale),
-                      value: confirmedReview.data.originalInvoiceId,
-                    },
-                    {
-                      id: 'paid',
-                      label: t('electricity.increase.paidBasis', locale),
-                      value: `${numbers.irrDigits(confirmedReview.data.originalInvoiceIrR)} IRR`,
-                    },
-                    {
-                      id: 'quantity',
-                      label: t('electricity.increase.increment', locale),
-                      value: `${numbers.irrDigits(confirmedReview.data.incrementalKwh)} kWh`,
-                    },
-                    {
-                      id: 'period',
-                      label: t('electricity.increase.period', locale),
-                      value: `${timestamp(confirmedReview.data.periodStart)} – ${timestamp(confirmedReview.data.periodEnd)}`,
-                    },
-                    {
-                      id: 'effective',
-                      label: t('electricity.increase.earliest', locale),
-                      value: timestamp(confirmedReview.data.effectiveFrom),
-                    },
-                    {
-                      id: 'eligible',
-                      label: t('electricity.increase.priceBegins', locale),
-                      value: timestamp(confirmedReview.data.eligibleFrom),
-                    },
-                    {
-                      id: 'base',
-                      label: t('electricity.increase.baseShare', locale),
-                      value: `${numbers.irrDigits(confirmedReview.data.baseShareIrR)} IRR`,
-                    },
-                    ...confirmedReview.data.priceAdjustments.map((component, index) => ({
-                      id: `price-${index}`,
-                      label: `${t('electricity.increase.priceChange', locale)} ${index + 1} · ${component.invoiceId}`,
-                      value: `${numbers.irrDigits(component.increaseShareIrR)} IRR`,
-                    })),
-                  ]}
-                  total={{
-                    label: t('electricity.increase.adjustment', locale),
-                    value: `${numbers.irrDigits(confirmedReview.data.adjustmentIrR)} IRR`,
-                  }}
-                  notice={t('electricity.increase.activationRule', locale)}
-                />
+                <>
+                  <FinancialReviewSummary
+                    title={t('electricity.increase.reviewTitle', locale)}
+                    rows={[
+                      {
+                        id: 'contract',
+                        label: t('electricity.increase.contractId', locale),
+                        value: confirmedReview.data.contractId,
+                      },
+                      {
+                        id: 'invoice',
+                        label: t('electricity.increase.originalInvoice', locale),
+                        value: confirmedReview.data.originalInvoiceId,
+                      },
+                      {
+                        id: 'paid',
+                        label: t('electricity.increase.paidBasis', locale),
+                        value: `${numbers.irrDigits(confirmedReview.data.originalInvoiceIrR)} IRR`,
+                      },
+                      {
+                        id: 'quantity',
+                        label: t('electricity.increase.increment', locale),
+                        value: `${numbers.irrDigits(confirmedReview.data.incrementalKwh)} kWh`,
+                      },
+                      {
+                        id: 'period',
+                        label: t('electricity.increase.period', locale),
+                        value: `${timestamp(confirmedReview.data.periodStart)} – ${timestamp(confirmedReview.data.periodEnd)}`,
+                      },
+                      {
+                        id: 'effective',
+                        label: t('electricity.increase.earliest', locale),
+                        value: timestamp(confirmedReview.data.effectiveFrom),
+                      },
+                      {
+                        id: 'eligible',
+                        label: t('electricity.increase.priceBegins', locale),
+                        value: timestamp(confirmedReview.data.eligibleFrom),
+                      },
+                      {
+                        id: 'base',
+                        label: t('electricity.increase.baseShare', locale),
+                        value: `${numbers.irrDigits(confirmedReview.data.baseShareIrR)} IRR`,
+                      },
+                      ...confirmedReview.data.priceAdjustments.map((component, index) => ({
+                        id: `price-${index}`,
+                        label: `${t('electricity.increase.priceChange', locale)} ${index + 1} · ${component.invoiceId}`,
+                        value: `${numbers.irrDigits(component.increaseShareIrR)} IRR`,
+                      })),
+                    ]}
+                    total={{
+                      label: t('electricity.increase.adjustment', locale),
+                      value: `${numbers.irrDigits(confirmedReview.data.adjustmentIrR)} IRR`,
+                    }}
+                    notice={t('electricity.increase.activationRule', locale)}
+                  />
+                  <OrderWalletBalance
+                    profileId={profileId}
+                    total={confirmedReview.data.adjustmentIrR}
+                    scopeKey={JSON.stringify([scopeKey, confirmedReview.hash])}
+                  />
+                </>
                 <label className="flex items-start gap-2">
                   <input
                     type="checkbox"

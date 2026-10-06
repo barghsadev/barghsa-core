@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
@@ -866,6 +867,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               ) : null}
             </CardContent>
           </Card>
+          <OrderWalletBalance
+            profileId={detail.profileId}
+            scopeKey={JSON.stringify([scopeKey, detail.orderId, detail.versionId])}
+          />
           {detail.contractState === 'Active' ? (
             <ElectricityIncreasePanel
               contractId={detail.contractId}

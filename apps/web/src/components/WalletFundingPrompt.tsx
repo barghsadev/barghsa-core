@@ -6,10 +6,12 @@ export function WalletFundingPrompt({
   balance,
   total,
   returnInvoiceId,
+  staff = false,
 }: {
   balance: string | null;
   total: string;
   returnInvoiceId?: string;
+  staff?: boolean;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -30,17 +32,19 @@ export function WalletFundingPrompt({
           ? t('wallet.funding.unknown', locale)
           : `${t('wallet.funding.shortfall', locale)}: ${numbers.money(shortfall.toString())}`}
       </p>
-      <p>{t('wallet.funding.methods', locale)}</p>
-      <a
-        className="font-medium underline"
-        href={
-          returnInvoiceId
-            ? `/wallet?returnInvoiceId=${encodeURIComponent(returnInvoiceId)}`
-            : '/wallet'
-        }
-      >
-        {t('wallet.funding.open', locale)}
-      </a>
+      <p>{t(staff ? 'wallet.funding.customerMethods' : 'wallet.funding.methods', locale)}</p>
+      {!staff && (
+        <a
+          className="font-medium underline"
+          href={
+            returnInvoiceId
+              ? `/wallet?returnInvoiceId=${encodeURIComponent(returnInvoiceId)}`
+              : '/wallet'
+          }
+        >
+          {t('wallet.funding.open', locale)}
+        </a>
+      )}
     </div>
   );
 }

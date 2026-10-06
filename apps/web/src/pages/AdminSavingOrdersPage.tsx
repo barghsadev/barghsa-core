@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { SavingFulfillmentHistory } from '../components/SavingFulfillmentProgress.js';
 import type { SavingFulfillmentEvent } from '../lib/saving-fulfillment.js';
 import { ListPage } from '@barghsa/ui';
@@ -612,6 +613,19 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
                     <dd>{copy(detail.contractState)}</dd>
                   </div>
                 </dl>
+                <OrderWalletBalance
+                  profileId={detail.profileId}
+                  total={
+                    ['rejected', 'cancelled', 'completed'].includes(detail.status) ||
+                    detail.invoiceState === 'PaymentUnderReview'
+                      ? '0'
+                      : detail.totalIrR
+                  }
+                  paid={detail.paidIrR}
+                  invoiceId={detail.invoiceId}
+                  scopeKey={JSON.stringify([sourceScope, detail.id, detail.versionId])}
+                  staff
+                />
                 <SavingOrderRevisionHistory
                   revisions={detail.revisions ?? []}
                   formatTimestamp={time.format}

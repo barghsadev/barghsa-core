@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type RefObject } from 'react';
@@ -1238,83 +1239,93 @@ function PriceAdjustmentFinancialReview({
   const money = numbers.money;
   const { quote } = calculation;
   return (
-    <FinancialReviewSummary
-      title={copy('reviewTitle')}
-      rows={[
-        { id: 'contract', label: copy('contractId'), value: calculation.contractId },
-        { id: 'profile', label: copy('profileId'), value: profileId },
-        { id: 'invoice', label: copy('originalInvoice'), value: calculation.originalInvoiceId },
-        { id: 'version', label: copy('versionId'), value: calculation.versionId },
-        ...(periodStart
-          ? [
-              {
-                id: 'start',
-                label: copy('termStarts'),
-                value: formatTime(periodStart),
-              },
-            ]
-          : []),
-        { id: 'end', label: copy('termEnds'), value: formatTime(periodEnd) },
-        {
-          id: 'effective',
-          label: copy('effective'),
-          value: formatTime(quote.effectiveFrom),
-        },
-        {
-          id: 'percentage',
-          label: copy('percentage'),
-          value: bpsToPercent(quote.percentageBps, numbers.number),
-        },
-        { id: 'old', label: copy('oldFuture'), value: money(quote.oldFutureIrR) },
-        { id: 'new', label: copy('newFuture'), value: money(quote.newFutureIrR) },
-        ...quote.components.map((component, index) => ({
-          id: `component-${index}`,
-          label: `${copy('basisComponent')} ${index + 1}`,
-          value: (
-            <div className="space-y-2">
-              <p className="break-all font-mono text-xs">
-                <bdi dir="ltr">{component.invoiceId}</bdi>
-              </p>
-              <p>{copy(`source.${component.source}`)}</p>
-              <p>
-                {copy('basisPrice')}: <CurrencyCell amount={component.basisIrR} format={money} />
-              </p>
-              <p>
-                {copy('oldFuture')}: <CurrencyCell amount={component.oldFutureIrR} format={money} />
-              </p>
-              <p>
-                {copy('newFuture')}: <CurrencyCell amount={component.newFutureIrR} format={money} />
-              </p>
-              <p>
-                {copy('amount')}: <CurrencyCell amount={component.changeIrR} format={money} />
-              </p>
-              <p>
-                {copy('termStarts')}:{' '}
-                <DateCell
-                  value={component.periodStart}
-                  format={(value) => formatTime(String(value))}
-                />
-              </p>
-              <p>
-                {copy('termEnds')}:{' '}
-                <DateCell
-                  value={component.periodEnd}
-                  format={(value) => formatTime(String(value))}
-                />
-              </p>
-              <p>
-                {copy('effective')}:{' '}
-                <DateCell
-                  value={component.eligibleFrom}
-                  format={(value) => formatTime(String(value))}
-                />
-              </p>
-            </div>
-          ),
-        })),
-      ]}
-      total={{ label: copy('amount'), value: money(quote.amountIrR) }}
-      notice={`${copy('reason')}: ${calculation.reason} · ${copy('basis')}: ${calculation.contractualBasis}`}
-    />
+    <>
+      <FinancialReviewSummary
+        title={copy('reviewTitle')}
+        rows={[
+          { id: 'contract', label: copy('contractId'), value: calculation.contractId },
+          { id: 'profile', label: copy('profileId'), value: profileId },
+          { id: 'invoice', label: copy('originalInvoice'), value: calculation.originalInvoiceId },
+          { id: 'version', label: copy('versionId'), value: calculation.versionId },
+          ...(periodStart
+            ? [
+                {
+                  id: 'start',
+                  label: copy('termStarts'),
+                  value: formatTime(periodStart),
+                },
+              ]
+            : []),
+          { id: 'end', label: copy('termEnds'), value: formatTime(periodEnd) },
+          {
+            id: 'effective',
+            label: copy('effective'),
+            value: formatTime(quote.effectiveFrom),
+          },
+          {
+            id: 'percentage',
+            label: copy('percentage'),
+            value: bpsToPercent(quote.percentageBps, numbers.number),
+          },
+          { id: 'old', label: copy('oldFuture'), value: money(quote.oldFutureIrR) },
+          { id: 'new', label: copy('newFuture'), value: money(quote.newFutureIrR) },
+          ...quote.components.map((component, index) => ({
+            id: `component-${index}`,
+            label: `${copy('basisComponent')} ${index + 1}`,
+            value: (
+              <div className="space-y-2">
+                <p className="break-all font-mono text-xs">
+                  <bdi dir="ltr">{component.invoiceId}</bdi>
+                </p>
+                <p>{copy(`source.${component.source}`)}</p>
+                <p>
+                  {copy('basisPrice')}: <CurrencyCell amount={component.basisIrR} format={money} />
+                </p>
+                <p>
+                  {copy('oldFuture')}:{' '}
+                  <CurrencyCell amount={component.oldFutureIrR} format={money} />
+                </p>
+                <p>
+                  {copy('newFuture')}:{' '}
+                  <CurrencyCell amount={component.newFutureIrR} format={money} />
+                </p>
+                <p>
+                  {copy('amount')}: <CurrencyCell amount={component.changeIrR} format={money} />
+                </p>
+                <p>
+                  {copy('termStarts')}:{' '}
+                  <DateCell
+                    value={component.periodStart}
+                    format={(value) => formatTime(String(value))}
+                  />
+                </p>
+                <p>
+                  {copy('termEnds')}:{' '}
+                  <DateCell
+                    value={component.periodEnd}
+                    format={(value) => formatTime(String(value))}
+                  />
+                </p>
+                <p>
+                  {copy('effective')}:{' '}
+                  <DateCell
+                    value={component.eligibleFrom}
+                    format={(value) => formatTime(String(value))}
+                  />
+                </p>
+              </div>
+            ),
+          })),
+        ]}
+        total={{ label: copy('amount'), value: money(quote.amountIrR) }}
+        notice={`${copy('reason')}: ${calculation.reason} · ${copy('basis')}: ${calculation.contractualBasis}`}
+      />
+      <OrderWalletBalance
+        profileId={profileId}
+        total={quote.kind === 'charge' ? quote.amountIrR : '0'}
+        scopeKey={JSON.stringify([calculation.contractId, calculation.versionId, quote])}
+        staff
+      />
+    </>
   );
 }

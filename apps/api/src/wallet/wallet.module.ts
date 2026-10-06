@@ -3,6 +3,7 @@ import { CustomerWalletInvoicePaymentController } from './customer-wallet-invoic
 import { CustomerWalletInvoicePaymentService } from './customer-wallet-invoice-payment.service.js';
 import { CustomerWalletReceiptController } from './customer-wallet-receipt.controller.js';
 import { WalletController } from './wallet.controller.js';
+import { StaffWalletBalanceController } from './staff-wallet-balance.controller.js';
 import { WalletService } from './wallet.service.js';
 import { OnlineTopUpService } from './online-topup.service.js';
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js';
@@ -23,6 +24,7 @@ import { InvoiceModule } from '../invoice/invoice.module.js';
   imports: [SessionModule, ProfilesModule, InvoiceModule],
   controllers: [
     WalletController,
+    StaffWalletBalanceController,
     CustomerWalletReceiptController,
     OnlineTopUpCallbackController,
     ChargebackDetectionController,

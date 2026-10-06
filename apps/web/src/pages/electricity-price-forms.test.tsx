@@ -1,10 +1,10 @@
 import { act, useLayoutEffect, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { afterEach, expect, it, vi } from 'vitest';
+import { afterEach, expect, it, vi, type Mock } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type * as ActionModule from '../components/TeamActionDialog.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
-import { priceContractId } from '../test/electricity-price-adjustment-fixtures.js';
+import { priceContractId, priceProfileId } from '../test/electricity-price-adjustment-fixtures.js';
 import {
   staffPriceState,
   staffPriceReview,
@@ -80,6 +80,9 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
 }));
 let root: Root | undefined;
 let host: HTMLDivElement;
+const walletReads = vi.fn(async () =>
+  Response.json({ profileId: priceProfileId, currency: 'IRR', balance: '0' })
+);
 const snapshots: Array<{ actor: string; review: boolean }> = [];
 function Probe({ actor }: { actor: string }) {
   useLayoutEffect(() => {
@@ -93,13 +96,25 @@ afterEach(async () => {
   host?.remove();
   dialogs.length = 0;
   snapshots.length = 0;
+  walletReads.mockClear();
   vi.unstubAllGlobals();
   window.history.replaceState({}, '', '/');
 });
-async function render(fetchMock: ReturnType<typeof vi.fn>, selected = true) {
+async function render(
+  fetchMock: Mock<(path: string, init?: RequestInit) => Promise<Response>>,
+  selected = true
+) {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  vi.stubGlobal('fetch', fetchMock);
+  vi.stubGlobal('fetch', (path: string, init?: RequestInit) => {
+    if (path === `/api/staff/profiles/${priceProfileId}/wallet-balance`) {
+      expect(init?.credentials).toBe('include');
+      expect(init?.cache).toBe('no-store');
+      expect(init?.method).toBeUndefined();
+      return walletReads();
+    }
+    return fetchMock(path, init);
+  });
   window.history.replaceState(
     {},
     '',
@@ -208,7 +223,7 @@ it('focuses the first invalid proposal field and keeps valid companion inputs', 
   await settled(() =>
     expect(host.querySelector('#price-percent')?.getAttribute('aria-invalid')).toBe('true')
   );
-  expect(document.activeElement).toBe(host.querySelector('#price-percent'));
+  await settled(() => expect(document.activeElement).toBe(host.querySelector('#price-percent')));
   expect(host.querySelector<HTMLInputElement>('#price-reason')!.value).toBe('Keep this reason');
   expect(host.querySelector<HTMLInputElement>('#price-effective')!.value).toBe('2026-10-06T12:00');
   expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -549,3 +564,27 @@ it('hides a private captured review at the new actor commit and fences all old c
   expect(host.querySelector<HTMLInputElement>('#price-reason')!.value).toBe('');
   expect(host.querySelector('[role="dialog"]')).toBeNull();
 });
+it.each(['10', '-10'])(
+  'shows funding only for a captured charge proposal, percentage=%s',
+  async (percentage) => {
+    const fetchMock = vi.fn(async (path: string, init?: RequestInit) =>
+      Response.json(path.endsWith('/review') ? staffPriceReview(body(init)) : staffPriceState())
+    );
+    await render(fetchMock);
+    await draft();
+    await fill('price-percent', percentage);
+    await submitProposal();
+    await settled(() =>
+      expect(host.querySelector('[data-testid=order-wallet-balance]')?.textContent).toContain(
+        'Available wallet balance: 0'
+      )
+    );
+    const panel = host.querySelector('[data-testid=order-wallet-balance]')!;
+    if (percentage === '10') expect(panel.textContent).toContain('Wallet top-up needed: 50000');
+    else expect(panel.textContent).not.toContain('Wallet top-up needed:');
+    expect(panel.querySelector('a')).toBeNull();
+    expect(walletReads).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(1);
+    expect(fetchMock.mock.calls.filter(([path]) => path.endsWith('/review'))).toHaveLength(1);
+  }
+);

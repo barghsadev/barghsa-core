@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { t as appText } from '@barghsa/i18n/app';
@@ -1993,111 +1994,135 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
                 )}
               />
             ) : paidFeeReview ? (
-              <FinancialReviewSummary
-                title={copy('paidFeeReviewTitle')}
-                rows={[
-                  { id: 'profile', label: copy('customer'), value: paidFeeReview.data.profileName },
-                  {
-                    id: 'service',
-                    label: copy('details'),
-                    value: paidFeeReview.data.serviceTitle[locale],
-                  },
-                  { id: 'scope', label: copy('scope'), value: paidFeeReview.data.scope },
-                  {
-                    id: 'deliverables',
-                    label: copy('deliverables'),
-                    value: paidFeeReview.data.deliverables,
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('paidFeeReviewInvoice'),
-                    value: paidFeeReview.data.paidInvoice.id,
-                  },
-                  {
-                    id: 'previousFee',
-                    label: copy('paidFeeReviewPrevious'),
-                    value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.previousFee))} IRR`,
-                  },
-                  {
-                    id: 'change',
-                    label: copy(
-                      paidFeeReview.data.outcome === 'charge_invoice'
-                        ? 'chargeAdjustment'
-                        : 'creditAdjustment'
-                    ),
-                    value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.adjustmentAmount))} IRR`,
-                  },
-                  {
-                    id: 'deadline',
-                    label: copy('offerValidUntil'),
-                    value: time.format(paidFeeReview.data.validUntil),
-                  },
-                  { id: 'reason', label: copy('reason'), value: paidFeeReview.data.reason },
-                  ...paidFeeReview.data.refundPlan.map((refund) => ({
-                    id: `refund-${refund.invoiceId}`,
-                    label: copy('paidFeeReviewRefundInvoice'),
-                    value: `${refund.invoiceId} · ${new Intl.NumberFormat(locale).format(BigInt(refund.amount))} IRR`,
-                  })),
-                ]}
-                total={{
-                  label: copy('paidFeeReviewRevised'),
-                  value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.revisedFee))} IRR`,
-                }}
-                notice={copy(
-                  paidFeeReview.data.outcome === 'charge_invoice'
-                    ? 'paidFeeReviewChargeOutcome'
-                    : 'paidFeeReviewCreditOutcome'
-                )}
-              />
+              <>
+                <FinancialReviewSummary
+                  title={copy('paidFeeReviewTitle')}
+                  rows={[
+                    {
+                      id: 'profile',
+                      label: copy('customer'),
+                      value: paidFeeReview.data.profileName,
+                    },
+                    {
+                      id: 'service',
+                      label: copy('details'),
+                      value: paidFeeReview.data.serviceTitle[locale],
+                    },
+                    { id: 'scope', label: copy('scope'), value: paidFeeReview.data.scope },
+                    {
+                      id: 'deliverables',
+                      label: copy('deliverables'),
+                      value: paidFeeReview.data.deliverables,
+                    },
+                    {
+                      id: 'invoice',
+                      label: copy('paidFeeReviewInvoice'),
+                      value: paidFeeReview.data.paidInvoice.id,
+                    },
+                    {
+                      id: 'previousFee',
+                      label: copy('paidFeeReviewPrevious'),
+                      value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.previousFee))} IRR`,
+                    },
+                    {
+                      id: 'change',
+                      label: copy(
+                        paidFeeReview.data.outcome === 'charge_invoice'
+                          ? 'chargeAdjustment'
+                          : 'creditAdjustment'
+                      ),
+                      value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.adjustmentAmount))} IRR`,
+                    },
+                    {
+                      id: 'deadline',
+                      label: copy('offerValidUntil'),
+                      value: time.format(paidFeeReview.data.validUntil),
+                    },
+                    { id: 'reason', label: copy('reason'), value: paidFeeReview.data.reason },
+                    ...paidFeeReview.data.refundPlan.map((refund) => ({
+                      id: `refund-${refund.invoiceId}`,
+                      label: copy('paidFeeReviewRefundInvoice'),
+                      value: `${refund.invoiceId} · ${new Intl.NumberFormat(locale).format(BigInt(refund.amount))} IRR`,
+                    })),
+                  ]}
+                  total={{
+                    label: copy('paidFeeReviewRevised'),
+                    value: `${new Intl.NumberFormat(locale).format(BigInt(paidFeeReview.data.revisedFee))} IRR`,
+                  }}
+                  notice={copy(
+                    paidFeeReview.data.outcome === 'charge_invoice'
+                      ? 'paidFeeReviewChargeOutcome'
+                      : 'paidFeeReviewCreditOutcome'
+                  )}
+                />
+                <OrderWalletBalance
+                  profileId={paidFeeReview.scope.profileId}
+                  total={
+                    paidFeeReview.data.outcome === 'charge_invoice'
+                      ? paidFeeReview.data.adjustmentAmount
+                      : '0'
+                  }
+                  scopeKey={paidFeeReview.hash}
+                  staff
+                />
+              </>
             ) : feeReview ? (
-              <FinancialReviewSummary
-                title={copy('feeReviewTitle')}
-                rows={[
-                  { id: 'profile', label: copy('customer'), value: feeReview.data.profileName },
-                  {
-                    id: 'service',
-                    label: copy('details'),
-                    value: feeReview.data.serviceTitle[locale],
-                  },
-                  { id: 'scope', label: copy('scope'), value: feeReview.data.scope },
-                  {
-                    id: 'deliverables',
-                    label: copy('deliverables'),
-                    value: feeReview.data.deliverables,
-                  },
-                  {
-                    id: 'deadline',
-                    label: copy('offerValidUntil'),
-                    value: time.format(feeReview.data.validUntil),
-                  },
-                  ...(feeReview.data.previousInvoice
-                    ? [
-                        {
-                          id: 'previous',
-                          label: copy('feeReviewPreviousInvoice'),
-                          value: feeReview.data.previousInvoice.id,
-                        },
-                        {
-                          id: 'previousAmount',
-                          label: copy('feeReviewPreviousAmount'),
-                          value: `${new Intl.NumberFormat(locale).format(BigInt(feeReview.data.previousInvoice.totalAmount))} IRR`,
-                        },
-                      ]
-                    : []),
-                  ...(feeReview.data.reason
-                    ? [{ id: 'reason', label: copy('reason'), value: feeReview.data.reason }]
-                    : []),
-                ]}
-                total={{
-                  label: copy('feeIrr'),
-                  value: `${new Intl.NumberFormat(locale).format(BigInt(feeReview.data.fee))} IRR`,
-                }}
-                notice={copy(
-                  feeReview.data.outcome === 'issue_invoice'
-                    ? 'feeReviewIssueOutcome'
-                    : 'feeReviewReplaceOutcome'
-                )}
-              />
+              <>
+                <FinancialReviewSummary
+                  title={copy('feeReviewTitle')}
+                  rows={[
+                    { id: 'profile', label: copy('customer'), value: feeReview.data.profileName },
+                    {
+                      id: 'service',
+                      label: copy('details'),
+                      value: feeReview.data.serviceTitle[locale],
+                    },
+                    { id: 'scope', label: copy('scope'), value: feeReview.data.scope },
+                    {
+                      id: 'deliverables',
+                      label: copy('deliverables'),
+                      value: feeReview.data.deliverables,
+                    },
+                    {
+                      id: 'deadline',
+                      label: copy('offerValidUntil'),
+                      value: time.format(feeReview.data.validUntil),
+                    },
+                    ...(feeReview.data.previousInvoice
+                      ? [
+                          {
+                            id: 'previous',
+                            label: copy('feeReviewPreviousInvoice'),
+                            value: feeReview.data.previousInvoice.id,
+                          },
+                          {
+                            id: 'previousAmount',
+                            label: copy('feeReviewPreviousAmount'),
+                            value: `${new Intl.NumberFormat(locale).format(BigInt(feeReview.data.previousInvoice.totalAmount))} IRR`,
+                          },
+                        ]
+                      : []),
+                    ...(feeReview.data.reason
+                      ? [{ id: 'reason', label: copy('reason'), value: feeReview.data.reason }]
+                      : []),
+                  ]}
+                  total={{
+                    label: copy('feeIrr'),
+                    value: `${new Intl.NumberFormat(locale).format(BigInt(feeReview.data.fee))} IRR`,
+                  }}
+                  notice={copy(
+                    feeReview.data.outcome === 'issue_invoice'
+                      ? 'feeReviewIssueOutcome'
+                      : 'feeReviewReplaceOutcome'
+                  )}
+                />
+                <OrderWalletBalance
+                  profileId={feeReview.scope.profileId}
+                  total={feeReview.data.fee}
+                  scopeKey={feeReview.hash}
+                  staff
+                />
+              </>
             ) : undefined
           }
           onClose={() => {

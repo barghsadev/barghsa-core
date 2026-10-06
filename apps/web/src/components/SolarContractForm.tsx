@@ -1,3 +1,4 @@
+import { OrderWalletBalance } from './OrderWalletBalance.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -672,61 +673,69 @@ export function SolarContractForm({
             }}
             summary={
               review && (
-                <FinancialReviewSummary
-                  title={copy('solarContractReviewTitle')}
-                  rows={[
-                    {
-                      id: 'source',
-                      label: copy('solarContractSource'),
-                      value: `${review.data.source.label}${review.data.source.versionNumber ? ` · v${review.data.source.versionNumber}` : ''}`,
-                    },
-                    { id: 'title', label: copy('solarContractTitle'), value: review.data.title },
-                    {
-                      id: 'reason',
-                      label: copy('solarContractReason'),
-                      value: review.data.changeDescription,
-                    },
-                    {
-                      id: 'commercial',
-                      label: contractCopy('statedContractValue'),
-                      value:
-                        review.data.commercialValue.kind === 'fixed'
-                          ? formatCurrencyIrr(review.data.commercialValue.amountIrr, locale)
-                          : review.data.commercialValue.description,
-                    },
-                    ...review.data.invoiceLines.map((line, index) => ({
-                      id: `line-${index}`,
-                      label: `${line.description} · ${line.quantity} × ${formatCurrencyIrr(line.unitPrice, locale)}`,
-                      value: formatCurrencyIrr(line.lineTotal, locale),
-                    })),
-                    {
-                      id: 'vat',
-                      label: copy('solarReviewVat'),
-                      value: formatCurrencyIrr(review.data.totals.vat, locale),
-                    },
-                    {
-                      id: 'due',
-                      label: copy('solarReviewDue'),
-                      value:
-                        review.data.dueRule.configDays === null
-                          ? '—'
-                          : `${review.data.dueRule.configDays} ${copy('solarReviewDaysAfterIssue')}`,
-                    },
-                  ]}
-                  total={{
-                    label: copy('solarReviewInvoiceTotal'),
-                    value: formatCurrencyIrr(review.data.totals.total, locale),
-                  }}
-                  notice={
-                    <>
-                      <p>{copy('solarReviewOutcome')}</p>
-                      <details className="mt-2">
-                        <summary className="cursor-pointer">{copy('solarContractText')}</summary>
-                        <p className="mt-2 whitespace-pre-wrap break-words">{review.data.text}</p>
-                      </details>
-                    </>
-                  }
-                />
+                <>
+                  <FinancialReviewSummary
+                    title={copy('solarContractReviewTitle')}
+                    rows={[
+                      {
+                        id: 'source',
+                        label: copy('solarContractSource'),
+                        value: `${review.data.source.label}${review.data.source.versionNumber ? ` · v${review.data.source.versionNumber}` : ''}`,
+                      },
+                      { id: 'title', label: copy('solarContractTitle'), value: review.data.title },
+                      {
+                        id: 'reason',
+                        label: copy('solarContractReason'),
+                        value: review.data.changeDescription,
+                      },
+                      {
+                        id: 'commercial',
+                        label: contractCopy('statedContractValue'),
+                        value:
+                          review.data.commercialValue.kind === 'fixed'
+                            ? formatCurrencyIrr(review.data.commercialValue.amountIrr, locale)
+                            : review.data.commercialValue.description,
+                      },
+                      ...review.data.invoiceLines.map((line, index) => ({
+                        id: `line-${index}`,
+                        label: `${line.description} · ${line.quantity} × ${formatCurrencyIrr(line.unitPrice, locale)}`,
+                        value: formatCurrencyIrr(line.lineTotal, locale),
+                      })),
+                      {
+                        id: 'vat',
+                        label: copy('solarReviewVat'),
+                        value: formatCurrencyIrr(review.data.totals.vat, locale),
+                      },
+                      {
+                        id: 'due',
+                        label: copy('solarReviewDue'),
+                        value:
+                          review.data.dueRule.configDays === null
+                            ? '—'
+                            : `${review.data.dueRule.configDays} ${copy('solarReviewDaysAfterIssue')}`,
+                      },
+                    ]}
+                    total={{
+                      label: copy('solarReviewInvoiceTotal'),
+                      value: formatCurrencyIrr(review.data.totals.total, locale),
+                    }}
+                    notice={
+                      <>
+                        <p>{copy('solarReviewOutcome')}</p>
+                        <details className="mt-2">
+                          <summary className="cursor-pointer">{copy('solarContractText')}</summary>
+                          <p className="mt-2 whitespace-pre-wrap break-words">{review.data.text}</p>
+                        </details>
+                      </>
+                    }
+                  />
+                  <OrderWalletBalance
+                    profileId={profileId}
+                    total={review.data.totals.total}
+                    scopeKey={JSON.stringify([scopeKey, review.hash])}
+                    staff
+                  />
+                </>
               )
             }
           />
