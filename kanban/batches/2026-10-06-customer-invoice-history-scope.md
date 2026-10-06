@@ -17,7 +17,7 @@ No API, database, dictionary, shared UI component, dependency, CI, budget or sup
 ## Validation
 
 - The pre-change invoice test proves next-page 401/403 retains a private prior invoice; the profile-denial cases also fail because the original list does not verify profile reads. The external baseline preserves the failures.
-- **32** distinct related source cases pass across seven actual files: invoice ownership/page/helper tests, shared reader/cursor, the three service-history pages and applied filter drafts. The requested `invoice-service-period.test.ts` filter matched no existing file and is not claimed as a passing check.
+- **32** distinct related source cases pass across seven actual files: invoice ownership/page/helper tests, shared reader/cursor, the three service-history pages and invoice service-period formatting. The requested `useHistoryFilterDraft.test.tsx` filter matched no existing file and is not claimed as a passing check.
 - **48** distinct Chromium/mobile Safari cases pass, 24 per engine, with zero retries: four new bilingual invoice-ownership cases, twelve service-history ownership regressions, twenty-eight list recovery cases and four exact invoice-filter cases. They verify live profile switching, a held obsolete reply, current denial/recovery, transient retention, exact large amounts, unpaid/status/date/amount/search filters, page reset, axe and mobile bounds.
 - Web build/types, root/focused lint, contract/suppression, strict SAST (1,802 files; no findings/errors; five fixtures), all 85 unchanged route budgets, formatting, backlog and diff checks pass. The unchanged compiled dictionary and 495 built assets are bound to the browser evidence.
 - Two complete original Persian native-browser invoice captures are reviewed. The targeted final capture repeat adds no distinct case. Publication/deployment outcomes have separate external receipts.
@@ -29,3 +29,7 @@ Review verifies the shared option is included in ownership, defaults preserve th
 After the clean committed release preflight and exact normal main-push readback, enqueue immediately with both reviewed captures. Continue the next coherent build without waiting for CI or deployment.
 
 External evidence: `~/.local/state/barghsa-manual-batches/customer-invoice-history-scope/`.
+
+## Deployment confirmation
+
+`v0.1.27` completed at `2026-10-06T08:09:28.314705+00:00` with exact live commit `f4a6a9b9237f885560706c91fc2457fa95b3c1ba`; Persian note `80` and both images `81`, `82` are confirmed. External completion receipts record the actual outcome.

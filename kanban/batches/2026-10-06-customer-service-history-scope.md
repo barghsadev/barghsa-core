@@ -16,7 +16,7 @@ Source review covers response freshness before and after body parsing, current-p
 
 ## Validation
 
-- **141** distinct source/dictionary cases pass: 29 cases in six actual history/filter files and 112 dictionary cases. The requested `useListView.test.tsx` filter matched no existing file and is not claimed as a passing test.
+- **141** distinct source/dictionary cases pass: 29 cases in six actual history/view files and 112 dictionary cases. The requested `useHistoryFilterDraft.test.tsx` filter matched no existing file and is not claimed as a passing test.
 - **56** distinct final-build history browser cases pass, 28 per engine, with zero retries: 12 new bilingual electricity/saving/solar cases and 44 existing history recovery/view cases. New cases exercise transient retention, current denial, explicit recovery, a real live profile switch, a held obsolete reply, preserved numeric search/status criteria, axe and mobile bounds.
 - **10** distinct broader electricity/saving/solar journey cases have passing evidence, five per engine, covering order review, payment, contract activation, saving approval/fulfillment, solar upload/postal review, address setup/return and exact contract/invoice issuance. Total browser coverage is **66 distinct cases**, 33 per engine. The case ledger retains four passing cases from one stopped run and two address cases from another; failed/interrupted cases are excluded and replaced by final passing targeted results. Stopped suites are not reported as wholly green.
 - Web/i18n build and web types, root/focused lint, contract/suppression, strict SAST (1,801 files; no findings/errors; five fixtures), all 85 unchanged route budgets, formatting, backlog and diff checks pass.
@@ -33,3 +33,7 @@ The baseline next-page denial visibly retained a private old row; the external f
 Publication and deployment results are separate external receipts. After a clean committed preflight and exact normal main-push readback, enqueue this release immediately with both reviewed captures. Continue the next coherent build without waiting for CI or deployment.
 
 External evidence: `~/.local/state/barghsa-manual-batches/customer-service-history-scope/`.
+
+## Deployment confirmation
+
+`v0.1.26` completed at `2026-10-06T08:04:27.481479+00:00` with exact live commit `84a551d371ce8911a6a25300db948417b057d4bf`. Persian note `78` and restored-profile image `79` are confirmed. The other image remains unknown; the completed job retains an optional-image warning. No automatic replay. External completion/failure receipts record the actual outcome.

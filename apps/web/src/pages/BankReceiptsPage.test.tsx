@@ -1,6 +1,8 @@
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { refreshProfileContext } from '../lib/profile-context.js';
 import { BankReceiptsPage } from './BankReceiptsPage.js';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -64,6 +66,7 @@ it.each(['en', 'fa'] as const)(
     document.documentElement.lang = locale;
     const fetcher = vi.fn(async (raw: string) => {
       const url = new URL(raw, 'https://app.example.test');
+      if (url.pathname === '/api/profiles') return Response.json({ activeProfileId: 'profile-1' });
       if (url.searchParams.get('statuses') === 'Rejected') {
         return Response.json({ items: [secondReceipt], nextCursor: null });
       }
@@ -115,7 +118,11 @@ it('offers a retry after the initial receipt request fails', async () => {
     .fn()
     .mockRejectedValueOnce(new Error('offline'))
     .mockResolvedValueOnce(Response.json({ items: [], nextCursor: null }));
-  vi.stubGlobal('fetch', fetcher);
+  vi.stubGlobal('fetch', (raw: string) =>
+    raw === '/api/profiles'
+      ? Promise.resolve(Response.json({ activeProfileId: 'profile-1' }))
+      : fetcher(raw)
+  );
   await act(async () => root.render(<BankReceiptsPage />));
   expect(host.querySelector('[role="alert"]')?.textContent).toContain('Could not load receipts');
   const retry = [...host.querySelectorAll('button')].find((button) =>
@@ -133,6 +140,8 @@ it('aborts older pages when filters change and ignores a late response', async (
   vi.stubGlobal(
     'fetch',
     vi.fn((raw: string, init?: RequestInit) => {
+      if (raw === '/api/profiles')
+        return Promise.resolve(Response.json({ activeProfileId: 'profile-1' }));
       const query = new URL(raw, 'https://app.example.test').searchParams;
       if (query.has('beforeId')) {
         olderSignal = init?.signal as AbortSignal;
@@ -170,6 +179,7 @@ it('keeps exact receipt criteria through ascending pagination and retry', async 
   vi.stubGlobal(
     'fetch',
     vi.fn(async (raw: string) => {
+      if (raw === '/api/profiles') return Response.json({ activeProfileId: 'profile-1' });
       const params = new URL(raw, 'https://app.example.test').searchParams;
       requests.push(params);
       if (params.has('beforeId') && failMore) {
@@ -225,6 +235,8 @@ it('clears the old receipt scope immediately and rejects late search responses',
   let resolveOld!: (response: Response) => void;
   let oldSignal: AbortSignal | undefined;
   const fetcher = vi.fn((raw: string, init?: RequestInit) => {
+    if (raw === '/api/profiles')
+      return Promise.resolve(Response.json({ activeProfileId: 'profile-1' }));
     if (new URL(raw, 'https://app.example.test').searchParams.get('q') === 'old') {
       oldSignal = init?.signal as AbortSignal;
       return new Promise<Response>((resolve) => {
@@ -249,4 +261,172 @@ it('clears the old receipt scope immediately and rejects late search responses',
     root.render(<BankReceiptsPage query={{ q: 'current', sort: 'submitted_at:asc' }} />)
   );
   expect(fetcher).toHaveBeenCalledTimes(count);
+});
+
+function heldReply() {
+  let resolve!: (value: Response) => void;
+  const promise = new Promise<Response>((r) => {
+    resolve = r;
+  });
+  return { promise, resolve };
+}
+const receiptPage = (
+  item: typeof firstReceipt | typeof secondReceipt = firstReceipt,
+  nextCursor: { beforeAt: string; beforeId: string } | null = {
+    beforeAt: '2026-09-02T12:00:00.000001Z',
+    beforeId: firstReceipt.receiptId,
+  }
+) => Response.json({ items: [item], nextCursor });
+const moreButton = () =>
+  host.querySelector<HTMLButtonElement>('nav[aria-label="History pages"] button')!;
+
+it.each(['account', 'profile'] as const)(
+  'fences late receipt success after a %s change',
+  async (kind) => {
+    document.documentElement.lang = 'en';
+    const held = heldReply();
+    let switched = false;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (raw: string) => {
+        if (raw === '/api/profiles')
+          return Response.json({ activeProfileId: switched ? 'profile-2' : 'profile-1' });
+        if (new URL(raw, 'https://app.example.test').searchParams.has('beforeId'))
+          return held.promise;
+        return receiptPage(switched ? secondReceipt : firstReceipt, switched ? null : undefined);
+      })
+    );
+    const render = (actor: string) => (
+      <AccountUserProvider value={actor}>
+        <BankReceiptsPage />
+      </AccountUserProvider>
+    );
+    await act(async () => root.render(render('account-1')));
+    expect(host.textContent).toContain(firstReceipt.receiptId);
+    await act(async () => moreButton().click());
+    switched = true;
+    await act(async () => {
+      if (kind === 'account') root.render(render('account-2'));
+      else refreshProfileContext();
+    });
+    expect(host.textContent).not.toContain(firstReceipt.receiptId);
+    expect(host.textContent).toContain(secondReceipt.receiptId);
+    await act(async () => held.resolve(receiptPage(firstReceipt, null)));
+    expect(host.textContent).not.toContain(firstReceipt.receiptId);
+    expect(host.textContent).toContain(secondReceipt.receiptId);
+  }
+);
+
+it('rejects a late denial before the new profile render and accepts only its first page', async () => {
+  document.documentElement.lang = 'en';
+  const held = heldReply();
+  let switched = false;
+  const reads: URLSearchParams[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (raw: string) => {
+      if (raw === '/api/profiles')
+        return Response.json({ activeProfileId: switched ? 'profile-2' : 'profile-1' });
+      const query = new URL(raw, 'https://app.example.test').searchParams;
+      reads.push(query);
+      return query.has('beforeId')
+        ? held.promise
+        : receiptPage(switched ? secondReceipt : firstReceipt, switched ? null : undefined);
+    })
+  );
+  await act(async () =>
+    root.render(
+      <AccountUserProvider value="account-1">
+        <BankReceiptsPage />
+      </AccountUserProvider>
+    )
+  );
+  await act(async () => moreButton().click());
+  switched = true;
+  await act(async () => {
+    refreshProfileContext();
+    held.resolve(Response.json({}, { status: 403 }));
+  });
+  expect(host.querySelector('[role=alert]')).toBeNull();
+  expect(host.textContent).not.toContain(firstReceipt.receiptId);
+  expect(host.textContent).toContain(secondReceipt.receiptId);
+  expect(reads.at(-1)!.has('beforeAt')).toBe(false);
+  expect(reads.at(-1)!.has('beforeId')).toBe(false);
+});
+
+it.each(['missing', 'changed'] as const)(
+  'withdraws pages when a profile is %s without a broadcast',
+  async (kind) => {
+    document.documentElement.lang = 'en';
+    let active: string | null = 'profile-1';
+    const held = heldReply();
+    const reads: URLSearchParams[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (raw: string) => {
+        if (raw === '/api/profiles') return Response.json({ activeProfileId: active });
+        reads.push(new URL(raw, 'https://app.example.test').searchParams);
+        return active === 'profile-2' ? held.promise : receiptPage();
+      })
+    );
+    await act(async () =>
+      root.render(<BankReceiptsPage query={{ q: 'saved', sort: 'submitted_at:asc' }} />)
+    );
+    active = kind === 'missing' ? null : 'profile-2';
+    await act(async () => moreButton().click());
+    expect(host.textContent).not.toContain(firstReceipt.receiptId);
+    if (kind === 'missing') {
+      expect(reads).toHaveLength(1);
+      expect(host.querySelector('nav[aria-label="History pages"]')).toBeNull();
+      expect(host.textContent).toContain('No receipts match');
+    } else {
+      expect(reads.at(-1)!.has('beforeAt')).toBe(false);
+      expect(reads.at(-1)!.has('beforeId')).toBe(false);
+      expect(reads.at(-1)!.get('q')).toBe('saved');
+      const nextCursor = {
+        beforeAt: '2026-09-02T12:00:00.000002Z',
+        beforeId: secondReceipt.receiptId,
+      };
+      await act(async () => held.resolve(receiptPage(secondReceipt, nextCursor)));
+      expect(host.textContent).toContain(secondReceipt.receiptId);
+      expect(host.textContent).not.toContain(firstReceipt.receiptId);
+      expect(host.querySelector('[role=status]')).toBeNull();
+      expect(moreButton().disabled).toBe(false);
+      await act(async () => moreButton().click());
+      expect(reads.at(-1)!.get('beforeAt')).toBe(nextCursor.beforeAt);
+      expect(reads.at(-1)!.get('beforeId')).toBe(nextCursor.beforeId);
+    }
+  }
+);
+
+it('keeps accepted receipts and the exact cursor after a malformed profile read', async () => {
+  document.documentElement.lang = 'en';
+  let malformed = false;
+  const reads: URLSearchParams[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (raw: string) => {
+      if (raw === '/api/profiles')
+        return Response.json(malformed ? {} : { activeProfileId: 'profile-1' });
+      const query = new URL(raw, 'https://app.example.test').searchParams;
+      reads.push(query);
+      return receiptPage(
+        query.has('beforeId') ? secondReceipt : firstReceipt,
+        query.has('beforeId') ? null : undefined
+      );
+    })
+  );
+  await act(async () => root.render(<BankReceiptsPage />));
+  malformed = true;
+  await act(async () => moreButton().click());
+  expect(host.querySelector('[role=alert]')).not.toBeNull();
+  expect(host.textContent).toContain(firstReceipt.receiptId);
+  expect(reads).toHaveLength(1);
+  malformed = false;
+  const retry = host.querySelector<HTMLButtonElement>('[data-slot=list-content] button')!;
+  await act(async () => retry.click());
+  expect(reads.at(-1)!.get('beforeAt')).toBe('2026-09-02T12:00:00.000001Z');
+  expect(reads.at(-1)!.get('beforeId')).toBe(firstReceipt.receiptId);
+  expect(host.textContent).toContain(firstReceipt.receiptId);
+  expect(host.textContent).toContain(secondReceipt.receiptId);
 });

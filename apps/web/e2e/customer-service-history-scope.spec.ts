@@ -16,10 +16,15 @@ const domains = {
   saving: { path: '/savings/orders', api: '/api/saving/orders', items: 'orders' },
   solar: { path: '/solar/requests', api: '/api/solar/requests', items: 'requests' },
   invoice: { path: '/invoices', api: '/api/invoices', items: 'invoices' },
+  receipt: { path: '/invoices/receipts', api: '/api/invoices/bank-receipts', items: 'items' },
 } as const;
 function row(id: string) {
   return {
     id,
+    receiptId: id,
+    amount: '9007199254740993',
+    bankName: 'Receipt bank',
+    paymentDate: '2026-10-01',
     orderId: id,
     invoiceId: id,
     role: 'original',
@@ -59,7 +64,8 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }, info) => {
       const config = domains[kind];
-      const status = kind === 'invoice' ? 'Unpaid' : 'submitted';
+      const status = kind === 'invoice' ? 'Unpaid' : kind === 'receipt' ? 'Submitted' : 'submitted';
+      const implicitProfile = kind === 'invoice' || kind === 'receipt';
       const copy = (key: string) => t(key, locale);
       await setupCatalogueForms(page, locale, locale === 'fa');
       let activeProfile = profileA;
@@ -114,10 +120,14 @@ for (const locale of ['en', 'fa'] as const)
         activeProfile = profileB;
         return route.fulfill({ json: { activeProfileId: profileB } });
       });
-      const response = (id: string, next: string | null) => ({
-        [config.items]: [row(id)],
-        nextBefore: next,
-      });
+      const beforeAt = '2026-10-05T10:00:00.000001Z';
+      const response = (id: string, next: string | null) =>
+        kind === 'receipt'
+          ? {
+              items: [{ ...row(id), state: 'Submitted' }],
+              nextCursor: next ? { beforeAt, beforeId: next } : null,
+            }
+          : { [config.items]: [row(id)], nextBefore: next };
       let mode: 'success' | 'held' | 'denied' | 'switch' = 'success';
       let held: Route | undefined, currentHeld: Route | undefined;
       const reads: URLSearchParams[] = [];
@@ -126,8 +136,8 @@ for (const locale of ['en', 'fa'] as const)
         const query = new URL(route.request().url()).searchParams;
         reads.push(query);
         owners.set(query, activeProfile);
-        if (kind === 'invoice') expect(query.has('profileId')).toBe(false);
-        if ((kind === 'invoice' ? activeProfile : query.get('profileId')) === profileB) {
+        if (implicitProfile) expect(query.has('profileId')).toBe(false);
+        if ((implicitProfile ? activeProfile : query.get('profileId')) === profileB) {
           currentHeld = route;
           return;
         }
@@ -147,7 +157,10 @@ for (const locale of ['en', 'fa'] as const)
             },
           });
         return route.fulfill({
-          json: query.has('before') ? response(older, older) : response(first, first),
+          json:
+            query.has('before') || query.has('beforeId')
+              ? response(older, older)
+              : response(first, first),
         });
       });
       await page.setViewportSize({ width: 1280, height: 900 });
@@ -207,7 +220,7 @@ for (const locale of ['en', 'fa'] as const)
       ).toEqual([]);
       if (
         locale === 'fa' &&
-        kind === 'invoice' &&
+        kind === 'receipt' &&
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
@@ -217,15 +230,17 @@ for (const locale of ['en', 'fa'] as const)
           .locator('[data-slot=list-page]')
           .locator('..')
           .screenshot({
-            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/invoice-history-denied-fa.png`,
+            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/receipt-history-denied-fa.png`,
           });
         await page.setViewportSize({ width: 390, height: 844 });
       }
       mode = 'success';
       await retry().click();
       await expect(record(first)).toBeVisible();
-      if (kind !== 'invoice') expect(reads.at(-1)!.get('profileId')).toBe(profileA);
+      if (!implicitProfile) expect(reads.at(-1)!.get('profileId')).toBe(profileA);
       expect(reads.at(-1)!.has('before')).toBe(false);
+      expect(reads.at(-1)!.has('beforeAt')).toBe(false);
+      expect(reads.at(-1)!.has('beforeId')).toBe(false);
       expect(reads.at(-1)!.get('q')).toBe('89000000');
       expect(reads.at(-1)!.get('statuses')).toBe(status);
       await expect(record(older)).toHaveCount(0);
@@ -242,6 +257,8 @@ for (const locale of ['en', 'fa'] as const)
       const fresh = reads.filter((query) => owners.get(query) === profileB);
       expect(fresh).toHaveLength(1);
       expect(fresh[0]!.has('before')).toBe(false);
+      expect(fresh[0]!.has('beforeAt')).toBe(false);
+      expect(fresh[0]!.has('beforeId')).toBe(false);
       expect(fresh[0]!.get('q')).toBe('89000000');
       expect(fresh[0]!.get('statuses')).toBe(status);
       await currentHeld!.fulfill({ json: response(current, null) });
@@ -280,7 +297,7 @@ for (const locale of ['en', 'fa'] as const)
       ).toEqual([]);
       if (
         locale === 'fa' &&
-        kind === 'invoice' &&
+        kind === 'receipt' &&
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
@@ -290,7 +307,7 @@ for (const locale of ['en', 'fa'] as const)
           .locator('[data-slot=list-page]')
           .locator('..')
           .screenshot({
-            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/invoice-history-profile-fa.png`,
+            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/receipt-history-profile-fa.png`,
           });
       }
     });

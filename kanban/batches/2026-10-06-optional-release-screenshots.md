@@ -26,3 +26,7 @@ No automatic unknown-image retry, fake delivery receipt, CI gate, business-engin
 After exact normal main-push readback, enqueue `v0.1.28` immediately. Explicitly retry the diagnosed terminal failed `v0.1.26` through the new immutable runner. Required note verification and live identity must pass before it advances to `v0.1.27` and then this release. Keep the unknown image receipt and warning truthful; reconcile the optional image only after channel inspection while its original release is live.
 
 Publication and recovery outcomes remain separate external receipts under `~/.local/state/barghsa-manual-batches/optional-release-screenshots/`. Continue the next customer bank-receipt ownership batch without waiting for deployment or CI.
+
+## Deployment confirmation
+
+v0.1.28 completed at `2026-10-06T08:14:39.820211+00:00`, deployed at `520b475da824c2dc816391d07149d73a636055e3`; Persian Telegram note `83` is confirmed. Its external completion receipt records the exact outcome.

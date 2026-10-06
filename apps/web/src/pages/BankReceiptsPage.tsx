@@ -32,12 +32,14 @@ import {
 } from '../hooks/useHistoryFilterDraft.js';
 import {
   fetchBankReceiptPage,
+  InvoiceRequestError,
   type CustomerBankReceiptListItem,
   type CustomerBankReceiptPage,
 } from '../lib/customer-invoices.js';
 
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 
 type ReceiptState = CustomerBankReceiptListItem['state'];
@@ -54,19 +56,22 @@ interface BankReceiptsPageProps {
 }
 
 export function BankReceiptsPage(props: BankReceiptsPageProps) {
+  const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const scope = JSON.stringify([
+    actor,
     revision,
     props.statuses,
     props.query,
     props.dateRange,
     props.amountRange,
   ]);
-  return <ReceiptHistory scope={scope} {...props} />;
+  return <ReceiptHistory scope={scope} profileRevision={revision} {...props} />;
 }
 
 function ReceiptHistory({
   scope,
+  profileRevision,
   statuses = [],
   onStatusesChange,
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
@@ -75,7 +80,7 @@ function ReceiptHistory({
   onApplyFilters,
   onClearFilters,
   onRemoveFilter,
-}: BankReceiptsPageProps & { scope: string }) {
+}: BankReceiptsPageProps & { scope: string; profileRevision: number }) {
   const statusesKey = statuses.join(',');
   const filterDraft = useHistoryFilterDraft(
     { query, statuses, dateRange, amountRange },
@@ -94,12 +99,74 @@ function ReceiptHistory({
     loadState: 'loading' as 'loading' | 'ready' | 'error',
     loadingMore: false,
     moreError: false,
+    denied: false,
   };
   const [result, setResult] = useState(emptyResult);
-  const { items, cursor, loadState, loadingMore, moreError } =
+  const { items, cursor, loadState, loadingMore, moreError, denied } =
     result.scope === scope ? result : emptyResult;
   const [revision, setRevision] = useState(0);
   const moreRequest = useRef<AbortController | null>(null);
+  const currentScope = useRef(scope);
+  currentScope.current = scope;
+  const actions = useRef(0);
+  const actionVersion = actions.current;
+  const owner = useRef<{ scope: string; profile: string | null } | null>(null);
+  const current = () =>
+    currentScope.current === scope && getProfileContextRevision() === profileRevision;
+  const fresh = (request: AbortController) => !request.signal.aborted && current();
+  const accessDenied = (error: unknown) =>
+    error instanceof InvoiceRequestError && [401, 403].includes(error.status);
+
+  async function readPage(request: AbortController, next?: CustomerBankReceiptPage['nextCursor']) {
+    const response = await fetch('/api/profiles', {
+      credentials: 'include',
+      signal: request.signal,
+    });
+    if (!fresh(request)) throw new Error('Obsolete receipt read');
+    if (!response.ok) throw new InvoiceRequestError(response.status, 'Could not load profiles');
+    const profile: unknown = await response.json();
+    if (!fresh(request)) throw new Error('Obsolete receipt read');
+    if (
+      !profile ||
+      typeof profile !== 'object' ||
+      Array.isArray(profile) ||
+      !('activeProfileId' in profile) ||
+      !(
+        profile.activeProfileId === null ||
+        (typeof profile.activeProfileId === 'string' && profile.activeProfileId.length > 0)
+      )
+    )
+      throw new Error('Invalid receipt profile');
+    const profileId = profile.activeProfileId as string | null;
+    if (!profileId || (owner.current?.scope === scope && owner.current.profile !== profileId)) {
+      actions.current += 1;
+      setResult(emptyResult);
+      next = null;
+    }
+    owner.current = { scope, profile: profileId };
+    if (!profileId) return { items: [], nextCursor: null };
+    const page = await fetchBankReceiptPage({
+      statuses,
+      ...query,
+      ...dateRange,
+      ...amountRange,
+      ...(next ? { cursor: next } : {}),
+      signal: request.signal,
+    });
+    if (!fresh(request)) throw new Error('Obsolete receipt read');
+    if (
+      !Array.isArray(page.items) ||
+      page.items.some((item) => !item || typeof item.receiptId !== 'string' || !item.receiptId) ||
+      (page.nextCursor !== null &&
+        (!page.nextCursor ||
+          typeof page.nextCursor.beforeAt !== 'string' ||
+          !page.nextCursor.beforeAt ||
+          typeof page.nextCursor.beforeId !== 'string' ||
+          !page.nextCursor.beforeId))
+    )
+      throw new Error('Invalid receipt page');
+    return page;
+  }
   const label = (key: string) => t(`invoices.receipts.${key}`, locale);
   const dateFormatter = useMemo(
     () =>
@@ -113,16 +180,12 @@ function ReceiptHistory({
   useEffect(() => {
     const request = new AbortController();
     moreRequest.current?.abort();
+    actions.current += 1;
     setResult(emptyResult);
-    void fetchBankReceiptPage({
-      statuses,
-      ...query,
-      ...dateRange,
-      ...amountRange,
-      signal: request.signal,
-    })
+    void readPage(request)
       .then((page) => {
-        if (request.signal.aborted) return;
+        if (!fresh(request)) return;
+        actions.current += 1;
         setResult({
           ...emptyResult,
           items: page.items,
@@ -130,8 +193,11 @@ function ReceiptHistory({
           loadState: 'ready',
         });
       })
-      .catch(() => {
-        if (!request.signal.aborted) setResult({ ...emptyResult, loadState: 'error' });
+      .catch((error: unknown) => {
+        if (fresh(request)) {
+          actions.current += 1;
+          setResult({ ...emptyResult, loadState: 'error', denied: accessDenied(error) });
+        }
       });
     return () => {
       request.abort();
@@ -150,20 +216,25 @@ function ReceiptHistory({
   ]);
 
   function loadMore() {
-    if (!cursor || loadingMore) return;
+    if (
+      !current() ||
+      !cursor ||
+      loadingMore ||
+      loadState !== 'ready' ||
+      (moreRequest.current && !moreRequest.current.signal.aborted) ||
+      actions.current !== actionVersion
+    )
+      return;
     const request = new AbortController();
     moreRequest.current = request;
-    setResult((current) => ({ ...current, loadingMore: true, moreError: false }));
-    void fetchBankReceiptPage({
-      statuses,
-      ...query,
-      ...dateRange,
-      ...amountRange,
-      cursor,
-      signal: request.signal,
-    })
+    actions.current += 1;
+    setResult((value) =>
+      value.scope === scope ? { ...value, loadingMore: true, moreError: false } : value
+    );
+    void readPage(request, cursor)
       .then((page) => {
-        if (request.signal.aborted) return;
+        if (!fresh(request)) return;
+        actions.current += 1;
         setResult((current) =>
           current.scope === scope
             ? {
@@ -176,21 +247,26 @@ function ReceiptHistory({
                   ),
                 ],
                 cursor: page.nextCursor,
+                loadState: 'ready',
               }
             : current
         );
       })
-      .catch(() => {
-        if (!request.signal.aborted)
-          setResult((current) =>
-            current.scope === scope ? { ...current, moreError: true } : current
-          );
+      .catch((error: unknown) => {
+        if (fresh(request)) {
+          actions.current += 1;
+          setResult((value) => {
+            if (value.scope !== scope) return value;
+            if (accessDenied(error) || value.loadState === 'loading')
+              return { ...emptyResult, loadState: 'error', denied: accessDenied(error) };
+            return { ...value, moreError: true };
+          });
+        }
       })
       .finally(() => {
-        if (!request.signal.aborted)
-          setResult((current) =>
-            current.scope === scope ? { ...current, loadingMore: false } : current
-          );
+        if (moreRequest.current === request) moreRequest.current = null;
+        if (fresh(request))
+          setResult((value) => (value.scope === scope ? { ...value, loadingMore: false } : value));
       });
   }
 
@@ -334,10 +410,18 @@ function ReceiptHistory({
           }
           errorView={
             <div className="space-y-2">
-              <p role="alert">{label(moreError ? 'moreError' : 'error')}</p>
+              <p role="alert">
+                {denied
+                  ? t('historyPagination.accessDenied', locale)
+                  : label(moreError ? 'moreError' : 'error')}
+              </p>
               <Button
                 variant="outline"
-                onClick={() => (moreError ? loadMore() : setRevision((value) => value + 1))}
+                onClick={() => {
+                  if (!current() || actions.current !== actionVersion) return;
+                  if (moreError) loadMore();
+                  else setRevision((value) => value + 1);
+                }}
               >
                 {label('retry')}
               </Button>
