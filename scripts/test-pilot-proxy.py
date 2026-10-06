@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """Exercise the committed pilot config without host ports or production certificates."""
 from pathlib import Path
+import argparse
 import subprocess
 import tempfile
 import time
 import uuid
 
 root=Path(__file__).resolve().parents[1]
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--profile', choices=['pilot', 'staging'], default='pilot')
+profile=parser.parse_args().profile
 def run(*args):
     result=subprocess.run(args,capture_output=True,text=True)
     if result.returncode:
@@ -22,14 +26,21 @@ try:
             '-keyout',str(cert/'key.pem'),'-out',str(cert/'cert.pem'))
         run('docker','run','-d','--name',backend,'--network','none',
             '-v',f'{root}/scripts/proxy-fixture.mjs:/fixture.mjs:ro',
-            '-v',f'{root}/scripts/check-pilot-proxy.mjs:/check.mjs:ro',
+            '-v',f'{root}/scripts/check-{profile}-proxy.mjs:/check.mjs:ro',
             'node:22-bookworm','node','/fixture.mjs')
         for _ in range(100):
             if 'ready' in run('docker','logs',backend): break
             time.sleep(.1)
         else: raise RuntimeError('Fixture did not start')
-        mounts=['-v',f'{root}/deploy/pilot/nginx.conf:/etc/nginx/nginx.conf:ro',
-            '-v',f'{cert}/cert.pem:/etc/ssl/certs/barghsa.pem:ro','-v',f'{cert}/key.pem:/etc/ssl/private/barghsa.key:ro']
+        if profile == 'pilot':
+            mounts=['-v',f'{root}/deploy/pilot/nginx.conf:/etc/nginx/nginx.conf:ro',
+                '-v',f'{cert}/cert.pem:/etc/ssl/certs/barghsa.pem:ro','-v',f'{cert}/key.pem:/etc/ssl/private/barghsa.key:ro']
+        else:
+            mounts=['-v',f'{root}/deploy/staging/nginx.conf:/etc/nginx/conf.d/default.conf:ro',
+                '-v',f'{root}/deploy/staging/nginx-api-proxy.conf:/etc/nginx/snippets/barghsa-api-proxy.conf:ro',
+                '-v',f'{root}/deploy/staging/nginx-s3-proxy.conf:/etc/nginx/snippets/barghsa-s3-proxy.conf:ro',
+                '-v',f'{cert}/cert.pem:/etc/letsencrypt/live/stg.barghsa.com/fullchain.pem:ro',
+                '-v',f'{cert}/key.pem:/etc/letsencrypt/live/stg.barghsa.com/privkey.pem:ro']
         run('docker','run','--rm',*mounts,'nginx:1.27-alpine','nginx','-t')
         run('docker','run','-d','--name',proxy,'--network',f'container:{backend}',*mounts,'nginx:1.27-alpine')
         # A failed config/start remains an error rather than a skipped probe.

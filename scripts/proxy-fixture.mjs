@@ -6,6 +6,13 @@ for (const [port, service] of [
   [4000, 'api'],
 ]) {
   const server = createServer((req, res) => {
+    if (service === 'api' && req.url === '/api/auth/application-limited') {
+      res.writeHead(429, { 'Content-Type': 'application/json', 'Retry-After': '60' });
+      res.end(
+        JSON.stringify({ error: { code: 'FIXTURE:APPLICATION_LIMIT', retryAfterSeconds: 60 } })
+      );
+      return;
+    }
     const staticCases = {
       '/assets/app-a1b2c3d4.js': [
         200,

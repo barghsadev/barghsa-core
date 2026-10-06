@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 31 | Accepted with unchanged source bindings. |
-| verify | 1276 | Existing work may be complete; inspect evidence before building. |
+| done | 40 | Accepted with unchanged source bindings. |
+| verify | 1267 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,17 +39,16 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Renew login/password enforcement, login OTP, session cookies/revocation, recovery and rate limits against existing implementation. Reuse matching auth proofs and inspect remaining policy-dependent CSRF/step-up/recovery criteria without inferring owner approval.
+Renew profile middleware, verification routing, individual/legal onboarding, completion and profile/default switching. Inspect current scope/context/authority and preserve policy-dependent auth partial tasks pending owner decisions.
 
-- `02-auth-users-admin.md#T-02.01.01`: Login page UI
-- `02-auth-users-admin.md#T-02.01.02`: Login authentication flow
-- `02-auth-users-admin.md#T-02.01.03`: Login OTP verification
-- `02-auth-users-admin.md#T-02.01.04`: Password change enforcement on login
-- `02-auth-users-admin.md#T-02.02.01`: Session creation and cookie management
-- `02-auth-users-admin.md#T-02.02.02`: Session revocation
-- `02-auth-users-admin.md#T-02.03.01`: Forgot password request UI
-- `02-auth-users-admin.md#T-02.03.02`: OTP verification and password reset
-- `02-auth-users-admin.md#T-02.04.01`: Auth rate limit enforcement
+- `02-auth-users-admin.md#T-03.01.01`: App-level profile check middleware
+- `02-auth-users-admin.md#T-03.01.02`: Profile verification check after login
+- `02-auth-users-admin.md#T-03.02.01`: Profile type selection (Individual vs Legal)
+- `02-auth-users-admin.md#T-03.02.02`: Individual profile form
+- `02-auth-users-admin.md#T-03.02.03`: Legal profile form
+- `02-auth-users-admin.md#T-03.02.04`: Onboarding completion and redirect
+- `02-auth-users-admin.md#T-03.03.01`: Profile switcher in sidebar
+- `02-auth-users-admin.md#T-03.03.02`: Default profile selection
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -72,18 +71,18 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-01.02.01` | done | Earlier acceptance_verified | OTP backend generation and sending |
 | `02-auth-users-admin.md#T-01.02.02` | done | Earlier acceptance_verified | OTP input UI with resend |
 | `02-auth-users-admin.md#T-01.02.03` | done | Earlier acceptance_verified | OTP verification and user creation |
-| `02-auth-users-admin.md#T-02.01.01` | verify | Earlier acceptance_verified | Login page UI |
-| `02-auth-users-admin.md#T-02.01.02` | verify | Earlier acceptance_verified | Login authentication flow |
-| `02-auth-users-admin.md#T-02.01.03` | verify | Earlier acceptance_verified | Login OTP verification |
-| `02-auth-users-admin.md#T-02.01.04` | verify | Earlier acceptance_verified | Password change enforcement on login |
-| `02-auth-users-admin.md#T-02.02.01` | verify | Earlier acceptance_verified | Session creation and cookie management |
-| `02-auth-users-admin.md#T-02.02.02` | verify | Earlier acceptance_verified | Session revocation |
+| `02-auth-users-admin.md#T-02.01.01` | done | Earlier acceptance_verified | Login page UI |
+| `02-auth-users-admin.md#T-02.01.02` | done | Earlier acceptance_verified | Login authentication flow |
+| `02-auth-users-admin.md#T-02.01.03` | done | Earlier acceptance_verified | Login OTP verification |
+| `02-auth-users-admin.md#T-02.01.04` | done | Earlier acceptance_verified | Password change enforcement on login |
+| `02-auth-users-admin.md#T-02.02.01` | done | Earlier acceptance_verified | Session creation and cookie management |
+| `02-auth-users-admin.md#T-02.02.02` | done | Earlier acceptance_verified | Session revocation |
 | `02-auth-users-admin.md#T-02.02.03` | partial | Earlier partial | CSRF protection |
 | `02-auth-users-admin.md#T-02.02.04` | partial | Earlier partial | Step-up authentication for sensitive actions |
-| `02-auth-users-admin.md#T-02.03.01` | verify | Earlier acceptance_verified | Forgot password request UI |
-| `02-auth-users-admin.md#T-02.03.02` | verify | Earlier acceptance_verified | OTP verification and password reset |
+| `02-auth-users-admin.md#T-02.03.01` | done | Earlier acceptance_verified | Forgot password request UI |
+| `02-auth-users-admin.md#T-02.03.02` | done | Earlier acceptance_verified | OTP verification and password reset |
 | `02-auth-users-admin.md#T-02.03.03` | partial | Earlier partial | Account recovery support path |
-| `02-auth-users-admin.md#T-02.04.01` | verify | Earlier acceptance_verified | Auth rate limit enforcement |
+| `02-auth-users-admin.md#T-02.04.01` | done | Earlier acceptance_verified | Auth rate limit enforcement |
 | `02-auth-users-admin.md#T-03.01.01` | verify | Earlier acceptance_verified | App-level profile check middleware |
 | `02-auth-users-admin.md#T-03.01.02` | verify | Earlier acceptance_verified | Profile verification check after login |
 | `02-auth-users-admin.md#T-03.02.01` | verify | Earlier acceptance_verified | Profile type selection (Individual vs Legal) |
