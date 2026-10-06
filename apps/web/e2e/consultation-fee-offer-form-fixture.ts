@@ -438,6 +438,17 @@ export async function setupConsultationFeeOffers(page: Page, locale: 'en' | 'fa'
         url: new URL(route.request().url()).origin,
       },
     ]);
+    // Intercepted WebKit responses can resume before the frame observes a protocol cookie update.
+    // Synchronize the readable CSRF cookie before releasing verification, as a real response does.
+    await page.evaluate((token) => {
+      document.cookie = `barghsa_csrf=${encodeURIComponent(token)}; Path=/; SameSite=Lax`;
+      if (
+        !document.cookie
+          .split(';')
+          .some((cookie) => cookie.trim() === `barghsa_csrf=${encodeURIComponent(token)}`)
+      )
+        throw new Error('Test verification cookie was not installed');
+    }, state.csrf);
     return route.fulfill({
       headers: { 'set-cookie': `barghsa_csrf=${state.csrf}; Path=/; SameSite=Lax` },
       json: { verified: true },

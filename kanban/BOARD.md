@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 113 | Accepted with unchanged source bindings. |
-| verify | 1194 | Existing work may be complete; inspect evidence before building. |
+| done | 129 | Accepted with unchanged source bindings. |
+| verify | 1178 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,24 +39,25 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify consultation schema, state transitions, profile isolation/legal eligibility, customer submission/detail/history, staff queue/assignment/decisions, offer invoice replacement and paid adjustment/refund boundaries. Inspect existing code and the preserved consultation patch before building demonstrated gaps.
+Verify existing electricity exact calculation, green composition and limits, settings guards/snapshots and Iran Jalali period boundaries. Inspect before building demonstrated gaps; reuse valid promotions/VAT caller evidence.
 
-- `03-core-business.md#T-03.03.01.01`: Create `consultation_requests` table: `id` (UUIDv7), `profile_id` (FK), `product_id` (FK — consultation product), `status` (enum: `submitted`, `under_review`, `awaiting_customer_info`, `offer_pending`, `offer_accepted`, `offer_declined`, `completed`, `rejected`, `cancelled`), `staff_owner_id` (FK nullable), `staff_team` (VARCHAR nullable), `fee` (bigint nullable), `scope` (text nullable), `deliverables` (text nullable), `expected_next_step` (text nullable), `offer_valid_until` (timestamptz nullable), `invoice_id` (FK nullable — to invoices), `submitted_at`, `created_at`, `updated_at`
-- `03-core-business.md#T-03.03.01.02`: State machine for consultation requests with full transition rules:
-- `03-core-business.md#T-03.03.01.03`: Consultation access control: customer sees only own profile's requests. Staff sees assigned or unassigned based on roles.
-- `03-core-business.md#T-03.03.01.04`: Consultation for electricity-saving certificate is available only when active profile is Legal Entity. Backend must reject Individual profiles at submission.
-- `03-core-business.md#T-03.03.02.01`: Customer UI: "Consultation" section — list of available consultation products with descriptions, each with a "Request" button
-- `03-core-business.md#T-03.03.02.02`: Consultation request submission form: profile selection verification, product detail display, submit button with confirmation
-- `03-core-business.md#T-03.03.02.03`: Consultation request detail page: status, assigned staff, fee (when set), scope, deliverables, validity period. Accept/Decline buttons when `offer_pending`.
-- `03-core-business.md#T-03.03.02.04`: Customer's consultation list: all profile-scoped requests with status, submission date, staff owner, next action indicator
-- `03-core-business.md#T-03.03.02.05`: Every status change sends a notification. The detail page shows full status history with actor, timestamp, and reason.
-- `03-core-business.md#T-03.03.03.01`: Staff UI: consultation work queue — list of unassigned and assigned requests with filtering by status, priority, age
-- `03-core-business.md#T-03.03.03.02`: Staff UI: consultation detail — full history, customer info, fee entry form, scope and deliverables fields, invoice creation trigger
-- `03-core-business.md#T-03.03.03.03`: Staff API: `POST /staff/consultations/:id/fee` — set fee, scope, deliverables, validity period. Creates associated invoice. If a previous unpaid invoice exists, cancel and replace it. Notify customer.
-- `03-core-business.md#T-03.03.03.04`: Staff API: `POST /staff/consultations/:id/assign` — assign self or team
-- `03-core-business.md#T-03.03.03.05`: Staff API: `POST /staff/consultations/:id/reject` — with reason
-- `03-core-business.md#T-03.03.03.06`: Staff API: `POST /staff/consultations/:id/cancel` — with reason
-- `03-core-business.md#T-03.03.03.07`: Fee changes after customer has already paid creates an adjustment/refund workflow — do not silently change or replace the paid invoice.
+- `03-core-business.md#T-03.04.01.01`: Implement `ElectricityCalculationService` with pure functions:
+- `03-core-business.md#T-03.04.01.02`: Mandatory green rule engine:
+- `03-core-business.md#T-03.04.01.03`: Product limit validation:
+- `03-core-business.md#T-03.04.01.04`: Zero-quantity products do not trigger their min_kwh validation. A product omitted from the order has no limit check.
+- `03-core-business.md#T-03.04.01.05`: Prices snapshot at submission time: capture unit prices, VAT rates, gift code discount rate. Store in order/contract snapshot JSON.
+- `03-core-business.md#T-03.04.02.01`: Create `electricity_settings` table: `id`, `simple_green_rule_enabled` (bool, default true), `advanced_green_rule_enabled` (bool, default false), `green_threshold_kw` (int, default 1000), `green_min_percentage` (int, basis points, default 400 = 4%), `online_wallet_topup_limit` (bigint, default 2_000_000_000), `advanced_lead_days` (int, default 0), `advanced_max_duration_months` (int, default 24), `default_contract_template_id` (FK nullable), `customer_increase_max_percentage` (int, basis points), `updated_by`, `updated_at`
+- `03-core-business.md#T-03.04.02.02`: Admin API: `GET /admin/settings/electricity` and `PATCH /admin/settings/electricity` — versioned settings with validation: threshold ≥ 0, percentage 0–10000, topup limit > 0.
+- `03-core-business.md#T-03.04.02.03`: Activating mandatory green rule is blocked unless green electricity product is Active, has a valid positive price, and its per-order limits are compatible with the configured percentage.
+- `03-core-business.md#T-03.04.02.04`: Settings changes affect new drafts only. Submitted orders retain the settings snapshot from confirmation time.
+- `03-core-business.md#T-03.04.03.01`: Implement shared `validateOrderComposition(orderInput, settings, products)` function used by both simple and advanced order validation:
+- `03-core-business.md#T-03.04.03.02`: Green rule simple mode: thermal is the only user-selected product. Backend auto-composes: thermal = total × (1 - green%), green = total × green%. The total requested energy is not increased.
+- `03-core-business.md#T-03.04.03.03`: Green rule advanced mode: when rule is enabled, green quantity is derived from thermal quantity (not independently editable). When rule disabled, customer can freely set green quantity.
+- `03-core-business.md#T-03.04.03.04`: When applied composition fails product limits (e.g. required green exceeds green max_kwh), the UI must explain the exact conflict. Never silently change the configured percentage.
+- `03-core-business.md#T-03.04.04.01`: Implement Jalali calendar period calculation functions:
+- `03-core-business.md#T-03.04.04.02`: Handle 29-, 30-, and 31-day Jalali months correctly. Handle Jalali leap years.
+- `03-core-business.md#T-03.04.04.03`: Current-week period starts at current time in Iran (not at Saturday 00:00 if already past it). Week boundaries use Iran official timezone, not customer's configured timezone.
+- `03-core-business.md#T-03.04.04.04`: Current-month period: starts at current time, ends at first instant of following Jalali month. Next-month period: covers the full next month `[start_of_month, start_of_following_month)`.
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -170,22 +171,22 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.02.05.03` | done | Recorded batch work | VAT resolution logic: if product has an active override, use it; else if the charge category has an active rate, use it; else zero. Snapshot the resolved rate on the invoice line at creation time. |
 | `03-core-business.md#T-03.02.05.04` | done | Recorded batch work | Admin API: CRUD for VAT configurations and product overrides with effective dating |
 | `03-core-business.md#T-03.02.05.05` | done | Recorded batch work | VAT calculation: tax = net taxable amount × rate, rounded half-up to nearest IRR. Discount applied before VAT. Stored inputs, rounding steps, and totals must be reproducible. |
-| `03-core-business.md#T-03.03.01.01` | verify | Recorded batch work | Create `consultation_requests` table: `id` (UUIDv7), `profile_id` (FK), `product_id` (FK — consultation product), `status` (enum: `submitted`, `under_review`, `awaiting_customer_info`, `offer_pending`, `offer_accepted`, `offer_declined`, `completed`, `rejected`, `cancelled`), `staff_owner_id` (FK nullable), `staff_team` (VARCHAR nullable), `fee` (bigint nullable), `scope` (text nullable), `deliverables` (text nullable), `expected_next_step` (text nullable), `offer_valid_until` (timestamptz nullable), `invoice_id` (FK nullable — to invoices), `submitted_at`, `created_at`, `updated_at` |
-| `03-core-business.md#T-03.03.01.02` | verify | Recorded batch work | State machine for consultation requests with full transition rules: |
-| `03-core-business.md#T-03.03.01.03` | verify | Recorded batch work | Consultation access control: customer sees only own profile's requests. Staff sees assigned or unassigned based on roles. |
-| `03-core-business.md#T-03.03.01.04` | verify | Inventory needed | Consultation for electricity-saving certificate is available only when active profile is Legal Entity. Backend must reject Individual profiles at submission. |
-| `03-core-business.md#T-03.03.02.01` | verify | Recorded batch work | Customer UI: "Consultation" section — list of available consultation products with descriptions, each with a "Request" button |
-| `03-core-business.md#T-03.03.02.02` | verify | Recorded batch work | Consultation request submission form: profile selection verification, product detail display, submit button with confirmation |
-| `03-core-business.md#T-03.03.02.03` | verify | Recorded batch work | Consultation request detail page: status, assigned staff, fee (when set), scope, deliverables, validity period. Accept/Decline buttons when `offer_pending`. |
-| `03-core-business.md#T-03.03.02.04` | verify | Recorded batch work | Customer's consultation list: all profile-scoped requests with status, submission date, staff owner, next action indicator |
-| `03-core-business.md#T-03.03.02.05` | verify | Recorded batch work | Every status change sends a notification. The detail page shows full status history with actor, timestamp, and reason. |
-| `03-core-business.md#T-03.03.03.01` | verify | Recorded batch work | Staff UI: consultation work queue — list of unassigned and assigned requests with filtering by status, priority, age |
-| `03-core-business.md#T-03.03.03.02` | verify | Recorded batch work | Staff UI: consultation detail — full history, customer info, fee entry form, scope and deliverables fields, invoice creation trigger |
-| `03-core-business.md#T-03.03.03.03` | verify | Recorded batch work | Staff API: `POST /staff/consultations/:id/fee` — set fee, scope, deliverables, validity period. Creates associated invoice. If a previous unpaid invoice exists, cancel and replace it. Notify customer. |
-| `03-core-business.md#T-03.03.03.04` | verify | Recorded batch work | Staff API: `POST /staff/consultations/:id/assign` — assign self or team |
-| `03-core-business.md#T-03.03.03.05` | verify | Recorded batch work | Staff API: `POST /staff/consultations/:id/reject` — with reason |
-| `03-core-business.md#T-03.03.03.06` | verify | Recorded batch work | Staff API: `POST /staff/consultations/:id/cancel` — with reason |
-| `03-core-business.md#T-03.03.03.07` | verify | Recorded batch work | Fee changes after customer has already paid creates an adjustment/refund workflow — do not silently change or replace the paid invoice. |
+| `03-core-business.md#T-03.03.01.01` | done | Recorded batch work | Create `consultation_requests` table: `id` (UUIDv7), `profile_id` (FK), `product_id` (FK — consultation product), `status` (enum: `submitted`, `under_review`, `awaiting_customer_info`, `offer_pending`, `offer_accepted`, `offer_declined`, `completed`, `rejected`, `cancelled`), `staff_owner_id` (FK nullable), `staff_team` (VARCHAR nullable), `fee` (bigint nullable), `scope` (text nullable), `deliverables` (text nullable), `expected_next_step` (text nullable), `offer_valid_until` (timestamptz nullable), `invoice_id` (FK nullable — to invoices), `submitted_at`, `created_at`, `updated_at` |
+| `03-core-business.md#T-03.03.01.02` | done | Recorded batch work | State machine for consultation requests with full transition rules: |
+| `03-core-business.md#T-03.03.01.03` | done | Recorded batch work | Consultation access control: customer sees only own profile's requests. Staff sees assigned or unassigned based on roles. |
+| `03-core-business.md#T-03.03.01.04` | done | Recorded batch work | Consultation for electricity-saving certificate is available only when active profile is Legal Entity. Backend must reject Individual profiles at submission. |
+| `03-core-business.md#T-03.03.02.01` | done | Recorded batch work | Customer UI: "Consultation" section — list of available consultation products with descriptions, each with a "Request" button |
+| `03-core-business.md#T-03.03.02.02` | done | Recorded batch work | Consultation request submission form: profile selection verification, product detail display, submit button with confirmation |
+| `03-core-business.md#T-03.03.02.03` | done | Recorded batch work | Consultation request detail page: status, assigned staff, fee (when set), scope, deliverables, validity period. Accept/Decline buttons when `offer_pending`. |
+| `03-core-business.md#T-03.03.02.04` | done | Recorded batch work | Customer's consultation list: all profile-scoped requests with status, submission date, staff owner, next action indicator |
+| `03-core-business.md#T-03.03.02.05` | done | Recorded batch work | Every status change sends a notification. The detail page shows full status history with actor, timestamp, and reason. |
+| `03-core-business.md#T-03.03.03.01` | done | Recorded batch work | Staff UI: consultation work queue — list of unassigned and assigned requests with filtering by status, priority, age |
+| `03-core-business.md#T-03.03.03.02` | done | Recorded batch work | Staff UI: consultation detail — full history, customer info, fee entry form, scope and deliverables fields, invoice creation trigger |
+| `03-core-business.md#T-03.03.03.03` | done | Recorded batch work | Staff API: `POST /staff/consultations/:id/fee` — set fee, scope, deliverables, validity period. Creates associated invoice. If a previous unpaid invoice exists, cancel and replace it. Notify customer. |
+| `03-core-business.md#T-03.03.03.04` | done | Recorded batch work | Staff API: `POST /staff/consultations/:id/assign` — assign self or team |
+| `03-core-business.md#T-03.03.03.05` | done | Recorded batch work | Staff API: `POST /staff/consultations/:id/reject` — with reason |
+| `03-core-business.md#T-03.03.03.06` | done | Recorded batch work | Staff API: `POST /staff/consultations/:id/cancel` — with reason |
+| `03-core-business.md#T-03.03.03.07` | done | Recorded batch work | Fee changes after customer has already paid creates an adjustment/refund workflow — do not silently change or replace the paid invoice. |
 | `03-core-business.md#T-03.04.01.01` | verify | Inventory needed | Implement `ElectricityCalculationService` with pure functions: |
 | `03-core-business.md#T-03.04.01.02` | verify | Inventory needed | Mandatory green rule engine: |
 | `03-core-business.md#T-03.04.01.03` | verify | Inventory needed | Product limit validation: |

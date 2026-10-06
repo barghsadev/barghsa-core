@@ -265,7 +265,7 @@ export class ConsultationRequestService {
       const rows = (
         await client.query(
           `SELECT r.id,r.status,r.product_snapshot,r.submitted_at,r.staff_owner_id,
-              u.username AS staff_owner_username,r.staff_team,r.expected_next_step,
+              r.staff_team,r.expected_next_step,
               r.invoice_id,i.state AS invoice_state,r.accepted_at,r.offer_valid_until,
               EXISTS(
                 SELECT 1 FROM refunds refund JOIN invoices paid ON paid.id=refund.invoice_id
@@ -273,7 +273,6 @@ export class ConsultationRequestService {
                   AND refund.state NOT IN ('Completed','Rejected','Cancelled')
               ) AS refund_pending
            FROM consultation_requests r
-           LEFT JOIN users u ON u.user_id=r.staff_owner_id
              LEFT JOIN invoices i ON i.id=r.invoice_id
              WHERE r.profile_id=$1
                AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) ${comparison} ($2::timestamptz,$3::uuid))
@@ -293,9 +292,18 @@ export class ConsultationRequestService {
           ]
         )
       ).rows;
+      const page = rows.slice(0, 100);
+      const names = await activityNames(
+        client,
+        page.map((request) => request.staff_owner_id as string | null)
+      );
       await client.query('COMMIT');
       return {
-        requests: rows.slice(0, 100),
+        requests: page.map((request) => ({
+          ...request,
+          // Preserve the existing public field while projecting only consented display names.
+          staff_owner_username: names.get(request.staff_owner_id as string) ?? null,
+        })),
         nextBefore: rows.length > 100 ? rows[99]!.id : null,
       };
     } catch (error) {
@@ -314,12 +322,11 @@ export class ConsultationRequestService {
       const request = (
         await client.query<Record<string, unknown>>(
           `SELECT r.id,r.profile_id,r.product_id,r.product_snapshot,r.status,r.staff_owner_id,
-            u.username AS staff_owner_username,r.staff_team,
+            r.staff_team,
           r.fee::text AS fee,r.scope,r.deliverables,r.expected_next_step,r.offer_valid_until,r.invoice_id,
           r.accepted_at,i.state AS invoice_state,r.submitted_at,r.updated_at,
           EXISTS(SELECT 1 FROM invoices paid WHERE paid.consultation_id=r.id::text AND paid.paid_amount>0) AS has_paid_invoice
             FROM consultation_requests r
-            LEFT JOIN users u ON u.user_id=r.staff_owner_id
             LEFT JOIN invoices i ON i.id=r.invoice_id WHERE r.id=$1`,
           [id]
         )
@@ -355,13 +362,16 @@ export class ConsultationRequestService {
           [id]
         )
       ).rows;
-      const names = await activityNames(
-        client,
-        history.map((event) => event.actor_user_id as string)
-      );
+      const names = await activityNames(client, [
+        request.staff_owner_id as string | null,
+        ...history.map((event) => event.actor_user_id as string),
+      ]);
       await client.query('COMMIT');
       return {
-        request,
+        request: {
+          ...request,
+          staff_owner_username: names.get(request.staff_owner_id as string) ?? null,
+        },
         history: history.map(({ actor_user_id, ...event }) => ({
           ...event,
           actor_name: names.get(actor_user_id as string) ?? null,

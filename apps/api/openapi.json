@@ -3921,7 +3921,7 @@
     },
     "/api/admin/consultations/requests": {
       "get": {
-        "operationId": "StaffConsultationWorkflowController_queue",
+        "operationId": "StaffConsultationWorkflowController_queue[0]",
         "parameters": [
           {
             "in": "query",
@@ -4009,7 +4009,7 @@
     },
     "/api/admin/consultations/requests/{id}": {
       "get": {
-        "operationId": "StaffConsultationWorkflowController_detail",
+        "operationId": "StaffConsultationWorkflowController_detail[0]",
         "parameters": [
           {
             "in": "path",
@@ -4038,7 +4038,7 @@
     },
     "/api/admin/consultations/requests/{id}/assign": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_assign",
+        "operationId": "StaffConsultationWorkflowController_assign[0]",
         "parameters": [
           {
             "in": "path",
@@ -4114,7 +4114,7 @@
     },
     "/api/admin/consultations/requests/{id}/cancel": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_cancel",
+        "operationId": "StaffConsultationWorkflowController_cancel[0]",
         "parameters": [
           {
             "in": "path",
@@ -4164,7 +4164,7 @@
     },
     "/api/admin/consultations/requests/{id}/complete": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_complete",
+        "operationId": "StaffConsultationWorkflowController_complete[0]",
         "parameters": [
           {
             "in": "path",
@@ -4214,7 +4214,7 @@
     },
     "/api/admin/consultations/requests/{id}/fee": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_setFee",
+        "operationId": "StaffConsultationWorkflowController_setFee[0]",
         "parameters": [
           {
             "in": "path",
@@ -4297,7 +4297,7 @@
     },
     "/api/admin/consultations/requests/{id}/fee-review": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_feeReview",
+        "operationId": "StaffConsultationWorkflowController_feeReview[0]",
         "parameters": [
           {
             "in": "path",
@@ -4369,7 +4369,7 @@
     },
     "/api/admin/consultations/requests/{id}/paid-cancel": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_paidCancel",
+        "operationId": "StaffConsultationWorkflowController_paidCancel[0]",
         "parameters": [
           {
             "in": "path",
@@ -4430,7 +4430,7 @@
     },
     "/api/admin/consultations/requests/{id}/paid-fee": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_adjustPaidFee",
+        "operationId": "StaffConsultationWorkflowController_adjustPaidFee[0]",
         "parameters": [
           {
             "in": "path",
@@ -4502,7 +4502,7 @@
     },
     "/api/admin/consultations/requests/{id}/paid-fee-review": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_paidFeeReview",
+        "operationId": "StaffConsultationWorkflowController_paidFeeReview[0]",
         "parameters": [
           {
             "in": "path",
@@ -4563,7 +4563,7 @@
     },
     "/api/admin/consultations/requests/{id}/paid-reject": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_paidReject",
+        "operationId": "StaffConsultationWorkflowController_paidReject[0]",
         "parameters": [
           {
             "in": "path",
@@ -4624,7 +4624,7 @@
     },
     "/api/admin/consultations/requests/{id}/paid-resolution-review": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_paidResolutionReview",
+        "operationId": "StaffConsultationWorkflowController_paidResolutionReview[0]",
         "parameters": [
           {
             "in": "path",
@@ -4683,7 +4683,7 @@
     },
     "/api/admin/consultations/requests/{id}/refund-recovery": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_refundRecovery",
+        "operationId": "StaffConsultationWorkflowController_refundRecovery[0]",
         "parameters": [
           {
             "in": "path",
@@ -4744,7 +4744,7 @@
     },
     "/api/admin/consultations/requests/{id}/reject": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_reject",
+        "operationId": "StaffConsultationWorkflowController_reject[0]",
         "parameters": [
           {
             "in": "path",
@@ -4794,7 +4794,7 @@
     },
     "/api/admin/consultations/requests/{id}/request-info": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_requestInfo",
+        "operationId": "StaffConsultationWorkflowController_requestInfo[0]",
         "parameters": [
           {
             "in": "path",
@@ -4844,7 +4844,7 @@
     },
     "/api/admin/consultations/requests/{id}/review": {
       "post": {
-        "operationId": "StaffConsultationWorkflowController_review",
+        "operationId": "StaffConsultationWorkflowController_review[0]",
         "parameters": [
           {
             "in": "path",
@@ -4885,7 +4885,7 @@
     },
     "/api/admin/consultations/teams": {
       "get": {
-        "operationId": "StaffConsultationWorkflowController_teams",
+        "operationId": "StaffConsultationWorkflowController_teams[0]",
         "parameters": [],
         "responses": {
           "200": {
@@ -28196,6 +28196,990 @@
         "summary": "Record customer courier, tracking, send date and optional receipt image",
         "tags": [
           "Solar postal documents"
+        ]
+      }
+    },
+    "/api/staff/consultations": {
+      "get": {
+        "operationId": "StaffConsultationWorkflowController_queue[1]",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": [
+                "submitted",
+                "under_review",
+                "awaiting_customer_info",
+                "offer_pending",
+                "offer_accepted",
+                "offer_declined",
+                "completed",
+                "rejected",
+                "cancelled"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "assignment",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "mine",
+                "unassigned"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "high",
+                "normal"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "minAgeDays",
+            "required": false,
+            "schema": {
+              "enum": [
+                "0",
+                "1",
+                "7"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List consultation work by status and assignment",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/teams": {
+      "get": {
+        "operationId": "StaffConsultationWorkflowController_teams[1]",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List active teams available for consultation assignment",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}": {
+      "get": {
+        "operationId": "StaffConsultationWorkflowController_detail[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read consultation details and status history for staff",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/assign": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_assign[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "assignTo": {
+                        "enum": [
+                          "self"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "assignTo"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "assignTo": {
+                        "enum": [
+                          "team"
+                        ],
+                        "type": "string"
+                      },
+                      "team": {
+                        "maxLength": 80,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "assignTo",
+                      "team"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Assign a consultation to self or an active staff team",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/cancel": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_cancel[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel a consultation request with a reason",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/complete": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_complete[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark a paid and accepted consultation completed",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/fee": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_setFee[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "deliverables": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "scope": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "fee",
+                  "scope",
+                  "deliverables",
+                  "validUntil",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Issue or replace a consultation fee offer and invoice",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/fee-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_feeReview[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "deliverables": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "scope": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fee",
+                  "scope",
+                  "deliverables",
+                  "validUntil"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative consultation fee offer and invoice outcome",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/paid-cancel": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidCancel[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "reason",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel a paid consultation and request wallet refunds",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/paid-fee": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_adjustPaidFee[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "fee",
+                  "reason",
+                  "validUntil",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Adjust an accepted paid consultation fee with a charge or credit and refund request",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/paid-fee-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidFeeReview[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "fee": {
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "validUntil": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fee",
+                  "reason",
+                  "validUntil"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the paid consultation charge or credit and refund allocation",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/paid-reject": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidReject[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "reason",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject a paid consultation and request wallet refunds",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/paid-resolution-review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidResolutionReview[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "cancel",
+                      "reject",
+                      "recover_refund"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview paid consultation closure or wallet refund recovery",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/refund-recovery": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_refundRecovery[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "reason",
+                  "expectedReviewHash"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request an uncovered consultation credit refund without issuing another credit",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/reject": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_reject[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject a consultation request with a reason",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/request-info": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_requestInfo[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request more information from the consultation customer",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/staff/consultations/{id}/review": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_review[1]",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Start reviewing a submitted consultation request",
+        "tags": [
+          "Admin · Consultations"
         ]
       }
     },

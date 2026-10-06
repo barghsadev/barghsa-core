@@ -512,7 +512,12 @@ export class ConsultationWorkflowService {
         if (previous?.consultation_id !== id || previous.profile_id !== request.profile_id)
           throw new ConflictException('Consultation invoice linkage is invalid');
         if (request.status === 'offer_pending') {
+          await client.query(
+            "UPDATE consultation_requests SET status='under_review',updated_at=NOW() WHERE id=$1",
+            [id]
+          );
           await this.event(client, id, 'under_review', actor.userId, input.reason);
+          await this.notify(client, request, 'under_review');
         }
         const replacement = await this.replacementInvoices.cancelAndReplaceInvoice({
           transactionClient: client,

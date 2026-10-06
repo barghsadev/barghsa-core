@@ -42,6 +42,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
     product_snapshot: { title },
     submitted_at: submittedAt,
     staff_owner_username: null,
+    staff_owner_id: status === 'submitted' ? null : 'private-owner-id',
     staff_team: null,
     fee: offer?.fee ?? null,
     scope: offer?.scope ?? null,
@@ -277,6 +278,16 @@ test('customer consultation moves through staff offer, payment handoff, and comp
 
   operatingContext = 'customer';
   await page.goto(`/consultations/${requestId}`);
+  await expect(page.getByText('Assigned staff', { exact: true })).toBeVisible();
+  await expect(page.locator('#dashboard-content')).not.toContainText('private-owner-id');
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .include('#dashboard-content')
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+        .analyze()
+    ).violations
+  ).toEqual([]);
   await expect(page.getByText('Supply assessment')).toBeVisible();
   await expect(page.getByText('Written report')).toBeVisible();
   await switchLanguage(page, 'en');
@@ -284,6 +295,8 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   const declineReview = page.getByRole('dialog', { name: 'بررسی پیشنهاد مشاوره' });
   await expect(declineReview).toContainText('Supply assessment');
   await expect(declineReview).toContainText('لغو');
+  // Contrast must be measured after the shared dialog's fade-in finishes.
+  await expect(declineReview).toHaveCSS('opacity', '1');
   const scan = await new AxeBuilder({ page })
     .include('[role="dialog"]')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])

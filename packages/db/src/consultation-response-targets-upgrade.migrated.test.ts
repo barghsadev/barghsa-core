@@ -63,7 +63,12 @@ it('expands consultation breaches while preserving existing episodes, routing cu
       .rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0244_consultation_response_targets'],
+      applied: [
+        '0244_consultation_response_targets',
+        '0245_business_actor_context',
+        '0246_catalogue_foundation_guards',
+        '0247_gift_code_integrity',
+      ],
     });
     expect((await pool.query('SELECT * FROM service_breach_alerts ORDER BY item_id')).rows).toEqual(
       alerts.map((alert) => ({ ...alert, source_activity_at: null }))

@@ -43,6 +43,7 @@ const row = (id = first) => ({
   product_snapshot: { title: { en: 'Owned consultation', fa: 'مشاوره' } },
   submitted_at: '2026-10-05T10:00:00.000Z',
   staff_owner_username: null,
+  staff_owner_id: 'private-owner-id',
   staff_team: null,
   expected_next_step: null,
   invoice_id: null,
@@ -115,6 +116,8 @@ for (const scenario of scenarios)
         await settled(() =>
           expect(host.querySelector(`a[href="/consultations/${first}"]`)).not.toBeNull()
         );
+        expect(host.textContent).toContain('Assigned staff');
+        expect(host.textContent).not.toContain('private-owner-id');
         const more = host.querySelector<HTMLButtonElement>(
           'nav[aria-label="History pages"] button'
         );

@@ -66,6 +66,7 @@ interface RequestRow {
   product_snapshot: { title: { fa: string; en: string } };
   submitted_at: string;
   staff_owner_username: string | null;
+  staff_owner_id?: string | null;
   staff_team: string | null;
   expected_next_step: string | null;
   invoice_id: string | null;
@@ -556,7 +557,14 @@ export function ConsultationsPage({
       label: copy('owner'),
       render: (request) => (
         <div className="min-w-40 space-y-1">
-          <p dir="auto">{request.staff_owner_username ?? copy('unassigned')}</p>
+          <p dir="auto">
+            {request.staff_owner_username ??
+              (request.staff_owner_id
+                ? copy('assignedStaff')
+                : request.staff_team
+                  ? copy('awaitingOwner')
+                  : copy('unassigned'))}
+          </p>
           {request.staff_team && (
             <p className="text-muted-foreground">
               {copy('team')}: <span dir="auto">{request.staff_team}</span>
@@ -607,7 +615,7 @@ export function ConsultationsPage({
     },
   ];
   return (
-    <main
+    <section
       className={`mx-auto w-full min-w-0 space-y-8 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -946,7 +954,12 @@ export function ConsultationsPage({
                             <span className="block text-sm text-muted-foreground">
                               {copy('owner')}:{' '}
                               <span dir="auto">
-                                {request.staff_owner_username ?? copy('unassigned')}
+                                {request.staff_owner_username ??
+                                  (request.staff_owner_id
+                                    ? copy('assignedStaff')
+                                    : request.staff_team
+                                      ? copy('awaitingOwner')
+                                      : copy('unassigned'))}
                               </span>
                             </span>
                             {request.staff_team && (
@@ -996,6 +1009,6 @@ export function ConsultationsPage({
           </section>
         </>
       )}
-    </main>
+    </section>
   );
 }

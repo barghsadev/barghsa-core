@@ -140,7 +140,7 @@ it('moves a consultation through staff assignment, customer information, and a r
     requests: [
       {
         id: requestId,
-        staff_owner_username: 'reviewer@consultation-flow.test',
+        staff_owner_username: null,
         staff_team: null,
         invoice_state: null,
         refund_pending: false,
@@ -180,7 +180,7 @@ it('moves a consultation through staff assignment, customer information, and a r
   };
   expect(body.request).toMatchObject({
     status: 'rejected',
-    staff_owner_username: 'reviewer@consultation-flow.test',
+    staff_owner_username: 'Chosen consultation staff',
   });
   expect(body.history.map((event) => event.status)).toEqual([
     'submitted',
@@ -348,6 +348,35 @@ it('projects only consented consultation owner names without changing queue pagi
     requests: [{ id: ids[100], staff_owner_id: 'context-hidden', staff_owner_name: null }],
     nextAfter: null,
   });
+  const customerSelected = () =>
+    fetch(`${http.base}/api/consultations/requests/${ids[3]}`, { headers: headers.customer! });
+  const customerList = () =>
+    fetch(`${http.base}/api/consultations/requests?profileId=${profileId}`, {
+      headers: headers.customer!,
+    });
+  const customerDetail = await customerSelected();
+  expect(customerDetail.status).toBe(200);
+  const visibleCustomer = await customerDetail.json();
+  expect(visibleCustomer).toMatchObject({
+    request: { id: ids[3], staff_owner_username: 'Chosen consultation owner' },
+  });
+  expect(JSON.stringify(visibleCustomer)).not.toMatch(
+    /private-.*login|Private (named|hidden)|Support-only owner/
+  );
+  const customerPage = await customerList();
+  expect(customerPage.status).toBe(200);
+  const customerRows = (await customerPage.json()) as {
+    requests: Array<{ id: string; staff_owner_username: string | null }>;
+  };
+  expect(customerRows.requests).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ id: ids[99], staff_owner_username: 'Chosen consultation owner' }),
+      expect.objectContaining({ id: ids[96], staff_owner_username: null }),
+    ])
+  );
+  expect(JSON.stringify(customerRows)).not.toMatch(
+    /private-.*login|Private (named|hidden)|Support-only owner/
+  );
   const selected = () =>
     fetch(`${http.base}/api/admin/consultations/requests/${ids[3]}`, {
       headers: headers.reviewer!,
@@ -366,6 +395,14 @@ it('projects only consented consultation owner names without changing queue pagi
   );
   expect(await (await selected()).json()).toMatchObject({
     request: { id: ids[3], staff_owner_name: null },
+  });
+  expect(await (await customerSelected()).json()).toMatchObject({
+    request: { id: ids[3], staff_owner_username: null },
+  });
+  expect(await (await customerList()).json()).toMatchObject({
+    requests: expect.arrayContaining([
+      expect.objectContaining({ id: ids[99], staff_owner_username: null }),
+    ]),
   });
   await http.pool.query(
     "UPDATE conversation_identities SET share_in_activity=true WHERE user_id='context-named'"
@@ -892,4 +929,141 @@ it('projects owned consultation reasons while retaining exact bounds, live autho
   const rejected = await post(`${root}/reject`, 'reviewer', { reason: 'r'.repeat(2000) });
   expect(rejected.status, http.logs()).toBe(200);
   expect(await rejected.json()).toEqual({ requestId, status: 'rejected' });
+});
+
+it('notifies every fee-replacement history transition and does not repeat notifications on replay', async () => {
+  const created = await post('/api/consultations/requests', 'customer', {
+    profileId,
+    productId,
+    submissionKey: randomUUID(),
+  });
+  expect(created.status, http.logs()).toBe(201);
+  const requestId = ((await created.json()) as { requestId: string }).requestId;
+  const root = `/api/admin/consultations/requests/${requestId}`;
+  expect((await post(`${root}/review`, 'reviewer', {})).status).toBe(200);
+  let savedCommand: Record<string, unknown> = {};
+  let secondReceipt: unknown;
+  for (const fee of ['1000', '2000']) {
+    const terms = {
+      fee,
+      scope: 'Feasibility review',
+      deliverables: 'Written report',
+      validUntil: new Date(Date.now() + 86400000).toISOString(),
+      ...(fee === '2000' ? { reason: 'Updated scope' } : {}),
+    };
+    const preview = await post(`${root}/fee-review`, 'reviewer', terms);
+    expect(preview.status, http.logs()).toBe(200);
+    savedCommand = {
+      ...terms,
+      idempotencyKey: randomUUID(),
+      expectedReviewHash: ((await preview.json()) as { hash: string }).hash,
+    };
+    const result = await post(`${root}/fee`, 'reviewer', savedCommand);
+    expect(result.status, http.logs()).toBe(200);
+    secondReceipt = await result.json();
+  }
+  const history = (
+    await http.pool.query(
+      'SELECT status FROM consultation_request_events WHERE request_id=$1 ORDER BY created_at,id',
+      [requestId]
+    )
+  ).rows.map((row) => row.status);
+  expect(history).toEqual([
+    'submitted',
+    'under_review',
+    'offer_pending',
+    'under_review',
+    'offer_pending',
+  ]);
+  const notifications = async () =>
+    (
+      await http.pool.query(
+        "SELECT id,localized_content FROM in_app_notifications WHERE recipient_user_id='customer' AND profile_id=$1 AND link_route=$2 ORDER BY created_at,id",
+        [profileId, `/consultations/${requestId}`]
+      )
+    ).rows;
+  const before = await notifications();
+  expect(before).toHaveLength(history.length);
+  const replay = await post(`${root}/fee`, 'reviewer', savedCommand);
+  expect(replay.status, http.logs()).toBe(200);
+  expect(await replay.json()).toEqual(secondReceipt);
+  expect(await notifications()).toEqual(before);
+});
+
+it('keeps specified staff aliases on the existing permission, review, replay and invoice boundaries', async () => {
+  const submit = async () => {
+    const response = await post('/api/consultations/requests', 'customer', {
+      profileId,
+      productId,
+      submissionKey: randomUUID(),
+    });
+    expect(response.status, http.logs()).toBe(201);
+    return ((await response.json()) as { requestId: string }).requestId;
+  };
+  const requestId = await submit();
+  const alias = `/api/staff/consultations/${requestId}`;
+  const original = `/api/admin/consultations/requests/${requestId}`;
+  for (const [action, body] of [
+    ['assign', { assignTo: 'self' }],
+    ['fee', {}],
+    ['reject', { reason: 'No access' }],
+    ['cancel', { reason: 'No access' }],
+  ] as const)
+    expect((await post(`${alias}/${action}`, 'customer', body)).status).toBe(403);
+  const assigned = await post(`${alias}/assign`, 'reviewer', { assignTo: 'self' });
+  expect(assigned.status, http.logs()).toBe(200);
+  expect(await assigned.json()).toMatchObject({
+    requestId,
+    status: 'under_review',
+    staffOwnerId: 'reviewer',
+  });
+  const queue = await fetch(
+    `${http.base}/api/staff/consultations?status=under_review&assignment=mine`,
+    {
+      headers: headers.reviewer!,
+    }
+  );
+  expect(queue.status, http.logs()).toBe(200);
+  expect(await queue.json()).toMatchObject({
+    requests: expect.arrayContaining([expect.objectContaining({ id: requestId })]),
+  });
+  const terms = {
+    fee: '9007199254740993',
+    scope: 'Exact alias offer',
+    deliverables: 'Written review',
+    validUntil: new Date(Date.now() + 86400000).toISOString(),
+  };
+  const preview = await post(`${alias}/fee-review`, 'reviewer', terms);
+  expect(preview.status, http.logs()).toBe(200);
+  const command = {
+    ...terms,
+    idempotencyKey: randomUUID(),
+    expectedReviewHash: ((await preview.json()) as { hash: string }).hash,
+  };
+  const offered = await post(`${alias}/fee`, 'reviewer', command);
+  expect(offered.status, http.logs()).toBe(200);
+  const receipt = (await offered.json()) as { invoiceId: string };
+  expect(
+    (
+      await http.pool.query('SELECT total_amount,state FROM invoices WHERE id=$1', [
+        receipt.invoiceId,
+      ])
+    ).rows
+  ).toEqual([{ total_amount: terms.fee, state: 'Unpaid' }]);
+  const replay = await post(`${original}/fee`, 'reviewer', command);
+  expect(replay.status, http.logs()).toBe(200);
+  expect(await replay.json()).toEqual(receipt);
+  const cancelled = await post(`${alias}/cancel`, 'reviewer', {
+    reason: 'Requested before payment',
+  });
+  expect(cancelled.status, http.logs()).toBe(200);
+  expect(
+    (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [receipt.invoiceId])).rows
+  ).toEqual([{ state: 'Cancelled' }]);
+  const secondId = await submit();
+  const rejected = await post(`/api/staff/consultations/${secondId}/reject`, 'reviewer', {
+    reason: 'Outside the service area',
+  });
+  expect(rejected.status, http.logs()).toBe(200);
+  expect(await rejected.json()).toMatchObject({ requestId: secondId, status: 'rejected' });
 });

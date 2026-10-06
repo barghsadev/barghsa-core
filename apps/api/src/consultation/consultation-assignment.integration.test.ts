@@ -171,7 +171,7 @@ it('routes each new request once, preserves simultaneous replay, and exposes the
   expect(await detail.json()).toMatchObject({
     request: {
       staff_owner_id: 'alpha',
-      staff_owner_username: 'alpha@routing.test',
+      staff_owner_username: null,
       staff_team: 'Primary',
     },
     history: [{ status: 'submitted' }],

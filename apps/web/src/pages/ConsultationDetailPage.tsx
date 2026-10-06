@@ -55,6 +55,7 @@ interface Detail {
     product_snapshot: { title: { fa: string; en: string } };
     submitted_at: string;
     staff_owner_username: string | null;
+    staff_owner_id?: string | null;
     staff_team: string | null;
     fee: string | null;
     scope: string | null;
@@ -411,7 +412,10 @@ export function ConsultationDetailPage() {
   const action = request ? consultationNextAction(request, refundPending, locale) : null;
   const latestEvent = detail?.history.at(-1);
   return (
-    <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <section
+      className="mx-auto max-w-3xl space-y-6 px-4 py-8"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       <Link to="/consultations" className="text-sm text-primary underline">
         {copy('back')}
       </Link>
@@ -456,7 +460,14 @@ export function ConsultationDetailPage() {
             </p>
             <p>
               {copy('owner')}:{' '}
-              <span dir="auto">{request.staff_owner_username ?? copy('unassigned')}</span>
+              <span dir="auto">
+                {request.staff_owner_username ??
+                  (request.staff_owner_id
+                    ? copy('assignedStaff')
+                    : request.staff_team
+                      ? copy('awaitingOwner')
+                      : copy('unassigned'))}
+              </span>
             </p>
             {request.staff_team && (
               <p>
@@ -738,6 +749,6 @@ export function ConsultationDetailPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </main>
+    </section>
   );
 }

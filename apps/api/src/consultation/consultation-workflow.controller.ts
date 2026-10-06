@@ -109,18 +109,18 @@ function requireFormPermission(req: AuthenticatedRequest) {
 
 @ApiTags('Admin · Consultations')
 @ApiBearerAuth()
-@Controller('api/admin/consultations')
+@Controller('api')
 @UseGuards(SessionAuthGuard)
 export class StaffConsultationWorkflowController {
   constructor(private readonly workflow: ConsultationWorkflowService) {}
 
-  @Get('teams')
+  @Get(['admin/consultations/teams', 'staff/consultations/teams'])
   @ApiOperation({ summary: 'List active teams available for consultation assignment' })
   teams(@Req() req: AuthenticatedRequest) {
     return this.workflow.teams(req.session);
   }
 
-  @Get('requests')
+  @Get(['admin/consultations/requests', 'staff/consultations'])
   @ApiOperation({ summary: 'List consultation work by status and assignment' })
   @ApiQuery({ name: 'status', required: false, enum: CONSULTATION_STATUSES })
   @ApiQuery({ name: 'assignment', required: false, enum: ['all', 'mine', 'unassigned'] })
@@ -159,13 +159,13 @@ export class StaffConsultationWorkflowController {
     );
   }
 
-  @Get('requests/:id')
+  @Get(['admin/consultations/requests/:id', 'staff/consultations/:id'])
   @ApiOperation({ summary: 'Read consultation details and status history for staff' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     return this.workflow.detail(req.session, id);
   }
 
-  @Post('requests/:id/assign')
+  @Post(['admin/consultations/requests/:id/assign', 'staff/consultations/:id/assign'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Assign a consultation to self or an active staff team' })
   @ApiZodBody(assignment)
@@ -177,7 +177,7 @@ export class StaffConsultationWorkflowController {
     return this.workflow.assign(req.session, id, parse(assignment, body), req.ip ?? '127.0.0.1');
   }
 
-  @Post('requests/:id/review')
+  @Post(['admin/consultations/requests/:id/review', 'staff/consultations/:id/review'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Start reviewing a submitted consultation request' })
   @ApiZodBody(empty)
@@ -190,7 +190,7 @@ export class StaffConsultationWorkflowController {
     return this.workflow.staffAction(req.session, id, 'review', undefined, req.ip ?? '127.0.0.1');
   }
 
-  @Post('requests/:id/fee')
+  @Post(['admin/consultations/requests/:id/fee', 'staff/consultations/:id/fee'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Issue or replace a consultation fee offer and invoice' })
   @ApiZodBody(feeOffer)
@@ -209,7 +209,7 @@ export class StaffConsultationWorkflowController {
     return this.workflow.setFee(req.session, id, input, req.ip ?? '127.0.0.1');
   }
 
-  @Post('requests/:id/fee-review')
+  @Post(['admin/consultations/requests/:id/fee-review', 'staff/consultations/:id/fee-review'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Preview the authoritative consultation fee offer and invoice outcome' })
   @ApiZodBody(feeReviewInput)
@@ -228,7 +228,7 @@ export class StaffConsultationWorkflowController {
     return this.workflow.feeReview(req.session, id, input);
   }
 
-  @Post('requests/:id/paid-fee')
+  @Post(['admin/consultations/requests/:id/paid-fee', 'staff/consultations/:id/paid-fee'])
   @HttpCode(200)
   @ApiOperation({
     summary: 'Adjust an accepted paid consultation fee with a charge or credit and refund request',
@@ -249,7 +249,10 @@ export class StaffConsultationWorkflowController {
     return this.workflow.adjustPaidFee(req.session, id, input, req.ip ?? '127.0.0.1');
   }
 
-  @Post('requests/:id/paid-fee-review')
+  @Post([
+    'admin/consultations/requests/:id/paid-fee-review',
+    'staff/consultations/:id/paid-fee-review',
+  ])
   @HttpCode(200)
   @ApiOperation({ summary: 'Preview the paid consultation charge or credit and refund allocation' })
   @ApiZodBody(paidFeeReviewInput)
@@ -268,7 +271,7 @@ export class StaffConsultationWorkflowController {
     return this.workflow.paidFeeReview(req.session, id, input);
   }
 
-  @Post('requests/:id/paid-cancel')
+  @Post(['admin/consultations/requests/:id/paid-cancel', 'staff/consultations/:id/paid-cancel'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Cancel a paid consultation and request wallet refunds' })
   @ApiZodBody(paidClosure)
@@ -284,7 +287,10 @@ export class StaffConsultationWorkflowController {
     return this.workflow.closePaid(req.session, id, 'cancel', input, req.ip ?? '127.0.0.1');
   }
 
-  @Post('requests/:id/paid-resolution-review')
+  @Post([
+    'admin/consultations/requests/:id/paid-resolution-review',
+    'staff/consultations/:id/paid-resolution-review',
+  ])
   @HttpCode(200)
   @ApiOperation({ summary: 'Preview paid consultation closure or wallet refund recovery' })
   @ApiZodBody(paidResolutionInput)
@@ -308,7 +314,7 @@ export class StaffConsultationWorkflowController {
     return this.workflow.paidResolutionReview(req.session, id, input);
   }
 
-  @Post('requests/:id/paid-reject')
+  @Post(['admin/consultations/requests/:id/paid-reject', 'staff/consultations/:id/paid-reject'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Reject a paid consultation and request wallet refunds' })
   @ApiZodBody(paidClosure)
@@ -324,7 +330,10 @@ export class StaffConsultationWorkflowController {
     return this.workflow.closePaid(req.session, id, 'reject', input, req.ip ?? '127.0.0.1');
   }
 
-  @Post('requests/:id/refund-recovery')
+  @Post([
+    'admin/consultations/requests/:id/refund-recovery',
+    'staff/consultations/:id/refund-recovery',
+  ])
   @HttpCode(200)
   @ApiOperation({
     summary: 'Request an uncovered consultation credit refund without issuing another credit',
@@ -342,7 +351,7 @@ export class StaffConsultationWorkflowController {
     return this.workflow.recoverRefund(req.session, id, input, req.ip ?? '127.0.0.1');
   }
 
-  @Post('requests/:id/request-info')
+  @Post(['admin/consultations/requests/:id/request-info', 'staff/consultations/:id/request-info'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Request more information from the consultation customer' })
   @ApiZodBody(reason)
@@ -361,7 +370,7 @@ export class StaffConsultationWorkflowController {
     );
   }
 
-  @Post('requests/:id/reject')
+  @Post(['admin/consultations/requests/:id/reject', 'staff/consultations/:id/reject'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Reject a consultation request with a reason' })
   @ApiZodBody(reason)
@@ -380,7 +389,7 @@ export class StaffConsultationWorkflowController {
     );
   }
 
-  @Post('requests/:id/cancel')
+  @Post(['admin/consultations/requests/:id/cancel', 'staff/consultations/:id/cancel'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Cancel a consultation request with a reason' })
   @ApiZodBody(reason)
@@ -399,7 +408,7 @@ export class StaffConsultationWorkflowController {
     );
   }
 
-  @Post('requests/:id/complete')
+  @Post(['admin/consultations/requests/:id/complete', 'staff/consultations/:id/complete'])
   @HttpCode(200)
   @ApiOperation({ summary: 'Mark a paid and accepted consultation completed' })
   @ApiZodBody(reason)
