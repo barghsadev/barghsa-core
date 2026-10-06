@@ -69,6 +69,51 @@ beforeEach(() => {
 afterAll(async () => {
   await http?.close();
 });
+async function actualDraft(restore: boolean | null = null) {
+  await http.pool.query(
+    `INSERT INTO products(type,system_key,title,status,price) VALUES('electricity','green','{}','active',100000) ON CONFLICT(system_key) DO UPDATE SET status='active',price=100000`
+  );
+  const provinceId = (
+    await http.pool.query('INSERT INTO provinces(name_fa,name_en) VALUES($1,$1) RETURNING id', [
+      randomUUID(),
+    ])
+  ).rows[0].id;
+  const cityId = (
+    await http.pool.query(
+      "INSERT INTO cities(province_id,name_fa,name_en) VALUES($1,'شهر','City') RETURNING id",
+      [provinceId]
+    )
+  ).rows[0].id;
+  const code = 'ORPHAN-' + randomUUID();
+  let giftId: string | null = null;
+  if (restore !== null)
+    giftId = (
+      await http.pool.query(
+        "INSERT INTO gift_codes(code,discount_type,discount_value,restore_on_cancel,restore_after_payment,created_by) VALUES($1,'fixed_irr',100,$2,false,'raw-reviewer') RETURNING id",
+        [code, restore]
+      )
+    ).rows[0].id;
+  const response = await fetch(http.base + '/api/orders', {
+    method: 'POST',
+    headers: headers['raw-buyer']!,
+    body: JSON.stringify({
+      profileId: profile,
+      productId: product,
+      orderType: 'electricity',
+      address: {
+        provinceId,
+        cityId,
+        fullAddress: 'PRIVATE generic draft address',
+        postalCode: '1234567890',
+      },
+      ...(giftId ? { giftCode: code } : {}),
+    }),
+  });
+  expect(response.status, http.logs()).toBe(201);
+  const id = ((await response.json()) as { id: string }).id;
+  expect((await snapshot(id)).root.status).toBe('DRAFT');
+  return { id, giftId };
+}
 async function seed(targetProfile = profile) {
   const id = randomUUID();
   await http.pool.query(
@@ -378,4 +423,194 @@ it('serializes association creation with the profile-first terminal decision', a
   }
   const command = await review(id);
   expect((await send(id, '/draft-terminal', command)).status, http.logs()).toBe(200);
+});
+
+for (const action of ['reject', 'cancel'] as const)
+  for (const restore of [null, false, true])
+    it(`terminates an actual generic DRAFT with ${action} and gift restore=${restore} under its captured unpaid policy`, async () => {
+      const { id, giftId } = await actualDraft(restore),
+        before = await snapshot(id);
+      const queued = await send('drafts', '');
+      expect(queued.status, http.logs()).toBe(200);
+      expect(
+        ((await queued.json()) as { drafts: { orderId: string }[] }).drafts.map((r) => r.orderId)
+      ).toContain(id);
+      const preview = await send(id, '/draft-terminal/review', {
+        action,
+        reason: 'Reviewed generic draft',
+      });
+      expect(preview.status, http.logs()).toBe(200);
+      const data = (await preview.json()) as { hash: string; data: { gift: unknown } };
+      expect(JSON.stringify(data)).not.toContain('PRIVATE');
+      expect(data.data.gift).toEqual(
+        giftId
+          ? {
+              giftCodeId: giftId,
+              redemptionId: expect.any(String),
+              status: 'consumed',
+              restoreOnCancel: restore,
+              outcome: restore ? 'release' : 'retain',
+            }
+          : null
+      );
+      const body = {
+        action,
+        reason: 'Reviewed generic draft',
+        expectedReviewHash: data.hash,
+        idempotencyKey: randomUUID(),
+      };
+      const responses = await Promise.all([
+        send(id, '/draft-terminal', body),
+        send(id, '/draft-terminal', body),
+      ]);
+      expect(
+        responses.map((r) => r.status),
+        http.logs()
+      ).toEqual([200, 200]);
+      expect(await responses[0]!.json()).toEqual(await responses[1]!.json());
+      const after = await snapshot(id);
+      expect(after.wizard).toEqual(before.wizard);
+      expect(after.contracts).toBeNull();
+      expect(after.invoices).toBeNull();
+      expect(after.draft).toMatchObject({
+        status: action === 'reject' ? 'rejected' : 'cancelled',
+        submitted_at: null,
+        submitted_by: null,
+        pricing_snapshot: null,
+        period_start: null,
+        period_end: null,
+      });
+      expect(after.root).toMatchObject({ status: 'CANCELLED', gift_code_id: giftId });
+      const redemptions = (
+        await http.pool.query('SELECT * FROM gift_code_redemptions WHERE order_id=$1', [id])
+      ).rows;
+      if (giftId) {
+        expect(redemptions).toHaveLength(1);
+        expect(redemptions[0]).toMatchObject({
+          profile_id: profile,
+          gift_code_id: giftId,
+          status: restore ? 'released' : 'consumed',
+        });
+        expect(redemptions[0].restored_at !== null).toBe(restore);
+        const released = (
+          await http.pool.query(
+            "SELECT metadata FROM audit_log WHERE metadata::jsonb->>'orderId'=$1 AND metadata::jsonb->>'action'='released'",
+            [id]
+          )
+        ).rows;
+        expect(released).toHaveLength(restore ? 1 : 0);
+        await expect(
+          http.pool.query('DELETE FROM gift_code_redemptions WHERE order_id=$1', [id])
+        ).rejects.toMatchObject({ code: '23514' });
+        await expect(
+          http.pool.query('UPDATE gift_code_redemptions SET status=$2 WHERE order_id=$1', [
+            id,
+            restore ? 'consumed' : 'released',
+          ])
+        ).rejects.toMatchObject({ code: '23514' });
+      } else expect(redemptions).toHaveLength(0);
+      await expectCoreAudit(http.pool, 'electricity.draft.terminated', id, {
+        entity: 'electricity_order',
+        fromState: 'draft',
+        toState: action === 'reject' ? 'rejected' : 'cancelled',
+        reason: body.reason,
+        actor: 'raw-reviewer',
+        context: 'staff',
+      });
+    });
+it('invalidates a captured orphan decision when gift policy changes, then honors the fresh policy', async () => {
+  const { id, giftId } = await actualDraft(true),
+    command = await review(id);
+  await http.pool.query('UPDATE gift_codes SET restore_on_cancel=false WHERE id=$1', [giftId]);
+  const before = await snapshot(id);
+  expect((await send(id, '/draft-terminal', command)).status).toBe(409);
+  expect(await snapshot(id)).toEqual(before);
+  expect(
+    (await http.pool.query('SELECT status FROM gift_code_redemptions WHERE order_id=$1', [id]))
+      .rows[0].status
+  ).toBe('consumed');
+  const fresh = await review(id);
+  expect((await send(id, '/draft-terminal', fresh)).status, http.logs()).toBe(200);
+  expect(
+    (await http.pool.query('SELECT status FROM gift_code_redemptions WHERE order_id=$1', [id]))
+      .rows[0].status
+  ).toBe('consumed');
+});
+it('rolls back orphan gift release and its audit when terminal audit fails, then retries once', async () => {
+  const { id } = await actualDraft(true),
+    command = await review(id),
+    before = await snapshot(id);
+  const giftsBefore = (
+    await http.pool.query('SELECT * FROM gift_code_redemptions WHERE order_id=$1', [id])
+  ).rows;
+  await http.pool.query(
+    `CREATE FUNCTION fail_orphan_gift_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='electricity.draft.terminated' THEN RAISE EXCEPTION 'audit unavailable'; END IF; RETURN NEW; END $$; CREATE TRIGGER fail_orphan_gift_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_orphan_gift_audit()`
+  );
+  try {
+    expect((await send(id, '/draft-terminal', command)).status).toBe(500);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_orphan_gift_audit ON audit_log; DROP FUNCTION fail_orphan_gift_audit()'
+    );
+  }
+  expect(await snapshot(id)).toEqual(before);
+  expect(
+    (await http.pool.query('SELECT * FROM gift_code_redemptions WHERE order_id=$1', [id])).rows
+  ).toEqual(giftsBefore);
+  expect((await send(id, '/draft-terminal', command)).status, http.logs()).toBe(200);
+  expect((await send(id, '/draft-terminal', command)).status).toBe(200);
+});
+it('retains an already released gift without releasing or auditing it again', async () => {
+  const { id } = await actualDraft(true);
+  await http.pool.query(
+    "UPDATE gift_code_redemptions SET status='released',restored_at=clock_timestamp() WHERE order_id=$1",
+    [id]
+  );
+  const giftsBefore = (
+    await http.pool.query('SELECT * FROM gift_code_redemptions WHERE order_id=$1', [id])
+  ).rows;
+  const response = await send(id, '/draft-terminal/review', {
+    action: 'reject',
+    reason: 'Already restored gift',
+  });
+  expect(response.status, http.logs()).toBe(200);
+  const preview = (await response.json()) as { hash: string; data: { gift: { outcome: string } } };
+  expect(preview.data.gift.outcome).toBe('already_released');
+  expect(
+    (
+      await send(id, '/draft-terminal', {
+        action: 'reject',
+        reason: 'Already restored gift',
+        expectedReviewHash: preview.hash,
+        idempotencyKey: randomUUID(),
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await http.pool.query('SELECT * FROM gift_code_redemptions WHERE order_id=$1', [id])).rows
+  ).toEqual(giftsBefore);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE metadata::jsonb->>'orderId'=$1 AND metadata::jsonb->>'action'='released'",
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+});
+it('excludes a conflicting gift association and refuses its captured decision without mutation', async () => {
+  const { id, giftId } = await actualDraft(true),
+    command = await review(id);
+  await http.pool.query('UPDATE orders SET gift_code_id=NULL WHERE id=$1', [id]);
+  const before = await snapshot(id);
+  const queue = await send('drafts', '');
+  expect(queue.status, http.logs()).toBe(200);
+  expect(
+    ((await queue.json()) as { drafts: { orderId: string }[] }).drafts.map((r) => r.orderId)
+  ).not.toContain(id);
+  expect((await send(id, '/draft-terminal', command)).status).toBe(409);
+  expect(await snapshot(id)).toEqual(before);
+  await http.pool.query('UPDATE orders SET gift_code_id=$2 WHERE id=$1', [id, giftId]);
+  expect((await send(id, '/draft-terminal', await review(id))).status, http.logs()).toBe(200);
 });

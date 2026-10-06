@@ -5,9 +5,13 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
-  'electricity.rawDraft.title': 'پیش\u200cنویس\u200cهای ناقص قدیمی',
+  'electricity.rawDraft.title': 'پیش\u200cنویس\u200cهای ارسال\u200cنشده',
   'electricity.rawDraft.description':
-    'فقط رکوردهای ارسال\u200cنشدهٔ سفارش بدون سابقهٔ تجاری یا پرداخت نمایش داده می\u200cشوند. اطلاعات فرم ذخیره\u200cشدهٔ مشتری خصوصی می\u200cماند.',
+    'سفارش\u200cهای ارسال\u200cنشده بدون قرارداد، صورت\u200cحساب یا پرداخت نمایش داده می\u200cشوند. تصمیم دربارهٔ کد هدیه طبق سیاست آن بررسی می\u200cشود. اطلاعات فرم ذخیره\u200cشدهٔ مشتری خصوصی می\u200cماند.',
+  'electricity.rawDraft.gift': 'کد هدیه',
+  'electricity.rawDraft.gift.release': 'سهم استفاده از کد هدیه بازگردانده می\u200cشود.',
+  'electricity.rawDraft.gift.retain': 'طبق سیاست کد هدیه، سهم استفاده بازگردانده نمی\u200cشود.',
+  'electricity.rawDraft.gift.already_released': 'سهم استفاده از کد هدیه قبلاً بازگردانده شده است.',
   'electricity.rawDraft.empty': 'پیش\u200cنویس ناقص قابل رسیدگی وجود ندارد.',
   'electricity.rawDraft.order': 'شناسه سفارش',
   'electricity.rawDraft.profile': 'شناسه پرونده',
@@ -1796,9 +1800,13 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
-  'electricity.rawDraft.title': 'Incomplete legacy drafts',
+  'electricity.rawDraft.title': 'Unsubmitted order drafts',
   'electricity.rawDraft.description':
-    'Only unsubmitted order records without business or payment history are shown. Saved customer form contents remain private.',
+    'Unsubmitted orders without contracts, invoices or payments are shown. Gift-code outcomes are reviewed under their policy. Saved customer form contents remain private.',
+  'electricity.rawDraft.gift': 'Gift code',
+  'electricity.rawDraft.gift.release': 'The gift-code usage slot will be restored.',
+  'electricity.rawDraft.gift.retain': 'The gift-code policy retains the usage slot.',
+  'electricity.rawDraft.gift.already_released': 'The gift-code usage slot was already restored.',
   'electricity.rawDraft.empty': 'No incomplete drafts need attention.',
   'electricity.rawDraft.order': 'Order ID',
   'electricity.rawDraft.profile': 'Profile ID',

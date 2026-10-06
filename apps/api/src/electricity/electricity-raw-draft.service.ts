@@ -19,12 +19,13 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { GiftCodeService } from '../admin/gift-code.service.js';
 
 export type DraftTerminalAction = 'reject' | 'cancel';
 const unlinked = `NOT EXISTS(SELECT 1 FROM contracts WHERE order_id=e.id)
  AND NOT EXISTS(SELECT 1 FROM electricity_contracts WHERE order_id=e.id)
  AND NOT EXISTS(SELECT 1 FROM invoices WHERE order_id=e.id)
- AND NOT EXISTS(SELECT 1 FROM gift_code_redemptions WHERE order_id=e.id)
+ AND raw_electricity_draft_gift_consistent(e.id,e.profile_id,o.gift_code_id)
  AND NOT EXISTS(SELECT 1 FROM refund_obligations WHERE order_id=e.id)
  AND NOT EXISTS(SELECT 1 FROM electricity_order_submissions WHERE order_id=e.id)
  AND NOT EXISTS(SELECT 1 FROM wallet_transactions WHERE type='payment' AND lower(ref_id)=e.id::text)
@@ -37,14 +38,24 @@ interface RawDraft {
   status: string;
   order_status: string;
   order_type: string;
-  has_gift: boolean;
+  gift_code_id: string | null;
+  gift: {
+    redemptionId: string;
+    giftCodeId: string;
+    status: string;
+    restoreOnCancel: boolean;
+    outcome: 'release' | 'retain' | 'already_released';
+  } | null;
   unlinked: boolean;
   fingerprint_source: string;
   updated_at: Date;
 }
 @Injectable()
 export class ElectricityRawDraftService {
-  constructor(private readonly reviews: ReviewSnapshotService) {}
+  constructor(
+    private readonly reviews: ReviewSnapshotService,
+    private readonly gifts: GiftCodeService
+  ) {}
   private async staffContext(client: PoolClient, actor: ContractActor) {
     const row = (
       await client.query<{ operating_context: string }>(
@@ -83,7 +94,7 @@ export class ElectricityRawDraftService {
           created_at: Date;
           updated_at: Date;
         }>(
-          `SELECT e.id,e.profile_id,e.mode,e.created_at,e.updated_at FROM electricity_orders e JOIN orders o ON o.id=e.id JOIN profiles p ON p.id=e.profile_id WHERE e.status='draft' AND o.status='PENDING' AND o.order_type='electricity' AND o.profile_id=e.profile_id AND o.gift_code_id IS NULL AND NOT p.archived AND ${unlinked} AND ($1::timestamptz IS NULL OR (e.created_at,e.id)>($1::timestamptz,$2::uuid)) ORDER BY e.created_at,e.id LIMIT 51`,
+          `SELECT e.id,e.profile_id,e.mode,e.created_at,e.updated_at FROM electricity_orders e JOIN orders o ON o.id=e.id JOIN profiles p ON p.id=e.profile_id WHERE e.status='draft' AND o.status IN ('DRAFT','PENDING') AND o.order_type='electricity' AND o.profile_id=e.profile_id AND NOT p.archived AND ${unlinked} AND ($1::timestamptz IS NULL OR (e.created_at,e.id)>($1::timestamptz,$2::uuid)) ORDER BY e.created_at,e.id LIMIT 51`,
           [anchor?.created_at ?? null, after ?? null]
         )
       ).rows;
@@ -124,7 +135,7 @@ export class ElectricityRawDraftService {
   ) {
     const row = (
       await client.query<RawDraft>(
-        `SELECT e.id,e.profile_id,o.profile_id AS order_profile_id,e.mode,e.status,o.status AS order_status,o.order_type,o.gift_code_id IS NOT NULL AS has_gift,(${unlinked}) AS unlinked,(to_jsonb(e)||jsonb_build_object('order',to_jsonb(o),'lines',COALESCE((SELECT jsonb_agg(to_jsonb(l) ORDER BY l.id) FROM electricity_order_lines l WHERE l.order_id=e.id),'[]'::jsonb)))::text AS fingerprint_source,e.updated_at FROM electricity_orders e JOIN orders o ON o.id=e.id WHERE e.id=$1 FOR ${lock} OF e,o`,
+        `SELECT e.id,e.profile_id,o.profile_id AS order_profile_id,e.mode,e.status,o.status AS order_status,o.order_type,o.gift_code_id,(${unlinked}) AS unlinked,(to_jsonb(e)||jsonb_build_object('order',to_jsonb(o),'lines',COALESCE((SELECT jsonb_agg(to_jsonb(l) ORDER BY l.id) FROM electricity_order_lines l WHERE l.order_id=e.id),'[]'::jsonb)))::text AS fingerprint_source,e.updated_at FROM electricity_orders e JOIN orders o ON o.id=e.id WHERE e.id=$1 FOR ${lock} OF e,o`,
         [id]
       )
     ).rows[0];
@@ -135,10 +146,40 @@ export class ElectricityRawDraftService {
       row.order_type !== 'electricity'
     )
       throw new NotFoundException('Draft order not found');
-    if (row.status !== 'draft' || row.order_status !== 'PENDING' || row.has_gift || !row.unlinked)
+    if (row.status !== 'draft' || !['DRAFT', 'PENDING'].includes(row.order_status) || !row.unlinked)
       throw new ConflictException(
         'Draft has business associations; use its reviewed contract workflow'
       );
+    row.gift = null;
+    if (row.gift_code_id) {
+      const gift = (
+        await client.query<{
+          id: string;
+          gift_code_id: string;
+          status: string;
+          restore_on_cancel: boolean;
+          source: string;
+        }>(
+          `SELECT r.id,r.gift_code_id,r.status,g.restore_on_cancel,(to_jsonb(r)||jsonb_build_object('policy',jsonb_build_object('id',g.id,'restoreOnCancel',g.restore_on_cancel)))::text AS source FROM gift_code_redemptions r JOIN gift_codes g ON g.id=r.gift_code_id WHERE r.order_id=$1 AND r.profile_id=$2 AND r.gift_code_id=$3 FOR ${lock} OF r NOWAIT FOR SHARE OF g NOWAIT`,
+          [id, row.profile_id, row.gift_code_id]
+        )
+      ).rows;
+      if (gift.length !== 1) throw new ConflictException('Draft gift association changed');
+      const saved = gift[0]!;
+      row.fingerprint_source += saved.source;
+      row.gift = {
+        redemptionId: saved.id,
+        giftCodeId: saved.gift_code_id,
+        status: saved.status,
+        restoreOnCancel: saved.restore_on_cancel,
+        outcome:
+          saved.status === 'released'
+            ? 'already_released'
+            : saved.restore_on_cancel
+              ? 'release'
+              : 'retain',
+      };
+    }
     return row;
   }
   private snapshot(row: RawDraft, action: DraftTerminalAction, reason: string) {
@@ -160,6 +201,7 @@ export class ElectricityRawDraftService {
         collectsPayment: false,
         refundAmount: '0',
         changesSavedWizardProgress: false,
+        gift: row.gift,
       }
     );
   }
@@ -201,10 +243,18 @@ export class ElectricityRawDraftService {
               this.reviews.assertConfirmed(review, input.expectedReviewHash);
               const status = input.action === 'reject' ? 'rejected' : 'cancelled';
               const order = await client.query(
-                "UPDATE orders SET status='CANCELLED',updated_at=clock_timestamp() WHERE id=$1 AND status='PENDING' RETURNING id",
+                "UPDATE orders SET status='CANCELLED',updated_at=clock_timestamp() WHERE id=$1 AND status IN ('DRAFT','PENDING') RETURNING id",
                 [id]
               );
               if (order.rowCount !== 1) throw new ConflictException('Draft order changed');
+              if (row.gift) {
+                const { released } = await this.gifts.releaseByOrder(id, client, {
+                  actorUserId: actor.userId,
+                  ip,
+                });
+                if (released !== (row.gift.outcome === 'release' ? 1 : 0))
+                  throw new ConflictException('Draft gift outcome changed');
+              }
               const draft = await client.query(
                 "UPDATE electricity_orders SET status=$2,updated_at=clock_timestamp() WHERE id=$1 AND status='draft' RETURNING id",
                 [id, status]

@@ -15,6 +15,32 @@ interface Draft {
   updatedAt: string;
 }
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function giftOutcome(value: unknown) {
+  if (value === undefined || value === null) return null;
+  if (
+    !value ||
+    typeof value !== 'object' ||
+    !('giftCodeId' in value) ||
+    typeof value.giftCodeId !== 'string' ||
+    !uuid.test(value.giftCodeId) ||
+    !('redemptionId' in value) ||
+    typeof value.redemptionId !== 'string' ||
+    !uuid.test(value.redemptionId) ||
+    !('status' in value) ||
+    !['consumed', 'released'].includes(String(value.status)) ||
+    !('restoreOnCancel' in value) ||
+    typeof value.restoreOnCancel !== 'boolean' ||
+    !('outcome' in value) ||
+    value.outcome !==
+      (value.status === 'released'
+        ? 'already_released'
+        : value.restoreOnCancel
+          ? 'release'
+          : 'retain')
+  )
+    throw new Error('Unbound draft gift outcome');
+  return { id: value.giftCodeId, outcome: String(value.outcome) };
+}
 function queue(value: unknown) {
   if (
     !value ||
@@ -71,7 +97,9 @@ function Queue() {
       null
     ),
     [reason, setReason] = useState(''),
-    [action, setAction] = useState<(TeamAction & { draft: Draft; reason: string }) | null>(null),
+    [action, setAction] = useState<
+      (TeamAction & { draft: Draft; reason: string; gift: ReturnType<typeof giftOutcome> }) | null
+    >(null),
     [busy, setBusy] = useState(false),
     [invalid, setInvalid] = useState(false);
   const live = useRef(true),
@@ -180,10 +208,12 @@ function Queue() {
         raw.data.changesSavedWizardProgress !== false
       )
         throw new Error('Unbound draft review');
+      const gift = giftOutcome('gift' in raw.data ? raw.data.gift : null);
       if (live.current)
         setAction({
           draft: owned.row,
           reason: explanation,
+          gift,
           title: copy(owned.action),
           description: copy('summary'),
           path: '/api/staff/electricity/orders/' + owned.row.id + '/draft-terminal',
@@ -326,6 +356,15 @@ function Queue() {
                     <dt>{copy('reason')}</dt>
                     <dd className="whitespace-pre-wrap break-words">{action.reason}</dd>
                   </div>
+                  {action.gift ? (
+                    <div>
+                      <dt>{copy('gift')}</dt>
+                      <dd className="break-all" dir="ltr">
+                        {action.gift.id}
+                      </dd>
+                      <dd>{copy('gift.' + action.gift.outcome)}</dd>
+                    </div>
+                  ) : null}
                 </dl>
               }
               onClose={() => setAction(null)}

@@ -47,6 +47,59 @@ function preview(action = 'reject') {
   };
 }
 const json = (v: unknown) => new Response(JSON.stringify(v), { status: 200 });
+for (const [status, restoreOnCancel, outcome, copy] of [
+  ['consumed', true, 'release', 'The gift-code usage slot will be restored.'],
+  ['consumed', false, 'retain', 'The gift-code policy retains the usage slot.'],
+  ['released', true, 'already_released', 'The gift-code usage slot was already restored.'],
+] as const)
+  it('discloses the exact captured gift outcome ' + outcome, async () => {
+    const p = {
+      ...preview(),
+      data: {
+        ...preview().data,
+        gift: { giftCodeId: orderId, redemptionId: profileId, status, restoreOnCancel, outcome },
+      },
+    };
+    const fetcher = vi.fn(async (input: RequestInfo | URL) =>
+      String(input).endsWith('/drafts') ? json(queue) : json(p)
+    );
+    vi.stubGlobal('fetch', fetcher);
+    await open();
+    await review();
+    const dialog = document.body.querySelector('[role=dialog]')!;
+    expect(dialog.textContent).toContain(copy);
+    expect(dialog.textContent).toContain(orderId);
+    expect(fetcher.mock.calls.filter(([u]) => String(u).endsWith('/draft-terminal'))).toHaveLength(
+      0
+    );
+  });
+it('refuses a gift outcome that contradicts its captured policy', async () => {
+  const p = {
+    ...preview(),
+    data: {
+      ...preview().data,
+      gift: {
+        giftCodeId: orderId,
+        redemptionId: profileId,
+        status: 'consumed',
+        restoreOnCancel: false,
+        outcome: 'release',
+      },
+    },
+  };
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo | URL) =>
+      String(input).endsWith('/drafts') ? json(queue) : json(p)
+    )
+  );
+  await open();
+  await review();
+  expect(document.body.querySelector('[role=dialog]')).toBeNull();
+  expect(container.querySelector('[role=alert]')?.textContent).toContain(
+    'Could not load or review'
+  );
+});
 beforeEach(() => {
   state.actor = 'reviewer';
   state.locale = 'en';

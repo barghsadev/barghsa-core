@@ -46,6 +46,13 @@ for (const locale of ['en', 'fa'] as const)
               collectsPayment: false,
               refundAmount: '0',
               changesSavedWizardProgress: false,
+              gift: {
+                giftCodeId: '86000000-0000-4000-8000-000000000001',
+                redemptionId: '87000000-0000-4000-8000-000000000001',
+                status: 'consumed',
+                restoreOnCancel: true,
+                outcome: 'release',
+              },
             },
           },
         });
@@ -75,6 +82,8 @@ for (const locale of ['en', 'fa'] as const)
     await expect(dialog).toContainText(orderId);
     await expect(dialog).toContainText(profileId);
     await expect(dialog).toContainText('Keyboard reviewed reason');
+    await expect(dialog).toContainText(copy('gift.release'));
+    await expect(dialog).toContainText('86000000-0000-4000-8000-000000000001');
     expect(writes).toHaveLength(0);
     expect(
       (
@@ -89,9 +98,20 @@ for (const locale of ['en', 'fa'] as const)
     await expect(dialog).toContainText('Keyboard reviewed reason');
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(details.getByRole('table')).toHaveCount(0);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
-      true
-    );
+    const overflow = await page.evaluate(() => ({
+      width: innerWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      overflowing: [...document.querySelectorAll('*')]
+        .map((el) => ({
+          tag: el.tagName,
+          text: el.textContent?.slice(0, 80),
+          className: el.className,
+          left: el.getBoundingClientRect().left,
+          right: el.getBoundingClientRect().right,
+        }))
+        .filter((el) => el.left < 0 || el.right > innerWidth),
+    }));
+    expect(overflow.scrollWidth <= overflow.width, JSON.stringify(overflow)).toBe(true);
     await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
     await expect(dialog).toHaveCount(0);
     expect(writes).toHaveLength(1);

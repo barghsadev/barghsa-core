@@ -1226,6 +1226,13 @@
       "when": 1791331202265,
       "tag": "0254_electricity_reviewed_rejection",
       "breakpoints": true
+    },
+    {
+      "idx": 255,
+      "version": "7",
+      "when": 1791331202266,
+      "tag": "0255_electricity_orphan_draft_gifts",
+      "breakpoints": true
     }
   ]
 }

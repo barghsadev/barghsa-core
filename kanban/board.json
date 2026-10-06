@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T23:24:06.117737+00:00",
+  "updated": "2026-10-06T23:31:18.422339+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17309,7 +17309,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/migrate.baseline.test.ts",
@@ -17492,6 +17492,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -43610,7 +43618,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f6c9fa5cc025f03f1d992d8af592992902de680e418a89bd3e6be80736fe704c"
+              "sha256": "e1ecbef66ec2e1d659f616471aedb15f6af2b3d2ddfb3da61678799c5584b9bd"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -43753,6 +43761,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/renewal-proof.json",
             "scope": "Existing controller/test AST, module/page wiring, old translations/OpenAPI and complete old journal prefix are preserved. Only additive raw-draft routes/component and guarded253 terminal associations change runtime.271 related current cases and exact source/output proof renew prior effective criteria. Incomplete linked/funded drafts and advanced rejection remain partial."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -44112,7 +44128,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -44136,7 +44152,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f6c9fa5cc025f03f1d992d8af592992902de680e418a89bd3e6be80736fe704c"
+              "sha256": "e1ecbef66ec2e1d659f616471aedb15f6af2b3d2ddfb3da61678799c5584b9bd"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -44429,6 +44445,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
             "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json",
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -44788,7 +44813,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -44812,7 +44837,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f6c9fa5cc025f03f1d992d8af592992902de680e418a89bd3e6be80736fe704c"
+              "sha256": "e1ecbef66ec2e1d659f616471aedb15f6af2b3d2ddfb3da61678799c5584b9bd"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -45105,6 +45130,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
             "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json",
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -45599,7 +45633,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -45881,6 +45915,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -46078,7 +46120,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46360,6 +46402,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -46557,7 +46607,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46839,6 +46889,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -47037,7 +47095,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47319,6 +47377,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -47476,7 +47542,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47758,6 +47824,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -47915,7 +47989,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48197,6 +48271,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -48354,7 +48436,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48636,6 +48718,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -48793,7 +48883,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49075,6 +49165,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -49232,7 +49330,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49514,6 +49612,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -49671,7 +49777,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49953,6 +50059,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -50111,7 +50225,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50393,6 +50507,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -50550,7 +50672,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50832,6 +50954,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -50990,7 +51120,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51272,6 +51402,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -51429,7 +51567,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51711,6 +51849,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -51868,7 +52014,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52150,6 +52296,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -52307,7 +52461,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52589,6 +52743,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -52746,7 +52908,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53028,6 +53190,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -53185,7 +53355,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53467,6 +53637,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -53625,7 +53803,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53907,6 +54085,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -54064,7 +54250,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54346,6 +54532,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -54503,7 +54697,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54785,6 +54979,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -54942,7 +55144,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55224,6 +55426,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -55381,7 +55591,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55663,6 +55873,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -55820,7 +56038,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56102,6 +56320,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -56260,7 +56486,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56542,6 +56768,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -56700,7 +56934,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56982,6 +57216,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -57140,7 +57382,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -57422,6 +57664,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -57579,7 +57829,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -57861,6 +58111,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -58018,7 +58276,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -58300,6 +58558,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -58457,7 +58723,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -58739,6 +59005,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -58785,7 +59059,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -58933,6 +59207,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -58978,7 +59260,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -59126,6 +59408,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -59172,7 +59462,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -59320,6 +59610,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -90367,7 +90665,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Finish generic orphan electricity drafts, including actual DRAFT records and financially associated records without a contract. Incomplete versioned linked staff intake is accepted through the existing contract screen and reviewed terminal engine. Inspect unversioned links separately. Pure saved wizard disposition awaits the owner-only discard decision; other actors private progress remains untouched."
+        "Finish orphan electricity records with invoices, payments or refund obligations and unversioned linked drafts. Actual generic DRAFT and legacy PENDING unfunded orders, including consistent consumed/released gift ledgers under their captured unpaid-cancellation policy, are accepted. Pure saved wizard disposition awaits the owner-only discard decision; other actors private progress remains untouched."
       ],
       "owner": null,
       "depends_on": [],
@@ -90383,7 +90681,8 @@
           "release-0.2-electricity-terminal-http",
           "release-0.2-electricity-raw-draft-terminal",
           "release-0.2-electricity-reviewed-rejection",
-          "release-0.2-electricity-linked-intake"
+          "release-0.2-electricity-linked-intake",
+          "release-0.2-electricity-orphan-draft-gifts"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-lifecycle-and-pre-active-rejection-with-exact-remaining-flows",
@@ -90487,23 +90786,23 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-raw-draft.service.ts",
-              "sha256": "908b6e72dab76058d944b61a36acef1ee96f670ebb404c0eb333d2f93c86ed1a"
+              "sha256": "465e4a2dc20d7606d9c8b03347747841dbeb98464a50119ef18d0728e29f2587"
             },
             {
               "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
-              "sha256": "5b79274b5163ab80109c055b1c4a20a38c2f40573f40a0246a32a34b8d3c5ea1"
+              "sha256": "9b1ecaa189b2e6e78a40f23faf8a958e7790fe4a8fc2c3e9b27014d30f978a66"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "0e7f5589896ea9e2acf4e4491286ca85601aa114058ac84c349cfed2a472c1f9"
+              "sha256": "0567a17d388860ee0ffc19f88116ed02a1a537358fba2b83c7598146f9010f0e"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "d64a9a932470431961b0f9504252f5b889ab4e277ff2f7efa81f62a668c32bbd"
+              "sha256": "2d6e0cdc57a6b0c990af6de2f0759fdc39a64565aa752425d885a3b4c6dbd2c7"
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
-              "sha256": "f901901d9568f52aadbd564c6e17aefd58f840b61592900132e2caa6d34e31b8"
+              "sha256": "3235448c57b5205f89654ee83f79e53868cddd3ad87b15e65db1e7456db0b48f"
             },
             {
               "path": "packages/db/drizzle/production/0253_electricity_raw_draft_terminal.sql",
@@ -90511,7 +90810,7 @@
             },
             {
               "path": "packages/db/src/electricity-raw-draft-terminal.migrated.test.ts",
-              "sha256": "937533c78862a306793c139ff838b99585eb09ec27df9b87860cc3a24c4ccb2c"
+              "sha256": "b92451d3e8d5c5283fde01d4ddc2c7a9efc9623b6e9ea62f0487bc43d20c67d0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -90523,11 +90822,11 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f6c9fa5cc025f03f1d992d8af592992902de680e418a89bd3e6be80736fe704c"
+              "sha256": "e1ecbef66ec2e1d659f616471aedb15f6af2b3d2ddfb3da61678799c5584b9bd"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
@@ -90719,7 +91018,7 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/i18n-current.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/accepted-outcomes.json"
           ],
-          "criterion_result": "Real submitted/changes_requested/approved rejection with paid/unpaid snapshots, reason, one receipt/event and wallet refund completion is verified. Strict confirmation binds commercial state; shared policy/profile locks and fresh guard checks prevent stale valid confirmation bypass. Expand-only database rejection preserves signed/publication/acceptance/version evidence and saving rules, with rejected business record immutability. Full task remains partial for the listed draft, financial approval and full state-matrix flows. Direct HTTP rejection of Accepted/AwaitingSignature/Signed electricity contracts is accepted with both unpaid and paid ledgers, exact mandatory wallet return and retained signing/version/document history. The complete linked pre-active cancellation matrix is accepted across8 state pairs and2 payment states using existing immutable intents, stale fingerprint/version rejection, permissions/reason gates and concurrent once-only execution. Nullable retained draft submission timestamps now return null with35 related HTTP/UI outcomes and accurate client type. Raw/incomplete/private draft handling and second-approval/multi-invoice rejection remain explicit implementation gaps; full task stays partial. Raw unsubmitted/unlinked actual order records now have guarded reject/cancel routes and staff controls, with no invented submitted facts or financial records.271 related cases verify retained wizard privacy, exact reason/review fingerprint/idempotency, live authority, mandatory audit rollback, terminal history and future-association guards, production migration and affected consumers. Incomplete linked/funded drafts, saved wizard effective acceptance and advanced rejection remain open. Reviewed all-invoice rejection is accepted with the immutable target, second approval, exact full wallet return and current locked financial/profile facts.16 state/payment matrix cases plus3 boundary/legacy cases pass; signed/version/publication/document history retained, mandatory audit rollback and unknown concurrent replay verified.324 distinct related cases and applicable checks pass. Full lifecycle remains partial for orphan financial drafts, incomplete staff intake presentation and saved wizard acceptance. Incomplete versioned linked staff intake presentation is accepted: safe eligibility projection and existing contract screen reach the reviewed rejection editor without invented periods/pricing/invoices.100 related outcomes pass; generic orphan drafts, unversioned links and private wizard disposition remain open.",
+          "criterion_result": "Real submitted/changes_requested/approved rejection with paid/unpaid snapshots, reason, one receipt/event and wallet refund completion is verified. Strict confirmation binds commercial state; shared policy/profile locks and fresh guard checks prevent stale valid confirmation bypass. Expand-only database rejection preserves signed/publication/acceptance/version evidence and saving rules, with rejected business record immutability. Full task remains partial for the listed draft, financial approval and full state-matrix flows. Direct HTTP rejection of Accepted/AwaitingSignature/Signed electricity contracts is accepted with both unpaid and paid ledgers, exact mandatory wallet return and retained signing/version/document history. The complete linked pre-active cancellation matrix is accepted across8 state pairs and2 payment states using existing immutable intents, stale fingerprint/version rejection, permissions/reason gates and concurrent once-only execution. Nullable retained draft submission timestamps now return null with35 related HTTP/UI outcomes and accurate client type. Raw/incomplete/private draft handling and second-approval/multi-invoice rejection remain explicit implementation gaps; full task stays partial. Raw unsubmitted/unlinked actual order records now have guarded reject/cancel routes and staff controls, with no invented submitted facts or financial records.271 related cases verify retained wizard privacy, exact reason/review fingerprint/idempotency, live authority, mandatory audit rollback, terminal history and future-association guards, production migration and affected consumers. Incomplete linked/funded drafts, saved wizard effective acceptance and advanced rejection remain open. Reviewed all-invoice rejection is accepted with the immutable target, second approval, exact full wallet return and current locked financial/profile facts.16 state/payment matrix cases plus3 boundary/legacy cases pass; signed/version/publication/document history retained, mandatory audit rollback and unknown concurrent replay verified.324 distinct related cases and applicable checks pass. Full lifecycle remains partial for orphan financial drafts, incomplete staff intake presentation and saved wizard acceptance. Incomplete versioned linked staff intake presentation is accepted: safe eligibility projection and existing contract screen reach the reviewed rejection editor without invented periods/pricing/invoices.100 related outcomes pass; generic orphan drafts, unversioned links and private wizard disposition remain open. Actual generic DRAFT creation and staff reject/cancel are accepted, including consumed/released gift ledgers and exact unpaid-cancellation policy disclosure. Existing gift service releases atomically; terminal order and gift history stay retained.205 distinct related cases pass across real API/database and production UI. Monetary orphan associations, unversioned linked drafts and private wizard acceptance remain open.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance",
           "submission_audit_renewal": {
             "base_commit": "ed058a6c37f6ee3692e2934d21e3456399705134",
@@ -90820,6 +91119,21 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
             "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-raw-draft.service.ts",
+              "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "apps/web/src/components/ElectricityRawDraftQueue.tsx",
+              "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
+              "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
+              "packages/db/src/electricity-raw-draft-terminal.migrated.test.ts",
+              "packages/i18n/src/app.ts",
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -103760,7 +104074,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f6c9fa5cc025f03f1d992d8af592992902de680e418a89bd3e6be80736fe704c"
+              "sha256": "e1ecbef66ec2e1d659f616471aedb15f6af2b3d2ddfb3da61678799c5584b9bd"
             }
           ],
           "checks": [
@@ -103933,6 +104247,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "scope": "Existing cancellation, finance, authorization and refund criteria renewed through current affected checks and exact source-bound proof. Default cancellation snapshot shape, old SQL history and original tests retained; new action only extends pre-active electricity rejection. Locked profile identity strengthened. No whole-task or milestone acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -104211,7 +104533,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "2a0b4841811ea98511e0c313e4b2dae33d1446af74227963e062977b84706f62"
+              "sha256": "006884837aba662c223b6fbc1ee53e8c1ab422ac395879fdf80164318431abb2"
             },
             {
               "path": "packages/db/src/audit-log-immutability-upgrade.migrated.test.ts",
@@ -104706,6 +105028,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake/renewal-proof.json",
             "scope": "No financial engine, writes, migration, policies, authorization guards, dependencies or localization source changed. Existing status financial computation and controller gates are byte-identical after removing additive visibility fields. Existing API test changes add10 lines only; old UI test bodies retained verbatim. Existing shared editor and exact captured command/receipt validation reused. One editor and action-specific remount preserve state isolation. Existing effective criteria retained with the100 affected outcomes; no unrelated acceptance inferred."
+          },
+          "orphan_draft_gift_renewal": {
+            "base_commit": "8b19477e891f946c635d42907dee374171bae9e2",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts/renewal-proof.json",
+            "scope": "Batch reviewed once. Profile-first identity/permissions/step-up and exact idempotent review retained. Gift outcome uses existing audited unpaid-cancellation policy. Snapshot includes locked redemption/policy; inconsistent ledgers or invoice/payment/refund/submission/contract associations remain excluded. Final SQL guard is byte-identical to0254 apart from consistent unpaid gift predicate, verified by migration test. Terminal gift history immutable. No invented contract, invoice, submission facts, private cache mutation or parallel refund engine. Other i18n AST, all old test AST and old SQL/journal prefix are retained. Only exact current migration tag/prefix assertions extend to0255. Current affected results renew effective criteria narrowly; no whole task or milestone accepted."
           }
         }
       }
@@ -138920,6 +139250,21 @@
         "The lifecycle remains partial for actual generic orphan DRAFT/gift/financial records, unversioned links and private wizard disposition. No release, deployment, notification or production accepted."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-linked-intake"
+    },
+    "release-0.2-electricity-orphan-draft-gifts": {
+      "title": "Actual generic electricity drafts and captured gift cancellation policy",
+      "task_keys": [
+        "03-core-business.md#T-03.07.01.01"
+      ],
+      "summary": "Extends the existing staff raw-draft workflow to actual root DRAFT records and consistent gift ledgers. Existing audited gift release policy is captured and reviewed; no invented contract/invoice/submission data.",
+      "validation": [
+        "205 distinct cases:25 raw HTTP (23 prior final passes plus2 additive boundaries),104 order/gift callers,37 financial HTTP callers,19 reviewed rejection cases (17 individual passes plus2 diagnosed startup-failure retries),13 UI,5 migration and2 final production-browser cases. Skipped, repeated and failed cases are not counted as passes.",
+        "Both locale/mobile browser checks, final types/builds, contract/snapshot, changed lint/format and3-file5-rule SAST pass. Shared compiled outputs match source after diagnosing a concurrent browser rebuild; subsequent browser checks use prebuilt mode.",
+        "0255 adds functions and a trigger, with no table/schema/data rewrite. Existing0254 guard is byte-identical except the consistent unpaid gift predicate. Upgrade/replay/retained prefix and atomic rollback pass; original50 raw API and20 UI expects plus all old AST blocks retained.",
+        "Policy changes invalidate confirmation; consumed slots release only under restore_on_cancel and already-released slots are untouched. Mandatory terminal audit failure rolls back gift release/audit and terminal state; concurrent exact retry applies once. Terminal gift history resists UPDATE/DELETE.",
+        "An initial mobile width check failed; final diagnostic retains the same strict width condition and mandatory true result in both locales, without tolerances or layout changes. Failures remain retained. Monetary associations, unversioned links and owner wizard disposition stay partial. No release, deployment, notification or production accepted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-draft-gifts"
     }
   },
   "historical_improvements": [
@@ -138961,7 +139306,7 @@
   "next_batch": {
     "id": "release-0.2-terminal-acceptance",
     "release": "0.2.0",
-    "goal": "Finish actual generic orphan electricity DRAFT records and gift/financial associations without fabricated contracts or submission data. Versioned incomplete linked intake and reviewed terminal engine are accepted. Preserve private wizard owner decision and other unanswered representation decisions; complete all-four-service gates before release.",
+    "goal": "Finish electricity orphan invoices/payments/refund obligations and unversioned linked draft disposition using existing financial boundaries. Generic DRAFT/PENDING and consistent gift-ledger terminal paths are accepted. Preserve owner-only wizard and representation decisions; complete all-four-service milestone gates before release.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.09.01.01",
