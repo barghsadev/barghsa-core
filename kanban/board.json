@@ -56,7 +56,8 @@
       "2026-10-06: first production launch must include all four services.",
       "Direct main pushes via GitHub CLI; reviewed batches, no PRs.",
       "Staging deployments are asynchronous and do not wait for hosted CI.",
-      "2026-10-06: release milestones replace per-batch versions and announcements."
+      "2026-10-06: release milestones replace per-batch versions and announcements.",
+      "October6: owner approved retaining versioned app_config electricity settings, current admin/config routes, percentage representations and zero top-up kill switch; reconcile literal table/route/positive-only requirements while retaining all business safeguards."
     ],
     "pending": [
       {
@@ -139,6 +140,18 @@
       "decision": "Discount matching lines only (recommended)",
       "scope": "Product-category gift codes on mixed electricity carts discount matching lines only. Existing service-wide codes retain whole-order behavior; full-order minimum still applies.",
       "source": "Explicit owner answer in this goal chat"
+    },
+    "electricity_settings_existing_design": {
+      "status": "approved",
+      "approved_by": "owner",
+      "approved_at": "2026-10-06",
+      "decision": "Retain existing design and reconcile specification (recommended)",
+      "scope": "Versioned app_config electricity/finance keys and existing /api/admin/config/... routes; green percentages0..100; zero online wallet top-up limit remains the fail-closed kill switch. Existing defaults, audits, activation status/price/quantity-limit safety and immutable submitted-order snapshots remain mandatory.",
+      "source": "Explicit owner answer in this goal chat",
+      "affected_task_keys": [
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02"
+      ]
     }
   },
   "specification_sources": {
@@ -60961,7 +60974,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Owner approved retaining current versioned app_config/route/percentage/zero-limit design. Reconcile exact specification and renew full effective criteria with source-bound evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -60987,7 +61000,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Owner approved retaining current versioned app_config/route/percentage/zero-limit design. Reconcile exact specification and renew full effective criteria with source-bound evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -61013,7 +61026,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Existing activation checks read green product status and effective positive price but omit per-order quantity limits. Implement and verify configured-percentage limit compatibility, including lock-wait changes; preserve current permissions, CSRF, step-up, audit versioning and rollback."
       ],
       "owner": null,
       "depends_on": [],
@@ -94689,6 +94702,30 @@
           "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
         }
       ]
+    },
+    "release-0.2-electricity-calculation-settings-periods": {
+      "title": "Electricity calculation, settings and Iran period verification in progress",
+      "task_keys": [
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04"
+      ],
+      "summary": "Inspected existing implementation; initial22 calculation/period and59 admin settings cases pass. Owner representation approval recorded; no new task or milestone acceptance. Activation quantity-limit criterion remains unimplemented.",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance"
     }
   },
   "historical_improvements": [
@@ -94730,7 +94767,7 @@
   "next_batch": {
     "id": "release-0.2-electricity-calculation-settings-periods",
     "release": "0.2.0",
-    "goal": "Verify existing electricity exact calculation, green composition and limits, settings guards/snapshots and Iran Jalali period boundaries. Inspect before building demonstrated gaps; reuse valid promotions/VAT caller evidence.",
+    "goal": "Verify existing electricity exact calculation, green composition and limits, settings guards/snapshots and Iran Jalali period boundaries. Inspect before building demonstrated gaps; reuse valid promotions/VAT caller evidence. Initial22 calculation/period cases and59 admin settings cases pass at3b6d0d45. Owner approved retaining existing settings design. Complete exact specification reconciliation and demonstrated activation quantity-limit gap before acceptance.",
     "task_keys": [
       "03-core-business.md#T-03.04.01.01",
       "03-core-business.md#T-03.04.01.02",

@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing electricity exact calculation, green composition and limits, settings guards/snapshots and Iran Jalali period boundaries. Inspect before building demonstrated gaps; reuse valid promotions/VAT caller evidence.
+Verify existing electricity exact calculation, green composition and limits, settings guards/snapshots and Iran Jalali period boundaries. Inspect before building demonstrated gaps; reuse valid promotions/VAT caller evidence. Initial22 calculation/period cases and59 admin settings cases pass at3b6d0d45. Owner approved retaining existing settings design. Complete exact specification reconciliation and demonstrated activation quantity-limit gap before acceptance.
 
 - `03-core-business.md#T-03.04.01.01`: Implement `ElectricityCalculationService` with pure functions:
 - `03-core-business.md#T-03.04.01.02`: Mandatory green rule engine:
