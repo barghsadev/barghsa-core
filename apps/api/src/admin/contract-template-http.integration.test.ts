@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { createRequire } from 'node:module';
 import { createStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
 import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
@@ -57,8 +58,9 @@ afterAll(async () => {
   await new Promise<void>((resolve) => storage.close(() => resolve()));
 });
 beforeEach(async () => {
+  await auditWindow.excludeExisting("event='change_recorded'", []);
   await http.pool.query(
-    "DELETE FROM contract_template_versions; DELETE FROM contract_templates; DELETE FROM storage_records; DELETE FROM audit_log WHERE event='change_recorded'"
+    'DELETE FROM contract_template_versions; DELETE FROM contract_templates; DELETE FROM storage_records;'
   );
   objects.clear();
   templateId = (
@@ -157,7 +159,7 @@ it.each(['create', 'update', 'delete', 'upload'] as const)(
       ).toHaveLength(0);
       await expect.poll(() => objects.size).toBe(0);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
       ).toHaveLength(0);
     } finally {
       await client.query('ROLLBACK');
@@ -256,7 +258,7 @@ it.each([
   ]);
   expect(objects.size).toBe(0);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(0);
 });
 
@@ -319,3 +321,5 @@ it('does not write storage when the durable reservation cannot commit', async ()
     await http.pool.query('DROP TRIGGER reject_template_reservation ON storage_records');
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

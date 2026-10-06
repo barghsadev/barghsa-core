@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -54,7 +55,7 @@ beforeEach(async () => {
   await http.pool.query(
     "DELETE FROM app_config WHERE key='electricity.contract_template_version_id'"
   );
-  await http.pool.query("DELETE FROM audit_log WHERE event='config_change'");
+  await auditWindow.excludeExisting("event='config_change'", []);
   await http.pool.query(
     "INSERT INTO products(system_key,title,price,status) VALUES ('green','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
   );
@@ -104,7 +105,7 @@ it('selects an active contract template version for new electricity orders and a
     options: expect.arrayContaining([expect.objectContaining({ id: versionId, supported: true })]),
   });
   const audit = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'='electricity.contract_template_version_id'"
     )
   ).rows;
@@ -134,7 +135,7 @@ it('allows authorized staff to configure audited electricity draft retention', a
   expect(await updated.json()).toEqual({ days: 14 });
   expect(await (await fetch(url, { headers: headers.operator! })).json()).toEqual({ days: 14 });
   const audit = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'='electricity.order_draft_ttl_days'"
     )
   ).rows;
@@ -174,7 +175,7 @@ it('shares wizard retention with the legacy endpoint while enforcing permission,
       ).rows
     ).toEqual([]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
     ).toEqual([]);
   } finally {
     await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='operator'");
@@ -184,7 +185,7 @@ it('shares wizard retention with the legacy endpoint while enforcing permission,
   expect(await (await put(legacy, { days: 30 })).json()).toEqual({ days: 30 });
   expect(await (await fetch(current, { headers: headers.operator! })).json()).toEqual({ days: 30 });
   const audits = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' ORDER BY created_at"
     )
   ).rows;
@@ -237,7 +238,7 @@ it('blocks an impossible green composition without changing settings, versions o
       (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [configKey])).rows
     ).toEqual([]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
     ).toEqual([]);
     expect(
       (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows[0]
@@ -300,7 +301,7 @@ it('returns owned fields for electricity settings without disclosing submitted v
     expect(JSON.stringify(await forbidden.json())).not.toContain('fields');
   }
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
   ).toEqual([]);
 });
 it('preserves camel, snake and mixed green-rule aliases and exact successful receipts', async () => {
@@ -349,7 +350,7 @@ it('serializes first writes and preserves a continuous audit version chain', asy
   const responses = await Promise.all([save(), save(input, 'viewer')]);
   expect(responses.map((r) => r.status)).toEqual([200, 200]);
   const audits = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' ORDER BY (metadata::jsonb->>'version')::int"
     )
   ).rows;
@@ -399,7 +400,7 @@ it.each(['permission', 'product', 'limits'])(
         (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [configKey])).rows
       ).toHaveLength(0);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
       ).toHaveLength(0);
       expect(
         (
@@ -478,3 +479,5 @@ it('requires password step-up before changing rules', async () => {
     await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='operator'");
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

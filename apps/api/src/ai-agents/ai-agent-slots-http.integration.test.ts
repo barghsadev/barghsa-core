@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -25,8 +26,9 @@ afterAll(async () => {
   await http?.close();
 });
 beforeEach(async () => {
+  await auditWindow.excludeExisting("event LIKE 'ai_agent_slot_%'", []);
   await http.pool.query(
-    "UPDATE ai_agent_slots SET agent_id=NULL; DELETE FROM ai_agents; DELETE FROM ai_models; DELETE FROM audit_log WHERE event LIKE 'ai_agent_slot_%'"
+    'UPDATE ai_agent_slots SET agent_id=NULL; DELETE FROM ai_agents; DELETE FROM ai_models;'
   );
   const model = (
     await http.pool.query(
@@ -103,7 +105,7 @@ it.each(['assign', 'clear'] as const)('rechecks current authority for slot %s', 
       ).rows
     ).toEqual([{ agent_id: action === 'clear' ? agentId : null }]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
     ).toHaveLength(0);
   } finally {
     await client.query('ROLLBACK');
@@ -124,11 +126,11 @@ it('reports cross-slot use and avoids duplicate assignment audits', async () => 
   });
   expect((await assign(agentId)).status).toBe(200);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
   ).toHaveLength(2);
   expect((await assign(null)).status).toBe(200);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_agent_slot_cleared'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='ai_agent_slot_cleared'")).rows
   ).toHaveLength(1);
 });
 it('refuses an agent deleted during assignment without writing an audit', async () => {
@@ -159,7 +161,7 @@ it('refuses an agent deleted during assignment without writing an audit', async 
       ).rows
     ).toEqual([{ agent_id: null }]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
     ).toHaveLength(0);
   } finally {
     await client.query('ROLLBACK');
@@ -186,7 +188,7 @@ it('rejects unknown slot-assignment payload fields', async () => {
     ).rows
   ).toEqual([{ agent_id: null }]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
   ).toHaveLength(0);
 });
 
@@ -224,7 +226,8 @@ it.each(['assign', 'clear'] as const)(
         ).rows
       ).toEqual([{ agent_id: action === 'clear' ? agentId : null }]);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'"))
+          .rows
       ).toHaveLength(0);
     });
   }
@@ -237,7 +240,7 @@ it('records current step-up proof on the mutation audit', async () => {
   ]);
   expect((await assign(agentId)).ok).toBe(true);
   const rows = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'ai_agent_slot_%'"
     )
   ).rows;
@@ -262,6 +265,8 @@ it('reports owned slot feedback without assigning an agent or exposing input', a
     ).rows
   ).toEqual([{ agent_id: null }]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
   ).toHaveLength(0);
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

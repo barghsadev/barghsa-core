@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { createServer } from 'node:http';
@@ -44,8 +45,9 @@ afterAll(async () => {
   await new Promise<void>((resolve) => embeddingProvider.close(() => resolve()));
 });
 beforeEach(async () => {
+  await auditWindow.excludeExisting("event LIKE 'kb_%'", []);
   await http.pool.query(
-    "DELETE FROM knowledge_bases; DELETE FROM kb_groups; DELETE FROM storage_records WHERE storage_key LIKE 'kb-test/%'; DELETE FROM audit_log WHERE event LIKE 'kb_%'"
+    "DELETE FROM knowledge_bases; DELETE FROM kb_groups; DELETE FROM storage_records WHERE storage_key LIKE 'kb-test/%';"
   );
   ids = {
     kb: (
@@ -99,7 +101,7 @@ it('keeps existing knowledge bases admin-only and audits explicit audience publi
   ).toEqual([{ audience: 'public' }]);
   expect(
     (
-      await http.pool.query<{ metadata: { audienceBefore: string; audienceAfter: string } }>(
+      await auditWindow.query<{ metadata: { audienceBefore: string; audienceAfter: string } }>(
         "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='kb_updated' AND metadata::jsonb->>'targetId'=$1",
         [ids.kb]
       )
@@ -168,7 +170,8 @@ it('requeues a failed KB through an audited staff action', async () => {
     isEnabled: false,
   });
   expect(
-    (await http.pool.query("SELECT event FROM audit_log WHERE event='kb_reprocess_requested'")).rows
+    (await auditWindow.query("SELECT event FROM audit_log WHERE event='kb_reprocess_requested'"))
+      .rows
   ).toEqual([{ event: 'kb_reprocess_requested' }]);
 });
 
@@ -308,7 +311,7 @@ it.each(cases)('rechecks current authority for $kind $action', async (entry) => 
       { id: ids[entry.kind], title: entry.title },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
     ).toHaveLength(0);
     expect(
       (
@@ -347,7 +350,7 @@ it.each(entities)(
       ).rows
     ).toHaveLength(1);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
     ).toHaveLength(3);
   }
 );
@@ -397,7 +400,7 @@ async function assertLinkUnchanged(action: LinkAction) {
     action === 'add' ? 0 : 1
   );
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
   ).toHaveLength(0);
 }
 it.each(['attach', 'detach', 'add', 'remove'] as const)(
@@ -466,7 +469,7 @@ it.each(['attach', 'detach', 'add', 'remove'] as const)(
         .rows
     ).toEqual([{ status: 'active' }]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
     ).toHaveLength(1);
   }
 );
@@ -538,7 +541,7 @@ it.each(['attach', 'add'] as const)(
     expect((await linkRequest(action, item)).status).toBe(action === 'attach' ? 200 : 204);
     expect((await linkRequest(action, item)).status).toBe(action === 'attach' ? 200 : 204);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
     ).toHaveLength(1);
   }
 );
@@ -592,7 +595,7 @@ it.each(entities)(
       { title: entry.title },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
     ).toHaveLength(0);
     const response = await fetch(`${http.base}/api/admin/${entry.path}/${ids[entry.kind]}`, {
       method: 'PUT',
@@ -628,7 +631,7 @@ it('rejects malformed link payloads without writing links or audit entries', asy
   }
   expect((await http.pool.query('SELECT id FROM kb_documents')).rows).toHaveLength(0);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
   ).toHaveLength(0);
 });
 
@@ -704,7 +707,7 @@ it.each(cases)('rolls back $kind $action when the session expires before commit'
         { group_id: ids.group, kb_id: ids.kb },
       ]);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
       ).toHaveLength(0);
     }
   );
@@ -738,7 +741,7 @@ it.each([
         { title: 'Original KB' },
       ]);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
       ).toHaveLength(0);
     });
   }
@@ -751,7 +754,7 @@ it('records current step-up proof on the mutation audit', async () => {
   ]);
   expect((await request(cases[0]!)).ok).toBe(true);
   const rows = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'kb_%'"
     )
   ).rows;
@@ -788,7 +791,7 @@ for (const method of ['POST', 'PUT'] as const)
       );
       expect(JSON.stringify(error)).not.toContain('private-submitted');
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
       ).toHaveLength(0);
       await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='kb-editor'");
       try {
@@ -843,7 +846,7 @@ for (const entry of [
     expect(value.error.fields).toEqual(entry.fields);
     expect(JSON.stringify(value)).not.toContain('private-input');
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
     ).toHaveLength(0);
     await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='kb-editor'");
     try {
@@ -862,3 +865,5 @@ for (const entry of [
       );
     }
   });
+
+const auditWindow = new AuditWindow(() => http.pool);

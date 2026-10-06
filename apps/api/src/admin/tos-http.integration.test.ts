@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -30,8 +31,9 @@ beforeAll(async () => {
   }
 }, 40000);
 beforeEach(async () => {
+  await auditWindow.excludeExisting("event='tos_updated'", []);
   await http.pool.query(
-    "DELETE FROM user_roles WHERE user_id='other'; DELETE FROM tos_acceptances; UPDATE users SET last_accepted_tos_version=NULL; DELETE FROM tos_versions; DELETE FROM audit_log WHERE event='tos_updated'; INSERT INTO user_roles(user_id,role_id) VALUES ('editor','tos-editor') ON CONFLICT DO NOTHING"
+    "DELETE FROM user_roles WHERE user_id='other'; DELETE FROM tos_acceptances; UPDATE users SET last_accepted_tos_version=NULL; DELETE FROM tos_versions;  INSERT INTO user_roles(user_id,role_id) VALUES ('editor','tos-editor') ON CONFLICT DO NOTHING"
   );
 });
 afterAll(async () => {
@@ -128,7 +130,7 @@ it('audits draft create, edit, publication and discard with current actor contex
   const second = (await next.json()) as { id: string };
   expect((await request(`/${second.id}`, 'DELETE')).status).toBe(204);
   const audits = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT user_id,metadata::jsonb->>'action' AS action,ip FROM audit_log WHERE event='tos_updated' ORDER BY created_at,id"
     )
   ).rows;
@@ -286,7 +288,7 @@ it('rejects publication after the previewed draft changed', async () => {
     (await http.pool.query('SELECT status FROM tos_versions WHERE id=$1', [id])).rows[0].status
   ).toBe('draft');
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE metadata::jsonb->>'action'='publish'"))
+    (await auditWindow.query("SELECT id FROM audit_log WHERE metadata::jsonb->>'action'='publish'"))
       .rows
   ).toHaveLength(0);
 });
@@ -534,3 +536,5 @@ it('checks permission before reporting terms field names and preserves a saved d
   expect(await response.json()).toMatchObject({ error: { fields: ['contentEn'] } });
   expect(await (await request(`/${saved.id}`)).json()).toMatchObject(draft);
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

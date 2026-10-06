@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import { beforeAll, afterAll, expect, it } from 'vitest';
+import { beforeEach, afterEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { isConfigAuditPage } from '@barghsa/shared/admin';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
-beforeAll(async () => {
+beforeEach(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query('DELETE FROM brand_config');
   for (const actor of ['admin', 'reader', 'customer']) {
@@ -30,7 +30,7 @@ beforeAll(async () => {
   );
   await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES('reader','audit-reader')");
 }, 40000);
-afterAll(async () => {
+afterEach(async () => {
   await http?.close();
 });
 function call(query: string, actor = 'admin') {
@@ -165,7 +165,6 @@ it('rechecks session expiry after the audit query waits for a database lock', as
   }
 }, 15000);
 it('uses microsecond and ID cursor ordering without omitting tied timestamps or mixing scopes', async () => {
-  await http.pool.query("DELETE FROM audit_log WHERE event='change_recorded'");
   const ids: string[] = [];
   for (let index = 0; index < 53; index++)
     ids.push(

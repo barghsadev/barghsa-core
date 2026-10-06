@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -37,9 +38,7 @@ afterAll(async () => {
 }, 15000);
 beforeEach(async () => {
   await http.pool.query('DELETE FROM background_jobs');
-  await http.pool.query(
-    "DELETE FROM audit_log WHERE event IN ('job_retry_requested','job_resolved')"
-  );
+  await auditWindow.excludeExisting("event IN ('job_retry_requested','job_resolved')", []);
 });
 function request(path = '', method = 'GET', body?: unknown, user = 'operator') {
   return fetch(`${http.base}/api/admin/failed-jobs${path}`, {
@@ -63,7 +62,7 @@ it('reads an exact job outside its former queue with current view authority and 
   expect((await request(`/${id}/resolve`, 'POST', {})).status).toBe(200);
   expect(await (await request('?status=failed')).json()).toEqual([]);
   const before = await row(id);
-  const audits = (await http.pool.query('SELECT count(*) FROM audit_log')).rows[0].count;
+  const audits = (await auditWindow.query('SELECT count(*) FROM audit_log')).rows[0].count;
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='viewer'");
   const result = await request(`/${id}`, 'GET', undefined, 'viewer');
   expect(result.status).toBe(200);
@@ -74,7 +73,7 @@ it('reads an exact job outside its former queue with current view authority and 
     resolvedByUsername: 'operator@example.test',
   });
   expect(await row(id)).toEqual(before);
-  expect((await http.pool.query('SELECT count(*) FROM audit_log')).rows[0].count).toBe(audits);
+  expect((await auditWindow.query('SELECT count(*) FROM audit_log')).rows[0].count).toBe(audits);
   expect((await fetch(`${http.base}/api/admin/failed-jobs/${id}`)).status).toBe(401);
   expect((await request(`/${id}`, 'GET', undefined, 'other')).status).toBe(403);
   expect((await request('/bad', 'GET', undefined, 'viewer')).status).toBe(400);
@@ -145,7 +144,7 @@ it('retries failed and exhausted jobs, resolves with actor attribution, and reje
   expect((await request(`/${randomUUID()}/retry`, 'POST', {})).status).toBe(404);
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT id FROM audit_log WHERE event IN ('job_retry_requested','job_resolved')"
       )
     ).rows
@@ -163,7 +162,7 @@ it('deduplicates bulk retry, skips missing/terminal jobs, and rolls the entire b
     expect((await row(first)).status).toBe('failed');
     expect((await row(second)).status).toBe('dead_letter');
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='job_retry_requested'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='job_retry_requested'")).rows
     ).toHaveLength(0);
   } finally {
     await http.pool.query('DROP TRIGGER reject_job_audit ON audit_log');
@@ -177,7 +176,7 @@ it('deduplicates bulk retry, skips missing/terminal jobs, and rolls the entire b
     { id: second, status: 'retrying' },
   ]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='job_retry_requested'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='job_retry_requested'")).rows
   ).toHaveLength(2);
 });
 it('rejects a permission revoked after the guard and releases its transaction without changing jobs', async () => {
@@ -220,3 +219,5 @@ it('rejects a permission revoked after the guard and releases its transaction wi
     );
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

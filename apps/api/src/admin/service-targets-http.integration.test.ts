@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { randomUUID } from 'node:crypto';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -111,7 +112,7 @@ for (const config of configurations) {
   });
   it(`${config.path} serializes first writes and rolls audit failures back`, async () => {
     await http.pool.query('DELETE FROM app_config WHERE key=$1', [config.key]);
-    await http.pool.query("DELETE FROM audit_log WHERE metadata::jsonb->>'key'=$1", [config.key]);
+    await auditWindow.excludeExisting("metadata::jsonb->>'key'=$1", [config.key]);
     const before = (await http.pool.query("SELECT version FROM config_version WHERE id='global'"))
       .rows[0].version;
     const responses = await Promise.all(
@@ -119,7 +120,7 @@ for (const config of configurations) {
     );
     expect(responses.map((response) => response.status)).toEqual([200, 200, 200, 200, 200]);
     const audits = (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT metadata::jsonb AS metadata FROM audit_log WHERE metadata::jsonb->>'key'=$1 ORDER BY (metadata::jsonb->>'version')::int",
         [config.key]
       )
@@ -187,7 +188,7 @@ for (const [path, body, fields] of [
   ],
 ] as const) {
   it(`${path} returns safe owned fields without writing an audit or reflecting input`, async () => {
-    const before = (await http.pool.query('SELECT COUNT(*)::int AS count FROM audit_log')).rows[0]
+    const before = (await auditWindow.query('SELECT COUNT(*)::int AS count FROM audit_log')).rows[0]
       .count;
     const response = await call(path, 'PUT', body);
     expect(response.status).toBe(400);
@@ -195,7 +196,9 @@ for (const [path, body, fields] of [
     expect(result).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID', fields } });
     expect(JSON.stringify(result)).not.toContain('private-value');
     expect(
-      (await http.pool.query('SELECT COUNT(*)::int AS count FROM audit_log')).rows[0].count
+      (await auditWindow.query('SELECT COUNT(*)::int AS count FROM audit_log')).rows[0].count
     ).toBe(before);
   });
 }
+
+const auditWindow = new AuditWindow(() => http.pool);

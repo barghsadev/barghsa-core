@@ -135,15 +135,31 @@ it('reads persisted role additions and removals with target and date filters', a
     [userId]
   );
   expect(rows.rows).toHaveLength(2);
-  for (const [index, row] of rows.rows.entries())
-    await http.pool.query('UPDATE audit_log SET created_at=$2 WHERE id=$1', [
-      row.id,
-      `2026-03-${20 + index}T12:00:00Z`,
-    ]);
+  // Construct dated timeline fixtures at insertion; real HTTP audit rows remain immutable.
+  const recorded = (
+    await http.pool.query('SELECT * FROM audit_log WHERE id=ANY($1::text[]) ORDER BY id', [
+      rows.rows.map((row) => row.id),
+    ])
+  ).rows;
+  const timelineUserId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES($1,$2,'fixture-only',true)",
+    [timelineUserId, `${timelineUserId}@example.test`]
+  );
+  for (const [index, row] of rows.rows.entries()) {
+    await http.pool.query(
+      `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at,operating_context,ip)
+      SELECT $2,user_id,event,(metadata::jsonb || jsonb_build_object('targetUserId',$3::text))::text,correlation_id,$4,operating_context,ip FROM audit_log WHERE id=$1`,
+      [row.id, randomUUID(), timelineUserId, `2026-03-${20 + index}T12:00:00Z`]
+    );
+  }
   const read = async (query: string) => {
-    const response = await fetch(`${http.base}/api/admin/staff/audit?userId=${userId}&${query}`, {
-      headers: adminHeaders,
-    });
+    const response = await fetch(
+      `${http.base}/api/admin/staff/audit?userId=${timelineUserId}&${query}`,
+      {
+        headers: adminHeaders,
+      }
+    );
     expect(response.status, await response.clone().text()).toBe(200);
     return response.json() as Promise<StaffAuditResult>;
   };
@@ -151,8 +167,8 @@ it('reads persisted role additions and removals with target and date filters', a
   expect(all).toMatchObject({ total: 2, limit: 1, offset: 0 });
   expect(all.items).toEqual([
     expect.objectContaining({
-      targetUserId: userId,
-      targetUsername: `${userId}@example.test`,
+      targetUserId: timelineUserId,
+      targetUsername: `${timelineUserId}@example.test`,
       actorUsername: 'admin@example.test',
       addedRoles: [{ roleId: 'role-customer-support', roleName: 'Customer Support' }],
       removedRoles: [{ roleId: 'role-finance', roleName: 'Finance' }],
@@ -178,6 +194,13 @@ it('reads persisted role additions and removals with target and date filters', a
     expect(
       (await fetch(`${http.base}/api/admin/staff/audit?${query}`, { headers: adminHeaders })).status
     ).toBe(400);
+  expect(
+    (
+      await http.pool.query('SELECT * FROM audit_log WHERE id=ANY($1::text[]) ORDER BY id', [
+        rows.rows.map((row) => row.id),
+      ])
+    ).rows
+  ).toEqual(recorded);
 });
 
 it('restricts staff permission history to current authorized viewers', async () => {

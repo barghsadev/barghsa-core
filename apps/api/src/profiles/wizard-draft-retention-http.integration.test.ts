@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -126,7 +127,7 @@ beforeEach(async () => {
     [individualId, legalId],
   ]);
   await http.pool.query("DELETE FROM app_config WHERE key='electricity.order_draft_ttl_days'");
-  await http.pool.query("DELETE FROM audit_log WHERE event='onboarding_draft_expired'");
+  await auditWindow.excludeExisting("event='onboarding_draft_expired'", []);
   for (const table of new Set(drafts.map((d) => d.table)))
     await http.pool.query(`DELETE FROM ${table}`);
   for (const draft of drafts) {
@@ -157,7 +158,7 @@ for (const draft of drafts) {
       expect((await stored(draft))[0]).toMatchObject({ version: 6, data: {} });
       expect(await (await read(draft)).json()).toEqual({ version: 6, data: {} });
       const audit = (
-        await http.pool.query(
+        await auditWindow.query(
           "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='onboarding_draft_expired' AND metadata::jsonb->>'profileId'=$1",
           [draft.profile]
         )
@@ -280,7 +281,8 @@ it('expires concurrent onboarding reads once and rolls back failed expiry audit 
   expect(results.map((response) => response.status)).toEqual([200, 200]);
   for (const response of results) expect(await response.json()).toEqual({ version: 6, data: {} });
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='onboarding_draft_expired'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='onboarding_draft_expired'"))
+      .rows
   ).toHaveLength(1);
   const before = await stored(drafts[1]);
   await http.pool.query(
@@ -343,3 +345,5 @@ it('does not expire an archived or submitted onboarding profile', async () => {
     expect(await stored(draft)).toEqual(before);
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

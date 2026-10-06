@@ -18,6 +18,7 @@
  * fully migrated disposable database pool.
  */
 
+import { randomUUID } from 'node:crypto';
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
@@ -468,18 +469,37 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
         lines: [{ description: 'Legacy replay', quantity: 1, unitPrice: 100n, vatRate: 0 }],
         idempotencyKey: `legacy-${scenario}`,
       };
-      const first = await service.createManualInvoice(cmd);
+      const source = await service.createManualInvoice(
+        scenario === 'missing audit'
+          ? { ...cmd, idempotencyKey: `seed-${cmd.idempotencyKey}` }
+          : cmd
+      );
+      const first = { ...source };
+      if (scenario === 'missing audit') {
+        // Construct a genuine legacy invoice without an audit; preserve the seed history.
+        first.invoiceId = randomUUID();
+        await ctx.pool.query(
+          `INSERT INTO invoices(id,profile_id,contract_id,type,state,total_amount,issued_at,payable_from,due_at,metadata,invoice_calculation_snapshot)
+          SELECT $2,profile_id,contract_id,type,state,total_amount,issued_at,payable_from,due_at,jsonb_set(metadata,'{idempotencyKey}',to_jsonb($3::text)),invoice_calculation_snapshot FROM invoices WHERE id=$1`,
+          [source.invoiceId, first.invoiceId, cmd.idempotencyKey]
+        );
+        await ctx.pool.query(
+          `INSERT INTO invoice_lines(invoice_id,description,quantity,unit_price,line_total,vat_rate,vat_amount,is_taxable,position)
+          SELECT $2,description,quantity,unit_price,line_total,vat_rate,vat_amount,is_taxable,position FROM invoice_lines WHERE invoice_id=$1`,
+          [source.invoiceId, first.invoiceId]
+        );
+        expect(await countAuditRows(first.invoiceId)).toBe(0);
+        expect(await countAuditRows(source.invoiceId)).toBe(1);
+      }
       if (scenario === 'missing fingerprint') {
         await ctx.pool.query("UPDATE invoices SET metadata=metadata-'fingerprint' WHERE id=$1", [
           first.invoiceId,
         ]);
-      } else if (scenario === 'missing audit') {
-        await ctx.pool.query('DELETE FROM audit_log WHERE id=$1', [first.auditId]);
       } else if (scenario === 'missing timestamps') {
         await ctx.pool.query('UPDATE invoices SET issued_at=NULL,payable_from=NULL WHERE id=$1', [
           first.invoiceId,
         ]);
-      } else {
+      } else if (scenario === 'duplicate records') {
         await ctx.pool.query(
           "INSERT INTO invoices(profile_id,type,state,total_amount,metadata) SELECT profile_id,type,'Draft',total_amount,metadata FROM invoices WHERE id=$1",
           [first.invoiceId]

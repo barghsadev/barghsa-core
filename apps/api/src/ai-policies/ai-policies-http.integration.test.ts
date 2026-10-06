@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -31,9 +32,8 @@ afterAll(async () => {
   await http?.close();
 });
 beforeEach(async () => {
-  await http.pool.query(
-    "DELETE FROM ai_policies; DELETE FROM ai_policy_groups; DELETE FROM audit_log WHERE event LIKE 'ai_policy_%'"
-  );
+  await auditWindow.excludeExisting("event LIKE 'ai_policy_%'", []);
+  await http.pool.query('DELETE FROM ai_policies; DELETE FROM ai_policy_groups;');
   ids = {
     policy: (
       await http.pool.query(
@@ -119,7 +119,7 @@ it.each(cases)('rechecks current authority for $kind $action', async (entry) => 
       { id: ids[entry.kind], title: entry.title },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toHaveLength(0);
     expect(
       (
@@ -158,7 +158,7 @@ it.each(entities)(
       ).rows
     ).toHaveLength(1);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toHaveLength(3);
   }
 );
@@ -213,7 +213,7 @@ it.each(['add', 'remove'] as const)('rechecks membership %s authority', async (a
       (await http.pool.query('SELECT policy_id FROM ai_policy_group_members')).rows
     ).toHaveLength(action === 'add' ? 0 : 1);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toHaveLength(0);
   } finally {
     await client.query('ROLLBACK');
@@ -227,12 +227,12 @@ it.each(['add', 'remove'] as const)('rechecks membership %s authority', async (a
 it('audits actual membership changes once and retains both records', async () => {
   expect((await membershipRequest('add')).status).toBe(204);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
   ).toHaveLength(0);
   expect((await membershipRequest('remove')).status).toBe(204);
   expect((await membershipRequest('add')).status).toBe(204);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
   ).toHaveLength(2);
   expect((await http.pool.query('SELECT id FROM ai_policies')).rows).toHaveLength(1);
   expect((await http.pool.query('SELECT id FROM ai_policy_groups')).rows).toHaveLength(1);
@@ -263,7 +263,7 @@ it('persists policy priority and audited group overrides through the HTTP API', 
   ).toEqual([{ priority_override: null }]);
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT event FROM audit_log WHERE event LIKE 'ai_policy_%' ORDER BY id"
       )
     ).rows.map((row) => row.event)
@@ -309,7 +309,7 @@ it('validates rules against the policy type after a concurrent edit commits', as
         .rows
     ).toEqual([{ policy_type: 'allowed_topics', rules: { topics: ['energy'] } }]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toHaveLength(0);
   } finally {
     await client.query('ROLLBACK');
@@ -371,7 +371,7 @@ it.each(entities)(
       { title: entry.title },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toHaveLength(0);
     const response = await fetch(`${http.base}/api/admin/${entry.path}/${ids[entry.kind]}`, {
       method: 'PUT',
@@ -395,7 +395,7 @@ it('rejects malformed and unknown membership payload fields', async () => {
     ).toBe(400);
   }
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
   ).toHaveLength(0);
 });
 
@@ -468,7 +468,7 @@ it.each(ruleCases)(
       (await http.pool.query('SELECT rules FROM ai_policies WHERE id=$1', [row.id])).rows
     ).toEqual([{ rules: entry.expected }]);
     expect(
-      (await http.pool.query("SELECT event FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      (await auditWindow.query("SELECT event FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toEqual([{ event: 'ai_policy_created' }]);
   }
 );
@@ -499,7 +499,7 @@ it.each(cases)('rejects $kind $action when session expires before commit', async
       (await http.pool.query('SELECT group_id,policy_id FROM ai_policy_group_members')).rows
     ).toEqual([{ group_id: ids.group, policy_id: ids.policy }]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toHaveLength(0);
   });
 });
@@ -513,7 +513,7 @@ it.each(['add', 'remove'] as const)(
         (await http.pool.query('SELECT policy_id FROM ai_policy_group_members')).rows
       ).toHaveLength(action === 'add' ? 0 : 1);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
       ).toHaveLength(0);
     });
   }
@@ -526,7 +526,7 @@ it('records current step-up proof on the mutation audit', async () => {
   ]);
   expect((await request(cases[0]!)).ok).toBe(true);
   const rows = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'ai_policy_%'"
     )
   ).rows;
@@ -563,7 +563,7 @@ for (const method of ['POST', 'PUT'] as const)
       );
       expect(JSON.stringify(error)).not.toContain('private-submitted');
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
       ).toHaveLength(0);
       await http.pool.query(
         "UPDATE staff_roles SET permissions='[]' WHERE role_id='policy-editor'"
@@ -592,7 +592,7 @@ it('returns only owned member/priority fields without mutating or auditing a pol
   expect(value.error.fields.sort()).toEqual(['policyId', 'priorityOverride']);
   expect(JSON.stringify(value)).not.toContain('private-input');
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
   ).toHaveLength(0);
   await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='policy-editor'");
   try {
@@ -605,3 +605,5 @@ it('returns only owned member/priority fields without mutating or auditing a pol
     );
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

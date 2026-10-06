@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -37,8 +38,9 @@ afterAll(async () => {
 }, 15000);
 beforeEach(async () => {
   await http.pool.query('DELETE FROM reconciliation_exceptions');
-  await http.pool.query(
-    "DELETE FROM audit_log WHERE event IN ('reconciliation_status_changed','resolution_recorded')"
+  await auditWindow.excludeExisting(
+    "event IN ('reconciliation_status_changed','resolution_recorded')",
+    []
   );
 });
 function request(path = '', method = 'GET', body?: unknown, user = 'operator') {
@@ -83,7 +85,7 @@ it('enforces view and mutation permissions and records the full lifecycle withou
     resolved_by_id: 'operator',
   });
   expect((await request(`/${id}/resolve`, 'POST', { note: 'Repeat' })).status).toBe(409);
-  const audit = await http.pool.query(
+  const audit = await auditWindow.query(
     "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event IN ('reconciliation_status_changed','resolution_recorded') ORDER BY created_at"
   );
   expect(audit.rows).toHaveLength(3);
@@ -142,7 +144,7 @@ it.each(['investigate', 'resolve', 'close'])(
       });
       expect(
         (
-          await http.pool.query(
+          await auditWindow.query(
             "SELECT id FROM audit_log WHERE event IN ('reconciliation_status_changed','resolution_recorded')"
           )
         ).rows
@@ -248,3 +250,5 @@ it.each(['resolve', 'close'])(
     expect(await row(id)).toMatchObject({ status: 'open', resolution_note: null });
   }
 );
+
+const auditWindow = new AuditWindow(() => http.pool);

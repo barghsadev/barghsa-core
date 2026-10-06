@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { EmailProviderConfigService } from './email-provider-config.service.js';
 import { SmsProviderConfigService } from './sms-provider-config.service.js';
 import { EmailCircuitBreakerService } from './email-circuit-breaker.service.js';
@@ -56,7 +57,7 @@ beforeEach(async () => {
   );
   await http.pool.query('DELETE FROM email_provider_configs');
   await http.pool.query('DELETE FROM sms_provider_configs');
-  await http.pool.query("DELETE FROM audit_log WHERE user_id='provider-writer'");
+  await auditWindow.excludeExisting("user_id='provider-writer'", []);
   await http.pool.query("UPDATE staff_roles SET permissions=$1 WHERE role_id='provider-writer'", [
     grants,
   ]);
@@ -71,7 +72,7 @@ async function snapshot(table: string) {
   return {
     providers: (await http.pool.query(`SELECT * FROM ${table} ORDER BY id`)).rows,
     audits: (
-      await http.pool.query("SELECT * FROM audit_log WHERE user_id='provider-writer' ORDER BY id")
+      await auditWindow.query("SELECT * FROM audit_log WHERE user_id='provider-writer' ORDER BY id")
     ).rows,
   };
 }
@@ -634,3 +635,5 @@ it('email edits clear optional public values while retaining encrypted credentia
   expect(JSON.stringify(receipt)).not.toContain('fixture-key-to-preserve');
   expect(after.last_test_status).toBe('pending');
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

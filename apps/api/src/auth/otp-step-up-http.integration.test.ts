@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, beforeEach, afterAll, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery';
@@ -20,8 +21,9 @@ beforeAll(async () => {
 beforeEach(async () => {
   session = randomUUID();
   csrf = randomUUID();
+  await auditWindow.excludeExisting('', []);
   await http.pool.query(
-    'DELETE FROM auth_delivery_outbox; DELETE FROM otp_challenges; DELETE FROM refresh_tokens; DELETE FROM sessions; DELETE FROM audit_log; DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows;'
+    'DELETE FROM auth_delivery_outbox; DELETE FROM otp_challenges; DELETE FROM refresh_tokens; DELETE FROM sessions;  DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows;'
   );
   await http.pool
     .query(`UPDATE users SET disabled_at=NULL,auth_version=1 WHERE user_id LIKE 'otp-gate-%';
@@ -149,7 +151,7 @@ it('rejects fresh password proof for providers, thresholds and roles; OTP rotati
   }
   expect((await request('auth/step-up/otp/send', {}, headers)).status).toBe(401);
   const proof = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='step_up_verified'"
     )
   ).rows;
@@ -241,7 +243,7 @@ it('consumes proof once during concurrent verification', async () => {
   const responses = await Promise.all([verify(c), verify(c)]);
   expect(responses.map((r) => r.status).sort()).toEqual([200, 401]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='step_up_verified'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='step_up_verified'")).rows
   ).toHaveLength(1);
 });
 
@@ -354,3 +356,5 @@ it('rolls back code consumption, credential rotation and proof when the audit fa
     );
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

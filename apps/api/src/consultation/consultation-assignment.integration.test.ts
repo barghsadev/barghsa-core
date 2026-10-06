@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -65,16 +66,10 @@ beforeAll(async () => {
   ]);
 }, 40000);
 beforeEach(async () => {
-  await http.pool
-    .query(`DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security;
-    DELETE FROM consultation_request_events; DELETE FROM consultation_requests;
-    DELETE FROM tickets; DELETE FROM verification_cases; DELETE FROM in_app_notifications;
-    DELETE FROM audit_log; DELETE FROM staff_assignment_cursors;
-    DELETE FROM app_config WHERE key='admin.staff_assignment_rules';
-    UPDATE staff_teams SET is_active=true,skill_tags='[]';
-    UPDATE users SET disabled_at=NULL,activation_token=NULL,is_admin=false;
-    UPDATE sessions SET operating_context=CASE WHEN user_id='customer' THEN 'customer' ELSE 'staff' END;
-    UPDATE staff_roles SET permissions='["orders:read","orders:write"]' WHERE role_id IN ('alpha','beta');`);
+  await auditWindow.excludeExisting('', []);
+  await http.pool.query(
+    "DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security;\n    DELETE FROM consultation_request_events; DELETE FROM consultation_requests;\n    DELETE FROM tickets; DELETE FROM verification_cases; DELETE FROM in_app_notifications;\n     DELETE FROM staff_assignment_cursors;\n    DELETE FROM app_config WHERE key='admin.staff_assignment_rules';\n    UPDATE staff_teams SET is_active=true,skill_tags='[]';\n    UPDATE users SET disabled_at=NULL,activation_token=NULL,is_admin=false;\n    UPDATE sessions SET operating_context=CASE WHEN user_id='customer' THEN 'customer' ELSE 'staff' END;\n    UPDATE staff_roles SET permissions='[\"orders:read\",\"orders:write\"]' WHERE role_id IN ('alpha','beta');"
+  );
   await http.pool.query(
     "INSERT INTO staff_teams(id,name) VALUES($1,'Primary'),($2,'Fallback') ON CONFLICT(id) DO NOTHING",
     [teamId, fallbackId]
@@ -136,7 +131,7 @@ it('routes each new request once, preserves simultaneous replay, and exposes the
   expect((await owner(second.requestId)).staff_owner_id).toBe('beta');
   expect((await owner((await created()).requestId)).staff_owner_id).toBe('alpha');
   const assignmentAudit = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb FROM audit_log WHERE event='work_auto_assigned' AND metadata::jsonb->>'itemId'=$1",
       [first.requestId]
     )
@@ -225,7 +220,7 @@ it('uses expertise and ordered fallbacks only when current members can read and 
   });
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT metadata::jsonb FROM audit_log WHERE event='work_auto_assigned'"
       )
     ).rows[0].metadata
@@ -274,7 +269,7 @@ it('rolls back routing on invalid product submission and rejects foreign profile
   await http.pool.query("UPDATE sessions SET operating_context='customer' WHERE user_id='alpha'");
   expect((await submit(randomUUID(), productId, 'alpha')).status).toBe(404);
   expect(
-    (await http.pool.query("SELECT * FROM audit_log WHERE event='work_auto_assigned'")).rows
+    (await auditWindow.query("SELECT * FROM audit_log WHERE event='work_auto_assigned'")).rows
   ).toEqual([]);
   expect((await http.pool.query('SELECT * FROM staff_assignment_cursors')).rows).toEqual([]);
   expect((await http.pool.query('SELECT * FROM in_app_notifications')).rows).toEqual([]);
@@ -405,3 +400,5 @@ it.each(['rules', 'team', 'delete', 'manual'] as const)(
     }
   }
 );
+
+const auditWindow = new AuditWindow(() => http.pool);

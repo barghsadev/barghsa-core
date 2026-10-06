@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import type { ProductDetailDto } from './catalogue-products.service.js';
@@ -44,7 +45,7 @@ const createBody = {
   status: 'active',
 };
 beforeEach(async () => {
-  await http.pool.query("DELETE FROM audit_log WHERE event LIKE 'catalogue_product_%'");
+  await auditWindow.excludeExisting("event LIKE 'catalogue_product_%'", []);
 });
 async function seed() {
   return (
@@ -95,7 +96,7 @@ it.each(['create', 'update', 'archive', 'price'])(
         (await http.pool.query('SELECT status,price FROM products WHERE id=$1', [id])).rows[0]
       ).toEqual({ status: 'active', price: '1000' });
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
           .rows
       ).toHaveLength(0);
       expect(
@@ -131,7 +132,7 @@ it.each([null, '0', '0000', undefined])(
       (await http.pool.query('SELECT id FROM product_price_versions ORDER BY id')).rows
     ).toEqual(prices);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
         .rows
     ).toEqual([]);
   }
@@ -186,7 +187,8 @@ it('serializes two staff edits so the second identical edit is a no-op', async (
   ]);
   expect(responses.map((response) => response.status)).toEqual([200, 200]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_updated'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='catalogue_product_updated'"))
+      .rows
   ).toHaveLength(1);
 });
 
@@ -231,7 +233,8 @@ it('validates category types on edit and treats repeated categories as a set', a
     (await request(`/${product.id}`, 'PUT', { categories: [category, category] })).status
   ).toBe(200);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_updated'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='catalogue_product_updated'"))
+      .rows
   ).toHaveLength(0);
   for (const id of [product.id, await seed()]) {
     expect((await request(`/${id}`, 'PUT', { categories: ['green_electricity'] })).status).toBe(
@@ -246,7 +249,7 @@ it('validates category types on edit and treats repeated categories as a set', a
   expect(await (await request(`/${product.id}`)).json()).toMatchObject({ categories: [changed] });
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='catalogue_product_updated'"
       )
     ).rows
@@ -287,7 +290,8 @@ it('rejects unknown fields, blank localized titles and ambiguous price dates wit
     (await http.pool.query('SELECT status,price FROM products WHERE id=$1', [id])).rows[0]
   ).toEqual({ status: 'active', price: '1000' });
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+      .rows
   ).toHaveLength(0);
   expect(
     (
@@ -397,7 +401,7 @@ it.each(['create', 'update', 'archive', 'price'] as const)(
           .rows
       ).toHaveLength(0);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
           .rows
       ).toHaveLength(0);
     });
@@ -411,7 +415,7 @@ it('records verified step-up time in the price configuration audit', async () =>
   ]);
   expect((await request('', 'POST', createBody)).ok).toBe(true);
   const rows = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'catalogue_product_%'"
     )
   ).rows;
@@ -495,7 +499,7 @@ it.each([
       (await http.pool.query('SELECT title,price FROM products WHERE id=$1', [id])).rows[0]
     ).toEqual({ title: { en: 'Original', fa: 'Test' }, price: '1000' });
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
         .rows
     ).toHaveLength(0);
   }
@@ -552,7 +556,7 @@ it('returns persisted saving-plan hardware in create/update/read receipts and le
   expect(((await noop.json()) as ProductDetailDto).hardwareIds).toEqual([second]);
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT id FROM audit_log WHERE event='catalogue_product_updated' AND metadata::jsonb->>'productId'=$1",
         [plan.id]
       )
@@ -642,7 +646,8 @@ it('queries literal bilingual titles, effective exact prices and bounded pages t
     (await request('?type=hardware&search=' + encodeURIComponent('x'.repeat(201)))).status
   ).toBe(400);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+      .rows
   ).toHaveLength(0);
 });
 
@@ -683,7 +688,7 @@ it('waits for a concurrent plan association and refuses to archive the newly ref
       (await http.pool.query('SELECT status FROM products WHERE id=$1', [hardware])).rows[0].status
     ).toBe('active');
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'"))
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='catalogue_product_archived'"))
         .rows
     ).toEqual([]);
   } finally {
@@ -692,3 +697,5 @@ it('waits for a concurrent plan association and refuses to archive the newly ref
     await pending;
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

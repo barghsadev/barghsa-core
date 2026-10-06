@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import type { NotificationTemplateResult } from './notification-template.service.js';
@@ -57,7 +58,7 @@ beforeEach(async () => {
   await http.pool.query(
     "DELETE FROM in_app_notifications WHERE recipient_user_id LIKE 'template-%'"
   );
-  await http.pool.query("DELETE FROM audit_log WHERE user_id LIKE 'template-%'");
+  await auditWindow.excludeExisting("user_id LIKE 'template-%'", []);
   await http.pool.query("UPDATE staff_roles SET permissions=$1 WHERE role_id='template-editor'", [
     grant,
   ]);
@@ -208,7 +209,7 @@ async function snapshot() {
       )
     ).rows,
     audits: (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT * FROM audit_log WHERE user_id LIKE 'template-%' AND event LIKE 'notification_template_%' ORDER BY id"
       )
     ).rows,
@@ -610,3 +611,5 @@ it('rejects publishing an invalid legacy draft before replacing the active templ
   expect((await write('publish', value)).status).toBe(400);
   expect(await snapshot()).toEqual(before);
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

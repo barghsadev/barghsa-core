@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -27,9 +28,8 @@ afterAll(async () => {
   await http?.close();
 });
 beforeEach(async () => {
-  await http.pool.query(
-    "DELETE FROM product_vat_overrides; DELETE FROM vat_configurations; DELETE FROM audit_log WHERE event='change_recorded'"
-  );
+  await auditWindow.excludeExisting("event='change_recorded'", []);
+  await http.pool.query('DELETE FROM product_vat_overrides; DELETE FROM vat_configurations;');
   productId = (
     await http.pool.query(
       "INSERT INTO products(system_key,title,price,status) VALUES ('thermal','{\"en\":\"VAT product\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active' RETURNING id"
@@ -123,7 +123,7 @@ it.each(['create', 'end', 'override', 'endOverride'] as const)(
       expect((await pending).status).toBe(403);
       await unchanged();
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
       ).toHaveLength(0);
     } finally {
       await client.query('ROLLBACK');
@@ -140,7 +140,7 @@ it('serializes repeated end-date requests without duplicate change audits', asyn
   const responses = await Promise.all([mutation('end'), mutation('end')]);
   expect(responses.map((response) => response.status)).toEqual([200, 200]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(1);
 });
 it('preserves the latest VAT state after waiting for another writer', async () => {
@@ -176,7 +176,7 @@ it('preserves the latest VAT state after waiting for another writer', async () =
       ).rows[0].effective_until.toISOString()
     ).toBe('2026-03-01T00:00:00.000Z');
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
     ).toHaveLength(0);
   } finally {
     await client.query('ROLLBACK');
@@ -201,7 +201,7 @@ it.each([
   expect(response.status).toBe(400);
   await unchanged();
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(0);
 });
 it('preserves the explicit effective-date offset', async () => {
@@ -248,7 +248,7 @@ it.each(['create', 'end', 'override', 'endOverride'] as const)(
       expect((await mutation(action)).status).toBe(401);
       await unchanged();
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
       ).toHaveLength(0);
     });
   }
@@ -261,7 +261,7 @@ it('records verified step-up time in the price configuration audit', async () =>
   ]);
   expect((await mutation('create')).ok).toBe(true);
   const rows = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'change_recorded'"
     )
   ).rows;
@@ -303,7 +303,7 @@ it.each([
   expect(error.error).not.toHaveProperty('details');
   await unchanged();
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(0);
 });
 it.each([
@@ -342,3 +342,5 @@ it('checks current finance permission before exposing field feedback', async () 
     );
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

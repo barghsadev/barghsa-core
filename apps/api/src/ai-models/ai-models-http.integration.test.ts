@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { createServer, type ServerResponse } from 'node:http';
 import { once } from 'node:events';
@@ -67,7 +68,7 @@ const input = {
 };
 beforeEach(async () => {
   await http.pool.query('DELETE FROM ai_model_test_jobs; DELETE FROM ai_models');
-  await http.pool.query("DELETE FROM audit_log WHERE event LIKE 'ai_model_%'");
+  await auditWindow.excludeExisting("event LIKE 'ai_model_%'", []);
 });
 function request(suffix = '', method = 'GET', body?: unknown) {
   return fetch(`${http.base}${path}${suffix}`, {
@@ -95,7 +96,7 @@ it('sets an audited monthly model budget and exposes current usage without chang
   const model = (await (await request(`/${id}`)).json()) as { budget: unknown };
   expect(model.budget).toMatchObject({ ...budget, usedInputTokens: 0, usedCostMicros: 0 });
   expect(
-    (await http.pool.query("SELECT event FROM audit_log WHERE event='ai_model_budget_updated'"))
+    (await auditWindow.query("SELECT event FROM audit_log WHERE event='ai_model_budget_updated'"))
       .rows
   ).toHaveLength(1);
   expect(
@@ -193,7 +194,7 @@ it.each(['create', 'update', 'delete'])('rejects revoked authority during %s', a
       { id, title: 'Original' },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
     ).toHaveLength(0);
     expect(
       (
@@ -256,7 +257,7 @@ it('encrypts tokens, retains masked credentials, clears stale test results and s
   expect((await request(`/${created.id}`, 'DELETE')).status).toBe(204);
   expect(
     JSON.stringify(
-      (await http.pool.query("SELECT metadata FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+      (await auditWindow.query("SELECT metadata FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
     )
   ).not.toContain(input.apiToken);
 });
@@ -334,7 +335,7 @@ it('preserves models referenced by an agent and records no deletion audit', asyn
       1
     );
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_deleted'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='ai_model_deleted'")).rows
     ).toHaveLength(0);
   } finally {
     await http.pool.query('DELETE FROM ai_agents WHERE id=$1', [agent]);
@@ -388,7 +389,7 @@ it.each(['edit', 'delete', 'revoke', 'audit failure', 'success'] as const)(
           : [{ last_test_status: action === 'success' ? 'passed' : 'pending' }]
       );
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
       ).toHaveLength(action === 'success' ? 1 : 0);
       if (action === 'success') {
         expect(await response.json()).toMatchObject({
@@ -432,7 +433,7 @@ it('does not overwrite a completed competing test', async () => {
       (await http.pool.query('SELECT last_test_status FROM ai_models WHERE id=$1', [id])).rows
     ).toEqual([{ last_test_status: 'passed' }]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
     ).toHaveLength(1);
   } finally {
     providerReplies[count]?.end();
@@ -493,7 +494,7 @@ it.each([
   const id = await seed();
   expect((await request(`/${id}`, 'PUT', invalid)).status).toBe(400);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
   ).toHaveLength(0);
 });
 
@@ -518,7 +519,7 @@ it.each(['baseUrl', 'providerType'] as const)(
       });
     }
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_updated'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='ai_model_updated'")).rows
     ).toHaveLength(0);
     expect((await request(`/${id}`, 'PUT', { ...change, apiToken: '' })).status).toBe(200);
     expect(
@@ -559,7 +560,7 @@ it.each(['create', 'update', 'delete'] as const)(
         { id, title: 'Original' },
       ]);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
       ).toHaveLength(0);
     });
   }
@@ -587,7 +588,7 @@ it.each([
         (await http.pool.query('SELECT last_test_status FROM ai_models WHERE id=$1', [id])).rows
       ).toEqual([{ last_test_status: 'pending' }]);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
       ).toHaveLength(0);
     } finally {
       providerReplies[count]?.end();
@@ -607,7 +608,7 @@ it('records current step-up proof on the mutation audit', async () => {
   ]);
   expect((await request('', 'POST', input)).ok).toBe(true);
   const rows = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'ai_model_%'"
     )
   ).rows;
@@ -646,3 +647,5 @@ it('returns owned model and budget feedback over HTTP without writing or exposin
   });
   expect(((await (await request(`/${id}`)).json()) as { budget: unknown }).budget).toBeNull();
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

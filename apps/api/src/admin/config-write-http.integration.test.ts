@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { randomUUID } from 'node:crypto';
@@ -135,7 +136,7 @@ beforeEach(async () => {
   await http.pool.query('DELETE FROM app_config WHERE key=ANY($1::text[])', [
     cases.map((value) => value.key),
   ]);
-  await http.pool.query('DELETE FROM audit_log');
+  await auditWindow.excludeExisting('', []);
 });
 
 function write(item: (typeof cases)[number], user = 'operator') {
@@ -163,7 +164,7 @@ it('wallet limit returns only its public form field for invalid amounts and chec
   expect(
     (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [walletLimit.key])).rows
   ).toHaveLength(0);
-  expect((await http.pool.query('SELECT id FROM audit_log')).rows).toHaveLength(0);
+  expect((await auditWindow.query('SELECT id FROM audit_log')).rows).toHaveLength(0);
 });
 it('wallet limit keeps mixed and invalid-version errors general without weakening concurrency', async () => {
   for (const body of [
@@ -291,7 +292,7 @@ it('persists minute boundaries and binds the delivery-window audit to the curren
   expect((await snapshot()).config).toEqual([{ key: daytimeWindow.key, value: body, version: 1 }]);
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT metadata::jsonb AS metadata,correlation_id FROM audit_log WHERE event='config_change'"
       )
     ).rows
@@ -425,7 +426,7 @@ it('wallet limit audit binds the current session and request correlation', async
   });
   expect(response.status).toBe(200);
   const audit = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata,correlation_id FROM audit_log WHERE event='config_change'"
     )
   ).rows;
@@ -445,7 +446,7 @@ async function snapshot() {
     ).rows,
     version: (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows,
     audits: (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT event,metadata FROM audit_log WHERE event='config_change' ORDER BY id"
       )
     ).rows,
@@ -544,3 +545,5 @@ for (const item of cases.filter((item) => item.grant === 'admin:financial:edit')
     expect((await write(item)).status).toBe(200);
   });
 }
+
+const auditWindow = new AuditWindow(() => http.pool);

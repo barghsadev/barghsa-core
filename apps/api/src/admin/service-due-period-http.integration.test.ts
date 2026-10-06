@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -37,7 +38,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await http.pool.query('DELETE FROM service_due_periods');
-  await http.pool.query('DELETE FROM audit_log');
+  await auditWindow.excludeExisting('', []);
   // These cases test configuration changes, not sub-millisecond clock agreement.
   await http.pool.query(
     "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes',step_up_verified_at=NOW()-INTERVAL '1 second'"
@@ -56,7 +57,7 @@ async function settings(response: Response) {
 }
 async function counts() {
   return (
-    await http.pool.query(`SELECT (SELECT count(*)::int FROM service_due_periods) AS periods,
+    await auditWindow.query(`SELECT (SELECT count(*)::int FROM service_due_periods) AS periods,
     (SELECT count(*)::int FROM audit_log WHERE event='invoice.due_period.changed') AS audits`)
   ).rows[0];
 }
@@ -326,3 +327,5 @@ it.each([
     ).toBeUndefined();
   }
 );
+
+const auditWindow = new AuditWindow(() => http.pool);

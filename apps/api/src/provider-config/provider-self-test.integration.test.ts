@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -42,7 +43,7 @@ beforeEach(async () => {
   );
   await http.pool.query('DELETE FROM email_provider_configs');
   await http.pool.query('DELETE FROM sms_provider_configs');
-  await http.pool.query('DELETE FROM audit_log WHERE user_id=$1', [actor.userId]);
+  await auditWindow.excludeExisting('user_id=$1', [actor.userId]);
   await http.pool.query('DELETE FROM notification_templates');
   for (const event of ['auth.otp', 'invoice.created'])
     await http.pool.query(
@@ -190,7 +191,7 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
         await http.pool.query(`SELECT * FROM ${channel}_provider_configs WHERE id=$1`, [row.id])
       ).rows,
       audit: (
-        await http.pool.query('SELECT * FROM audit_log WHERE user_id=$1 ORDER BY id', [
+        await auditWindow.query('SELECT * FROM audit_log WHERE user_id=$1 ORDER BY id', [
           actor.userId,
         ])
       ).rows,
@@ -280,7 +281,7 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
         providers: (await http.pool.query(`SELECT * FROM ${channel}_provider_configs ORDER BY id`))
           .rows,
         audit: (
-          await http.pool.query('SELECT * FROM audit_log WHERE user_id=$1 ORDER BY id', [
+          await auditWindow.query('SELECT * FROM audit_log WHERE user_id=$1 ORDER BY id', [
             actor.userId,
           ])
         ).rows,
@@ -577,3 +578,5 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
     expect(await snapshot()).toEqual(before);
   });
 }
+
+const auditWindow = new AuditWindow(() => http.pool);

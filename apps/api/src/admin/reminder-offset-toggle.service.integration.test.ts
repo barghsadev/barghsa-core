@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 /**
  * Real-PostgreSQL integration tests for ReminderOffsetToggleService
  * (T-04.1.04.05).
@@ -47,6 +48,7 @@ function parseMeta(raw: unknown): AuditMeta {
 }
 
 describe('ReminderOffsetToggleService — real PostgreSQL (T-04.1.04.05)', () => {
+  const auditWindow = new AuditWindow(() => ctx.pool);
   let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let service: ReminderOffsetToggleService;
 
@@ -71,7 +73,7 @@ describe('ReminderOffsetToggleService — real PostgreSQL (T-04.1.04.05)', () =>
 
   beforeEach(async () => {
     await ctx.pool.query('DELETE FROM invoice_reminder_offset_toggles');
-    await ctx.pool.query('DELETE FROM audit_log');
+    await auditWindow.excludeExisting('', []);
   });
 
   it('records previousEnabled from the preceding committed value under concurrent first writes', async () => {
@@ -96,7 +98,7 @@ describe('ReminderOffsetToggleService — real PostgreSQL (T-04.1.04.05)', () =>
     expect(stored.rows).toHaveLength(1);
     expect(stored.rows[0]!.enabled).toBe(false);
 
-    const audits = await ctx.pool.query<{ id: string; metadata: unknown }>(
+    const audits = await auditWindow.query<{ id: string; metadata: unknown }>(
       `SELECT id, metadata FROM audit_log
         WHERE event = $1
         ORDER BY created_at ASC, id ASC`,

@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -25,9 +26,8 @@ afterAll(async () => {
   await http?.close();
 });
 beforeEach(async () => {
-  await http.pool.query(
-    "DELETE FROM gift_codes; DELETE FROM audit_log WHERE event='change_recorded'"
-  );
+  await auditWindow.excludeExisting("event='change_recorded'", []);
+  await http.pool.query('DELETE FROM gift_codes;');
   giftId = (
     await http.pool.query(
       "INSERT INTO gift_codes(code,discount_type,discount_value,valid_from,created_by) VALUES ('ORIGINAL','fixed_irr',1000,'2026-01-01','gift-admin') RETURNING id"
@@ -388,7 +388,7 @@ it.each(['create', 'update', 'toggle', 'archive'] as const)(
       expect((await pending).status).toBe(403);
       await unchanged();
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
       ).toHaveLength(0);
     } finally {
       await client.query('ROLLBACK');
@@ -440,7 +440,7 @@ it('persists gift-code changes and suppresses repeated activation audits', async
     { code: 'SECOND', status: 'active' },
   ]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(3);
 });
 
@@ -473,7 +473,7 @@ for (const method of ['POST', 'PATCH'])
     expect(response.status).toBe(400);
     await unchanged();
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
     ).toHaveLength(0);
   });
 it('accepts exact database bounds and normalizes a code', async () => {
@@ -645,7 +645,7 @@ it('archives idempotently while retaining released history and rejects consumed 
     expect((await archive()).status).toBe(409);
     await unchanged();
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
     ).toHaveLength(0);
     await http.pool.query(
       "UPDATE gift_code_redemptions SET status='released',restored_at=clock_timestamp() WHERE order_id=$1",
@@ -659,7 +659,7 @@ it('archives idempotently while retaining released history and rejects consumed 
     expect(replay.status).toBe(200);
     expect(await replay.json()).toEqual(receipt);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
     ).toHaveLength(1);
     expect(
       (
@@ -676,3 +676,5 @@ it('archives idempotently while retaining released history and rejects consumed 
     await http.pool.query('DELETE FROM profiles WHERE id=$1', [profileId]);
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -46,7 +47,7 @@ function request(method = 'GET', user = 'operator') {
 }
 beforeEach(async () => {
   await http.pool.query('DELETE FROM invoice_reminder_offset_toggles');
-  await http.pool.query('DELETE FROM audit_log');
+  await auditWindow.excludeExisting('', []);
   await http.pool.query(
     "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day', idle_deadline=NOW()+INTERVAL '30 minutes', step_up_verified_at=NOW()"
   );
@@ -75,7 +76,7 @@ it('rejects reminder writes after a grant is revoked while waiting on the actor'
     expect(
       (await http.pool.query('SELECT * FROM invoice_reminder_offset_toggles')).rows
     ).toHaveLength(0);
-    expect((await http.pool.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
+    expect((await auditWindow.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
   } finally {
     await client.query('ROLLBACK');
     client.release();
@@ -96,14 +97,14 @@ it('rolls back the reminder toggle when its audit insert fails', async () => {
     expect(
       (await http.pool.query('SELECT * FROM invoice_reminder_offset_toggles')).rows
     ).toHaveLength(0);
-    expect((await http.pool.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
+    expect((await auditWindow.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
   } finally {
     await http.pool.query('DROP TRIGGER reject_reminder_audit ON audit_log');
   }
   expect((await request('PUT')).status).toBe(200);
-  expect((await http.pool.query('SELECT metadata::jsonb AS metadata FROM audit_log')).rows).toEqual(
-    [{ metadata: { ...body, previousEnabled: true } }]
-  );
+  expect(
+    (await auditWindow.query('SELECT metadata::jsonb AS metadata FROM audit_log')).rows
+  ).toEqual([{ metadata: { ...body, previousEnabled: true } }]);
 });
 it('denies staff without the reminder grant and preserves the default matrix', async () => {
   expect((await request('GET', 'other')).status).toBe(403);
@@ -166,7 +167,7 @@ it.each(['pair', 'audit', 'read'] as const)(
       expect(
         (await http.pool.query('SELECT * FROM invoice_reminder_offset_toggles')).rows
       ).toHaveLength(0);
-      expect((await http.pool.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
+      expect((await auditWindow.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
     } finally {
       await blocker.query('ROLLBACK');
       blocker.release();
@@ -204,10 +205,12 @@ it('rechecks step-up after waiting for the pair lock', async () => {
     expect(
       (await http.pool.query('SELECT * FROM invoice_reminder_offset_toggles')).rows
     ).toHaveLength(0);
-    expect((await http.pool.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
+    expect((await auditWindow.query('SELECT * FROM audit_log')).rows).toHaveLength(0);
   } finally {
     await blocker.query('ROLLBACK');
     blocker.release();
     await pending;
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

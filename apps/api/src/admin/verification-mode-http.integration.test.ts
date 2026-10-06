@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -28,8 +29,9 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 beforeEach(async () => {
+  await auditWindow.excludeExisting('', []);
   await http.pool.query(
-    "DELETE FROM app_config WHERE key IN ('profile_verification_mode','profile_verification_mode_draft','verification.required','verification.method'); DELETE FROM audit_log"
+    "DELETE FROM app_config WHERE key IN ('profile_verification_mode','profile_verification_mode_draft','verification.required','verification.method');"
   );
   await http.pool.query(
     "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day',idle_deadline=clock_timestamp()+INTERVAL '30 minutes',step_up_verified_at=clock_timestamp() WHERE session_id=$2",
@@ -55,7 +57,7 @@ async function snapshot() {
     ).rows,
     global: (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows,
     audit: (
-      await http.pool.query(
+      await auditWindow.query(
         'SELECT event,metadata,correlation_id FROM audit_log ORDER BY created_at,id'
       )
     ).rows,
@@ -245,3 +247,5 @@ for (const action of ['draft', 'activate']) {
     });
   }
 }
+
+const auditWindow = new AuditWindow(() => http.pool);

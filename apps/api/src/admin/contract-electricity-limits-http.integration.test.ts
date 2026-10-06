@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -43,7 +44,7 @@ const input = {
 };
 beforeEach(async () => {
   await http.pool.query('DELETE FROM app_config WHERE key=$1', [key]);
-  await http.pool.query("DELETE FROM audit_log WHERE event='change_recorded'");
+  await auditWindow.excludeExisting("event='change_recorded'", []);
 });
 function save(user = 'operator') {
   return fetch(`${http.base}/api/admin/config/contract-electricity-limits`, {
@@ -73,7 +74,7 @@ it('returns owned camelCase fields for invalid limits without writing settings o
     (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [key])).rows
   ).toHaveLength(0);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(0);
 });
 it('keeps unknown and mixed input general without reflecting private keys, and checks permission first', async () => {
@@ -142,7 +143,7 @@ it('serializes first saves from different staff before recording previous versio
     expect((await first).status).toBe(200);
     expect((await second).status).toBe(200);
     const rows = (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='change_recorded' ORDER BY (metadata::jsonb->>'version')::int"
       )
     ).rows;
@@ -181,7 +182,7 @@ it('rejects removed authority while saving without an idle transaction', async (
       (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [key])).rows
     ).toHaveLength(0);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
     ).toHaveLength(0);
     expect(
       (
@@ -218,3 +219,5 @@ it('rolls back settings and global version when audit storage fails', async () =
     await http.pool.query('DROP TRIGGER reject_contract_limit_audit ON audit_log');
   }
 });
+
+const auditWindow = new AuditWindow(() => http.pool);

@@ -1184,6 +1184,13 @@
       "when": 1791331202259,
       "tag": "0248_electricity_pre_active_rejection",
       "breakpoints": true
+    },
+    {
+      "idx": 249,
+      "version": "7",
+      "when": 1791331202260,
+      "tag": "0249_audit_log_immutability",
+      "breakpoints": true
     }
   ]
 }

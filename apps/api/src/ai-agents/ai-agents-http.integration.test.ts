@@ -1,3 +1,4 @@
+import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -26,8 +27,9 @@ afterAll(async () => {
   await http?.close();
 });
 beforeEach(async () => {
+  await auditWindow.excludeExisting("event LIKE 'ai_agent_%'", []);
   await http.pool.query(
-    "UPDATE ai_agent_slots SET agent_id=NULL; DELETE FROM ai_agents; DELETE FROM ai_models; DELETE FROM audit_log WHERE event LIKE 'ai_agent_%'"
+    'UPDATE ai_agent_slots SET agent_id=NULL; DELETE FROM ai_agents; DELETE FROM ai_models;'
   );
   modelId = (
     await http.pool.query(
@@ -97,7 +99,7 @@ it.each(['create', 'update', 'delete'] as const)('rechecks agent %s authority', 
       { id: agentId, title: 'Support' },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
     ).toHaveLength(0);
   } finally {
     await client.query('ROLLBACK');
@@ -117,7 +119,7 @@ it('persists agent CRUD with audit entries', async () => {
   ]);
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT event FROM audit_log WHERE event LIKE 'ai_agent_%' ORDER BY created_at,id"
       )
     ).rows.map((row) => row.event)
@@ -234,7 +236,7 @@ it('audits the latest enabled state after a concurrent edit', async () => {
     expect((await pending).status).toBe(200);
     expect(
       (
-        await http.pool.query(
+        await auditWindow.query(
           "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='ai_agent_updated'"
         )
       ).rows
@@ -299,7 +301,7 @@ async function unchangedLink(entry: (typeof linkCases)[number]) {
     ).rows
   ).toHaveLength(entry.action === 'remove' ? 1 : 0);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
   ).toHaveLength(0);
 }
 it.each(linkCases)('rolls back agent $kind $action links on audit failure', async (entry) => {
@@ -353,11 +355,11 @@ it.each(['kb', 'policy'] as const)(
     expect((await linkRequest({ kind, action: 'add' }, id)).status).toBe(204);
     expect((await linkRequest({ kind, action: 'add' }, id)).status).toBe(204);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
     ).toHaveLength(1);
     expect((await linkRequest({ kind, action: 'remove' }, id)).status).toBe(204);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
     ).toHaveLength(2);
     expect(
       (
@@ -388,7 +390,7 @@ it('rejects blank titles and unexpected agent fields without mutations', async (
     { title: 'Support' },
   ]);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
   ).toHaveLength(0);
   const response = await fetch(`${http.base}/api/admin/agents/${agentId}`, {
     method: 'PUT',
@@ -467,19 +469,19 @@ it('creates, preserves, replaces and clears agent group references', async () =>
     kbGroups: [{ id: groups.kb }],
     policyGroups: [{ id: groups.policy }],
   });
-  await http.pool.query("DELETE FROM audit_log WHERE event LIKE 'ai_agent_%'");
+  await auditWindow.excludeExisting("event LIKE 'ai_agent_%'", []);
   expect(
     (await updateGroups({ kbGroupIds: [groups.kb, groups.kb], policyGroupIds: [groups.policy] }))
       .status
   ).toBe(200);
   expect(
-    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
   ).toHaveLength(0);
   expect((await updateGroups({ kbGroupIds: [] })).status).toBe(200);
   expect(await read()).toMatchObject({ kbGroups: [], policyGroups: [{ id: groups.policy }] });
   expect(
     (
-      await http.pool.query(
+      await auditWindow.query(
         "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='ai_agent_updated'"
       )
     ).rows
@@ -503,7 +505,7 @@ it.each(['kbGroupIds', 'policyGroupIds'] as const)(
       { id: agentId, title: 'Support' },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
     ).toHaveLength(0);
   }
 );
@@ -512,8 +514,9 @@ it('rolls back group replacements with scalar edits when the audit fails', async
   expect(
     (await updateGroups({ kbGroupIds: [groups.kb], policyGroupIds: [groups.policy] })).status
   ).toBe(200);
+  await auditWindow.excludeExisting("event LIKE 'ai_agent_%'", []);
   await http.pool.query(
-    "DELETE FROM audit_log WHERE event LIKE 'ai_agent_%'; CREATE OR REPLACE FUNCTION reject_agent_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_agent_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_agent_%') EXECUTE FUNCTION reject_agent_audit()"
+    "CREATE OR REPLACE FUNCTION reject_agent_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_agent_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_agent_%') EXECUTE FUNCTION reject_agent_audit()"
   );
   try {
     expect(
@@ -585,7 +588,7 @@ it.each(['create', 'update', 'delete'] as const)(
           { id: agentId, title: 'Support' },
         ]);
         expect(
-          (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+          (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
         ).toHaveLength(0);
       }
     );
@@ -623,7 +626,7 @@ it.each([
         (await http.pool.query('SELECT agent_id FROM ai_agent_policy_groups')).rows
       ).toHaveLength(0);
       expect(
-        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
       ).toHaveLength(0);
     });
   }
@@ -636,7 +639,7 @@ it('records current step-up proof on the mutation audit', async () => {
   ]);
   expect((await mutation('create')).ok).toBe(true);
   const rows = (
-    await http.pool.query(
+    await auditWindow.query(
       "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'ai_agent_%'"
     )
   ).rows;
@@ -675,7 +678,7 @@ it.each(['create', 'update'] as const)(
       { id: agentId, title: 'Support' },
     ]);
     expect(
-      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
     ).toHaveLength(0);
   }
 );
@@ -710,3 +713,5 @@ it('reports exact direct link counts in the agent list and refreshed detail', as
     expect.objectContaining({ id: agentId, kbCount: 0, policyCount: 0 }),
   ]);
 });
+
+const auditWindow = new AuditWindow(() => http.pool);
