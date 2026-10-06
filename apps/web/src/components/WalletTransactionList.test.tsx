@@ -1,9 +1,12 @@
-import { act } from 'react';
+import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
 import { WalletTransactionList } from './WalletTransactionList.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { refreshProfileContext } from '../lib/profile-context.js';
+import { useListQuery } from '../hooks/useListQuery.js';
+import { walletHistoryQueryOptions } from '../lib/wallet-history-query.js';
 
 let currentLocale: 'en' | 'fa' = 'en';
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => currentLocale }));
@@ -404,3 +407,107 @@ it('distinguishes a pending second review from an applied payment', async () => 
   expect(host.textContent).toContain('Awaiting a second reviewer. No funds have been applied yet.');
   expect(host.querySelector('details')?.textContent).not.toContain('Receipt confirmed');
 });
+
+it.each([401, 403])('recovers a denied wallet history from page one (%s)', async (status) => {
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(response([tx], 'denied-page'))
+    .mockResolvedValueOnce({ ok: false, status })
+    .mockResolvedValueOnce(response([{ ...tx, description: 'Restored history' }]));
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await click('Next page');
+  expect(host.textContent).not.toContain('Bank transfer');
+  expect(host.querySelector('nav[aria-label="History pages"]')).toBeNull();
+  await click('Try again');
+  expect(String(fetcher.mock.calls.at(-1)![0])).not.toContain('cursor=');
+  expect(host.textContent).toContain('Restored history');
+});
+
+it.each(['success', 'denial'] as const)(
+  'fences a late wallet %s after an account change',
+  async (kind) => {
+    let finish!: (value: unknown) => void;
+    const pending = new Promise((resolve) => {
+      finish = resolve;
+    });
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response([tx], 'older-page'))
+      .mockReturnValueOnce(pending)
+      .mockResolvedValueOnce(response([{ ...tx, description: 'New account history' }]));
+    vi.stubGlobal('fetch', fetcher);
+    await render();
+    await click('Next page');
+    await render('profile-a', 'en', 'new-account');
+    expect(host.textContent).not.toContain('Bank transfer');
+    await act(async () => finish(kind === 'success' ? response() : { ok: false, status: 403 }));
+    expect(host.textContent).toContain('New account history');
+    expect(host.querySelector('[role=alert]')).toBeNull();
+    expect(String(fetcher.mock.calls.at(-1)![0])).not.toContain('cursor=');
+  }
+);
+
+it('fences a denial when profile context changes before the next render', async () => {
+  let finish!: (value: unknown) => void;
+  const pending = new Promise((resolve) => {
+    finish = resolve;
+  });
+  vi.stubGlobal(
+    'fetch',
+    vi
+      .fn()
+      .mockResolvedValueOnce(response([tx], 'older-page'))
+      .mockReturnValueOnce(pending)
+      .mockResolvedValueOnce(response([{ ...tx, description: 'Current profile history' }]))
+  );
+  await render();
+  await click('Next page');
+  await act(async () => {
+    refreshProfileContext();
+    finish({ ok: false, status: 403 });
+  });
+  expect(host.textContent).not.toContain('Bank transfer');
+  expect(host.textContent).toContain('Current profile history');
+  expect(host.querySelector('[role=alert]')).toBeNull();
+});
+
+it.each(['denial', 'account'] as const)(
+  'waits for asynchronous cursor reset before reading after %s',
+  async (kind) => {
+    let finishNavigation!: () => void;
+    function RouteHistory({ account, locale = 'en' }: { account: string; locale?: 'en' | 'fa' }) {
+      const [raw, setRaw] = useState<Record<string, unknown>>({
+        history_cursor: 'denied-page',
+        history_q: 'saved',
+      });
+      const binding = useListQuery(walletHistoryQueryOptions, raw, (update) => {
+        finishNavigation = () => setRaw(update);
+      });
+      return (
+        <AccountUserProvider value={account}>
+          <WalletTransactionList profileId="profile-a" locale={locale} binding={binding} />
+        </AccountUserProvider>
+      );
+    }
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(kind === 'denial' ? { ok: false, status: 403 } : response())
+      .mockResolvedValue(response([{ ...tx, description: 'Restored history' }]));
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () => root.render(<RouteHistory account="old-account" />));
+    if (kind === 'denial') await click('Try again');
+    else {
+      await act(async () => root.render(<RouteHistory account="new-account" />));
+      await act(async () => root.render(<RouteHistory account="new-account" locale="fa" />));
+    }
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(host.textContent).not.toContain('Bank transfer');
+    await act(async () => finishNavigation());
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    const url = new URL(String(fetcher.mock.calls.at(-1)![0]), 'http://localhost');
+    expect(url.searchParams.has('cursor')).toBe(false);
+    expect(url.searchParams.get('q')).toBe('saved');
+    expect(host.textContent).toContain('Restored history');
+  }
+);

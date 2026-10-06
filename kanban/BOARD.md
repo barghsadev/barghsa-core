@@ -10,11 +10,11 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 13 | Accepted with unchanged source bindings. |
+| done | 14 | Accepted with unchanged source bindings. |
 | verify | 1290 | Existing work may be complete; inspect evidence before building. |
 | partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 14 | New, concrete work or release checks. |
-| in_progress | 0 | Existing work to finish. |
+| todo | 12 | New, concrete work or release checks. |
+| in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 1 | Explicit approved scope disposition. |
 
@@ -39,9 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect native wallet history ownership, then renew identity and four-service acceptance using current implementation and matching evidence.
+Fix demonstrated solar add-address and historical address display gaps, renew address-in-order acceptance, then continue the current identity/four-service task inventory without rebuilding existing engines.
 
-- `release-readiness#R-01.02`: Inspect and repair customer wallet history ownership
+- `02-auth-users-admin.md#T-03.04.02`: Address in order flow
+- `03-core-business.md#T-03.11.02.03`: Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -50,8 +51,8 @@ All four services have a safe browse → intake → review → payment where app
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-01.01` | todo | Inventory needed | Renew identity and all-four-service journey acceptance |
-| `release-readiness#R-01.02` | todo | Inventory needed | Inspect and repair customer wallet history ownership |
+| `release-readiness#R-01.01` | in_progress | Inventory needed | Renew identity and all-four-service journey acceptance |
+| `release-readiness#R-01.02` | done | Inventory needed | Inspect and repair customer wallet history ownership |
 | `release-readiness#R-01.03` | done | Recorded batch work | Finish the already validated consultation history changes |
 | `release-readiness#R-01.04` | todo | Inventory needed | Verify four complete customer and staff intake journeys |
 | `release-readiness#R-01.05` | done | Inventory needed | Group release notes and screenshots into at most two Telegram posts |

@@ -17196,8 +17196,9 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Local source and fixture-backed acceptance; no production/provider deployment claim.",
-        "Savings/solar address selection and saved-address creation remain incomplete with their unbuilt product flows. Reconcile generic snapshot requirements with future product schemas before building. Track in V01/B01; do not recreate whole order products in this repair batch."
+        "Verify existing saved-address selection/creation and immutable order address snapshots across electricity, saving and solar with relevant source/HTTP/browser evidence.",
+        "Confirmed solar gaps: add-address action is available only when no addresses exist; request detail joins the mutable saved address instead of the recorded submission review snapshot.",
+        "Original saved-address CRUD and dependent order-flow acceptance remains to be renewed; historical claims that saving/solar modules are unbuilt are stale."
       ],
       "owner": null,
       "depends_on": [],
@@ -65229,7 +65230,7 @@
         "Disposition each original task in this scope using its own criterion. Shared primitives do not prove whole workflows.",
         "Replace stale absent-module statements with exact current remaining criteria and bound check evidence."
       ],
-      "status": "todo",
+      "status": "in_progress",
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
@@ -65241,7 +65242,13 @@
       "depends_on": [],
       "evidence": {
         "current_acceptance": null,
-        "batches": []
+        "batches": [],
+        "inspection": {
+          "wallet_history": "R-01.02 accepted separately.",
+          "address_flow": "Saving creates saved addresses inline; advanced electricity saves its draft before opening address settings; solar address settings preserve its draft but its link is hidden when existing addresses are present. Solar detail joins mutable address despite retaining submission_review.data.siteAddress.",
+          "dashboard": "Current context and five widget readers plus permission-scoped contract/order/ticket/invoice counts exist; historical missing-module claims require current reconciliation.",
+          "policy": "Existing six unanswered owner questions remain unchanged; no approval inferred."
+        }
       }
     },
     {
@@ -65255,17 +65262,74 @@
         "Check account/profile changes, late replies, current 401/403 and deliberate retry against the native transaction history.",
         "Add a regression only for a confirmed gap. Preserve funding, payment and exact amounts."
       ],
-      "status": "todo",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check account/profile changes, late replies, current 401/403 and deliberate retry against the native transaction history.",
-        "Add a regression only for a confirmed gap. Preserve funding, payment and exact amounts."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
-        "current_acceptance": null,
+        "current_acceptance": {
+          "kind": "reviewed-wallet-history-recovery",
+          "reviewed_sha": "ab8b633c57cc532f566c1494ea0c7c4c65ce4a0a",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+              "sha256": "64bc486492644d738b3bbe7d588e3c58f82b401aa314e24f76a9ee2c9aee27a1"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "6e5c69eb627956b64752b25f840981ee2b9c481b65afbbbd192371d49e11bf99"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f50d69b3240a87957a8bda0c5f92da4814431e0e40d7504496dd077563b2280d"
+            },
+            {
+              "path": "apps/web/src/routes/_app/wallet.tsx",
+              "sha256": "06a62593967c8d00199b8fd9c2bdc7deba6f19d24aeefa33e6b1c2a4871c892e"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "54f64f439296c9a03103a2aeccd816d2c3402cf10a6c46026fb3cc28c2db35d3"
+            }
+          ],
+          "checks": [
+            "83 actual source cases pass in four exact wallet history/presenter/query/hook files, including seven new regressions. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/source-reviewed.json",
+            "Eight zero-retry production browser cases pass in Persian/English, light/dark and Chromium/mobile Safari; denial clears private content/pagination, exactly one deliberate recovery fetch starts page one, applied filters and unsubmitted bank draft remain. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/browser-reviewed.json",
+            "Web production build/types, focused lint and all 85 unchanged numeric route/interaction budgets pass; 495 build assets bound. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/browser-source.json",
+            "Native amounts above Number.MAX_SAFE_INTEGER, original receipt recovery, keyboard and WCAG assertions retained. Reviewed original Persian captures and exact failed-check dispositions: /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/review.json"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope"
+        },
         "batches": []
       }
     },
@@ -72217,18 +72281,19 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-history-and-acceptance",
+    "id": "release-0.2-address-and-acceptance",
     "release": "0.2.0",
-    "goal": "Inspect native wallet history ownership, then renew identity and four-service acceptance using current implementation and matching evidence.",
+    "goal": "Fix demonstrated solar add-address and historical address display gaps, renew address-in-order acceptance, then continue the current identity/four-service task inventory without rebuilding existing engines.",
     "task_keys": [
-      "release-readiness#R-01.02",
+      "02-auth-users-admin.md#T-03.04.02",
+      "03-core-business.md#T-03.11.02.03",
       "release-readiness#R-01.01"
     ]
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "Estimate from confirmed missing criteria and observed comparable accepted batches; show policy/provisioning time separately. Do not count verification items as unbuilt tasks."
+    "method": "Consultation patch and wallet history are accepted batches. Current census still requires task-specific verification; two solar address gaps are demonstrated. Six owner decisions and required external operational/provider evidence remain separate from implementation time."
   },
   "capabilities": [
     {

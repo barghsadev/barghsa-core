@@ -7,6 +7,8 @@ import { t, type Locale } from '@barghsa/i18n/app';
 import { WalletTransactionRecords, type WalletTransaction } from './WalletTransactionRecords.js';
 import { useListView } from '../hooks/useListView.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 
 interface Page {
   transactions: WalletTransaction[];
@@ -26,13 +28,19 @@ export function TransactionList({
   const [raw, setRaw] = useState<Record<string, unknown>>({});
   const local = useListQuery(walletHistoryQueryOptions, raw, (update) => setRaw(update));
   const query = binding ?? local;
-  const previousProfile = useRef(profileId);
+  const account = useAccountUser();
+  const revision = useProfileContextRevision();
+  const owner = JSON.stringify([account, revision, profileId]);
+  const previousOwner = useRef(owner);
+  const resettingCursor = previousOwner.current !== owner && !!query.query.cursor;
   useLayoutEffect(() => {
-    if (previousProfile.current === profileId) return;
-    previousProfile.current = profileId;
-    if (query.query.cursor) query.setQuery({ cursor: '' }, true);
-  }, [profileId]);
-  return <History key={profileId} profileId={profileId} locale={locale} binding={query} />;
+    if (previousOwner.current === owner) return;
+    if (query.query.cursor) query.setQuery({ cursor: '', search: query.query.search }, true);
+    else previousOwner.current = owner;
+  }, [owner, query.query.cursor]);
+  return resettingCursor ? null : (
+    <History key={owner} profileId={profileId} locale={locale} binding={query} />
+  );
 }
 export { TransactionList as WalletTransactionList };
 function History({
@@ -113,15 +121,27 @@ function HistoryPage({
     page: null,
   });
   const page = accepted.criteria === criteria ? accepted.page : null;
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const cursor = binding.query.cursor;
+  const revision = useProfileContextRevision();
+  const requestScope = JSON.stringify([criteria, cursor, attempt, revision]);
+  const currentRequest = useRef(requestScope);
+  currentRequest.current = requestScope;
+  const [read, setRead] = useState({
+    scope: requestScope,
+    status: 'loading' as 'loading' | 'ready' | 'error' | 'denied',
+  });
+  const status = read.scope === requestScope ? read.status : 'loading';
+  const loading = status === 'loading';
+  const error = status === 'error' || status === 'denied';
   const label = (key: string) => t(`wallet.history.${key}`, locale);
   useEffect(() => {
     const controller = new AbortController();
-    setLoading(true);
-    setError(false);
+    const current = () =>
+      !controller.signal.aborted &&
+      currentRequest.current === requestScope &&
+      getProfileContextRevision() === revision;
+    setRead({ scope: requestScope, status: 'loading' });
     const params = new URLSearchParams(filters);
     params.set('limit', '25');
     if (cursor) params.set('cursor', cursor);
@@ -130,27 +150,30 @@ function HistoryPage({
       signal: controller.signal,
     })
       .then(async (response) => {
+        if (!current()) return;
         if (!response.ok) {
-          if (!controller.signal.aborted && [401, 403, 404].includes(response.status))
+          if ([401, 403, 404].includes(response.status)) {
             setAccepted({ criteria, page: null });
+            setRead({ scope: requestScope, status: 'denied' });
+            return;
+          }
           throw new Error('History unavailable');
         }
         const data = (await response.json()) as Page;
+        if (!current()) return;
         if (
           !Array.isArray(data.transactions) ||
           !(data.nextCursor === null || typeof data.nextCursor === 'string')
         )
           throw new Error('Invalid history');
-        if (!controller.signal.aborted) setAccepted({ criteria, page: data });
+        setAccepted({ criteria, page: data });
+        setRead({ scope: requestScope, status: 'ready' });
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (current()) setRead({ scope: requestScope, status: 'error' });
       });
     return () => controller.abort();
-  }, [criteria, cursor, attempt]);
+  }, [requestScope]);
   return (
     <>
       <ListPage.Content
@@ -161,8 +184,24 @@ function HistoryPage({
         loadingView={<p role="status">{label('loading')}</p>}
         errorView={
           <div className="flex flex-col gap-2">
-            <p role="alert">{label('error')}</p>
-            <Button variant="outline" onClick={() => setAttempt((value) => value + 1)}>
+            <p role="alert">
+              {status === 'denied' ? t('historyPagination.accessDenied', locale) : label('error')}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (
+                  currentRequest.current !== requestScope ||
+                  getProfileContextRevision() !== revision
+                )
+                  return;
+                if (status === 'denied' && cursor) {
+                  binding.setQuery({ cursor: '', search: binding.query.search }, true);
+                  return;
+                }
+                setAttempt((value) => value + 1);
+              }}
+            >
               {label('retry')}
             </Button>
           </div>
@@ -180,19 +219,21 @@ function HistoryPage({
           />
         ) : null}
       </ListPage.Content>
-      <ListPage.Pagination
-        kind="cursor"
-        label={t('historyPagination.label', locale)}
-        hasMore={!error && binding.canAdvance(page?.nextCursor ?? null)}
-        loading={loading}
-        nextLabel={label('next')}
-        onNext={() => binding.next(page?.nextCursor ?? '')}
-        previous={{
-          enabled: binding.hasPrevious,
-          label: label('previous'),
-          onClick: binding.previous,
-        }}
-      />
+      {status !== 'denied' && (
+        <ListPage.Pagination
+          kind="cursor"
+          label={t('historyPagination.label', locale)}
+          hasMore={!error && binding.canAdvance(page?.nextCursor ?? null)}
+          loading={loading}
+          nextLabel={label('next')}
+          onNext={() => binding.next(page?.nextCursor ?? '')}
+          previous={{
+            enabled: binding.hasPrevious,
+            label: label('previous'),
+            onClick: binding.previous,
+          }}
+        />
+      )}
     </>
   );
 }

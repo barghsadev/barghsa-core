@@ -143,6 +143,7 @@ for (const locale of ['en', 'fa'] as const)
         });
       let reads = 0;
       let failNextPage = false;
+      let denyNextPage = false;
       const queries: URLSearchParams[] = [];
       const receipt = {
         paymentDate: '2026-09-01',
@@ -174,6 +175,10 @@ for (const locale of ['en', 'fa'] as const)
         const params = new URL(r.request().url()).searchParams;
         queries.push(params);
         const more = params.has('cursor');
+        if (more && denyNextPage) {
+          denyNextPage = false;
+          return r.fulfill({ status: 403, json: {} });
+        }
         if (more && failNextPage) {
           failNextPage = false;
           return r.fulfill({ status: 503, json: { message: 'Try again' } });
@@ -474,6 +479,46 @@ for (const locale of ['en', 'fa'] as const)
         .click();
       await expect(history.getByRole('alert')).toHaveCount(0);
       expect(queries.at(-1)?.toString()).toBe(failedQuery);
+      await history
+        .getByRole('button', { name: t('wallet.history.previous', locale), exact: true })
+        .click();
+      denyNextPage = true;
+      await history
+        .getByRole('button', { name: t('wallet.history.next', locale), exact: true })
+        .click();
+      await expect(history.getByRole('alert')).toHaveText(
+        t('historyPagination.accessDenied', locale)
+      );
+      await expect(history.getByRole('navigation')).toHaveCount(0);
+      await expect(details).toHaveCount(0);
+      await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+      if (locale === 'fa' && darkMode && process.env.BARGHSA_SCREENSHOT_DIR)
+        await history.screenshot({
+          path: `${process.env.BARGHSA_SCREENSHOT_DIR}/wallet-history-denied-${test.info().project.name}.png`,
+        });
+      const beforeDeniedRetry = queries.length;
+      await history
+        .getByRole('button', { name: t('wallet.history.retry', locale), exact: true })
+        .click();
+      await expect(history.getByRole('alert')).toHaveCount(0);
+      await expect.poll(() => queries.at(-1)?.has('cursor')).toBe(false);
+      expect(queries.slice(beforeDeniedRetry).map((query) => query.has('cursor'))).toEqual([false]);
+      expect(queries.at(-1)?.get('q')).toBe('TRK_%\\');
+      expect(queries.at(-1)?.get('min')).toBe(amount);
+      expect(queries.at(-1)?.get('max')).toBe(amount);
+      expect(queries.at(-1)?.get('sort')).toBe('asc');
+      await expect(bankDraft).toHaveValue('Unsubmitted bank draft');
+      await expect(
+        history.getByRole('button', { name: t('wallet.history.previous', locale), exact: true })
+      ).toBeDisabled();
+      if (locale === 'fa' && darkMode && process.env.BARGHSA_SCREENSHOT_DIR)
+        await history.screenshot({
+          path: `${process.env.BARGHSA_SCREENSHOT_DIR}/wallet-history-restored-${test.info().project.name}.png`,
+        });
+      await history
+        .getByRole('button', { name: t('wallet.history.next', locale), exact: true })
+        .click();
+      await expect.poll(() => queries.at(-1)?.get('cursor')).toBe('older-page');
       const pageUrl = page.url();
       await page.reload();
       await expect(history).toBeVisible();
