@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-06T17:48:48Z. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-06T17:53:13Z. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 214 | Accepted with unchanged source bindings. |
-| verify | 1089 | Existing work may be complete; inspect evidence before building. |
+| done | 227 | Accepted with unchanged source bindings. |
+| verify | 1076 | Existing work may be complete; inspect evidence before building. |
 | partial | 54 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,21 +39,26 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing solar request schema, conditional intake, agreement acceptance, independent document decisions, postal and overall lifecycle. Preserve earlier demonstrated address gaps; build only missing criteria. Retain unfinished electricity all-pre-active terminal operations and unanswered schema naming dispositions.
+Inspect common four-service requirements: authoritative templates/wallet funding, audit and comment visibility, submission/gift limits, immutable settings snapshots, staff dashboard/refund queues, tested state guards, WorkflowStatusBanner and form drafts. Reuse exact current service receipts; build demonstrated gaps. Preserve electricity all-pre-active terminal work and unanswered owner representations.
 
-- `03-core-business.md#T-03.11.01.01`: Create `solar_construction_requests` table: `id` (UUIDv7), `profile_id` (FK), `status` (enum — overall state machine), `building_type` (enum: `building_apartment`, `non_household`), `grid_type` (enum: `on_grid`, `off_grid`), `bill_identifier` (VARCHAR nullable — required for on-grid), `property_form` (enum: `apartment`, `villa` — nullable, for building/apartment only), `structural_frame` (enum: `concrete`, `steel`, `other` — nullable), `building_completion_date` (date — nullable), `total_units` (int — nullable, for apartment), `site_category` (enum: `agricultural`, `industrial` — nullable, for non-household), `installation_surface` (enum: `land`, `rooftop`, `both` — nullable), `usable_area_sqm` (decimal — nullable), `site_address_id` (FK — nullable), `site_relationship` (enum: `owner`, `tenant`, `authorized_operator` — nullable), `site_description` (text — nullable), `agreement_accepted` (bool), `agreement_version` (text), `agreement_snapshot` (text), `created_at`, `updated_at`
-- `03-core-business.md#T-03.11.01.02`: Create `solar_construction_documents` table: `id`, `request_id` (FK), `document_id` (FK — documents/storage), `file_name`, `staff_status` (enum: `pending`, `approved`, `rejected`), `staff_reason` (text nullable), `staff_reviewed_by` (FK nullable), `staff_reviewed_at`, `uploaded_by` (FK), `uploaded_at`
-- `03-core-business.md#T-03.11.01.03`: Create `solar_construction_postal` table: `id`, `request_id` (FK), `status` (enum: `waiting_for_shipment`, `shipped`, `received`, `incomplete`, `not_received`), `courier` (text nullable), `tracking_number` (text nullable), `send_date` (timestamptz nullable), `receipt_image_id` (FK nullable), `staff_confirmed_by` (FK nullable), `staff_confirmed_at`, `staff_notes` (text nullable)
-- `03-core-business.md#T-03.11.02.01`: Screen 1: Persian instruction: `نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.` — Two option cards: "Building and apartment" and "Non-household"
-- `03-core-business.md#T-03.11.02.04`: Grid type selection: "On-Grid" (sell to grid) or "Off-Grid" (self-consumption)
-- `03-core-business.md#T-03.11.02.05`: On-Grid only: electricity bill identifier field (required)
-- `03-core-business.md#T-03.11.02.06`: Off-Grid disclaimer: generated electricity is used internally. May remain available during grid outages only subject to final technical design and installed storage equipment.
-- `03-core-business.md#T-03.11.03.01`: Display 5 contract-preparation stages before submission:
-- `03-core-business.md#T-03.11.03.02`: Required checkbox: `شرایط ثبت قرارداد را می‌پذیرم.` with the accepted text version and time retained.
-- `03-core-business.md#T-03.11.03.03`: Submission creates only a solar construction request (no contract or invoice). Redirects to request detail page.
-- `03-core-business.md#T-03.11.04.01`: Overall state machine:
-- `03-core-business.md#T-03.11.04.02`: Document-level decisions do not automatically reject the overall request. Only one file may be rejected while others are approved.
-- `03-core-business.md#T-03.11.04.03`: `Rejected` and `Cancelled` require reason and support path. `Approved` remains open until staff creates/linked contract or explicitly closes as "No contract required" with elevated permission and reason.
+- `03-core-business.md#T-03.90.01`: Configure default contract template for electricity orders in admin settings. The template is used when creating the preliminary contract at order submission.
+- `03-core-business.md#T-03.90.02`: All order review/submission pages must display current wallet balance. Payment is through wallet. If insufficient, show top-up option (online or bank receipt).
+- `03-core-business.md#T-03.90.03`: Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata.
+- `03-core-business.md#T-03.90.04`: Customer-facing history uses understandable labels. Internal notes and customer-visible comments are separate. Staff must choose visibility.
+- `03-core-business.md#T-03.90.05`: Rate limit order/consultation submission: 5 per profile per minute, plus duplicate/idempotency protection.
+- `03-core-business.md#T-03.90.06`: Rate limit gift code validation: reasonable limit to prevent brute-force guessing.
+- `03-core-business.md#T-03.90.07`: An electricity product required by an ordering rule cannot be sold if inactive or has no price. Customers see "ordering temporarily unavailable" + contact support rather than broken checkout.
+- `03-core-business.md#T-03.90.08`: Price/VAT/limit changes are versioned with effective dates. Existing orders keep snapshot from submission time. Admin changes never silently retroactive.
+- `03-core-business.md#T-03.90.09`: Admin dashboard: widget for pending consultation requests count, pending electricity orders count, pending solar construction requests count, pending document reviews.
+- `03-core-business.md#T-03.90.10`: Admin dashboard: refund obligations queue, failed refund obligations alert.
+- `03-core-business.md#T-03.90.11`: Unit tests: state machine transitions for all electricity/saving/solar/consultation states
+- `03-core-business.md#T-03.90.12`: Unit tests: Jalali period calculations, green rule composition, price calculation, gift code validation
+- `03-core-business.md#T-03.90.13`: Integration tests: order submission with idempotency, concurrent wallet operations, gift code atomic redemption, automatic refund obligation creation
+- `03-core-business.md#T-03.90.14`: E2E tests: simple electricity order → review → payment → contract lifecycle. Saving plan order wizard → fulfillment stages. Solar construction request → document upload → postal.
+- `03-core-business.md#T-03.90.15`: Implement a state machine engine (or use a library) that enforces allowed transitions, guards, side effects, and notification behavior. Used across all core business entities.
+- `03-core-business.md#T-03.90.16`: Create reusable `<WorkflowStatusBanner>` component that renders entity status, what happened, next available action, responsible party (customer/staff), and support contact for any business entity (order, contract, solar request, consultation, etc.).
+- `03-core-business.md#T-03.90.17`: Create `useFormDraft(key, schema)` hook that auto-saves multi-step form progress to backend after each completed step. Supports resume from interruption, error recovery, and validates that prior input is not cleared on error.
+- `03-core-business.md#T-03.90.18`: Add architectural checklist item (or automated test) verifying every customer-facing workflow displays: current state, what happened, next available action, who is responsible, and how to get help.
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
 - `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
 - `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
@@ -278,21 +283,21 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.09.04.03` | done | Recorded batch work | Customer order list: all saving orders with status, plan name, hardware, price, date, next action |
 | `03-core-business.md#T-03.09.04.04` | done | Recorded batch work | Customer order detail: submitted data, invoice status, contract status, payment options, fulfillment progress (5 stages), document upload, comments |
 | `03-core-business.md#T-03.09.04.05` | done | Recorded batch work | Before payment: customer can request hardware/address change — recalculates draft invoice. After payment: only staff can apply changes via audited amendment. |
-| `03-core-business.md#T-03.11.01.01` | verify | Recorded batch work | Create `solar_construction_requests` table: `id` (UUIDv7), `profile_id` (FK), `status` (enum — overall state machine), `building_type` (enum: `building_apartment`, `non_household`), `grid_type` (enum: `on_grid`, `off_grid`), `bill_identifier` (VARCHAR nullable — required for on-grid), `property_form` (enum: `apartment`, `villa` — nullable, for building/apartment only), `structural_frame` (enum: `concrete`, `steel`, `other` — nullable), `building_completion_date` (date — nullable), `total_units` (int — nullable, for apartment), `site_category` (enum: `agricultural`, `industrial` — nullable, for non-household), `installation_surface` (enum: `land`, `rooftop`, `both` — nullable), `usable_area_sqm` (decimal — nullable), `site_address_id` (FK — nullable), `site_relationship` (enum: `owner`, `tenant`, `authorized_operator` — nullable), `site_description` (text — nullable), `agreement_accepted` (bool), `agreement_version` (text), `agreement_snapshot` (text), `created_at`, `updated_at` |
-| `03-core-business.md#T-03.11.01.02` | verify | Inventory needed | Create `solar_construction_documents` table: `id`, `request_id` (FK), `document_id` (FK — documents/storage), `file_name`, `staff_status` (enum: `pending`, `approved`, `rejected`), `staff_reason` (text nullable), `staff_reviewed_by` (FK nullable), `staff_reviewed_at`, `uploaded_by` (FK), `uploaded_at` |
-| `03-core-business.md#T-03.11.01.03` | verify | Inventory needed | Create `solar_construction_postal` table: `id`, `request_id` (FK), `status` (enum: `waiting_for_shipment`, `shipped`, `received`, `incomplete`, `not_received`), `courier` (text nullable), `tracking_number` (text nullable), `send_date` (timestamptz nullable), `receipt_image_id` (FK nullable), `staff_confirmed_by` (FK nullable), `staff_confirmed_at`, `staff_notes` (text nullable) |
-| `03-core-business.md#T-03.11.02.01` | verify | Recorded batch work | Screen 1: Persian instruction: `نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.` — Two option cards: "Building and apartment" and "Non-household" |
+| `03-core-business.md#T-03.11.01.01` | done | Recorded batch work | Create `solar_construction_requests` table: `id` (UUIDv7), `profile_id` (FK), `status` (enum — overall state machine), `building_type` (enum: `building_apartment`, `non_household`), `grid_type` (enum: `on_grid`, `off_grid`), `bill_identifier` (VARCHAR nullable — required for on-grid), `property_form` (enum: `apartment`, `villa` — nullable, for building/apartment only), `structural_frame` (enum: `concrete`, `steel`, `other` — nullable), `building_completion_date` (date — nullable), `total_units` (int — nullable, for apartment), `site_category` (enum: `agricultural`, `industrial` — nullable, for non-household), `installation_surface` (enum: `land`, `rooftop`, `both` — nullable), `usable_area_sqm` (decimal — nullable), `site_address_id` (FK — nullable), `site_relationship` (enum: `owner`, `tenant`, `authorized_operator` — nullable), `site_description` (text — nullable), `agreement_accepted` (bool), `agreement_version` (text), `agreement_snapshot` (text), `created_at`, `updated_at` |
+| `03-core-business.md#T-03.11.01.02` | done | Recorded batch work | Create `solar_construction_documents` table: `id`, `request_id` (FK), `document_id` (FK — documents/storage), `file_name`, `staff_status` (enum: `pending`, `approved`, `rejected`), `staff_reason` (text nullable), `staff_reviewed_by` (FK nullable), `staff_reviewed_at`, `uploaded_by` (FK), `uploaded_at` |
+| `03-core-business.md#T-03.11.01.03` | done | Recorded batch work | Create `solar_construction_postal` table: `id`, `request_id` (FK), `status` (enum: `waiting_for_shipment`, `shipped`, `received`, `incomplete`, `not_received`), `courier` (text nullable), `tracking_number` (text nullable), `send_date` (timestamptz nullable), `receipt_image_id` (FK nullable), `staff_confirmed_by` (FK nullable), `staff_confirmed_at`, `staff_notes` (text nullable) |
+| `03-core-business.md#T-03.11.02.01` | done | Recorded batch work | Screen 1: Persian instruction: `نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.` — Two option cards: "Building and apartment" and "Non-household" |
 | `03-core-business.md#T-03.11.02.02` | done | Inventory needed | Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected) |
 | `03-core-business.md#T-03.11.02.03` | done | Recorded batch work | Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description |
-| `03-core-business.md#T-03.11.02.04` | verify | Inventory needed | Grid type selection: "On-Grid" (sell to grid) or "Off-Grid" (self-consumption) |
-| `03-core-business.md#T-03.11.02.05` | verify | Inventory needed | On-Grid only: electricity bill identifier field (required) |
-| `03-core-business.md#T-03.11.02.06` | verify | Inventory needed | Off-Grid disclaimer: generated electricity is used internally. May remain available during grid outages only subject to final technical design and installed storage equipment. |
-| `03-core-business.md#T-03.11.03.01` | verify | Recorded batch work | Display 5 contract-preparation stages before submission: |
-| `03-core-business.md#T-03.11.03.02` | verify | Recorded batch work | Required checkbox: `شرایط ثبت قرارداد را می‌پذیرم.` with the accepted text version and time retained. |
-| `03-core-business.md#T-03.11.03.03` | verify | Recorded batch work | Submission creates only a solar construction request (no contract or invoice). Redirects to request detail page. |
-| `03-core-business.md#T-03.11.04.01` | verify | Recorded batch work | Overall state machine: |
-| `03-core-business.md#T-03.11.04.02` | verify | Inventory needed | Document-level decisions do not automatically reject the overall request. Only one file may be rejected while others are approved. |
-| `03-core-business.md#T-03.11.04.03` | verify | Inventory needed | `Rejected` and `Cancelled` require reason and support path. `Approved` remains open until staff creates/linked contract or explicitly closes as "No contract required" with elevated permission and reason. |
+| `03-core-business.md#T-03.11.02.04` | done | Recorded batch work | Grid type selection: "On-Grid" (sell to grid) or "Off-Grid" (self-consumption) |
+| `03-core-business.md#T-03.11.02.05` | done | Recorded batch work | On-Grid only: electricity bill identifier field (required) |
+| `03-core-business.md#T-03.11.02.06` | done | Recorded batch work | Off-Grid disclaimer: generated electricity is used internally. May remain available during grid outages only subject to final technical design and installed storage equipment. |
+| `03-core-business.md#T-03.11.03.01` | done | Recorded batch work | Display 5 contract-preparation stages before submission: |
+| `03-core-business.md#T-03.11.03.02` | done | Recorded batch work | Required checkbox: `شرایط ثبت قرارداد را می‌پذیرم.` with the accepted text version and time retained. |
+| `03-core-business.md#T-03.11.03.03` | done | Recorded batch work | Submission creates only a solar construction request (no contract or invoice). Redirects to request detail page. |
+| `03-core-business.md#T-03.11.04.01` | done | Recorded batch work | Overall state machine: |
+| `03-core-business.md#T-03.11.04.02` | done | Recorded batch work | Document-level decisions do not automatically reject the overall request. Only one file may be rejected while others are approved. |
+| `03-core-business.md#T-03.11.04.03` | done | Recorded batch work | `Rejected` and `Cancelled` require reason and support path. `Approved` remains open until staff creates/linked contract or explicitly closes as "No contract required" with elevated permission and reason. |
 | `03-core-business.md#T-03.90.01` | verify | Recorded batch work | Configure default contract template for electricity orders in admin settings. The template is used when creating the preliminary contract at order submission. |
 | `03-core-business.md#T-03.90.02` | verify | Recorded batch work | All order review/submission pages must display current wallet balance. Payment is through wallet. If insufficient, show top-up option (online or bank receipt). |
 | `03-core-business.md#T-03.90.03` | verify | Inventory needed | Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata. |

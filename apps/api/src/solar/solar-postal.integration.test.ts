@@ -961,16 +961,21 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     },
   });
   const detail = (await (await send('postal-buyer', `solar/requests/${id}`)).json()) as {
-    history: Array<{ event: string; at: string }>;
+    history: Array<{ event: string; at: string; actorContext: 'customer' | 'staff' | 'unknown' }>;
   };
   const events = detail.history.map((entry) => entry.event);
   expect(events[0]).toBe('solar.request.submitted');
   expect(events).toContain('solar.final.review_started');
   expect(events).toContain('solar.final.approve');
   expect(events.at(-1)).toBe('solar.contract.created');
-  expect(detail.history.every((entry) => Object.keys(entry).sort().join(',') === 'at,event')).toBe(
-    true
-  );
+  expect(
+    detail.history.every((entry) => Object.keys(entry).sort().join(',') === 'actorContext,at,event')
+  ).toBe(true);
+  expect(detail.history[0]).toMatchObject({ actorContext: 'customer' });
+  expect(detail.history.at(-1)).toMatchObject({ actorContext: 'staff' });
+  expect(
+    detail.history.every((entry) => ['customer', 'staff', 'unknown'].includes(entry.actorContext))
+  ).toBe(true);
   expect((await send('postal-other', `solar/requests/${id}`)).status).toBe(404);
   const listed = (await (
     await send('postal-buyer', `solar/requests?profileId=${profileId}`)

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06T17:48:48Z",
+  "updated": "2026-10-06T17:53:13Z",
   "source_commit": "0a146ac4d2c83ef43e77264ac947a87b10dbd1c1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20317,7 +20317,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "7cf776a00da92b119cd72e5f8abebfd68149116d134c932ec6590ea7e8a765ae"
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -20485,6 +20485,17 @@
               "checks": [
                 "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance/saving-api.json",
                 "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance/configured-submit-final.json"
+              ]
+            },
+            {
+              "base_commit": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+              "changed_bindings": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Only strengthened exact history-shape/context assertions change; earlier address and profile assertions/fixtures and production runtime remain unchanged. Current affected case passes; retain original scoped evidence.",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json"
               ]
             }
           ]
@@ -77267,21 +77278,116 @@
         "story": "03-core-business.md#spec-cfc12cf2a961"
       },
       "requirement": "| **T-03.11.01.01** | Create `solar_construction_requests` table: `id` (UUIDv7), `profile_id` (FK), `status` (enum — overall state machine), `building_type` (enum: `building_apartment`, `non_household`), `grid_type` (enum: `on_grid`, `off_grid`), `bill_identifier` (VARCHAR nullable — required for on-grid), `property_form` (enum: `apartment`, `villa` — nullable, for building/apartment only), `structural_frame` (enum: `concrete`, `steel`, `other` — nullable), `building_completion_date` (date — nullable), `total_units` (int — nullable, for apartment), `site_category` (enum: `agricultural`, `industrial` — nullable, for non-household), `installation_surface` (enum: `land`, `rooftop`, `both` — nullable), `usable_area_sqm` (decimal — nullable), `site_address_id` (FK — nullable), `site_relationship` (enum: `owner`, `tenant`, `authorized_operator` — nullable), `site_description` (text — nullable), `agreement_accepted` (bool), `agreement_version` (text), `agreement_snapshot` (text), `created_at`, `updated_at` | XL |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-solar-intake"
+          "2026-09-23-solar-intake",
+          "release-0.2-solar-request-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Existing solar_construction_requests has every specified intake field, UUIDv7 identity, profile/address FKs, conditional enums/positive area and units, agreement/version/text/time and commercial-state checks. Real migrated HTTP submits both branches, rejects invalid/foreign/stale inputs, captures address and agreement snapshots and replays exact receipt.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77295,19 +77401,115 @@
         "story": "03-core-business.md#spec-cfc12cf2a961"
       },
       "requirement": "| **T-03.11.01.02** | Create `solar_construction_documents` table: `id`, `request_id` (FK), `document_id` (FK — documents/storage), `file_name`, `staff_status` (enum: `pending`, `approved`, `rejected`), `staff_reason` (text nullable), `staff_reviewed_by` (FK nullable), `staff_reviewed_at`, `uploaded_by` (FK), `uploaded_at` | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-solar-request-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Existing document relation stores UUIDv7, request/document FKs, filename, per-file status/reason/reviewer/time/uploader/time. Schema enforces pending versus reviewed identity/time and required rejection reason; current real upload/scan/replacement/independent review cases pass.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77321,19 +77523,115 @@
         "story": "03-core-business.md#spec-cfc12cf2a961"
       },
       "requirement": "| **T-03.11.01.03** | Create `solar_construction_postal` table: `id`, `request_id` (FK), `status` (enum: `waiting_for_shipment`, `shipped`, `received`, `incomplete`, `not_received`), `courier` (text nullable), `tracking_number` (text nullable), `send_date` (timestamptz nullable), `receipt_image_id` (FK nullable), `staff_confirmed_by` (FK nullable), `staff_confirmed_at`, `staff_notes` (text nullable) | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-solar-request-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Existing postal row holds each specified state, courier/tracking/send time/receipt image, staff confirmer/time/notes and unique request relation. Current shipment issue/resubmission/receipt tests cover the actual migrated row and state guards.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77347,12 +77645,10 @@
         "story": "03-core-business.md#spec-eac60821db88"
       },
       "requirement": "| **T-03.11.02.01** | 📋 Screen 1: Persian instruction: `نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.` — Two option cards: \"Building and apartment\" and \"Non-household\" | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -77360,9 +77656,106 @@
         "changed_paths": [],
         "batches": [
           "2026-09-23-solar-intake",
-          "2026-09-24-solar-intake-drafts"
+          "2026-09-24-solar-intake-drafts",
+          "release-0.2-solar-request-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "SolarRequestPage renders the exact Persian instruction and building/apartment versus non-household radio cards using dictionaries. Current source cases and FA/EN browser branch/address recovery cases pass.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77409,7 +77802,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "7cf776a00da92b119cd72e5f8abebfd68149116d134c932ec6590ea7e8a765ae"
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
             },
             {
               "path": "apps/api/src/finance/review-snapshot.service.ts",
@@ -77488,7 +77881,20 @@
             "changed_sources": [
               "apps/api/src/solar/solar-request.service.ts"
             ]
-          }
+          },
+          "renewals": [
+            {
+              "base_commit": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+              "changed_bindings": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Only strengthened exact history-shape/context assertions change; earlier address and profile assertions/fixtures and production runtime remain unchanged. Current affected case passes; retain original scoped evidence.",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json"
+              ]
+            }
+          ]
         }
       }
     },
@@ -77538,7 +77944,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "7cf776a00da92b119cd72e5f8abebfd68149116d134c932ec6590ea7e8a765ae"
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
             },
             {
               "path": "apps/api/src/finance/review-snapshot.service.ts",
@@ -77617,7 +78023,20 @@
             "changed_sources": [
               "apps/api/src/solar/solar-request.service.ts"
             ]
-          }
+          },
+          "renewals": [
+            {
+              "base_commit": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+              "changed_bindings": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Only strengthened exact history-shape/context assertions change; earlier address and profile assertions/fixtures and production runtime remain unchanged. Current affected case passes; retain original scoped evidence.",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json"
+              ]
+            }
+          ]
         }
       }
     },
@@ -77632,19 +78051,115 @@
         "story": "03-core-business.md#spec-eac60821db88"
       },
       "requirement": "| **T-03.11.02.04** | 📋 Grid type selection: \"On-Grid\" (sell to grid) or \"Off-Grid\" (self-consumption) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-solar-request-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "On-grid/off-grid radios render localized grid sale/internal consumption explanations and retain branch input through save/review. Server discriminated schema and DB check independently enforce allowed types.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77658,19 +78173,115 @@
         "story": "03-core-business.md#spec-eac60821db88"
       },
       "requirement": "| **T-03.11.02.05** | 📋 On-Grid only: electricity bill identifier field (required) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-solar-request-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Bill field is shown/required only on-grid, normalizes supported digits and validates6..13 digits. Server rejects missing on-grid and present off-grid values; submission nulls off-grid bill. Both real branch submissions and current UI cases pass.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77684,19 +78295,115 @@
         "story": "03-core-business.md#spec-eac60821db88"
       },
       "requirement": "| **T-03.11.02.06** | ⚠️ Off-Grid disclaimer: generated electricity is used internally. May remain available during grid outages only subject to final technical design and installed storage equipment. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-solar-request-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Exact current FA/EN off-grid text limits outage availability to final technical design and installed storage. Current page renders the dictionary help alongside off-grid selection; no unconditional backup-power promise.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77710,21 +78417,116 @@
         "story": "03-core-business.md#spec-482c7ac043c0"
       },
       "requirement": "| **T-03.11.03.01** | 📋 Display 5 contract-preparation stages before submission:\n  1. Contract request\n  2. Document upload\n  3. Document verification\n  4. Postal submission of documents\n  5. Final approval | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-solar-intake"
+          "2026-09-23-solar-intake",
+          "release-0.2-solar-request-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Before submission, the wizard displays ordered request/document-upload/document-verification/postal/final-approval stages. Existing source and current complete browser journey inspected against all five dictionary labels.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77738,21 +78540,116 @@
         "story": "03-core-business.md#spec-482c7ac043c0"
       },
       "requirement": "| **T-03.11.03.02** | 📋 Required checkbox: `شرایط ثبت قرارداد را می‌پذیرم.` with the accepted text version and time retained. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-30-solar-request-submission-review"
+          "2026-09-30-solar-request-submission-review",
+          "release-0.2-solar-request-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Exact Persian agreement checkbox is explicit and required by both wizard and strict server schema. Authoritative review captures version/text and final insertion records accepted text and NOW acceptance time; stale review denies. Current real submission and browser checks pass.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77766,12 +78663,10 @@
         "story": "03-core-business.md#spec-482c7ac043c0"
       },
       "requirement": "| **T-03.11.03.03** | ⚠️ Submission creates only a solar construction request (no contract or invoice). Redirects to request detail page. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -77779,9 +78674,106 @@
         "changed_paths": [],
         "batches": [
           "2026-09-23-customer-request-routing",
-          "2026-09-23-solar-request-history"
+          "2026-09-23-solar-request-history",
+          "release-0.2-solar-request-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Initial submission creates only solar request, immutable confirmed intake review, audit and receipt; no contract/invoice. Current migrated tests assert zero initial contract/invoice effects and exact/concurrent replay; browser redirects to detail. Subsequent staff contract creation is separately guarded.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77795,12 +78787,10 @@
         "story": "03-core-business.md#spec-bdf60018f3bb"
       },
       "requirement": "| **T-03.11.04.01** | 🔄 Overall state machine:\n  - `draft` (form in progress)\n  - `submitted` (initial after submission)\n  - `uploading_documents` (document upload phase)\n  - `documents_under_review` (staff reviewing)\n  - `changes_requested` (staff requests additional/replacement documents)\n  - `waiting_for_postal_submission`\n  - `postal_documents_received`\n  - `final_review`\n  - `approved`\n  - `rejected`\n  - `cancelled`\n  - `contract_created` (terminal — staff created contract) | XL |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -77812,9 +78802,106 @@
           "2026-09-24-solar-customer-history",
           "2026-09-24-solar-final-rejection",
           "2026-09-24-solar-final-review-handoff",
-          "2026-09-30-solar-contract-invoice-review"
+          "2026-09-30-solar-contract-invoice-review",
+          "release-0.2-solar-request-lifecycle"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "All twelve specified states are constrained in schema; scoped form drafts and request/document/postal/final/contract methods implement guarded progression. Actual journeys cover submitted, upload/review/changes, postal wait/received, final approval/rejection/cancellation and separately confirmed contract_created, with stale/role/step-up/referral guards.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77828,19 +78915,115 @@
         "story": "03-core-business.md#spec-bdf60018f3bb"
       },
       "requirement": "| **T-03.11.04.02** | ⚠️ Document-level decisions do not automatically reject the overall request. Only one file may be rejected while others are approved. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-solar-request-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Per-file review updates only its relation/reason/audit. Current document scenario approves/rejects different files, keeps overall request under review, requires an explicit request-additional/set-advance decision and tracks replacement lineage; file rejection never automatically rejects request.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -77854,19 +79037,115 @@
         "story": "03-core-business.md#spec-bdf60018f3bb"
       },
       "requirement": "| **T-03.11.04.03** | ⚠️ `Rejected` and `Cancelled` require reason and support path. `Approved` remains open until staff creates/linked contract or explicitly closes as \"No contract required\" with elevated permission and reason. | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.2.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.2-solar-request-lifecycle"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
+          "reviewed_sha": "ba14fa8bfa9b1420a2836989b55cc90f6566ac87",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+              "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.integration.test.ts",
+              "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.validation.ts",
+              "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+            },
+            {
+              "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+              "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+            },
+            {
+              "path": "apps/web/src/pages/solar-request.test.tsx",
+              "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+            },
+            {
+              "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+              "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+            },
+            {
+              "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+              "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+            },
+            {
+              "path": "packages/db/src/schema/solar-construction.ts",
+              "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/criteria.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/source-binding.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/renewal-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/review.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-api.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/postal-history-current.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-web.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/solar-browser.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/api-types.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-lint.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance/test-format.json"
+          ],
+          "criterion_result": "Reject/close-no-contract require trimmed reason and retain customer support_path=/tickets. Approved stays open with null contract until separately confirmed linking. Close uses elevated contracts:write and fresh step-up/review hash; ordinary approval/rejection uses orders:write. Real stale/role/reason/close/contract cases and current browser rejection pass.",
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance"
+        }
       }
     },
     {
@@ -108150,6 +109429,110 @@
           "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
         }
       ]
+    },
+    "release-0.2-solar-request-lifecycle": {
+      "title": "Solar conditional intake, independent documents and postal/final lifecycle acceptance",
+      "task_keys": [
+        "03-core-business.md#T-03.11.01.01",
+        "03-core-business.md#T-03.11.01.02",
+        "03-core-business.md#T-03.11.01.03",
+        "03-core-business.md#T-03.11.02.01",
+        "03-core-business.md#T-03.11.02.04",
+        "03-core-business.md#T-03.11.02.05",
+        "03-core-business.md#T-03.11.02.06",
+        "03-core-business.md#T-03.11.03.01",
+        "03-core-business.md#T-03.11.03.02",
+        "03-core-business.md#T-03.11.03.03",
+        "03-core-business.md#T-03.11.04.01",
+        "03-core-business.md#T-03.11.04.02",
+        "03-core-business.md#T-03.11.04.03"
+      ],
+      "summary": "Accepted13 original solar criteria from existing implementation; corrected one outdated test to strengthen exact context/history privacy assertions. Three earlier address/profile test bindings renewed.",
+      "validation": [
+        "60 distinct current API cases assembled from59 baseline successes and one corrected case;28 component cases and26 zero-retry Chromium/mobile Safari journeys pass. API types and changed-test lint/format pass.",
+        "Source/schema/guards inspected against exact criteria. Current real migrated HTTP proves both intake branches, agreement/address snapshots, initial absence of contract/invoice, per-file isolation, replacement lineage, postal receipt, final reason/support, approved open state, elevated no-contract closure and separately confirmed atomic contract/invoice creation.",
+        "All3121 prior non-map outputs remain byte-identical; production code, schemas, dictionaries and browser fixtures are unchanged. No rebuild or duplicate SAST/budget suite needed for test-only edit. Failed baseline and selected-out replacement cases recorded honestly.",
+        "Reviewed once. No weakened money/authorization/idempotency/privacy assertions, milestone version bump, deployment or notification claim."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-request-lifecycle-acceptance",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+          "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+        },
+        {
+          "path": "apps/api/src/solar/solar-documents.service.ts",
+          "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+        },
+        {
+          "path": "apps/api/src/solar/solar-final.service.ts",
+          "sha256": "3db46631290fbeba5ed68e570d5328a119c9c5ade61acfc17c549c6a41082de0"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+          "sha256": "d6d6009293d018d06eac8f88a4f3846084c1656b79073e79af9b2eb68a3ee553"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.service.ts",
+          "sha256": "c80feb0b00d265424008d30b381add251c99b46cfcc4b3d9cdee55a2552d80df"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.integration.test.ts",
+          "sha256": "6b8cb7acc6d85053965abe95f16ec72067a24dd5ebfcc790b7cb8da80d363533"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.service.ts",
+          "sha256": "0250f0246ba1464c1db1f405908096b7daf712038e0b38cfdf6a78f52095a90d"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.validation.ts",
+          "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
+        },
+        {
+          "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+          "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "052ccb71a335578dab0750d9bda4c36c70d12ca6568f2a5da8717f61adb382a4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+          "sha256": "573e5af406c62ca9ecb73a0f8ade760bf25c29feb890ce38d5c3d10463018729"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+          "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestPage.tsx",
+          "sha256": "39255b87850a2e2b7190d222aa96b53c6b6510f7450444d57dc33724004911e4"
+        },
+        {
+          "path": "apps/web/src/pages/solar-request.test.tsx",
+          "sha256": "e329bdfd0bcef503da9e68d38be1289efc6ec993b9adae601c7720541c2b89e6"
+        },
+        {
+          "path": "packages/db/drizzle/production/0165_solar_construction_intake.sql",
+          "sha256": "e2339156bb9d53418f8741b7626bc79c9bbfb67268b9bc1e3a9f315badf49eff"
+        },
+        {
+          "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+          "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+        },
+        {
+          "path": "packages/db/src/schema/solar-construction.ts",
+          "sha256": "574d8b81f9e8b405d1e2717f828e1c69f686d5ad14d2a5445eaee774b07f9807"
+        },
+        {
+          "path": "packages/i18n/src/solar.ts",
+          "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -108189,23 +109572,28 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-solar-request-lifecycle",
+    "id": "release-0.2-common-business-gates",
     "release": "0.2.0",
-    "goal": "Inspect existing solar request schema, conditional intake, agreement acceptance, independent document decisions, postal and overall lifecycle. Preserve earlier demonstrated address gaps; build only missing criteria. Retain unfinished electricity all-pre-active terminal operations and unanswered schema naming dispositions.",
+    "goal": "Inspect common four-service requirements: authoritative templates/wallet funding, audit and comment visibility, submission/gift limits, immutable settings snapshots, staff dashboard/refund queues, tested state guards, WorkflowStatusBanner and form drafts. Reuse exact current service receipts; build demonstrated gaps. Preserve electricity all-pre-active terminal work and unanswered owner representations.",
     "task_keys": [
-      "03-core-business.md#T-03.11.01.01",
-      "03-core-business.md#T-03.11.01.02",
-      "03-core-business.md#T-03.11.01.03",
-      "03-core-business.md#T-03.11.02.01",
-      "03-core-business.md#T-03.11.02.04",
-      "03-core-business.md#T-03.11.02.05",
-      "03-core-business.md#T-03.11.02.06",
-      "03-core-business.md#T-03.11.03.01",
-      "03-core-business.md#T-03.11.03.02",
-      "03-core-business.md#T-03.11.03.03",
-      "03-core-business.md#T-03.11.04.01",
-      "03-core-business.md#T-03.11.04.02",
-      "03-core-business.md#T-03.11.04.03",
+      "03-core-business.md#T-03.90.01",
+      "03-core-business.md#T-03.90.02",
+      "03-core-business.md#T-03.90.03",
+      "03-core-business.md#T-03.90.04",
+      "03-core-business.md#T-03.90.05",
+      "03-core-business.md#T-03.90.06",
+      "03-core-business.md#T-03.90.07",
+      "03-core-business.md#T-03.90.08",
+      "03-core-business.md#T-03.90.09",
+      "03-core-business.md#T-03.90.10",
+      "03-core-business.md#T-03.90.11",
+      "03-core-business.md#T-03.90.12",
+      "03-core-business.md#T-03.90.13",
+      "03-core-business.md#T-03.90.14",
+      "03-core-business.md#T-03.90.15",
+      "03-core-business.md#T-03.90.16",
+      "03-core-business.md#T-03.90.17",
+      "03-core-business.md#T-03.90.18",
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.09.01.01",
       "03-core-business.md#T-03.05.01.04",
@@ -108216,7 +109604,7 @@
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "204 v0.2 tasks now accepted; task-specific remaining criteria include solar and common gates, electricity all-pre-active terminal operations and pending owner representations. External provider/operational evidence and prior owner policy decisions remain separate; no launch date is defensible yet."
+    "method": "217 v0.2 tasks accepted. Remaining common-business and release gates, electricity all-pre-active terminal operations, pending owner representations and existing identity/security decisions must be resolved. External provider/operational evidence remains separate; no launch date is yet defensible."
   },
   "capabilities": [
     {
