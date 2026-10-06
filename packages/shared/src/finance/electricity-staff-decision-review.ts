@@ -10,6 +10,13 @@ const dataSchema = z
     customerName: z.string().min(1),
     contractId: z.string().uuid(),
     contractState: z.string(),
+    commercialStatus: z.enum([
+      'draft',
+      'submitted',
+      'awaiting_staff_review',
+      'changes_requested',
+      'approved',
+    ]),
     versionId: z.string().uuid(),
     versionNumber: z.number().int().positive(),
     contractSnapshot: z.record(z.string(), z.unknown()),

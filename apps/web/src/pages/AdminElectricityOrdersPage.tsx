@@ -524,7 +524,11 @@ export default function AdminElectricityOrdersPage({
   function choose(decision: Decision) {
     if (
       !detail ||
-      detail.commercialStatus !== 'awaiting_staff_review' ||
+      !(decision === 'reject'
+        ? ['draft', 'submitted', 'awaiting_staff_review', 'changes_requested', 'approved'].includes(
+            detail.commercialStatus
+          )
+        : detail.commercialStatus === 'awaiting_staff_review') ||
       locked() ||
       captured.current ||
       accessDenied.current
@@ -1240,7 +1244,13 @@ export default function AdminElectricityOrdersPage({
                   staff
                   formatTimestamp={time.format}
                 />
-                {detail.commercialStatus === 'awaiting_staff_review' ? (
+                {[
+                  'draft',
+                  'submitted',
+                  'awaiting_staff_review',
+                  'changes_requested',
+                  'approved',
+                ].includes(detail.commercialStatus) ? (
                   <div className="space-y-3 border-t pt-4">
                     <Form {...form}>
                       <div data-testid="electricity-staff-reason-form">
@@ -1307,6 +1317,7 @@ export default function AdminElectricityOrdersPage({
                     <div className="flex flex-wrap gap-2">
                       <Button
                         disabled={
+                          detail.commercialStatus !== 'awaiting_staff_review' ||
                           reviewLoading ||
                           form.formState.isSubmitting ||
                           pending.current ||
@@ -1320,6 +1331,7 @@ export default function AdminElectricityOrdersPage({
                       <Button
                         variant="outline"
                         disabled={
+                          detail.commercialStatus !== 'awaiting_staff_review' ||
                           reviewLoading ||
                           form.formState.isSubmitting ||
                           pending.current ||

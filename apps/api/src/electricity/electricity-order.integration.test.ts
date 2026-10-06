@@ -1973,6 +1973,275 @@ it('revises an advanced delivery period and composition', async () => {
   });
 });
 
+it.each([
+  ['submitted', false],
+  ['submitted', true],
+  ['changes_requested', false],
+  ['changes_requested', true],
+  ['approved', false],
+  ['approved', true],
+] as const)(
+  'rejects the pre-active %s order with paid=%s atomically and once',
+  async (state, paid) => {
+    const order = await submittedOrder();
+    const versionId = (
+      await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+        order.contractId,
+      ])
+    ).rows[0].current_version_id;
+    if (paid)
+      await http.pool.query(
+        "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
+        [order.invoiceId]
+      );
+    if (state === 'changes_requested' && paid) {
+      // A retained pre-active record may have outstanding money after a prior correction.
+      await http.pool.query("UPDATE contracts SET state='ChangesRequested' WHERE id=$1", [
+        order.contractId,
+      ]);
+      await http.pool.query(
+        "UPDATE electricity_orders SET status='changes_requested' WHERE id=$1",
+        [order.orderId]
+      );
+    } else if (state === 'changes_requested') {
+      expect(
+        (
+          await staffPost(order.orderId, 'request-changes', {
+            idempotencyKey: randomUUID(),
+            expectedVersionId: versionId,
+            reason: 'Need revised terms',
+          })
+        ).status,
+        http.logs()
+      ).toBe(200);
+    } else if (state === 'approved') {
+      expect(
+        (
+          await staffPost(order.orderId, 'approve', {
+            idempotencyKey: randomUUID(),
+            expectedVersionId: versionId,
+          })
+        ).status,
+        http.logs()
+      ).toBe(200);
+    } else
+      await http.pool.query("UPDATE electricity_orders SET status='submitted' WHERE id=$1", [
+        order.orderId,
+      ]);
+    const evidence = (
+      await http.pool.query(
+        `SELECT
+    (SELECT jsonb_agg(to_jsonb(v) ORDER BY version_number) FROM contract_versions v WHERE contract_id=$1) AS versions,
+    (SELECT jsonb_agg(to_jsonb(p) ORDER BY version_id) FROM contract_publications p WHERE contract_id=$1) AS publications`,
+        [order.contractId]
+      )
+    ).rows[0];
+    const path = `${http.base}/api/staff/electricity/orders/${order.orderId}`;
+    const preview = await fetch(`${path}/financial-review`, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ action: 'reject', reason: 'Unable to deliver' }),
+    });
+    expect(preview.status, http.logs()).toBe(200);
+    const review = (await preview.json()) as {
+      hash: string;
+      data: { commercialStatus: string; outcome: string; refundAmount: string };
+    };
+    expect(review.data).toMatchObject({
+      commercialStatus: state,
+      outcome: paid ? 'refund_obligation' : 'cancel_invoice',
+      refundAmount: paid ? '500000' : '0',
+    });
+    const command = {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: versionId,
+      expectedReviewHash: review.hash,
+      reason: 'Unable to deliver',
+    };
+    const send = () =>
+      fetch(`${path}/reject`, {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify(command),
+      });
+    const responses = await Promise.all([send(), send()]);
+    expect(
+      responses.map((r) => r.status),
+      http.logs()
+    ).toEqual([200, 200]);
+    const receipts = await Promise.all(
+      responses.map(
+        async (r) => (await r.json()) as { refundId: string; orderId: string; status: string }
+      )
+    );
+    expect(receipts[0]).toEqual(receipts[1]);
+    expect(receipts[0]).toMatchObject({
+      orderId: order.orderId,
+      status: 'rejected',
+      refundId: paid ? expect.any(String) : null,
+    });
+    expect(
+      (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [order.contractId])).rows[0]
+        .state
+    ).toBe('Rejected');
+    expect(
+      (await http.pool.query('SELECT status FROM orders WHERE id=$1', [order.orderId])).rows[0]
+        .status
+    ).toBe('CANCELLED');
+    expect(
+      (await http.pool.query('SELECT status FROM electricity_orders WHERE id=$1', [order.orderId]))
+        .rows[0].status
+    ).toBe('rejected');
+    expect(
+      (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [order.invoiceId])).rows[0]
+        .state
+    ).toBe(paid ? 'PartiallyFunded' : 'Cancelled');
+    expect(
+      (await http.pool.query('SELECT * FROM refund_obligations WHERE order_id=$1', [order.orderId]))
+        .rows
+    ).toHaveLength(paid ? 1 : 0);
+    const audit = (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_review.reject' AND metadata::jsonb->>'orderId'=$1",
+        [order.orderId]
+      )
+    ).rows;
+    expect(audit).toHaveLength(1);
+    expect(audit[0].metadata).toMatchObject({
+      entity: 'electricity_order',
+      entityId: order.orderId,
+      from: state,
+      fromState: state,
+      toState: 'rejected',
+      reason: command.reason,
+      reviewHash: review.hash,
+    });
+    const afterEvidence = (
+      await http.pool.query(
+        `SELECT
+    (SELECT jsonb_agg(to_jsonb(v) ORDER BY version_number) FROM contract_versions v WHERE contract_id=$1) AS versions,
+    (SELECT jsonb_agg(to_jsonb(p) ORDER BY version_id) FROM contract_publications p WHERE contract_id=$1) AS publications`,
+        [order.contractId]
+      )
+    ).rows[0];
+    expect(afterEvidence).toEqual(evidence);
+    if (paid) {
+      expect(await runWalletRefund(http.pool, receipts[0]!.refundId)).toBe('completed');
+      const detail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+        headers,
+      });
+      expect(await detail.json()).toMatchObject({
+        electricityStatus: 'rejected',
+        financialStatus: 'refunded',
+      });
+    }
+  }
+);
+
+it('invalidates pre-active rejection confirmation when only the commercial state changes', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  const path = `${http.base}/api/staff/electricity/orders/${order.orderId}`;
+  const preview = await fetch(`${path}/financial-review`, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify({ action: 'reject', reason: 'Cannot deliver' }),
+  });
+  expect(preview.status, http.logs()).toBe(200);
+  const oldReview = (await preview.json()) as { hash: string };
+  await http.pool.query("UPDATE electricity_orders SET status='submitted' WHERE id=$1", [
+    order.orderId,
+  ]);
+  const before = await correctionSnapshot(order.orderId, order.contractId);
+  const result = await staffPost(order.orderId, 'reject', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    expectedReviewHash: oldReview.hash,
+    reason: 'Cannot deliver',
+  });
+  expect(result.status, http.logs()).toBe(409);
+  expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(before);
+});
+it.each(['second_approval', 'corrupt_policy', 'extra_invoice'] as const)(
+  'refuses pre-active rejection with %s without financial or audit effects',
+  async (scenario) => {
+    const order = await submittedOrder();
+    const versionId = (
+      await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+        order.contractId,
+      ])
+    ).rows[0].current_version_id;
+    expect(
+      (
+        await staffPost(order.orderId, 'approve', {
+          idempotencyKey: randomUUID(),
+          expectedVersionId: versionId,
+        })
+      ).status,
+      http.logs()
+    ).toBe(200);
+    await http.pool.query(
+      "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
+      [order.invoiceId]
+    );
+    const beforePolicyReview = await fetch(
+      `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+      {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({ action: 'reject', reason: 'Cannot deliver' }),
+      }
+    );
+    expect(beforePolicyReview.status, http.logs()).toBe(200);
+    const originalReview = (await beforePolicyReview.json()) as { hash: string };
+    if (scenario === 'extra_invoice')
+      await http.pool.query(
+        "INSERT INTO invoices(profile_id,type,state,total_amount,contract_id) VALUES($1,'manual','Draft',0,$2)",
+        [input.profileId, order.contractId]
+      );
+    else
+      await http.pool.query(
+        "INSERT INTO app_config(key,value,version) VALUES('finance.dual_approval_threshold',$1::jsonb,1) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=app_config.version+1",
+        [
+          JSON.stringify(
+            scenario === 'second_approval'
+              ? { threshold_irr: 100000 }
+              : { enabled: true, threshold_irr: 'broken' }
+          ),
+        ]
+      );
+    const before = await correctionSnapshot(order.orderId, order.contractId);
+    const preview = await fetch(
+      `${http.base}/api/staff/electricity/orders/${order.orderId}/financial-review`,
+      {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({ action: 'reject', reason: 'Cannot deliver' }),
+      }
+    );
+    expect(preview.status, http.logs()).toBe(409);
+    const result = await staffPost(order.orderId, 'reject', {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: versionId,
+      expectedReviewHash: originalReview.hash,
+      reason: 'Cannot deliver',
+    });
+    expect(result.status, http.logs()).toBe(409);
+    expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(before);
+    expect(
+      (
+        await http.pool.query('SELECT id FROM refund_obligations WHERE order_id=$1', [
+          order.orderId,
+        ])
+      ).rows
+    ).toEqual([]);
+  }
+);
+
 it('creates a mandatory refund obligation when a paid order is rejected', async () => {
   const order = await submittedOrder();
   await http.pool.query(

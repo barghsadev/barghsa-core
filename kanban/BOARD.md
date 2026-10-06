@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-06T18:49:42Z. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-06T19:10:50Z. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish all-pre-active electricity terminal operations, remaining audit event metadata and wallet disclosure. Integrate preserved audit guard with immutable test-fixture baselines/fresh databases before migration acceptance. Reuse existing engines and retain unanswered owner decisions.
+Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; complete remaining audit event metadata and wallet-review disclosure. Integrate preserved audit guard only after fixture changes and rebasing its journal index. Reuse accepted engines and preserve unanswered owner decisions.
 
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
 - `03-core-business.md#T-03.90.03`: Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata.

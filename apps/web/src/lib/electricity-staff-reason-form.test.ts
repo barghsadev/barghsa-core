@@ -46,6 +46,7 @@ it('binds a complete review to the captured action, resource, profile, version, 
       ...staffFormReview(),
       data: { ...staffFormReview().data, invoiceId: staffFormOrder.orderId },
     },
+    { ...staffFormReview(), data: { ...staffFormReview().data, commercialStatus: 'approved' } },
     staffFormReview('reject'),
     staffFormReview('request-changes', 'Another reason'),
   ])

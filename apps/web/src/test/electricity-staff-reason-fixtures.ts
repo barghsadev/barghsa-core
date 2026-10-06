@@ -40,6 +40,7 @@ export function staffFormReview(
       customerName: staffFormOrder.customerName,
       contractId: staffFormOrder.contractId,
       contractState: staffFormOrder.contractState,
+      commercialStatus: staffFormOrder.commercialStatus,
       versionId: staffFormOrder.versionId,
       versionNumber: 1,
       contractSnapshot: {},

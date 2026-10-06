@@ -8,6 +8,7 @@ export type StaffDecisionContext = {
   profileId: string;
   versionId: string;
   contractId: string | null;
+  commercialStatus: string;
   invoiceId: string;
 };
 
@@ -25,6 +26,7 @@ export function boundStaffDecisionReview(
     review.data.action === decision &&
     review.data.versionId === order.versionId &&
     review.data.contractId === order.contractId &&
+    review.data.commercialStatus === order.commercialStatus &&
     review.data.invoiceId === order.invoiceId &&
     review.data.reason === (decision === 'approve' ? '' : reason.trim())
     ? review

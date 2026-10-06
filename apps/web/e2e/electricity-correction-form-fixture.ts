@@ -173,6 +173,7 @@ export function correctionStaffReview(
       customerName: order.customerName,
       contractId: order.contractId,
       contractState: order.contractState,
+      commercialStatus: order.commercialStatus,
       versionId: order.versionId,
       versionNumber: order.versionId === correctionVersion ? 1 : 2,
       contractSnapshot: order.contractSnapshot,

@@ -1177,6 +1177,13 @@
       "when": 1791331202258,
       "tag": "0247_gift_code_integrity",
       "breakpoints": true
+    },
+    {
+      "idx": 248,
+      "version": "7",
+      "when": 1791331202259,
+      "tag": "0248_electricity_pre_active_rejection",
+      "breakpoints": true
     }
   ]
 }

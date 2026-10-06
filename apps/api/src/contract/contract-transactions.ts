@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
+import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 export type ContractActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 type Actor = ContractActor;
 export { idempotentMutation as contractIdempotency } from '../database/idempotency.js';
@@ -12,27 +13,37 @@ export async function staffContractMutation<T>(
   profileId: string,
   actor: Actor,
   work: (client: PoolClient, archived: boolean) => Promise<T>,
-  options: { financialReview?: boolean } = {}
+  options: { financialReview?: boolean; financialPolicy?: boolean } = {}
 ): Promise<T> {
-  return staffContractAccess(profileId, actor, work, options.financialReview === true, true);
+  return staffContractAccess(
+    profileId,
+    actor,
+    work,
+    options.financialReview === true,
+    true,
+    options.financialPolicy === true
+  );
 }
 export async function staffContractFinancialReview<T>(
   profileId: string,
   actor: Actor,
-  work: (client: PoolClient, archived: boolean) => Promise<T>
+  work: (client: PoolClient, archived: boolean) => Promise<T>,
+  options: { financialPolicy?: boolean } = {}
 ): Promise<T> {
-  return staffContractAccess(profileId, actor, work, true, false);
+  return staffContractAccess(profileId, actor, work, true, false, options.financialPolicy === true);
 }
 async function staffContractAccess<T>(
   profileId: string,
   actor: Actor,
   work: (client: PoolClient, archived: boolean) => Promise<T>,
   exclusiveProfile: boolean,
-  mutation: boolean
+  mutation: boolean,
+  financialPolicy: boolean
 ): Promise<T> {
   const client = await getDbPool().connect();
   try {
     await client.query('BEGIN');
+    if (financialPolicy) await lockDualApprovalThreshold(client, 'read');
     const profile = (
       await client.query<{ archived: boolean }>(
         `SELECT archived FROM profiles WHERE id=$1 FOR ${exclusiveProfile ? 'UPDATE' : 'SHARE'}`,

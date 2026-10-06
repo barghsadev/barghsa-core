@@ -329,6 +329,7 @@ test('simple electricity order moves from reviewed quote through payment and con
           customerName: 'Buyer',
           contractId,
           contractState: 'AwaitingStaffReview',
+          commercialStatus: 'awaiting_staff_review',
           versionId,
           versionNumber: 1,
           contractSnapshot: staffOrder().contractSnapshot,
