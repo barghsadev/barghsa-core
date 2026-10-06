@@ -15,19 +15,28 @@ const record = (value: unknown): value is Record<string, unknown> =>
 export function useCustomerServiceHistory<T extends object>({
   endpoint,
   profileEndpoint = '/api/profiles',
+  implicitProfile = false,
   query,
   itemsKey,
   identify,
 }: {
   endpoint: string;
   profileEndpoint?: string;
+  implicitProfile?: boolean;
   query: string;
-  itemsKey: 'orders' | 'requests';
+  itemsKey: 'orders' | 'requests' | 'invoices';
   identify: (item: T) => string;
 }) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
-  const scope = JSON.stringify([actor, profileRevision, endpoint, profileEndpoint, query]);
+  const scope = JSON.stringify([
+    actor,
+    profileRevision,
+    endpoint,
+    profileEndpoint,
+    implicitProfile,
+    query,
+  ]);
   const currentScope = useRef(scope);
   currentScope.current = scope;
   const owner = useRef<{
@@ -95,10 +104,10 @@ export function useCustomerServiceHistory<T extends object>({
           }
         }
         owner.current = { actor, context: profileRevision, profile: profileId };
-        const params = new URLSearchParams({ profileId });
+        const params = new URLSearchParams(implicitProfile ? undefined : { profileId });
         if (before) params.set('before', before);
         for (const [key, value] of new URLSearchParams(query)) params.append(key, value);
-        const result = await fetch(`${endpoint}?${params}`, {
+        const result = await fetch(`${endpoint}${params.size ? `?${params}` : ''}`, {
           credentials: 'include',
           signal: controller.signal,
         });
@@ -128,6 +137,7 @@ export function useCustomerServiceHistory<T extends object>({
     profileRevision,
     endpoint,
     profileEndpoint,
+    implicitProfile,
     query,
     itemsKey,
     identify,

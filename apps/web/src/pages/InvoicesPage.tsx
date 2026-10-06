@@ -9,7 +9,6 @@ import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js'
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Loader2Icon, ReceiptIcon } from 'lucide-react';
@@ -31,14 +30,15 @@ import {
   type NumberRangeValue,
 } from '@barghsa/shared/validation';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
-import { useCursorHistory } from '../hooks/useCursorHistory.js';
+import { useCustomerServiceHistory } from '../hooks/useCustomerServiceHistory.js';
 import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import {
-  fetchInvoiceList,
   roleI18nKey,
   stateI18nKey,
   type CustomerInvoiceListItem,
 } from '../lib/customer-invoices.js';
+
+const identifyHistoryRow = (row: CustomerInvoiceListItem) => row.invoiceId;
 
 /** Filtered, paginated invoices for the active profile, including corrections. */
 export function InvoicesPage({
@@ -100,14 +100,25 @@ export function InvoicesPage({
             : 'warning',
     }));
   const statusesKey = statuses.join(',');
-  const { items, before, nextBefore, acceptPage, loadMore } = useCursorHistory<
-    CustomerInvoiceListItem & { id: string }
-  >(
-    `${unpaidOnly}:${statusesKey}:${dateRange.from ?? ''}:${dateRange.to ?? ''}:${query.q}:${query.sort}:${amountRange.min ?? ''}:${amountRange.max ?? ''}`
-  );
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [revision, setRevision] = useState(0);
+  const params = new URLSearchParams();
+  if (unpaidOnly) params.set('status', 'unpaid');
+  for (const [key, value] of Object.entries({
+    statuses: statusesKey,
+    ...dateRange,
+    ...query,
+    ...amountRange,
+  })) {
+    if (value && !(key === 'sort' && value === DEFAULT_INVOICE_LIST_SORT)) params.set(key, value);
+  }
+  const history = useCustomerServiceHistory<CustomerInvoiceListItem>({
+    endpoint: '/api/invoices',
+    implicitProfile: true,
+    query: params.toString(),
+    itemsKey: 'invoices',
+    identify: identifyHistoryRow,
+  });
+  const { items, nextBefore, loadMore, loading } = history;
+  const error = !!history.error;
   const filtered = !!(
     statusesKey ||
     dateRange.from ||
@@ -116,48 +127,6 @@ export function InvoicesPage({
     amountRange.min ||
     amountRange.max
   );
-
-  useEffect(() => {
-    const abort = new AbortController();
-    setLoading(true);
-    setError(false);
-    fetchInvoiceList(unpaidOnly, {
-      before,
-      statuses: statusesKey,
-      ...dateRange,
-      ...query,
-      ...amountRange,
-      signal: abort.signal,
-    })
-      .then((page) => {
-        if (!abort.signal.aborted)
-          acceptPage(
-            page.invoices.map((item) => ({ ...item, id: item.invoiceId })),
-            page.nextBefore ?? null
-          );
-      })
-      .catch(() => {
-        if (!abort.signal.aborted) setError(true);
-      })
-      .finally(() => {
-        if (!abort.signal.aborted) setLoading(false);
-      });
-    return () => {
-      abort.abort();
-    };
-  }, [
-    unpaidOnly,
-    statusesKey,
-    dateRange.from,
-    dateRange.to,
-    query.q,
-    query.sort,
-    amountRange.min,
-    amountRange.max,
-    before,
-    revision,
-    acceptPage,
-  ]);
 
   const columns: HistoryColumn<CustomerInvoiceListItem>[] = [
     {
@@ -363,10 +332,12 @@ export function InvoicesPage({
           }
           errorView={
             <div className="space-y-2" role="alert">
-              <p className="text-destructive">{t('invoices.error.load', locale)}</p>
-              <Button onClick={() => setRevision((value) => value + 1)}>
-                {t('invoices.filter.retry', locale)}
-              </Button>
+              <p className="text-destructive">
+                {history.error === 'denied'
+                  ? t('historyPagination.accessDenied', locale)
+                  : t('invoices.error.load', locale)}
+              </p>
+              <Button onClick={history.retry}>{t('invoices.filter.retry', locale)}</Button>
             </div>
           }
           emptyView={

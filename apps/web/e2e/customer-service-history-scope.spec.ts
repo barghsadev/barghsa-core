@@ -15,12 +15,19 @@ const domains = {
   electricity: { path: '/electricity/orders', api: '/api/electricity/orders', items: 'orders' },
   saving: { path: '/savings/orders', api: '/api/saving/orders', items: 'orders' },
   solar: { path: '/solar/requests', api: '/api/solar/requests', items: 'requests' },
+  invoice: { path: '/invoices', api: '/api/invoices', items: 'invoices' },
 } as const;
 function row(id: string) {
   return {
     id,
     orderId: id,
     invoiceId: id,
+    role: 'original',
+    state: 'Unpaid',
+    totalAmount: '9007199254740993',
+    paidAmount: '0',
+    issuedAt: '2026-10-05T10:00:00.000Z',
+    dueAt: '2026-10-12T10:00:00.000Z',
     contractId: null,
     status: 'submitted',
     electricityStatus: 'submitted',
@@ -52,6 +59,7 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }, info) => {
       const config = domains[kind];
+      const status = kind === 'invoice' ? 'Unpaid' : 'submitted';
       const copy = (key: string) => t(key, locale);
       await setupCatalogueForms(page, locale, locale === 'fa');
       let activeProfile = profileA;
@@ -113,10 +121,13 @@ for (const locale of ['en', 'fa'] as const)
       let mode: 'success' | 'held' | 'denied' | 'switch' = 'success';
       let held: Route | undefined, currentHeld: Route | undefined;
       const reads: URLSearchParams[] = [];
+      const owners = new Map<URLSearchParams, string>();
       await page.route(new RegExp(`${config.api.replaceAll('/', '\\/')}(?:\\?|$)`), (route) => {
         const query = new URL(route.request().url()).searchParams;
         reads.push(query);
-        if (query.get('profileId') === profileB) {
+        owners.set(query, activeProfile);
+        if (kind === 'invoice') expect(query.has('profileId')).toBe(false);
+        if ((kind === 'invoice' ? activeProfile : query.get('profileId')) === profileB) {
           currentHeld = route;
           return;
         }
@@ -140,7 +151,7 @@ for (const locale of ['en', 'fa'] as const)
         });
       });
       await page.setViewportSize({ width: 1280, height: 900 });
-      await page.goto(`${config.path}?statuses=submitted`);
+      await page.goto(`${config.path}?statuses=${status}`);
       const main = page.getByRole('main').last();
       const content = main.locator('[data-slot=list-content]');
       const record = (id: string) => content.getByText(id, { exact: true }).first();
@@ -196,24 +207,27 @@ for (const locale of ['en', 'fa'] as const)
       ).toEqual([]);
       if (
         locale === 'fa' &&
-        kind === 'electricity' &&
+        kind === 'invoice' &&
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
         await page.setViewportSize({ width: 430, height: 1500 });
         await page.evaluate(() => document.fonts.ready);
-        await main.screenshot({
-          path: `${process.env.BARGHSA_SCREENSHOT_DIR}/customer-history-denied-fa.png`,
-        });
+        await main
+          .locator('[data-slot=list-page]')
+          .locator('..')
+          .screenshot({
+            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/invoice-history-denied-fa.png`,
+          });
         await page.setViewportSize({ width: 390, height: 844 });
       }
       mode = 'success';
       await retry().click();
       await expect(record(first)).toBeVisible();
-      expect(reads.at(-1)!.get('profileId')).toBe(profileA);
+      if (kind !== 'invoice') expect(reads.at(-1)!.get('profileId')).toBe(profileA);
       expect(reads.at(-1)!.has('before')).toBe(false);
       expect(reads.at(-1)!.get('q')).toBe('89000000');
-      expect(reads.at(-1)!.get('statuses')).toBe('submitted');
+      expect(reads.at(-1)!.get('statuses')).toBe(status);
       await expect(record(older)).toHaveCount(0);
 
       await page.setViewportSize({ width: 1280, height: 900 });
@@ -225,11 +239,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect.poll(() => !!currentHeld).toBe(true);
       await expect(record(first)).toHaveCount(0);
       await expect(record(older)).toHaveCount(0);
-      const fresh = reads.filter((query) => query.get('profileId') === profileB);
+      const fresh = reads.filter((query) => owners.get(query) === profileB);
       expect(fresh).toHaveLength(1);
       expect(fresh[0]!.has('before')).toBe(false);
       expect(fresh[0]!.get('q')).toBe('89000000');
-      expect(fresh[0]!.get('statuses')).toBe('submitted');
+      expect(fresh[0]!.get('statuses')).toBe(status);
       await currentHeld!.fulfill({ json: response(current, null) });
       await expect(record(current)).toBeVisible();
       await obsolete.fulfill({ json: response(older, null) });
@@ -266,15 +280,18 @@ for (const locale of ['en', 'fa'] as const)
       ).toEqual([]);
       if (
         locale === 'fa' &&
-        kind === 'electricity' &&
+        kind === 'invoice' &&
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
         await page.setViewportSize({ width: 430, height: 1500 });
         await page.evaluate(() => document.fonts.ready);
-        await main.screenshot({
-          path: `${process.env.BARGHSA_SCREENSHOT_DIR}/customer-history-profile-fa.png`,
-        });
+        await main
+          .locator('[data-slot=list-page]')
+          .locator('..')
+          .screenshot({
+            path: `${process.env.BARGHSA_SCREENSHOT_DIR}/invoice-history-profile-fa.png`,
+          });
       }
     });
   }

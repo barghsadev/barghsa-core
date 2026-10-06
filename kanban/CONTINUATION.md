@@ -12,7 +12,15 @@ Release notifications use verified bot `@barghsa_dev_bot` and Barghsa Release Ra
 
 The version/notification operations batch and one test-only closure queue CI compatibility repair pass their related local checks. Actual publication, exact-commit CI and deployment/Telegram outcomes are tracked separately in external receipts. See `kanban/batches/2026-10-05-staging-version-and-telegram.md`. Domain engines and global UI task completion are not recounted.
 
-## Latest manual batch: customer service-history ownership for v0.1.26 (October 6, 2026)
+## Latest manual batch: customer invoice-history ownership for v0.1.27 (October 6, 2026)
+
+Customer invoices now reuse account/profile/query-owned history. Current 401/403 withdraws every page and cursor; explicit retry starts from page one with unpaid/status/search/date/exact amount criteria intact. Account/profile changes mask old rows and fence late replies. Transient/malformed reads retain accepted same-scope pages. An explicit shared-reader option preserves the invoice API's server-session profile selection; the three service APIs retain their explicit profile parameters.
+
+All **32** source cases in seven actual files and **48 distinct** browser cases pass, 24 per engine, with zero retries. Four new bilingual invoice cases accompany service-history ownership, seven-family recovery and exact invoice-filter regressions. Build/types/root/focused lint, contract/suppression, strict SAST (1,802 files; no findings/errors; five fixtures), all 85 unchanged budgets, formatting and backlog checks pass. Two complete original Persian invoice captures are reviewed; unchanged dictionary and 495 built assets are bound externally. See `kanban/batches/2026-10-06-customer-invoice-history-scope.md`.
+
+This repairs domain adoption under `07-ui-ux-design.md#T-07.15.01.05` and `#T-07.18.01.06`, retaining E-04 profile-scoped history and correction/detail engines. Global requirements remain partial; no new engine completion count. No API, migration, dictionary, shared UI component, dependency, CI, budget or supervisor-state changes. Continue direct-main batches and enqueue independent deployment after exact remote readback. A next candidate is customer bank-receipt history: its scope includes the profile revision but omits the account, and its load-more catch retains old pages after definitive denial. Confirm the failing boundary, then repair this native compound-cursor list without changing receipt/payment engines.
+
+## Previous manual batch: customer service-history ownership for v0.1.26 (October 6, 2026)
 
 Electricity, saving and solar history now bind accepted pages to the current account/profile revision and criteria. Current 401/403 withdraws every page and pagination cursor; explicit recovery starts from page one with saved filters. Profile changes mask old rows immediately and fence late replies, including an unannounced changed profile during pagination. Missing profiles clear history. Transient/malformed reads retain accepted same-scope pages and retry the exact cursor. Existing presentations, URL filters, precision, dates and financial commands remain intact.
 

@@ -27,7 +27,9 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 it('loads unpaid invoices and offers the unfiltered list', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  const request = vi.fn(async () => Response.json({ invoices: [] }));
+  const request = vi.fn(async (path: string) =>
+    Response.json(path === '/api/profiles' ? { activeProfileId: 'profile-1' } : { invoices: [] })
+  );
   vi.stubGlobal('fetch', request);
   const container = document.createElement('div');
   document.body.append(container);
@@ -49,23 +51,27 @@ it('shows an invoice due date when the API supplies one', async () => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.stubGlobal(
     'fetch',
-    vi.fn(async () =>
-      Response.json({
-        invoices: [
-          {
-            invoiceId: 'invoice-1',
-            role: 'original',
-            state: 'Unpaid',
-            totalAmount: '109000',
-            paidAmount: '40000',
-            issuedAt: '2026-09-23T10:00:00Z',
-            dueAt: '2026-09-30T10:00:00Z',
-            periodStart: '2026-10-01T00:00:00Z',
-            periodEnd: '2026-11-01T00:00:00Z',
-            explanation: null,
-          },
-        ],
-      })
+    vi.fn(async (path: string) =>
+      Response.json(
+        path === '/api/profiles'
+          ? { activeProfileId: 'profile-1' }
+          : {
+              invoices: [
+                {
+                  invoiceId: 'invoice-1',
+                  role: 'original',
+                  state: 'Unpaid',
+                  totalAmount: '109000',
+                  paidAmount: '40000',
+                  issuedAt: '2026-09-23T10:00:00Z',
+                  dueAt: '2026-09-30T10:00:00Z',
+                  periodStart: '2026-10-01T00:00:00Z',
+                  periodEnd: '2026-11-01T00:00:00Z',
+                  explanation: null,
+                },
+              ],
+            }
+      )
     )
   );
   const container = document.createElement('div');
