@@ -8,7 +8,6 @@ import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js'
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { Link } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import {
   Button,
@@ -26,7 +25,7 @@ import {
 } from '@barghsa/shared/validation';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
-import { useCursorHistory } from '../hooks/useCursorHistory.js';
+import { useCustomerServiceHistory } from '../hooks/useCustomerServiceHistory.js';
 import { statusFilterTone } from '../lib/status-filter-tone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -90,6 +89,8 @@ function nextActionLink(order: ListedOrder): { href: string; label: string } | n
   }
 }
 
+const identifyHistoryRow = (row: ListedOrder) => row.orderId;
+
 export function ElectricityOrdersPage({
   pendingOnly = false,
   statuses = [],
@@ -132,83 +133,22 @@ export function ElectricityOrdersPage({
       tone: statusFilterTone(value),
     }));
   const statusesKey = statuses.join(',');
-  const {
-    items: orders,
-    before,
-    nextBefore,
-    acceptPage,
-    loadMore,
-  } = useCursorHistory<ListedOrder & { id: string }>(
-    `${pendingOnly}:${statusesKey}:${dateRange.from ?? ''}:${dateRange.to ?? ''}:${query.q}:${query.sort}`
-  );
-  const [noProfile, setNoProfile] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [revision, setRevision] = useState(0);
-
-  useEffect(() => {
-    const abort = new AbortController();
-    setLoading(true);
-    setError(false);
-    void (async () => {
-      const profileResponse = await fetch('/api/profiles/verification-status', {
-        credentials: 'include',
-        signal: abort.signal,
-      });
-      if (!profileResponse.ok) throw new Error('Profile unavailable');
-      const profile = (await profileResponse.json()) as { activeProfileId: string | null };
-      if (!profile.activeProfileId) {
-        if (!abort.signal.aborted) {
-          acceptPage([], null);
-          setNoProfile(true);
-        }
-        return;
-      }
-      if (abort.signal.aborted) return;
-      setNoProfile(false);
-      const params = new URLSearchParams({ profileId: profile.activeProfileId });
-      if (before) params.set('before', before);
-      if (pendingOnly) params.set('status', 'pending');
-      if (statusesKey) params.set('statuses', statusesKey);
-      if (dateRange.from) params.set('from', dateRange.from);
-      if (dateRange.to) params.set('to', dateRange.to);
-      if (query.q) params.set('q', query.q);
-      if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
-      const response = await fetch(`/api/electricity/orders?${params}`, {
-        credentials: 'include',
-        signal: abort.signal,
-      });
-      if (!response.ok) throw new Error('Orders unavailable');
-      const result = (await response.json()) as {
-        orders: ListedOrder[];
-        nextBefore: string | null;
-      };
-      if (!Array.isArray(result.orders)) throw new Error('Invalid orders');
-      if (!abort.signal.aborted) {
-        acceptPage(
-          result.orders.map((order) => ({ ...order, id: order.orderId })),
-          result.nextBefore
-        );
-      }
-    })()
-      .catch(() => {
-        if (!abort.signal.aborted) setError(true);
-      })
-      .finally(() => {
-        if (!abort.signal.aborted) setLoading(false);
-      });
-    return () => abort.abort();
-  }, [
-    before,
-    pendingOnly,
-    revision,
-    statusesKey,
-    dateRange.from,
-    dateRange.to,
-    query.q,
-    query.sort,
-    acceptPage,
-  ]);
+  const params = new URLSearchParams();
+  if (pendingOnly) params.set('status', 'pending');
+  if (statusesKey) params.set('statuses', statusesKey);
+  if (dateRange.from) params.set('from', dateRange.from);
+  if (dateRange.to) params.set('to', dateRange.to);
+  if (query.q) params.set('q', query.q);
+  if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
+  const history = useCustomerServiceHistory<ListedOrder>({
+    endpoint: '/api/electricity/orders',
+    profileEndpoint: '/api/profiles/verification-status',
+    query: params.toString(),
+    itemsKey: 'orders',
+    identify: identifyHistoryRow,
+  });
+  const { items: orders, nextBefore, loadMore, loading, noProfile } = history;
+  const error = !!history.error;
 
   const formatPeriod = (order: ListedOrder) =>
     `${time.format(order.periodStart, { year: 'numeric', month: '2-digit', day: '2-digit' })} – ${time.format(new Date(new Date(order.periodEnd).getTime() - 1), { year: 'numeric', month: '2-digit', day: '2-digit' })}`;
@@ -404,10 +344,12 @@ export function ElectricityOrdersPage({
           loadingView={<p role="status">{t('electricity.orders.loading', locale)}</p>}
           errorView={
             <div role="alert" className="space-y-2">
-              <p>{t('electricity.orders.error', locale)}</p>
-              <Button onClick={() => setRevision((value) => value + 1)}>
-                {t('electricity.order.retry', locale)}
-              </Button>
+              <p>
+                {history.error === 'denied'
+                  ? t('historyPagination.accessDenied', locale)
+                  : t('electricity.orders.error', locale)}
+              </p>
+              <Button onClick={history.retry}>{t('electricity.order.retry', locale)}</Button>
             </div>
           }
           emptyView={

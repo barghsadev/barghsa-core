@@ -1,6 +1,7 @@
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en as documentWords } from '../../../packages/i18n/src/documents';
+import { solarContractReview, type SolarCommand } from './solar-contract-issue-form-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 test.beforeEach(async ({ page }) => {
@@ -512,6 +513,8 @@ test('solar intake returns from address setup with its saved site details', asyn
     fullAddress: 'Solar Field Road',
     postalCode: '9876543210',
     mainAddress: true,
+    createdAt: submittedAt,
+    updatedAt: submittedAt,
   };
   const addresses: Array<typeof siteAddress> = [];
   let draft: Record<string, unknown> | null = null;
@@ -529,7 +532,18 @@ test('solar intake returns from address setup with its saved site details', asyn
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
-        profiles: [{ id: profileId, profileType: 'INDIVIDUAL', title: 'Buyer' }],
+        profiles: [
+          {
+            id: profileId,
+            profileType: 'INDIVIDUAL',
+            title: 'Buyer',
+            isDefault: true,
+            status: 'ACTIVE',
+            firstName: 'Solar',
+            lastName: 'Buyer',
+            nationalId: '1234567890',
+          },
+        ],
         activeProfileId: profileId,
         hasDefault: true,
       },
@@ -610,7 +624,8 @@ test('solar intake returns from address setup with its saved site details', asyn
   await page.locator('#addresses-field-3').fill(siteAddress.fullAddress);
   await page.locator('#addresses-field-4').fill(siteAddress.postalCode);
   await page.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.getByText(siteAddress.fullAddress)).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'New Address' })).toBeHidden();
+  await expect(page.getByText(siteAddress.fullAddress, { exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Return to solar construction request' }).click();
   await expect(page).toHaveURL(/\/solar\/requests\/new\?step=1$/);
   await expect(page.locator('#solar-area')).toHaveValue('250');
@@ -634,7 +649,7 @@ test('solar intake returns from address setup with its saved site details', asyn
 });
 
 test('staff confirms the reviewed solar contract and exact initial invoice', async ({ page }) => {
-  let reviewed: Record<string, unknown> | null = null;
+  let reviewed: SolarCommand | null = null;
   let issued: Record<string, unknown> | null = null;
   const contractId = '66666666-6666-4666-8666-666666666666';
   const invoiceId = '77777777-7777-4777-8777-777777777777';
@@ -700,30 +715,11 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
     })
   );
   await page.route(`**/api/admin/solar/requests/${requestId}/create-contract/review`, (route) => {
-    reviewed = route.request().postDataJSON() as Record<string, unknown>;
-    return route.fulfill({
-      json: {
-        hash: 'c'.repeat(64),
-        data: {
-          title: 'Solar agreement',
-          text: 'Build the station.',
-          changeDescription: 'Initial draft',
-          commercialValue: { kind: 'fixed', amountIrr: '900000' },
-          source: { kind: 'template', label: 'Solar agreement', versionNumber: 2 },
-          invoiceLines: [
-            {
-              description: 'Deposit',
-              quantity: 1,
-              unitPrice: '100000',
-              lineTotal: '100000',
-              vatAmount: '0',
-            },
-          ],
-          totals: { subtotal: '100000', vat: '0', total: '100000' },
-          dueRule: { configDays: 7 },
-        },
-      },
-    });
+    reviewed = route.request().postDataJSON() as SolarCommand;
+    const review = solarContractReview(requestId, reviewed);
+    review.data.source.label = 'Solar agreement';
+    review.data.source.versionNumber = 2;
+    return route.fulfill({ json: { ...review, hash: 'c'.repeat(64) } });
   });
   await page.route(`**/api/admin/solar/requests/${requestId}/create-contract`, (route) => {
     issued = route.request().postDataJSON() as Record<string, unknown>;

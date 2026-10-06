@@ -606,7 +606,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   await expect(page.getByRole('region', { name: 'Preliminary contract for review' })).toContainText(
     'Supply begins after invoice payment and customer acceptance.'
   );
-  await expect(page.getByRole('table')).toContainText('Green electricity');
+  await expect(staffProducts).toContainText('Green electricity');
   await page.getByRole('button', { name: 'Approve order' }).click();
   await expect(
     page.getByRole('region', { name: 'Electricity decision financial review' })

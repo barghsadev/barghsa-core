@@ -32,8 +32,23 @@ export function useCursorHistory<T extends { id: string }>(scope: string) {
     },
     [scope, before]
   );
+  const clear = useCallback(() => {
+    setPage((current) =>
+      current.scope === scope ? { ...current, items: [], nextBefore: null } : current
+    );
+  }, [scope]);
+  const reset = useCallback(() => {
+    setPage((current) =>
+      current.scope === scope ? { scope, items: [], nextBefore: null } : current
+    );
+  }, [scope]);
   const loadMore = () => {
-    if (nextBefore) setPage((current) => ({ ...current, before: nextBefore }));
+    if (nextBefore)
+      setPage((current) =>
+        current.scope === scope && current.nextBefore === nextBefore
+          ? { ...current, before: nextBefore }
+          : current
+      );
   };
-  return { items, before, nextBefore, acceptPage, loadMore };
+  return { items, before, nextBefore, acceptPage, loadMore, clear, reset };
 }

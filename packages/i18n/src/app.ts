@@ -77,6 +77,8 @@ export const fa: I18nDictionary = {
   'historyPagination.label': 'صفحه‌های سوابق',
   'historyPagination.previous': 'صفحهٔ قبل',
   'historyPagination.retry': 'تلاش دوباره',
+  'historyPagination.accessDenied':
+    'این تاریخچه دیگر در دسترس شما نیست. برای بررسی دسترسی فعلی دوباره تلاش کنید.',
   'historyFilters.apply': 'اعمال فیلترها',
   'historyFilters.cancel': 'انصراف',
   'historyFilters.close': 'بستن فیلترها',
@@ -1826,6 +1828,8 @@ export const en: I18nDictionary = {
   'historyPagination.label': 'History pages',
   'historyPagination.previous': 'Previous page',
   'historyPagination.retry': 'Retry',
+  'historyPagination.accessDenied':
+    'This history is no longer available. Retry to check your current access.',
   'historyFilters.apply': 'Apply filters',
   'historyFilters.cancel': 'Cancel',
   'historyFilters.close': 'Close filters',

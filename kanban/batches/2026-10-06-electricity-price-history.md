@@ -23,6 +23,10 @@ No API, database, shared-component, dependency, CI, budget or supervisor-state c
 
 Failures remain external. Validation caught stale compiled translations, a formatting type mismatch, and duplicate IDs between the mounted responsive presentations. Product fixes rebuild the translation dependency, preserve exact formatting and restore focus through a visible-action lookup. Existing invoice browser selectors now identify the visible presentation. Modal refresh tests explicitly inspect the inert background without bypassing financial guards. No test retries, forced clicks, weakened command assertions or budget changes.
 
+## Deployment confirmation
+
+`v0.1.25` completed at `2026-10-06T06:47:24.832982+00:00`, with exact healthy live commit `88f1d067834ce6be061131a62a27c371415ed0e1`; Persian Telegram note `75` and captures `76`, `77` are confirmed. Docker was initially unavailable after the host interruption. The existing Docker Desktop was started and verified before retrying that exact failed release. External failure, publication and completion receipts preserve the real outcomes and frozen capture hashes.
+
 ## Prior deployment confirmation
 
 `v0.1.24` completed at `2026-10-05T23:59:50.517470+00:00`, with exact healthy live commit `48c3c826c328ece20dbcd2aeecd1fdc0e5b8b45e`; Persian Telegram note `72` and captures `73`, `74` are confirmed. Its report and external completion receipt record the actual result.

@@ -257,6 +257,25 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
       },
     })
   );
+  const staffPricingSnapshot = {
+    plan: { title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' } },
+    lines: [
+      {
+        title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' },
+        amountIrR: '100000',
+        discountIrR: '0',
+        netIrR: '100000',
+        vatIrR: '0',
+      },
+      {
+        title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
+        amountIrR: '200000',
+        discountIrR: '0',
+        netIrR: '200000',
+        vatIrR: '0',
+      },
+    ],
+  };
   const staffOrder = () => ({
     id: savingOrderId,
     orderId: parentOrderId,
@@ -270,12 +289,17 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     installationAddressId: addressId,
     hardwareProductId: hardwareId,
     hardwareTitle: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
-    pricingSnapshot: { plan: { title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' } } },
+    pricingSnapshot: staffPricingSnapshot,
+    agreementSnapshot: 'The customer accepts this plan.',
+    contractId,
+    invoiceId,
     versionId: agreementVersionId,
-    invoiceState: 'Unpaid',
-    contractState: approved ? 'AwaitingCustomerAcceptance' : 'AwaitingStaffReview',
+    invoiceState,
+    contractState: approved ? contractState : 'AwaitingStaffReview',
     totalIrR: '300000',
     paidIrR: '0',
+    refundedIrR: '0',
+    pendingRefundIrR: '0',
   });
   await page.route('**/api/staff/saving/orders?*', (route) => {
     const lane = new URL(route.request().url()).searchParams.get('lane');
@@ -328,24 +352,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
           billIdentifier: '1234567890123',
           hardwareTitle: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
           addressSnapshot: { full_address: 'Saving Street' },
-          pricingSnapshot: {
-            lines: [
-              {
-                title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' },
-                amountIrR: '100000',
-                discountIrR: '0',
-                netIrR: '100000',
-                vatIrR: '0',
-              },
-              {
-                title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
-                amountIrR: '200000',
-                discountIrR: '0',
-                netIrR: '200000',
-                vatIrR: '0',
-              },
-            ],
-          },
+          pricingSnapshot: staffPricingSnapshot,
           agreementSnapshot: 'The customer accepts this plan.',
           contractId,
           contractState: 'AwaitingStaffReview',
@@ -373,7 +380,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     });
     approved = true;
     stageIndex = 1;
-    return route.fulfill({ json: { status: 'approved' } });
+    return route.fulfill({ json: { savingOrderId, status: 'approved', refundId: null } });
   });
   const invoice = {
     invoiceId,

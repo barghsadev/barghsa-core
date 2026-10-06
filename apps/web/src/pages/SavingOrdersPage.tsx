@@ -13,10 +13,9 @@ import { t } from '@barghsa/i18n/app';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { Link } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 import { Button, Card, CardContent, StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
 import { SAVING_ORDER_STATUSES } from '@barghsa/shared/validation';
-import { useCursorHistory } from '../hooks/useCursorHistory.js';
+import { useCustomerServiceHistory } from '../hooks/useCustomerServiceHistory.js';
 import { statusFilterTone } from '../lib/status-filter-tone.js';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
@@ -31,6 +30,8 @@ interface SavingOrderRow extends SavingActionContext {
   hardware_title: { fa: string; en: string };
   total_amount: string;
 }
+
+const identifyHistoryRow = (row: SavingOrderRow) => row.id;
 
 export function SavingOrdersPage({
   pendingOnly = false,
@@ -82,69 +83,23 @@ export function SavingOrdersPage({
     })
   );
   const statusesKey = statuses.join(',');
-  const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
-  const {
-    items: orders,
-    before,
-    nextBefore,
-    acceptPage,
-    loadMore,
-  } = useCursorHistory<SavingOrderRow>(
-    `${pendingOnly}:${statusesKey}:${rangeKey}:${query.q}:${query.sort}`
-  );
-  const [revision, setRevision] = useState(0);
-  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
-  useEffect(() => {
-    const controller = new AbortController();
-    setState('loading');
-    void (async () => {
-      try {
-        const profileResponse = await fetch('/api/profiles', { signal: controller.signal });
-        if (!profileResponse.ok) throw new Error('profile');
-        const profile = (await profileResponse.json()) as { activeProfileId: string | null };
-        if (!profile.activeProfileId) {
-          if (!controller.signal.aborted) {
-            acceptPage([], null);
-            setState('ready');
-          }
-          return;
-        }
-        const params = new URLSearchParams({ profileId: profile.activeProfileId });
-        if (before) params.set('before', before);
-        if (pendingOnly) params.set('status', 'pending');
-        if (statusesKey) params.set('statuses', statusesKey);
-        if (dateRange.from) params.set('from', dateRange.from);
-        if (dateRange.to) params.set('to', dateRange.to);
-        if (query.q) params.set('q', query.q);
-        if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
-        const response = await fetch(`/api/saving/orders?${params}`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error('orders');
-        const result = (await response.json()) as {
-          orders: SavingOrderRow[];
-          nextBefore: string | null;
-        };
-        if (!controller.signal.aborted) {
-          acceptPage(result.orders, result.nextBefore);
-          setState('ready');
-        }
-      } catch {
-        if (!controller.signal.aborted) setState('error');
-      }
-    })();
-    return () => controller.abort();
-  }, [
-    before,
-    revision,
-    pendingOnly,
-    statusesKey,
-    dateRange.from,
-    dateRange.to,
-    query.q,
-    query.sort,
-    acceptPage,
-  ]);
+  const params = new URLSearchParams();
+  if (pendingOnly) params.set('status', 'pending');
+  if (statusesKey) params.set('statuses', statusesKey);
+  if (dateRange.from) params.set('from', dateRange.from);
+  if (dateRange.to) params.set('to', dateRange.to);
+  if (query.q) params.set('q', query.q);
+  if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
+  const history = useCustomerServiceHistory<SavingOrderRow>({
+    endpoint: '/api/saving/orders',
+    profileEndpoint: '/api/profiles',
+    query: params.toString(),
+    itemsKey: 'orders',
+    identify: identifyHistoryRow,
+  });
+  const { items: orders, nextBefore, loadMore } = history;
+  const state = history.loading ? 'loading' : history.error ? 'error' : 'ready';
+
   const columns: HistoryColumn<SavingOrderRow>[] = [
     {
       id: 'reference',
@@ -340,8 +295,12 @@ export function SavingOrdersPage({
           loadingView={<p role="status">{copy('loading')}</p>}
           errorView={
             <div className="space-y-2">
-              <p role="alert">{copy('error')}</p>
-              <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+              <p role="alert">
+                {history.error === 'denied'
+                  ? t('historyPagination.accessDenied', locale)
+                  : copy('error')}
+              </p>
+              <Button variant="outline" onClick={history.retry}>
                 {t('historyPagination.retry', locale)}
               </Button>
             </div>

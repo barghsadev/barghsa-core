@@ -11,11 +11,10 @@ import { HistoryListControls } from '../components/HistoryListControls.js';
 import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validation';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
-import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
 import { SOLAR_REQUEST_STATUSES } from '@barghsa/shared/validation';
-import { useCursorHistory } from '../hooks/useCursorHistory.js';
+import { useCustomerServiceHistory } from '../hooks/useCustomerServiceHistory.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { statusFilterTone } from '../lib/status-filter-tone.js';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -35,6 +34,8 @@ interface RequestRow {
   initial_invoice_id: string | null;
   initial_invoice_state: string | null;
 }
+
+const identifyHistoryRow = (row: RequestRow) => row.id;
 
 export function SolarRequestsPage({
   statuses = [],
@@ -78,69 +79,22 @@ export function SolarRequestsPage({
     })
   );
   const statusesKey = statuses.join(',');
-  const rangeKey = `${dateRange.from ?? ''}:${dateRange.to ?? ''}`;
-  const {
-    items: rows,
-    before,
-    nextBefore,
-    acceptPage,
-    loadMore,
-  } = useCursorHistory<RequestRow>(`${statusesKey}:${rangeKey}:${query.q}:${query.sort}`);
-  const [revision, setRevision] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(false);
-    void (async () => {
-      try {
-        const profileResponse = await fetch('/api/profiles', {
-          credentials: 'include',
-          signal: controller.signal,
-        });
-        if (!profileResponse.ok) throw new Error('profile');
-        const profile = (await profileResponse.json()) as { activeProfileId: string | null };
-        if (!profile.activeProfileId) {
-          if (!controller.signal.aborted) acceptPage([], null);
-          return;
-        }
-        const params = new URLSearchParams({ profileId: profile.activeProfileId });
-        if (before) params.set('before', before);
-        if (statusesKey) params.set('statuses', statusesKey);
-        if (dateRange.from) params.set('from', dateRange.from);
-        if (dateRange.to) params.set('to', dateRange.to);
-        if (query.q) params.set('q', query.q);
-        if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
-        const response = await fetch(`/api/solar/requests?${params}`, {
-          credentials: 'include',
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error('requests');
-        const result = (await response.json()) as {
-          requests: RequestRow[];
-          nextBefore: string | null;
-        };
-        if (!controller.signal.aborted) {
-          acceptPage(result.requests, result.nextBefore);
-        }
-      } catch {
-        if (!controller.signal.aborted) setError(true);
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
-    return () => controller.abort();
-  }, [
-    before,
-    revision,
-    statusesKey,
-    dateRange.from,
-    dateRange.to,
-    query.q,
-    query.sort,
-    acceptPage,
-  ]);
+  const params = new URLSearchParams();
+  if (statusesKey) params.set('statuses', statusesKey);
+  if (dateRange.from) params.set('from', dateRange.from);
+  if (dateRange.to) params.set('to', dateRange.to);
+  if (query.q) params.set('q', query.q);
+  if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
+  const history = useCustomerServiceHistory<RequestRow>({
+    endpoint: '/api/solar/requests',
+    profileEndpoint: '/api/profiles',
+    query: params.toString(),
+    itemsKey: 'requests',
+    identify: identifyHistoryRow,
+  });
+  const { items: rows, nextBefore, loadMore, loading } = history;
+  const error = !!history.error;
+
   const columns: HistoryColumn<RequestRow>[] = [
     {
       id: 'reference',
@@ -285,8 +239,12 @@ export function SolarRequestsPage({
           loadingView={<p role="status">{copy('loading')}</p>}
           errorView={
             <div className="space-y-2">
-              <p role="alert">{copy('notFound')}</p>
-              <Button variant="outline" onClick={() => setRevision((n) => n + 1)}>
+              <p role="alert">
+                {history.error === 'denied'
+                  ? t('historyPagination.accessDenied', locale)
+                  : copy('notFound')}
+              </p>
+              <Button variant="outline" onClick={history.retry}>
                 {copy('retry')}
               </Button>
             </div>

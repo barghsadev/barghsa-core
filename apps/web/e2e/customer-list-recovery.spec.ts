@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { tSolar } from '@barghsa/i18n/solar';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { contractText } from '@barghsa/i18n/contracts';
 
 const first = '81000000-0000-4000-8000-000000000001';
 const older = '81000000-0000-4000-8000-000000000002';
@@ -188,7 +189,10 @@ for (const locale of ['en', 'fa'] as const) {
       if (kind === 'consultation') await page.getByRole('radio').check();
       const more = page
         .getByRole('navigation', { name: t('historyPagination.label', locale), exact: true })
-        .getByRole('button');
+        .getByRole(
+          'button',
+          kind === 'contract' ? { name: contractText('next', locale), exact: true } : {}
+        );
       await more.click();
       await expect.poll(() => !!held).toBe(true);
       await expect(content).toHaveAttribute('aria-busy', 'true');
