@@ -5,6 +5,7 @@ import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en as documentWords } from '../../../packages/i18n/src/documents';
 import { solarContractReview, type SolarCommand } from './solar-contract-issue-form-fixture';
+import { fullNavigation } from './navigation-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 test.beforeEach(async ({ page }) => {
@@ -160,7 +161,7 @@ test('solar request moves from customer upload through staff review and postal r
           site_category: null,
           installation_surface: null,
           usable_area_sqm: null,
-          site_address: null,
+          site_address: 'Household installation site',
           site_relationship: null,
           site_description: null,
           agreement_version: '2026-09',
@@ -844,3 +845,89 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
   ).toBeVisible();
   expect(issued).toMatchObject({ ...reviewed, expectedReviewHash: 'c'.repeat(64) });
 });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`legacy solar history identifies an unrecorded installation address (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript(
+      (language) => localStorage.setItem('barghsa.locale', language),
+      locale
+    );
+    const id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'legacy-reader',
+          isStaff: false,
+          operatingContext: 'customer',
+          requiresTosAcceptance: false,
+          navigation: fullNavigation('customer', 'INDIVIDUAL'),
+        },
+      })
+    );
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [{ id: profileId, profileType: 'INDIVIDUAL', title: 'Legacy reader' }],
+          activeProfileId: profileId,
+          hasDefault: true,
+        },
+      })
+    );
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: {
+          activeProfileId: profileId,
+          profileStatus: 'ACTIVE',
+          verificationRequired: true,
+          isVerified: true,
+        },
+      })
+    );
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
+    await page.route(`**/api/solar/requests/${id}`, (route) =>
+      route.fulfill({
+        json: {
+          request: {
+            id,
+            profile_id: profileId,
+            status: 'cancelled',
+            building_type: 'non_household',
+            grid_type: 'off_grid',
+            site_address: null,
+            submission_review: null,
+            agreement_version: 'legacy-v1',
+            agreement_snapshot: 'Legacy terms',
+            agreement_accepted_at: '2020-01-01T00:00:00Z',
+            submitted_at: '2020-01-01T00:00:00Z',
+          },
+          history: [],
+        },
+      })
+    );
+    await page.route(`**/api/solar/requests/${id}/documents`, (route) =>
+      route.fulfill({
+        json: {
+          guidance: { en: '', fa: '', suggestions: [] },
+          requestedDocuments: [],
+        },
+      })
+    );
+    await page.route('**/api/documents?*', (route) =>
+      route.fulfill({ json: { documents: [], nextBefore: null } })
+    );
+    await page.goto(`/solar/requests/${id}`);
+    await expect(
+      page.getByText(tSolar('addressNotRecorded', locale), { exact: true })
+    ).toBeVisible();
+    await expect(page.getByText('Legacy terms', { exact: true })).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+  });

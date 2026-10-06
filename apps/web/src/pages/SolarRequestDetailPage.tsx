@@ -377,12 +377,10 @@ export function SolarRequestDetailPage() {
                 <dd>{request.usable_area_sqm}</dd>
               </div>
             )}
-            {request.site_address && (
-              <div>
-                <dt>{copy('address')}</dt>
-                <dd>{request.site_address}</dd>
-              </div>
-            )}
+            <div>
+              <dt>{copy('address')}</dt>
+              <dd>{request.site_address || copy('addressNotRecorded')}</dd>
+            </div>
             {request.site_relationship && (
               <div>
                 <dt>{copy('relationship')}</dt>

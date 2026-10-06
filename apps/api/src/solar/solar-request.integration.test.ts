@@ -591,3 +591,34 @@ it('replays a legacy household signed receipt without adding address fields or c
     ).rows[0]!.submission_review
   ).toEqual(stored);
 }, 60_000);
+
+it('keeps an unsigned legacy site address unknown after the saved address changes', async () => {
+  const key = randomUUID();
+  const row = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO solar_construction_requests(profile_id,submitted_by,submission_key,status,building_type,grid_type,site_category,installation_surface,usable_area_sqm,site_address_id,site_relationship,agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at)
+     VALUES($1,'solar-customer',$2,'submitted','non_household','off_grid','industrial','rooftop',100,$3,'owner',true,'legacy-v1','Legacy terms',NOW()) RETURNING id`,
+      [profileId, key, addressId]
+    )
+  ).rows[0]!;
+  await http.pool.query(
+    "UPDATE addresses SET full_address='Mutable present-day site' WHERE id=$1",
+    [addressId]
+  );
+  const response = await request(`/api/solar/requests/${row.id}`, 'GET');
+  expect(response.status, http.logs()).toBe(200);
+  expect(await response.json()).toMatchObject({
+    request: { id: row.id, site_address: null, submission_review: null },
+  });
+  expect(
+    (await request(`/api/solar/requests/${row.id}`, 'GET', undefined, otherHeaders)).status
+  ).toBe(404);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT submission_review,site_address_id FROM solar_construction_requests WHERE id=$1',
+        [row.id]
+      )
+    ).rows
+  ).toEqual([{ submission_review: null, site_address_id: addressId }]);
+}, 60_000);

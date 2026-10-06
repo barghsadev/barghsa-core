@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 22 | Accepted with unchanged source bindings. |
+| done | 23 | Accepted with unchanged source bindings. |
 | verify | 1284 | Existing work may be complete; inspect evidence before building. |
-| partial | 51 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,16 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Remove mutable saved-address fallback from legacy solar history and display missing recorded addresses explicitly in both languages. Preserve all three staging legacy rows and prior signed/replay boundaries, then continue original identity/four-service acceptance.
+Renew registration/shared auth layout, username normalization, versioned terms, submission/deduplication and registration OTP acceptance against existing code. Build only demonstrated gaps; preserve pending owner decisions and current typed/privacy boundaries.
 
-- `02-auth-users-admin.md#T-03.04.02`: Address in order flow
+- `02-auth-users-admin.md#T-01.01.01`: Register route and shared auth layout
+- `02-auth-users-admin.md#T-01.01.02`: Unified username field (email or mobile)
+- `02-auth-users-admin.md#T-01.01.04`: TOS acceptance checkbox
+- `02-auth-users-admin.md#T-01.01.05`: "Back to login" and "Forgot password?" links
+- `02-auth-users-admin.md#T-01.01.06`: Registration form submission and error handling
+- `02-auth-users-admin.md#T-01.02.01`: OTP backend generation and sending
+- `02-auth-users-admin.md#T-01.02.02`: OTP input UI with resend
+- `02-auth-users-admin.md#T-01.02.03`: OTP verification and user creation
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -89,7 +96,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-03.03.05` | verify | Earlier acceptance_verified | Notification channel preferences |
 | `02-auth-users-admin.md#T-03.03.06` | verify | Earlier acceptance_verified | Timezone settings |
 | `02-auth-users-admin.md#T-03.04.01` | done | Earlier acceptance_verified | Address CRUD for current profile |
-| `02-auth-users-admin.md#T-03.04.02` | partial | Earlier partial | Address in order flow |
+| `02-auth-users-admin.md#T-03.04.02` | done | Earlier partial | Address in order flow |
 | `02-auth-users-admin.md#T-04.01.01` | verify | Earlier acceptance_verified | Public TOS page |
 | `02-auth-users-admin.md#T-04.01.02` | verify | Earlier acceptance_verified | TOS acceptance storage |
 | `02-auth-users-admin.md#T-04.01.03` | verify | Earlier acceptance_verified | TOS re-acceptance flow |

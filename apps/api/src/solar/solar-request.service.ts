@@ -416,12 +416,11 @@ export class SolarRequestService {
       await requireCurrentSession(client, actor);
       const request = (
         await client.query<Record<string, unknown>>(
-          `SELECT r.*,COALESCE(r.submission_review->'data'->>'siteAddress',a.full_address) AS site_address,
+          `SELECT r.*,r.submission_review->'data'->>'siteAddress' AS site_address,
                i.id AS initial_invoice_id,
                i.state AS initial_invoice_state,
                EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id) AS contract_published
            FROM solar_construction_requests r
-           LEFT JOIN addresses a ON a.id=r.site_address_id
            LEFT JOIN LATERAL (
                SELECT id,state FROM invoices WHERE contract_id=r.contract_id::text
              ORDER BY issued_at,id LIMIT 1

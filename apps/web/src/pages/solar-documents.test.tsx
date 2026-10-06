@@ -2,6 +2,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SolarRequestDetailPage } from './SolarRequestDetailPage.js';
+import { tSolar } from '@barghsa/i18n/solar';
 
 vi.mock('@tanstack/react-router', () => ({
   useParams: () => ({ requestId: 'request-1' }),
@@ -15,6 +16,53 @@ vi.mock('../components/DocumentsWorkspace.js', () => ({
   DocumentResults: () => <div>File list</div>,
 }));
 afterEach(() => vi.unstubAllGlobals());
+
+it.each(['en', 'fa'] as const)(
+  'shows an unrecorded legacy address explicitly in %s',
+  async (locale) => {
+    document.documentElement.lang = locale;
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url === '/api/user/settings/timezone')
+          return Response.json({ timezone: 'Asia/Tehran' });
+        if (url.endsWith('/documents'))
+          return Response.json({
+            guidance: { en: '', fa: '', suggestions: [] },
+            requestedDocuments: [],
+          });
+        return Response.json({
+          request: {
+            id: 'request-1',
+            profile_id: 'profile-1',
+            status: 'cancelled',
+            building_type: 'non_household',
+            grid_type: 'off_grid',
+            site_address: null,
+            agreement_version: 'legacy-v1',
+            agreement_snapshot: 'Legacy terms',
+            agreement_accepted_at: '2020-01-01T00:00:00Z',
+            submitted_at: '2020-01-01T00:00:00Z',
+          },
+        });
+      })
+    );
+    const host = document.createElement('div');
+    document.body.append(host);
+    const root = createRoot(host);
+    try {
+      await act(async () => root.render(<SolarRequestDetailPage />));
+      expect(host.textContent).toContain(tSolar('addressNotRecorded', locale));
+      expect([...host.querySelectorAll('dt')].map((node) => node.textContent)).toContain(
+        tSolar('address', locale)
+      );
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  }
+);
 
 it('allows an empty solar document set to be sent for review', async () => {
   document.documentElement.lang = 'en';
