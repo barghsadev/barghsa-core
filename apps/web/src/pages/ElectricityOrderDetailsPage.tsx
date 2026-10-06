@@ -72,7 +72,7 @@ interface ElectricityOrderDetail {
   profileId: string;
   profileName?: string;
   mode: string;
-  submittedAt?: string;
+  submittedAt?: string | null;
   commercialStatus: string;
   electricityStatus: string;
   financialStatus: string;

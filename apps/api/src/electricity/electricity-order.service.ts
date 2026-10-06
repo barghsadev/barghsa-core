@@ -376,7 +376,7 @@ export class ElectricityOrderService {
           pricing_snapshot: Record<string, unknown>;
           settings_snapshot: Record<string, unknown>;
           green_rule_applied: boolean;
-          submitted_at: Date;
+          submitted_at: Date | null;
           gift_code_id: string | null;
           gift_code: string | null;
           gift_discount_amount: string | null;
@@ -511,7 +511,7 @@ export class ElectricityOrderService {
         pricingSnapshot: detail.pricing_snapshot,
         settingsSnapshot: detail.settings_snapshot,
         greenRuleApplied: detail.green_rule_applied,
-        submittedAt: detail.submitted_at.toISOString(),
+        submittedAt: detail.submitted_at?.toISOString() ?? null,
         giftCodeId: detail.gift_code_id,
         giftCode: detail.gift_code,
         giftDiscountIrR: detail.gift_discount_amount ?? '0',

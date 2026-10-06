@@ -665,3 +665,75 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
     vi.unstubAllGlobals();
   }
 });
+
+it.each(['en', 'fa'] as const)(
+  'shows a cancelled retained draft without inventing a submission date in %s',
+  async (locale) => {
+    document.documentElement.lang = locale;
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    const orderId = '11111111-1111-7111-8111-111111111111';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async (url: string) =>
+          new Response(
+            JSON.stringify(
+              url === '/api/user/settings/timezone'
+                ? { timezone: 'Asia/Tehran' }
+                : url.includes('/comments')
+                  ? { comments: [], nextBefore: null }
+                  : {
+                      orderId,
+                      profileId: '22222222-2222-7222-8222-222222222222',
+                      profileName: 'Retained draft',
+                      mode: 'simple',
+                      submittedAt: null,
+                      commercialStatus: 'CANCELLED',
+                      electricityStatus: 'cancelled',
+                      financialStatus: 'refunded',
+                      nextAction: 'none',
+                      periodStart: '2026-09-23T00:00:00.000Z',
+                      periodEnd: '2026-09-30T00:00:00.000Z',
+                      totalKwh: '10',
+                      fullAddress: 'Draft address',
+                      postalCode: '1234567890',
+                      contractId: '33333333-3333-7333-8333-333333333333',
+                      contractState: 'Cancelled',
+                      versionId: '44444444-4444-7444-8444-444444444444',
+                      invoiceId: '55555555-5555-7555-8555-555555555555',
+                      invoiceState: 'Refunded',
+                      totalIrR: '1000',
+                      paidIrR: '500',
+                      refundedIrR: '500',
+                      financiallyClosed: true,
+                      lines: [],
+                      timeline: [],
+                    }
+            ),
+            { headers: { 'Content-Type': 'application/json' } }
+          )
+      )
+    );
+    const host = document.createElement('div');
+    document.body.append(host);
+    const root = createRoot(host);
+    try {
+      await act(async () => root.render(<ElectricityOrderDetailsPage orderId={orderId} />));
+      expect(host.textContent).toContain('Retained draft');
+      expect(host.textContent).not.toContain('1970');
+      expect([...host.querySelectorAll('time')].every((el) => !!el.getAttribute('dateTime'))).toBe(
+        true
+      );
+      expect(
+        [...host.querySelectorAll('dt,span')].some(
+          (el) => el.textContent === (locale === 'en' ? 'Submitted' : 'زمان ثبت سفارش')
+        )
+      ).toBe(false);
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+      vi.unstubAllGlobals();
+      document.documentElement.lang = 'en';
+    }
+  }
+);

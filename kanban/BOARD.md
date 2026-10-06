@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-06T21:51:09Z. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-06T22:07:19Z. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish terminal draft/second-approval/multi-invoice rejection and cancellation acceptance; renew all-four-service journey evidence after effective criteria are accepted. Core business audit families are accepted. Preserve unanswered owner decisions and operational prerequisites.
+Implement raw/private/incomplete draft terminal handling and second-approval/multi-invoice rejection using existing financial safeguards. Linked pre-active cancellation and accepted/signing/signed rejection are accepted. Preserve unanswered owner decisions and complete all-four-service acceptance before release.
 
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
 - `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
