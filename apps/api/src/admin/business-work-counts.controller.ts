@@ -11,7 +11,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { getDbPool } from '@barghsa/db';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
-import { hasStaffPermission } from '../session/staff-permissions.js';
+import { hasStaffPermission, resolveStaffPermissions } from '../session/staff-permissions.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 
 const widgetKeys = ['queue', 'work', 'failures'] as const;
@@ -158,6 +158,25 @@ export class BusinessWorkCountsController {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      const account = (
+        await client.query<{
+          is_admin: boolean;
+          is_staff: boolean;
+          disabled_at: Date | null;
+          activation_pending: boolean;
+        }>(
+          `SELECT is_admin,is_staff,disabled_at,activation_token IS NOT NULL AS activation_pending
+           FROM users WHERE user_id=$1 FOR SHARE`,
+          [req.session.userId]
+        )
+      ).rows[0];
+      if (
+        !account ||
+        account.disabled_at ||
+        account.activation_pending ||
+        (!account.is_admin && !account.is_staff)
+      )
+        throw new ForbiddenException('Staff dashboard permission required');
       await requireCurrentSession(client, req.session);
       const counts = (
         await client.query<Record<string, number | null>>(
@@ -177,6 +196,42 @@ export class BusinessWorkCountsController {
           ]
         )
       ).rows[0]!;
+      // A grant change during a blocked count must withdraw the old snapshot.
+      // Keep the final role rows stable until this read commits.
+      const roles = await client.query<{ permissions: unknown }>(
+        `SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
+         WHERE ur.user_id=$1 ORDER BY r.role_id FOR SHARE OF ur,r`,
+        [req.session.userId]
+      );
+      const grants = resolveStaffPermissions(roles.rows.map((role) => role.permissions));
+      const current = (permission: string) =>
+        account.is_admin || grants.includes('*') || grants.includes(permission);
+      const currentTickets = current('tickets:read') || current('tickets:*');
+      const currentAccess = [
+        current('orders:read'),
+        current('contracts:read') || current('contracts:write'),
+        current('invoices:read'),
+        current('legal:read'),
+        current('admin:financial:edit'),
+        current('admin:jobs:view'),
+        currentTickets,
+        !currentTickets && current('tickets:assigned'),
+      ];
+      const context = (
+        await client.query<{ operating_context: string }>(
+          'SELECT operating_context FROM sessions WHERE session_id=$1 AND user_id=$2',
+          [req.session.sessionId, req.session.userId]
+        )
+      ).rows[0];
+      if (
+        context?.operating_context !== 'staff' ||
+        currentAccess.some(
+          (value, index) =>
+            value !==
+            [orders, contracts, invoices, legal, finance, jobs, tickets, assignedTickets][index]
+        )
+      )
+        throw new ForbiddenException('Staff dashboard permissions changed');
       await requireCurrentSession(client, req.session);
       await client.query('COMMIT');
       return Object.fromEntries(columns.map(({ key, alias }) => [key, counts[alias]]));

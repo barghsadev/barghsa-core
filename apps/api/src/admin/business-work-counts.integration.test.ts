@@ -377,3 +377,39 @@ it('rejects permissions removed after an earlier successful widget read', async 
   await http.pool.query("DELETE FROM user_roles WHERE user_id='work-tickets'");
   expect((await fetch(path, { headers: headers['work-tickets']! })).status).toBe(403);
 });
+
+it('withdraws counts if staff grants are revoked while their database read is waiting', async () => {
+  const locker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await locker.query('BEGIN');
+    await locker.query('LOCK TABLE consultation_requests IN ACCESS EXCLUSIVE MODE');
+    pending = fetch(`${http.base}/api/admin/dashboard/widgets/work`, {
+      headers: headers['work-admin']!,
+    });
+    await expect
+      .poll(async () => {
+        const waiting = await http.pool.query<{ count: number }>(
+          `SELECT count(*)::int AS count FROM pg_stat_activity
+           WHERE datname=current_database() AND state='active' AND wait_event_type='Lock'
+             AND query LIKE '%WITH access AS (SELECT%'`
+        );
+        return waiting.rows[0]!.count;
+      })
+      .toBe(1);
+    await http.pool.query("DELETE FROM user_roles WHERE user_id='work-admin'");
+    await locker.query('COMMIT');
+    const response = await pending;
+    expect(response.status, http.logs()).toBe(403);
+    const body = await response.json();
+    expect(body).not.toHaveProperty('consultations');
+    expect(body).not.toHaveProperty('refundObligations');
+  } finally {
+    await locker.query('ROLLBACK');
+    await pending;
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('work-admin','business-work-all') ON CONFLICT DO NOTHING"
+    );
+    locker.release();
+  }
+});
