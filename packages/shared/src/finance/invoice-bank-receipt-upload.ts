@@ -14,7 +14,7 @@ import { parseBankReceiptBankName as parseInvoiceBankName } from './bank-receipt
  * @module finance
  */
 
-import { BANK_RECEIPT_SETTLEABLE_INVOICE_STATES } from './invoice-overpayment.js';
+import { BANK_RECEIPT_SETTLEABLE_INVOICE_STATES } from './bank-receipt-fields.js';
 import {
   BANK_RECEIPT_ATTACHMENT_EXTENSIONS,
   parseBankReceiptAttachmentKey,
@@ -24,7 +24,7 @@ import {
   parseBankReceiptTopUpAmountIrR,
   utcTodayIso,
   type BankReceiptTopUpDetails,
-} from './wallet-bank-receipt-topup.js';
+} from './bank-receipt-fields.js';
 
 const MB = 1024 * 1024;
 

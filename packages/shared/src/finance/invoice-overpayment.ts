@@ -10,21 +10,11 @@
  * @module finance
  */
 
-import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js';
-
-/**
- * Invoice states that can still absorb a bank-receipt allocation.
- * S-04.1.01 permits SubmitBankReceipt only from Unpaid / PartiallyFunded
- * (and ConfirmBankReceipt from PaymentUnderReview). S-04.1.03 also
- * permits payment when Overdue. Paid has remaining 0, so a linked
- * receipt is entirely verified wallet excess.
- */
-export const BANK_RECEIPT_SETTLEABLE_INVOICE_STATES = [
-  'Unpaid',
-  'PaymentUnderReview',
-  'PartiallyFunded',
-  'Overdue',
-] as const;
+import {
+  BANK_RECEIPT_TOPUP_CHANNEL,
+  BANK_RECEIPT_SETTLEABLE_INVOICE_STATES,
+} from './bank-receipt-fields.js';
+export { BANK_RECEIPT_SETTLEABLE_INVOICE_STATES } from './bank-receipt-fields.js';
 
 export type BankReceiptSettleableInvoiceState =
   (typeof BANK_RECEIPT_SETTLEABLE_INVOICE_STATES)[number];

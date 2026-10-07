@@ -1,15 +1,13 @@
 /** Lightweight finance guards needed by the customer wallet before a review opens. */
-export {
-  isValidWalletTopUpLimit,
-  readOnlineTopUpLimitFromErrorBody,
-} from './wallet-topup-config.js';
+export { isValidWalletTopUpLimit } from './wallet-topup-fields.js';
+export { readOnlineTopUpLimitFromErrorBody } from './wallet-topup-config.js';
 export {
   BANK_RECEIPT_STORAGE_PURPOSE,
   parseBankReceiptTopUpAmountIrR,
   parseBankReceiptPaymentDate,
   parseBankReceiptPayerReference,
   parseBankReceiptCustomerNote,
-} from './wallet-bank-receipt-topup.js';
+} from './bank-receipt-fields.js';
 export {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
   evaluateInvoiceBankReceiptClientFile,

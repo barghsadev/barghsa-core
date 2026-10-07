@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "dbc294d9fdc5cdc2d4c72c19515b3050f0229220",
+  "source_commit": "a1e1b1e35135218ca7cb4efe03b0ae0ddf5d3422",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -36244,7 +36244,8 @@
           "2026-10-03-limit-settings-forms",
           "release-0.3-admin-financial-controls",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -36492,7 +36493,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -36501,6 +36502,14 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -36512,7 +36521,8 @@
             "Online limit default2,000,000,000IRR,approved zero kill switch,versioned config/global audit/cache,currentgrants/session/stepup andoptimistic expected-version. Absent-row first adminwrite serializes with in-flightsubmission. Newintents usecurrent ceiling; acceptedintents keeporiginal ceiling/version,replay identity andno repeated providerstart. UIshows localizedIRR/toman,future-submission warning andsafe validation/retry/denial/receipt matching.",
             "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -36629,7 +36639,8 @@
         "batches": [
           "release-0.3-admin-financial-controls",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -36877,7 +36888,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -36886,6 +36897,14 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -36897,7 +36916,8 @@
             "Online limit default2,000,000,000IRR,approved zero kill switch,versioned config/global audit/cache,currentgrants/session/stepup andoptimistic expected-version. Absent-row first adminwrite serializes with in-flightsubmission. Newintents usecurrent ceiling; acceptedintents keeporiginal ceiling/version,replay identity andno repeated providerstart. UIshows localizedIRR/toman,future-submission warning andsafe validation/retry/denial/receipt matching.",
             "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -38442,7 +38462,7 @@
       "launch_required": true,
       "remaining": [
         "Invoice receipt/wallet funding producer is now verified. Finish the C-04.CC.06 refund/provider reconciliation producers, including immutable refund credit provenance, outstanding reservations, unmatched authenticated callbacks/chargebacks, stale processing and expired intents. The owner accounting clarification remains pending; do not silently apply the contradictory completed-refund inequality.",
-        "Pass the unchanged Wallet 300 KB budget (current 300825 bytes) and diagnose the retained invoice-receipt filter animation trace before full launch quality acceptance."
+        "Wallet budget now passes at 299120/300000 bytes; all 87 unchanged route/interaction budgets pass. Retained dev-server filter failure shows a fresh page bootstrap interrupting the open dialog; the reload initiator remains unidentified. Current production-build receipt histories and Wallet finance journeys pass 20 cases with unchanged assertions. Resolve any recurrent development reload and complete the required launch rehearsal before whole quality acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -38540,7 +38560,8 @@
           "2026-10-05-reconciliation-review-forms",
           "2026-10-05-reconciliation-tables",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -39027,11 +39048,12 @@
             "Candidates are bounded, ordered and exclude current open/investigating invoice incidents. Each candidate re-locks its invoice with FOR UPDATE SKIP LOCKED, recomputes current funding and rechecks incident identity before one atomic insert. Concurrent workers report once, locked finance rows defer, fixed candidates skip, resolved still-present drift can report again, and one connection/row failure does not prevent later candidates.",
             "Actual compiled worker schedules the new independent invoice_reconciliation_scan, tracks in-flight work and shutdown, records report failure, then opens the report and clears the failed job after recovery without touching invoices. Invalid interval fallback, SIGTERM/SIGINT and database outage behavior checked. Both dictionaries and the monitoring allowlist/contract add the new type only.",
             "Generated 0261 migration/snapshot/journal add only lower(ref_id), wallet_id partial lookup for completed payments. All previous schema objects/journal entries unchanged. Real base-through-0260 upgrade applies exactly the new tag, preserves immutable financial data, supports uppercase historical IDs and reruns as no-op; EXPLAIN chooses the lookup index among 20k unrelated immutable credit/debit rows. Rollback drops only the new index and changes no money or application behavior.",
-            "Invoice producer criterion verified; refund/provider sources, owner clarification, earlier dependencies/operational gates and launch rehearsal unaccepted. Wallet remains FAIL 300825/300000 bytes; no assertions/budgets changed. This coherent batch is not a milestone release, and production authorization is still required."
+            "Invoice producer criterion verified; refund/provider sources, owner clarification, earlier dependencies/operational gates and launch rehearsal unaccepted. Wallet remains FAIL 300825/300000 bytes; no assertions/budgets changed. This coherent batch is not a milestone release, and production authorization is still required.",
+            "Current quality update: Wallet 299120/300000 bytes, all 87 unchanged route/interaction budgets and Size Limit pass on final build. 350 distinct passing behavior cases: 169 shared, 84 API, 77 UI and 20 production-build browser cases. Twenty-seven export checks and three budget-verifier tests counted separately. Older failed checks remain historical; reconciliation and launch acceptance remain partial."
           ],
           "limitations": [
             "Invoice receipt/wallet funding producer is now verified. Finish the C-04.CC.06 refund/provider reconciliation producers, including immutable refund credit provenance, outstanding reservations, unmatched authenticated callbacks/chargebacks, stale processing and expired intents. The owner accounting clarification remains pending; do not silently apply the contradictory completed-refund inequality.",
-            "Pass the unchanged Wallet 300 KB budget (current 300825 bytes) and diagnose the retained invoice-receipt filter animation trace before full launch quality acceptance."
+            "Wallet budget corrected in release-0.3-wallet-payload; original failure remains historical. Provider/refund producers and owner accounting decision remain unaccepted."
           ]
         }
       }
@@ -39597,7 +39619,8 @@
           "2026-10-03-limit-settings-forms",
           "release-0.3-admin-financial-controls",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -39845,7 +39868,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -39854,6 +39877,14 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -39865,7 +39896,8 @@
             "Online limit default2,000,000,000IRR,approved zero kill switch,versioned config/global audit/cache,currentgrants/session/stepup andoptimistic expected-version. Absent-row first adminwrite serializes with in-flightsubmission. Newintents usecurrent ceiling; acceptedintents keeporiginal ceiling/version,replay identity andno repeated providerstart. UIshows localizedIRR/toman,future-submission warning andsafe validation/retry/denial/receipt matching.",
             "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -58470,7 +58502,8 @@
           "2026-10-01-wallet-receipt-evidence",
           "2026-10-01-wallet-receipt-timeline",
           "release-0.3-wallet-ledger-topups",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -58558,18 +58591,27 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
-              "sha256": "ff33834ecf13c1eec0f00989220c3e33f15db7a45a174cf31a98917644b4f551"
+              "sha256": "887e67dd95dabbe53a59d31a342842d7fa61ea0504577129b509348f21c2131f"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
             "Current receipt submission preserves positive int8 amount without configured maximum,date,payer reference,file and optional note/bank name. Current actor/profile/session,confirmed provenance,attachment-first/idempotency locks,shared cross-flow claim,immutable sealing and review hash bind one Pending receipt without changing wallet balance. Exact replay retains frozen metadata; conflicting/missing/corrupt/foreign/unconfirmed attachments fail. Customer source/browser cases retain exact money/file through field errors,lost acknowledgements,profile changes and safe retries; all original validation assertions remain.",
             "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
             "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
           "limitations": [
@@ -58968,7 +59010,8 @@
         ],
         "batches": [
           "release-0.3-wallet-ledger-topups",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -59056,18 +59099,27 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-overpayment.ts",
-              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+              "sha256": "3563045e6f05ca885da52d60c111402acba6cb5790683c7541e04b9c550cf692"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
             "Current invoice-linked confirmation locks wallet then invoice,enforces the same profile and eligible state,and allocates min(receipt,remaining) to invoice. Exact excess uses a separate WalletService.credit and independent receipt-bound idempotency key,with immutable allocation snapshot and audit. No invoice over-settlement. Exact/partial/excess,bigint,racing/replayed confirmations and failure rollback are verified by actual PG/service cases and shared allocation contracts.",
             "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
             "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
           "limitations": [
@@ -59162,7 +59214,8 @@
         "batches": [
           "release-0.3-wallet-ledger-topups",
           "release-0.3-admin-geography-terms",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -59230,11 +59283,19 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -59242,7 +59303,8 @@
             "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
             "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending.",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
           "limitations": [
@@ -61114,7 +61176,8 @@
         "batches": [
           "2026-09-30-invoice-receipt-submission-review",
           "release-0.3-bank-receipts-financial-history",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -61382,11 +61445,19 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
-              "sha256": "c0f896bc1b5d8f2af6aef52b6ca3d41bbbb137f05cf88fedd593b3553f67b916"
+              "sha256": "a7f686830dc8171b15c38a6216f1f94f0afe4b0861691e21a4f621745ebf55dd"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -61394,7 +61465,8 @@
             "Historical removed useReceiptAttachmentUpload hook is not current evidence. Current InvoiceBankReceiptUploadForm imports useReceiptForm and uploadInvoiceReceiptAttachment from invoice-bank-receipt-upload; their source and current form/lib/browser cases are bound here. Historical records remain unchanged.",
             "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -61511,7 +61583,8 @@
         ],
         "batches": [
           "release-0.3-bank-receipts-financial-history",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -61783,18 +61856,27 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-overpayment.ts",
-              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+              "sha256": "3563045e6f05ca885da52d60c111402acba6cb5790683c7541e04b9c550cf692"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
             "Current confirmation validates locked receipt/profile/invoice and captured review,with current permission/step-up and final authority checks. Profile->wallet->invoice lock order preserved. Invoice allocation=min(receipt,remaining); only excess becomes separate wallet credit. Allocation,paidAmount/state,receipt confirmation actor/history/audit commit atomically. Confirmed replay loads stored allocation without new money. Wrong scope,corrupt config,closed invoice,mismatch,audit/final authority failures and cross-flow claims fail closed/rollback in actual PG cases.",
             "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -61931,7 +62013,8 @@
         ],
         "batches": [
           "release-0.3-bank-receipts-financial-history",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -62219,7 +62302,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-overpayment.ts",
-              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+              "sha256": "3563045e6f05ca885da52d60c111402acba6cb5790683c7541e04b9c550cf692"
             },
             {
               "path": "packages/shared/src/finance/online-topup-expiry.ts",
@@ -62228,13 +62311,22 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
             "Rejection requires reason/current receipt authority/proof; Rejected reason/actor/status,audit,pending approval resolution and deduplicated customer outbox commit atomically without balance changes. Same reason replay stable; Confirmed conflicts. Eight actual local worker cases lease producer payloads and render FA/EN receipt/rejection/expiry templates into private in-app/test-email delivery receipts; live SMTP/provider operations remain separate.",
             "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -62344,7 +62436,8 @@
         ],
         "batches": [
           "release-0.3-bank-receipts-financial-history",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -62616,18 +62709,27 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-overpayment.ts",
-              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+              "sha256": "3563045e6f05ca885da52d60c111402acba6cb5790683c7541e04b9c550cf692"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
             "Amount>=locked configured threshold requires distinct currently authorized reviewer and initiator,exact review and step-up. First decision parks UnderReview without settlement; second executes one allocation/credit. Revoked/same reviewer,changed threshold/state/review,corrupt config and concurrent decisions fail safely. Separate authorized emergency override requires reason/proof/audit; browser retains receipt/reason/focus through verification.",
             "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -109523,7 +109625,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -109739,7 +109842,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -109776,6 +109879,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -109841,7 +109952,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Pure helpers retain exact bigint millisecond duration and threshold arithmetic, decimal display hours/power and bigint line multiplication. Reproduced then fixed endpoint subtraction losing1ms beyond Number safe difference range. Rounded9-place display strings never enter rule decisions or money multiplication.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -109982,7 +110094,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -110198,7 +110311,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -110235,6 +110348,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -110300,7 +110421,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Strict above-threshold mandatory green rule uses exact cross multiplication and percentage ratios/ceiling integer kWh. Equal threshold, disabled rule, missing/unpriced/inactive green and required green exceeding max return the tested correct outcomes. Existing total/rule calculations preserved.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -110441,7 +110563,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -110657,7 +110780,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -110694,6 +110817,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -110759,7 +110890,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Positive products validate current min/max without period proration; zero max means unlimited. Exact quantity/price overflow remains rejected. Calculation and real four-product submission cases pass.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -110900,7 +111032,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -111116,7 +111249,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -111153,6 +111286,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -111218,7 +111359,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Zero and omitted lines bypass min/orderability checks. Existing core behavior retained and independently enumerated activation compatibility preserves rounded all-green simple compositions with omitted thermal.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -111359,7 +111501,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -111575,7 +111718,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -111612,6 +111755,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -111677,7 +111828,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Existing submission snapshot freezes unit prices, product limits, per-line VAT source/rate, gift terms/allocation, period and resulting totals. Real order/contract/invoice submission, stale price rejection and revised immutable histories verified in45 HTTP order cases.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -111818,7 +111970,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -112034,7 +112187,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -112071,6 +112224,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -112136,7 +112297,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Owner-approved versioned app_config design reconciled to exact keys/defaults. Existing independent green modes, finance top-up limit, advanced contract limits and supported active template reference preserve audit actor, previous/new values, versions and update time. Defaults and zero top-up kill switch covered by90 shared and related API cases.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -112277,7 +112439,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -112493,7 +112656,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -112530,6 +112693,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -112595,7 +112766,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Owner-approved current GET/PUT admin/config endpoints retained with validated green thresholds/percentages, nonnegative top-up limit, contract limit bounds and active supported template reference. Current permission/CSRF/step-up/version chain/audit rollback preserved. Committed OpenAPI unchanged.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -112736,7 +112908,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -112952,7 +113125,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -112989,6 +113162,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -113054,7 +113235,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Activation now requires existing status/price safety plus at least one integer composition satisfying configured percentage and product min/max. Product rows and limit table are locked before final check, including first limit insertion. Impossible thermal max1/green min=max100 configuration fails400 without config/version/audit mutation; post-permission-lock limit change also fails400. Safety status exposes typed reason, bilingual UI shows it and permits disabling.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -113195,7 +113377,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -113411,7 +113594,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -113448,6 +113631,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -113513,7 +113704,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Existing locked source-version settings snapshot survives submitted order history. Changed rules invalidate a captured advanced review; submitted settings/pricing remain immutable. Real HTTP submission and replay cases retain original snapshots.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -113654,7 +113846,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -113870,7 +114063,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -113907,6 +114100,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -113972,7 +114173,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Both simple and advanced quote/submission modes consume one existing validateOrderComposition through ElectricityCalculationService, including availability/positive price, limits, exact period/rule and detailed errors. No separate validation engine added.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -114113,7 +114315,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -114329,7 +114532,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -114366,6 +114569,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -114431,7 +114642,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Simple composition preserves requested total: required green is ceiling quantity times share; thermal is remainder. Exact101=96+5 case and green max4 conflict preserved.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -114572,7 +114784,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -114788,7 +115001,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -114825,6 +115038,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -114890,7 +115111,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Advanced mandatory green derives only from thermal and cannot be directly edited while enabled. Disabled rules permit independent green selection. Exact thermal100 derives green5; unrelated free-market line retained. API bundle and frontend cases pass.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -115032,7 +115254,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -115248,7 +115471,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -115285,6 +115508,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -115350,7 +115581,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Known product min/max errors retain required/allowed quantities and localized product labels; simple and advanced components block checkout on exact conflict. New activation warning is localized and unknown reasons remain rejected. Existing percentages are never silently changed.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -115491,7 +115723,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -115707,7 +115940,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -115744,6 +115977,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -115809,7 +116050,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Existing five period helpers return half-open remaining/full Iran Jalali month and Saturday week ranges. Current ranges start at copied now; future ranges cover full required period. Current/future boundaries and invalid instants verified.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -115950,7 +116192,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -116166,7 +116409,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -116203,6 +116446,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -116268,7 +116519,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Existing tests cover leap30-day Esfand, regular29-day Esfand, full31-day Farvardin and regular30-day autumn month, with exact expected UTC boundaries.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -116409,7 +116661,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -116625,7 +116878,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -116662,6 +116915,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -116727,7 +116988,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Current week starts at actual now; next Saturday boundary is Iran-local midnight, even when now is Saturday. Account display zone never changes service period calculation. Existing source unchanged.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -116868,7 +117130,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-geography-terms",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-wallet-payload"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -117084,7 +117347,7 @@
             },
             {
               "path": "packages/shared/src/finance/wallet-topup-config.ts",
-              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -117121,6 +117384,14 @@
             {
               "path": "packages/db/drizzle/production/0248_electricity_pre_active_rejection.sql",
               "sha256": "f11604eaa48d56458910c819cb36c989073733cd85f26ba0577642f2ffcc3043"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
             }
           ],
           "checks": [
@@ -117186,7 +117457,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
           ],
           "criterion_result": "Current month starts at now and ends at first next Jalali month instant; next month spans two consecutive month starts. Leap/year and month lengths verified in exact boundary cases.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-foundations-acceptance",
@@ -196135,6 +196407,49 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/invoice-reconciliation",
       "release": false
+    },
+    "release-0.3-wallet-payload": {
+      "title": "Keep Wallet payload below its unchanged budget",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.10.01",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05"
+      ],
+      "summary": "Extract existing finance field guards into dependency leaves. Wallet now passes its unchanged initial payload budget. Reconciliation stays partial.",
+      "validation": [
+        "350 distinct current passing behavior cases: 169 shared finance guards/allocation cases, 84 affected API callers, 77 Wallet/upload UI cases and 20 production-build browser journeys covering receipt histories, allocations, emergency credit and limit settings. Duplicate development rerun, superseded intermediate tests and failed gates excluded.",
+        "All 105 prior non-import/export finance declarations unchanged in original or extracted modules. Existing export names and function identities retained; no financial writer, assertion, permission, migration or API contract changed.",
+        "Final shared ESM/CommonJS build with 27 package export checks, affected strict types, changed-file lint/format, three route-budget verifier tests and all 87 production route/interaction budgets plus Size Limit pass. Wallet 299120 bytes under unchanged 300000-byte limit; no configuration exclusions added.",
+        "One bounded review found no issue. Retained browser trace shows a fresh document/Vite bootstrap interrupting an open dialog; initiating reload mechanism remains unconfirmed. Current production-build 20-case suite passes without changing assertions or UI behavior.",
+        "Source renewals retain prior effective acceptance only for unchanged code now extracted into leaf modules; no whole-task completion inferred. No release milestone accepted, version changed, staging enqueued or Telegram message sent."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payload",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -196176,7 +196491,7 @@
   "next_batch": {
     "id": "release-0.3-financial-reconciliation-completion",
     "release": "0.3.0",
-    "goal": "Finish remaining financial reconciliation and quality criteria: inspect provider/refund sources before implementing locked bounded reports; preserve the pending cumulative refund accounting decision and credit-note entitlement basis. Fix Wallet under the unchanged 300 KB budget and diagnose the retained filter-animation trace. Keep prior owner, release, operational and consultation work intact.",
+    "goal": "Finish financial reconciliation producers: inspect and implement locked bounded provider reports while the cumulative refund accounting decision remains pending; retain credit-note entitlement basis. Wallet budget now passes unchanged limits. Preserve the retained dev-reload trace, prior owner and release operational gates, and unfinished consultation work.",
     "task_keys": [
       "02-auth-users-admin.md#T-09.09.01"
     ]
