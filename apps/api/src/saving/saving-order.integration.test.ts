@@ -4350,6 +4350,20 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
 }, 60000);
 
 it('lets staff change the duplicate rule while requiring customer acknowledgement', async () => {
+  // This scenario needs two units regardless of which earlier scenarios were selected.
+  const reserved = (
+    await http.pool.query<{ reserved_count: number }>(
+      'SELECT reserved_count FROM products WHERE id=$1',
+      [input.hardwareProductId]
+    )
+  ).rows[0]!.reserved_count;
+  const inventory = await request(
+    `/api/admin/catalogue/hardware/${input.hardwareProductId}/inventory`,
+    'PUT',
+    { stockTracking: true, stockCount: reserved + 2, reservationMinutes: 30 },
+    staffHeaders
+  );
+  expect(inventory.status, http.logs()).toBe(200);
   const policyPath = `/api/admin/catalogue/saving-plans/${input.savingPlanId}/duplicate-policy`;
   const configurationPath = `/api/admin/catalogue/saving-plans/${input.savingPlanId}/configuration`;
   expect((await request(policyPath, 'PUT', { preventActiveDuplicates: false })).status).toBe(403);

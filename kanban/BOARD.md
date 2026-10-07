@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T00:57:33.551442+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T01:15:59.649677+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,11 +10,11 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 246 | Accepted with unchanged source bindings. |
+| done | 248 | Accepted with unchanged source bindings. |
 | verify | 1058 | Existing work may be complete; inspect evidence before building. |
 | partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 12 | New, concrete work or release checks. |
-| in_progress | 1 | Existing work to finish. |
+| todo | 11 | New, concrete work or release checks. |
+| in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 1 | Explicit approved scope disposition. |
 
@@ -39,10 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Complete the deduplicated four-service production journey rehearsal and final scope dispositions. Step-up and valid persisted electricity terminal/finance reconciliation are accepted. Keep owner policy/representation/private-wizard decisions pending; do not infer live external provider or production authorization.
+Keep v0.2 publication blocked on its six explicitly pending original decisions. Continue independent preparation for the next dependent milestone: inspect existing CRM users list/filter/detail and sensitive session actions; renew only their own criteria and build demonstrated gaps. Do not accept or deploy v0.3 before v0.2 acceptance.
 
-- `release-readiness#R-01.04`: Verify four complete customer and staff intake journeys
-- `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
+- `02-auth-users-admin.md#T-05.01.01`: CRM users list page
+- `02-auth-users-admin.md#T-05.01.02`: CRM filters and search
+- `02-auth-users-admin.md#T-05.02.01`: Full profile view for CRM staff
+- `02-auth-users-admin.md#T-05.02.02`: Staff profile editing
+- `02-auth-users-admin.md#T-05.02.03`: Verification state management
+- `02-auth-users-admin.md#T-05.02.04`: Force password change and session expiry
 
 ## v0.2.0: Complete customer journeys
 
@@ -50,10 +54,10 @@ All four services have a safe browse → intake → review → payment where app
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-01.01` | in_progress | Recorded batch work | Renew identity and all-four-service journey acceptance |
+| `release-readiness#R-01.01` | done | Recorded batch work | Renew identity and all-four-service journey acceptance |
 | `release-readiness#R-01.02` | done | Inventory needed | Inspect and repair customer wallet history ownership |
 | `release-readiness#R-01.03` | done | Recorded batch work | Finish the already validated consultation history changes |
-| `release-readiness#R-01.04` | todo | Inventory needed | Verify four complete customer and staff intake journeys |
+| `release-readiness#R-01.04` | done | Recorded batch work | Verify four complete customer and staff intake journeys |
 | `release-readiness#R-01.05` | done | Inventory needed | Group release notes and screenshots into at most two Telegram posts |
 | `02-auth-users-admin.md#T-01.01.01` | done | Earlier acceptance_verified | Register route and shared auth layout |
 | `02-auth-users-admin.md#T-01.01.02` | done | Earlier acceptance_verified | Unified username field (email or mobile) |
@@ -253,7 +257,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.09.02.08` | done | Recorded batch work | Bill verification provider failure (timeout, auth error, provider unavailable) must not erase the draft. Customer can retry or submit for manual staff review. Failed verification state is persisted in `verification_result`; explicit "submit for staff review" action advances the order. |
 | `03-core-business.md#T-03.09.03.01` | done | Recorded batch work | Step 4: Address selection — choose from profile's existing addresses or add new one inside the flow. Must select installation address. |
 | `03-core-business.md#T-03.09.03.02` | done | Recorded batch work | Step 5: Agreement — display admin-editable saving plan agreement title and body. Require explicit "I accept" action. Record accepted version. |
-| `03-core-business.md#T-03.09.03.03` | done | Inventory needed | Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals. |
+| `03-core-business.md#T-03.09.03.03` | done | Recorded batch work | Step 6: Review & submit — full summary: saving plan, hardware, bill ID, address, individual price lines, subtotal, VAT and amount, gift code discount, total payable, wallet balance. Backend authoritative totals. |
 | `03-core-business.md#T-03.09.03.04` | done | Recorded batch work | Submission: `POST /saving/orders` — idempotent. Atomic transaction creates: saving order, linked draft contract, linked unpaid invoice. Snapshots: installation address, selected prices, accepted agreement version. Redirects to order detail. |
 | `03-core-business.md#T-03.09.03.05` | done | Recorded batch work | Idempotency prevents duplicate orders, contracts, or invoices. Use idempotency key on submission. |
 | `03-core-business.md#T-03.09.03.06` | done | Recorded batch work | Backend enforces: active profile must be Individual (residential). Legal Entity profiles are rejected. |
@@ -266,7 +270,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.11.01.02` | done | Recorded batch work | Create `solar_construction_documents` table: `id`, `request_id` (FK), `document_id` (FK — documents/storage), `file_name`, `staff_status` (enum: `pending`, `approved`, `rejected`), `staff_reason` (text nullable), `staff_reviewed_by` (FK nullable), `staff_reviewed_at`, `uploaded_by` (FK), `uploaded_at` |
 | `03-core-business.md#T-03.11.01.03` | done | Recorded batch work | Create `solar_construction_postal` table: `id`, `request_id` (FK), `status` (enum: `waiting_for_shipment`, `shipped`, `received`, `incomplete`, `not_received`), `courier` (text nullable), `tracking_number` (text nullable), `send_date` (timestamptz nullable), `receipt_image_id` (FK nullable), `staff_confirmed_by` (FK nullable), `staff_confirmed_at`, `staff_notes` (text nullable) |
 | `03-core-business.md#T-03.11.02.01` | done | Recorded batch work | Screen 1: Persian instruction: `نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.` — Two option cards: "Building and apartment" and "Non-household" |
-| `03-core-business.md#T-03.11.02.02` | done | Inventory needed | Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected) |
+| `03-core-business.md#T-03.11.02.02` | done | Recorded batch work | Building/Apartment form: property form (Apartment / Villa), structural frame (Concrete / Steel / Other), building completion date (derive age), total unit count (when Apartment selected) |
 | `03-core-business.md#T-03.11.02.03` | done | Recorded batch work | Non-household form: site category (Agricultural / Industrial), installation surface (Land / Rooftop / Both), approximate usable area (sq m), site address, relationship (Owner / Tenant / Authorized Operator), optional site description |
 | `03-core-business.md#T-03.11.02.04` | done | Recorded batch work | Grid type selection: "On-Grid" (sell to grid) or "Off-Grid" (self-consumption) |
 | `03-core-business.md#T-03.11.02.05` | done | Recorded batch work | On-Grid only: electricity bill identifier field (required) |
