@@ -18,6 +18,8 @@ export type ContractCustomerEvent =
   | 'contract.cancelled'
   | 'contract.changes_requested';
 
+export type CustomerBusinessEvent = ContractCustomerEvent | 'order.submitted';
+
 export interface CreateNotificationParams {
   userId: string;
   profileId?: string;
@@ -78,7 +80,7 @@ export class NotificationsService {
   async create(
     params: CreateNotificationParams,
     transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
-    delivery?: { outboxId: string; eventKey: ContractCustomerEvent }
+    delivery?: { outboxId: string; eventKey: CustomerBusinessEvent }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
     const id = uuidv7();
@@ -126,7 +128,7 @@ export class NotificationsService {
   async createCustomerBusinessEvent(
     params: CreateNotificationParams & {
       profileId: string;
-      eventKey: ContractCustomerEvent;
+      eventKey: CustomerBusinessEvent;
       occurrenceKey: string;
       payload: Record<string, string>;
     },

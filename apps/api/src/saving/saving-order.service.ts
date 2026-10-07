@@ -1,4 +1,5 @@
 import { auditContract } from '../contract/contract-transactions.js';
+import { notifyOrderSubmitted } from '../notifications/order-notifications.js';
 import {
   literalSearchPattern,
   DEFAULT_HISTORY_SORT,
@@ -1339,6 +1340,7 @@ export class SavingOrderService {
         [contractId, now]
       );
       const response = { savingOrderId: savingId, orderId, contractId, invoiceId, ...quote };
+      await notifyOrderSubmitted(client, 'saving', savingId);
       await client.query(
         `INSERT INTO saving_order_submissions(id,user_id,idempotency_key,request_hash,order_id,response)
          VALUES($1,$2,$3,$4,$5,$6::jsonb)`,

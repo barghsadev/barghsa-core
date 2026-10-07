@@ -143,8 +143,9 @@ export class OrdersService {
   }
 
   async lockOrderActor(client: PoolClient, actor: OrderActor): Promise<void> {
+    // Keep account changes/deletion serialized without blocking notification recipient FKs.
     const account = (
-      await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+      await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR NO KEY UPDATE', [
         actor.userId,
       ])
     ).rows[0];

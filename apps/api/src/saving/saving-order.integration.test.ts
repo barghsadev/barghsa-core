@@ -8,6 +8,10 @@ import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { expireSavingInventory } from '@barghsa/db/saving-inventory';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { expectSubmissionAudit } from '../test/submission-audit.js';
+import {
+  expectOrderSubmitted,
+  expectSubmissionNotificationRollback,
+} from '../test/order-submission-notifications.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let customerHeaders: Record<string, string>;
@@ -756,6 +760,9 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     },
   });
   expect(draftBeforeSubmit.status, http.logs()).toBe(200);
+  await expectSubmissionNotificationRollback(http.pool, () =>
+    request('/api/saving/orders', 'POST', submission)
+  );
   const first = await request('/api/saving/orders', 'POST', submission);
   expect(first.status, http.logs()).toBe(201);
   const clearedDraft = await request(
@@ -784,6 +791,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const retry = await request('/api/saving/orders', 'POST', submission);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toEqual(result);
+  await expectOrderSubmitted(http.pool, {
+    service: 'saving',
+    id: result.savingOrderId,
+    profileId: input.profileId,
+    owner: 'saving-order-buyer',
+    table: 'saving_orders',
+    route: '/savings/orders',
+  });
   await expectSubmissionAudit(http.pool, {
     event: 'order_created',
     actor: 'saving-order-buyer',

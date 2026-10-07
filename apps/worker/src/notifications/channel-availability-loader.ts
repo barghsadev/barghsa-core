@@ -82,7 +82,7 @@ export interface NotificationRecipient {
   emailSuppressed: boolean;
 }
 
-/** The queue's explicit recipient wins; absent recipients use the current owner. */
+/** Explicit recipients remain stable. Canonical private business notices require current ownership. */
 export async function loadNotificationRecipient(
   pool: AvailabilityPool,
   outboxId: string
@@ -107,7 +107,17 @@ export async function loadNotificationRecipient(
             WHERE i.user_id=u.user_id AND i.kind='primary' AND i.destination=u.username)
           THEN u.username END AS mobile
     ) contacts
-    WHERE o.id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
+    WHERE o.id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL
+      AND (o.event_key NOT IN (
+        'contract.created','contract.awaiting_acceptance','contract.accepted',
+        'contract.signed','contract.active','contract.cancelled','contract.changes_requested',
+        'order.submitted'
+      ) OR (p.user_id=u.user_id AND NOT p.archived) OR EXISTS (
+        SELECT 1 FROM in_app_notifications n
+        WHERE n.delivery_key='outbox:'||o.id::text AND n.profile_id=o.profile_id
+          AND n.recipient_user_id=u.user_id AND n.operating_context='staff'
+          AND n.type=o.event_key
+      ))`,
     [outboxId]
   );
   const row = result.rows[0];

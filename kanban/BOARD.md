@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Complete demonstrated native order notification producer gaps in dependency order. Inspect existing submission,review/status andpre-publication cancellation engines for all four services before edits. Enqueue order.submitted/order.status_changed andrequired cancellation-request events with exact variables/current recipients,immediate private in-app andsame-transaction email intent. Preserve existing contract Rejected versus Cancelled meanings,financial/audit/idempotency boundaries andall original assertions. Keep active in-app template integration andother Appendix/provider/owner/operational criteria explicit.
+Inspect native status/cancellation-request writers for all four services. Complete canonical order.status_changed/order.cancellation_requested with exact variables,current private recipients,immediate in-app and same-transaction email intent. Preserve native pre-publication Rejected versus formal Cancelled,financial/audit/authorization/idempotency and replay boundaries. Native submitted events are scoped accepted; do not rebuild them. Keep other Appendix/template/provider/owner/operations gates explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

@@ -4,6 +4,7 @@ import {
   type HistoryQuery,
 } from '@barghsa/shared/validation';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
+import { notifyOrderSubmitted } from '../notifications/order-notifications.js';
 import {
   Injectable,
   NotFoundException,
@@ -291,9 +292,10 @@ export class SolarRequestService {
           JSON.stringify(review),
         ]
       );
+      await notifyOrderSubmitted(client, 'solar', id);
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
-         VALUES($1,$2,'solar.request.submitted',$3::jsonb,$4,$5)`,
+           VALUES($1,$2,'solar.request.submitted',$3::jsonb,$4,$5)`,
         [
           uuidv7(),
           actor.userId,

@@ -10,6 +10,10 @@ import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-proce
 import type { ElectricityPriceAdjustmentReview } from '@barghsa/shared/finance';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { expectSubmissionAudit } from '../test/submission-audit.js';
+import {
+  expectOrderSubmitted,
+  expectSubmissionNotificationRollback,
+} from '../test/order-submission-notifications.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
@@ -1328,7 +1332,7 @@ it('rolls back transition effects and receipt when notification fails, then retr
       "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
     )
   ).rows[0].count;
-  expect(initialNotices).toBe(1);
+  expect(initialNotices).toBe(2);
   const command = { expectedVersionId: versionId, idempotencyKey: randomUUID() };
   await http.pool.query(
     `CREATE FUNCTION fail_transition_notice() RETURNS trigger LANGUAGE plpgsql AS $$
@@ -1377,7 +1381,7 @@ it('rolls back transition effects and receipt when notification fails, then retr
     )
   ).rows[0].count;
   expect(notices - initialNotices).toBe(1);
-  expect(notices).toBe(2);
+  expect(notices).toBe(3);
   expect((await staffPost(order.orderId, 'approve', command)).status).toBe(200);
   expect(
     (
@@ -3947,6 +3951,7 @@ it('previews and atomically submits an order, contract, lines and payable invoic
     totalIrR: '1000000',
     lines: [{ totalIrR: '1000000' }],
   });
+  await expectSubmissionNotificationRollback(http.pool, () => post('orders/simple', input));
   const first = await post('orders/simple', input);
   expect(first.status, http.logs()).toBe(201);
   const result = (await first.json()) as {
@@ -3989,6 +3994,14 @@ it('previews and atomically submits an order, contract, lines and payable invoic
   const repeat = await post('orders/simple', input);
   expect(repeat.status, http.logs()).toBe(201);
   expect(await repeat.json()).toEqual(result);
+  await expectOrderSubmitted(http.pool, {
+    service: 'electricity',
+    id: result.orderId,
+    profileId: String(input.profileId),
+    owner: 'buyer',
+    table: 'electricity_orders',
+    route: '/electricity/orders',
+  });
   await expectSubmissionAudit(http.pool, {
     event: 'order_created',
     actor: 'buyer',

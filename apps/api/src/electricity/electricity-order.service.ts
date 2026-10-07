@@ -1,4 +1,5 @@
 import { activityNames } from '../common/activity-identity.js';
+import { notifyOrderSubmitted } from '../notifications/order-notifications.js';
 import { createHash } from 'node:crypto';
 import {
   literalSearchPattern,
@@ -1759,6 +1760,7 @@ export class ElectricityOrderService {
         [orderId]
       );
       const response = { orderId, contractId, invoiceId, ...this.presentQuote(quoted, template) };
+      await notifyOrderSubmitted(client, 'electricity', orderId);
       await client.query(
         `INSERT INTO electricity_order_submissions(user_id,idempotency_key,request_hash,order_id,contract_id,invoice_id,response)
          VALUES($1,$2,$3,$4,$5,$6,$7::jsonb)`,

@@ -12,6 +12,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { OrdersService } from '../orders/orders.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifyOrderSubmitted } from '../notifications/order-notifications.js';
 import { StaffAssignmentService } from '../staff-assignment/staff-assignment.service.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -165,7 +166,9 @@ export class ConsultationRequestService {
          VALUES($1,$2,'submitted',$3)`,
         [uuidv7(), requestId, actor.userId]
       );
+      const notifiedOwner = await notifyOrderSubmitted(client, 'consultation', requestId);
       for (const userId of new Set([profile.user_id, actor.userId])) {
+        if (userId === notifiedOwner) continue;
         await new NotificationsService().create(
           {
             userId,

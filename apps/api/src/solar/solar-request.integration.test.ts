@@ -2,6 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { expectSubmissionAudit } from '../test/submission-audit.js';
+import {
+  expectOrderSubmitted,
+  expectSubmissionNotificationRollback,
+} from '../test/order-submission-notifications.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -231,6 +235,7 @@ it('submits both solar request types, captures agreement, and creates no contrac
     siteAddressId: randomUUID(),
   });
   expect(badHouseholdAddress.status).toBe(400);
+  await expectSubmissionNotificationRollback(http.pool, () => submitReviewed(buildingInput));
   const buildingResponse = await submitReviewed(buildingInput);
   expect(buildingResponse.status, http.logs()).toBe(201);
   const building = (await buildingResponse.json()) as { requestId: string; status: string };
@@ -241,6 +246,14 @@ it('submits both solar request types, captures agreement, and creates no contrac
   const retry = await submitReviewed(buildingInput);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toMatchObject(building);
+  await expectOrderSubmitted(http.pool, {
+    service: 'solar',
+    id: building.requestId,
+    profileId,
+    owner: 'solar-customer',
+    table: 'solar_construction_requests',
+    route: '/solar/requests',
+  });
   await expectSubmissionAudit(http.pool, {
     event: 'solar.request.submitted',
     actor: 'solar-customer',

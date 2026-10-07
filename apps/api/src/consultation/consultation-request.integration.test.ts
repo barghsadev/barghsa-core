@@ -3,6 +3,10 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { expectSubmissionAudit } from '../test/submission-audit.js';
+import {
+  expectOrderSubmitted,
+  expectSubmissionNotificationRollback,
+} from '../test/order-submission-notifications.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -74,6 +78,9 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
     400
   );
   const key = randomUUID();
+  await expectSubmissionNotificationRollback(http.pool, () =>
+    post('individual', profiles.individual!, individualProducts[0]!.id, key)
+  );
   const submitted = await post('individual', profiles.individual!, individualProducts[0]!.id, key);
   expect(submitted.status, http.logs()).toBe(201);
   const created = (await submitted.json()) as { requestId: string; status: string };
@@ -81,6 +88,14 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
   const retry = await post('individual', profiles.individual!, individualProducts[0]!.id, key);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toEqual(created);
+  await expectOrderSubmitted(http.pool, {
+    service: 'consultation',
+    id: created.requestId,
+    profileId: profiles.individual!,
+    owner: 'individual',
+    table: 'consultation_requests',
+    route: '/consultations',
+  });
   expect((await post('individual', profiles.individual!, certificateId, key)).status).toBe(400);
   const list = await fetch(
     `${http.base}/api/consultations/requests?profileId=${profiles.individual}`,
