@@ -47,3 +47,12 @@ it.each(['document.scan_failed', 'document.quarantined'])(
     expect(defaultInboxLink(event, { link_route: 'https://evil.example' })).toBeNull();
   }
 );
+
+it('gives internal refund failures bilingual finance instructions and keeps exact bigint amounts', () => {
+  const content = defaultInboxContent('payment.refund_failed', { amount: '9007199254740993' });
+  expect(content.en.title).toBe('Refund needs attention');
+  expect(content.en.body).toContain('finance workspace');
+  expect(content.fa.body).toContain('بخش مالی');
+  for (const locale of ['fa', 'en'] as const)
+    expect(content[locale].body).toContain('9007199254740993');
+});

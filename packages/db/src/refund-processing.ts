@@ -1,6 +1,7 @@
 import type { Pool, PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { resolveStaffPermissions } from '@barghsa/shared/admin';
+import { defaultInboxContent } from '@barghsa/shared/notifications';
 import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   readInvoiceBankReceiptDualApprovalThreshold,
@@ -237,10 +238,11 @@ async function audit(
   event: string,
   extra: Record<string, unknown>
 ) {
-  await client.query(
+  const id = uuidv7();
+  const stored = await client.query(
     'INSERT INTO audit_log(id,user_id,event,metadata,correlation_id) VALUES ($1,$5,$2,$3::jsonb,$4)',
     [
-      uuidv7(),
+      id,
       event,
       JSON.stringify({
         refundId: refund.id,
@@ -254,6 +256,78 @@ async function audit(
       authorizedBy,
     ]
   );
+  if (event === 'refund.failed' && stored.rowCount !== 1)
+    throw new Error('Refund failure audit was not stored');
+  return id;
+}
+async function notifyRefundFailure(
+  client: PoolClient,
+  row: RefundProcessingRow,
+  auditId: string,
+  attempt: number
+) {
+  const recipients = await client.query(`SELECT u.user_id,u.is_admin,
+    ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id) AS permissions
+    FROM users u WHERE u.disabled_at IS NULL AND u.activation_token IS NULL
+      AND (u.is_admin OR EXISTS(SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))`);
+  const payload = {
+    auditId,
+    refundId: row.id,
+    invoiceId: row.invoice_id,
+    amount: row.amount,
+    attempt,
+    link_route: `/admin/invoices?invoiceId=${row.invoice_id}#wallet-refunds-panel`,
+  };
+  const content = defaultInboxContent('payment.refund_failed', payload);
+  for (const recipient of recipients.rows) {
+    const permissions = resolveStaffPermissions(recipient.permissions);
+    if (
+      !recipient.is_admin &&
+      !permissions.includes('*') &&
+      !permissions.includes('admin:financial:edit')
+    )
+      continue;
+    await requireRefundFinancePermission(client, recipient.user_id);
+    const outboxId = uuidv7(),
+      inboxId = uuidv7();
+    const outbox = await client.query(
+      `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts)
+       SELECT $1,$2,'payment.refund_failed',$3,ARRAY['in_app'],'queued',$4,5
+       FROM audit_log a WHERE a.id=$5 AND a.event='refund.failed'
+         AND a.metadata::jsonb->>'refundId'=$6 AND a.metadata::jsonb->>'attempt'=$7
+       RETURNING id`,
+      [
+        outboxId,
+        recipient.user_id,
+        payload,
+        `payment.refund_failed:${auditId}:${recipient.user_id}`,
+        auditId,
+        row.id,
+        String(attempt),
+      ]
+    );
+    if (outbox.rows.length !== 1 || outbox.rows[0].id !== outboxId)
+      throw new Error('Refund failure outbox was not stored');
+    const inbox = await client.query(
+      `INSERT INTO in_app_notifications(id,recipient_user_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,delivery_key)
+       VALUES($1,$2,'staff','payment.refund_failed','notifications.legacy.title','notifications.legacy.body',$3,$4,$5) RETURNING id`,
+      [inboxId, recipient.user_id, content, payload.link_route, `outbox:${outboxId}`]
+    );
+    if (inbox.rows.length !== 1 || inbox.rows[0].id !== inboxId)
+      throw new Error('Refund failure inbox was not stored');
+    const job = await client.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done','urgent',5,1,$2,$3)`,
+      [outboxId, inboxId, payload]
+    );
+    if (job.rowCount !== 1) throw new Error('Refund failure inbox job was not stored');
+    const history = await client.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [outboxId, inboxId]
+    );
+    if (history.rowCount !== 1) throw new Error('Refund failure inbox history was not stored');
+  }
 }
 async function alertExhausted(
   client: PoolClient,
@@ -536,7 +610,7 @@ export async function runWalletRefund(
         exhausted_at=CASE WHEN $3 THEN now() ELSE NULL END WHERE refund_id=$1`,
           [row.id, code, exhausted, delay]
         );
-      await audit(client, row, job.executor_user_id, 'refund.failed', {
+      const failureAuditId = await audit(client, row, job.executor_user_id, 'refund.failed', {
         fromState: 'Processing',
         toState: 'Failed',
         ...manualEvidence,
@@ -544,6 +618,7 @@ export async function runWalletRefund(
         errorCode: code,
       });
       await notifyRefundOutcome(client, { ...row, destination: 'wallet', state: 'Failed' });
+      await notifyRefundFailure(client, row, failureAuditId, attempt);
       if (exhausted && !manualRetry)
         await alertExhausted(client, row, attempt, job.executor_user_id);
       result = exhausted ? 'exhausted' : 'failed';

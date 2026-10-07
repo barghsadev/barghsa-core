@@ -6,6 +6,12 @@ export interface InboxText {
 }
 export type InboxContent = Record<'fa' | 'en', InboxText>;
 const labels: Record<string, [string, string, string, string]> = {
+  'payment.refund_failed': [
+    'بازپرداخت نیازمند پیگیری است',
+    'Refund needs attention',
+    'یک تلاش برای بازپرداخت ناموفق بود. وضعیت و سابقه تلاش‌ها را در بخش مالی بررسی کنید.',
+    'A refund attempt failed. Review its status and attempt history in the finance workspace.',
+  ],
   'document.scan_failed': [
     'اسکن مدرک ناموفق بود',
     'Document scan failed',

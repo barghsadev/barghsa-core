@@ -5,6 +5,7 @@ import {
 } from '@barghsa/shared/notifications';
 export { relativeLinkRoute } from '@barghsa/shared/notifications';
 import { getDbPool } from '@barghsa/db';
+import { resolveStaffPermissions } from '@barghsa/shared/admin';
 import type { QueryPool } from './channel-scheduling.js';
 import type {
   INotificationTransport,
@@ -18,6 +19,7 @@ export function inboxOperatingContext(
   linkRoute: string | null,
   profileId: string | null
 ): 'staff' | 'customer' | 'account' {
+  if (eventKey === 'payment.refund_failed') return 'staff';
   if (/^(admin|finance)\./.test(eventKey) || /^\/(admin|staff|crm)(\/|\?|$)/.test(linkRoute ?? ''))
     return 'staff';
   if (/^auth\./.test(eventKey) || /^\/settings\/security(\/|\?|$)/.test(linkRoute ?? ''))
@@ -89,6 +91,8 @@ export class InAppNotificationTransport implements INotificationTransport {
     const operatingContext = inboxOperatingContext(payload.eventKey, linkRoute, payload.profileId);
     if (operatingContext === 'staff' && !recipient)
       throw new Error('in_app staff notices require an account recipient');
+    if (payload.eventKey === 'payment.refund_failed' && payload.profileId !== null)
+      throw new Error('Internal refund failures require a private staff recipient');
     const existing = await pool.query(
       `SELECT id FROM in_app_notifications WHERE delivery_key=$1
       AND profile_id IS NOT DISTINCT FROM $2::uuid AND recipient_user_id IS NOT DISTINCT FROM $3::text
@@ -96,6 +100,38 @@ export class InAppNotificationTransport implements INotificationTransport {
       [deliveryKey, payload.profileId, recipient, operatingContext, payload.eventKey]
     );
     if (existing.rows[0]) return { status: 'delivered', providerRef: existing.rows[0].id };
+    if (payload.eventKey === 'payment.refund_failed') {
+      const allowed = await pool.query(
+        `SELECT u.user_id,u.is_admin FROM users u JOIN audit_log a ON a.id::text=$2
+         JOIN refunds r ON r.id::text=a.metadata::jsonb->>'refundId'
+         WHERE u.user_id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL
+           AND a.event='refund.failed' AND r.id::text=$3 AND r.invoice_id::text=$4
+           AND a.metadata::jsonb->>'attempt'=$5 AND a.metadata::jsonb->>'amount'=$6
+         FOR SHARE OF u NOWAIT`,
+        [
+          recipient,
+          payload.payload.auditId,
+          payload.payload.refundId,
+          payload.payload.invoiceId,
+          String(payload.payload.attempt),
+          payload.payload.amount,
+        ]
+      );
+      if (!allowed.rows[0])
+        throw new Error('Refund failure requires its audit and active finance recipient');
+      if (!allowed.rows[0].is_admin) {
+        const roles = await pool.query(
+          `SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
+           WHERE ur.user_id=$1 ORDER BY r.role_id FOR SHARE OF ur,r NOWAIT`,
+          [recipient]
+        );
+        const permissions = resolveStaffPermissions(
+          roles.rows.map((row: { permissions: unknown }) => row.permissions)
+        );
+        if (!permissions.includes('*') && !permissions.includes('admin:financial:edit'))
+          throw new Error('Refund failure recipient no longer has finance permission');
+      }
+    }
     if (
       payload.eventKey === 'document.scan_failed' ||
       payload.eventKey === 'document.quarantined'

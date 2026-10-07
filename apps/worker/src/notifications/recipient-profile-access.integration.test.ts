@@ -2438,3 +2438,131 @@ it.each(['payment.refund_completed'])(
     expect(request).toHaveBeenCalledTimes(1);
   }
 );
+
+async function internalRefundFixture() {
+  const f = await fixture('payment.refund_failed', 'staff'),
+    invoice = randomUUID(),
+    audit = randomUUID();
+  await pool.query("INSERT INTO user_roles(user_id,role_id) VALUES($1,'role-finance')", [f.owner]);
+  await pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount) VALUES($1,$2,'Paid',100,100)",
+    [invoice, f.profile]
+  );
+  const refund = (
+    await pool.query(
+      "INSERT INTO refunds(invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES($1,$2,40,'wallet',$3,$4) RETURNING id",
+      [invoice, f.profile, f.owner, randomUUID()]
+    )
+  ).rows[0].id;
+  await pool.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refund]);
+  await pool.query("UPDATE refunds SET state='Failed' WHERE id=$1", [refund]);
+  const payload = {
+    auditId: audit,
+    refundId: refund,
+    invoiceId: invoice,
+    amount: '40',
+    attempt: 1,
+    link_route: `/admin/invoices?invoiceId=${invoice}#wallet-refunds-panel`,
+  };
+  await pool.query(
+    "INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,$2,'refund.failed',$3)",
+    [
+      audit,
+      f.owner,
+      { refundId: refund, invoiceId: invoice, profileId: f.profile, amount: '40', attempt: 1 },
+    ]
+  );
+  await pool.query('UPDATE notification_outbox SET profile_id=NULL,payload=$2 WHERE id=$1', [
+    f.id,
+    payload,
+  ]);
+  await pool.query("DELETE FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text", [
+    f.id,
+  ]);
+  return { ...f, payload };
+}
+it.each([
+  'role',
+  'disabled',
+  'activation',
+  'audit',
+  'refund',
+  'invoice',
+  'attempt',
+  'amount',
+  'profile',
+] as const)('rejects a fresh internal refund inbox delivery after %s changes', async (change) => {
+  const f = await internalRefundFixture();
+  if (change === 'role')
+    await pool.query("DELETE FROM user_roles WHERE user_id=$1 AND role_id='role-finance'", [
+      f.owner,
+    ]);
+  else if (change === 'disabled')
+    await pool.query('UPDATE users SET disabled_at=now() WHERE user_id=$1', [f.owner]);
+  else if (change === 'activation')
+    await pool.query('UPDATE users SET activation_token=$2 WHERE user_id=$1', [
+      f.owner,
+      randomUUID(),
+    ]);
+  else if (['audit', 'refund', 'invoice'].includes(change))
+    f.payload[
+      { audit: 'auditId', refund: 'refundId', invoice: 'invoiceId' }[
+        change as 'audit' | 'refund' | 'invoice'
+      ] as 'auditId' | 'refundId' | 'invoiceId'
+    ] = randomUUID();
+  else if (change === 'attempt') f.payload.attempt = 2;
+  else if (change === 'amount') f.payload.amount = '41';
+  const transport = new InAppNotificationTransport(pool);
+  await expect(
+    transport.send({
+      outboxId: f.id,
+      profileId: change === 'profile' ? f.profile : null,
+      recipientId: f.owner,
+      eventKey: 'payment.refund_failed',
+      channel: 'in_app',
+      payload: f.payload,
+      idempotencyKey: `failure:${f.id}`,
+    })
+  ).rejects.toThrow();
+  expect(
+    (
+      await pool.query(
+        "SELECT id FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+        [f.id]
+      )
+    ).rows
+  ).toEqual([]);
+});
+it('delivers an audit-bound internal finance receipt privately and preserves its read content after offboarding', async () => {
+  const f = await internalRefundFixture(),
+    transport = new InAppNotificationTransport(pool);
+  const payload = {
+    outboxId: f.id,
+    profileId: null,
+    recipientId: f.owner,
+    eventKey: 'payment.refund_failed',
+    channel: 'in_app' as const,
+    payload: f.payload,
+    idempotencyKey: `failure:${f.id}`,
+  };
+  const first = await transport.send(payload);
+  expect(first.status).toBe('delivered');
+  await pool.query('UPDATE in_app_notifications SET is_read=true,read_at=now() WHERE id=$1', [
+    first.providerRef,
+  ]);
+  const before = (
+    await pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [first.providerRef])
+  ).rows;
+  expect(before[0]).toMatchObject({
+    profile_id: null,
+    recipient_user_id: f.owner,
+    operating_context: 'staff',
+    type: 'payment.refund_failed',
+    localized_content: { en: { title: 'Refund needs attention' } },
+  });
+  await pool.query("DELETE FROM user_roles WHERE user_id=$1 AND role_id='role-finance'", [f.owner]);
+  expect(await transport.send(payload)).toEqual(first);
+  expect(
+    (await pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [first.providerRef])).rows
+  ).toEqual(before);
+});

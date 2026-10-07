@@ -591,9 +591,15 @@ it('does not resend an existing historical receipt, attach a rejection or attach
 const completionSinks = [
   ['in_app_notifications', "NEW.delivery_key LIKE 'refund:%:Completed'"],
   ['notification_outbox', "NEW.event_key='payment.refund_completed'"],
-  ['notification_job', "NEW.channel='in_app'"],
+  [
+    'notification_job',
+    "NEW.channel='in_app' AND EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.outbox_id AND o.event_key='payment.refund_completed')",
+  ],
   ['notification_job', "NEW.channel='email'"],
-  ['notification_delivery_log', "NEW.channel='in_app'"],
+  [
+    'notification_delivery_log',
+    "NEW.channel='in_app' AND EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.notification_id AND o.event_key='payment.refund_completed')",
+  ],
 ] as const;
 it.each(
   completionSinks.flatMap(([table, guard]) =>
@@ -666,3 +672,234 @@ it.each(
     ).toEqual([{ amount: '40' }]);
   }
 );
+
+async function failureManifests(row: RefundProcessingRow, attempt: number) {
+  const records = (
+    await db.pool.query(
+      "SELECT o.id,o.user_id,o.profile_id,o.channels,o.payload,n.id AS inbox_id,n.operating_context,n.type,n.link_route,n.localized_content,n.is_read FROM notification_outbox o JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text WHERE o.event_key='payment.refund_failed' AND o.payload->>'refundId'=$1 AND o.payload->>'attempt'=$2 ORDER BY o.user_id",
+      [row.id, String(attempt)]
+    )
+  ).rows;
+  expect(records.map((r) => r.user_id).sort()).toEqual([admin, finance, reviewer].sort());
+  for (const record of records) {
+    expect(record).toMatchObject({
+      profile_id: null,
+      operating_context: 'staff',
+      type: 'payment.refund_failed',
+      channels: ['in_app'],
+      payload: { refundId: row.id, invoiceId: row.invoice_id, amount: row.amount, attempt },
+      link_route: `/admin/invoices?invoiceId=${row.invoice_id}#wallet-refunds-panel`,
+    });
+    expect(record.localized_content.en.body).toContain('finance workspace');
+    expect(record.localized_content.fa.body).toContain('بخش مالی');
+    expect(
+      (
+        await db.pool.query(
+          "SELECT event,metadata::jsonb->>'refundId' AS refund FROM audit_log WHERE id=$1",
+          [record.payload.auditId]
+        )
+      ).rows
+    ).toEqual([{ event: 'refund.failed', refund: row.id }]);
+    expect(
+      (
+        await db.pool.query(
+          'SELECT channel,status,priority,attempts,provider_ref FROM notification_job WHERE outbox_id=$1',
+          [record.id]
+        )
+      ).rows
+    ).toEqual([
+      {
+        channel: 'in_app',
+        status: 'done',
+        priority: 'urgent',
+        attempts: 1,
+        provider_ref: record.inbox_id,
+      },
+    ]);
+    expect(
+      (
+        await db.pool.query(
+          'SELECT channel,status,attempt_number,provider_ref FROM notification_delivery_log WHERE notification_id=$1',
+          [record.id]
+        )
+      ).rows
+    ).toEqual([
+      { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: record.inbox_id },
+    ]);
+  }
+  return records;
+}
+it('notifies active finance privately for each audited failed attempt before and at exhaustion while retaining the original stop alert/customer history', async () => {
+  const row = await refund('9007199254740993', '9007199254740993', 'wallet', 2);
+  await db.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [row.profile_id]);
+  expect(await runWalletRefund(db.pool, row.id)).toBe('failed');
+  const first = await failureManifests(row, 1);
+  await db.pool.query('UPDATE in_app_notifications SET is_read=true,read_at=now() WHERE id=$1', [
+    first[0].inbox_id,
+  ]);
+  const history = (
+    await db.pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [first[0].inbox_id])
+  ).rows;
+  expect(
+    (
+      await db.pool.query('SELECT id FROM in_app_notifications WHERE delivery_key LIKE $1', [
+        `refund-exhausted:${row.id}:%`,
+      ])
+    ).rows
+  ).toEqual([]);
+  await due(row.id);
+  expect(await runWalletRefund(db.pool, row.id)).toBe('exhausted');
+  await failureManifests(row, 2);
+  expect(
+    (await db.pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [first[0].inbox_id]))
+      .rows
+  ).toEqual(history);
+  expect(
+    (
+      await db.pool.query(
+        'SELECT recipient_user_id FROM in_app_notifications WHERE delivery_key LIKE $1',
+        [`refund-exhausted:${row.id}:%`]
+      )
+    ).rows
+      .map((r) => r.recipient_user_id)
+      .sort()
+  ).toEqual([admin, finance, reviewer].sort());
+  expect(
+    (
+      await db.pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
+        `refund:${row.id}:Failed`,
+      ])
+    ).rows
+  ).toHaveLength(1);
+  expect(await runWalletRefund(db.pool, row.id)).toBe('deferred');
+  expect(
+    (
+      await db.pool.query(
+        "SELECT id FROM notification_outbox WHERE event_key='payment.refund_failed' AND payload->>'refundId'=$1",
+        [row.id]
+      )
+    ).rows
+  ).toHaveLength(6);
+});
+async function failureRowsSnapshot() {
+  const tables = (
+    await db.pool.query(
+      "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename"
+    )
+  ).rows;
+  const snapshot: Record<string, unknown> = {};
+  for (const { tablename } of tables)
+    snapshot[tablename] = (
+      await db.pool.query(
+        `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${tablename}" t`
+      )
+    ).rows[0].rows;
+  return snapshot;
+}
+it.each(
+  [
+    ['audit_log', "NEW.event='refund.failed'"],
+    ['notification_outbox', "NEW.event_key='payment.refund_failed'"],
+    ['in_app_notifications', "NEW.type='payment.refund_failed'"],
+    [
+      'notification_job',
+      "EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.outbox_id AND o.event_key='payment.refund_failed')",
+    ],
+    [
+      'notification_delivery_log',
+      "EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.notification_id AND o.event_key='payment.refund_failed')",
+    ],
+  ].flatMap(([table, guard]) => ['raise', 'silent'].map((mode) => ({ table, guard, mode })))
+)(
+  'rolls the whole failed attempt back after $mode in $table, then recovers one private audit-bound fanout',
+  async ({ table, guard, mode }) => {
+    const row = await refund('40', '100', 'wallet', 1);
+    await db.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [row.profile_id]);
+    const before = await failureRowsSnapshot();
+    await db.pool.query(
+      `CREATE FUNCTION fail_internal_refund() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${guard} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'failure delivery unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_internal_refund BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_internal_refund()`
+    );
+    try {
+      await expect(runWalletRefund(db.pool, row.id)).rejects.toThrow();
+      expect(await failureRowsSnapshot()).toEqual(before);
+    } finally {
+      await db.pool.query(
+        `DROP TRIGGER fail_internal_refund ON ${table}; DROP FUNCTION fail_internal_refund()`
+      );
+    }
+    expect(await runWalletRefund(db.pool, row.id)).toBe('exhausted');
+    await failureManifests(row, 1);
+    expect(await job(row.id)).toMatchObject({
+      attempts: 1,
+      completed_at: null,
+      last_error_code: 'profile_archived',
+    });
+    expect(await runWalletRefund(db.pool, row.id)).toBe('deferred');
+  }
+);
+
+it('selects only current valid finance/admin recipients and excludes support,malformed roles,disabled and pending activation accounts', async () => {
+  const candidates: string[] = [],
+    eligible: string[] = [];
+  try {
+    for (const [permissions, disabled, pending, isAdmin] of [
+      ['["admin:financial:edit"]', false, false, false],
+      ['["*"]', false, false, false],
+      ['["tickets:read"]', false, false, false],
+      ['{"admin:financial:edit":true}', false, false, false],
+      ['["admin:financial:edit",7]', false, false, false],
+      ['["admin:financial:edit"]', true, false, false],
+      ['["admin:financial:edit"]', false, true, false],
+      ['[]', false, true, true],
+    ] as const) {
+      const user = randomUUID(),
+        role = randomUUID();
+      candidates.push(user);
+      await db.pool.query(
+        "INSERT INTO users(user_id,username,password_hash,is_admin,disabled_at,activation_token) VALUES($1,$1,'fixture',$2,CASE WHEN $3 THEN now() END,CASE WHEN $4 THEN $1 END)",
+        [user, isAdmin, disabled, pending]
+      );
+      await db.pool.query(
+        "INSERT INTO staff_roles(role_id,name,description,permissions) VALUES($1,$1,'fixture',$2)",
+        [role, permissions]
+      );
+      await db.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES($1,$2)', [user, role]);
+      if (
+        !disabled &&
+        !pending &&
+        (permissions === '["admin:financial:edit"]' || permissions === '["*"]')
+      )
+        eligible.push(user);
+    }
+    const row = await refund();
+    await db.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [row.profile_id]);
+    expect(await runWalletRefund(db.pool, row.id)).toBe('failed');
+    const received = (
+      await db.pool.query(
+        "SELECT user_id FROM notification_outbox WHERE event_key='payment.refund_failed' AND payload->>'refundId'=$1",
+        [row.id]
+      )
+    ).rows.map((r) => r.user_id);
+    expect(received.sort()).toEqual([admin, finance, reviewer, ...eligible].sort());
+    expect(received).not.toContain(support);
+  } finally {
+    await db.pool.query('UPDATE users SET disabled_at=now() WHERE user_id=ANY($1)', [candidates]);
+  }
+});
+it('uses NOWAIT for recipient authority so an actor lock cannot deadlock the original invoice processing order', async () => {
+  const row = await refund();
+  await db.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [row.profile_id]);
+  const before = await failureRowsSnapshot(),
+    held = await db.pool.connect();
+  try {
+    await held.query('BEGIN');
+    await held.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [reviewer]);
+    await expect(runWalletRefund(db.pool, row.id)).rejects.toMatchObject({ code: '55P03' });
+    expect(await failureRowsSnapshot()).toEqual(before);
+  } finally {
+    await held.query('ROLLBACK');
+    held.release();
+  }
+  expect(await runWalletRefund(db.pool, row.id)).toBe('failed');
+  await failureManifests(row, 1);
+});
