@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import {
+  type AnyPgColumn,
   check,
   foreignKey,
   index,
@@ -11,6 +12,8 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core';
 import { pgEnum, uuidv7, irrAmount, timestamptz } from '../types';
+import { contracts } from './contracts';
+import { consultationRequests } from './consultation-requests';
 import { profiles } from './profiles';
 import { orders } from './orders';
 
@@ -83,20 +86,15 @@ export const invoices = pgTable(
     /** Optional foreign key to the originating order. */
     orderId: uuid('order_id').references(() => orders.id, { onDelete: 'set null' }),
 
-    /**
-     * Optional reference to a contract (T-04.1.02.05).
-     * FK deferred until the contracts table is defined.
-     */
-    contractId: text('contract_id'),
-
-    /**
-     * Optional reference to a consultation (T-04.1.02.05).
-     * FK deferred until the consultations table is defined, mirroring the
-     * contractId pattern — the column carries the origin reference from day
-     * one, and the actual FK constraint is added in the epic that creates
-     * the consultations table.
-     */
-    consultationId: text('consultation_id'),
+    /** Nullable, retained text origin with a real parent foreign key. */
+    contractId: text('contract_id').references((): AnyPgColumn => contracts.invoiceReference, {
+      onDelete: 'restrict',
+      onUpdate: 'no action',
+    }),
+    consultationId: text('consultation_id').references(
+      (): AnyPgColumn => consultationRequests.invoiceReference,
+      { onDelete: 'restrict', onUpdate: 'no action' }
+    ),
 
     /**
      * Invoice source/kind discriminator (T-04.1.02.06).

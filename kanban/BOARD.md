@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T01:49:08.665961+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T02:01:41.433227+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 266 | Accepted with unchanged source bindings. |
-| verify | 1040 | Existing work may be complete; inspect evidence before building. |
-| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 280 | Accepted with unchanged source bindings. |
+| verify | 1027 | Existing work may be complete; inspect evidence before building. |
+| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,23 +39,21 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and renew invoice state machine, constraints/audit, lines, manual/automatic issue, VAT/rounding, immutable calculation snapshots and actual submission callers. Resolve demonstrated gaps before acceptance; old missing-caller/table limitations require current inspection. Preserve money, transaction/profile locks, exact amounts, idempotency and rollback. v0.2 remains blocked on six owner decisions; no release before dependency acceptance.
+Inspect current invoice due-date defaults/overrides,overdue/reminder lifecycle and correction/replacement/credit flows. Reuse final source-bound core/overdue evidence and test only remaining task criteria/callers. Preserve financial snapshots,profile/current authority,idempotency,audit and rollback. v0.2 still awaits six owner decisions; no milestone acceptance or deployment before dependency gates.
 
-- `04-invoices-wallet-contracts.md#T-04.1.01.01`: Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps
-- `04-invoices-wallet-contracts.md#T-04.1.01.02`: Create `invoice_state` enum in DB matching all 9 states
-- `04-invoices-wallet-contracts.md#T-04.1.01.03`: Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission
-- `04-invoices-wallet-contracts.md#T-04.1.01.04`: Add DB constraints: `CHECK (paidAmount <= totalAmount)`, `CHECK (refundedAmount <= paidAmount)`
-- `04-invoices-wallet-contracts.md#T-04.1.01.05`: Write audit repository entry for every invoice state transition
-- `04-invoices-wallet-contracts.md#T-04.1.01.06`: Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection
-- `04-invoices-wallet-contracts.md#T-04.1.02.01`: Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints
-- `04-invoices-wallet-contracts.md#T-04.1.02.02`: Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice
-- `04-invoices-wallet-contracts.md#T-04.1.02.03`: Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms
-- `04-invoices-wallet-contracts.md#T-04.1.02.04`: Implement VAT calculation module with category default / product override resolution
-- `04-invoices-wallet-contracts.md#T-04.1.02.05`: Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys
-- `04-invoices-wallet-contracts.md#T-04.1.02.06`: Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index)
-- `04-invoices-wallet-contracts.md#T-04.1.02.07`: Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements
-- `04-invoices-wallet-contracts.md#T-04.1.02.08`: Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility
-- `04-invoices-wallet-contracts.md#T-04.1.02.09`: Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals
+- `04-invoices-wallet-contracts.md#T-04.1.03.01`: Add `service_due_periods` admin config table (service type, default days, active period)
+- `04-invoices-wallet-contracts.md#T-04.1.03.02`: Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override)
+- `04-invoices-wallet-contracts.md#T-04.1.03.03`: Build staff override UI/API: override input + reason field, stored in audit + invoice metadata
+- `04-invoices-wallet-contracts.md#T-04.1.03.04`: Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded
+- `04-invoices-wallet-contracts.md#T-04.1.04.01`: Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status`
+- `04-invoices-wallet-contracts.md#T-04.1.04.02`: Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows
+- `04-invoices-wallet-contracts.md#T-04.1.04.03`: Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox
+- `04-invoices-wallet-contracts.md#T-04.1.04.04`: Enforce idempotency: unique index on (invoiceId, offset, channel)
+- `04-invoices-wallet-contracts.md#T-04.1.04.05`: Admin toggle UI: enable/disable each offset per service type
+- `04-invoices-wallet-contracts.md#T-04.1.04.06`: Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled
+- `04-invoices-wallet-contracts.md#T-04.1.05.02`: Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement
+- `04-invoices-wallet-contracts.md#T-04.1.05.03`: Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit
+- `04-invoices-wallet-contracts.md#T-04.1.05.04`: Customer-facing invoice details page shows original + linked corrections/replacements with explanations
 
 ## v0.2.0: Complete customer journeys
 
@@ -421,21 +419,21 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.13.02.01` | verify | Recorded batch work | Solar contracts follow the general contract lifecycle (E-04): |
 | `03-core-business.md#T-03.13.02.02` | verify | Inventory needed | Customer cancellation follows the general rule: customers submit cancellation request, staff resolves. |
 | `03-core-business.md#T-03.13.02.03` | verify | Inventory needed | Contract activation requires: internal approval + customer acceptance + optionally signature + optionally payment. Unmet activation requirements visible on detail page. |
-| `04-invoices-wallet-contracts.md#T-04.1.01.01` | verify | Earlier acceptance_verified | Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps |
-| `04-invoices-wallet-contracts.md#T-04.1.01.02` | verify | Earlier acceptance_verified | Create `invoice_state` enum in DB matching all 9 states |
-| `04-invoices-wallet-contracts.md#T-04.1.01.03` | verify | Earlier acceptance_verified | Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission |
-| `04-invoices-wallet-contracts.md#T-04.1.01.04` | verify | Earlier acceptance_verified | Add DB constraints: `CHECK (paidAmount <= totalAmount)`, `CHECK (refundedAmount <= paidAmount)` |
-| `04-invoices-wallet-contracts.md#T-04.1.01.05` | verify | Earlier acceptance_verified | Write audit repository entry for every invoice state transition |
-| `04-invoices-wallet-contracts.md#T-04.1.01.06` | verify | Earlier acceptance_verified | Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection |
-| `04-invoices-wallet-contracts.md#T-04.1.02.01` | verify | Earlier acceptance_verified | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints |
-| `04-invoices-wallet-contracts.md#T-04.1.02.02` | verify | Earlier acceptance_verified | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice |
+| `04-invoices-wallet-contracts.md#T-04.1.01.01` | done | Earlier acceptance_verified | Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps |
+| `04-invoices-wallet-contracts.md#T-04.1.01.02` | done | Earlier acceptance_verified | Create `invoice_state` enum in DB matching all 9 states |
+| `04-invoices-wallet-contracts.md#T-04.1.01.03` | done | Earlier acceptance_verified | Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission |
+| `04-invoices-wallet-contracts.md#T-04.1.01.04` | done | Earlier acceptance_verified | Add DB constraints: `CHECK (paidAmount <= totalAmount)`, `CHECK (refundedAmount <= paidAmount)` |
+| `04-invoices-wallet-contracts.md#T-04.1.01.05` | done | Earlier acceptance_verified | Write audit repository entry for every invoice state transition |
+| `04-invoices-wallet-contracts.md#T-04.1.01.06` | done | Earlier acceptance_verified | Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection |
+| `04-invoices-wallet-contracts.md#T-04.1.02.01` | done | Earlier acceptance_verified | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints |
+| `04-invoices-wallet-contracts.md#T-04.1.02.02` | done | Earlier acceptance_verified | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice |
 | `04-invoices-wallet-contracts.md#T-04.1.02.03` | partial | Earlier partial | Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms |
-| `04-invoices-wallet-contracts.md#T-04.1.02.04` | verify | Earlier acceptance_verified | Implement VAT calculation module with category default / product override resolution |
-| `04-invoices-wallet-contracts.md#T-04.1.02.05` | partial | Earlier partial | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys |
-| `04-invoices-wallet-contracts.md#T-04.1.02.06` | verify | Earlier acceptance_verified | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) |
-| `04-invoices-wallet-contracts.md#T-04.1.02.07` | verify | Earlier acceptance_verified | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements |
-| `04-invoices-wallet-contracts.md#T-04.1.02.08` | verify | Earlier acceptance_verified | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility |
-| `04-invoices-wallet-contracts.md#T-04.1.02.09` | verify | Earlier acceptance_verified | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals |
+| `04-invoices-wallet-contracts.md#T-04.1.02.04` | done | Earlier acceptance_verified | Implement VAT calculation module with category default / product override resolution |
+| `04-invoices-wallet-contracts.md#T-04.1.02.05` | done | Earlier partial | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys |
+| `04-invoices-wallet-contracts.md#T-04.1.02.06` | done | Earlier acceptance_verified | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) |
+| `04-invoices-wallet-contracts.md#T-04.1.02.07` | done | Earlier acceptance_verified | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements |
+| `04-invoices-wallet-contracts.md#T-04.1.02.08` | done | Earlier acceptance_verified | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility |
+| `04-invoices-wallet-contracts.md#T-04.1.02.09` | done | Earlier acceptance_verified | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals |
 | `04-invoices-wallet-contracts.md#T-04.1.03.01` | verify | Earlier acceptance_verified | Add `service_due_periods` admin config table (service type, default days, active period) |
 | `04-invoices-wallet-contracts.md#T-04.1.03.02` | verify | Earlier acceptance_verified | Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override) |
 | `04-invoices-wallet-contracts.md#T-04.1.03.03` | verify | Earlier acceptance_verified | Build staff override UI/API: override input + reason field, stored in audit + invoice metadata |

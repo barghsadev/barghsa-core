@@ -2519,9 +2519,13 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     }
   });
   const { expectedReviewHash: _unusedCancelHash, ...cancelWithoutHash } = cancelUpgradeInput;
-  expect((await request(cancelUpgradePath, 'POST', cancelWithoutHash, staffHeaders)).status).toBe(
-    400
+  const missingCancellationReview = await request(
+    cancelUpgradePath,
+    'POST',
+    cancelWithoutHash,
+    staffHeaders
   );
+  expect(missingCancellationReview.status, await missingCancellationReview.text()).toBe(400);
   expect(
     (
       await request(

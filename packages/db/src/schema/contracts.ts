@@ -46,6 +46,10 @@ export const contracts = pgTable(
   'contracts',
   {
     ...baseColumns,
+    /** Stable text key for existing invoice origin columns. */
+    invoiceReference: text('invoice_reference')
+      .generatedAlwaysAs(sql`id::text`)
+      .unique('contracts_invoice_reference_key'),
     contractNumber: bigint('contract_number', { mode: 'bigint' })
       .notNull()
       .default(sql`nextval('contract_number_seq'::regclass)`),

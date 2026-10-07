@@ -290,9 +290,10 @@ it('reads an exact cancellation financial snapshot without changing the contract
   const row = await create();
   const invoiceId = randomUUID(),
     unrelated = randomUUID();
+  const otherContract = await create({ ...(await input()), profileId: row.profileId });
   await http.pool.query(
-    "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,paid_amount,refunded_amount) VALUES($1,$2,$3,'Paid',9007199254740999,9007199254740999,3),($4,$2,'unrelated','Paid',123,123,0)",
-    [invoiceId, row.profileId, row.id, unrelated]
+    "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,paid_amount,refunded_amount) VALUES($1,$2,$3,'Paid',9007199254740999,9007199254740999,3),($4,$2,$5,'Paid',123,123,0)",
+    [invoiceId, row.profileId, row.id, unrelated, otherContract.id]
   );
   const refund = (
     await http.pool.query(

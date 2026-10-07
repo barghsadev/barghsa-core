@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import {
+  type AnyPgColumn,
   check,
   index,
   jsonb,
@@ -33,6 +34,10 @@ export const consultationRequests = pgTable(
   'consultation_requests',
   {
     id: uuidv7('id').primaryKey().notNull(),
+    /** Stable text key for existing invoice origin columns. */
+    invoiceReference: text('invoice_reference')
+      .generatedAlwaysAs(sql`id::text`)
+      .unique('consultation_requests_invoice_reference_key'),
     profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
@@ -54,7 +59,9 @@ export const consultationRequests = pgTable(
     offerValidUntil: timestamp('offer_valid_until', { withTimezone: true }),
     acceptedAt: timestamp('accepted_at', { withTimezone: true }),
     acceptedBy: text('accepted_by').references(() => users.userId, { onDelete: 'restrict' }),
-    invoiceId: uuid('invoice_id').references(() => invoices.id, { onDelete: 'restrict' }),
+    invoiceId: uuid('invoice_id').references((): AnyPgColumn => invoices.id, {
+      onDelete: 'restrict',
+    }),
     submittedAt: timestamp('submitted_at', { withTimezone: true }).notNull().defaultNow(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
