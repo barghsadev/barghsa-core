@@ -1,4 +1,8 @@
 import { randomUUID } from 'node:crypto';
+import {
+  expectSolarStatusDeliveries,
+  solarDeliverySnapshot,
+} from '../test/solar-status-notification-proof.js';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
@@ -302,6 +306,15 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
   );
   expect(empty.status, http.logs()).toBe(200);
   expect(await empty.json()).toMatchObject({ status: 'documents_under_review' });
+  const initialDelivery = await solarDeliverySnapshot(http.pool, requestId);
+  expect(
+    (
+      await send('solar-buyer', `solar/requests/${requestId}/documents/complete`, 'POST', {
+        allDocumentsUploaded: true,
+      })
+    ).status
+  ).toBe(200);
+  expect(await solarDeliverySnapshot(http.pool, requestId)).toEqual(initialDelivery);
   const queue = await send('solar-reviewer', 'admin/solar/requests');
   expect(queue.status, http.logs()).toBe(200);
   expect(await queue.json()).toMatchObject({
@@ -509,6 +522,12 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
   );
   expect(advanced.status, http.logs()).toBe(200);
   expect(await advanced.json()).toMatchObject({ status: 'waiting_for_postal_submission' });
+  await expectSolarStatusDeliveries(http.pool, requestId, 'solar-buyer', [
+    'documents_under_review',
+    'changes_requested',
+    'documents_under_review',
+    'waiting_for_postal_submission',
+  ]);
   expect(
     (
       await http.pool.query<{ hash: string }>(

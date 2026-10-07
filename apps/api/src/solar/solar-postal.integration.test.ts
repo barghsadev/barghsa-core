@@ -4,6 +4,11 @@ import {
   expectSolarAuditRollback,
 } from '../test/solar-audit.js';
 import { createHash, randomUUID } from 'node:crypto';
+import {
+  expectSolarStatusDeliveries,
+  expectSolarStatusRollback,
+  solarDeliverySnapshot,
+} from '../test/solar-status-notification-proof.js';
 import { renderContractPdf } from '../contract/contract-pdf.js';
 import type { ContractService } from '../contract/contract.service.js';
 import { createRequire } from 'node:module';
@@ -939,6 +944,13 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       ContentType: 'text/plain',
     })
   );
+  await expectSolarStatusRollback(
+    http.pool,
+    id,
+    'contract_created',
+    () => send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command),
+    true
+  );
   const contract = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/create-contract`,
@@ -952,6 +964,15 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     status: string;
   };
   expect(result.status).toBe('contract_created');
+  await expectSolarStatusDeliveries(http.pool, id, 'postal-buyer', [
+    'documents_under_review',
+    'waiting_for_postal_submission',
+    'postal_documents_received',
+    'final_review',
+    'approved',
+    'contract_created',
+  ]);
+  const statusDeliveryBeforeReplay = await solarDeliverySnapshot(http.pool, id);
   const sourceAttachment = (
     await http.pool.query(
       `SELECT d.*,v.content FROM contract_documents cd
@@ -1137,6 +1158,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   const afterPublishedContract = await solarContractEffects();
   // A real lifecycle advance cannot recreate or change the saved original creation receipt.
   const progressedReplay = await send('postal-reviewer', contractBase, 'POST', command);
+  expect(await solarDeliverySnapshot(http.pool, id)).toEqual(statusDeliveryBeforeReplay);
   expect(progressedReplay.status, http.logs()).toBe(200);
   expect(await progressedReplay.json()).toEqual(result);
   const alteredReplay = await send('postal-reviewer', contractBase, 'POST', {

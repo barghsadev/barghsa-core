@@ -11,7 +11,7 @@ import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
-import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifySolarStatus } from './solar-status-notifications.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
@@ -175,26 +175,19 @@ export class SolarFinalService {
         "UPDATE solar_construction_requests SET status='final_review',updated_at=NOW() WHERE id=$1",
         [requestId]
       );
-      await new NotificationsService().create(
-        {
-          userId: request.user_id,
-          profileId: request.profile_id,
-          operatingContext: 'customer',
-          type: 'general',
-          title: 'Solar request in final review',
-          localizedContent: {
-            fa: {
-              title: 'بررسی نهایی درخواست نیروگاه خورشیدی',
-              body: 'مدارک پستی دریافت شد و درخواست شما در بررسی نهایی کارشناسان است.',
-            },
-            en: {
-              title: 'Solar request in final review',
-              body: 'Your postal documents were received. Staff are reviewing your request.',
-            },
+      await notifySolarStatus(client, requestId, request.status, 'final_review', {
+        title: 'Solar request in final review',
+        localizedContent: {
+          fa: {
+            title: 'بررسی نهایی درخواست نیروگاه خورشیدی',
+            body: 'مدارک پستی دریافت شد و درخواست شما در بررسی نهایی کارشناسان است.',
+          },
+          en: {
+            title: 'Solar request in final review',
+            body: 'Your postal documents were received. Staff are reviewing your request.',
           },
         },
-        client
-      );
+      });
       await audit(
         client,
         actor,
@@ -269,41 +262,34 @@ export class SolarFinalService {
           return { status };
         },
         notify: async () => {
-          await new NotificationsService().create(
-            {
-              userId: request.user_id,
-              profileId: request.profile_id,
-              operatingContext: 'customer',
-              type: 'general',
-              title:
-                decision === 'approve'
-                  ? 'Solar request approved'
-                  : decision === 'reject'
-                    ? 'Solar request rejected'
-                    : 'Solar request closed',
-              localizedContent: {
-                fa: {
-                  title: 'درخواست نیروگاه خورشیدی',
-                  body:
-                    decision === 'approve'
-                      ? 'درخواست شما تأیید شد و قرارداد توسط کارشناس آماده می‌شود.'
-                      : decision === 'reject'
-                        ? `درخواست شما رد شد. دلیل: ${decisionReason}`
-                        : `درخواست بدون قرارداد بسته شد: ${decisionReason}`,
-                },
-                en: {
-                  title: 'Solar request',
-                  body:
-                    decision === 'approve'
-                      ? 'Your request was approved. Staff will prepare the contract.'
-                      : decision === 'reject'
-                        ? `Your request was rejected. Reason: ${decisionReason}`
-                        : `The request was closed without a contract: ${decisionReason}`,
-                },
+          await notifySolarStatus(client, requestId, request.status, status, {
+            title:
+              decision === 'approve'
+                ? 'Solar request approved'
+                : decision === 'reject'
+                  ? 'Solar request rejected'
+                  : 'Solar request closed',
+            localizedContent: {
+              fa: {
+                title: 'درخواست نیروگاه خورشیدی',
+                body:
+                  decision === 'approve'
+                    ? 'درخواست شما تأیید شد و قرارداد توسط کارشناس آماده می‌شود.'
+                    : decision === 'reject'
+                      ? `درخواست شما رد شد. دلیل: ${decisionReason}`
+                      : `درخواست بدون قرارداد بسته شد: ${decisionReason}`,
+              },
+              en: {
+                title: 'Solar request',
+                body:
+                  decision === 'approve'
+                    ? 'Your request was approved. Staff will prepare the contract.'
+                    : decision === 'reject'
+                      ? `Your request was rejected. Reason: ${decisionReason}`
+                      : `The request was closed without a contract: ${decisionReason}`,
               },
             },
-            client
-          );
+          });
         },
       });
       await client.query('COMMIT');

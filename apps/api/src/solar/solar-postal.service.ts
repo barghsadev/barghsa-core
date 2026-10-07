@@ -10,7 +10,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { OrdersService } from '../orders/orders.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
-import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifySolarStatus } from './solar-status-notifications.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { InputFieldException } from '../common/input-field.exception.js';
@@ -411,35 +411,28 @@ export class SolarPostalService {
           "UPDATE solar_construction_requests SET status='postal_documents_received',updated_at=NOW() WHERE id=$1",
           [requestId]
         );
-      await new NotificationsService().create(
-        {
-          userId: request.user_id,
-          profileId: request.profile_id,
-          operatingContext: 'customer',
-          type: 'general',
-          title:
-            decision === 'received'
-              ? 'Postal documents received'
-              : 'Postal submission needs attention',
-          localizedContent: {
-            fa: {
-              title: 'مدارک پستی نیروگاه خورشیدی',
-              body:
-                decision === 'received'
-                  ? 'مدارک پستی شما دریافت شد.'
-                  : `ارسال پستی نیازمند پیگیری است: ${decisionReason}`,
-            },
-            en: {
-              title: 'Solar postal documents',
-              body:
-                decision === 'received'
-                  ? 'Your postal documents were received.'
-                  : `Postal submission needs attention: ${decisionReason}`,
-            },
+      await notifySolarStatus(client, requestId, request.status, requestOutcome, {
+        title:
+          decision === 'received'
+            ? 'Postal documents received'
+            : 'Postal submission needs attention',
+        localizedContent: {
+          fa: {
+            title: 'مدارک پستی نیروگاه خورشیدی',
+            body:
+              decision === 'received'
+                ? 'مدارک پستی شما دریافت شد.'
+                : `ارسال پستی نیازمند پیگیری است: ${decisionReason}`,
+          },
+          en: {
+            title: 'Solar postal documents',
+            body:
+              decision === 'received'
+                ? 'Your postal documents were received.'
+                : `Postal submission needs attention: ${decisionReason}`,
           },
         },
-        client
-      );
+      });
       await audit(
         client,
         actor,

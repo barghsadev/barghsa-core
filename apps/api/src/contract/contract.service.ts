@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { duePeriodTypeForManual } from '@barghsa/shared/finance';
+import { notifySolarStatus } from '../solar/solar-status-notifications.js';
 import {
   getDbPool,
   contracts,
@@ -39,7 +40,6 @@ import { ManualInvoiceService } from '../invoice/manual-invoice.service.js';
 import { calculateManualInvoice } from '../invoice/manual-invoice.calculation.js';
 import { DueAtCalculationService } from '../invoice/due-at.service.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
-import { NotificationsService } from '../notifications/notifications.service.js';
 import type {
   SolarContractInput,
   SolarContractReviewInput,
@@ -649,12 +649,12 @@ export class ContractService {
            SET contract_id=$2,status='contract_created',updated_at=NOW() WHERE id=$1`,
             [input.requestId, id]
           );
-          await new NotificationsService().create(
+          await notifySolarStatus(
+            client,
+            input.requestId,
+            request.status,
+            'contract_created',
             {
-              userId: request.submitted_by,
-              profileId: input.profileId,
-              operatingContext: 'customer',
-              type: 'general',
               title: 'Solar invoice issued',
               localizedContent: {
                 fa: {
@@ -667,7 +667,7 @@ export class ContractService {
                 },
               },
             },
-            client
+            request.submitted_by
           );
           await client.query(
             `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)

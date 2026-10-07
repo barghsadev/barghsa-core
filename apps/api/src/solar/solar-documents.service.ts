@@ -10,7 +10,7 @@ import type { PoolClient } from 'pg';
 import { OrdersService } from '../orders/orders.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
-import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifySolarStatus } from './solar-status-notifications.js';
 import { DocumentService } from '../documents/document.service.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -182,11 +182,22 @@ export class SolarDocumentsService {
            VALUES($1,$2,'Available','SubmittedForReview',$3)`,
           [document.id, document.revision, actor.userId]
         );
-      if (request.status !== 'documents_under_review')
+      if (request.status !== 'documents_under_review') {
         await client.query(
           "UPDATE solar_construction_requests SET status='documents_under_review',updated_at=NOW() WHERE id=$1",
           [requestId]
         );
+        await notifySolarStatus(client, requestId, request.status, 'documents_under_review', {
+          title: 'Solar documents submitted for review',
+          localizedContent: {
+            fa: { title: 'مدارک نیروگاه خورشیدی', body: 'مدارک شما برای بررسی کارشناسان ثبت شد.' },
+            en: {
+              title: 'Solar documents',
+              body: 'Your documents were submitted for staff review.',
+            },
+          },
+        });
+      }
       await audit(
         client,
         actor,
@@ -486,26 +497,19 @@ export class SolarDocumentsService {
         "UPDATE solar_construction_requests SET status='changes_requested',updated_at=NOW() WHERE id=$1",
         [requestId]
       );
-      await new NotificationsService().create(
-        {
-          userId: request.user_id,
-          profileId: request.profile_id,
-          operatingContext: 'customer',
-          type: 'general',
-          title: 'Additional solar documents requested',
-          localizedContent: {
-            fa: {
-              title: 'مدارک نیروگاه خورشیدی',
-              body: `مدرک تکمیلی درخواست شد: ${requestedDescription}`,
-            },
-            en: {
-              title: 'Solar documents',
-              body: `Additional document requested: ${requestedDescription}`,
-            },
+      await notifySolarStatus(client, requestId, request.status, 'changes_requested', {
+        title: 'Additional solar documents requested',
+        localizedContent: {
+          fa: {
+            title: 'مدارک نیروگاه خورشیدی',
+            body: `مدرک تکمیلی درخواست شد: ${requestedDescription}`,
+          },
+          en: {
+            title: 'Solar documents',
+            body: `Additional document requested: ${requestedDescription}`,
           },
         },
-        client
-      );
+      });
       await audit(
         client,
         actor,
@@ -546,26 +550,19 @@ export class SolarDocumentsService {
         'INSERT INTO solar_construction_postal(request_id) VALUES($1) ON CONFLICT(request_id) DO NOTHING',
         [requestId]
       );
-      await new NotificationsService().create(
-        {
-          userId: request.user_id,
-          profileId: request.profile_id,
-          operatingContext: 'customer',
-          type: 'general',
-          title: 'Solar document set approved',
-          localizedContent: {
-            fa: {
-              title: 'درخواست نیروگاه خورشیدی',
-              body: 'مدارک بررسی شد. مرحله بعد ارسال پستی مدارک است.',
-            },
-            en: {
-              title: 'Solar request',
-              body: 'Documents were reviewed. Postal submission is next.',
-            },
+      await notifySolarStatus(client, requestId, request.status, 'waiting_for_postal_submission', {
+        title: 'Solar document set approved',
+        localizedContent: {
+          fa: {
+            title: 'درخواست نیروگاه خورشیدی',
+            body: 'مدارک بررسی شد. مرحله بعد ارسال پستی مدارک است.',
+          },
+          en: {
+            title: 'Solar request',
+            body: 'Documents were reviewed. Postal submission is next.',
           },
         },
-        client
-      );
+      });
       await audit(
         client,
         actor,
