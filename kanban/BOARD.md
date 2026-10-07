@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing invoice-paid/overdue native writers and effective state/paid amount guards. Complete only demonstrated private canonical durable delivery gaps,using original payments/ledger/customer/staff recipients and occurrence identity. Preserve immutable credits/payment provenance,invoice overpayment/remaining/paid_at/cancellation/refund/invalidation,actor/profile/permission/clock/lock,idempotency and rollback/retry boundaries. Reconcile pending OTP owner reply if available; keep refund/wallet/low-balance/other Appendix/native templates/live provider/owner/operations/launch explicit.
+Inspect existing notifyRefundOutcome shared native Completed/Rejected/Failed private warnings and worker/API callers before rebuilding. Reuse original immutable credits,dual obligations/payment provenance,original customer/staff context,order/invoice links,read/history keys and financial/retry/closure/authorization/audit boundaries. Complete only demonstrated canonical durable/private immediate delivery gaps;do not resend historical receipts or expose unpublished cancellation/finance/private reasons. Reconcile pending OTP owner reply if available;keep wallet credit/low-balance/system/awaiting-staff/other Appendix/native templates/live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

@@ -1310,6 +1310,13 @@
       "when": 1791404379260,
       "tag": "0266_online_topup_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 267,
+      "version": "7",
+      "when": 1791404922974,
+      "tag": "0267_invoice_outcome_notifications",
+      "breakpoints": true
     }
   ]
 }

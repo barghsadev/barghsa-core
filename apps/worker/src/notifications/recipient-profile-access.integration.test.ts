@@ -1,3 +1,5 @@
+import { withReminderDeliveryPolicy } from '../invoices/reminder-delivery-policy.js';
+import type { OutboxRow } from './outbox-reader.js';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -2052,4 +2054,213 @@ it('rechecks new device login contact change after rendering before the provider
       )
     ).rows[0].delivery_payload
   ).toEqual(snapshot);
+});
+
+async function invoiceOutcomeFixture(event = 'payment.invoice_paid') {
+  const f = await fixture(event),
+    invoice = randomUUID();
+  await pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount,due_at,paid_at) VALUES($1,$2,$3::invoice_state,100,$4,clock_timestamp()-interval '1 day',CASE WHEN $3::invoice_state='Paid'::invoice_state THEN clock_timestamp() ELSE NULL END)",
+    [
+      invoice,
+      f.profile,
+      event === 'payment.invoice_paid' ? 'Paid' : 'Overdue',
+      event === 'payment.invoice_paid' ? 100 : 0,
+    ]
+  );
+  const dates = (
+    await pool.query(
+      `SELECT to_char(due_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS due FROM invoices WHERE id=$1`,
+      [invoice]
+    )
+  ).rows[0];
+  const payload = {
+    invoiceId: invoice,
+    invoiceNumber: invoice,
+    amount: '100',
+    link_route: `/invoices/${invoice}`,
+    ...(event === 'payment.invoice_paid'
+      ? { paidAt: new Date().toISOString() }
+      : { dueDate: dates.due }),
+  };
+  await pool.query('UPDATE notification_outbox SET payload=$2 WHERE id=$1', [f.id, payload]);
+  await pool.query(
+    "UPDATE in_app_notifications SET link_route=$2 WHERE delivery_key='outbox:'||$1::text",
+    [f.id, `/invoices/${invoice}`]
+  );
+  return { ...f, invoice, payload };
+}
+it.each(['payment.invoice_paid', 'payment.invoice_overdue'])(
+  'binds %s to its actual invoice,current private profile and owner',
+  async (event) => {
+    const f = await invoiceOutcomeFixture(event);
+    expect(await loadNotificationRecipient(pool, f.id)).toMatchObject({
+      userId: f.owner,
+      profileId: f.profile,
+    });
+    await pool.query('UPDATE profiles SET user_id=$2 WHERE id=$1', [f.profile, f.next]);
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+  }
+);
+it.each(['payment.invoice_paid', 'payment.invoice_overdue'])(
+  'denies archived %s profiles',
+  async (event) => {
+    const f = await invoiceOutcomeFixture(event);
+    expect(await loadNotificationRecipient(pool, f.id)).not.toBeNull();
+    await pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+  }
+);
+it.each(['paid', 'cancelled', 'deadline', 'invoice', 'inbox'] as const)(
+  'does not deliver obsolete overdue payment demand after %s changes',
+  async (change) => {
+    const f = await invoiceOutcomeFixture('payment.invoice_overdue');
+    const before = await loadNotificationRecipient(pool, f.id);
+    expect(before).not.toBeNull();
+    if (change === 'paid')
+      await pool.query(
+        "UPDATE invoices SET state='Paid',paid_amount=100,paid_at=clock_timestamp() WHERE id=$1",
+        [f.invoice]
+      );
+    else if (change === 'cancelled')
+      await pool.query("UPDATE invoices SET state='Cancelled' WHERE id=$1", [f.invoice]);
+    else if (change === 'deadline')
+      await pool.query(
+        "UPDATE invoices SET due_at=clock_timestamp()+interval '1 day' WHERE id=$1",
+        [f.invoice]
+      );
+    else if (change === 'invoice')
+      await pool.query(
+        "UPDATE notification_outbox SET payload=jsonb_set(payload,'{invoiceId}',to_jsonb($2::text)) WHERE id=$1",
+        [f.id, randomUUID()]
+      );
+    else
+      await pool.query("DELETE FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text", [
+        f.id,
+      ]);
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+  }
+);
+it.each(['payment.invoice_paid', 'payment.invoice_overdue'])(
+  'delivers a private %s email once with its active template and durable receipt',
+  async (event) => {
+    const f = await invoiceOutcomeFixture(event);
+    await pool.query("UPDATE users SET locale='en' WHERE user_id=$1", [f.owner]);
+    await pool.query("UPDATE email_provider_configs SET status='disabled' WHERE status='active'");
+    await pool.query(
+      `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+ VALUES('resend','Controlled session test','active',$1,$2,'passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
+      [JSON.stringify({ api_key: 'local-test-only', from_email: 'sender@example.test' }), f.owner]
+    );
+    await pool.query(
+      `INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
+ VALUES($1,'email','en','Invoice outcome','<p>{{amount}} IRR for {{invoiceNumber}}</p>','["amount","invoiceNumber"]','active',true,$2) ON CONFLICT DO NOTHING`,
+      [event, f.owner]
+    );
+    const request = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ id: 'session-email-receipt' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+    const transport = new EmailNotificationTransport(pool, request);
+    const payload = {
+      outboxId: f.id,
+      profileId: f.profile,
+      recipientId: f.owner,
+      channel: 'email' as const,
+      eventKey: event,
+      payload: f.payload,
+      idempotencyKey: `session-provider:${f.id}`,
+    };
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'session-email-receipt',
+    });
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'session-email-receipt',
+    });
+    expect(request).toHaveBeenCalledTimes(1);
+    const sent = JSON.parse(String(request.mock.calls[0]![1]!.body));
+    expect(sent).toMatchObject({
+      to: [`${f.owner}@example.test`],
+      subject: 'Invoice outcome',
+      html: expect.stringContaining(`<p>100 IRR for ${f.invoice}</p>`),
+    });
+    expect(JSON.stringify(sent)).not.toContain('Private conversation');
+    expect(
+      (
+        await pool.query(
+          'SELECT status,provider_ref FROM notification_send_receipts WHERE outbox_id=$1',
+          [f.id]
+        )
+      ).rows
+    ).toEqual([{ status: 'accepted', provider_ref: 'session-email-receipt' }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT delivery_payload FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+          [f.id]
+        )
+      ).rows[0].delivery_payload
+    ).toMatchObject({
+      profileId: f.profile,
+      userId: f.owner,
+      templateVersion: 1,
+      destination: `${f.owner}@example.test`,
+      idempotencyKey: payload.idempotencyKey,
+    });
+    await expect(
+      transport.send({ ...payload, profileId: null, eventKey: 'wallet.topup_completed' })
+    ).rejects.toThrow('durable queued recipient');
+    expect(request).toHaveBeenCalledTimes(1);
+  }
+);
+
+it('holds an overdue invoice through provider work so concurrent payment cannot commit a stale demand', async () => {
+  const f = await invoiceOutcomeFixture('payment.invoice_overdue');
+  const row: OutboxRow = {
+    id: f.id,
+    profileId: f.profile,
+    userId: f.owner,
+    eventKey: 'payment.invoice_overdue',
+    payload: f.payload,
+    channels: ['in_app', 'email'],
+    idempotencyKey: `overdue:${f.id}`,
+    attempts: 0,
+    maxAttempts: 5,
+    scheduledAt: null,
+    lastError: null,
+  };
+  let paid: Promise<unknown> | undefined;
+  try {
+    await withReminderDeliveryPolicy(pool, row, async (policy) => {
+      expect(policy.skipReason).toBeUndefined();
+      expect(policy.deferUntil).toBeUndefined();
+      paid = pool.query(
+        "UPDATE invoices SET state='Paid',paid_amount=100,paid_at=clock_timestamp() WHERE id=$1",
+        [f.invoice]
+      );
+      await expect
+        .poll(
+          async () =>
+            (
+              await pool.query(
+                "SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'UPDATE invoices SET state=%' AND cardinality(pg_blocking_pids(pid))>0"
+              )
+            ).rows[0].count
+        )
+        .toBe(1);
+      expect(
+        (await pool.query('SELECT state FROM invoices WHERE id=$1', [f.invoice])).rows
+      ).toEqual([{ state: 'Overdue' }]);
+    });
+    await paid;
+    await withReminderDeliveryPolicy(pool, row, async (policy) => {
+      expect(policy.skipReason).toBe('reminder_invoice_stopped');
+    });
+  } finally {
+    await paid;
+  }
 });

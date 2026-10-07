@@ -466,6 +466,33 @@ async function queuedReminder() {
   };
   return { ...recipient, emailAddress: recipient.email, id, invoiceId, email, options };
 }
+// Keep the new payment receipt separate from these existing reminder-only polls.
+async function parkPaidReceipt(invoiceId: string) {
+  const receipts = (
+    await pool.query(
+      "SELECT o.id,n.type,j.status,j.provider_ref FROM notification_outbox o JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text JOIN notification_job j ON j.outbox_id=o.id AND j.channel='in_app' WHERE o.event_key='payment.invoice_paid' AND o.payload->>'invoiceId'=$1",
+      [invoiceId]
+    )
+  ).rows;
+  expect(receipts).toHaveLength(1);
+  expect(receipts[0]).toMatchObject({
+    type: 'payment.invoice_paid',
+    status: 'done',
+    provider_ref: expect.any(String),
+  });
+  expect(
+    (
+      await pool.query(
+        "SELECT channel,status,attempts FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+        [receipts[0].id]
+      )
+    ).rows
+  ).toEqual([{ channel: 'email', status: 'queued', attempts: 0 }]);
+  await pool.query(
+    "UPDATE notification_outbox SET scheduled_for=clock_timestamp()+interval '1 day' WHERE id=$1",
+    [receipts[0].id]
+  );
+}
 for (const change of ['Paid', 'Cancelled', 'Refunded', 'deadline', 'archived'] as const) {
   it(`suppresses an already queued reminder after ${change}`, async () => {
     const r = await queuedReminder();
@@ -481,6 +508,7 @@ for (const change of ['Paid', 'Cancelled', 'Refunded', 'deadline', 'archived'] a
         change,
         change === 'Paid' ? 100 : 0,
       ]);
+    if (change === 'Paid') await parkPaidReceipt(r.invoiceId);
     expect(await runOutboxPoll(r.options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
     expect(r.email).not.toHaveBeenCalled();
     expect(
@@ -563,6 +591,7 @@ for (const accepted of [true, false]) {
         })
       ).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
     await pool.query("UPDATE invoices SET state='Paid',paid_amount=100 WHERE id=$1", [r.invoiceId]);
+    await parkPaidReceipt(r.invoiceId);
     expect(await runOutboxPoll(r.options)).toEqual({
       leased: 1,
       delivered: accepted ? 1 : 0,

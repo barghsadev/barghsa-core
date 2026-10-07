@@ -120,6 +120,14 @@ export async function loadNotificationRecipient(
           AND n.recipient_user_id=u.user_id AND n.operating_context='staff'
           AND n.type=o.event_key
       ))
+      AND (o.event_key NOT IN ('payment.invoice_paid','payment.invoice_overdue') OR (o.profile_id IS NOT NULL AND p.user_id=u.user_id AND NOT p.archived AND EXISTS (
+        SELECT 1 FROM invoices i JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE i.id::text=o.payload->>'invoiceId' AND i.profile_id=o.profile_id
+          AND n.profile_id=o.profile_id AND n.recipient_user_id=u.user_id
+          AND n.operating_context='customer' AND n.type=o.event_key
+          AND (o.event_key='payment.invoice_paid' OR (i.state='Overdue' AND isfinite(i.due_at) AND i.due_at<clock_timestamp()
+            AND i.total_amount>i.paid_amount AND to_char(i.due_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"')=o.payload->>'dueDate'))
+      )))
       AND (o.event_key NOT IN ('ticket.new_reply','ticket.assigned') OR EXISTS (
         SELECT 1 FROM tickets t JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
         WHERE t.id::text=o.payload->>'ticketNumber' AND n.profile_id IS NULL AND o.profile_id IS NULL

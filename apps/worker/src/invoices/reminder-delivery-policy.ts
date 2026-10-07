@@ -27,8 +27,11 @@ export async function withReminderDeliveryPolicy<T>(
   work: (policy: ReminderDeliveryPolicy) => Promise<T>,
   windowOverride?: DeliveryWindowConfig
 ): Promise<T> {
-  if (row.eventKey !== 'payment.invoice_reminder') return work({});
-  const { invoiceId, offset, dueAt } = row.payload;
+  const isOverdue = row.eventKey === 'payment.invoice_overdue';
+  if (row.eventKey !== 'payment.invoice_reminder' && !isOverdue) return work({});
+  const { invoiceId } = row.payload;
+  const offset = isOverdue ? 0 : row.payload.offset;
+  const dueAt = isOverdue ? row.payload.dueDate : row.payload.dueAt;
   if (
     typeof invoiceId !== 'string' ||
     !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(invoiceId) ||
@@ -84,6 +87,16 @@ export async function withReminderDeliveryPolicy<T>(
       !isEligibleForReminderSend(invoice.state)
     )
       return await work({ skipReason: 'reminder_invoice_stopped' });
+    if (isOverdue) {
+      const balance = (
+        await client.query(
+          'SELECT total_amount>paid_amount AS outstanding FROM invoices WHERE id=$1',
+          [invoiceId]
+        )
+      ).rows[0];
+      if (invoice.state !== 'Overdue' || balance?.outstanding !== true)
+        return await work({ skipReason: 'reminder_invoice_stopped' });
+    }
     const currentDue = new Date(invoice.due_at);
     if (
       !invoice.due_at ||
@@ -92,8 +105,9 @@ export async function withReminderDeliveryPolicy<T>(
     )
       return await work({ skipReason: 'reminder_deadline_changed' });
     const now = new Date();
-    if (invoice.dirty) return await work({ deferUntil: new Date(now.getTime() + 60_000) });
-    if (invoice.service_type) {
+    if (!isOverdue && invoice.dirty)
+      return await work({ deferUntil: new Date(now.getTime() + 60_000) });
+    if (!isOverdue && invoice.service_type) {
       await client.query(
         `SELECT pg_advisory_xact_lock(hashtext($1),hashtext($2 || ':' || $3::text))`,
         ['barghsa.invoice_reminder_offset_toggles', invoice.service_type, offset]
