@@ -246,7 +246,9 @@ for (const locale of ['en', 'fa'] as const) {
     const count = queries.length;
     detailStatus = 200;
     await error.getByRole('button', { name: word('retry'), exact: true }).click();
-    await expect(main.getByRole('heading', { level: 2, name: templateRow.title })).toBeVisible();
+    await expect(
+      main.getByRole('heading', { level: 2, name: templateRow.title, exact: true })
+    ).toBeVisible();
     expect(queries.length).toBe(count);
     await main.getByRole('button', { name: word('edit'), exact: true }).click();
     await page.locator('#document-template-title').fill('Metadata draft');

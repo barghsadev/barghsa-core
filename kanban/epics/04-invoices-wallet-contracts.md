@@ -573,7 +573,7 @@ Draft → Awaiting staff review → Awaiting customer acceptance → Accepted �
   - Contract created → document generated from template enters `Uploading` state
   - Customer uploads signed version → enters same lifecycle
   - Staff uploads signed copy received through approved channel → record identifying uploader
-  - Amendments → new document version linked to superseded document via `supersedes_document_id`
+  - Amendments → new contract version linked through `base_version_id`; its documents link to the new version. Previously signed files remain immutable. File replacements within the same version and role retain `supersedes_document_id` and audit history. Owner approved this existing lineage design on 2026-10-07.
 
 #### Tasks
 

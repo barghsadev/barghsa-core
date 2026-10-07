@@ -235,6 +235,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('heading', { name: words.title, exact: true })).toBeVisible();
     await page.getByRole('button', { name: words.upload, exact: true }).click();
     const upload = page.getByRole('region', { name: words.upload });
+    await expect(upload.locator('input[type="file"]')).toBeEnabled();
     await upload.getByLabel(words.file, { exact: true }).setInputFiles({
       name: 'proof.pdf',
       mimeType: 'application/pdf',

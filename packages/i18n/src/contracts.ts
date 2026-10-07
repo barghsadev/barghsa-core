@@ -329,7 +329,8 @@ export const en = {
   uploadAmendment: 'Upload amendment document',
   generateContractPdf: 'Generate PDF from saved terms',
   generatingContractPdf: 'Generating PDF…',
-  contractPdfSubmitted: 'PDF submitted for document review.',
+  contractPdfSubmitted: 'PDF created. Check its status in the document list.',
+  contractPdfScanning: 'PDF created and queued for file checks. Check its status below.',
   contractPdfError: 'Could not generate the PDF. Check access and try again.',
   copyNotice:
     'Uploading a signed copy records the document and its uploader. Signature confirmation remains a separate step.',
@@ -693,7 +694,9 @@ export const fa: Record<keyof typeof en, string> = {
   uploadAmendment: 'بارگذاری مدرک الحاقیه',
   generateContractPdf: 'ساخت PDF از مفاد ذخیره‌شده',
   generatingContractPdf: 'در حال ساخت PDF…',
-  contractPdfSubmitted: 'PDF برای بررسی مدرک ارسال شد.',
+  contractPdfSubmitted: 'PDF ایجاد شد. وضعیت آن را در فهرست مدارک بررسی کنید.',
+  contractPdfScanning:
+    'PDF ایجاد و برای بررسی فایل در صف قرار گرفت. وضعیت آن را در زیر بررسی کنید.',
   contractPdfError: 'ساخت PDF انجام نشد. دسترسی را بررسی کنید و دوباره تلاش کنید.',
   copyNotice:
     'بارگذاری نسخه امضاشده، مدرک و بارگذار آن را ثبت می‌کند. تأیید امضا مرحله‌ای جداگانه است.',

@@ -150,20 +150,27 @@ export class ContractPdfService {
         }),
       ]
     );
+    const scannerConfigured = Boolean(process.env['DOCUMENT_CLAMAV_HOST']?.trim());
     await client.query(
       `UPDATE storage_records SET status='active',content_type='application/pdf',file_size=$2,
        metadata=(metadata-'provisionalUpload'-'deletionRequested'-'uploadExpiresAt')
-         ||jsonb_build_object('scanState','Available','scanSkippedReason','not_configured','sha256',$3::text),
+         ||jsonb_build_object('scanState',$4::text,'scanSkippedReason',$5::text,'sha256',$3::text),
        removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
-      [uploadKey, bytes.length, checksum]
+      [
+        uploadKey,
+        bytes.length,
+        checksum,
+        scannerConfigured ? 'Pending' : 'Available',
+        scannerConfigured ? null : 'not_configured',
+      ]
     );
     const available = (
       await db
         .update(documents)
         .set({
-          state: 'Available',
-          scanState: 'Available',
-          scanSkippedReason: 'not_configured',
+          state: scannerConfigured ? 'PendingScan' : 'Available',
+          scanState: scannerConfigured ? 'Pending' : 'Available',
+          scanSkippedReason: scannerConfigured ? null : 'not_configured',
           storageKey,
           detectedMime: 'application/pdf',
           checksum,
@@ -172,6 +179,10 @@ export class ContractPdfService {
         .returning()
     )[0]!;
     await recordEvent(client, available, 'PendingScan', actor, ip);
+    if (scannerConfigured) {
+      await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [created.id]);
+      return available.id;
+    }
     const submitted = (
       await db
         .update(documents)
@@ -278,6 +289,7 @@ export class ContractPdfService {
       true,
       request.ip ?? ''
     );
+    if (confirmed.state === 'PendingScan') return confirmed;
     return this.documents.act(
       confirmed.id,
       'submit',

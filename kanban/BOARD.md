@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T04:25:04.133233+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T04:45:48.532912+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 347 | Accepted with unchanged source bindings. |
-| verify | 957 | Existing work may be complete; inspect evidence before building. |
+| done | 353 | Accepted with unchanged source bindings. |
+| verify | 951 | Existing work may be complete; inspect evidence before building. |
 | partial | 55 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,13 +39,15 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing contract-document links,generated/signing/amendment documents,current base document lifecycle,immutable storage/provenance,review/replacement/supersession and signed-document locks. Reuse current source-bound contract/signature/read/browser evidence; build only demonstrated missing acceptance and verify actual affected callers. Preserve profile/current authority,template/version snapshots,financial review,concurrency/idempotency/audit/rollback and private download boundaries. Earlier owner/refund/performance/dependency gates remain unfinished; no milestone deployment before acceptance.
+Inspect current electricity rejection/cancellation refund obligations and closure,using accepted shared refund engine and source-bound evidence. Verify exact electricity criteria for amounts,payment allocations,immutable credits,retries,Finance visibility,notifications and atomic order/contract/invoice closure. Build only demonstrated gaps. Pending owner refund representation and earlier dependency/performance gates remain incomplete.
 
-- `04-invoices-wallet-contracts.md#T-04.5.04.01`: Create `contract_documents` link table: `contractVersionId`, `documentId`, `role` (original, signed, amendment, superseded)
-- `04-invoices-wallet-contracts.md#T-04.5.04.02`: Document state machine integration: wire contract documents into E-05's state machine (`T-05.11.01`); contract-specific guards (e.g., signed contracts cannot be replaced) enforced via policy on top of the base lifecycle
-- `04-invoices-wallet-contracts.md#T-04.5.04.03`: Replacement rule: new document linked to superseded doc; rejection requires reason + Replace action
-- `04-invoices-wallet-contracts.md#T-04.5.04.04`: Immutable signed docs: once Signed state reached, no replacement; new version for amendments
-- `04-invoices-wallet-contracts.md#T-04.5.04.05`: UI: contract detail shows all linked docs with states and version history
+- `03-core-business.md#T-03.07.03.01`: Create `refund_obligations` table: `id`, `order_id` (FK), `contract_id` (FK nullable), `invoice_id` (FK), `profile_id` (FK), `total_paid_amount` (bigint), `completed_refund_amount` (bigint default 0), `status` (enum: `pending`, `processing`, `completed`, `failed`), `idempotency_key` (unique), `created_at`, `updated_at`
+- `03-core-business.md#T-03.07.03.02`: When an order transitions to `rejected` or `cancelled` and `total_paid_amount > completed_refund_amount`: automatically create a `refund_obligation` with status `pending`. This is automatic, not optional for staff.
+- `03-core-business.md#T-03.07.03.03`: Worker: process refund obligations — post immutable wallet credit linked to contract, invoice, and original payment allocations. Use unique idempotency key to prevent duplicate credits.
+- `03-core-business.md#T-03.07.03.04`: Refundable amount = confirmed paid amount − previously completed refunds. Must never exceed this.
+- `03-core-business.md#T-03.07.03.05`: Contract/order cannot be marked financially closed until refund obligation is Completed. Staff cannot dismiss or manually mark complete without the linked wallet credit.
+- `03-core-business.md#T-03.07.03.06`: Failed refund processing must be retried and visible in a finance work queue/alert until resolved. Staff do not manually create the required full wallet refund.
+- `03-core-business.md#T-03.07.03.07`: Refund completion notification to customer: amount, reason, actor/system, timestamps.
 
 ## v0.2.0: Complete customer journeys
 
@@ -499,11 +501,11 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.5.03.01` | done | Recorded batch work | Add `serviceType` to contracts table; per-type activation rule configuration in admin |
 | `04-invoices-wallet-contracts.md#T-04.5.03.02` | done | Recorded batch work | Build `ActivationRuleResolver` — given a contract, check which prerequisites are met, return unmet list |
 | `04-invoices-wallet-contracts.md#T-04.5.03.03` | done | Recorded batch work | UI: contract detail page shows each prerequisite (Staff approval, Customer acceptance, Signature, Payment, Service start) with current state |
-| `04-invoices-wallet-contracts.md#T-04.5.04.01` | verify | Recorded batch work | Create `contract_documents` link table: `contractVersionId`, `documentId`, `role` (original, signed, amendment, superseded) |
-| `04-invoices-wallet-contracts.md#T-04.5.04.02` | verify | Recorded batch work | Document state machine integration: wire contract documents into E-05's state machine (`T-05.11.01`); contract-specific guards (e.g., signed contracts cannot be replaced) enforced via policy on top of the base lifecycle |
-| `04-invoices-wallet-contracts.md#T-04.5.04.03` | verify | Recorded batch work | Replacement rule: new document linked to superseded doc; rejection requires reason + Replace action |
-| `04-invoices-wallet-contracts.md#T-04.5.04.04` | verify | Inventory needed | Immutable signed docs: once Signed state reached, no replacement; new version for amendments |
-| `04-invoices-wallet-contracts.md#T-04.5.04.05` | verify | Recorded batch work | UI: contract detail shows all linked docs with states and version history |
+| `04-invoices-wallet-contracts.md#T-04.5.04.01` | done | Recorded batch work | Create `contract_documents` link table: `contractVersionId`, `documentId`, `role` (original, signed, amendment, superseded) |
+| `04-invoices-wallet-contracts.md#T-04.5.04.02` | done | Recorded batch work | Document state machine integration: wire contract documents into E-05's state machine (`T-05.11.01`); contract-specific guards (e.g., signed contracts cannot be replaced) enforced via policy on top of the base lifecycle |
+| `04-invoices-wallet-contracts.md#T-04.5.04.03` | done | Recorded batch work | Replacement rule: new document linked to superseded doc; rejection requires reason + Replace action |
+| `04-invoices-wallet-contracts.md#T-04.5.04.04` | done | Recorded batch work | Immutable signed docs: once Signed state reached, no replacement; new version for amendments |
+| `04-invoices-wallet-contracts.md#T-04.5.04.05` | done | Recorded batch work | UI: contract detail shows all linked docs with states and version history |
 | `04-invoices-wallet-contracts.md#T-04.6.01.01` | verify | Inventory needed | Build customer quantity increase request UI/API: validate against max increase percentage, check one-per-contract limit |
 | `04-invoices-wallet-contracts.md#T-04.6.01.02` | verify | Inventory needed | Staff review queue: approve/reject with reason |
 | `04-invoices-wallet-contracts.md#T-04.6.01.03` | verify | Inventory needed | On approval: create amendment document version, trigger customer signature workflow |
@@ -516,6 +518,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.6.02.04` | verify | Inventory needed | Step-up auth + audit: mandatory for this action |
 | `04-invoices-wallet-contracts.md#T-04.6.02.05` | verify | Inventory needed | Notify customer: full disclosure of old/new price, calculation, effective date before invoice is issued |
 | `04-invoices-wallet-contracts.md#T-04.6.02.06` | verify | Inventory needed | Decrease → refund/credit workflow (refund or wallet credit) |
+| `05-notifications-documents-ai.md#T-05.11.01` | done | Recorded batch work | Document state machine |
 
 ## v0.4.0: Documents, notifications and AI
 
@@ -582,7 +585,6 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.10.03` | verify | Recorded batch work | Template admin UI |
 | `05-notifications-documents-ai.md#T-05.10.04` | verify | Inventory needed | Placeholder re-extraction on file changes |
 | `05-notifications-documents-ai.md#T-05.10.05` | verify | Recorded batch work | Placeholder conflict detection & validation |
-| `05-notifications-documents-ai.md#T-05.11.01` | verify | Recorded batch work | Document state machine |
 | `05-notifications-documents-ai.md#T-05.11.02` | verify | Inventory needed | Upload pipeline |
 | `05-notifications-documents-ai.md#T-05.11.03` | verify | Recorded batch work | Document scanning integration |
 | `05-notifications-documents-ai.md#T-05.11.04` | verify | Recorded batch work | Document review workflow |

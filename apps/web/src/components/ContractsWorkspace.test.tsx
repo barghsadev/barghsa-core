@@ -236,6 +236,34 @@ it('submits the saved electricity snapshot as a PDF for staff document review', 
   ).toBe(true);
 });
 it.each(['en', 'fa'] as const)(
+  'does not claim a scan-pending generated PDF was submitted for review in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const current = detail({
+      state: 'Accepted',
+      currentVersionId: VERSION,
+      currentVersion: version({
+        content: { template: { name: 'Electricity agreement', text: 'Saved exact terms' } },
+      }),
+    });
+    const base = api(current);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (raw: string) =>
+        raw.endsWith(`/versions/${VERSION}/generate-pdf`)
+          ? response({ id: 'generated-document', state: 'PendingScan' }, 201)
+          : base(raw)
+      )
+    );
+    await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
+    await click(words.generateContractPdf);
+    expect(container.textContent).not.toContain(words.contractPdfSubmitted);
+    expect(container.textContent).toContain(words.contractPdfScanning);
+    expect(button(words.generateContractPdf).disabled).toBe(true);
+  }
+);
+it.each(['en', 'fa'] as const)(
   'uses the automatically generated PDF for order-linked electricity contracts in %s',
   async (locale) => {
     harness.locale = locale;

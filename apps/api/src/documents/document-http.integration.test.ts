@@ -16,7 +16,9 @@ import type { UploadService } from '../upload/upload.service.js';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
 const requireWorker = createRequire(resolve(__dirname, '../../../worker/package.json'));
-const { S3Client, CreateBucketCommand, PutObjectCommand } = requireShared('@aws-sdk/client-s3') as {
+const { S3Client, CreateBucketCommand, PutObjectCommand, GetObjectCommand } = requireShared(
+  '@aws-sdk/client-s3'
+) as {
   S3Client: new (config: Record<string, unknown>) => {
     send(command: unknown): Promise<unknown>;
     destroy(): void;
@@ -28,6 +30,7 @@ const { S3Client, CreateBucketCommand, PutObjectCommand } = requireShared('@aws-
     Body: Buffer;
     ContentType: string;
   }) => unknown;
+  GetObjectCommand: new (input: { Bucket: string; Key: string }) => unknown;
 };
 let minio: StartedTestContainer;
 let s3: InstanceType<typeof S3Client>;
@@ -518,6 +521,308 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
     delete process.env['DOCUMENT_CLAMAV_HOST'];
   }
 }, 60_000);
+
+async function generatedPdfScanFixture(work: () => Promise<void>) {
+  const original = http,
+    originalHeaders = { ...headers },
+    originalHost = process.env['DOCUMENT_CLAMAV_HOST'];
+  let configured: typeof http | undefined;
+  try {
+    process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
+    configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
+    http = configured;
+    await login('document-legal', 'role-legal-contracts');
+    await work();
+  } finally {
+    http = original;
+    for (const key of Object.keys(headers)) delete headers[key];
+    Object.assign(headers, originalHeaders);
+    if (originalHost === undefined) delete process.env['DOCUMENT_CLAMAV_HOST'];
+    else process.env['DOCUMENT_CLAMAV_HOST'] = originalHost;
+    await configured?.close();
+  }
+}
+const generatedPdfStorage = {
+  getObject: async (key: string) => {
+    const object = (await s3.send(new GetObjectCommand({ Bucket: 'test-evidence', Key: key }))) as {
+      Body: { transformToWebStream(): ReadableStream<Uint8Array> };
+      ContentLength: number;
+    };
+    return { body: object.Body.transformToWebStream(), contentLength: object.ContentLength };
+  },
+} as unknown as StorageProvider;
+const generatedPdfScanner = requireWorker('./dist/documents/scan-runner.js') as {
+  runDocumentScans: (
+    pool: typeof http.pool,
+    storage: StorageProvider,
+    endpoint: { host: string; port: number },
+    scan: (bytes: Buffer) => Promise<'clean' | 'infected'>
+  ) => Promise<{ clean: number; infected: number; retrying: number }>;
+};
+const generatedScanEndpoint = { host: '127.0.0.1', port: 3310 };
+
+it('holds the initial generated electricity PDF behind the configured scanner before review', async () => {
+  await generatedPdfScanFixture(async () => {
+    const f = await owner();
+    await http.pool.query("UPDATE profiles SET status='ACTIVE' WHERE id=$1", [f.profile]);
+    await http.pool.query(
+      `INSERT INTO products(type,system_key,title,status,price)
+       VALUES('electricity','thermal','{"en":"Thermal"}','active',100000)
+       ON CONFLICT(system_key) DO UPDATE SET status='active',price=100000`
+    );
+    await http.pool.query(
+      `INSERT INTO products(type,system_key,title,status,price)
+       VALUES('electricity','green','{"en":"Green"}','active',200000)
+       ON CONFLICT(system_key) DO UPDATE SET status='active',price=200000`
+    );
+    const province = (
+      await http.pool.query(
+        "INSERT INTO provinces(name_fa,name_en) VALUES('استان','Province') RETURNING id"
+      )
+    ).rows[0].id;
+    const city = (
+      await http.pool.query(
+        "INSERT INTO cities(province_id,name_fa,name_en) VALUES($1,'شهر','City') RETURNING id",
+        [province]
+      )
+    ).rows[0].id;
+    const templateBytes = Buffer.from(
+      'Agreement for {{customerName}}: {{amount}} IRR on {{date}}.'
+    );
+    const templateKey = `templates/${randomUUID()}.txt`;
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: 'test-evidence',
+        Key: templateKey,
+        Body: templateBytes,
+        ContentType: 'text/plain',
+      })
+    );
+    const templateId = (
+      await http.pool.query(
+        "INSERT INTO contract_templates(name,created_by) VALUES('Scanned electricity agreement','document-legal') RETURNING id"
+      )
+    ).rows[0].id;
+    const templateVersion = (
+      await http.pool.query(
+        `INSERT INTO contract_template_versions(template_id,version_number,storage_key,file_name,file_size,placeholders,created_by)
+         VALUES($1,1,$2,'agreement.txt',$3,ARRAY['customerName','amount','date']::text[],'document-legal') RETURNING id`,
+        [templateId, templateKey, templateBytes.length]
+      )
+    ).rows[0].id;
+    await http.pool.query(
+      "INSERT INTO app_config(key,value) VALUES('electricity.contract_template_version_id',to_jsonb($1::text)) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value",
+      [templateVersion]
+    );
+    const input = {
+      profileId: f.profile,
+      period: 'next_week',
+      totalKwh: '10',
+      address: {
+        provinceId: province,
+        cityId: city,
+        fullAddress: 'Electricity Street',
+        postalCode: '1234567890',
+      },
+      idempotencyKey: randomUUID(),
+    };
+    const preview = await send('electricity/preview/simple', f.user, 'POST', {
+      profileId: input.profileId,
+      period: input.period,
+      totalKwh: input.totalKwh,
+    });
+    expect(preview.status, (await preview.clone().text()) + http.logs()).toBe(200);
+    const quote = (await preview.json()) as { reviewDigest: string };
+    const body = { ...input, expectedQuoteDigest: quote.reviewDigest };
+    const response = await send('electricity/orders/simple', f.user, 'POST', body);
+    expect(response.status, (await response.clone().text()) + http.logs()).toBe(201);
+    const receipt = (await response.json()) as { contractId: string; invoiceId: string };
+    const rows = (
+      await http.pool.query(
+        `SELECT d.* FROM documents d JOIN contract_documents link ON link.document_id=d.id
+       WHERE link.contract_id=$1 AND link.role='original'`,
+        [receipt.contractId]
+      )
+    ).rows;
+    expect(rows).toHaveLength(1);
+    const document = rows[0];
+    expect(document).toMatchObject({
+      state: 'PendingScan',
+      scan_state: 'Pending',
+      scan_skipped_reason: null,
+      uploaded_by_type: 'system',
+    });
+    expect(document.storage_key).toEqual(expect.any(String));
+    expect(
+      (
+        await http.pool.query(
+          "SELECT metadata->>'scanState' AS state,metadata->>'scanSkippedReason' AS skipped FROM storage_records WHERE storage_key=$1",
+          [document.upload_key]
+        )
+      ).rows
+    ).toEqual([{ state: 'Pending', skipped: null }]);
+    const job = (
+      await http.pool.query(
+        'SELECT attempts,completed_at FROM document_scan_jobs WHERE document_id=$1',
+        [document.id]
+      )
+    ).rows;
+    expect(job).toEqual([{ attempts: 0, completed_at: null }]);
+    expect((await send(`admin/documents/${document.id}/download`, 'document-legal')).status).toBe(
+      409
+    );
+    expect(
+      (
+        await send(
+          `admin/documents/${document.id}/submit`,
+          'document-legal',
+          'POST',
+          command(document.revision)
+        )
+      ).status
+    ).toBe(409);
+    const money = (
+      await http.pool.query(
+        'SELECT state,total_amount,paid_amount,refunded_amount FROM invoices WHERE id=$1',
+        [receipt.invoiceId]
+      )
+    ).rows;
+    expect(
+      await generatedPdfScanner.runDocumentScans(
+        http.pool,
+        generatedPdfStorage,
+        generatedScanEndpoint,
+        async () => {
+          throw new Error('scanner unavailable');
+        }
+      )
+    ).toMatchObject({ retrying: 1, clean: 0 });
+    expect(
+      (await http.pool.query('SELECT state FROM documents WHERE id=$1', [document.id])).rows
+    ).toEqual([{ state: 'PendingScan' }]);
+    await http.pool.query(
+      'UPDATE document_scan_jobs SET next_attempt_at=NOW() WHERE document_id=$1',
+      [document.id]
+    );
+    const outcomes = await Promise.all(
+      [1, 2].map(() =>
+        generatedPdfScanner.runDocumentScans(
+          http.pool,
+          generatedPdfStorage,
+          generatedScanEndpoint,
+          async (bytes) => {
+            expect(bytes.subarray(0, 5).toString()).toBe('%PDF-');
+            expect(createHash('sha256').update(bytes).digest('hex')).toBe(document.checksum);
+            return 'clean';
+          }
+        )
+      )
+    );
+    expect(outcomes.reduce((total, result) => total + result.clean, 0)).toBe(1);
+    const available = (await (
+      await send(`admin/documents/${document.id}`, 'document-legal')
+    ).json()) as DocumentDto;
+    expect(available).toMatchObject({
+      state: 'Available',
+      scanState: 'Available',
+      scanSkippedReason: null,
+    });
+    expect((await send(`admin/documents/${document.id}/download`, 'document-legal')).status).toBe(
+      200
+    );
+    expect((await act(available, 'submit', 'document-legal', true)).state).toBe(
+      'SubmittedForReview'
+    );
+    expect((await send('electricity/orders/simple', f.user, 'POST', body)).status).toBe(201);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT state,total_amount,paid_amount,refunded_amount FROM invoices WHERE id=$1',
+          [receipt.invoiceId]
+        )
+      ).rows
+    ).toEqual(money);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT count(*)::int AS count FROM contract_documents WHERE contract_id=$1',
+          [receipt.contractId]
+        )
+      ).rows[0].count
+    ).toBe(1);
+  });
+}, 60000);
+
+it.each(['clean', 'infected'] as const)(
+  'holds a regenerated contract PDF until the configured scanner returns %s',
+  async (verdict) => {
+    await generatedPdfScanFixture(async () => {
+      const f = await owner();
+      const created = await send('admin/contracts', 'document-legal', 'POST', {
+        profileId: f.profile,
+        serviceType: 'electricity',
+        content: { template: { name: 'Saved agreement', text: 'Saved exact contract terms.' } },
+        changeDescription: 'Initial terms',
+        idempotencyKey: randomUUID(),
+      });
+      expect(created.status, (await created.clone().text()) + http.logs()).toBe(201);
+      const contract = (await created.json()) as ContractDto;
+      const path = `admin/contracts/${contract.id}/versions/${contract.currentVersionId}/generate-pdf`;
+      const body = { idempotencyKey: randomUUID() };
+      const response = await send(path, 'document-legal', 'POST', body);
+      expect(response.status, (await response.clone().text()) + http.logs()).toBe(201);
+      const pending = (await response.json()) as DocumentDto;
+      expect(pending).toMatchObject({
+        state: 'PendingScan',
+        scanState: 'Pending',
+        scanSkippedReason: null,
+      });
+      expect((await send(`admin/documents/${pending.id}/download`, 'document-legal')).status).toBe(
+        409
+      );
+      const repeated = await send(path, 'document-legal', 'POST', body);
+      expect(repeated.status, http.logs()).toBe(201);
+      expect(((await repeated.json()) as DocumentDto).id).toBe(pending.id);
+      expect(
+        await generatedPdfScanner.runDocumentScans(
+          http.pool,
+          generatedPdfStorage,
+          generatedScanEndpoint,
+          async (bytes) => {
+            expect(bytes.subarray(0, 5).toString()).toBe('%PDF-');
+            return verdict;
+          }
+        )
+      ).toMatchObject({
+        clean: verdict === 'clean' ? 1 : 0,
+        infected: verdict === 'infected' ? 1 : 0,
+      });
+      const outcome = (await (
+        await send(`admin/documents/${pending.id}`, 'document-legal')
+      ).json()) as DocumentDto;
+      expect(outcome.state).toBe(verdict === 'clean' ? 'Available' : 'Quarantined');
+      if (verdict === 'clean') {
+        const resumed = await send(path, 'document-legal', 'POST', body);
+        expect(resumed.status, http.logs()).toBe(201);
+        expect(await resumed.json()).toMatchObject({ id: pending.id, state: 'SubmittedForReview' });
+      } else {
+        expect(
+          (await send(`admin/documents/${pending.id}/download`, 'document-legal')).status
+        ).toBe(409);
+        expect((await send(path, 'document-legal', 'POST', body)).status).toBe(409);
+      }
+      expect(
+        (
+          await http.pool.query(
+            'SELECT count(*)::int AS count FROM contract_documents WHERE contract_id=$1',
+            [contract.id]
+          )
+        ).rows[0].count
+      ).toBe(1);
+    });
+  },
+  60000
+);
 
 it('keeps document and profile legal holds auditable and applies versioned retention policies', async () => {
   const f = await owner();

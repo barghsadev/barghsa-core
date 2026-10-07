@@ -1019,7 +1019,7 @@ function ContractDocuments({
   const [reload, setReload] = useState(0);
   const [generating, setGenerating] = useState(false);
   const [generationError, setGenerationError] = useState(false);
-  const [generated, setGenerated] = useState(false);
+  const [generated, setGenerated] = useState<'scanning' | 'created' | null>(null);
   const uploadOwner = useRef<object>({});
   useEffect(() => () => coordination.release(uploadOwner.current), [coordination]);
   const filters = useMemo<DocumentFilters>(
@@ -1074,11 +1074,18 @@ function ContractDocuments({
     setGenerating(true);
     setGenerationError(false);
     try {
-      await documentRequest(
+      const result = await documentRequest(
         `${contractBase(true)}/${encodeURIComponent(contract.id)}/versions/${encodeURIComponent(version.id)}/generate-pdf`,
         { method: 'POST', body: JSON.stringify({ idempotencyKey: version.id }) }
       );
-      setGenerated(true);
+      const state =
+        result && typeof result === 'object' && 'state' in result ? result.state : undefined;
+      if (
+        typeof state !== 'string' ||
+        !['PendingScan', 'Available', 'SubmittedForReview', 'Approved'].includes(state)
+      )
+        throw new Error('Unexpected generated document state');
+      setGenerated(state === 'PendingScan' ? 'scanning' : 'created');
       setReload((value) => value + 1);
     } catch {
       setGenerationError(true);
@@ -1105,14 +1112,14 @@ function ContractDocuments({
           <div className="flex flex-wrap items-center gap-3">
             <Button
               variant="outline"
-              disabled={generating || generated || blocked}
+              disabled={generating || Boolean(generated) || blocked}
               onClick={() => void generatePdf()}
             >
               {word(generating ? 'generatingContractPdf' : 'generateContractPdf')}
             </Button>
             {generated ? (
               <p role="status" className="text-sm">
-                {word('contractPdfSubmitted')}
+                {word(generated === 'scanning' ? 'contractPdfScanning' : 'contractPdfSubmitted')}
               </p>
             ) : null}
             {generationError ? (

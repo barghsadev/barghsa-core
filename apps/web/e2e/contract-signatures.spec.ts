@@ -43,7 +43,7 @@ for (const locale of ['en', 'fa'] as const)
       const version = {
         id: VERSION,
         versionNumber: 2,
-        content: { text: 'Accepted terms' },
+        content: contractReview('request').data.contract.content,
         changeDescription: 'Accepted terms',
         createdAt: '2026-09-21T00:00:00Z',
         acceptedAt: '2026-09-21T00:01:00Z',
@@ -62,6 +62,7 @@ for (const locale of ['en', 'fa'] as const)
         versionId: VERSION,
         state,
         isCurrent: true,
+        isAmendment: false,
         canRequest: staff && !recorded,
         canRecord: requested && !recorded,
         request: requested
@@ -72,6 +73,7 @@ for (const locale of ['en', 'fa'] as const)
               originalName: 'original.pdf',
               documentState: 'Approved',
               requestedAt: '2026-09-21T00:02:00Z',
+              ...(staff ? { requestedBy: 'contract-test-user' } : {}),
             }
           : null,
         signature: recorded
@@ -83,6 +85,9 @@ for (const locale of ['en', 'fa'] as const)
               recordedByType: staff ? 'staff' : 'customer',
               uploadedByType: 'customer',
               recordedAt: '2026-09-21T00:03:00Z',
+              ...(staff
+                ? { recordedBy: 'contract-test-user', uploadedBy: 'contract-test-user' }
+                : {}),
             }
           : null,
       });
@@ -120,6 +125,8 @@ for (const locale of ['en', 'fa'] as const)
           sizeBytes: 8,
           revision: 4,
           uploadedByType: 'customer',
+          uploadedBy: 'contract-test-user',
+          checksum: (id === 'original' ? 'b' : 'd').repeat(64),
           createdAt: '2026-09-21T00:00:00Z',
         }));
         return route.fulfill({ json: { documents, nextBefore: null } });
@@ -175,10 +182,13 @@ for (const locale of ['en', 'fa'] as const)
       }
       await expect(panel.getByText('original.pdf', { exact: false }).first()).toBeVisible();
       await panel.getByLabel(words.approvedSigned, { exact: true }).selectOption(SIGNED);
-      await expect(
-        panel.getByRole('button', { name: words.recordSignature, exact: true })
-      ).toBeDisabled();
-      await panel.getByRole('checkbox', { name: words.signatureAcknowledgement }).check();
+      await panel.getByRole('button', { name: words.recordSignature, exact: true }).click();
+      const acknowledgement = panel.getByRole('checkbox', { name: words.signatureAcknowledgement });
+      await expect(acknowledgement).toHaveAttribute('aria-invalid', 'true');
+      await expect(acknowledgement).toBeFocused();
+      await expect(dialog).toHaveCount(0);
+      expect(attempts).toHaveLength(0);
+      await acknowledgement.check();
       await panel.getByRole('button', { name: words.recordSignature, exact: true }).click();
       await dialog.getByRole('button', { name: confirm, exact: true }).click();
       await dialog.locator('input[type=password]').fill('Test-password');
