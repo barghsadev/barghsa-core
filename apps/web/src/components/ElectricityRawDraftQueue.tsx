@@ -8,6 +8,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { OperationalQueueTable } from './OperationalQueueTable.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
+import { existingDraftReturns } from '../lib/electricity-existing-returns.js';
 interface Draft {
   id: string;
   profileId: string;
@@ -77,7 +78,15 @@ function financialOutcome(data: object) {
     throw new Error('Unbound draft return');
   const required = 'approvalRequired' in data ? data.approvalRequired : false;
   if (typeof required !== 'boolean') throw new Error('Invalid draft approval');
-  return { amount, invoices, required };
+  const existing = existingDraftReturns(
+    'existingReturns' in data ? data.existingReturns : undefined
+  );
+  if (
+    new Set(existing.map((r) => r.invoiceId)).size !== existing.length ||
+    existing.some((r) => !invoices.some((i) => i.id === r.invoiceId && i.amount === r.amount))
+  )
+    throw new Error('Unbound adopted draft return');
+  return { amount, invoices, required, existing };
 }
 function approvalOutcome(raw: object) {
   const value = 'approval' in raw ? raw.approval : null;
@@ -463,6 +472,18 @@ function Queue() {
                           <dd>{numbers.money(line.amount)}</dd>
                         </div>
                       ))}
+                      {action.financial.existing.map((refund) => (
+                        <div key={refund.id}>
+                          <dt>{copy('existingReturn')}</dt>
+                          <dd className="break-all" dir="ltr">
+                            {refund.id}
+                          </dd>
+                          <dd>{t('invoices.activity.state.' + refund.state, locale)}</dd>
+                          <dd>
+                            {copy(refund.exhausted ? 'manualRetryRequired' : 'retryPreserved')}
+                          </dd>
+                        </div>
+                      ))}
                       <div>
                         <dt>{copy('approval')}</dt>
                         <dd>
@@ -529,6 +550,11 @@ function Queue() {
                       invoices.get(String(row.invoiceId)) !== row.amount
                     )
                       throw new Error('Unbound draft obligation');
+                    const adopted = action.financial.existing.find(
+                      (r) => r.invoiceId === row.invoiceId
+                    );
+                    if (adopted && row.id !== adopted.id)
+                      throw new Error('Changed adopted refund identity');
                     ids.add(row.id);
                     invoices.delete(String(row.invoiceId));
                   }

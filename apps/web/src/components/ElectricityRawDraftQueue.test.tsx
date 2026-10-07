@@ -324,3 +324,94 @@ it('uses Persian RTL copy, labelled reason controls and a native keyboard disclo
   expect(textarea.required).toBe(true);
   expect(container.querySelector('[role=region]')).not.toBeNull();
 });
+
+it('shows the existing exhausted refund and refuses a mismatched adoption', async () => {
+  const invoiceId = '86000000-0000-4000-8000-000000000001',
+    refundId = '87000000-0000-4000-8000-000000000001';
+  let amount = '100';
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo | URL) =>
+      String(input).endsWith('/drafts')
+        ? json(queue)
+        : json({
+            ...preview(),
+            data: {
+              ...preview().data,
+              refundAmount: '100',
+              invoices: [{ id: invoiceId, refundableAmount: '100' }],
+              existingReturns: [
+                { refundId, invoiceId, amount, refundState: 'Failed', job: { exhausted: true } },
+              ],
+            },
+          })
+    )
+  );
+  await open();
+  await review();
+  const dialog = document.body.querySelector('[role=dialog]')!;
+  expect(dialog.textContent).toContain(refundId);
+  expect(dialog.textContent).toContain('finance-authorized manual retry');
+  expect(dialog.textContent).toContain('Failed');
+  await act(async () => {
+    const buttons = Array.from(dialog.querySelectorAll('button'));
+    buttons.find((b) => b.textContent?.includes('Cancel'))!.click();
+  });
+  amount = '99';
+  await act(async () =>
+    container
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  expect(document.body.querySelector('[role=dialog]')).toBeNull();
+  expect(container.textContent).toContain('Could not load or review');
+});
+
+it('keeps the captured adoption open when acknowledgement substitutes its refund identity', async () => {
+  const invoiceId = '86000000-0000-4000-8000-000000000001',
+    refundId = '87000000-0000-4000-8000-000000000001';
+  const commands: unknown[] = [];
+  let wrong = true;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).endsWith('/drafts')) return json(queue);
+      if (String(input).endsWith('/review'))
+        return json({
+          ...preview(),
+          data: {
+            ...preview().data,
+            refundAmount: '100',
+            invoices: [{ id: invoiceId, refundableAmount: '100' }],
+            existingReturns: [
+              {
+                refundId,
+                invoiceId,
+                amount: '100',
+                refundState: 'Processing',
+                job: { exhausted: false },
+              },
+            ],
+          },
+        });
+      commands.push(JSON.parse(String(init?.body)));
+      const id = wrong ? '87000000-0000-4000-8000-000000000002' : refundId;
+      return json({
+        orderId,
+        status: 'rejected',
+        refundId: id,
+        financiallyClosed: false,
+        refunds: [{ id, invoiceId, amount: '100' }],
+      });
+    })
+  );
+  await open();
+  await review();
+  await act(async () => confirm().click());
+  expect(document.body.querySelector('[role=dialog]')).not.toBeNull();
+  wrong = false;
+  await act(async () => confirm().click());
+  expect(document.body.querySelector('[role=dialog]')).toBeNull();
+  expect(commands).toHaveLength(2);
+  expect(commands[1]).toEqual(commands[0]);
+});

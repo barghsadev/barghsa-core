@@ -94,10 +94,11 @@ it('upgrades the unchanged 0252 journal prefix exactly once, preserves old rows,
         '0254_electricity_reviewed_rejection',
         '0255_electricity_orphan_draft_gifts',
         '0256_electricity_orphan_financial',
+        '0257_electricity_legacy_refund_adoption',
       ],
     });
     expect(
-      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -4)
+      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -5)
     ).toEqual(before);
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
     expect(await retained()).toEqual(oldRecord);
@@ -164,4 +165,54 @@ it('fresh migration keeps ordinary submitted-order requirements and refuses arbi
       )
     ).rows[0]
   ).toEqual({ status: 'draft', submitted_at: null, submitted_by: null, pricing_snapshot: null });
+});
+
+it('rolls back legacy adoption atomically to the complete0256 authority guards', async () => {
+  const client = await fixture.pool.connect();
+  const definitions = async () =>
+    (
+      await client.query(
+        "SELECT proname,pg_get_functiondef(p.oid) AS definition FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND proname=ANY($1::text[]) ORDER BY proname",
+        [['guard_electricity_draft_termination', 'enforce_electricity_draft_termination_complete']]
+      )
+    ).rows;
+  const current = await definitions();
+  try {
+    await client.query('BEGIN');
+    const old = readFileSync(join(folder, '0256_electricity_orphan_financial.sql'), 'utf8');
+    for (const name of [
+      'guard_electricity_draft_termination',
+      'enforce_electricity_draft_termination_complete',
+    ]) {
+      const begin = old.indexOf('CREATE FUNCTION ' + name + '(');
+      await client.query(
+        old
+          .slice(begin, old.indexOf('END $$;', begin) + 7)
+          .replace('CREATE FUNCTION ', 'CREATE OR REPLACE FUNCTION ')
+      );
+    }
+    await client.query(
+      'DROP FUNCTION electricity_draft_return_matches(uuid,uuid,jsonb,jsonb,text); DROP FUNCTION electricity_draft_existing_return(uuid,uuid,uuid)'
+    );
+    const prior = await definitions();
+    await client.query('SAVEPOINT before_adoption');
+    await client.query(
+      readFileSync(join(folder, '0257_electricity_legacy_refund_adoption.sql'), 'utf8')
+    );
+    expect(await definitions()).toEqual(current);
+    await client.query('ROLLBACK TO SAVEPOINT before_adoption');
+    expect(await definitions()).toEqual(prior);
+    expect(
+      (
+        await client.query(
+          "SELECT to_regprocedure('electricity_draft_existing_return(uuid,uuid,uuid)') AS helper"
+        )
+      ).rows[0].helper
+    ).toBeNull();
+    await client.query('ROLLBACK');
+    expect(await definitions()).toEqual(current);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
 });

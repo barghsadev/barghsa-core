@@ -32,7 +32,7 @@ const unlinked = `NOT EXISTS(SELECT 1 FROM contracts WHERE order_id=e.id)
  AND NOT EXISTS(SELECT 1 FROM electricity_contracts WHERE order_id=e.id)
  AND NOT EXISTS(SELECT 1 FROM invoices WHERE order_id=e.id AND (profile_id<>e.profile_id OR contract_id IS NOT NULL OR (total_amount<=0 AND NOT (total_amount=0 AND paid_amount=0 AND refunded_amount=0 AND state IN ('Cancelled','Refunded'))) OR adjustment_kind='credit'))
  AND raw_electricity_draft_gift_consistent(e.id,e.profile_id,o.gift_code_id)
- AND NOT EXISTS(SELECT 1 FROM refund_obligations WHERE order_id=e.id AND status<>'completed')
+ AND NOT EXISTS(SELECT 1 FROM refund_obligations ro WHERE ro.order_id=e.id AND (ro.contract_id IS NOT NULL OR ro.profile_id<>e.profile_id OR NOT EXISTS(SELECT 1 FROM invoices i WHERE i.id=ro.invoice_id AND i.order_id=e.id AND i.profile_id=e.profile_id)))
  AND NOT EXISTS(SELECT 1 FROM electricity_order_submissions WHERE order_id=e.id)
  AND NOT EXISTS(SELECT 1 FROM wallet_transactions WHERE type='payment' AND lower(ref_id)=e.id::text)
  AND e.submitted_at IS NULL AND e.submitted_by IS NULL`;
@@ -220,6 +220,9 @@ export class ElectricityRawDraftService {
         approvalPolicy: row.financial.policy,
         approvalRequired: row.financial.approvalRequired,
         paidOrder: row.financial.paid,
+        ...(row.financial.existingReturns.length
+          ? { existingReturns: row.financial.existingReturns }
+          : {}),
         changesSavedWizardProgress: false,
         gift: row.gift,
       }
@@ -419,6 +422,60 @@ export class ElectricityRawDraftService {
                 );
               const refunds: Array<{ id: string; invoiceId: string; amount: string }> = [];
               for (const invoice of row.financial.invoices) {
+                const existing = row.financial.existingReturns.find(
+                  (r) => r.invoiceId === invoice.id
+                );
+                if (existing) {
+                  if (['Requested', 'Approved'].includes(existing.refundState)) {
+                    if (existing.refundState === 'Requested')
+                      await client.query("UPDATE refunds SET state='Approved' WHERE id=$1", [
+                        existing.refundId,
+                      ]);
+                    await client.query("UPDATE refunds SET state='Processing' WHERE id=$1", [
+                      existing.refundId,
+                    ]);
+                  }
+                  if (!existing.job)
+                    await client.query(
+                      'INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,$2)',
+                      [existing.refundId, existing.authorizedBy]
+                    );
+                  refunds.push({
+                    id: existing.refundId,
+                    invoiceId: invoice.id,
+                    amount: existing.amount,
+                  });
+                  await client.query(
+                    "INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip) VALUES($1,$2,'refund.obligation_adopted',$3::jsonb,$4,$5)",
+                    [
+                      uuidv7(),
+                      actor.userId,
+                      JSON.stringify({
+                        entity: 'refund',
+                        entityId: existing.refundId,
+                        refundId: existing.refundId,
+                        invoiceId: invoice.id,
+                        orderId: id,
+                        profileId,
+                        fromState: existing.refundState,
+                        toState: ['Requested', 'Approved'].includes(existing.refundState)
+                          ? 'Processing'
+                          : existing.refundState,
+                        reason: input.reason,
+                        originalReason: existing.reason,
+                        amount: existing.amount,
+                        destination: 'wallet',
+                        authorizedBy: existing.authorizedBy,
+                        committedBy: actor.userId,
+                        reviewHash: review.hash,
+                        retryBudget: existing.job,
+                      }),
+                      correlationIdStorage.getStore() ?? uuidv7(),
+                      ip,
+                    ]
+                  );
+                  continue;
+                }
                 const refundId = await createElectricityRefundObligation(client, {
                   orderId: id,
                   contractId: null,

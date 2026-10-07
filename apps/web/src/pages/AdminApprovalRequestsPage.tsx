@@ -14,6 +14,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel.js';
 import { Link, useSearch } from '@tanstack/react-router';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { existingDraftReturns } from '../lib/electricity-existing-returns.js';
 
 type Status = 'pending' | 'approved' | 'rejected';
 interface Request {
@@ -40,6 +41,21 @@ function approvalAmount(request: Request) {
   )
     return amount;
   return request.amountIrR;
+}
+function adoptedReturns(request: Request) {
+  const review = request.details?.financialReview;
+  if (
+    request.details?.entityType !== 'electricity_order_termination' ||
+    !review ||
+    typeof review !== 'object' ||
+    !('data' in review) ||
+    !review.data ||
+    typeof review.data !== 'object'
+  )
+    return [];
+  return existingDraftReturns(
+    'existingReturns' in review.data ? review.data.existingReturns : undefined
+  );
 }
 const PAGE_SIZE = 25;
 
@@ -240,6 +256,12 @@ function ApprovalWorkspace({
       !currentItems.current.some((row) => JSON.stringify(row) === JSON.stringify(request))
     )
       return;
+    try {
+      adoptedReturns(request);
+    } catch {
+      setError(true);
+      return;
+    }
     decisionDraft.current = draft;
     returnFocus.current = draft.focus;
     setSaved(false);
@@ -596,6 +618,20 @@ function ApprovalWorkspace({
                                   : []
                             )
                           : []),
+                        ...adoptedReturns(review).map((refund) => ({
+                          id: 'existing-' + refund.id,
+                          label: t('electricity.rawDraft.existingReturn', locale),
+                          value:
+                            refund.id +
+                            ' · ' +
+                            t('admin.invoices.walletRefunds.state.' + refund.state, locale) +
+                            ' · ' +
+                            t(
+                              'electricity.rawDraft.' +
+                                (refund.exhausted ? 'manualRetryRequired' : 'retryPreserved'),
+                              locale
+                            ),
+                        })),
                       ]
                     : []),
                   ...(typeof review.details?.invoiceId === 'string'

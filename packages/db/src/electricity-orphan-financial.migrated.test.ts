@@ -85,10 +85,10 @@ it('adds orphan authority atomically to the unchanged0255 prefix, retains rows a
     }
     expect(await runMigrations(options)).toEqual({
       ok: true,
-      applied: ['0256_electricity_orphan_financial'],
+      applied: ['0256_electricity_orphan_financial', '0257_electricity_legacy_refund_adoption'],
     });
     expect(
-      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -1)
+      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -2)
     ).toEqual(history);
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
     expect(await retained()).toEqual(oldRows);

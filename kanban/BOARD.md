@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T00:12:31.607891+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T00:29:00.345945+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish pending legacy orphan refund adoption/reconciliation and unversioned linked draft termination; audit any remaining demonstrated monetary association. Reviewed contractless invoice refunds, second approval and committed wallet returns are accepted. Preserve the owner-only wizard and other representation decisions; complete all-four-service gates before release.
+Finish unversioned linked draft termination and inspect remaining demonstrated anomalous monetary associations or effective reconciliation. Contractless financial drafts and exact legacy wallet returns are accepted, with full current approval and unchanged retry budgets. Preserve owner-only wizard and other representation decisions; complete all-four-service gates before release.
 
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
 - `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
@@ -102,7 +102,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-08.01.03` | done | Earlier partial | Quick status cards |
 | `02-auth-users-admin.md#T-11.01.01` | done | Recorded batch work | Account/profile closure request and blocker evaluation |
 | `02-auth-users-admin.md#T-11.01.02` | done | Recorded batch work | Portable customer data export |
-| `02-auth-users-admin.md#T-11.01.03` | done | Inventory needed | Closure execution, revocation, retention and anonymization |
+| `02-auth-users-admin.md#T-11.01.03` | done | Recorded batch work | Closure execution, revocation, retention and anonymization |
 | `02-auth-users-admin.md#T-11.02.01` | done | Recorded batch work | Explicit operating context in session and authorization policy |
 | `02-auth-users-admin.md#T-11.02.02` | done | Recorded batch work | Context-isolation integration and E2E tests |
 | `02-auth-users-admin.md#T-11.03.01` | done | Inventory needed | Atomic staff user/profile creation without customer onboarding |

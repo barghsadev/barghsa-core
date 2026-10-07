@@ -318,6 +318,19 @@ for (const locale of ['en', 'fa'] as const)
           terminalAction: action,
           orderId: first,
           profileId: second,
+          financialReview: {
+            data: {
+              existingReturns: [
+                {
+                  refundId: '97000000-0000-4000-8000-000000000001',
+                  invoiceId: '96000000-0000-4000-8000-000000000001',
+                  amount: '100000',
+                  refundState: 'Failed',
+                  job: { exhausted: true },
+                },
+              ],
+            },
+          },
           refundDecision: {
             mode: 'full_wallet',
             refunds: [
@@ -338,6 +351,10 @@ for (const locale of ['en', 'fa'] as const)
       expect(dialog.textContent).toContain(appText('electricity.rawDraft.walletReturn', locale));
       expect(dialog.textContent).toContain(first);
       expect(dialog.textContent).toContain(second);
+      expect(dialog.textContent).toContain('97000000-0000-4000-8000-000000000001');
+      expect(dialog.textContent).toContain(
+        appText('electricity.rawDraft.manualRetryRequired', locale)
+      );
       expect(dialog.textContent).toContain('invoice-one');
       expect(dialog.textContent).toContain('invoice-two');
       expect(dialog.textContent).toContain('100000');

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T00:12:31.607891+00:00",
+  "updated": "2026-10-07T00:29:00.345945+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17230,7 +17230,9 @@
           "historically_skipped": false
         },
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.2-electricity-legacy-refund-adoption"
+        ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
@@ -17309,7 +17311,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/migrate.baseline.test.ts",
@@ -17401,7 +17403,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/login-session-acceptance",
           "limitations": [
@@ -17509,6 +17512,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -19697,7 +19708,9 @@
           "historically_skipped": false
         },
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.2-electricity-legacy-refund-adoption"
+        ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
@@ -19828,7 +19841,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "b9d9c00ac8d0a07e54f41c78c90c854355ad11ed1e5083d10fcdef4f9f1aa938"
+              "sha256": "e4c552bac8c4bf75638667864b2e0b12ad2f7ee5f9f507332e78191d39c72dfe"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -20021,7 +20034,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/criteria.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -20075,6 +20089,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "apps/web/src/pages/AdminApprovalRequestsPage.tsx"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -43459,7 +43481,9 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.2-electricity-legacy-refund-adoption"
+        ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
           "reviewed_sha": "f96d425945e6459a09501a5b5e384fa8e5a7e6d8",
@@ -43662,7 +43686,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f1109ec2e20dc4b82e9072fa89d49ffcfe7c97ccccefc35c144c33f68e0248e6"
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -43736,7 +43760,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure/criteria.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/review.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
           "limitations": [
@@ -43821,6 +43846,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -43848,7 +43881,8 @@
         "batches": [
           "2026-09-29-notification-context-isolation",
           "2026-09-29-staff-customer-context",
-          "release-0.2-business-history-acting-context"
+          "release-0.2-business-history-acting-context",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -44180,7 +44214,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -44204,7 +44238,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f1109ec2e20dc4b82e9072fa89d49ffcfe7c97ccccefc35c144c33f68e0248e6"
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -44326,7 +44360,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -44515,6 +44550,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json",
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -44542,7 +44586,8 @@
         "batches": [
           "2026-09-29-notification-context-isolation",
           "2026-09-29-staff-customer-context",
-          "release-0.2-business-history-acting-context"
+          "release-0.2-business-history-acting-context",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -44874,7 +44919,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/business-actor-context-migration.test.ts",
@@ -44898,7 +44943,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f1109ec2e20dc4b82e9072fa89d49ffcfe7c97ccccefc35c144c33f68e0248e6"
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -45020,7 +45065,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -45209,6 +45255,15 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json",
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -45571,7 +45626,8 @@
           "packages/db/src/schema/products.ts"
         ],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -45703,7 +45759,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -45867,7 +45923,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "a4e40b48ab2c8281c3d5004dd71ad9f2e5d064e3aa7df47912e9b88d71699517",
@@ -46001,6 +46058,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -46066,7 +46131,8 @@
           "apps/api/src/catalogue/catalogue-products-http.integration.test.ts"
         ],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -46198,7 +46264,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46362,7 +46428,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "9df6b9c0e2c697b6939b642182dec228c469f8262a8b6a7431411b6e5d60cd99",
@@ -46496,6 +46563,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -46561,7 +46636,8 @@
           "apps/api/src/catalogue/catalogue-products-http.integration.test.ts"
         ],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -46693,7 +46769,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -46857,7 +46933,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "abf471935018564f53e84a325e56b376ecb559bb3418bbf878fbeded35c5f1e5",
@@ -46991,6 +47068,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -47057,7 +47142,8 @@
           "packages/db/src/schema/electricity-product-limits.ts"
         ],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -47189,7 +47275,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47353,7 +47439,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "876e6356a9810898f3bdd41ea1ac7333b27983cb8d76a61fa5581b1e147543fc",
@@ -47487,6 +47574,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -47512,7 +47607,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -47644,7 +47740,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -47808,7 +47904,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "08aa437bde24df5a3b14f04cee30d43ae81e4083d835673734f138b5504aaf54",
@@ -47942,6 +48039,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -47967,7 +48072,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -48099,7 +48205,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48263,7 +48369,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "7ebc6fb8ce575c36f30d618340475bf5963a5877a48db6771295776a98da73c7",
@@ -48397,6 +48504,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -48422,7 +48537,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -48554,7 +48670,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -48718,7 +48834,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "b14f69fe0c1bce4e529d6d588c159a234fe6dc344a2196766e78bb6ed09150d0",
@@ -48852,6 +48969,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -48877,7 +49002,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -49009,7 +49135,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49173,7 +49299,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "aea2f687bda8cfbe19d7ef08e9869ebee65f946948f1f2765b671504cbb710d7",
@@ -49307,6 +49434,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -49332,7 +49467,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -49464,7 +49600,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -49628,7 +49764,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "62c4db09000a0b4bcb011a61b6cbcbf5669ba79d8099018b7c911157595c8550",
@@ -49762,6 +49899,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -49787,7 +49932,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -49919,7 +50065,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50083,7 +50229,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "2b0ced4b278c0dddaa8f0344c2d40981db8d510c803a4f13e993a8d5af7aeb6c",
@@ -50217,6 +50364,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -50243,7 +50398,8 @@
         "changed_paths": [],
         "batches": [
           "2026-10-06-product-catalogue-tables",
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -50375,7 +50531,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50539,7 +50695,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "5712e71725ab7027e46d1c63786777c04c52a3e09f3d650cc4de3d598770f51c",
@@ -50673,6 +50830,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -50698,7 +50863,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -50830,7 +50996,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -50994,7 +51160,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "c8cec7820d5d6528cdbe29917d3c721e2cf539fe8dac4bf9ba4907f8abb46b2c",
@@ -51128,6 +51295,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -51154,7 +51329,8 @@
         "changed_paths": [],
         "batches": [
           "2026-10-06-product-catalogue-query",
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -51286,7 +51462,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51450,7 +51626,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "adcb3f895b407baae3bae22309628b28962d63b689afcd21fa9fa84edebf9acd",
@@ -51584,6 +51761,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -51609,7 +51794,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -51741,7 +51927,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -51905,7 +52091,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "788a405ca0e2dea52f30ec7f87bd366a939f60ca4997ebc48207080f8539e64c",
@@ -52039,6 +52226,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -52064,7 +52259,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -52196,7 +52392,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52360,7 +52556,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "12b5934296394ec004f7a0ba64fe52e78ab165cc90f8f023d124004b12c4c6ba",
@@ -52494,6 +52691,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -52519,7 +52724,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -52651,7 +52857,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -52815,7 +53021,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "b4bda91107b2e024e5f6ff5078a5f2278159e0b6909a7d446434555562fcadc3",
@@ -52949,6 +53156,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -52974,7 +53189,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -53106,7 +53322,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53270,7 +53486,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "ac4e2ff5a36b7ad250de0f65bb6b009545054deaecbca2ce1f1f842d609eee28",
@@ -53404,6 +53621,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -53429,7 +53654,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -53561,7 +53787,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -53725,7 +53951,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "7b7eab9588ad4b06f4c6302913af30376d3e635d947932133070155732390e63",
@@ -53859,6 +54086,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -53885,7 +54120,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-23-saving-catalogue",
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -54017,7 +54253,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54181,7 +54417,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "e18a5e6e2b8048b4f8c17a4bf121eb551ded1fcbc203b83c31ae0753508cc258",
@@ -54315,6 +54552,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -54340,7 +54585,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -54472,7 +54718,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -54636,7 +54882,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "2626f91c8ca6b588294449ff33c01bffaf2252665e3b105bbc2888d832688529",
@@ -54770,6 +55017,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -54795,7 +55050,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -54927,7 +55183,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55091,7 +55347,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "2cc38133d5cbec4f9644452f53ff5664f995e260096980dac59d8e963f6b6ab1",
@@ -55225,6 +55482,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -55250,7 +55515,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -55382,7 +55648,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -55546,7 +55812,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "8f879b4854e8aacc6717975a22200f7e11bdb5e68f488ccee84af74e82ca0393",
@@ -55680,6 +55947,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -55705,7 +55980,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -55837,7 +56113,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56001,7 +56277,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "e557e1873c1952bd68b3e775699ad28531b9feedb907f26d8452a4f1a32a42b8",
@@ -56135,6 +56412,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -56160,7 +56445,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -56292,7 +56578,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56456,7 +56742,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "c6c9f96c8d32528ee743a901494976986da1041030377b1e7a5f0f26f608621c",
@@ -56590,6 +56877,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -56616,7 +56911,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-23-saving-accepted-agreement",
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -56748,7 +57044,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -56912,7 +57208,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "b421d33c305606383826283ff2b08a56b96e3c576078c64bb578f98b0a8f85de",
@@ -57046,6 +57343,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -57072,7 +57377,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-23-saving-accepted-agreement",
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -57204,7 +57510,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -57368,7 +57674,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "932a5c9ca3767c3ebb2223b4aecbfee4fcc54d3e1c406773aa6c3d326f10596f",
@@ -57502,6 +57809,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -57528,7 +57843,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-23-consultation-intake",
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -57660,7 +57976,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -57824,7 +58140,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "51eaeaafd9f3b6f93102ca46fc7a1d5511e7d832e514b21e92243d236296d958",
@@ -57958,6 +58275,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -57983,7 +58308,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -58115,7 +58441,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -58279,7 +58605,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "bec275c45aaf011dd59626eca97c96116ee28d85f7b6430ea09d87749e5fa39e",
@@ -58413,6 +58740,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -58438,7 +58773,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -58570,7 +58906,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -58734,7 +59070,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "add6a9eca37f9e7cfa8369880505cdd381df2d04e5385ff4b779cfce98e4e0db",
@@ -58868,6 +59205,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -58893,7 +59238,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-catalogue-foundations"
+          "release-0.2-catalogue-foundations",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -59025,7 +59371,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -59189,7 +59535,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/catalogue-foundations-acceptance",
           "requirement_sha256": "a5d7e2f3c5b248a68180819db9322c81ba1abd2638ae04d93e21018af963c883",
@@ -59323,6 +59670,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -59349,7 +59704,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-24-gift-code-cancellation-policy",
-          "release-0.2-promotions-vat"
+          "release-0.2-promotions-vat",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -59369,7 +59725,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -59453,7 +59809,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "criteria": [
             "Current PostgreSQL migration head persists UUIDv7/exact amounts/cancellation defaults; canonical code identity enforced by normalization trigger, unique index and data-preserving duplicate preflight. Owner-approved field representations retained."
@@ -59533,6 +59890,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -59558,7 +59923,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-promotions-vat"
+          "release-0.2-promotions-vat",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -59578,7 +59944,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -59662,7 +60028,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "criteria": [
             "Existing valid FK scopes retained; generated unique gift-code/profile index matches ORM snapshot. Actual duplicate/FK writes reject; legacy duplicates fail upgrade before mutation."
@@ -59742,6 +60109,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -59768,7 +60143,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-24-gift-code-cancellation-policy",
-          "release-0.2-promotions-vat"
+          "release-0.2-promotions-vat",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -59788,7 +60164,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/promotions-vat-guards.test.ts",
@@ -59872,7 +60248,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "criteria": [
             "Exact redemption amounts, UUIDv7, timestamp/status and restored-at persisted; unique parent-order association and restrict-delete FKs verified against current PostgreSQL head."
@@ -59952,6 +60329,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -91303,7 +91688,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Finish pending legacy refund adoption or explicit effective reconciliation, unversioned linked draft handling and any other demonstrated anomalous monetary association. Unsubmitted contractless drafts with valid invoices now have reviewed full wallet return, current second approval, retained invoices and once-only refund fulfillment; completed legacy obligations and reconciled zero invoices are preserved. Pure saved wizard disposition still awaits the owner-only discard decision; other actors private progress remains untouched."
+        "Finish unversioned linked draft handling and any remaining demonstrated anomalous monetary association or effective reconciliation. Exact pending legacy full-wallet obligations now reuse their identities and original authors; current termination approval and committed authority continue their fulfillment without resetting retries. Partial/unbound/other-key obligations remain behind reconciliation. Pure saved wizard disposition still awaits the owner-only discard decision; other actors private progress remains untouched."
       ],
       "owner": null,
       "depends_on": [],
@@ -91321,7 +91706,8 @@
           "release-0.2-electricity-reviewed-rejection",
           "release-0.2-electricity-linked-intake",
           "release-0.2-electricity-orphan-draft-gifts",
-          "release-0.2-electricity-orphan-financial"
+          "release-0.2-electricity-orphan-financial",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-lifecycle-and-pre-active-rejection-with-exact-remaining-flows",
@@ -91425,23 +91811,23 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-raw-draft.service.ts",
-              "sha256": "90cdb5b62cdea0946f8815242c04faf9ee4d0f96e07a74a58fe816e72d38b284"
+              "sha256": "bd51ef773f9d48979c4c4abdd4aeba35906fb26635fca7ec8854ed14f8dc218a"
             },
             {
               "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
-              "sha256": "bca48a8adba568184ac57ccc8f4ee35609d60869d58341943272dff237c585ab"
+              "sha256": "12666f4b8a627f3a0251de52eefef898840cfaec94fe126459b4a6f2c6e92ede"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
-              "sha256": "ff4f6f4fea7349b06a15b4fdd518a45b784f8b2b21b58fd037f5034d780a3200"
+              "sha256": "396c03498b8efc904f7cb9863d508ec4085f074210244bf7d7376df2417e859c"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
-              "sha256": "d2a7d00f19f9eaac719ee0a16d72a1dbcd0e2eaaf2481e8bee58a109c771eb8f"
+              "sha256": "dee3b4dda40c7d813fa48b543add09572f4fb8a02daf66163feb8aa7bee8b865"
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
-              "sha256": "3235448c57b5205f89654ee83f79e53868cddd3ad87b15e65db1e7456db0b48f"
+              "sha256": "55c0903a3c6e4cc9143233eef8e4a2614371f797ba845b9e75d4a12bd69eba9b"
             },
             {
               "path": "packages/db/drizzle/production/0253_electricity_raw_draft_terminal.sql",
@@ -91449,7 +91835,7 @@
             },
             {
               "path": "packages/db/src/electricity-raw-draft-terminal.migrated.test.ts",
-              "sha256": "fb967b6ecf57c7ba1472394c9f6e1eb08d09de374db5def3e3c455739527bba5"
+              "sha256": "ad8e10ad2976726d59976ee28a34d70a363a644a369d3cab46206ea673db1ba7"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -91461,11 +91847,11 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f1109ec2e20dc4b82e9072fa89d49ffcfe7c97ccccefc35c144c33f68e0248e6"
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
@@ -91525,11 +91911,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
-              "sha256": "3d55bca6d38eeef978ce5e9b0ca74864beea9fe4813ee0504469a96d882e35fd"
+              "sha256": "cd3e7bb4799d59841622e312f2cc5904ca2246a26533f7ce717c0dfb6ba663b9"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-              "sha256": "b9d9c00ac8d0a07e54f41c78c90c854355ad11ed1e5083d10fcdef4f9f1aa938"
+              "sha256": "e4c552bac8c4bf75638667864b2e0b12ad2f7ee5f9f507332e78191d39c72dfe"
             },
             {
               "path": "packages/db/drizzle/production/0254_electricity_reviewed_rejection.sql",
@@ -91537,11 +91923,27 @@
             },
             {
               "path": "packages/db/src/refund-processing.ts",
-              "sha256": "3da0a11873dadcd3fe7d37ee2897ef553f37b17767d928b946d8176a7bcaceda"
+              "sha256": "e4740f2434aea283bb451cce2b720bfc81ef3b69bf6f78b6559e731b61e28e39"
             },
             {
               "path": "packages/i18n/src/contracts.ts",
               "sha256": "2b4ae75d1438caf11281f682cb2ad03273c0c3b2e4f8cf5833ed145ec635609d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-orphan-financial.ts",
+              "sha256": "52b02db1617369fd1d8e9d32d893d90b6f429581453eed802e3f40d296829e1f"
+            },
+            {
+              "path": "packages/db/src/electricity-orphan-financial.migrated.test.ts",
+              "sha256": "9af0743fe05cb73041f4656aa15eb6474a03a70a10c8d64f8eaa6c4a74fd5724"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-existing-returns.ts",
+              "sha256": "c12b9922737c4891154e478dd7807a1f0d393342998e7a8f90fcd94cfd7004e8"
+            },
+            {
+              "path": "packages/db/drizzle/production/0257_electricity_legacy_refund_adoption.sql",
+              "sha256": "9850b50d8f0cf32016fabea5a2dbbfa5ecf7986302c4b8edd2cfc126c792597d"
             }
           ],
           "checks": [
@@ -91655,7 +92057,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/final-web-build.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/db-build.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/i18n-current.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/accepted-outcomes.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/accepted-outcomes.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "criterion_result": "Real submitted/changes_requested/approved rejection with paid/unpaid snapshots, reason, one receipt/event and wallet refund completion is verified. Strict confirmation binds commercial state; shared policy/profile locks and fresh guard checks prevent stale valid confirmation bypass. Expand-only database rejection preserves signed/publication/acceptance/version evidence and saving rules, with rejected business record immutability. Full task remains partial for the listed draft, financial approval and full state-matrix flows. Direct HTTP rejection of Accepted/AwaitingSignature/Signed electricity contracts is accepted with both unpaid and paid ledgers, exact mandatory wallet return and retained signing/version/document history. The complete linked pre-active cancellation matrix is accepted across8 state pairs and2 payment states using existing immutable intents, stale fingerprint/version rejection, permissions/reason gates and concurrent once-only execution. Nullable retained draft submission timestamps now return null with35 related HTTP/UI outcomes and accurate client type. Raw/incomplete/private draft handling and second-approval/multi-invoice rejection remain explicit implementation gaps; full task stays partial. Raw unsubmitted/unlinked actual order records now have guarded reject/cancel routes and staff controls, with no invented submitted facts or financial records.271 related cases verify retained wizard privacy, exact reason/review fingerprint/idempotency, live authority, mandatory audit rollback, terminal history and future-association guards, production migration and affected consumers. Incomplete linked/funded drafts, saved wizard effective acceptance and advanced rejection remain open. Reviewed all-invoice rejection is accepted with the immutable target, second approval, exact full wallet return and current locked financial/profile facts.16 state/payment matrix cases plus3 boundary/legacy cases pass; signed/version/publication/document history retained, mandatory audit rollback and unknown concurrent replay verified.324 distinct related cases and applicable checks pass. Full lifecycle remains partial for orphan financial drafts, incomplete staff intake presentation and saved wizard acceptance. Incomplete versioned linked staff intake presentation is accepted: safe eligibility projection and existing contract screen reach the reviewed rejection editor without invented periods/pricing/invoices.100 related outcomes pass; generic orphan drafts, unversioned links and private wizard disposition remain open. Actual generic DRAFT creation and staff reject/cancel are accepted, including consumed/released gift ledgers and exact unpaid-cancellation policy disclosure. Existing gift service releases atomically; terminal order and gift history stay retained.205 distinct related cases pass across real API/database and production UI. Monetary orphan associations, unversioned linked drafts and private wizard acceptance remain open. Contractless draft financial termination is accepted for valid existing invoices: immutable order authority binds captured action/reason/profile/facts/policy and every mandatory wallet return. Required second approval is distinct and current; new invoice/stale policy or revoked finance review cannot execute.34 current raw HTTP cases cover funded/unfunded matrices, committed debt after grant withdrawal, rollback on mandatory audit failure, retained completed legacy debt/zero invoices and direct SQL omission rejection.238 distinct related outcomes pass. Full lifecycle remains partial for pending legacy adoption/reconciliation, unversioned links and saved wizard disposition.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance",
@@ -91794,6 +92197,24 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "apps/api/src/electricity/electricity-raw-draft.service.ts",
+              "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "apps/web/src/components/ElectricityRawDraftQueue.tsx",
+              "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
+              "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
+              "packages/db/src/electricity-raw-draft-terminal.migrated.test.ts",
+              "packages/i18n/src/app.ts",
+              "packages/db/drizzle/production/meta/_journal.json",
+              "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
+              "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "packages/db/src/refund-processing.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -104605,7 +105026,8 @@
         "batches": [
           "2026-09-23-order-wallet-funding",
           "release-0.2-common-business-gates",
-          "release-0.2-wallet-review-disclosure"
+          "release-0.2-wallet-review-disclosure",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -104833,7 +105255,7 @@
             },
             {
               "path": "packages/i18n/src/app.ts",
-              "sha256": "f1109ec2e20dc4b82e9072fa89d49ffcfe7c97ccccefc35c144c33f68e0248e6"
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
             }
           ],
           "checks": [
@@ -104910,7 +105332,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "criterion_result": "All applicable simple/advanced/saving order, electricity detail/revision/increase/price, saving detail/change/staff, consultation intake/offer/fee and solar intake/contract reviews display current available balance with existing wallet online/bank-receipt funding where an exact reviewed charge exceeds balance. Staff access requires current finance authorization; denied/malformed/stale reads never disclose old data or masquerade as zero. Existing authoritative wallet payment and confirmation/retry behavior retained.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure",
@@ -105023,6 +105446,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/i18n/src/app.ts"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -105061,7 +105492,8 @@
           "release-0.2-saving-transition-audit",
           "release-0.2-saving-system-audit",
           "release-0.2-consultation-settlement-audit",
-          "release-0.2-solar-transition-audit"
+          "release-0.2-solar-transition-audit",
+          "release-0.2-electricity-legacy-refund-adoption"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -105301,7 +105733,7 @@
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
-              "sha256": "03a0f160cc4e7832ffc69182f9e8f5d96ac3a3825c3f62c42a0ef7b704f746f8"
+              "sha256": "276806101a6d86cfab60ef78c163aa64a5cebfa942b515a07fc89da26070a9b1"
             },
             {
               "path": "packages/db/src/audit-log-immutability-upgrade.migrated.test.ts",
@@ -105667,7 +106099,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-raw-draft-terminal/source-binding.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
-            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
           ],
           "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open. Paid consultation settlement now records consultation entity/id, actual locked offer_pending→offer_accepted state, acceptance/payment actor, profile and reason alongside existing invoice/acceptedBy provenance.11 payment/workflow outcomes preserve135 original payment-test expects; both payment/acceptance orders verify mandatory-audit rollback/retry and duplicate/unmatched/unaccepted no-op boundaries. Only solar progress/final/postal audit families remain open. Solar progress/final/postal/shipment/tracking and versioned guidance audit families now record actual entity/key and prior/new state with actor/reason and existing timestamp/correlation provenance. Postal records use their actual locked UUID; progress/tracking aggregates use their actual request key.27 solar and4 model cases pass, with11 audit-failure rollback/retries plus a skipped guidance write probe.362 original expectations retained. Historical state bindings renewed through exact-hash lookup and324 valid-pair comparisons. All explicitly remaining audit families are accepted; this task does not certify broader service journey, schema, identity, operational or release gates.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
@@ -105812,6 +106245,14 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "legacy_refund_adoption_renewal": {
+            "base_commit": "b0b7d9af173871e5292c2ecfca7d0bc2213722aa",
+            "changed_paths": [
+              "packages/db/drizzle/production/meta/_journal.json"
+            ],
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
+            "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
           }
         }
       }
@@ -140059,6 +140500,24 @@
         "Apply0256 before updated consumers. Retain the compatible refund executor until every new orphan terminal obligation completes, or drain them before application rollback. Older workers cannot derive this new durable authority. SQL atomic rollback is checked before acceptance; no complete old-worker compatibility claim."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial"
+    },
+    "release-0.2-electricity-legacy-refund-adoption": {
+      "title": "Adopt exact existing legacy orphan wallet returns without duplicate debt or retry resets",
+      "task_keys": [
+        "03-core-business.md#T-03.07.01.01"
+      ],
+      "summary": "Immutable terminal review captures the exact full-wallet legacy obligation, original author/reason and current retry metadata. Existing refund states/jobs remain authoritative; requested/approved debts activate once and exhausted debts retain the existing finance manual retry boundary. Both reviewers see the existing refund and exhausted state.",
+      "validation": [
+        "153 distinct cases:40 raw HTTP,37 cancellation/customer-request HTTP,22 migrated refund plus8 migration/guard cases,42 UI and4 production-browser. Two snapshot checker cases also pass. Repeated/intermediate outcomes are not added.",
+        "Requested, approved and processing debts preserve principal/identity/history and fulfill once after original finance permission withdrawal. Exhausted failed debt preserves the complete automatic job before and after separately audited finance manual fulfillment. Changed retry budgets invalidate review; unbound partial debt is refused.",
+        "Default reviews omit empty adoption data. Existing grants, profile locks, current threshold/second reviewer, gift policy, all-invoice snapshots, financial retention, canonical audits and idempotency remain enforced. Acknowledgement cannot substitute the captured refund ID; retry keeps the same command.",
+        "Historical SQL and journal prefix byte-identical. Function-only0257 adds no table/snapshot changes or row rewrites. Migration upgrade/replay/retained historical rows and atomic SQL rollback pass. All original refund-processing bytes outside the additive orphan lookup remain unchanged. Prior dictionary AST preserved apart from six new properties.",
+        "API/DB/web types and builds, snapshot, changed lint/format and13-file5-rule SAST pass; three changed final test/parser files rescanned with zero findings. OpenAPI is byte-identical; no contract regeneration needed.",
+        "Complete implementation diff reviewed once; fixed SQL null/JSON-null retry comparison, strict UUID/receipt identity and exhaustion disclosure. Failed checks retained, never labelled passed. A new test initially expected manual fulfillment to mark the automatic job completed; corrected to the stronger exact whole-job preservation assertion and separate completion audit, matching the existing engine.",
+        "Unversioned linked drafts, effective reconciliation of anomalous associations and the owner wizard decision remain unfinished. Prior235 v0.2 tasks stay accepted; no milestone, staging, Telegram or production acceptance inferred.",
+        "Apply0257 before consumers. Retain the compatible refund executor until newly adopted debt completes or drain before application rollback. Pre0257 workers require the original author current finance grant; no old-worker compatibility inferred. SQL atomic rollback before commitment verified."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
     }
   },
   "historical_improvements": [
@@ -140100,7 +140559,7 @@
   "next_batch": {
     "id": "release-0.2-terminal-acceptance",
     "release": "0.2.0",
-    "goal": "Finish pending legacy orphan refund adoption/reconciliation and unversioned linked draft termination; audit any remaining demonstrated monetary association. Reviewed contractless invoice refunds, second approval and committed wallet returns are accepted. Preserve the owner-only wizard and other representation decisions; complete all-four-service gates before release.",
+    "goal": "Finish unversioned linked draft termination and inspect remaining demonstrated anomalous monetary associations or effective reconciliation. Contractless financial drafts and exact legacy wallet returns are accepted, with full current approval and unchanged retry budgets. Preserve owner-only wizard and other representation decisions; complete all-four-service gates before release.",
     "task_keys": [
       "03-core-business.md#T-03.07.01.01",
       "03-core-business.md#T-03.09.01.01",
@@ -140112,7 +140571,7 @@
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "235 v0.2 tasks accepted. Reviewed rejection with second approval and all-invoice wallet returns is accepted. Orphan financial drafts, incomplete staff intake and saved wizard acceptance remain. Unanswered owner schema/security/identity choices and operational/provider evidence still prevent a defensible launch date."
+    "method": "235 v0.2 tasks accepted. Reviewed rejection, contractless financial termination and exact legacy wallet debt adoption are accepted. Unversioned linked intake, anomalous association reconciliation and owner-only saved wizard disposition remain. Unanswered owner schema/security/identity choices and operational/provider evidence still prevent a defensible launch date."
   },
   "capabilities": [
     {

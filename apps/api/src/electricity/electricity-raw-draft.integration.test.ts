@@ -955,14 +955,16 @@ it('preserves a completed legacy orphan obligation and returns only the remainin
     "INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,'orphan-finance')",
     [refundId]
   );
-  expect(
-    (
-      await send(id, '/draft-terminal/review', {
-        action: 'reject',
-        reason: 'Outstanding legacy return',
-      })
-    ).status
-  ).toBe(409);
+  const pendingReview = await send(id, '/draft-terminal/review', {
+    action: 'reject',
+    reason: 'Outstanding legacy return',
+  });
+  expect(pendingReview.status, http.logs()).toBe(200);
+  expect(await pendingReview.json()).toMatchObject({
+    data: {
+      existingReturns: [{ refundId, invoiceId, amount: '100000', refundState: 'Processing' }],
+    },
+  });
   expect(await runWalletRefund(http.pool, refundId)).toBe('completed');
   const legacy = (
     await http.pool.query('SELECT * FROM refund_obligations WHERE refund_id=$1', [refundId])
@@ -1065,4 +1067,201 @@ it('refuses a direct orphan commit that omits one mandatory wallet obligation', 
   expect(
     (await http.pool.query('SELECT id FROM refunds WHERE invoice_id=ANY($1::uuid[])', [ids])).rows
   ).toHaveLength(0);
+});
+
+async function legacyReturn(id: string, invoiceId: string, state = 'Processing') {
+  await orphanFinance();
+  const refundId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,$3,100000,'wallet',$4)",
+    [refundId, invoiceId, profile, 'legacy:' + id]
+  );
+  await http.pool.query(
+    "INSERT INTO refund_obligations(order_id,invoice_id,profile_id,refund_id,total_paid_amount,idempotency_key,authorized_by,reason) VALUES($1,$2,$3,$4,100000,$5,'orphan-finance','Original legacy reason')",
+    [id, invoiceId, profile, refundId, 'electricity-end:' + id]
+  );
+  if (state !== 'Requested')
+    await http.pool.query("UPDATE refunds SET state='Approved' WHERE id=$1", [refundId]);
+  if (['Processing', 'Failed'].includes(state)) {
+    await http.pool.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refundId]);
+    await http.pool.query(
+      "INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,'orphan-finance')",
+      [refundId]
+    );
+  }
+  if (state === 'Failed') {
+    await http.pool.query("UPDATE refunds SET state='Failed' WHERE id=$1", [refundId]);
+    await http.pool.query(
+      'UPDATE refund_retry_jobs SET attempts=max_attempts,exhausted_at=clock_timestamp(),next_attempt_at=NULL WHERE refund_id=$1',
+      [refundId]
+    );
+  }
+  return refundId;
+}
+it.each(['Requested', 'Approved', 'Processing', 'Failed'])(
+  'adopts an exact legacy %s return without duplicating debt or resetting retries',
+  async (state) => {
+    const { id } = await actualDraft(),
+      ids = await orphanFunding(id),
+      refundId = await legacyReturn(id, ids[0]!, state);
+    const old = (
+      await http.pool.query('SELECT * FROM refund_obligations WHERE refund_id=$1', [refundId])
+    ).rows[0];
+    const job = (
+      await http.pool.query('SELECT * FROM refund_retry_jobs WHERE refund_id=$1', [refundId])
+    ).rows[0];
+    const command = await review(id),
+      response = await send(id, '/draft-terminal', command);
+    expect(response.status, http.logs()).toBe(200);
+    const receipt = (await response.json()) as {
+      refunds: Array<{ id: string; invoiceId: string; amount: string }>;
+    };
+    expect(receipt.refunds).toHaveLength(2);
+    expect(receipt.refunds).toContainEqual({ id: refundId, invoiceId: ids[0], amount: '100000' });
+    const after = (
+      await http.pool.query('SELECT * FROM refund_obligations WHERE refund_id=$1', [refundId])
+    ).rows[0];
+    for (const key of [
+      'id',
+      'order_id',
+      'invoice_id',
+      'profile_id',
+      'refund_id',
+      'total_paid_amount',
+      'completed_refund_amount',
+      'idempotency_key',
+      'authorized_by',
+      'reason',
+      'created_at',
+    ])
+      expect(after[key]).toEqual(old[key]);
+    const adoptedJob = (
+      await http.pool.query('SELECT * FROM refund_retry_jobs WHERE refund_id=$1', [refundId])
+    ).rows[0];
+    if (job) expect(adoptedJob).toEqual(job);
+    else
+      expect(adoptedJob).toMatchObject({
+        executor_user_id: 'orphan-finance',
+        attempts: 0,
+        exhausted_at: null,
+      });
+    expect((await send(id, '/draft-terminal', command)).status).toBe(200);
+    expect(
+      (await http.pool.query('SELECT id FROM refunds WHERE invoice_id=$1', [ids[0]])).rows
+    ).toHaveLength(1);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE event='refund.obligation_adopted' AND metadata::jsonb->>'entityId'=$1",
+          [refundId]
+        )
+      ).rows
+    ).toHaveLength(1);
+    await expectCoreAudit(http.pool, 'refund.obligation_adopted', refundId, {
+      entity: 'refund',
+      fromState: state,
+      toState: ['Requested', 'Approved'].includes(state) ? 'Processing' : state,
+      reason: command.reason,
+      actor: 'raw-reviewer',
+      context: 'staff',
+    });
+    await http.pool.query("DELETE FROM user_roles WHERE user_id='orphan-finance'");
+    if (state === 'Failed') {
+      expect(await runWalletRefund(http.pool, refundId)).toBe('deferred');
+      expect(
+        (await http.pool.query('SELECT * FROM refund_retry_jobs WHERE refund_id=$1', [refundId]))
+          .rows[0]
+      ).toEqual(job);
+      const finance = await orphanFinance();
+      const reviewed = await fetch(
+        http.base + '/api/admin/wallet-refunds/' + refundId + '/process/review',
+        { method: 'POST', headers: finance, body: '{}' }
+      );
+      expect(reviewed.status, http.logs()).toBe(200);
+      const preview = (await reviewed.json()) as { hash: string };
+      const processed = await fetch(
+        http.base + '/api/admin/wallet-refunds/' + refundId + '/process',
+        {
+          method: 'POST',
+          headers: finance,
+          body: JSON.stringify({ expectedReviewHash: preview.hash }),
+        }
+      );
+      expect(processed.status, http.logs()).toBe(200);
+      expect(await processed.json()).toMatchObject({ state: 'Completed' });
+      const retriedJob = (
+        await http.pool.query('SELECT * FROM refund_retry_jobs WHERE refund_id=$1', [refundId])
+      ).rows[0];
+      expect(retriedJob.attempts).toBe(job.attempts);
+      expect(retriedJob.max_attempts).toBe(job.max_attempts);
+      expect(retriedJob.exhausted_at).toEqual(job.exhausted_at);
+      // A manual attempt is audited separately and preserves the entire exhausted automatic job.
+      expect(retriedJob).toEqual(job);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.completed' AND metadata::jsonb->>'refundId'=$1",
+            [refundId]
+          )
+        ).rows[0].metadata
+      ).toMatchObject({ retriedBy: 'orphan-finance' });
+      expect(
+        (
+          await http.pool.query(
+            "SELECT amount FROM wallet_transactions WHERE type='refund' AND ref_id=$1",
+            [refundId]
+          )
+        ).rows
+      ).toEqual([{ amount: '100000' }]);
+    } else {
+      expect(await runWalletRefund(http.pool, refundId)).toBe('completed');
+      expect(await runWalletRefund(http.pool, refundId)).toBe('deferred');
+      expect(
+        (
+          await http.pool.query(
+            "SELECT amount FROM wallet_transactions WHERE type='refund' AND ref_id=$1",
+            [refundId]
+          )
+        ).rows
+      ).toEqual([{ amount: '100000' }]);
+    }
+  }
+);
+it('invalidates a legacy adoption review when its retry budget changes', async () => {
+  const { id } = await actualDraft(),
+    ids = await orphanFunding(id),
+    refundId = await legacyReturn(id, ids[0]!);
+  const command = await review(id),
+    before = await snapshot(id);
+  await http.pool.query('UPDATE refund_retry_jobs SET attempts=attempts+1 WHERE refund_id=$1', [
+    refundId,
+  ]);
+  expect((await send(id, '/draft-terminal', command)).status).toBe(409);
+  expect(await snapshot(id)).toEqual(before);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT order_id FROM electricity_draft_terminations WHERE order_id=$1',
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+});
+it('refuses an unbound partial legacy refund while retaining all records', async () => {
+  const { id } = await actualDraft(),
+    ids = await orphanFunding(id);
+  await http.pool.query(
+    "INSERT INTO refunds(invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,50000,'wallet',$3)",
+    [ids[0], profile, 'partial:' + id]
+  );
+  const before = await snapshot(id);
+  expect(
+    (
+      await send(id, '/draft-terminal/review', {
+        action: 'reject',
+        reason: 'Unmatched partial return',
+      })
+    ).status
+  ).toBe(409);
+  expect(await snapshot(id)).toEqual(before);
 });

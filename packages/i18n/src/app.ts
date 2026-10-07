@@ -13,6 +13,11 @@ export const fa: I18nDictionary = {
   'electricity.rawDraft.gift.retain': 'طبق سیاست کد هدیه، سهم استفاده بازگردانده نمی\u200cشود.',
   'electricity.rawDraft.gift.already_released': 'سهم استفاده از کد هدیه قبلاً بازگردانده شده است.',
   'electricity.rawDraft.walletReturn': 'بازگشت کامل به کیف پول',
+  'electricity.rawDraft.existingReturn': 'بازپرداخت موجود',
+  'electricity.rawDraft.retryPreserved':
+    'همین بازپرداخت ادامه می‌یابد. شمار و مهلت تلاش‌های قبلی حفظ می‌شود.',
+  'electricity.rawDraft.manualRetryRequired':
+    'تلاش‌های خودکار پایان یافته است. ادامه به تلاش دستی با مجوز مالی نیاز دارد.',
   'electricity.rawDraft.invoice': 'صورت\u200cحساب',
   'electricity.rawDraft.approval': 'تأیید مالی',
   'electricity.rawDraft.approvalRequired': 'تأیید یک بررسی\u200cکنندهٔ مالی دیگر لازم است.',
@@ -1818,6 +1823,11 @@ export const en: I18nDictionary = {
   'electricity.rawDraft.gift.retain': 'The gift-code policy retains the usage slot.',
   'electricity.rawDraft.gift.already_released': 'The gift-code usage slot was already restored.',
   'electricity.rawDraft.walletReturn': 'Full wallet return',
+  'electricity.rawDraft.existingReturn': 'Existing refund',
+  'electricity.rawDraft.retryPreserved':
+    'This existing refund continues. Previous retry counts and timing are preserved.',
+  'electricity.rawDraft.manualRetryRequired':
+    'Automatic retries are exhausted. A finance-authorized manual retry is required.',
   'electricity.rawDraft.invoice': 'Invoice',
   'electricity.rawDraft.approval': 'Financial approval',
   'electricity.rawDraft.approvalRequired':

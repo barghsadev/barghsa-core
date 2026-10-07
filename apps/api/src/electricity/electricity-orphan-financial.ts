@@ -9,6 +9,26 @@ import {
   type CancellationInvoice,
 } from '../contract/contract-cancellation-snapshot.js';
 
+export interface ExistingDraftReturn {
+  refundId: string;
+  invoiceId: string;
+  amount: string;
+  authorizedBy: string;
+  reason: string;
+  idempotencyKey: string;
+  totalPaidAmount: string;
+  completedRefundAmount: string;
+  status: string;
+  refundState: 'Requested' | 'Approved' | 'Processing' | 'Failed';
+  job: null | {
+    executorUserId: string;
+    attempts: number;
+    maxAttempts: number;
+    exhausted: boolean;
+    nextAttemptAt: string | null;
+  };
+}
+
 /** Reuses the contract terminal invoice accounting for a genuine contractless order. */
 export async function readOrphanFinancialState(
   client: PoolClient,
@@ -56,12 +76,28 @@ export async function readOrphanFinancialState(
           'Cancelled',
         ].includes(i.state) ||
         i.pendingPayments ||
-        i.pendingRefunds.length ||
         (['Draft', 'Cancelled', 'Refunded'].includes(i.state) &&
           BigInt(i.paidAmount) > BigInt(i.refundedAmount))
     )
   )
     throw new ConflictException('Orphan invoice facts require reconciliation');
+  const existingReturns: ExistingDraftReturn[] = [];
+  for (const invoice of rows.filter((i) => i.pendingRefunds.length)) {
+    const claim = (
+      await client.query<{ claim: ExistingDraftReturn | null }>(
+        'SELECT electricity_draft_existing_return($1,$2,$3) AS claim',
+        [orderId, profileId, invoice.id]
+      )
+    ).rows[0]?.claim;
+    if (
+      !claim ||
+      invoice.pendingRefunds.length !== 1 ||
+      invoice.pendingRefunds[0]!.id !== claim.refundId ||
+      claim.amount !== (BigInt(invoice.paidAmount) - BigInt(invoice.refundedAmount)).toString()
+    )
+      throw new ConflictException('Existing orphan refund requires reconciliation');
+    existingReturns.push(claim);
+  }
   const invoices = invoiceRefundBalances(rows),
     refundAmount = invoices.reduce((sum, i) => sum + BigInt(i.refundableAmount), 0n).toString();
   if (BigInt(refundAmount) > 9223372036854775807n)
@@ -84,6 +120,7 @@ export async function readOrphanFinancialState(
     policy,
     approvalRequired: policy.enabled && BigInt(refundAmount) >= BigInt(policy.thresholdIrR!),
     paid: rows.some((i) => BigInt(i.paidAmount) > 0n),
+    existingReturns,
     source: rows.map((i) => i.source).join(''),
   };
 }

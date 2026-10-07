@@ -54,14 +54,16 @@ export async function readContractRefundAuthorization(
   if (!obligation) {
     const orphan = (
       await client.query<{ order_id: string; authorized_by: string; valid: boolean }>(
-        `SELECT o.order_id,o.authorized_by,COALESCE((t.order_id=o.order_id AND t.profile_id=$3 AND t.executed_by=o.authorized_by
+        `SELECT o.order_id,o.authorized_by,COALESCE((t.order_id=o.order_id AND t.profile_id=$3
        AND parent.status='CANCELLED' AND parent.order_type='electricity' AND parent.profile_id=$3 AND e.profile_id=$3 AND e.status=CASE WHEN t.action='reject' THEN 'rejected' ELSE 'cancelled' END
        AND i.order_id=o.order_id AND i.contract_id IS NULL AND i.id=$2 AND i.profile_id=$3 AND o.invoice_id=$2 AND o.profile_id=$3
        AND r.invoice_id=$2 AND r.profile_id=$3 AND r.amount=$5::bigint AND r.destination='wallet' AND r.staff_id IS NULL AND $4::text IS NULL
        AND o.status IN ('processing','failed','completed') AND r.state IN ('Processing','Failed','Completed')
-       AND EXISTS(SELECT 1 FROM jsonb_array_elements(t.financial_review->'data'->'invoices') line WHERE line->>'id'=$2::text AND line->>'paidAmount'=o.total_paid_amount::text AND line->>'refundableAmount'=$5::text)
+       AND EXISTS(SELECT 1 FROM jsonb_array_elements(t.financial_review->'data'->'invoices') line WHERE line->>'id'=$2::text AND line->>'paidAmount'=o.total_paid_amount::text AND line->>'refundableAmount'=$5::text
+        AND ((t.executed_by=o.authorized_by AND o.idempotency_key='electricity-end:'||o.order_id::text||':'||o.invoice_id::text)
+         OR EXISTS(SELECT 1 FROM jsonb_array_elements(COALESCE(t.financial_review->'data'->'existingReturns','[]'::jsonb)) claim WHERE claim->>'refundId'=o.refund_id::text AND electricity_draft_return_matches(o.order_id,o.profile_id,line,claim,'authorized'))))
        AND EXISTS(SELECT 1 FROM audit_log a WHERE a.event='electricity.draft.terminated' AND a.metadata::jsonb->>'entityId'=o.order_id::text AND a.metadata::jsonb->>'reviewHash'=t.review_hash AND a.user_id=t.executed_by AND a.metadata::jsonb->'financialReview'=t.financial_review)),false) AS valid
-       FROM refund_obligations o JOIN refunds r ON r.id=o.refund_id JOIN electricity_draft_terminations t ON t.order_id=o.order_id JOIN orders parent ON parent.id=o.order_id JOIN electricity_orders e ON e.id=o.order_id JOIN invoices i ON i.id=o.invoice_id WHERE o.refund_id=$1 AND o.contract_id IS NULL AND o.idempotency_key='electricity-end:'||o.order_id::text||':'||o.invoice_id::text`,
+       FROM refund_obligations o JOIN refunds r ON r.id=o.refund_id JOIN electricity_draft_terminations t ON t.order_id=o.order_id JOIN orders parent ON parent.id=o.order_id JOIN electricity_orders e ON e.id=o.order_id JOIN invoices i ON i.id=o.invoice_id WHERE o.refund_id=$1 AND o.contract_id IS NULL AND (o.idempotency_key='electricity-end:'||o.order_id::text||':'||o.invoice_id::text OR EXISTS(SELECT 1 FROM jsonb_array_elements(COALESCE(t.financial_review->'data'->'existingReturns','[]'::jsonb)) claim WHERE claim->>'refundId'=o.refund_id::text))`,
         [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount]
       )
     ).rows[0];

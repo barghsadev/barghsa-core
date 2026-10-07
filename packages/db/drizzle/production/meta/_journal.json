@@ -1240,6 +1240,13 @@
       "when": 1791331202267,
       "tag": "0256_electricity_orphan_financial",
       "breakpoints": true
+    },
+    {
+      "idx": 257,
+      "version": "7",
+      "when": 1791331202268,
+      "tag": "0257_electricity_legacy_refund_adoption",
+      "breakpoints": true
     }
   ]
 }
