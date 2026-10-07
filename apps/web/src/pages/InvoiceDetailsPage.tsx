@@ -352,7 +352,27 @@ function InvoiceCard({
       </dl>
 
       {node.lines.length > 0 ? (
-        <div className="mt-4 overflow-x-auto">
+        // Arrow keys operate this native scroll region; descendant controls keep their own keys.
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        <div
+          className="mt-4 overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          role="region"
+          aria-label={t('invoices.details.lines', locale)}
+          // Native horizontal scrolling needs keyboard focus, including Safari.
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+          tabIndex={0}
+          onKeyDown={(event) => {
+            const region = event.currentTarget;
+            if (
+              event.target !== region ||
+              region.scrollWidth <= region.clientWidth ||
+              (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')
+            )
+              return;
+            event.preventDefault();
+            region.scrollBy({ left: event.key === 'ArrowLeft' ? -40 : 40 });
+          }}
+        >
           <table className="w-full min-w-[36rem] text-sm">
             <caption className="sr-only">{t('invoices.details.lines', locale)}</caption>
             <thead>

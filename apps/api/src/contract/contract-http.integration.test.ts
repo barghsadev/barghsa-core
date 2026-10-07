@@ -50,7 +50,7 @@ beforeEach(async () => {
     "INSERT INTO user_roles(user_id,role_id) VALUES('contract-legal','role-legal-contracts') ON CONFLICT DO NOTHING"
   );
 });
-async function profile() {
+async function profile(): Promise<string> {
   const user = randomUUID(),
     id = randomUUID();
   await http.pool.query("INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'test')", [

@@ -102,9 +102,23 @@ it('rolls back the reminder toggle when its audit insert fails', async () => {
     await http.pool.query('DROP TRIGGER reject_reminder_audit ON audit_log');
   }
   expect((await request('PUT')).status).toBe(200);
+  const proof = await http.pool.query<{ step_up_verified_at: Date }>(
+    'SELECT step_up_verified_at FROM sessions WHERE session_id=$1 AND user_id=$2',
+    [headers.operator!.Cookie!.slice('barghsa_session='.length), 'operator']
+  );
+  expect(proof.rows).toHaveLength(1);
   expect(
     (await auditWindow.query('SELECT metadata::jsonb AS metadata FROM audit_log')).rows
-  ).toEqual([{ metadata: { ...body, previousEnabled: true } }]);
+  ).toEqual([
+    {
+      metadata: {
+        ...body,
+        previousEnabled: true,
+        stepUpVerified: true,
+        stepUpVerifiedAt: proof.rows[0]!.step_up_verified_at.toISOString(),
+      },
+    },
+  ]);
 });
 it('denies staff without the reminder grant and preserves the default matrix', async () => {
   expect((await request('GET', 'other')).status).toBe(403);

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T02:01:41.433227+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T02:18:46.442057+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 280 | Accepted with unchanged source bindings. |
-| verify | 1027 | Existing work may be complete; inspect evidence before building. |
+| done | 293 | Accepted with unchanged source bindings. |
+| verify | 1014 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,21 +39,23 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current invoice due-date defaults/overrides,overdue/reminder lifecycle and correction/replacement/credit flows. Reuse final source-bound core/overdue evidence and test only remaining task criteria/callers. Preserve financial snapshots,profile/current authority,idempotency,audit and rollback. v0.2 still awaits six owner decisions; no milestone acceptance or deployment before dependency gates.
+Inspect current ledger,balance/version/lock/reconciliation and online/bank-receipt top-up implementation before rebuilding. Verify demonstrated gaps with targeted current-source evidence; fix baseline Wallet bundle overflow within existing budget. Preserve profile isolation,int8 money,receipt/review/idempotency/callback/rollback boundaries. Owner-only callback and v0.2 dispositions remain pending; no milestone acceptance/deployment before dependency gates.
 
-- `04-invoices-wallet-contracts.md#T-04.1.03.01`: Add `service_due_periods` admin config table (service type, default days, active period)
-- `04-invoices-wallet-contracts.md#T-04.1.03.02`: Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override)
-- `04-invoices-wallet-contracts.md#T-04.1.03.03`: Build staff override UI/API: override input + reason field, stored in audit + invoice metadata
-- `04-invoices-wallet-contracts.md#T-04.1.03.04`: Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded
-- `04-invoices-wallet-contracts.md#T-04.1.04.01`: Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status`
-- `04-invoices-wallet-contracts.md#T-04.1.04.02`: Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows
-- `04-invoices-wallet-contracts.md#T-04.1.04.03`: Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox
-- `04-invoices-wallet-contracts.md#T-04.1.04.04`: Enforce idempotency: unique index on (invoiceId, offset, channel)
-- `04-invoices-wallet-contracts.md#T-04.1.04.05`: Admin toggle UI: enable/disable each offset per service type
-- `04-invoices-wallet-contracts.md#T-04.1.04.06`: Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled
-- `04-invoices-wallet-contracts.md#T-04.1.05.02`: Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement
-- `04-invoices-wallet-contracts.md#T-04.1.05.03`: Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit
-- `04-invoices-wallet-contracts.md#T-04.1.05.04`: Customer-facing invoice details page shows original + linked corrections/replacements with explanations
+- `04-invoices-wallet-contracts.md#T-04.2.01.01`: Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance`
+- `04-invoices-wallet-contracts.md#T-04.2.01.02`: Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps
+- `04-invoices-wallet-contracts.md#T-04.2.01.03`: Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0`
+- `04-invoices-wallet-contracts.md#T-04.2.01.04`: Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes
+- `04-invoices-wallet-contracts.md#T-04.2.01.05`: Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow
+- `04-invoices-wallet-contracts.md#T-04.2.01.06`: Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion`
+- `04-invoices-wallet-contracts.md#T-04.2.01.07`: Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column
+- `04-invoices-wallet-contracts.md#T-04.2.01.08`: Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue
+- `04-invoices-wallet-contracts.md#T-04.2.02.01`: Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway
+- `04-invoices-wallet-contracts.md#T-04.2.02.02`: Build provider callback handler: verify signature, replay window, event id, merchant context; apply credit via `WalletService.credit()` with idempotency key
+- `04-invoices-wallet-contracts.md#T-04.2.02.03`: Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state
+- `04-invoices-wallet-contracts.md#T-04.2.02.04`: Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()`
+- `04-invoices-wallet-contracts.md#T-04.2.02.05`: Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet
+- `04-invoices-wallet-contracts.md#T-04.2.02.06`: Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission
+- `04-invoices-wallet-contracts.md#T-04.2.02.07`: Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL
 
 ## v0.2.0: Complete customer journeys
 
@@ -434,20 +436,20 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.1.02.07` | done | Earlier acceptance_verified | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements |
 | `04-invoices-wallet-contracts.md#T-04.1.02.08` | done | Earlier acceptance_verified | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility |
 | `04-invoices-wallet-contracts.md#T-04.1.02.09` | done | Earlier acceptance_verified | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals |
-| `04-invoices-wallet-contracts.md#T-04.1.03.01` | verify | Earlier acceptance_verified | Add `service_due_periods` admin config table (service type, default days, active period) |
-| `04-invoices-wallet-contracts.md#T-04.1.03.02` | verify | Earlier acceptance_verified | Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override) |
-| `04-invoices-wallet-contracts.md#T-04.1.03.03` | verify | Earlier acceptance_verified | Build staff override UI/API: override input + reason field, stored in audit + invoice metadata |
-| `04-invoices-wallet-contracts.md#T-04.1.03.04` | verify | Earlier acceptance_verified | Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded |
-| `04-invoices-wallet-contracts.md#T-04.1.04.01` | verify | Earlier acceptance_verified | Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status` |
-| `04-invoices-wallet-contracts.md#T-04.1.04.02` | verify | Earlier acceptance_verified | Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows |
-| `04-invoices-wallet-contracts.md#T-04.1.04.03` | verify | Earlier acceptance_verified | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox |
-| `04-invoices-wallet-contracts.md#T-04.1.04.04` | verify | Earlier acceptance_verified | Enforce idempotency: unique index on (invoiceId, offset, channel) |
-| `04-invoices-wallet-contracts.md#T-04.1.04.05` | verify | Earlier acceptance_verified | Admin toggle UI: enable/disable each offset per service type |
-| `04-invoices-wallet-contracts.md#T-04.1.04.06` | verify | Earlier acceptance_verified | Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled |
+| `04-invoices-wallet-contracts.md#T-04.1.03.01` | done | Earlier acceptance_verified | Add `service_due_periods` admin config table (service type, default days, active period) |
+| `04-invoices-wallet-contracts.md#T-04.1.03.02` | done | Earlier acceptance_verified | Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override) |
+| `04-invoices-wallet-contracts.md#T-04.1.03.03` | done | Earlier acceptance_verified | Build staff override UI/API: override input + reason field, stored in audit + invoice metadata |
+| `04-invoices-wallet-contracts.md#T-04.1.03.04` | done | Earlier acceptance_verified | Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded |
+| `04-invoices-wallet-contracts.md#T-04.1.04.01` | done | Earlier acceptance_verified | Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status` |
+| `04-invoices-wallet-contracts.md#T-04.1.04.02` | done | Earlier acceptance_verified | Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows |
+| `04-invoices-wallet-contracts.md#T-04.1.04.03` | done | Earlier acceptance_verified | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox |
+| `04-invoices-wallet-contracts.md#T-04.1.04.04` | done | Earlier acceptance_verified | Enforce idempotency: unique index on (invoiceId, offset, channel) |
+| `04-invoices-wallet-contracts.md#T-04.1.04.05` | done | Earlier acceptance_verified | Admin toggle UI: enable/disable each offset per service type |
+| `04-invoices-wallet-contracts.md#T-04.1.04.06` | done | Earlier acceptance_verified | Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled |
 | `04-invoices-wallet-contracts.md#T-04.1.05.01` | done | Earlier acceptance_verified | Add `replacesInvoiceId` and `adjustmentForInvoiceId` nullable self-references on invoice table |
-| `04-invoices-wallet-contracts.md#T-04.1.05.02` | verify | Earlier acceptance_verified | Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement |
-| `04-invoices-wallet-contracts.md#T-04.1.05.03` | verify | Earlier acceptance_verified | Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit |
-| `04-invoices-wallet-contracts.md#T-04.1.05.04` | verify | Earlier acceptance_verified | Customer-facing invoice details page shows original + linked corrections/replacements with explanations |
+| `04-invoices-wallet-contracts.md#T-04.1.05.02` | done | Earlier acceptance_verified | Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement |
+| `04-invoices-wallet-contracts.md#T-04.1.05.03` | done | Earlier acceptance_verified | Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit |
+| `04-invoices-wallet-contracts.md#T-04.1.05.04` | done | Earlier acceptance_verified | Customer-facing invoice details page shows original + linked corrections/replacements with explanations |
 | `04-invoices-wallet-contracts.md#T-04.2.01.01` | verify | Earlier acceptance_verified | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` |
 | `04-invoices-wallet-contracts.md#T-04.2.01.02` | verify | Earlier acceptance_verified | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps |
 | `04-invoices-wallet-contracts.md#T-04.2.01.03` | verify | Earlier acceptance_verified | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` |
