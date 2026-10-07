@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "df191729aa39cadb1174890a03979be14fb214f8",
+  "source_commit": "8cba2061018354d8a7aa24cf1e5a4f7615f52b44",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -186625,19 +186625,2313 @@
         "Exercise approval, rejection, cancellation, refund exhaustion/retry, dual approval and concurrent duplicate settlements.",
         "Refresh task-level evidence and build only exact remaining criteria."
       ],
-      "status": "todo",
+      "status": "partial",
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile contract/refund/invoice/receipt tasks with existing writers, APIs, native pages and tests.",
-        "Exercise approval, rejection, cancellation, refund exhaustion/retry, dual approval and concurrent duplicate settlements.",
-        "Refresh task-level evidence and build only exact remaining criteria."
+        "Implement the required staff quantity-increase approval reason. Current approval input cannot accept it and writes null audit reason. See04-invoices-wallet-contracts.md#T-04.6.01.02; preserve exact review/replay, version/future/payment locks, audits and rejection behavior.",
+        "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
-        "current_acceptance": null,
-        "batches": []
+        "current_acceptance": {
+          "kind": "verified-financial-closure-boundaries-with-approval-reason-and-owner-criteria-pending",
+          "base_commit": "8cba2061018354d8a7aa24cf1e5a4f7615f52b44",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+              "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+              "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+              "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+              "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+              "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state.model.ts",
+              "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "docs/runbooks/invoice-origins.md",
+              "sha256": "cc26c846d2faad83e601e38676e6288b3f7f39cc0b91814e993c4d8e3b35ecc0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+              "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+            },
+            {
+              "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+              "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0259_invoice_origin_foreign_keys.sql",
+              "sha256": "7da9064616117595d2f418dd0ed725da20f12a7e8968101c4a44dbf72fceac87"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/0259_snapshot.json",
+              "sha256": "5d6774bb0b5f0f0637205feee52bf7ecdce07f1371c63f03b32586b6bf94ad9c"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "daf3876fd083e7174b47a9389a036230686e1b149a7762ece249dd173421af9c"
+            },
+            {
+              "path": "packages/db/src/invoice-origins.migrated.test.ts",
+              "sha256": "2319089d7af6cf4f5b9dc008b4d78a026cb882da71072c96fd53b1ed5cda01f4"
+            },
+            {
+              "path": "packages/db/src/schema/consultation-requests.ts",
+              "sha256": "c9195d2904f08397b569b684da4ba9e8a04025edcc446fe1d9d8cbd4762855e1"
+            },
+            {
+              "path": "packages/db/src/schema/contracts.ts",
+              "sha256": "f44608836bc9e8629dea6b380ef0186d78bc76b2cbf00c59bda601e773f0935b"
+            },
+            {
+              "path": "packages/db/src/schema/invoices-constraints.test.ts",
+              "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+            },
+            {
+              "path": "packages/db/src/schema/invoices.test.ts",
+              "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+            },
+            {
+              "path": "packages/db/src/schema/invoices.ts",
+              "sha256": "4e0f58c4e4ea3eea4e62f49a08a1cef4515a5bc2b6e7f7e97dcd2cf8f2619484"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+              "sha256": "1a24286d03b5853f081e8a72dfd5a2fc374e7b179588a63b4c9d912bcaf3eeb5"
+            },
+            {
+              "path": "apps/api/src/contract/contract-http.integration.test.ts",
+              "sha256": "d416943ee3712228ea4242c2d8d4b8898de77380a1faab7ac987eda84b7c3a71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "6c42df1949b2134d6c92083bd9a3dbe17058555e475651d485c9e6b25ce193e4"
+            },
+            {
+              "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+              "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+            },
+            {
+              "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+              "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+            },
+            {
+              "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+              "sha256": "6f9629dab9615bfb110064d976141580c7b09ea9c3210957f9e44ae2e51f32d5"
+            },
+            {
+              "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+              "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+            },
+            {
+              "path": "apps/api/src/invoice/auto-invoice.service.ts",
+              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+              "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+              "sha256": "4a7264b75c595482a772fd98f3add6cf1e6e48fa827b18e7ee8b1d2478ab3240"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+              "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+              "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+              "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+              "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+              "sha256": "a54d1e9e4177c8f247ce13fd9e0d3e25591b143a2a802ad28d0656b12b569557"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+              "sha256": "401633ffffe6397278301e3126ad396426ac163895fd8cc39ad1aa1262a5e90d"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+              "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.service.ts",
+              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+            },
+            {
+              "path": "apps/api/src/invoice/rounding.service.test.ts",
+              "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+            },
+            {
+              "path": "apps/api/src/invoice/rounding.service.ts",
+              "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.test.ts",
+              "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "f747404d8ee3a4c158eed10819daa9b3d8b65bdeb2504dfc4ddc22d63499388f"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "ae6166a97a6f5ba046d7ba9ca02258eaf28abe9b99b472d3c3939d8f99b50491"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.service.ts",
+              "sha256": "456a608fc0df75d78926e2231f98351ade705956ee11a7fbfd36bf517a9f2f65"
+            },
+            {
+              "path": "apps/web/e2e/manual-invoice.spec.ts",
+              "sha256": "61914da492f1ec1de0c96d77c1b28b6ec0c91366e2364bdbee36e11274029d77"
+            },
+            {
+              "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
+              "sha256": "22a18ca74a2c00d8abb2bd3a6655c91d3f6d998d0bf6678728e1ce72a27d0035"
+            },
+            {
+              "path": "apps/web/src/components/ManualInvoiceForm.tsx",
+              "sha256": "e899d2ec305c767ea4d3880a91d172e2586c3b75233f83a127c499d95cacb221"
+            },
+            {
+              "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
+              "sha256": "7d33edcf73bb787d9e67aee26a5963242a25a1b95c3cc00cffcac3eb5e240192"
+            },
+            {
+              "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+              "sha256": "4c09a8eef3749aa82d5cb7d695da9565765434bbdeafc33357721b3cf69c331f"
+            },
+            {
+              "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+              "sha256": "164499441edd1150916915f441b27faa2f9a6093631a327b052e4d732db2d3bb"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-items.ts",
+              "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+              "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-lines.ts",
+              "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+            },
+            {
+              "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+              "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+            },
+            {
+              "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+              "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+            },
+            {
+              "path": "packages/db/src/schema/invoices-origin.test.ts",
+              "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+            },
+            {
+              "path": "packages/i18n/src/manual-invoice.ts",
+              "sha256": "0d429ecada4a40c407fcb289741d5445445ebbdace9b5999ea73c524421a99b8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/field.tsx",
+              "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/native-select.tsx",
+              "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+            },
+            {
+              "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+              "sha256": "678190c2f2f24ed290a46212a97c06f6f5575a3f5a9a2f4a5750141b8c27e28c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "1db096841abfd7210217cb7f99be2d1428eb9b6efeec48f40e05222882ba780a"
+            },
+            {
+              "path": "apps/api/src/admin/admin.module.ts",
+              "sha256": "1298b3824d3fe6b99625352e76b55b30be63fe2fdeb8b041e884dca9901ded7d"
+            },
+            {
+              "path": "apps/api/src/admin/due-at-override.controller.test.ts",
+              "sha256": "10156ceb5c8f07221bcdc1b69daf31e00b4750b30328d8120c2eb75ce9a6ffa9"
+            },
+            {
+              "path": "apps/api/src/admin/due-at-override.controller.ts",
+              "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+            },
+            {
+              "path": "apps/api/src/admin/reminder-offset-toggle-http.integration.test.ts",
+              "sha256": "e141baa41a55aa4497cbddd9590e71f5e21964603fb37e81a029e55aa4df9e55"
+            },
+            {
+              "path": "apps/api/src/admin/reminder-offset-toggle.controller.test.ts",
+              "sha256": "440fd447814b2e08a3b1701c55ed3193c7680779a65b5591733a126b5234e78a"
+            },
+            {
+              "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+              "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+            },
+            {
+              "path": "apps/api/src/admin/reminder-offset-toggle.service.integration.test.ts",
+              "sha256": "704de01aa42099bb1f34e79e157aaf3d8970dabb4e41e1d1ea7811fae9e75437"
+            },
+            {
+              "path": "apps/api/src/admin/reminder-offset-toggle.service.test.ts",
+              "sha256": "94328d21da5ebe38ab3a2544780acc607ef4c0d49fed896817a123eccf3785aa"
+            },
+            {
+              "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+            },
+            {
+              "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
+              "sha256": "121e8c08c5f003f115c1ff8ecbaa9e93f03ff1ab1dd3e6f79477ad913fddf921"
+            },
+            {
+              "path": "apps/api/src/admin/service-due-period.controller.ts",
+              "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+            },
+            {
+              "path": "apps/api/src/admin/service-due-period.service.ts",
+              "sha256": "71b9e9dc14f95d6d7ee43e2285ee58b469868e2c6ab2a1b7df5b58f7b59bab5b"
+            },
+            {
+              "path": "apps/api/src/invoice/cancel-and-replace-invoice.integration.test.ts",
+              "sha256": "8cfab74733f4b888e130e2f274f1e5fe326a4954639ba58035005ded082ae8e0"
+            },
+            {
+              "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+              "sha256": "cf3edfc3bfe14bf9bbcef6eb604a4dac7e17c2a2141e0341cbbec5810250bb44"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "d75ee5d1a230cc8adcf10d5baca543ba1b63552ab79812a6fa4108c924ca12ab"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+              "sha256": "95e2fecc7ed81cfa30ebee404a10f6994d576428fd4a6f3be02b3203844c3654"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
+              "sha256": "01f6d5e2c2b56e6cff39e4aefbbed4a8853fa51698471fcef53e85c6427ffec8"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at-override.service.test.ts",
+              "sha256": "a08cabc6b1813210eb82264a32fa5754025b5446276d11ae9f17472b0720817f"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at-override.service.ts",
+              "sha256": "797bfd821547c13f44c17c1317b2968fc40c6ffb1c5b33a6564031c7b5068349"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at.integration.test.ts",
+              "sha256": "f6ede8086b8e3917a0c96b4493ee6df2f55bc8d9335080992404d0867f844ad6"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at.repository.ts",
+              "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at.service.ts",
+              "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+            },
+            {
+              "path": "apps/api/src/invoice/due-at.test.ts",
+              "sha256": "4cdf294a234221de5d514dd65bdb1e7c06ae6f739fb3ef9b0794b3d07d8ac14c"
+            },
+            {
+              "path": "apps/web/e2e/browser-date.ts",
+              "sha256": "21c67d6d7c8f496adcbfcaab67d55637cc0d464846a44858cac21f9a122fbf47"
+            },
+            {
+              "path": "apps/web/e2e/invoice-corrections.spec.ts",
+              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+            },
+            {
+              "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
+              "sha256": "e026851e92c96aac15bd5893c31ee309ba89b3fe314e9b26d09c3e053386217f"
+            },
+            {
+              "path": "apps/web/e2e/invoice-deadline.spec.ts",
+              "sha256": "933106dca05ec2348044a36f4b74477fc7ed856bc7188f598b3e6913f0fc4929"
+            },
+            {
+              "path": "apps/web/e2e/invoice-due-period.spec.ts",
+              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
+              "sha256": "b741a2722eb450b14df68a98c21e6ef348b274f290b6c631b18952235dd4c2dc"
+            },
+            {
+              "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+              "sha256": "a041d265baaa367b1f246832b32aedcfb067dfc738661bea1ab7b3ea611dc9bc"
+            },
+            {
+              "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+              "sha256": "72790591ba96d9a112f4d0331cf13bd9cecd3c7adc1918545daa71fd8ce43d2c"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.test.ts",
+              "sha256": "a57907e3a550e33cf3a4de15ffad97c308adf715855087f43a31a3ab040367ee"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+              "sha256": "e02f67599336891149684ada26183a843509287856dfb4468781880f8e4ad419"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
+              "sha256": "a9e4ed163e2db67c812f366a2244af8987c75e160db0ef5c1eb45963d328c219"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-canceller.test.ts",
+              "sha256": "a6d2fe5101cf809d4c0c4f76c82e8f73fbdf54eecbf1874d2b77518df42900c3"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
+              "sha256": "d9d75522dfd50dfb5ee9e8742f80362c077ebefbd8d2b59ed1fd90816e6976e1"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-scheduler.integration.test.ts",
+              "sha256": "520363710bd934aea238fe298d72b17b49c1ee9707b17632a1f1819fb4a0d5b7"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
+              "sha256": "8bd9e3d4af3641ba330175d67cf1039460f1d2158fb081304e33b4ec31b744bb"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+              "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+              "sha256": "6b50f3c9d3053bbfd95dfc0aa568a29610cca52d45009a8a6b9348a9f14bff42"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-sender.test.ts",
+              "sha256": "662d4375077f98bf1c6bfc8b8cc704bd3727509766ecbb1caa3d2c12579d865c"
+            },
+            {
+              "path": "apps/worker/src/invoices/reminder-sender.ts",
+              "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "db8fe319aa954ba6c5d3589bbda1d43630602479e755da9019c5d2922a6537f3"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+            },
+            {
+              "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+              "sha256": "c6c10741a0c719bdee7e307a635ba129329963f48de38b15fe70720be893a05d"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-adjustment-kind.test.ts",
+              "sha256": "1eff879fa1e0786981995d071fa8248e73ec901101d68d38ef8d394238eb9447"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-correction-links.test.ts",
+              "sha256": "11a3b08f71cd79a4c8fdc75d97308ea500828784bb5bdc5dd733ac68bdb5ac9e"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-order-type-adjustment.test.ts",
+              "sha256": "f620b9fe342eae199a91ac1fd23500d39d75aa53871a6d7cba27edd1de74f7ef"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-reminder-cancel.test.ts",
+              "sha256": "5478cb1f50ca500939900d77995bce34fbfa5a8f956f057690e281a2c0db5b20"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-reminder-offset-toggles.test.ts",
+              "sha256": "40950e5b013f4660c3735fdfa6604033336970ee6dcb7b0fd2acfb00196fbf21"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-reminder-schedule-idempotency.test.ts",
+              "sha256": "4135a89343624b6acc04ff6171c5275a502e6b6633644d2e47b6180e5f0dabf4"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-reminder-schedule.test.ts",
+              "sha256": "3b85c4532c3a6a78050a3651fa38775cc06e1897b1953bac589d3590901a4233"
+            },
+            {
+              "path": "packages/db/src/migrate.service-due-periods.test.ts",
+              "sha256": "afe988bafb21b74db43a6b212032e3137da43a9a6a9c454d4718f45eea5bffd3"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-reminder-offset-toggles.test.ts",
+              "sha256": "aa519b7c3917f9a3a2e46aa35c08e25b3b1c4c536bf8bcbded8dbdeccfdc73a3"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+              "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-reminder-schedule-cancel.test.ts",
+              "sha256": "7a8e7acefd0c73d578ffe07d8630eae0e25ad521a8242b645cfe2d2ac5e5aeda"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-reminder-schedule-idempotency.test.ts",
+              "sha256": "d789df73be9a8bd442abd1ac16530729754c5004cea60d6a7b9906c42b6102ff"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-reminder-schedule.test.ts",
+              "sha256": "e4861a1fe05c6f45608604615153e3bc3df18b27911e8f23b10a09f34b721bd5"
+            },
+            {
+              "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+              "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+            },
+            {
+              "path": "packages/db/src/schema/invoices-adjustment-kind.test.ts",
+              "sha256": "aad25726cba9f56a8c60ff7e7ac58d0d6d6eabd72eed14a33a42fc0bb8d9bb34"
+            },
+            {
+              "path": "packages/db/src/schema/invoices-correction-links.test.ts",
+              "sha256": "5df5d8c32d5f489fcab4d2ccbc511fd2b955a0a70665448abf8168c762cac12e"
+            },
+            {
+              "path": "packages/db/src/schema/invoices-order-type-adjustment.test.ts",
+              "sha256": "9a4149974e5fa0c68abd3b3d99b38b055be88b0c9d87f01144124e0d7f85ab37"
+            },
+            {
+              "path": "packages/db/src/schema/service-due-periods.test.ts",
+              "sha256": "29fc8f14c0e208eac79dee696f4ff761a90b17a1fc6c42973b78a164ea59560f"
+            },
+            {
+              "path": "packages/db/src/schema/service-due-periods.ts",
+              "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+            },
+            {
+              "path": "packages/i18n/src/invoice-due-periods.ts",
+              "sha256": "41ea6882805652c3420317050f916d371959cc4df0918ca6557404ede314aa53"
+            },
+            {
+              "path": "packages/shared/src/finance/due-at-override.test.ts",
+              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+            },
+            {
+              "path": "packages/shared/src/finance/due-at-override.ts",
+              "sha256": "583aecdad0110b7ede85ac0fb8fb72dec15b0ae57d80659d970daf2a5944625e"
+            },
+            {
+              "path": "packages/shared/src/finance/due-at.test.ts",
+              "sha256": "f27d3f690f58300d3c248329fbda29c6dfb2fe26c7e526cd139cf5c8898164b6"
+            },
+            {
+              "path": "packages/shared/src/finance/due-at.ts",
+              "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-adjustment.test.ts",
+              "sha256": "d6b4f6269a075c3c87f9437a1979b97ad155b3a88ac9691399b36f7db1d531f2"
+            },
+            {
+              "path": "packages/shared/src/finance/reminder-offset-toggles.test.ts",
+              "sha256": "737bf48d52ccf8a6f239336fe258bc61d023d8c6330512481da814fc582d6df6"
+            },
+            {
+              "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+              "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+            },
+            {
+              "path": "packages/shared/src/finance/reminder-schedule.test.ts",
+              "sha256": "8ab9a985385b7afcd2127fe8a51cb54d737fa5aea71850ff6c25cb2f61d2b4d4"
+            },
+            {
+              "path": "packages/shared/src/finance/reminder-schedule.ts",
+              "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+            },
+            {
+              "path": "packages/shared/src/finance/service-due-periods.test.ts",
+              "sha256": "e9a414af442b55d5a22d4e94be3f6e9c0e2363545d60362b6f47d7f79e25c17c"
+            },
+            {
+              "path": "packages/shared/src/finance/service-due-periods.ts",
+              "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+            },
+            {
+              "path": "apps/api/src/notifications/notification-template.service.ts",
+              "sha256": "3a0cd63d30d8562026356e35f12d687e8860aa729cf39db9f89e1b260f850119"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+              "sha256": "8a8a80d7dcc1620c6924c9cc9be46c5e96205f29e09a5cd4fe2a7c0e2420eaf0"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+              "sha256": "dd14af384d932bec1a2899b69f8e1b4d4a5186789728f08aff096efe82f2a1ac"
+            },
+            {
+              "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+              "sha256": "9febac28f9732849f0d81cf025e53261d81819f375eb3ec7d329cfb56387989b"
+            },
+            {
+              "path": "apps/web/src/lib/sms-providers-api.ts",
+              "sha256": "a5ab805b7f36d51aca979bfcdebd44b1f436ede441ddfb5eed09876daef73185"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+              "sha256": "49e4b18958de7d4195e26ba3141887864d9b36c53d6645ca7ef8fe20d904d633"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-transport.ts",
+              "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+            },
+            {
+              "path": "docs/operations/notification-delivery-recovery.md",
+              "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
+            },
+            {
+              "path": "packages/i18n/src/providers.ts",
+              "sha256": "ce019099dd6b2b4acabc08678f44b610fbdc9c839f4075fc76185ea6358b3711"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
+              "sha256": "63c6e5a9dce10b593999c506d8e3707e01e1eba9050d18e1d12d20e2bcd8cd38"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.test.ts",
+              "sha256": "e73fd173f1f75f8920f62ab8b97eac67be7731201240d747e672fd96545ff37e"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.ts",
+              "sha256": "e3fc38fdc0a6ae71f3c9567f4f6042b87b66d759e7bb86bdd2450e2e86d9cdbc"
+            },
+            {
+              "path": "packages/db/drizzle/0064_add_invoice_correction_self_references.sql",
+              "sha256": "2f51ecf0acc42344207dd9c01fbe572295c720f2098d8cf4474515d3958fa876"
+            },
+            {
+              "path": "packages/db/drizzle/0065_invoice_order_type_unique_exclude_replacements.sql",
+              "sha256": "93008ebbba3fe9ec926d1c4d747a53f901b6749f24d3c3979d15c8fd15ab53ba"
+            },
+            {
+              "path": "packages/db/drizzle/0066_invoice_order_type_unique_exclude_adjustments.sql",
+              "sha256": "751a1a72d79161fb7e91edf79898758d7ab110f4da08c3e9e231d4b0b535628c"
+            },
+            {
+              "path": "packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql",
+              "sha256": "bba10ea9b23aef2ee4e4032fc345633da790422ad03f8eccff0ad5a5cd4f0bab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-correction-request.ts",
+              "sha256": "a1aa5cecbffc1bdc16ac86fdfa186b205f9614686215e77d3a2883fd746d9f79"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+              "sha256": "f0ba02f7b0b1962197fe269bc630024d82b3df387f1efabf407a4dd3bb1ae690"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice.module.ts",
+              "sha256": "1210830813043578a93594d17831b586a11e26b264181424d81524686daa310d"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+              "sha256": "ba9f5904feb34150102831b96250b12b4f8576fac6d1d50851815ff35081b3a6"
+            },
+            {
+              "path": "packages/i18n/src/invoice-corrections.ts",
+              "sha256": "5bd99466bc2b6e2c657220418a9606a020c245325fab535cbababd7e87b8bd01"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+            },
+            {
+              "path": "apps/web/e2e/approval-queue.spec.ts",
+              "sha256": "dbeed48d9ef303ee13ead30e555a7bf79f03b58a204d52d12eda68d73a567d0d"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "e4c552bac8c4bf75638667864b2e0b12ad2f7ee5f9f507332e78191d39c72dfe"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+              "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+            },
+            {
+              "path": "apps/web/src/routes/__root.tsx",
+              "sha256": "cf0a8def503b2ae46959072e97b8a81b187d932359f97b5ca5d1a87b79ad428c"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "aa3f03bc3991e437ca35e9f25e056272667dfb9e54320633d3a2b3ac96fc890b"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
+              "sha256": "7c63417d465ac9f5ec9b7851235839362011eba700918b242bb6dd0e9756d1e6"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
+              "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
+              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reconciliation.ts",
+              "sha256": "6e9b100dfa56f366f183fcab9b82ec50a7b12715a6792712ce9e3d56dd460712"
+            },
+            {
+              "path": "apps/api/src/finance/financial-submission-actor.ts",
+              "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-authority.integration.test.ts",
+              "sha256": "a3f7cfcf9c73462673474e04d9a060c64bc067c9e5187fa6a821e6acad22f00e"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+              "sha256": "75cfaae2a6308de878f20ff3c1b474e5dbb65b5b20115807c35e6e3e83a853b8"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.integration.test.ts",
+              "sha256": "e6f2e4e9c291452813914a6d1442fe476cddba5a585f98a390909e5d9712c009"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/web/e2e/online-payment-return.spec.ts",
+              "sha256": "9b6e148f7806514d1c41ab858e94faf520aad52354482126c73a057bba1f4485"
+            },
+            {
+              "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+              "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+            },
+            {
+              "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+              "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-actor.ts",
+              "sha256": "619524a50c605981d2316b437a3c1dac9dc808bf6f53ed6c46c9240143fe9165"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+              "sha256": "2401f88002bde001a366c719f30140f6e48d8e4a7b0bfe55dd113e8267779153"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-topup.integration.test.ts",
+              "sha256": "154e281b83918ae7e040e606ea98a66fda9f0d6bda90660e2662589d855493a1"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+              "sha256": "422fb39d48c2f300060677b7606995c3b1696cac25cc11d285e28cc2e3ba43eb"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-fields.ts",
+              "sha256": "74bc5c9c5c6ec43c95ad749e6d3f80c9479fe7a57cb6d977b1201c1911152105"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
+              "sha256": "887e67dd95dabbe53a59d31a342842d7fa61ea0504577129b509348f21c2131f"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-fields.ts",
+              "sha256": "b904679137fd51175c661c8c2f2135b02f5af0aa5ebe50d2753bbc210d23b41c"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-fields.ts",
+              "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
+            },
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+              "sha256": "eac2a0488f4eddee7c1c6585176931781cd1f1d6a04994415b4e5f1a47b6df00"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+              "sha256": "22ca40322761d6de2190332ee314b38629008dcaea3fab2233f68f4df51634f2"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "abfa5762b9d80a65bd367b1e1649c99649722e00448f3b55f7de94a640c60a55"
+            },
+            {
+              "path": "apps/web/e2e/receipt-emergency.spec.ts",
+              "sha256": "4f7d0b8938e8e0169871c13615931b54ee4390163d1a86e8e70ad4570c6813a8"
+            },
+            {
+              "path": "apps/web/src/lib/bank-receipt-confirmation.ts",
+              "sha256": "1572ee12f4defc1166bd5aaca35d6e8d8916f57403495d7bdf6859887a15d97d"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+              "sha256": "4fbe73ae188a72f8a867021fc8c4167206c040beb3e9e5f693f1164ea55b8160"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "143786921ef55380f04f91b9edb8456ca6b79c69064fa8d564e9f4d8620de383"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+            },
+            {
+              "path": "packages/i18n/src/wallet-receipts.ts",
+              "sha256": "2f86ee0207cb4f0784c015303722258ff300b9bd3fb1231442ae729b6da8db4d"
+            },
+            {
+              "path": "packages/shared/src/finance/online-topup-expiry.ts",
+              "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-overpayment.ts",
+              "sha256": "3563045e6f05ca885da52d60c111402acba6cb5790683c7541e04b9c550cf692"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-config.ts",
+              "sha256": "48e161c9f4a063fb25b6feaa5de30bc2da81a6025c3f4057d43b58ffad34f380"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+            },
+            {
+              "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
+              "sha256": "f4de404ae7c395f4e7e1aa7b58c1c75f133aad3402270b4ee8a710b28263b73d"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+              "sha256": "e541d12f2dce38aa194c697c4b7690a8e348650b46de2669245c0d971d569d93"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.module.ts",
+              "sha256": "29aa2576c33b2a0a1139ea97e8d455bc22cdab14add7916a58406c11f8511395"
+            },
+            {
+              "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+              "sha256": "5fd14372d10d40c5a44ca89b0987aec5ea591873f0bcdae43cd109881c0fb65a"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
+            },
+            {
+              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+              "sha256": "bb908e0e1d7a28efe69ce16b2fbd50a98a7d1e4d11243e12bdb0309a47610355"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "apps/web/vite.config.ts",
+              "sha256": "7a15874f33e5958c98647e947745b37ce0d7b4793003ff6865b0f3134e75d413"
+            },
+            {
+              "path": "packages/db/src/schema/idempotency-keys.ts",
+              "sha256": "dc4a2bcdf02e92603cad7498abd35acffaa4cb2409dd2fe3bda75ba62217ff01"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+              "sha256": "d407e6b2bb9d32181f16ec50d42520b0f86528ba12fced95ab8c9bc680d8a124"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "a441bad377bc7f01b025ab6172c851e984dc5e328d46cacd52dc0b5e76153dae"
+            },
+            {
+              "path": "packages/i18n/src/wallet-invoice-payment.ts",
+              "sha256": "a01d60530b9eb91b1c391b7e8d4d5795135252b47baeef4c36fcddde6e85bbf9"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+              "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.integration.test.ts",
+              "sha256": "ed9ec6b98ed5651cd5fe2718e0c8b78fd7ff79b4b35b2a97c2a7c2c3ad92e605"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.test.ts",
+              "sha256": "0cc320eaddc8731850409d3c4f121bc2468404264a24da994f8c3effb0d10662"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+            },
+            {
+              "path": "packages/db/drizzle/0073_create_idempotency_keys.sql",
+              "sha256": "8fc896d59c81d151d1c899ee8bfef60f55766e226a66380be545467c647abf20"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reverse.integration.test.ts",
+              "sha256": "88e11be3b150c4addef6f91f2abd270f94ca945a0c4b4df5c21a5a0646f088d6"
+            },
+            {
+              "path": "packages/db/drizzle/0077_wallet_tx_reversal_original_check.sql",
+              "sha256": "2cd9237a798e37a1b05e1c16e661ab6e523a96f42af9723edf816af31f8dc1ba"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reversal.test.ts",
+              "sha256": "4442fdf214314e87fe4892d232e955ae6e570366b36de3844ea9d9742f0f0edd"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reversal.ts",
+              "sha256": "06f138304ced158ded6b6beea0171dd5b1dc5cf9891dac327c48112b07b13306"
+            },
+            {
+              "path": "apps/api/src/admin/chargeback-alert.controller.ts",
+              "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+            },
+            {
+              "path": "apps/api/src/notifications/notification-center.service.ts",
+              "sha256": "a20034600fadaaa337193c75b63cf9eeabdbb790ea654d0b3bbfc10eb735909d"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+              "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
+            },
+            {
+              "path": "apps/web/e2e/crm-dashboard.spec.ts",
+              "sha256": "98ea7057c4e16b00bfd9d51f02334398232626607191535dfb45f4d549b908ed"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.tsx",
+              "sha256": "5924aea47c88060882c276f3a0f29d5b9db3c808de7f3574a247fe25d73f8499"
+            },
+            {
+              "path": "apps/worker/src/notifications/in-app-transport.ts",
+              "sha256": "04cb783f855ca2899f509d79966717bc99c9f2aac0b6888acb1a120c3032d513"
+            },
+            {
+              "path": "packages/db/src/seed/notification-templates.ts",
+              "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-chargeback-alert.ts",
+              "sha256": "097c62cd1af496d062552a095a41ead559e2b7beaa3a932694789253b7b9279f"
+            },
+            {
+              "path": "packages/shared/src/notifications/inbox-content.ts",
+              "sha256": "872793652a8330792dd1715517e62195691feeba8f254fc8b3a71a94e74e24d1"
+            },
+            {
+              "path": "packages/shared/src/notifications/notification-registry.ts",
+              "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "54bdc858ea7072a509477fefae5f38e5beba670980c1cf6ab4203248765a0ef0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "f4fee8eb64f6086938a5bf3d0eb4bbb673106b3d5b0b83c3021fedc27f711e66"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "1d4aad9d277bbc44072cab39126b9f773684e02f2428a9cea858b1ecaea14817"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "packages/db/drizzle/0078_create_bank_receipts.sql",
+              "sha256": "d674c22ca6d7166fefc5be65b885f572228eef69163726d62509a9de78dbe44d"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+              "sha256": "6204d1d8fed35d68f0ef924fcc4f996d015663769f98e499bd6226724b2bd3a0"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
+              "sha256": "a7f686830dc8171b15c38a6216f1f94f0afe4b0861691e21a4f621745ebf55dd"
+            },
+            {
+              "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+              "sha256": "dd1b01fc220f2e64efc943615c892684dd5b8e958a99c2fc15e23f44c147426c"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+              "sha256": "b7b8e45ae0016345f0189c77b808329d2091b40dd0cc8922253b6781243e746a"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+              "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "949ef8870987de7fa1f7d0048b7bf3c866c37a9b08d29f4e75ffac69535399f2"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
+              "sha256": "c16581dc6df65cf3dc4b6c7f30d4f46a1cbb0a5e3c994d15d03bce7d2d51da81"
+            },
+            {
+              "path": "apps/api/src/contract/contract-activation.controller.ts",
+              "sha256": "1222b631fa1a74d4fcc85f713c8991fc23cac7b80f99efc8225b8edfd3929430"
+            },
+            {
+              "path": "apps/api/src/contract/contract-activation.service.ts",
+              "sha256": "11ad104fbc5797a62aa5d13b721e48643059428b359d637faad89f3bcec2ec9c"
+            },
+            {
+              "path": "apps/api/src/contract/contract-authoring-authority.test.ts",
+              "sha256": "8e90c9d1def1e91658cb7107b2d69189581356f26b80f45f2f73a91f66311f7a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-authoring-input-fields.test.ts",
+              "sha256": "428c3fb4822146a10b94c1a87d3ec2f230b9dcc3fb8643576964b8bc57eddd94"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
+              "sha256": "a4f61a13d20ec00a4e67bf8e3a4e7f95ffc18f47e181ee03f62269bd241e51c4"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-request.service.ts",
+              "sha256": "35d06a51d9389c8207e9dfb6f8e8648f165d3f1c8dcd9344899f7a6d912b46ec"
+            },
+            {
+              "path": "apps/api/src/contract/contract-customer-access.ts",
+              "sha256": "789ba0972b242090edf44322feb53fbea1c926edefd6819720c1e62aaf7bb153"
+            },
+            {
+              "path": "apps/api/src/contract/contract-financial-review.test.ts",
+              "sha256": "db56ab78fc0dac2c3630da07c9a7f9d55df2f6856641c8ec034295ca671645e6"
+            },
+            {
+              "path": "apps/api/src/contract/contract-journey-authority.test.ts",
+              "sha256": "a6cbde1c9a26ec9dcfc3dbf50a6c25dff9e9eca05620954a180427b82de003de"
+            },
+            {
+              "path": "apps/api/src/contract/contract-journey-input-fields.test.ts",
+              "sha256": "5cb789624c514d9c2867fde1e349edd05079889cc30ea14c36cda3e055f499c2"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review-http.integration.test.ts",
+              "sha256": "9cca4811781a2eb25092200a2f5b146c588ff23bd9cffb6d465030075a8d4f36"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review.controller.ts",
+              "sha256": "ad9e00f071c317515b975684dd86fe5430e6490ab1103900ee26793d0dc59828"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review.service.ts",
+              "sha256": "625abccba9aeaefd2f9da00c0f097483f951e2d91df8da467ee23a5a368d78c6"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+              "sha256": "18a80104921ac94e239441267fa362d54b6b0b48aee8ecff70612bfff87baa8b"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature.controller.ts",
+              "sha256": "73363ba6ab962c7b08cbda89860a378cdbcded1c818eef6eefca622161250b4d"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature.service.ts",
+              "sha256": "a8eb573625c889f112a8256cee2754b45cbd042439f77aa493c95534fae3a47d"
+            },
+            {
+              "path": "apps/api/src/contract/contract-status-history.ts",
+              "sha256": "756bee2e3716bfa50f29e49becb07875c05e447c6df71018bd88ae58c3d8f36a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-transactions.ts",
+              "sha256": "91279ef9d7f4cd648cbdf736e73603f992db89b43f9be052fe29f22080e8f261"
+            },
+            {
+              "path": "apps/api/src/contract/contract.controller.ts",
+              "sha256": "953451cbb86603635cac0ab6e79f5e11f3bc54df7cbe17dcbf51abedd825d610"
+            },
+            {
+              "path": "apps/api/src/contract/contract.service.ts",
+              "sha256": "549e9a25dd172df4c9e9ed4bb29e2e67dc5d4f63988e00c326f98ec844b1c37e"
+            },
+            {
+              "path": "apps/web/e2e/contract-activation.spec.ts",
+              "sha256": "92f4452f22975f00600220f50150d2f0bd9e070650f5d3a7ecc38e21192743e0"
+            },
+            {
+              "path": "apps/web/e2e/contract-authoring.spec.ts",
+              "sha256": "a59de58f2bacd2a12efdb0223a0bc4edfdc160f4f4b06e7c58f194047bc6cea2"
+            },
+            {
+              "path": "apps/web/e2e/contract-context.spec.ts",
+              "sha256": "ad04cb0e8f9e569c6a4f16497e061838f10d222aeb4611e983495bee8ebf9983"
+            },
+            {
+              "path": "apps/web/e2e/contract-limits.spec.ts",
+              "sha256": "2614b5767b22320b78619557a603b91a072ba3a50b276ebe4fd58d4307759b4f"
+            },
+            {
+              "path": "apps/web/e2e/contract-settings-recovery.spec.ts",
+              "sha256": "447e7cde5c84f642d9473dac82f648ddde14feb9fb3693cdb71259a42b7a3e18"
+            },
+            {
+              "path": "apps/web/e2e/contracts.spec.ts",
+              "sha256": "8e9408df100ddd3d2408bb75250470344ef0febfc04a7e50070839e7af8c83ed"
+            },
+            {
+              "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
+              "sha256": "1f9e1e9a77bdf84924a6e47438a34dc7c0c6011dcf80a48755f0365ecefbed1f"
+            },
+            {
+              "path": "apps/web/src/components/ContractActivation.test.tsx",
+              "sha256": "1b4397f30d351545e165bbb4a43cdeb3ae522fcf7417906fca49b6c15dad1232"
+            },
+            {
+              "path": "apps/web/src/components/ContractActivationPanel.tsx",
+              "sha256": "e18e5e6bb3880c8fb0e46213bd7da267c25956db13148f0b3a9616d4c1fdc197"
+            },
+            {
+              "path": "apps/web/src/components/ContractActivationRules.tsx",
+              "sha256": "a36aad9fe06922b3b422e0d20842bfea7957e07cf64c802a56d06887e1a180ba"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
+              "sha256": "15bbf3c3d558141983f0532f8be4ce7f7e007839bc124003577bddedcda13f0f"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
+              "sha256": "3161d74ea5af589894936c881ffb6bc66f8bd0cdaba2451f4b66a1262a13299c"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
+              "sha256": "34324f5c68833ec15a135853a1ae1337a4a422e1f8d341e75705d41dbc54b318"
+            },
+            {
+              "path": "apps/web/src/components/ContractContextEditor.test.tsx",
+              "sha256": "c865195b814fec1f0e32fcb670d33d2d74b7883b056e3570d1437669b50d1b87"
+            },
+            {
+              "path": "apps/web/src/components/ContractContextEditor.tsx",
+              "sha256": "e5841b590d5047f299179bed8f58a63a69ea13ecb769841ffadb68a7d11927de"
+            },
+            {
+              "path": "apps/web/src/components/ContractDetail.tsx",
+              "sha256": "3eda4a2cfbce1827dabe6e599bd331aaceb9e7f7d62122c0252a9e8fddc4eb8c"
+            },
+            {
+              "path": "apps/web/src/components/ContractDraftChoices.tsx",
+              "sha256": "5fc7ee1dc4b12eb041a038eb87580e250f95c1322733807454f1c91f9e897453"
+            },
+            {
+              "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
+              "sha256": "30e759f74c90d07cccec9b650e0edb122b92e2df0eecfa4abcf1a3ad84f9afd4"
+            },
+            {
+              "path": "apps/web/src/components/ContractDraftEditor.tsx",
+              "sha256": "6c30effb7f61f535c90a5ebb7216c8ff77ab1c2ec9f32cce913e3e5e766c504c"
+            },
+            {
+              "path": "apps/web/src/components/ContractDraftForm.tsx",
+              "sha256": "60065cba8d38a4987dc133d86a278ff24f3983667602c34130681ddf19f9f478"
+            },
+            {
+              "path": "apps/web/src/components/ContractSignaturePanel.tsx",
+              "sha256": "b11c8c17be93ffa91e4d41b5206126255d83367339baf9234dc64c261a544122"
+            },
+            {
+              "path": "apps/web/src/components/ContractStatusTimeline.test.tsx",
+              "sha256": "f9ab0555dc6c157de12929b6f528e94640f7a81df7fb1328f3aec3042f562b15"
+            },
+            {
+              "path": "apps/web/src/components/ContractStatusTimeline.tsx",
+              "sha256": "81c88ce3997b79bffd2af5de08308c084907ff855346c83031a08380a5848116"
+            },
+            {
+              "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
+              "sha256": "bd663ca41f85faab7101f3465274234a3dbb0b33459beb15e6978138cfaa2d33"
+            },
+            {
+              "path": "apps/web/src/components/ContractsWorkspace.tsx",
+              "sha256": "ed1b90dac3a922131afd3be25f0eb5adf906beb771ef789c8ec56647f977f3de"
+            },
+            {
+              "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
+              "sha256": "a2652431ae0ab6ab48a73bdcc1152ee921dfb12c2c3808a6c826ec6e180802ff"
+            },
+            {
+              "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
+              "sha256": "45558398b3778866297f78121a16f4288cd397bbc5350177a7f6a072e399be4c"
+            },
+            {
+              "path": "apps/web/src/lib/contract-authoring-form.ts",
+              "sha256": "27134f97bc7991245940892fd5746b835d59856be37da915248821127bfc802d"
+            },
+            {
+              "path": "apps/web/src/lib/contract-cancellation.ts",
+              "sha256": "79d7429ec6a34c74371346e122572c95fedefb43de577bcfe0adc47b7301832f"
+            },
+            {
+              "path": "apps/web/src/lib/contracts.ts",
+              "sha256": "a564b5ecbbdf3b14138ae7eb6d594e299ab9a68bc086908ef062a888a861236f"
+            },
+            {
+              "path": "apps/worker/src/contracts/activation-runner.test.ts",
+              "sha256": "a6d95548536095e8f24585ba2a4e1052ab776e9cc70200fd24576ec07150ad84"
+            },
+            {
+              "path": "apps/worker/src/contracts/activation-runner.ts",
+              "sha256": "44d4c906d29066d0358e1b66ed340e856b6e4f74395bea036b711fdbc15bcba6"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.test.ts",
+              "sha256": "58f0ada881228ae1eb5992153d4a302630d74677b85294d645406e5b4d5dfa93"
+            },
+            {
+              "path": "apps/worker/src/contracts/completion-runner.ts",
+              "sha256": "c4934581f8661f6998b916f947ee54c185466fdcc71ba69f0d10fe0b0b217090"
+            },
+            {
+              "path": "packages/db/drizzle/production/0138_contract_drafts.sql",
+              "sha256": "aee3c31baa092883e3d48f0e2bb5597eccdc2683698fca46b6a336100b0cffb9"
+            },
+            {
+              "path": "packages/db/drizzle/production/0139_contract_review.sql",
+              "sha256": "2187dfcedb7569b77743b3db7f535efa8e2e338181da47807a9e1943c617faf2"
+            },
+            {
+              "path": "packages/db/drizzle/production/0141_contract_signature_evidence.sql",
+              "sha256": "1eb046c3736dc44a3e8ca5eb3cabf86d3de2bdfa763b34cee0c1a28284ab37d5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0142_contract_activation_requirements.sql",
+              "sha256": "b201c235108acf77831e88921aaf4a4b2a71c1ef885c03f51c4964f3f217fc2e"
+            },
+            {
+              "path": "packages/db/drizzle/production/0143_contract_system_activation.sql",
+              "sha256": "b3c2c73c35e5efebed6ee9a77e85de5e1df518dd2c3774a28195a3837908516e"
+            },
+            {
+              "path": "packages/db/drizzle/production/0194_contract_amendment_drafts.sql",
+              "sha256": "ae5afeb43b186c535799f6149f92976a44066a304e0cb387c85a83705812fb17"
+            },
+            {
+              "path": "packages/db/src/contract-activation-upgrade.migrated.test.ts",
+              "sha256": "f20afc316bcd4dfb3a77f6f0e7927d2a3caa2b904b824a5be9e5f646e11fd51a"
+            },
+            {
+              "path": "packages/db/src/contract-activation.migrated.test.ts",
+              "sha256": "30bc8cd3773524a05dbf53f48a230a92d5fe3b1cdaa5d89ba6b0bb8eca5d830c"
+            },
+            {
+              "path": "packages/db/src/contract-activation.ts",
+              "sha256": "dda9356cd3d6c01d251f16ad11d08b8364c18e519bd65a3d3157cc24e038dfc9"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation-requests.migrated.test.ts",
+              "sha256": "28aa7c9a61e23d39b02e9c30c506d5879acf0707216d3f9b8d50c1efb4482731"
+            },
+            {
+              "path": "packages/db/src/contract-completion-upgrade.migrated.test.ts",
+              "sha256": "199a1b3f614b3daec8f64e9a6ca382849225c65dc5f2d11e66328dd28a2a78bb"
+            },
+            {
+              "path": "packages/db/src/contract-completion.migrated.test.ts",
+              "sha256": "e810f58f55c5c7df8646bef7dfc9e0138dcc30bb9e42ba6038f3038f55a7758e"
+            },
+            {
+              "path": "packages/db/src/contract-completion.ts",
+              "sha256": "f21cb8cf3cd7cab1f196028499431361a384792d97f5ae54ef69cecf0286af51"
+            },
+            {
+              "path": "packages/db/src/contract-review.migrated.test.ts",
+              "sha256": "92d7d8760072efb56fb091286d2319e7d0df179e625374360f4ce304ac299c60"
+            },
+            {
+              "path": "packages/db/src/contract-signatures.migrated.test.ts",
+              "sha256": "e250a467748823cdae0dc13de40091373e1b3da446d6754b6ff092ae3104fb60"
+            },
+            {
+              "path": "packages/db/src/contract-system-activation.migrated.test.ts",
+              "sha256": "139222acddb3a33e32e66c02787cc2c40851b14b153a7be0c8200b1f480169ca"
+            },
+            {
+              "path": "packages/db/src/contract-system-audit-upgrade.migrated.test.ts",
+              "sha256": "45c15f553235c6737f3ffc8506ccf3173ab4b9be4e52f40e3f1e72e38674dc73"
+            },
+            {
+              "path": "packages/db/src/contracts.migrated.test.ts",
+              "sha256": "d8107ccb99ab3ee7eb22ede0a0eb6993cfb953d31a54b25517fc77dd033ea7e4"
+            },
+            {
+              "path": "packages/db/src/schema/contract-activation.ts",
+              "sha256": "ed5407e1c091139702d49f15e2fd87b81e539f13fa7b24cb143e0c8692cbdaf7"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation-requests.ts",
+              "sha256": "7e0afd3d8f6af8b8cd96314021a386610c73df9bbf8fbfb0f1587aa3a5c68aff"
+            },
+            {
+              "path": "packages/db/src/schema/contract-review.ts",
+              "sha256": "5c4bcf3d1d67bb5eeffb4bc8500ec561fa2ec2fd3c15413982ac03d8400a6cd1"
+            },
+            {
+              "path": "packages/db/src/schema/contract-signatures.ts",
+              "sha256": "9fe0b33dd607c9c60dc7f862a4b6352dc051c7d2806703ad17cbf728684cf523"
+            },
+            {
+              "path": "packages/i18n/src/contracts.ts",
+              "sha256": "3b4bafb3a4f21ea93cb5f77c54367a07139554c7b4fa9db4d40b890c8b1dee00"
+            },
+            {
+              "path": "apps/api/src/contract/contract-pdf.service.ts",
+              "sha256": "2160b6e8268b7460d2b0682ff73eb893dd31bb192370d25771ab13c91f94d7e4"
+            },
+            {
+              "path": "apps/api/src/contract/contract-pdf.ts",
+              "sha256": "2056e887f7f35a3d1562bf8d8c2ab336e48da992d6e210e8ae522e21c21a8277"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "0851edbb0c800cc3a4649647864378d2dd6c345632e0b15f3b72c95340378849"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "91295468786464145c600423c4d0528d367846b879b4b25284527765e0697143"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "13937a6bd4199c01d9cbd51eea9b4a03bc35e31f0fb637e061cd7326959aa8c6"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "09708dcaf86efab0516a0f89b4a2f4e619289777da22fab8f97ccf9a762f555e"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
+              "sha256": "014c6b0cc99e1d20810c42b10a547b32e0899af21b51203729e5dc45c656d24f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.test.ts",
+              "sha256": "a36ae22d6c0489cafafa196bf889a9ab7c1ba956df1745eff74f5a6732d93fbb"
+            },
+            {
+              "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
+              "sha256": "578a24eeb401ac5bec14bd011a476cb0660c3aaed56cc90cc6ced27f122b3193"
+            },
+            {
+              "path": "apps/web/e2e/contract-signatures.spec.ts",
+              "sha256": "5ec1bc7abd1f6d5b2de5455b04d4d2270be00618d4b252ec9864c9e0fa99efc6"
+            },
+            {
+              "path": "apps/web/e2e/document-list-recovery.spec.ts",
+              "sha256": "7c16d57abff2a4c529f1b16d88cb36b914ab5c11a7584b50e121861e1e63cc7e"
+            },
+            {
+              "path": "apps/web/e2e/document-records.spec.ts",
+              "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+            },
+            {
+              "path": "apps/web/e2e/documents.spec.ts",
+              "sha256": "47c0307c78cd5e00161c5f01dfcd983c010242f1383f7c2c5d9c7d747cdf6a55"
+            },
+            {
+              "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
+              "sha256": "f680224560ea6cffd4ac9f81088c5cb35666836c0e1e530c3f40fb66ce255188"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "7a070a54f0a87dfdc05f5f5607d4d3d0bd83742496d2623cc916491dcb0cd91a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "602b5daac0a0adc42a62cc6436939b212bc941b273aec9ec6c4ed92c3861cf4f"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "f486a1bfc89a58b278a874029ab3a7630ffe067c32c33b67ebc88e03e06bb0d5"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "239a6dcbf39e1ea2a839ed96f9369687c5a3db23aae0258433ecb97013bd5d3e"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "b7b9eda24cf4458cfa3014fd9b25714ee69c16fc2a624950a4bac205b24da37d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "c9ae7e25ca7952ca313860b3dad7971a3fc229579ed429e69accb3aac6820ab6"
+            },
+            {
+              "path": "apps/web/src/components/contract-authoring-native.test.tsx",
+              "sha256": "5abb07283ad12d5107dcec910e3ecc90f5e014bca0473f87bf7b6da3154b3288"
+            },
+            {
+              "path": "apps/web/src/components/contract-signature-native-validation.test.tsx",
+              "sha256": "a105244fca8267a4cf1fdd34dbf3dd7143d311cbe5371b0d5c408f010239b826"
+            },
+            {
+              "path": "apps/web/src/components/contract-signature-password-recovery.test.tsx",
+              "sha256": "7ef27184c590c742abd3a40424b1478ef5ef25193cdd956b3bbc9b8fb224bca9"
+            },
+            {
+              "path": "apps/web/src/components/document-list-recovery.test.tsx",
+              "sha256": "c233f48eb8c3fc2f7d0fcc2e47dbba056d11cc3c26a5f5961cbf5f054dcbd749"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form.test.ts",
+              "sha256": "530cb1d3ef8bf88d4cf78db3615cff6946e377fa92f8e6c54ffc68129229c21b"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form.ts",
+              "sha256": "ab7296399d86fde0e61b69f840e00c86ecb0ed78dc4396503468ca9aaabc4649"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/worker/src/documents/clamav.test.ts",
+              "sha256": "aaeebe5ffe008c6a2da6cbbd7dedc86092cfe654d6a0825b0c58d16c3de83321"
+            },
+            {
+              "path": "apps/worker/src/documents/clamav.ts",
+              "sha256": "fdbece8702d79782d8746068a16d185bda2c01d79be8b335e69179ca752cea13"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+            },
+            {
+              "path": "kanban/epics/04-invoices-wallet-contracts.md",
+              "sha256": "5dd37ca24b944576b4fe566847e326e3893e4e1a65bc29ec17e8292a78b70d84"
+            },
+            {
+              "path": "packages/db/drizzle/production/0140_document_lifecycle.sql",
+              "sha256": "7334c8337f4dce799029dd1fc9a1f00c20063022cfe0dd549f1035b3560a848d"
+            },
+            {
+              "path": "packages/db/drizzle/production/0196_pending_amendment_documents.sql",
+              "sha256": "d594b0565cc5858bd1a0703687a42d77b32f9b1863733bd56242c7d23d27685a"
+            },
+            {
+              "path": "packages/db/drizzle/production/0199_quarantined_contract_original_replacement.sql",
+              "sha256": "67889bed57a0facffff1c9ab2d4e263adc90aa3e1885c881d5645f50046d6c7c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0205_document_scanning.sql",
+              "sha256": "68b6b006c01ba170f3019713d45db8125a8adf90af7dac2e7d7d63a490bf7fc5"
+            },
+            {
+              "path": "packages/db/src/documents.migrated.test.ts",
+              "sha256": "26656eb7de8af7c95817ac114e7fcf3b242a6eda5c0d2a8f180512fe3dc0062f"
+            },
+            {
+              "path": "packages/db/src/schema/document-scan-jobs.ts",
+              "sha256": "8a93379c4ea285d7c8d8fe911b7f0aa076cd3377febe87b8c10b20a39873c5e0"
+            },
+            {
+              "path": "packages/db/src/schema/documents.ts",
+              "sha256": "4328349824236f20d5f0b67abe7941a5a1ea6985cd7e805f258e5a14dd8c5d15"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "11497fdffae17f0df54ce1e9cc7708b952c90f7c15ad71ba536ce39ba2e8dd3d"
+            },
+            {
+              "path": ".size-limit.json",
+              "sha256": "2d3a715a9d1be56bdaf5aeaf1ce6074f2ac4b6ed9a91796bebe7cf6a17f8a6ec"
+            },
+            {
+              "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
+              "sha256": "7505fa807ddf738d1c7473f38cc80fc980c92431ecaaa1363ee926663b7c313c"
+            },
+            {
+              "path": "apps/api/src/admin/contract-electricity-limits.controller.test.ts",
+              "sha256": "2d6e25b34fbb6be70b016d214cd495221a2bc5b06a44795abf2b58cfca6f27fe"
+            },
+            {
+              "path": "apps/api/src/admin/contract-electricity-limits.controller.ts",
+              "sha256": "6d036bf059dae10b9940a7eea6744bad7399301912a08cad1d06fc27f9e6b270"
+            },
+            {
+              "path": "apps/api/src/admin/contract-electricity-limits.service.test.ts",
+              "sha256": "357a7cb55f551d2ce32c448c8b37be3c8b27d2b128a305871339f3ed1b42d3fd"
+            },
+            {
+              "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
+              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
+              "sha256": "5a4d5cf535e84317ca67cc636ecb3ee61e471fbb479e6db98274ee12c38f2287"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-increase.controller.ts",
+              "sha256": "1e04cd4afcec1923a6aa3ae5867afef52a5efec85979b63ab856cb9f70c7ac8e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-increase.service.ts",
+              "sha256": "5e07f7f40b6282063e32cf13bdd5cd4796758e3f5fc0ef44950982291b7c387d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-increase.test.ts",
+              "sha256": "f459153205fb602e163448982f7c1d197545607dcf5849a2ec5c213f84d9888f"
+            },
+            {
+              "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+              "sha256": "b8355c2f0ae71363362887764475341556fec6f58007873f27e1d67af1ba1c23"
+            },
+            {
+              "path": "apps/web/e2e/electricity-increase-queue.spec.ts",
+              "sha256": "c5f61726a26232137a46ffe28e3100852a51e6b4a3276a9b1f4cba0cbf5cdcf2"
+            },
+            {
+              "path": "apps/web/e2e/electricity-quantity-increase-form-fixture.ts",
+              "sha256": "12effef9f7d0cd5675385a5b72ebf775ced99754588f7c20347c2089332e57fc"
+            },
+            {
+              "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
+              "sha256": "71edaa5dcbec31f27f96f755a982df3943be694354be76b670e943ba8d14ae7a"
+            },
+            {
+              "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
+              "sha256": "46f23f7f0d07c1369a0f0d23592136e56fcce6067cec0952cd709c36b5026cc6"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-increase-decision-form-schemas.ts",
+              "sha256": "6db92409f9ad214b5f1b1e55db52ac71dafa23676585ce47c967da88623c128d"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-increase-decision-form.test.ts",
+              "sha256": "b74b4999c012f1fb5e669e6da49b114eb659ea59728ab5069afb7839ce78253b"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-increase-decision-form.ts",
+              "sha256": "f1e2b4777cb2b74bc91b93d6c952835750aed74176a685da3fed47247ca0f961"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-increase-form-schemas.ts",
+              "sha256": "0f9f4a9e3972f77bc03b777cd9b083f6c3cfd115fa8008c86c0b8abbeeb4b969"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-increase-form.test.ts",
+              "sha256": "4b96833f83600ee206f9db85ad2a13650c4edceec49507a490b4c068604cce82"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-increase-form.ts",
+              "sha256": "73721e81ebe83a0d9a10308801b4714256bd1c218aa929d560bf9081a922263c"
+            },
+            {
+              "path": "apps/web/src/pages/admin-electricity-increases.test.tsx",
+              "sha256": "79dbec9d84c8a9a577cc189553df045ad8f517e17f80d15c48b0c2757be1b88a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-increase-decision-forms.test.tsx",
+              "sha256": "45a15d90f7ccd983cf235773f5308f71c7bc8718a93a6c37b19c51cb66271156"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-increase-fixtures.ts",
+              "sha256": "23b6887f184ac39901f7cdaf61b6eb4b357c098942a60155c47069e0785628d0"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-increase-forms.test.tsx",
+              "sha256": "8abd865cd8c7d4b779653401b60830edac67fde99f2638b7a8a0d02fe2715814"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-increase-panel.test.tsx",
+              "sha256": "4491e6739055133ef00b93beb9deaf21927d22a232d8c7760a524856b0710025"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-increases.tsx",
+              "sha256": "80e57cfbe4019d20c23bc9899c8eba3dedd0b9954601e0c42d57341b83110396"
+            },
+            {
+              "path": "apps/web/src/test/electricity-increase-decision-fixtures.ts",
+              "sha256": "850a16ed363847fc1b07bbfdfd23a2070b19c1f11d1f130e1e964041315cc0a6"
+            },
+            {
+              "path": "apps/worker/src/contracts/electricity-increase-runner.test.ts",
+              "sha256": "c2f5b680f0166e7d73789a8232cf713ef06acba48f585878c2e952885c053a08"
+            },
+            {
+              "path": "apps/worker/src/contracts/electricity-increase-runner.ts",
+              "sha256": "539ac8114e35a800fd7a54fdc1c52b02cf2c1a54c0a3c424496105f98fb2e668"
+            },
+            {
+              "path": "packages/db/src/electricity-increase-activation.ts",
+              "sha256": "981b38045f2f9c5a0b352087239764796c1823f38dd9271b4fb4914fcfe6e080"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-quantity-increase-requests.ts",
+              "sha256": "7b785ea8d1a1e0769f5780f30e1a93ca711d351d40013ddba070eb9e2f320a5b"
+            },
+            {
+              "path": "packages/i18n/src/electricity-increase-forms.test.ts",
+              "sha256": "1a5a08c1a0ca5a1db9452e968183e75843b5b882e8c743ea99db817f2d134248"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-electricity-limits.test.ts",
+              "sha256": "9a06ae2b44f649823e33591ccc81ed728c447b841a79754eb6b8ac864a67346b"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-electricity-limits.ts",
+              "sha256": "50376908c79c971e174396a41cf58ea25ded84c4c06494a2ba392c89e6b23b10"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-increase-signing-review.test.ts",
+              "sha256": "1ff2abf3b803974fddde34c19e0535dbaa0ae849c77bf9bb8ee879e9bcd64988"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-increase-signing-review.ts",
+              "sha256": "c14e4dfee71cbb50574914498a63c342152f6eaf24d1872ce008223014c36a9b"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-increase-staff-decision-review.ts",
+              "sha256": "2b8c6ca4a6a7866c59140d03bfd73fc9a9145ec4e620a4cb721bfe754d18571c"
+            },
+            {
+              "path": "scripts/check-route-budgets.mjs",
+              "sha256": "74a10ac3765256dde8a77e4af25b1cd0d761c4beb4e5fc0da7644c99f09955b9"
+            },
+            {
+              "path": "scripts/check-route-budgets.test.mjs",
+              "sha256": "08f76e4df7c2cea66a4cc68aa304d03d19afd41723a7337f208b8508feec529a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "f18f5668526dd0d6b842462c46723cbc40adbef810c72e59e26bc3c8a053a918"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "402d0caf585a3964b85685a5729bd8146aa488c990dfe70bca133bf16f748458"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
+              "sha256": "90023babb831fd2eb7bf00f710af1cb1aecf6a44acf00b214ee903e63c43eb8e"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "c7209e50be84a74ec8eac85fe462b224191a942af431667d462b30969db7caac"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
+              "sha256": "34901b992acf37d97582c39bcb6666e234ea2fc2bff6e3e7ea028f4de16f1228"
+            }
+          ],
+          "checks": [
+            "Reconciled105 invoice/wallet/contract tasks:94 done and11 partial. Every current acceptance source binding matched;568 distinct bound paths verified. This validates applicability of their retained task-level evidence, not a new105-task execution. Six partial tasks still lack current whole-task acceptance; historical batch mentions do not certify them. task-reconciliation.json retains qualified statuses, exact remaining criteria and binding counts.",
+            "35 distinct new real-DB boundary cases pass. Fifteen selected wallet-refund/contract-cancellation cases exercise approved rejection/cancellation, exact second approval, reservation/settlement concurrency, audit rollback, crash/retry, five-attempt exhaustion and financial closure only after obligations settle. Twenty complete receipt dual-approval/cross-flow/rejection cases exercise distinct reviewers, parked/rejected approvals, single-winner attachment allocation, exact reason/history and rollback on failed audit.",
+            "3915 source and6232 compiled-output hashes matched the verified current build before prebuilt consumers. No output rewrite while tests ran. Current invoice/refund/receipt/contract sources, native page evidence and related accepted task bindings retained; no unrelated suite or build repeated. Board/format checks apply to this metadata batch.",
+            "Bounded review found one implementation gap already recorded in increase approval acceptance: strict approval input has no reason, and audit writes reason:null. Required approve/reject-with-reason remains to implement through schema/review, staff UI, immutable decision/amendment/audit and affected checks. Do not reinterpret it as an owner-policy blocker.",
+            "Original owner decisions remain pending for generic invoice-engine naming, signed callback CSRF wording, shared credit routine/budget trigger representation, quantity increase configuration/routes and consent evidence. Reconciliation mathematical policy and retained dev-reload diagnosis remain separate. No question is repeated or approval inferred."
+          ],
+          "limitations": [
+            "Implement the required staff quantity-increase approval reason. Current approval input cannot accept it and writes null audit reason. See04-invoices-wallet-contracts.md#T-04.6.01.02; preserve exact review/replay, version/future/payment locks, audits and rejection behavior.",
+            "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
+          ],
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/financial-closure-release-gate"
+        },
+        "batches": [
+          "release-0.3-financial-closure-release-gate"
+        ]
       }
     },
     {
@@ -197948,6 +200242,23 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance",
       "release": false
+    },
+    "release-0.3-financial-closure-release-gate": {
+      "title": "Reconcile financial-closure gate and identify required increase approval reason",
+      "task_keys": [
+        "release-readiness#R-02.01"
+      ],
+      "summary": "Current financial boundaries verified and existing accepted source evidence reconciled. Gate remains partial for an approval-reason implementation gap and preserved owner criteria.",
+      "validation": [
+        "Reconciled105 invoice/wallet/contract tasks:94 done and11 partial. Every current acceptance source binding matched;568 distinct bound paths verified. This validates applicability of their retained task-level evidence, not a new105-task execution. Six partial tasks still lack current whole-task acceptance; historical batch mentions do not certify them. task-reconciliation.json retains qualified statuses, exact remaining criteria and binding counts.",
+        "35 distinct new real-DB boundary cases pass. Fifteen selected wallet-refund/contract-cancellation cases exercise approved rejection/cancellation, exact second approval, reservation/settlement concurrency, audit rollback, crash/retry, five-attempt exhaustion and financial closure only after obligations settle. Twenty complete receipt dual-approval/cross-flow/rejection cases exercise distinct reviewers, parked/rejected approvals, single-winner attachment allocation, exact reason/history and rollback on failed audit.",
+        "3915 source and6232 compiled-output hashes matched the verified current build before prebuilt consumers. No output rewrite while tests ran. Current invoice/refund/receipt/contract sources, native page evidence and related accepted task bindings retained; no unrelated suite or build repeated. Board/format checks apply to this metadata batch.",
+        "Bounded review found one implementation gap already recorded in increase approval acceptance: strict approval input has no reason, and audit writes reason:null. Required approve/reject-with-reason remains to implement through schema/review, staff UI, immutable decision/amendment/audit and affected checks. Do not reinterpret it as an owner-policy blocker.",
+        "Original owner decisions remain pending for generic invoice-engine naming, signed callback CSRF wording, shared credit routine/budget trigger representation, quantity increase configuration/routes and consent evidence. Reconciliation mathematical policy and retained dev-reload diagnosis remain separate. No question is repeated or approval inferred.",
+        "No milestone release, version bump, staging enqueue, Telegram announcement or production authorization."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/financial-closure-release-gate",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -197987,11 +200298,11 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-financial-closure-release-gate",
+    "id": "release-0.3-increase-approval-reason",
     "release": "0.3.0",
-    "goal": "Reconcile final-source contract/refund/invoice/receipt acceptance for the financial closure gate, reusing valid evidence for approval/rejection, cancellation, refund exhaustion/retry, dual approval and concurrent settlements. Run only uncovered or invalidated boundaries. Preserve live template/SMS mapping, retention, mathematical policy, prior owner/release gates and consultation work.",
+    "goal": "Implement required staff quantity-increase approval reason through the existing strict schema, review snapshot, native staff decision UI and immutable amendment/audit. Reproduce missing/blank-reason acceptance first; preserve exact authority, snapshot/replay, future-period/payment, notification and rollback boundaries. Inspect existing sources before changing them. Owner route/units/consent decisions remain pending; do not infer those approvals.",
     "task_keys": [
-      "release-readiness#R-02.01"
+      "04-invoices-wallet-contracts.md#T-04.6.01.02"
     ]
   },
   "launch_forecast": {

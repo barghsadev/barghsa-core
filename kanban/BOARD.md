@@ -12,8 +12,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | --- | ---: | --- |
 | done | 435 | Accepted with unchanged source bindings. |
 | verify | 867 | Existing work may be complete; inspect evidence before building. |
-| partial | 57 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 11 | New, concrete work or release checks. |
+| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
+| todo | 10 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 1 | Explicit approved scope disposition. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile final-source contract/refund/invoice/receipt acceptance for the financial closure gate, reusing valid evidence for approval/rejection, cancellation, refund exhaustion/retry, dual approval and concurrent settlements. Run only uncovered or invalidated boundaries. Preserve live template/SMS mapping, retention, mathematical policy, prior owner/release gates and consultation work.
+Implement required staff quantity-increase approval reason through the existing strict schema, review snapshot, native staff decision UI and immutable amendment/audit. Reproduce missing/blank-reason acceptance first; preserve exact authority, snapshot/replay, future-period/payment, notification and rollback boundaries. Inspect existing sources before changing them. Owner route/units/consent decisions remain pending; do not infer those approvals.
 
-- `release-readiness#R-02.01`: Renew fulfillment and financial closure acceptance
+- `04-invoices-wallet-contracts.md#T-04.6.01.02`: Staff review queue: approve/reject with reason
 
 ## v0.2.0: Complete customer journeys
 
@@ -301,7 +301,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-02.01` | todo | Inventory needed | Renew fulfillment and financial closure acceptance |
+| `release-readiness#R-02.01` | partial | Recorded batch work | Renew fulfillment and financial closure acceptance |
 | `release-readiness#R-02.02` | todo | Inventory needed | Verify staff operations and customer support for all services |
 | `02-auth-users-admin.md#T-05.01.01` | done | Earlier acceptance_verified | CRM users list page |
 | `02-auth-users-admin.md#T-05.01.02` | done | Earlier acceptance_verified | CRM filters and search |
