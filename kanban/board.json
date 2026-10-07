@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T03:07:02.529721+00:00",
+  "updated": "2026-10-07T03:14:05.321350+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -132,6 +132,18 @@
         "status": "awaiting_owner",
         "asked_once": "2026-10-07 in this goal chat via request_user_input_async; do not repeat.",
         "independent_work": "Continue due dates,reminders,corrections andfinancial closure acceptance."
+      },
+      {
+        "task_key": "04-invoices-wallet-contracts.md#T-04.4.01.03",
+        "affected_task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.4.01.03",
+          "04-invoices-wallet-contracts.md#T-04.4.01.04",
+          "04-invoices-wallet-contracts.md#T-04.4.02.02"
+        ],
+        "question": "Retain shared postWalletCredit ledger routine used by WalletService.credit and cross-row database budget triggers; reconcile literal worker service-method and unsupported CHECK subquery representations? All monetary,reservation,concurrency,idempotency and rollback safeguards remain required.",
+        "status": "awaiting_owner",
+        "asked_once": "2026-10-07 in this goal chat via request_user_input_async; do not repeat.",
+        "independent_work": "Nine refund/closure criteria accepted; continue contract lifecycle/versioning/activation and remaining milestone gates."
       }
     ],
     "catalogue_existing_design": {
@@ -16943,7 +16955,8 @@
         ],
         "batches": [
           "release-0.2-step-up-action-audit",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-refunds-financial-closure"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -17071,7 +17084,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "1bf3c756b2bf24fadddd02fb14d83c02bc001e74d386368f9e334234d33ba5f6"
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -17297,7 +17310,8 @@
             "14 UI component cases plus28 distinct production-browser cases cover OTP/password modal recovery, both languages, light/dark, mobile layout, focus, invalid proof, rotated CSRF and preservation of the captured operation. All browser assertions retained.12 trusted-device/12 unaffected OTP cases passed in the failed initial run;4 email cases pass after one mobile role-selector correction. No whole failed run claimed passed.",
             "258 adds audit proof only from a matching validated transaction actor/session and unexpired timestamp.7 fresh DB proof/history/rollback cases pass, plus6 unchanged migration/guard cases from their completed passing suites. COMMIT/ROLLBACK clears scope; foreign, other-session, future and expired scope cannot mint proof. Existing audit append-only protection remains.",
             "441 distinct passing cases total; repeats and skips excluded. API/DB types, API production build, changed lint/format and SAST pass. Auth predicates, historical SQL/journal, schema/snapshot and web/worker/shared outputs remain source-bound. Full proof: /Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
-            "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core"
+            "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
+            "Scoped refund notice test renewal only: one existing wallet refund/backoff case now requires exactly1 Failed and1 Completed notice and excludes private provider text. Every original current Finance/session/CSRF/step-up,recent-proof/final-expiry,approval/idempotency,one-credit/exact-money/rollback assertion remains. All other test cases and step-up implementation/compiled API source unchanged.97 unaffected cases retained plus2 corrected notice cases pass against final emitted shared DB,along with48 captured verification browser cases. This renews only changed test binding; other original acceptance/limitations remain. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -55736,21 +55750,227 @@
         "story": "04-invoices-wallet-contracts.md#spec-76b00f403101"
       },
       "requirement": "| T-04.4.01.01 | Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet | external_bank), `staffId`, `idempotencyKey`, `bankReference?`, `reconciliationStatus?`, timestamps | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-20-refund-storage"
+          "2026-09-20-refund-storage",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current production migrated refunds/schema has UUIDv7/base timestamps,same-profile invoice RESTRICT FK,positive int8,7 canonical states,wallet/external_bank destination,staff-or-system provenance,unique nonblank idempotency key,bank reference/reconciliation fields and indexes. Immutable identity/destination/history and external completion prerequisites preserved. Actual migrated tests reject invalid/cross-profile/duplicate/terminal mutations and preserve legacy rows.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55764,12 +55984,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-76b00f403101"
       },
       "requirement": "| T-04.4.01.02 | Implement `RefundStateMachine` with all 9 transitions, guards, and audit events | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -55778,9 +55996,217 @@
         "batches": [
           "2026-09-20-external-refunds",
           "2026-09-20-refund-pending-ledger",
-          "2026-09-20-wallet-refund-workflow"
+          "2026-09-20-wallet-refund-workflow",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current RefundService/model cover all9 transitions: Requested->Approved/Rejected/Cancelled,Approved->Processing/Rejected/Cancelled,Processing->Completed/Failed,Failed->Processing; terminal outcomes cannot reopen. Current Finance/session/CSRF/step-up and final authority checks,canonical immutable reviews and mandatory from/to/reason audits remain transactional. Pending transaction created on approval and completed only with exact linked credit/external reconciliation; reject/cancel retain no-money semantics and release only eligible reservations. Actual unit/PG/HTTP rollback/concurrency/int8/profile/policy/audit cases pass.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55794,11 +56220,11 @@
         "story": "04-invoices-wallet-contracts.md#spec-76b00f403101"
       },
       "requirement": "| T-04.4.01.03 | DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))` | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Await the owner answer already requested in this goal chat on retaining the shared postWalletCredit routine used by WalletService.credit and cross-row budget triggers instead of the literal CHECK subquery. Monetary,profile,concurrency,idempotency/audit/rollback behavior inspected and tested; do not repeat the question."
       ],
       "owner": null,
       "depends_on": [],
@@ -55806,9 +56232,218 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-20-refund-storage"
+          "2026-09-20-refund-storage",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "implementation_checkpoint": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current database uses parent-invoice serialization,row-version update,refund/invoice triggers and statement-level completion totals. Active/Failed reservations+completed refunded amounts cannot exceed confirmed paid amount; reject/cancel releases reservation. Direct invoice edits,multi-row completion,concurrent requests,stale repeatable-read reservation,immutable identity and rollback pass actual migrated PG cases. Literal PostgreSQL CHECK subquery is replaced by these cross-row triggers; owner representation decision requested and pending. Effective budget safeguards verified,full task acceptance remains partial.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55822,11 +56457,11 @@
         "story": "04-invoices-wallet-contracts.md#spec-76b00f403101"
       },
       "requirement": "| T-04.4.01.04 | Wallet refund: `WalletService.credit()` with idempotency key tied to refund ID | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Await the owner answer already requested in this goal chat on retaining the shared postWalletCredit routine used by WalletService.credit and cross-row budget triggers instead of the literal CHECK subquery. Monetary,profile,concurrency,idempotency/audit/rollback behavior inspected and tested; do not repeat the question."
       ],
       "owner": null,
       "depends_on": [],
@@ -55834,9 +56469,218 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-20-wallet-refund-workflow"
+          "2026-09-20-wallet-refund-workflow",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": null,
+        "implementation_checkpoint": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current processor invokes postWalletCredit,the same shared ledger routine used by WalletService.credit,with refund-wallet-credit:<refundUUID> key,exact wallet/type/amount/ref/state matching and caller-owned transaction. Exact one linked credit and refund transaction/invoice counters/state/audit/notice complete atomically; collisions,replays,crash recovery,concurrent worker claims and balance/audit/notice failure rollback pass actual PG/HTTP cases. Literal service method representation decision requested and pending; full task remains partial.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55850,12 +56694,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-76b00f403101"
       },
       "requirement": "| T-04.4.01.05 | External refund: workflow for staff to record bank reference; second reconciliation confirmation step | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -55864,9 +56706,217 @@
         "batches": [
           "2026-09-20-external-refunds",
           "2026-09-29-external-bank-refund-workspace",
-          "2026-09-29-refund-approval-return"
+          "2026-09-29-refund-approval-return",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current external refund records one exact bank reference and Pending reconciliation while staying Processing. Same/different-reference duplicates,cross-destination actions and premature completion fail. A different currently authorized Finance actor must reconcile immutable recorded transfer/audit evidence before Confirmed/Completed and invoice counters/state. Current reviewer revocation/final session,changed later policy,mandatory audit/customer-notice rollback and exact no-wallet-credit cases pass. Recorded staff history remains evidence after offboarding; current reconciler permission still mandatory. Live bank transfer not simulated as actual provider execution.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55880,12 +56930,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-76b00f403101"
       },
       "requirement": "| T-04.4.01.06 | Dual-approval integration: if refund amount ≥ threshold, require second finance staff before Approved | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -55895,9 +56943,217 @@
           "2026-09-20-external-refunds",
           "2026-09-20-wallet-refund-workflow",
           "2026-09-29-approval-request-handoff",
-          "2026-09-29-refund-approval-return"
+          "2026-09-29-refund-approval-return",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current threshold binding selects exact canonical refund/invoice/profile/destination/amount/initiator and distinct reviewer evidence. Requires current Finance on manual processing,rechecks approval/policy at money move; missing/substitute/rejected/corrupt/wrong-field/changed threshold or revoked reviewer fail closed. Approve is gated before pending transaction; committed system obligations instead bind the already audited threshold-reviewed contract decision. Real PG/HTTP/browser tests verify exact review,second approval and retry behavior.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55911,21 +57167,227 @@
         "story": "04-invoices-wallet-contracts.md#spec-76b00f403101"
       },
       "requirement": "| T-04.4.01.07 | Retry worker: pick up Failed refunds with bounded backoff; alert if max attempts exceeded | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-20-refund-retries"
+          "2026-09-20-refund-retries",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Registered refund worker polls every15s,due-job batch serializes advisory/refund/job claims and respects durable attempts/max/due times. Failed reserves funds; retry uses bounded exponential backoff1min..1h,max5 by default. Exhausted job terminal history cannot reset/reopen; current Finance receives one sanitized alert and customer one failure notice. Authorized manual auto-obligation retry is one separately audited attempt without resetting exhausted automatic history. Crash/concurrency/policy/current authority/ledger/audit/notice rollback and infrastructure recorder cases pass.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55939,21 +57401,227 @@
         "story": "04-invoices-wallet-contracts.md#spec-65bec0f91bd8"
       },
       "requirement": "| T-04.4.02.01 | Build `AutomaticRefundObligation` trigger: on contract → Rejected/Cancelled, if paid amount > 0, create refund with state Requested, destination = wallet | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-21-contract-cancellation"
+          "2026-09-21-contract-cancellation",
+          "release-0.3-refunds-financial-closure"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Electricity rejection/cancellation requires mandatory full_wallet of all confirmed paid balance minus completed returns; no discretionary dismissal. Exact version/current financial snapshot/pending payment/current authority/threshold review guards bind decision. Same transaction creates Requested refund+immutable system/payment allocation audit,approves/queues durable Processing obligation and audited terminal contract/order decision. Deferred DB guards reject direct omitted/fabricated/incomplete obligations; repeated decisions/adopted legacy returns do not duplicate debt. Actual all-invoice funded/unfunded/raw orphan/linked contract HTTP and production migration cases pass.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55967,19 +57635,229 @@
         "story": "04-invoices-wallet-contracts.md#spec-65bec0f91bd8"
       },
       "requirement": "| T-04.4.02.02 | Worker: pick up auto-refund obligations, execute `WalletService.credit()`, mark refund Completed | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Await the owner answer already requested in this goal chat on retaining the shared postWalletCredit routine used by WalletService.credit and cross-row budget triggers instead of the literal CHECK subquery. Monetary,profile,concurrency,idempotency/audit/rollback behavior inspected and tested; do not repeat the question."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-refunds-financial-closure"
+        ],
+        "current_acceptance": null,
+        "implementation_checkpoint": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Worker reads exact committed contract/order termination authorization,immutable invoice/profile/amount/destination/refund identity and system executor provenance before posting shared ledger credit. One refund-id key preserves immutable contract/invoice/original payment allocation links/audits; failures roll back money and retain durable retries. Mark Completed only with exact posted ledger/refund-transaction and invoice accounting. Shared postWalletCredit versus literal WalletService.credit decision pending; full task remains partial.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -55993,19 +57871,226 @@
         "story": "04-invoices-wallet-contracts.md#spec-65bec0f91bd8"
       },
       "requirement": "| T-04.4.02.03 | Block contract/order financial closure until linked refund obligations are Completed | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-refunds-financial-closure"
+        ],
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Contract financial status requires recorded cancellation/rejection and every bound refund plus transaction Completed,with no pending/unbound payment/refund guards. Failed/Rejected/Cancelled obligations never close as completed. DB forbids manual dismissal of mandatory obligation; service termination can precede financial closure but exposed outcome remains refunds_pending/needs_attention until actual returned money. Actual PG/HTTP and browser show failed retries/open closure,authorized restoration and once-only completed financial closure.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -56019,19 +58104,226 @@
         "story": "04-invoices-wallet-contracts.md#spec-65bec0f91bd8"
       },
       "requirement": "| T-04.4.02.04 | Finance queue: show failed auto-refund obligations with Retry action | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-refunds-financial-closure"
+        ],
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current Finance queue shows pending/failed/exhausted auto returns with amount,reference,state,context and review-bound Retry; distinct external record/reconciliation controls preserve reference and recent proof. Failed refresh retains accepted rows and stale/access-denied/scope/unmount callbacks withdraw invalid actions. Cannot dismiss mandatory debt or reset automatic attempt history. Current UI/browser verify exact commands,owned fields,step-up/retry,FA/EN themes/mobile/keyboard/focus/Axe behavior.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -56045,19 +58337,226 @@
         "story": "04-invoices-wallet-contracts.md#spec-65bec0f91bd8"
       },
       "requirement": "| T-04.4.02.05 | Notify customer on completion and on failure (with support path) | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-refunds-financial-closure"
+        ],
+        "current_acceptance": {
+          "kind": "current-refund-and-financial-closure-verification",
+          "reviewed_base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "ac3b96cd93007c89e8d2707a8e73de9c839dd43e66c2609a5ff49fad1a2c7f0a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.ts",
+              "sha256": "74188887c7451f85b386afda89f5d83e844b07e27d18b1e0a496938ba2744e2f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "f674888030e5488de254fd844984657ef8de3632ab6dfc193a2e22c90a3d331e"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+              "sha256": "ee3e03a76a9143fbb2428e92398dad2ffb2fce4c2579d9e0d826d8d19df53e7f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-refund-obligation.ts",
+              "sha256": "e562ca0b0204097c0f403536c03b08655f614c7b83290e6dfb658f992e744bd1"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/refund-input-fields.test.ts",
+              "sha256": "acd0005e8a7aae2c2f9fcd2587f7d7e66935a54c86583141b8263167cc304973"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/contract-cancellation.spec.ts",
+              "sha256": "0c73531d7180484ae2bc7a5a19e6e0a9ede8280a35b744e841b4154ab69af4ab"
+            },
+            {
+              "path": "apps/web/e2e/contract-refund-queue.spec.ts",
+              "sha256": "dd5c843bd26afa4cb11426958ef062a97b99b2cef0653d222e8c8b1a11cc5d7c"
+            },
+            {
+              "path": "apps/web/e2e/manual-external-refund.spec.ts",
+              "sha256": "bdf9c35db4ae9dad024b0f68ac6783a3786e37ff613ea8a821141051203021dd"
+            },
+            {
+              "path": "apps/web/e2e/manual-wallet-refund.spec.ts",
+              "sha256": "965bb19731b3036f979526359981a7316312c5be46c6d65b6611c89d42805ee5"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "dda18fe5ac05a3d8de1bb98da4fdbe4827d7423cea7d657b7561ac5fda4bba71"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "8e20f99c7801d36943f837f8b38586728cdad1f18f7d7c68e339701b4d27fe85"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "65129b124ef622ce8d8b12c36975ca08c911216b77f1c49f72dce1ee6a97da39"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.test.tsx",
+              "sha256": "6acfac65f19b4b99ee3859b884b73dd6f6641b6248a431cd415a9a9809e50071"
+            },
+            {
+              "path": "apps/web/src/components/ContractRefundQueue.tsx",
+              "sha256": "a2d3602f36079011a0724d1e619e06538dfee75fe82d74476d501773d998b064"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "566beaa2c62c51c83e1e80ade2dd142463acbd4746d966c3233412bfdc5b751c"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "5c0da47874f1aaf050059af5f64be12a8dc226bc914fd1a2b6558ab19a317ef7"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.test.ts",
+              "sha256": "450358c041c4a64ac55cc481c5601417482b929d1f5230765f2389384bc6b30a"
+            },
+            {
+              "path": "apps/worker/src/refunds/retry-runner.ts",
+              "sha256": "55f13fe08dc4be7fc5d627279416824437db326682dbef81b247816abc8b58c0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+              "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+            },
+            {
+              "path": "packages/db/drizzle/production/0136_refund_retry_jobs.sql",
+              "sha256": "c5d9a6e231e92e62a7f992272db99b1925e672abef4aa9028a2af4ca80b312a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0145_contract_cancellation.sql",
+              "sha256": "ebb680de9e653625cbf18204cfc90df818adaf36b2ddd906c4b0e37a1babc96c"
+            },
+            {
+              "path": "packages/db/src/contract-cancellation.migrated.test.ts",
+              "sha256": "ed80258814f66763a213bf99f2005438b99a780c7bd57f8df108f69a4ce5ddd2"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "4a73de78730c025456309d71351803e765bd1e7d54b195251521ef4502c4e0bd"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+            },
+            {
+              "path": "packages/db/src/refund-processing.ts",
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
+            },
+            {
+              "path": "packages/db/src/refund-transactions.migrated.test.ts",
+              "sha256": "e327dc94c21d4180481feef237385861b4fda80b43ba5d410f49f1f3f6c65af3"
+            },
+            {
+              "path": "packages/db/src/refunds.migrated.test.ts",
+              "sha256": "291d806dd261b22bb50b58d4d45846dfb96ae0092045d2afa8776d1581048c80"
+            },
+            {
+              "path": "packages/db/src/schema/contract-cancellation.ts",
+              "sha256": "dcd7de877cbadb9b22b4325e29921539671f7fd844ca18bee2e385b1f7b8aa7b"
+            },
+            {
+              "path": "packages/db/src/schema/refund-retry-jobs.ts",
+              "sha256": "e5f2d60cff3fb98fb8ceabc8d567cc6b2f65c2cf0466b238e560c7d80fde4431"
+            },
+            {
+              "path": "packages/db/src/schema/refund-transactions.ts",
+              "sha256": "bffd3b253694d1d98f2b39d737925770b3ccea6f87245ecf38e1810cb2aee8ce"
+            },
+            {
+              "path": "packages/db/src/schema/refunds.ts",
+              "sha256": "6a7369f7e9e9190d7e8e7f9a889d6aa04da4213507e1730112237a8e1035c569"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Customer receives profile-private localized exact-amount completion and first-failure notices with invoice/order detail and support guidance. Failed notice now commits in the same attempt transaction and stable delivery key deduplicates repeated failure/exhaustion/manual retry without rewriting history. Completed remains separate unique outcome. Failure-notice outage rolls back attempt,state,counters/credit; completion-notice outage rolls back money then persists Failed with backoff. Actual PG/HTTP confirm one Failed+one Completed notice,one exact credit,private-error exclusion and unchanged balances on failed posting. Finance alert remains exhaustion-only; no false early-alert wording. Live SMTP/provider certification not claimed.",
+            "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+            "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+          "limitations": [
+            "Local actual PostgreSQL/HTTP/worker/in-app/browser fixtures; external banking/SMTP/provider and deployment operations remain separate gates.",
+            "Shared ledger and cross-row DB trigger representation decision pending for3 tasks. Earlier dependencies/global Wallet performance gate remain incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -107071,7 +109570,8 @@
           "release-0.2-electricity-orphan-financial",
           "release-0.2-electricity-legacy-refund-adoption",
           "release-0.2-electricity-terminal-invariant-review",
-          "release-0.2-step-up-action-audit"
+          "release-0.2-step-up-action-audit",
+          "release-0.3-refunds-financial-closure"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-lifecycle-and-pre-active-rejection-with-exact-remaining-flows",
@@ -107287,7 +109787,7 @@
             },
             {
               "path": "packages/db/src/refund-processing.ts",
-              "sha256": "e4740f2434aea283bb451cce2b720bfc81ef3b69bf6f78b6559e731b61e28e39"
+              "sha256": "b37920da9c73dbbead2ded654ec809ed43c231cfca711103707d6ec49893af05"
             },
             {
               "path": "packages/i18n/src/contracts.ts",
@@ -107621,6 +110121,11 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit/renewal-proof.json",
             "scope": "Renew prior effective criteria only; no incomplete task or milestone accepted by association."
+          },
+          "refund_notice_binding_renewal": {
+            "base_commit": "85ce3e7b7a73103bf1ee066f705cf1e5ee6a9e86",
+            "scope": "Only customer failure-notice timing moved into the existing audited failure transaction; amount/authority/ledger/retry/obligation/closure guards unchanged.57 selected electricity caller cases including raw/legacy/linked/all-invoice paths pass against emitted current DB processor. First-failure dedupe and notice-outage rollback pass DB/HTTP checks. This renews only that processor binding; older unrelated journal/test bindings are not recertified. Earlier wizard discard owner decision still pending; task remains partial.",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure"
           }
         }
       }
@@ -157042,6 +159547,31 @@
         "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history"
+    },
+    "release-0.3-refunds-financial-closure": {
+      "title": "Notify refund failure immediately and accept refund financial closure",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.4.01.07",
+        "04-invoices-wallet-contracts.md#T-04.4.02.01",
+        "04-invoices-wallet-contracts.md#T-04.4.02.03",
+        "04-invoices-wallet-contracts.md#T-04.4.02.04",
+        "04-invoices-wallet-contracts.md#T-04.4.02.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.03",
+        "04-invoices-wallet-contracts.md#T-04.4.01.04",
+        "04-invoices-wallet-contracts.md#T-04.4.02.02",
+        "03-core-business.md#T-03.07.01.01",
+        "02-auth-users-admin.md#T-02.02.04"
+      ],
+      "summary": "Nine effective refund/closure criteria accepted;3 implementation representations owner-pending. First-failure private customer notice now atomic/deduplicated; actual refunded money,distinct approval,bank reconciliation and mandatory closure guards verified. One earlier partial electricity processor binding renewed narrowly. Earlier step-up acceptance renewed narrowly for the changed notice assertions; all original authority assertions retained.",
+      "validation": [
+        "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
+        "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure"
     }
   },
   "historical_improvements": [
@@ -157081,22 +159611,24 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-refunds-financial-closure",
+    "id": "release-0.3-contract-lifecycle-versioning-activation",
     "release": "0.3.0",
-    "goal": "Inspect existing refund requests,profile/current authorization,customer destination choice,distinct Finance approval,atomic wallet credit or external payout evidence,idempotency and final financial closure. Find source before building gaps; reuse source-bound receipt/wallet/correction/notification evidence and verify affected callers. Preserve exact money,audit,concurrency/rollback and unfinished owner/dependency/performance gates; no milestone deployment until accepted.",
+    "goal": "Inspect current contract/version schema,immutable material edits,lifecycle/state/audit,staff cancellation/customer request,amendments and per-service activation prerequisites. Reuse current source-bound cancellation/refund/read evidence and verify current affected callers/UI; build only demonstrated gaps. Preserve submitted/accepted/signing snapshots,current authority,profile isolation,money/rollback,idempotency and unfinished consultation patch/owner decisions. Earlier release dependencies and performance gate remain incomplete; no milestone deployment before acceptance.",
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.4.01.01",
-      "04-invoices-wallet-contracts.md#T-04.4.01.02",
-      "04-invoices-wallet-contracts.md#T-04.4.01.03",
-      "04-invoices-wallet-contracts.md#T-04.4.01.04",
-      "04-invoices-wallet-contracts.md#T-04.4.01.05",
-      "04-invoices-wallet-contracts.md#T-04.4.01.06",
-      "04-invoices-wallet-contracts.md#T-04.4.01.07",
-      "04-invoices-wallet-contracts.md#T-04.4.02.01",
-      "04-invoices-wallet-contracts.md#T-04.4.02.02",
-      "04-invoices-wallet-contracts.md#T-04.4.02.03",
-      "04-invoices-wallet-contracts.md#T-04.4.02.04",
-      "04-invoices-wallet-contracts.md#T-04.4.02.05"
+      "04-invoices-wallet-contracts.md#T-04.5.01.01",
+      "04-invoices-wallet-contracts.md#T-04.5.01.02",
+      "04-invoices-wallet-contracts.md#T-04.5.01.03",
+      "04-invoices-wallet-contracts.md#T-04.5.01.04",
+      "04-invoices-wallet-contracts.md#T-04.5.01.05",
+      "04-invoices-wallet-contracts.md#T-04.5.01.06",
+      "04-invoices-wallet-contracts.md#T-04.5.01.07",
+      "04-invoices-wallet-contracts.md#T-04.5.02.01",
+      "04-invoices-wallet-contracts.md#T-04.5.02.02",
+      "04-invoices-wallet-contracts.md#T-04.5.02.03",
+      "04-invoices-wallet-contracts.md#T-04.5.02.04",
+      "04-invoices-wallet-contracts.md#T-04.5.03.01",
+      "04-invoices-wallet-contracts.md#T-04.5.03.02",
+      "04-invoices-wallet-contracts.md#T-04.5.03.03"
     ]
   },
   "launch_forecast": {

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T03:07:02.529721+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T03:14:05.321350+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 324 | Accepted with unchanged source bindings. |
-| verify | 983 | Existing work may be complete; inspect evidence before building. |
-| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 333 | Accepted with unchanged source bindings. |
+| verify | 971 | Existing work may be complete; inspect evidence before building. |
+| partial | 55 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,20 +39,22 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing refund requests,profile/current authorization,customer destination choice,distinct Finance approval,atomic wallet credit or external payout evidence,idempotency and final financial closure. Find source before building gaps; reuse source-bound receipt/wallet/correction/notification evidence and verify affected callers. Preserve exact money,audit,concurrency/rollback and unfinished owner/dependency/performance gates; no milestone deployment until accepted.
+Inspect current contract/version schema,immutable material edits,lifecycle/state/audit,staff cancellation/customer request,amendments and per-service activation prerequisites. Reuse current source-bound cancellation/refund/read evidence and verify current affected callers/UI; build only demonstrated gaps. Preserve submitted/accepted/signing snapshots,current authority,profile isolation,money/rollback,idempotency and unfinished consultation patch/owner decisions. Earlier release dependencies and performance gate remain incomplete; no milestone deployment before acceptance.
 
-- `04-invoices-wallet-contracts.md#T-04.4.01.01`: Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet
-- `04-invoices-wallet-contracts.md#T-04.4.01.02`: Implement `RefundStateMachine` with all 9 transitions, guards, and audit events
-- `04-invoices-wallet-contracts.md#T-04.4.01.03`: DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))`
-- `04-invoices-wallet-contracts.md#T-04.4.01.04`: Wallet refund: `WalletService.credit()` with idempotency key tied to refund ID
-- `04-invoices-wallet-contracts.md#T-04.4.01.05`: External refund: workflow for staff to record bank reference; second reconciliation confirmation step
-- `04-invoices-wallet-contracts.md#T-04.4.01.06`: Dual-approval integration: if refund amount ≥ threshold, require second finance staff before Approved
-- `04-invoices-wallet-contracts.md#T-04.4.01.07`: Retry worker: pick up Failed refunds with bounded backoff; alert if max attempts exceeded
-- `04-invoices-wallet-contracts.md#T-04.4.02.01`: Build `AutomaticRefundObligation` trigger: on contract → Rejected/Cancelled, if paid amount > 0, create refund with state Requested, destination = wallet
-- `04-invoices-wallet-contracts.md#T-04.4.02.02`: Worker: pick up auto-refund obligations, execute `WalletService.credit()`, mark refund Completed
-- `04-invoices-wallet-contracts.md#T-04.4.02.03`: Block contract/order financial closure until linked refund obligations are Completed
-- `04-invoices-wallet-contracts.md#T-04.4.02.04`: Finance queue: show failed auto-refund obligations with Retry action
-- `04-invoices-wallet-contracts.md#T-04.4.02.05`: Notify customer on completion and on failure (with support path)
+- `04-invoices-wallet-contracts.md#T-04.5.01.01`: Create `contracts` table: `id` (UUIDv7), `profileId`, `orderId?`, `serviceType` (enum), `state`, `currentVersionId`, `submittedAt`, `acceptedAt?`, `signedAt?`, `activatedAt?`, `completedAt?`, `cancelledAt?`, timestamps
+- `04-invoices-wallet-contracts.md#T-04.5.01.02`: Create `contract_versions` table: `id`, `contractId`, `versionNumber`, `content` (JSONB — full snapshot), `changeDescription`, `createdBy`, `createdAt`, `acceptedAt?`
+- `04-invoices-wallet-contracts.md#T-04.5.01.03`: Implement `ContractStateMachine` with all transitions, guards, prerequisites, audit events
+- `04-invoices-wallet-contracts.md#T-04.5.01.04`: Activation prerequisite checker: evaluate all requirements, surface unmet ones
+- `04-invoices-wallet-contracts.md#T-04.5.01.05`: Staff cancellation endpoint: requires reason + refund decision + step-up auth
+- `04-invoices-wallet-contracts.md#T-04.5.01.06`: Customer cancellation request: creates staff review task, cannot cancel directly
+- `04-invoices-wallet-contracts.md#T-04.5.01.07`: DB constraints: terminal states cannot transition; version must increment on material edit
+- `04-invoices-wallet-contracts.md#T-04.5.02.01`: Enforce version increment in `ContractService.updateContract()` — inserts new version, never edits existing
+- `04-invoices-wallet-contracts.md#T-04.5.02.02`: API: GET contract versions list with metadata; GET specific version full content
+- `04-invoices-wallet-contracts.md#T-04.5.02.03`: UI: version timeline showing who changed what and when; "View previous version"
+- `04-invoices-wallet-contracts.md#T-04.5.02.04`: Support amendment workflow: create amendment version, new acceptance cycle, link to original
+- `04-invoices-wallet-contracts.md#T-04.5.03.01`: Add `serviceType` to contracts table; per-type activation rule configuration in admin
+- `04-invoices-wallet-contracts.md#T-04.5.03.02`: Build `ActivationRuleResolver` — given a contract, check which prerequisites are met, return unmet list
+- `04-invoices-wallet-contracts.md#T-04.5.03.03`: UI: contract detail page shows each prerequisite (Staff approval, Customer acceptance, Signature, Payment, Service start) with current state
 
 ## v0.2.0: Complete customer journeys
 
@@ -480,18 +482,18 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.3.02.02` | done | Recorded batch work | Wallet transaction list API: cursor-based pagination, filters (type, state, date range), sort |
 | `04-invoices-wallet-contracts.md#T-04.3.02.03` | done | Recorded batch work | React components: InvoiceDetail, WalletTransactionList, BankReceiptList with full states |
 | `04-invoices-wallet-contracts.md#T-04.3.02.04` | done | Recorded batch work | Localized state labels and descriptive text for every state |
-| `04-invoices-wallet-contracts.md#T-04.4.01.01` | verify | Recorded batch work | Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet |
-| `04-invoices-wallet-contracts.md#T-04.4.01.02` | verify | Recorded batch work | Implement `RefundStateMachine` with all 9 transitions, guards, and audit events |
-| `04-invoices-wallet-contracts.md#T-04.4.01.03` | verify | Recorded batch work | DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))` |
-| `04-invoices-wallet-contracts.md#T-04.4.01.04` | verify | Recorded batch work | Wallet refund: `WalletService.credit()` with idempotency key tied to refund ID |
-| `04-invoices-wallet-contracts.md#T-04.4.01.05` | verify | Recorded batch work | External refund: workflow for staff to record bank reference; second reconciliation confirmation step |
-| `04-invoices-wallet-contracts.md#T-04.4.01.06` | verify | Recorded batch work | Dual-approval integration: if refund amount ≥ threshold, require second finance staff before Approved |
-| `04-invoices-wallet-contracts.md#T-04.4.01.07` | verify | Recorded batch work | Retry worker: pick up Failed refunds with bounded backoff; alert if max attempts exceeded |
-| `04-invoices-wallet-contracts.md#T-04.4.02.01` | verify | Recorded batch work | Build `AutomaticRefundObligation` trigger: on contract → Rejected/Cancelled, if paid amount > 0, create refund with state Requested, destination = wallet |
-| `04-invoices-wallet-contracts.md#T-04.4.02.02` | verify | Inventory needed | Worker: pick up auto-refund obligations, execute `WalletService.credit()`, mark refund Completed |
-| `04-invoices-wallet-contracts.md#T-04.4.02.03` | verify | Inventory needed | Block contract/order financial closure until linked refund obligations are Completed |
-| `04-invoices-wallet-contracts.md#T-04.4.02.04` | verify | Inventory needed | Finance queue: show failed auto-refund obligations with Retry action |
-| `04-invoices-wallet-contracts.md#T-04.4.02.05` | verify | Inventory needed | Notify customer on completion and on failure (with support path) |
+| `04-invoices-wallet-contracts.md#T-04.4.01.01` | done | Recorded batch work | Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet |
+| `04-invoices-wallet-contracts.md#T-04.4.01.02` | done | Recorded batch work | Implement `RefundStateMachine` with all 9 transitions, guards, and audit events |
+| `04-invoices-wallet-contracts.md#T-04.4.01.03` | partial | Recorded batch work | DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))` |
+| `04-invoices-wallet-contracts.md#T-04.4.01.04` | partial | Recorded batch work | Wallet refund: `WalletService.credit()` with idempotency key tied to refund ID |
+| `04-invoices-wallet-contracts.md#T-04.4.01.05` | done | Recorded batch work | External refund: workflow for staff to record bank reference; second reconciliation confirmation step |
+| `04-invoices-wallet-contracts.md#T-04.4.01.06` | done | Recorded batch work | Dual-approval integration: if refund amount ≥ threshold, require second finance staff before Approved |
+| `04-invoices-wallet-contracts.md#T-04.4.01.07` | done | Recorded batch work | Retry worker: pick up Failed refunds with bounded backoff; alert if max attempts exceeded |
+| `04-invoices-wallet-contracts.md#T-04.4.02.01` | done | Recorded batch work | Build `AutomaticRefundObligation` trigger: on contract → Rejected/Cancelled, if paid amount > 0, create refund with state Requested, destination = wallet |
+| `04-invoices-wallet-contracts.md#T-04.4.02.02` | partial | Recorded batch work | Worker: pick up auto-refund obligations, execute `WalletService.credit()`, mark refund Completed |
+| `04-invoices-wallet-contracts.md#T-04.4.02.03` | done | Recorded batch work | Block contract/order financial closure until linked refund obligations are Completed |
+| `04-invoices-wallet-contracts.md#T-04.4.02.04` | done | Recorded batch work | Finance queue: show failed auto-refund obligations with Retry action |
+| `04-invoices-wallet-contracts.md#T-04.4.02.05` | done | Recorded batch work | Notify customer on completion and on failure (with support path) |
 | `04-invoices-wallet-contracts.md#T-04.5.01.01` | verify | Recorded batch work | Create `contracts` table: `id` (UUIDv7), `profileId`, `orderId?`, `serviceType` (enum), `state`, `currentVersionId`, `submittedAt`, `acceptedAt?`, `signedAt?`, `activatedAt?`, `completedAt?`, `cancelledAt?`, timestamps |
 | `04-invoices-wallet-contracts.md#T-04.5.01.02` | verify | Recorded batch work | Create `contract_versions` table: `id`, `contractId`, `versionNumber`, `content` (JSONB — full snapshot), `changeDescription`, `createdBy`, `createdAt`, `acceptedAt?` |
 | `04-invoices-wallet-contracts.md#T-04.5.01.03` | verify | Recorded batch work | Implement `ContractStateMachine` with all transitions, guards, prerequisites, audit events |

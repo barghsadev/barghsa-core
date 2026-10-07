@@ -539,7 +539,7 @@ it('rolls wallet completion back if its customer notice cannot be persisted', as
   const refund = (await response.json()) as RefundDto;
   expect((await post(`wallet-refunds/${refund.id}/approve`)).status).toBe(200);
   await http.pool.query(
-    "CREATE FUNCTION fail_refund_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.profile_id IS NOT NULL THEN RAISE EXCEPTION 'test notice unavailable'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_refund_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_refund_notice()"
+    "CREATE FUNCTION fail_refund_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.delivery_key LIKE 'refund:%:Completed' THEN RAISE EXCEPTION 'test notice unavailable'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_refund_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_refund_notice()"
   );
   try {
     const failed = await post(`wallet-refunds/${refund.id}/process`);
@@ -565,12 +565,21 @@ it('rolls wallet completion back if its customer notice cannot be persisted', as
     expect((await post(`wallet-refunds/${refund.id}/process`)).status).toBe(200);
   const notices = (
     await http.pool.query(
-      'SELECT localized_content FROM in_app_notifications WHERE profile_id=$1',
+      'SELECT delivery_key,localized_content FROM in_app_notifications WHERE profile_id=$1',
       [f.profile]
     )
   ).rows;
-  expect(notices).toHaveLength(1);
-  expect(notices[0].localized_content.en.body).toContain('returned to your wallet');
+  expect(notices.map((notice) => notice.delivery_key).sort()).toEqual(
+    [`refund:${refund.id}:Completed`, `refund:${refund.id}:Failed`].sort()
+  );
+  expect(
+    notices.find((notice) => notice.delivery_key === `refund:${refund.id}:Completed`)
+      .localized_content.en.body
+  ).toContain('returned to your wallet');
+  expect(
+    notices.find((notice) => notice.delivery_key === `refund:${refund.id}:Failed`).localized_content
+      .en.body
+  ).toContain('contact support');
 });
 
 it('returns only public bank-reference metadata before a failed external decision can write', async () => {

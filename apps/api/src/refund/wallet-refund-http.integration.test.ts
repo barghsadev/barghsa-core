@@ -795,10 +795,16 @@ it('persists Failed with backoff and lets the registered worker retry exactly on
   expect(
     (await http.pool.query('SELECT id FROM wallet_transactions WHERE ref_id=$1', [refund.id])).rows
   ).toHaveLength(1);
-  expect(
-    (await http.pool.query('SELECT id FROM in_app_notifications WHERE profile_id=$1', [f.profile]))
-      .rows
-  ).toHaveLength(1);
+  const notices = (
+    await http.pool.query(
+      'SELECT delivery_key,localized_content FROM in_app_notifications WHERE profile_id=$1',
+      [f.profile]
+    )
+  ).rows;
+  expect(notices.map((notice) => notice.delivery_key).sort()).toEqual(
+    [`refund:${refund.id}:Completed`, `refund:${refund.id}:Failed`].sort()
+  );
+  expect(JSON.stringify(notices)).not.toContain('private provider details');
 });
 
 it('recovers a committed processing request after a crash and serializes concurrent worker attempts', async () => {

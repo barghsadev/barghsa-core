@@ -299,7 +299,6 @@ async function alertExhausted(
     );
   }
   await audit(client, row, authorizedBy, 'refund.retry_exhausted', { attempts });
-  await notifyRefundOutcome(client, { ...row, destination: 'wallet', state: 'Failed' });
 }
 
 export type RefundAttemptResult = 'completed' | 'failed' | 'exhausted' | 'deferred';
@@ -544,6 +543,7 @@ export async function runWalletRefund(
         attempt,
         errorCode: code,
       });
+      await notifyRefundOutcome(client, { ...row, destination: 'wallet', state: 'Failed' });
       if (exhausted && !manualRetry)
         await alertExhausted(client, row, attempt, job.executor_user_id);
       result = exhausted ? 'exhausted' : 'failed';

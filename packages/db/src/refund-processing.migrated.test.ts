@@ -221,9 +221,25 @@ it('persists safe failures and stops at the bound with finance-only, nonduplicat
     last_error_code: 'profile_archived',
     exhausted_at: null,
   });
+  const failureNotices = () =>
+    db.pool.query(
+      'SELECT profile_id,operating_context,localized_content,link_route FROM in_app_notifications WHERE delivery_key=$1',
+      [`refund:${row.id}:Failed`]
+    );
+  const firstNotice = (await failureNotices()).rows;
+  expect(firstNotice).toHaveLength(1);
+  expect(firstNotice[0]).toMatchObject({
+    profile_id: row.profile_id,
+    operating_context: 'customer',
+    link_route: `/invoices/${row.invoice_id}`,
+  });
+  expect(firstNotice[0].localized_content.en.body).toContain('40 IRR');
+  expect(firstNotice[0].localized_content.en.body).toContain('contact support');
+  expect(firstNotice[0].localized_content.fa.body).toContain('۴۰');
   await due(row.id);
   expect(await runWalletRefund(db.pool, row.id)).toBe('exhausted');
   expect(await runWalletRefund(db.pool, row.id)).toBe('deferred');
+  expect((await failureNotices()).rows).toEqual(firstNotice);
   const alerts = (
     await db.pool.query(
       'SELECT recipient_user_id FROM in_app_notifications WHERE delivery_key LIKE $1',
@@ -238,6 +254,38 @@ it('persists safe failures and stops at the bound with finance-only, nonduplicat
   await expect(
     db.pool.query('DELETE FROM refund_retry_jobs WHERE refund_id=$1', [row.id])
   ).rejects.toThrow();
+});
+
+it('rolls back a failed attempt when its customer notice cannot be persisted', async () => {
+  const row = await refund();
+  await db.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [row.profile_id]);
+  await db.pool.query(
+    "CREATE FUNCTION fail_refund_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.delivery_key LIKE 'refund:%:Failed' THEN RAISE EXCEPTION 'notice unavailable'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_refund_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_refund_notice()"
+  );
+  try {
+    await expect(runWalletRefund(db.pool, row.id)).rejects.toThrow('notice unavailable');
+    expect(await job(row.id)).toMatchObject({ attempts: 0, exhausted_at: null });
+    expect(
+      (await db.pool.query('SELECT state FROM refunds WHERE id=$1', [row.id])).rows[0].state
+    ).toBe('Processing');
+    expect(
+      (await db.pool.query('SELECT refunded_amount FROM invoices WHERE id=$1', [row.invoice_id]))
+        .rows[0].refunded_amount
+    ).toBe('0');
+    expect(
+      (
+        await db.pool.query(
+          'SELECT count(*)::int AS count FROM wallet_transactions WHERE ref_id=$1',
+          [row.id]
+        )
+      ).rows[0].count
+    ).toBe(0);
+  } finally {
+    await db.pool.query(
+      'DROP TRIGGER fail_refund_notice ON in_app_notifications; DROP FUNCTION fail_refund_notice()'
+    );
+  }
+  await expect(runWalletRefund(db.pool, row.id)).resolves.toBe('failed');
 });
 
 it('fails safely for changed invoice/policy state and recovers only when the policy permits', async () => {
