@@ -47,6 +47,7 @@ import {
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
+import { evaluateWalletLowBalanceSignals } from './wallet/low-balance-notifications.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
@@ -464,18 +465,25 @@ async function main(): Promise<void> {
   const outboxPoller = pollers.every(async () => {
     if (draining) return;
     try {
+      const walletAlerts = await evaluateWalletLowBalanceSignals();
       const r = await runOutboxPoll({ transports });
       if (r.leased > 0) {
         logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
       }
-      if (r.failed > 0) {
+      if (r.failed > 0 || walletAlerts.errors.length > 0) {
         await recordJobFailure({
           jobType: 'notification_outbox_poll',
-          error: 'notification_delivery_failed',
+          error: walletAlerts.errors.length
+            ? 'wallet_low_balance_evaluation_failed'
+            : 'notification_delivery_failed',
           errorCategory: 'transient',
-          payload: { failed: r.failed, delivered: r.delivered },
+          payload: {
+            failed: r.failed,
+            delivered: r.delivered,
+            walletAlertErrors: walletAlerts.errors.length,
+          },
         });
-      } else if (r.delivered > 0) {
+      } else if (r.delivered > 0 || walletAlerts.evaluated > 0) {
         await recordJobSuccess('notification_outbox_poll');
       }
     } catch (err) {

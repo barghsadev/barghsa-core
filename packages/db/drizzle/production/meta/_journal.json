@@ -1324,6 +1324,13 @@
       "when": 1791404922975,
       "tag": "0268_wallet_credit_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 269,
+      "version": "7",
+      "when": 1791407853467,
+      "tag": "0269_wallet_low_balance_signals",
+      "breakpoints": true
     }
   ]
 }

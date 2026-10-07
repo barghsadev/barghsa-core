@@ -769,3 +769,6 @@ export * from './schema/contract-cancellation';
 export * from './schema/contract-cancellation-requests';
 
 export * from './schema/onboarding-journeys';
+
+export { walletAlertSignals, walletLowBalanceStates } from './schema/wallet-alerts';
+export type { WalletAlertSignal, WalletLowBalanceState } from './schema/wallet-alerts';

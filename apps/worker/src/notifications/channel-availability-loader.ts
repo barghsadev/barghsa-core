@@ -4,6 +4,7 @@
  * bounce suppression applies independently of marketing consent.
  */
 import type { NotificationChannel } from '@barghsa/shared/notifications';
+import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance';
 import {
   resolveChannelAvailability,
   type ChannelAvailabilityContext,
@@ -158,6 +159,15 @@ export async function loadNotificationRecipient(
           AND a.metadata::jsonb->>'targetUserId'=u.user_id AND NOT entity.archived AND entity.profile_type='LEGAL'
           AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
           AND n.operating_context='customer' AND n.type=o.event_key
+      )))
+      AND (o.event_key<>'wallet.low_balance' OR (p.user_id=u.user_id AND NOT p.archived AND EXISTS (
+        SELECT 1 FROM wallet_low_balance_states state JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE state.profile_id=o.profile_id AND state.active AND state.episode_id::text=o.payload->>'episodeId'
+          AND state.recipient_user_id=u.user_id AND n.profile_id=o.profile_id AND n.recipient_user_id=u.user_id
+          AND n.operating_context='customer' AND n.type=o.event_key
+          AND COALESCE((SELECT posted_balance-reserved_balance FROM wallets WHERE profile_id=o.profile_id),0)
+            < COALESCE((SELECT SUM(GREATEST(total_amount-paid_amount,0)) FROM invoices
+              WHERE profile_id=o.profile_id AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}),0)
       )))
       AND (o.event_key<>'wallet.credit_received' OR (p.user_id=u.user_id AND NOT p.archived AND EXISTS (
         SELECT 1 FROM wallet_transactions w JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text

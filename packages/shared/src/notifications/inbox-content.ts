@@ -6,6 +6,12 @@ export interface InboxText {
 }
 export type InboxContent = Record<'fa' | 'en', InboxText>;
 const labels: Record<string, [string, string, string, string]> = {
+  'wallet.low_balance': [
+    'موجودی کیف پول پایین',
+    'Low wallet balance',
+    'هنگام ثبت این اعلان، موجودی کیف پول برای صورتحساب‌های باز کافی نبود. موجودی فعلی و صورتحساب‌ها را بررسی کنید.',
+    'Your wallet did not cover the open invoices when this alert was recorded. Check your current balance and invoices.',
+  ],
   'payment.refund_failed': [
     'بازپرداخت نیازمند پیگیری است',
     'Refund needs attention',

@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing customer lowBalanceWarning predicates andreal invoice/wallet write boundaries. Reuse current available posted-minus-reserved balance andactual unpaid customer invoices as existing UI threshold;define/read original eligibility andonlybuild canonical private mandatory immediate deficit entry/recovery/retry/no-spam gaps. Preserve money/authority/locks/concurrency/credits/payments/invoice snapshot/history/once semantics andacceptedwalletcredit/refund/TTL/invoice/topup/earlierfamilies. SecureOTP owner disposition,system/awaiting-staff/otherAppendix/nativetemplates/liveprovider/policy/operations/launch remain unfinished.
+Inspect existing order.awaiting_staff native writers,actual staff recipients/permission/assignment/private pending routes andbusiness transitions. Reuse existing mandatory immediate canonical helpers andonlybuild demonstrated missing delivery boundaries. Preserve money/authority/currentassignment/profile/privatecontext/concurrency/idempotency/history andacceptedwallet/refund/TTL/invoice/earlierfamilies. SecureOTP owner disposition,system/otherAppendix/native templates/liveprovider/policy/operations/fourservice launch remainunfinished.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

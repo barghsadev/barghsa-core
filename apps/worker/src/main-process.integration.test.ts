@@ -922,3 +922,94 @@ it('compiled worker automatically completes elapsed service terms without closin
     await worker.close();
   }
 }, 45000);
+
+it('compiled notification loop consumes financial signals into exactly one private low-balance episode', async () => {
+  const worker = await startWorker({
+      ...Object.fromEntries(intervals.map((key) => [key, '600000'])),
+    }),
+    profile = randomUUID(),
+    invoice = randomUUID();
+  try {
+    const c = await worker.pool.connect();
+    try {
+      await c.query('BEGIN');
+      await c.query("INSERT INTO profiles(id,user_id) VALUES($1,'worker-process-actor')", [
+        profile,
+      ]);
+      await c.query('INSERT INTO wallets(profile_id,posted_balance) VALUES($1,40)', [profile]);
+      await c.query(
+        "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount) VALUES($1,$2,'Unpaid',100,0)",
+        [invoice, profile]
+      );
+      await c.query('COMMIT');
+    } catch (e) {
+      await c.query('ROLLBACK');
+      throw e;
+    } finally {
+      c.release();
+    }
+    await expect
+      .poll(
+        async () =>
+          Number(
+            (
+              await worker.pool.query(
+                "SELECT count(*) AS count FROM notification_outbox WHERE profile_id=$1 AND event_key='wallet.low_balance'",
+                [profile]
+              )
+            ).rows[0].count
+          ),
+        { timeout: 10000, interval: 200 }
+      )
+      .toBe(1);
+    const outbox = (
+      await worker.pool.query(
+        "SELECT id,payload,user_id FROM notification_outbox WHERE profile_id=$1 AND event_key='wallet.low_balance'",
+        [profile]
+      )
+    ).rows[0];
+    expect(outbox).toMatchObject({
+      user_id: 'worker-process-actor',
+      payload: { balance: '40', threshold: '100', link_route: '/wallet' },
+    });
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT profile_id,recipient_user_id,operating_context,type FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+          [outbox.id]
+        )
+      ).rows
+    ).toEqual([
+      {
+        profile_id: profile,
+        recipient_user_id: 'worker-process-actor',
+        operating_context: 'customer',
+        type: 'wallet.low_balance',
+      },
+    ]);
+    await worker.pool.query('UPDATE wallets SET posted_balance=100 WHERE profile_id=$1', [profile]);
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              'SELECT active FROM wallet_low_balance_states WHERE profile_id=$1',
+              [profile]
+            )
+          ).rows[0]?.active,
+        { timeout: 10000, interval: 200 }
+      )
+      .toBe(false);
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT id FROM notification_outbox WHERE profile_id=$1 AND event_key='wallet.low_balance'",
+          [profile]
+        )
+      ).rows
+    ).toHaveLength(1);
+    expect(await worker.stop()).toEqual({ code: 0, signal: null });
+  } finally {
+    await worker.close();
+  }
+}, 25000);
