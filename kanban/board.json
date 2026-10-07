@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T01:45:23.891773+00:00",
+  "updated": "2026-10-07T01:49:08.665961+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -26118,12 +26118,10 @@
         "story": "02-auth-users-admin.md#spec-c50c093708e7"
       },
       "requirement": "**T-05.05.01 — Profiles awaiting verification widget**\n\n- Description: On staff dashboard, widget showing profiles pending verification (if verification is not disabled). Shows count and \"Show all\" link to CRM with verification filter.\n- Technical notes: GET `/api/crm/dashboard/pending-verification` returns count and last 5 entries. Permission: staff with `crm:verify`.\n- UI/UX: Card: icon + count + \"Profiles awaiting verification\" + \"Show all\" link. Click opens CRM with `?verification=PENDING` filter.\n- Dependencies: T-05.01.02, E-07 (verification settings)\n- Complexity: S",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -26205,8 +26203,86 @@
           "apps/web/e2e/crm-dashboard.spec.ts",
           "apps/web/e2e/number-preferences.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-staff-administration"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-administration-and-dashboard-verification",
+          "reviewed_base_commit": "dee4e626c8cc0cd6acd7617e939819b93bf81e51",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+            },
+            {
+              "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
+              "sha256": "c73d0c474cc5b4eab637490f1b82d8736fbf78cbdc6bb413a65e46162f99c383"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "148c8ef482904560d5664e83a3f0c30766b951849d1a248c2e4a67dc5cf703a1"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "a87d0335e4e89d72ea5d0d0055cb03978b956d2da027eb8ca1ed0850afb6acc3"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/crm-dashboard.spec.ts",
+              "sha256": "98ea7057c4e16b00bfd9d51f02334398232626607191535dfb45f4d549b908ed"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/number-preferences.spec.ts",
+              "sha256": "a3caf6041fbbe7f850fb9539ff603604cd2b33035593025dcec6536b9e8878d3"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+              "sha256": "e2e0b25db1b4e840e83d6f72263a1a2e136cfaf794665b03fdc1fdc9bc954698"
+            },
+            {
+              "path": "apps/web/src/hooks/useStaffDashboardData.ts",
+              "sha256": "a3bb637f5d6a615b02ed7e55cedf26e133558c3bfb197de67328504b1fdac032"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.test.tsx",
+              "sha256": "8528d87a70490a6efa234024a1c2452c9436abb05f66d00d245d056f7373ddfa"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.tsx",
+              "sha256": "5924aea47c88060882c276f3a0f29d5b9db3c808de7f3574a247fe25d73f8499"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Current crm:verify permission gates GET /api/crm/dashboard/pending-verification even when disabled. Canonical profile_verification_mode overrides legacy verification.required; DISABLED returns no identities/count, invalid explicit modes fail safe. One PostgreSQL window-count snapshot returns total plus latest five nonarchived pending profiles, stable tied dates/IDs and microsecond UTC instants.",
+            "Staff card displays localized icon/count/name links and Show all preserving verification=PENDING. Disabled widget is hidden, denial and unavailable states remain recoverable, and malformed data cannot claim a zero count. Actual HTTP6 and current dashboard UI/browser tests cover current permission/revocation, MANUAL/API/legacy/invalid/empty states, FA/EN, light/dark and mobile. The destination retains separate crm:read authority.",
+            "255 distinct passing cases:197 API,24 source UI and34 browser. Fresh150 dashboard/controller-boundary +20 scoped service units;27 unchanged staff HTTP cases reused. Browser26 distinct comprises22 unchanged initial passes +2 desktop selector passes +2 final mobile replacements. Eight prior dashboard/staff-permission browser callbacks reused from current identity acceptance. Failed26/4-case invocations retained, not claimed green.",
+            "Complete one-test selector diff reviewed once; reversing its exact block recovers the original file byte-for-byte. No production/dependency/configuration change and all5497 outputs match dee4e626, so matching build/type/budget evidence reused. Changed lint/format, exact source proof and board validation pass. React act warnings in existing UI tests are retained;24 cases pass with no assertion change. Evidence: /Users/majid/.local/state/barghsa-manual-batches/staff-administration"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, source and production-browser fixtures. No milestone deployment, live external delivery or whole-launch certification.",
+            "Broader domain role matrix and profile archival policy remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -26220,12 +26296,10 @@
         "story": "02-auth-users-admin.md#spec-c50c093708e7"
       },
       "requirement": "**T-05.05.02 — Agent invitation dashboard widget**\n\n- Description: On customer dashboard, if the active profile has been invited by a legal entity, show banner with details and accept/decline actions.\n- Technical notes: Wrapper around T-05.04.03 but surfaced on dashboard.\n- UI/UX: Prominent card at top of dashboard, not dismissible until action taken.\n- Dependencies: T-05.04.03\n- Complexity: S\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -26266,8 +26340,74 @@
           "apps/web/src/pages/DashboardLayout.tsx",
           "apps/web/e2e/team.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-staff-administration"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-administration-and-dashboard-verification",
+          "reviewed_base_commit": "dee4e626c8cc0cd6acd7617e939819b93bf81e51",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/team.spec.ts",
+              "sha256": "b1cfc24aeea8113bb904f0389322d082a8013c6b907ed4e1f5add3c034000694"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/InvitationBanner.tsx",
+              "sha256": "593ba10c62960ad31d043aa16fe00915b84d4e7c2dd7c7b49e7f0f32d28e3532"
+            },
+            {
+              "path": "apps/web/src/components/InvitationDetails.tsx",
+              "sha256": "e92d176e0a385adb606c17dd0347d9c766e66bd5f9fec6840cef716c770fb67f"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+              "sha256": "e2e0b25db1b4e840e83d6f72263a1a2e136cfaf794665b03fdc1fdc9bc954698"
+            },
+            {
+              "path": "apps/web/src/hooks/useStaffDashboardData.ts",
+              "sha256": "a3bb637f5d6a615b02ed7e55cedf26e133558c3bfb197de67328504b1fdac032"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.test.tsx",
+              "sha256": "8528d87a70490a6efa234024a1c2452c9436abb05f66d00d245d056f7373ddfa"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardLayout.tsx",
+              "sha256": "d05c2127cfab42502d8556f5ebaca9a7db81e6698c8e251c6540809d9e12b25d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Customer DashboardLayout mounts the same accepted invitation banner in AppShell banners above the header. Current account owns invitation lookup; changing selected profile does not grant invitation rights. Private company/inviter/role/date details and accept/decline match the accepted T-05.04.03 implementation.",
+            "Four current source-bound dashboard en/fa desktop/mobile cases prove top placement, non-dismissal by Escape, private details and retained display until action. Validated target/status decisions and explicit post-accept profile opening remain bound to the previous identity-and-membership acceptance; verified-secondary registry behavior and unverified/removal safeguards unchanged.",
+            "255 distinct passing cases:197 API,24 source UI and34 browser. Fresh150 dashboard/controller-boundary +20 scoped service units;27 unchanged staff HTTP cases reused. Browser26 distinct comprises22 unchanged initial passes +2 desktop selector passes +2 final mobile replacements. Eight prior dashboard/staff-permission browser callbacks reused from current identity acceptance. Failed26/4-case invocations retained, not claimed green.",
+            "Complete one-test selector diff reviewed once; reversing its exact block recovers the original file byte-for-byte. No production/dependency/configuration change and all5497 outputs match dee4e626, so matching build/type/budget evidence reused. Changed lint/format, exact source proof and board validation pass. React act warnings in existing UI tests are retained;24 cases pass with no assertion change. Evidence: /Users/majid/.local/state/barghsa-manual-batches/staff-administration"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, source and production-browser fixtures. No milestone deployment, live external delivery or whole-launch certification.",
+            "Broader domain role matrix and profile archival policy remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -28647,12 +28787,10 @@
         "story": "02-auth-users-admin.md#spec-c624ff118ce2"
       },
       "requirement": "**T-09.05.01 — Staff role management**\n\n- Description: Admin can view/edit staff roles and their permissions. Predefined roles: Customer Support, CRM & Verification, Finance, Legal & Contracts, Operations, Admin. Each with associated permission set.\n- Technical notes: Permissions: `admin:roles:edit`. Role-permission mapping stored in DB (role_id → permission[]). Allow custom roles in future, initially fixed set. Audit: role_permission_change.\n- UI/UX: Table of roles with permission checkboxes grouped by module. Read-only for predefined roles initially. \"View effective permissions\" for a staff user.\n- Dependencies: T-05.03.02, admin config framework\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -28729,9 +28867,94 @@
           "apps/api/src/session/staff-permissions.ts"
         ],
         "batches": [
-          "2026-10-05-staff-access-native-forms"
+          "2026-10-05-staff-access-native-forms",
+          "release-0.3-staff-administration"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-staff-administration-and-dashboard-verification",
+          "reviewed_base_commit": "dee4e626c8cc0cd6acd7617e939819b93bf81e51",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+              "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.test.ts",
+              "sha256": "70b9a2fae193e91be98a1d657fa39f776ec602620ded02df7d8e7576cd9971bc"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/staff-http.integration.test.ts",
+              "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/role-permission-recovery.spec.ts",
+              "sha256": "c3097239b48b609881070c4e7ec4bf9d62d9761164d2e6d9330e2b76d5a5b6d6"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/lib/staff-access-form-schemas.ts",
+              "sha256": "daaffd774d095448b7fe75f57103eaa7085203491271620a503b0adeda3702e6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminRolesPage.tsx",
+              "sha256": "a1aa8b6e6db0d551b8da6048b095efaf0c2e64036ea0c6ed7128080f20934075"
+            },
+            {
+              "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
+              "sha256": "d7509e483d489844bbf64bd2e50b026ac27792612326c22ef1feb5e4ff2adb97"
+            },
+            {
+              "path": "packages/db/src/schema/staff-roles.ts",
+              "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "64bf2bcd227b6cb9758e9fa5930bc3393235cd8f0bda22e44abd75c85cac291f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Six predefined DB staff roles expose descriptions and grouped permission mappings. Current admin:roles:edit gates catalogue and effective-permission lookup; predefined roles are initially read-only as explicitly specified. Checked/disabled grants, wildcard, union/deduplication, disabled/pending targets and current lookup authority match the established permission engine. No speculative custom-role mutation is added.",
+            "Role page validates catalogue and exact requested-user receipt, cancels stale lookups, denies unauthorized data, localizes names/module groups and shows effective roles. Desktop table and responsive mobile cards both retain four fixture grants and Finance Payments grouping. All original count/read-only/no-write/overflow/light-dark Axe assertions retained; only locator now follows both semantic layouts.",
+            "255 distinct passing cases:197 API,24 source UI and34 browser. Fresh150 dashboard/controller-boundary +20 scoped service units;27 unchanged staff HTTP cases reused. Browser26 distinct comprises22 unchanged initial passes +2 desktop selector passes +2 final mobile replacements. Eight prior dashboard/staff-permission browser callbacks reused from current identity acceptance. Failed26/4-case invocations retained, not claimed green.",
+            "Complete one-test selector diff reviewed once; reversing its exact block recovers the original file byte-for-byte. No production/dependency/configuration change and all5497 outputs match dee4e626, so matching build/type/budget evidence reused. Changed lint/format, exact source proof and board validation pass. React act warnings in existing UI tests are retained;24 cases pass with no assertion change. Evidence: /Users/majid/.local/state/barghsa-manual-batches/staff-administration"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, source and production-browser fixtures. No milestone deployment, live external delivery or whole-launch certification.",
+            "Broader domain role matrix and profile archival policy remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -35794,12 +36017,10 @@
         "story": "02-auth-users-admin.md#spec-d4b05c2e9a37"
       },
       "requirement": "**T-10.01.01 — Staff user list (admin)**\n\n- Description: Admin can view all staff users, their roles, last login, status. Create/edit/disable staff accounts.\n- Technical notes: GET `/api/admin/staff` — separate from CRM user list. Permissions: `admin:staff:view`. Disable: POST `/api/admin/staff/:userId/disable` — revokes sessions, prevents login.\n- UI/UX: Table with name, username, roles badges, status (active/disabled). Disable button with confirmation.\n- Dependencies: authorization framework\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -35915,9 +36136,122 @@
           "apps/api/src/session/session-step-up.ts"
         ],
         "batches": [
-          "2026-10-05-staff-access-native-forms"
+          "2026-10-05-staff-access-native-forms",
+          "release-0.3-staff-administration"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-staff-administration-and-dashboard-verification",
+          "reviewed_base_commit": "dee4e626c8cc0cd6acd7617e939819b93bf81e51",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.test.ts",
+              "sha256": "70b9a2fae193e91be98a1d657fa39f776ec602620ded02df7d8e7576cd9971bc"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/staff-http.integration.test.ts",
+              "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+              "sha256": "65a89679fc88d1970de93885262e5f7a10978e7b958965e0f93b4169ecf1b631"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
+              "sha256": "ff26770e6ccdb918ede163a3edb3f039d434779dc55982a6180ff724c3e73138"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/staff-creation.spec.ts",
+              "sha256": "b2add40cb1f3198a4de76ac75ca8749cfb3620fe1a7b410efea546c80dfafbcb"
+            },
+            {
+              "path": "apps/web/e2e/staff-users.spec.ts",
+              "sha256": "1f630a1f878fcfb613ca85f385bfbfb93d41bb137fbab742dc300f76e169ae3c"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/lib/staff-access-form-schemas.ts",
+              "sha256": "daaffd774d095448b7fe75f57103eaa7085203491271620a503b0adeda3702e6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+            },
+            {
+              "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
+              "sha256": "d7509e483d489844bbf64bd2e50b026ac27792612326c22ef1feb5e4ff2adb97"
+            },
+            {
+              "path": "packages/db/src/schema/staff-roles.ts",
+              "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+            },
+            {
+              "path": "packages/shared/src/admin/staff-permissions.ts",
+              "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "GET /api/admin/staff remains separate from CRM and requires current admin:staff:view. Staff flags, administrators and role holders are listed, including empty-role staff. Stable pages show name, username, role badges, last login, active/disabled and pending activation with no usable credentials. Create/role edits use independently accepted capabilities and workflows.",
+            "Target-specific disable confirmation requires admin:staff:edit, recent proof and current locked target. Self-disable denied; disable flag, all sessions, refresh tokens and audit share one transaction. Audit failure/lock-time authority/expiry roll back; repeated disable is idempotent and current login/session rejects disabled users. Staff27 real HTTP boundaries reused, current service-unit checks and FA/EN source/browser capability/retry cases pass.",
+            "255 distinct passing cases:197 API,24 source UI and34 browser. Fresh150 dashboard/controller-boundary +20 scoped service units;27 unchanged staff HTTP cases reused. Browser26 distinct comprises22 unchanged initial passes +2 desktop selector passes +2 final mobile replacements. Eight prior dashboard/staff-permission browser callbacks reused from current identity acceptance. Failed26/4-case invocations retained, not claimed green.",
+            "Complete one-test selector diff reviewed once; reversing its exact block recovers the original file byte-for-byte. No production/dependency/configuration change and all5497 outputs match dee4e626, so matching build/type/budget evidence reused. Changed lint/format, exact source proof and board validation pass. React act warnings in existing UI tests are retained;24 cases pass with no assertion change. Evidence: /Users/majid/.local/state/barghsa-manual-batches/staff-administration"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, source and production-browser fixtures. No milestone deployment, live external delivery or whole-launch certification.",
+            "Broader domain role matrix and profile archival policy remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -35931,12 +36265,10 @@
         "story": "02-auth-users-admin.md#spec-d4b05c2e9a37"
       },
       "requirement": "**T-10.01.02 — Staff permission audit view**\n\n- Description: Admin can view permission changes for staff users. Timeline of role additions/removals.\n- Technical notes: Queries audit_log for role changes. Filterable by user, date range.\n- UI/UX: Timeline view per user: \"Assigned [role] by [admin] on [date]\", \"Removed [role] by [admin] on [date]\".\n- Dependencies: T-09.05.01, audit module\n- Complexity: M\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -36003,8 +36335,94 @@
           "apps/api/src/admin/admin.service.test.ts",
           "apps/api/src/session/staff-permissions.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-staff-administration"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-administration-and-dashboard-verification",
+          "reviewed_base_commit": "dee4e626c8cc0cd6acd7617e939819b93bf81e51",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.test.ts",
+              "sha256": "70b9a2fae193e91be98a1d657fa39f776ec602620ded02df7d8e7576cd9971bc"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/staff-http.integration.test.ts",
+              "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/staff-users.spec.ts",
+              "sha256": "1f630a1f878fcfb613ca85f385bfbfb93d41bb137fbab742dc300f76e169ae3c"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/StaffPermissionHistory.tsx",
+              "sha256": "35d5c0764908b237df567615d0a71e76dd1e2755fb79e4df916ade39f00bc616"
+            },
+            {
+              "path": "apps/web/src/lib/staff-access-form-schemas.ts",
+              "sha256": "daaffd774d095448b7fe75f57103eaa7085203491271620a503b0adeda3702e6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+            },
+            {
+              "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
+              "sha256": "d7509e483d489844bbf64bd2e50b026ac27792612326c22ef1feb5e4ff2adb97"
+            },
+            {
+              "path": "packages/db/src/schema/staff-roles.ts",
+              "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+            },
+            {
+              "path": "packages/shared/src/admin/staff-permissions.ts",
+              "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Current admin:staff:view gates global and target-filtered role_change timeline. User/date/page filters are parameterized and validated, actor/target display names resolve safely, added/removed roles derive from before/after IDs with retained unknown-role fallback and stable event order. Read-only timeline preserves audit history.",
+            "Timeline shows localized assigned/removed roles, actor, reason and account-timezone date/time. Date-picker bounds include entire selected calendar days; invalid range prevents filtering, unavailable timezone/data remains retryable, pagination/count and cancellation of stale requests are preserved. Seven current audit units, source-bound actual staff HTTP and four FA/EN desktop/mobile history cases pass.",
+            "255 distinct passing cases:197 API,24 source UI and34 browser. Fresh150 dashboard/controller-boundary +20 scoped service units;27 unchanged staff HTTP cases reused. Browser26 distinct comprises22 unchanged initial passes +2 desktop selector passes +2 final mobile replacements. Eight prior dashboard/staff-permission browser callbacks reused from current identity acceptance. Failed26/4-case invocations retained, not claimed green.",
+            "Complete one-test selector diff reviewed once; reversing its exact block recovers the original file byte-for-byte. No production/dependency/configuration change and all5497 outputs match dee4e626, so matching build/type/budget evidence reused. Changed lint/format, exact source proof and board validation pass. React act warnings in existing UI tests are retained;24 cases pass with no assertion change. Evidence: /Users/majid/.local/state/barghsa-manual-batches/staff-administration"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, source and production-browser fixtures. No milestone deployment, live external delivery or whole-launch certification.",
+            "Broader domain role matrix and profile archival policy remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -144349,6 +144767,22 @@
         "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership"
+    },
+    "release-0.3-staff-administration": {
+      "title": "Renew dashboard widgets, staff directory, role catalogue and permission audit",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-05.05.02",
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-10.01.02"
+      ],
+      "summary": "Existing implementations satisfy five full task criteria. Update only the browser Finance locator to support responsive cards while retaining all original assertions. Reuse immutable source-bound staff HTTP and prior dashboard browser evidence.",
+      "validation": [
+        "255 distinct passing cases:197 API,24 source UI and34 browser. Fresh150 dashboard/controller-boundary +20 scoped service units;27 unchanged staff HTTP cases reused. Browser26 distinct comprises22 unchanged initial passes +2 desktop selector passes +2 final mobile replacements. Eight prior dashboard/staff-permission browser callbacks reused from current identity acceptance. Failed26/4-case invocations retained, not claimed green.",
+        "Complete one-test selector diff reviewed once; reversing its exact block recovers the original file byte-for-byte. No production/dependency/configuration change and all5497 outputs match dee4e626, so matching build/type/budget evidence reused. Changed lint/format, exact source proof and board validation pass. React act warnings in existing UI tests are retained;24 cases pass with no assertion change. Evidence: /Users/majid/.local/state/barghsa-manual-batches/staff-administration"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration"
     }
   },
   "historical_improvements": [
@@ -144388,21 +144822,31 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-staff-administration",
+    "id": "release-0.3-invoice-core",
     "release": "0.3.0",
-    "goal": "Continue independent staff administration preparation. Inspect current role management, staff lists/audit and dashboard widgets against their criteria, reuse valid staff checks and build demonstrated gaps. Preserve profile archival and broader cross-domain role-matrix blockers. No milestone acceptance/deployment before v0.2 decisions resolve.",
+    "goal": "Inspect and renew invoice state machine, constraints/audit, lines, manual/automatic issue, VAT/rounding, immutable calculation snapshots and actual submission callers. Resolve demonstrated gaps before acceptance; old missing-caller/table limitations require current inspection. Preserve money, transaction/profile locks, exact amounts, idempotency and rollback. v0.2 remains blocked on six owner decisions; no release before dependency acceptance.",
     "task_keys": [
-      "02-auth-users-admin.md#T-05.05.01",
-      "02-auth-users-admin.md#T-05.05.02",
-      "02-auth-users-admin.md#T-09.05.01",
-      "02-auth-users-admin.md#T-10.01.01",
-      "02-auth-users-admin.md#T-10.01.02"
+      "04-invoices-wallet-contracts.md#T-04.1.01.01",
+      "04-invoices-wallet-contracts.md#T-04.1.01.02",
+      "04-invoices-wallet-contracts.md#T-04.1.01.03",
+      "04-invoices-wallet-contracts.md#T-04.1.01.04",
+      "04-invoices-wallet-contracts.md#T-04.1.01.05",
+      "04-invoices-wallet-contracts.md#T-04.1.01.06",
+      "04-invoices-wallet-contracts.md#T-04.1.02.01",
+      "04-invoices-wallet-contracts.md#T-04.1.02.02",
+      "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "04-invoices-wallet-contracts.md#T-04.1.02.06",
+      "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "04-invoices-wallet-contracts.md#T-04.1.02.08",
+      "04-invoices-wallet-contracts.md#T-04.1.02.09"
     ]
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "Four-service rehearsal, CRM six tasks and identity/staff/membership seven tasks accepted from source-bound local checks. v0.2 still awaits six original owner decisions; staff administration and financial preparation continue independently. Provider/operational evidence and production authorization remain required."
+    "method": "Four-service rehearsal, six CRM tasks, seven identity/staff/membership tasks and five staff administration/dashboard tasks accepted from source-bound local checks. v0.2 still awaits six owner decisions; invoice and financial closure preparation continues. Provider/operational evidence and production authorization remain required."
   },
   "capabilities": [
     {

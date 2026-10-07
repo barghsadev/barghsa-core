@@ -85,7 +85,12 @@ for (const locale of ['en', 'fa'] as const) {
     const content = page.locator('#admin-content');
     const finance = page
       .getByRole('row')
-      .filter({ has: page.getByRole('rowheader', { name: fa ? /^مالی/ : /^Finance/ }) });
+      .filter({ has: page.getByRole('rowheader', { name: fa ? /^مالی/ : /^Finance/ }) })
+      .or(
+        content.getByRole('listitem').filter({
+          has: page.getByRole('heading', { name: fa ? 'مالی' : 'Finance', exact: true }),
+        })
+      );
     await expect(
       finance.getByRole('group', { name: fa ? 'پرداخت‌ها' : 'Payments', exact: true })
     ).toBeVisible();

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T01:45:23.891773+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T01:49:08.665961+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 261 | Accepted with unchanged source bindings. |
-| verify | 1045 | Existing work may be complete; inspect evidence before building. |
+| done | 266 | Accepted with unchanged source bindings. |
+| verify | 1040 | Existing work may be complete; inspect evidence before building. |
 | partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,13 +39,23 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue independent staff administration preparation. Inspect current role management, staff lists/audit and dashboard widgets against their criteria, reuse valid staff checks and build demonstrated gaps. Preserve profile archival and broader cross-domain role-matrix blockers. No milestone acceptance/deployment before v0.2 decisions resolve.
+Inspect and renew invoice state machine, constraints/audit, lines, manual/automatic issue, VAT/rounding, immutable calculation snapshots and actual submission callers. Resolve demonstrated gaps before acceptance; old missing-caller/table limitations require current inspection. Preserve money, transaction/profile locks, exact amounts, idempotency and rollback. v0.2 remains blocked on six owner decisions; no release before dependency acceptance.
 
-- `02-auth-users-admin.md#T-05.05.01`: Profiles awaiting verification widget
-- `02-auth-users-admin.md#T-05.05.02`: Agent invitation dashboard widget
-- `02-auth-users-admin.md#T-09.05.01`: Staff role management
-- `02-auth-users-admin.md#T-10.01.01`: Staff user list (admin)
-- `02-auth-users-admin.md#T-10.01.02`: Staff permission audit view
+- `04-invoices-wallet-contracts.md#T-04.1.01.01`: Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps
+- `04-invoices-wallet-contracts.md#T-04.1.01.02`: Create `invoice_state` enum in DB matching all 9 states
+- `04-invoices-wallet-contracts.md#T-04.1.01.03`: Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission
+- `04-invoices-wallet-contracts.md#T-04.1.01.04`: Add DB constraints: `CHECK (paidAmount <= totalAmount)`, `CHECK (refundedAmount <= paidAmount)`
+- `04-invoices-wallet-contracts.md#T-04.1.01.05`: Write audit repository entry for every invoice state transition
+- `04-invoices-wallet-contracts.md#T-04.1.01.06`: Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection
+- `04-invoices-wallet-contracts.md#T-04.1.02.01`: Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints
+- `04-invoices-wallet-contracts.md#T-04.1.02.02`: Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice
+- `04-invoices-wallet-contracts.md#T-04.1.02.03`: Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms
+- `04-invoices-wallet-contracts.md#T-04.1.02.04`: Implement VAT calculation module with category default / product override resolution
+- `04-invoices-wallet-contracts.md#T-04.1.02.05`: Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys
+- `04-invoices-wallet-contracts.md#T-04.1.02.06`: Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index)
+- `04-invoices-wallet-contracts.md#T-04.1.02.07`: Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements
+- `04-invoices-wallet-contracts.md#T-04.1.02.08`: Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility
+- `04-invoices-wallet-contracts.md#T-04.1.02.09`: Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals
 
 ## v0.2.0: Complete customer journeys
 
@@ -322,8 +332,8 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-05.04.03` | done | Earlier acceptance_verified | Accept/decline invitation |
 | `02-auth-users-admin.md#T-05.04.04` | partial | Earlier partial | Agent role permissions enforcement |
 | `02-auth-users-admin.md#T-05.04.05` | done | Earlier acceptance_verified | Ownership transfer |
-| `02-auth-users-admin.md#T-05.05.01` | verify | Earlier acceptance_verified | Profiles awaiting verification widget |
-| `02-auth-users-admin.md#T-05.05.02` | verify | Earlier acceptance_verified | Agent invitation dashboard widget |
+| `02-auth-users-admin.md#T-05.05.01` | done | Earlier acceptance_verified | Profiles awaiting verification widget |
+| `02-auth-users-admin.md#T-05.05.02` | done | Earlier acceptance_verified | Agent invitation dashboard widget |
 | `02-auth-users-admin.md#T-06.01.01` | partial | Earlier partial | Ticket creation |
 | `02-auth-users-admin.md#T-06.01.02` | partial | Earlier partial | Ticket list and detail view |
 | `02-auth-users-admin.md#T-06.01.03` | verify | Earlier acceptance_verified | Staff ticket management |
@@ -333,7 +343,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.02.02` | verify | Earlier acceptance_verified | City CRUD per province |
 | `02-auth-users-admin.md#T-09.03.01` | verify | Earlier acceptance_verified | TOS editor |
 | `02-auth-users-admin.md#T-09.03.02` | verify | Earlier acceptance_verified | TOS version history |
-| `02-auth-users-admin.md#T-09.05.01` | verify | Earlier acceptance_verified | Staff role management |
+| `02-auth-users-admin.md#T-09.05.01` | done | Earlier acceptance_verified | Staff role management |
 | `02-auth-users-admin.md#T-09.07.01` | verify | Earlier acceptance_verified | Dual-approval threshold configuration |
 | `02-auth-users-admin.md#T-09.07.02` | verify | Earlier acceptance_verified | Dual-approval workflow |
 | `02-auth-users-admin.md#T-09.08.01` | partial | Earlier partial | Service response targets |
@@ -351,8 +361,8 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.12.04` | partial | Earlier partial | Contract template management |
 | `02-auth-users-admin.md#T-09.12.05` | verify | Earlier acceptance_verified | Upload policies configuration |
 | `02-auth-users-admin.md#T-09.12.06` | partial | Earlier partial | Contract electricity increase limits |
-| `02-auth-users-admin.md#T-10.01.01` | verify | Earlier acceptance_verified | Staff user list (admin) |
-| `02-auth-users-admin.md#T-10.01.02` | verify | Earlier acceptance_verified | Staff permission audit view |
+| `02-auth-users-admin.md#T-10.01.01` | done | Earlier acceptance_verified | Staff user list (admin) |
+| `02-auth-users-admin.md#T-10.01.02` | done | Earlier acceptance_verified | Staff permission audit view |
 | `03-core-business.md#T-03.07.03.01` | verify | Inventory needed | Create `refund_obligations` table: `id`, `order_id` (FK), `contract_id` (FK nullable), `invoice_id` (FK), `profile_id` (FK), `total_paid_amount` (bigint), `completed_refund_amount` (bigint default 0), `status` (enum: `pending`, `processing`, `completed`, `failed`), `idempotency_key` (unique), `created_at`, `updated_at` |
 | `03-core-business.md#T-03.07.03.02` | verify | Inventory needed | When an order transitions to `rejected` or `cancelled` and `total_paid_amount > completed_refund_amount`: automatically create a `refund_obligation` with status `pending`. This is automatic, not optional for staff. |
 | `03-core-business.md#T-03.07.03.03` | verify | Inventory needed | Worker: process refund obligations — post immutable wallet credit linked to contract, invoice, and original payment allocations. Use unique idempotency key to prevent duplicate credits. |
