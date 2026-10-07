@@ -7,6 +7,13 @@ import { getDbPool } from '@barghsa/db';
 import type { OperatingContext, ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import type { PoolClient } from 'pg';
+
+export type ContractCustomerEvent =
+  | 'contract.awaiting_acceptance'
+  | 'contract.accepted'
+  | 'contract.signed'
+  | 'contract.changes_requested';
 
 export interface CreateNotificationParams {
   userId: string;
@@ -67,29 +74,33 @@ export class NotificationsService {
    */
   async create(
     params: CreateNotificationParams,
-    transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> }
+    transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
+    delivery?: { outboxId: string; eventKey: ContractCustomerEvent }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
     const id = uuidv7();
     const now = new Date();
 
-    await pool.query(
+    const inserted = await pool.query(
       `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
        VALUES ($1::uuid,$2,$3,$4,$5,'notifications.legacy.title','notifications.legacy.body',
-       COALESCE($10::jsonb,jsonb_build_object('original',jsonb_build_object('title',$6::text,'body',COALESCE($7::text,'')))),$8,false,$9,'direct:'||$1::text)`,
+       COALESCE($10::jsonb,jsonb_build_object('original',jsonb_build_object('title',$6::text,'body',COALESCE($7::text,'')))),$8,false,$9,COALESCE($11::text,'direct:'||$1::text)) RETURNING id`,
       [
         id,
         params.userId,
         params.profileId ?? null,
         params.operatingContext,
-        params.type,
+        delivery?.eventKey ?? params.type,
         params.title,
         params.body ?? null,
         notificationLink(params.link),
         now,
         params.localizedContent ? JSON.stringify(params.localizedContent) : null,
+        delivery ? `outbox:${delivery.outboxId}` : null,
       ]
     );
+    if (delivery && !(inserted as { rows: { id: string }[] }).rows.some((row) => row.id === id))
+      throw new Error('Mandatory inbox delivery was not stored');
 
     this.logger.log(`Notification created: id=${id} type=${params.type} user=${params.userId}`);
 
@@ -97,7 +108,7 @@ export class NotificationsService {
       id,
       userId: params.userId,
       profileId: params.profileId ?? null,
-      type: params.type,
+      type: delivery?.eventKey ?? params.type,
       title: params.title,
       body: params.body ?? null,
       link: notificationLink(params.link),
@@ -106,6 +117,65 @@ export class NotificationsService {
       createdAt: now,
       updatedAt: now,
     };
+  }
+
+  /** The caller owns the native business transaction and its stable occurrence identity. */
+  async createCustomerBusinessEvent(
+    params: CreateNotificationParams & {
+      profileId: string;
+      eventKey: ContractCustomerEvent;
+      occurrenceKey: string;
+      payload: Record<string, string>;
+    },
+    transaction: PoolClient
+  ): Promise<void> {
+    if (params.operatingContext !== 'customer' || !params.occurrenceKey.trim())
+      throw new Error('Customer business delivery requires a private scope and occurrence key');
+    const payload = {
+      ...params.payload,
+      ...(params.link ? { link_route: notificationLink(params.link) } : {}),
+    };
+    const outboxId = uuidv7();
+    const inserted = await transaction.query(
+      `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$3,$4,$5,ARRAY['in_app','email'],'queued',$6,5,$7)
+       ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
+      [
+        outboxId,
+        params.profileId,
+        params.userId,
+        params.eventKey,
+        payload,
+        params.occurrenceKey,
+        correlationIdStorage.getStore() ?? null,
+      ]
+    );
+    if (!inserted.rows[0]) {
+      const existing = await transaction.query(
+        `SELECT ob.id FROM notification_outbox ob JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+         WHERE ob.idempotency_key=$1 AND ob.profile_id=$2 AND ob.user_id=$3 AND ob.event_key=$4 AND ob.payload=$5::jsonb
+         AND ob.channels=ARRAY['in_app','email'] AND n.profile_id=ob.profile_id AND n.recipient_user_id=ob.user_id
+         AND n.operating_context='customer' AND n.type=ob.event_key`,
+        [params.occurrenceKey, params.profileId, params.userId, params.eventKey, payload]
+      );
+      if (!existing.rows[0])
+        throw new Error('Business notification occurrence conflicts with saved delivery');
+      return;
+    }
+    const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
+    const priority =
+      classifyNotificationType(params.eventKey) === 'immediate' ? 'urgent' : 'normal';
+    // In-app delivery is immediate and already persisted; only email awaits the worker/window.
+    await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done',$2,5,1,$3,$4),($1,'email','queued',$2,5,0,NULL,NULL)`,
+      [outboxId, priority, notice.id, payload]
+    );
+    await transaction.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [outboxId, notice.id]
+    );
   }
 
   /** Queue external verification channels in the caller's status-change transaction. */

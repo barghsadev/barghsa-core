@@ -148,7 +148,7 @@ export class ContractReviewService {
               baseVersionId: row.base_version_id,
             }
           );
-          await notifyContractReview(client, id, 'published');
+          await notifyContractReview(client, id, 'published', undefined, input.expectedVersionId);
           return this.contracts.get(id, client);
         }
       )
@@ -243,7 +243,7 @@ export class ContractReviewService {
                   : 'ChangesRequested',
             reason: input.reason ?? null,
           });
-          await notifyContractReview(client, id, event, input.reason);
+          await notifyContractReview(client, id, event, input.reason, input.expectedVersionId);
           return this.contracts.get(id, client);
         }
       )
@@ -503,7 +503,7 @@ export class ContractReviewService {
                 contractToState: auditState.contract_state,
               }
             );
-            await notifyContractReview(client, id, 'accepted');
+            await notifyContractReview(client, id, 'accepted', undefined, input.expectedVersionId);
             return {
               ...(await this.published(client, profileId, id)),
               ...(financialReview ? { financialReview } : {}),

@@ -1,3 +1,4 @@
+import { expectContractCustomerDelivery } from '../test/contract-notification-proof.js';
 import { expectCoreAudit } from '../test/core-audit.js';
 import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
@@ -430,6 +431,12 @@ it('records real approved customer bytes once and preserves recorder, uploader a
   });
 
   expect(await (await record(f, body)).json()).toEqual(evidence);
+  await expectContractCustomerDelivery(
+    http.pool,
+    f.row.id,
+    f.row.currentVersionId,
+    'contract.signed'
+  );
   const staff = (await (
     await send(
       `admin/contracts/${f.row.id}/signature?versionId=${f.row.currentVersionId}`,

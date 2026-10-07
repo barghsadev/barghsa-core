@@ -1,7 +1,10 @@
 import { contractText } from '@barghsa/i18n/contracts';
 import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
-import { NotificationsService } from '../notifications/notifications.service.js';
+import {
+  NotificationsService,
+  type ContractCustomerEvent,
+} from '../notifications/notifications.service.js';
 const messages = {
   rejected: {
     fa: contractText('rejectionOrderNotice', 'fa'),
@@ -77,11 +80,17 @@ export async function notifyContractReview(
   client: PoolClient,
   id: string,
   event: keyof typeof messages,
-  reason?: string
+  reason?: string,
+  versionId?: string
 ) {
   const profile = (
-    await client.query<{ profile_id: string; user_id: string; order_id: string | null }>(
-      'SELECT c.profile_id,c.order_id,p.user_id FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1',
+    await client.query<{
+      profile_id: string;
+      user_id: string;
+      order_id: string | null;
+      contract_number: string;
+    }>(
+      'SELECT c.profile_id,c.order_id,c.contract_number::text,p.user_id FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1',
       [id]
     )
   ).rows[0]!;
@@ -109,28 +118,63 @@ export async function notifyContractReview(
     }
   }
   const message = messages[event];
-  for (const { userId, operatingContext } of recipients)
-    await new NotificationsService().create(
-      {
-        userId,
-        ...(operatingContext === 'customer' ? { profileId: profile.profile_id } : {}),
-        operatingContext,
-        ...(event === 'rejected' && profile.order_id
-          ? { link: `/electricity/orders/${profile.order_id}` }
-          : {}),
-        type: 'general',
-        title: message.en,
-        localizedContent: {
-          fa: {
-            title: 'قرارداد',
-            body: message.fa + ' شناسه قرارداد: ' + id + (reason ? ' ' + reason : ''),
-          },
-          en: {
-            title: 'Contract',
-            body: message.en + ' Contract reference: ' + id + (reason ? ' ' + reason : ''),
-          },
+  const customerEvents: Partial<Record<keyof typeof messages, ContractCustomerEvent>> = {
+    published: 'contract.awaiting_acceptance',
+    accepted: 'contract.accepted',
+    signed_copy_recorded: 'contract.signed',
+    changes_requested: 'contract.changes_requested',
+  };
+  const eventKey = customerEvents[event];
+  const payload: Record<string, string> = { contractNumber: profile.contract_number };
+  if (eventKey) {
+    if (!versionId)
+      throw new Error('Contract customer notification requires the exact event version');
+    if (event === 'changes_requested') payload.changesDescription = reason!;
+    if (event === 'accepted' || event === 'signed_copy_recorded') {
+      const evidence = await client.query<{ occurred_at: Date }>(
+        event === 'accepted'
+          ? 'SELECT accepted_at AS occurred_at FROM contract_acceptances WHERE contract_id=$1 AND version_id=$2'
+          : 'SELECT recorded_at AS occurred_at FROM contract_signatures WHERE contract_id=$1 AND version_id=$2',
+        [id, versionId]
+      );
+      payload[event === 'accepted' ? 'acceptedAt' : 'signedAt'] =
+        evidence.rows[0]!.occurred_at.toISOString();
+    }
+  }
+  for (const { userId, operatingContext } of recipients) {
+    const params = {
+      userId,
+      ...(operatingContext === 'customer' ? { profileId: profile.profile_id } : {}),
+      operatingContext,
+      ...(event === 'rejected' && profile.order_id
+        ? { link: `/electricity/orders/${profile.order_id}` }
+        : {}),
+      type: 'general',
+      title: message.en,
+      localizedContent: {
+        fa: {
+          title: 'قرارداد',
+          body: message.fa + ' شناسه قرارداد: ' + id + (reason ? ' ' + reason : ''),
+        },
+        en: {
+          title: 'Contract',
+          body: message.en + ' Contract reference: ' + id + (reason ? ' ' + reason : ''),
         },
       },
-      client
-    );
+    } as const;
+    const notifications = new NotificationsService();
+    if (operatingContext === 'customer' && eventKey)
+      await notifications.createCustomerBusinessEvent(
+        {
+          ...params,
+          profileId: profile.profile_id,
+          eventKey,
+          payload,
+          link: `/contracts/${id}`,
+          occurrenceKey: `${eventKey}:${id}:${versionId}:${userId}`,
+        },
+        client
+      );
+    else await notifications.create(params, client);
+  }
 }

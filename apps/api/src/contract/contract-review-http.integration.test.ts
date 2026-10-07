@@ -1,3 +1,4 @@
+import { expectContractCustomerDelivery } from '../test/contract-notification-proof.js';
 import { expectCoreAudit } from '../test/core-audit.js';
 import { contractJourneyEffects } from '../test/contract-journey-http-proof.js';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
@@ -464,6 +465,15 @@ it('publishes and accepts an unsigned amendment while the active base remains ef
     version: { id: string };
   };
   expect(oldVersion.version.id).toBe(f.row.currentVersionId);
+  for (const versionId of [f.row.currentVersionId, pending.versionId]) {
+    await expectContractCustomerDelivery(
+      http.pool,
+      f.row.id,
+      versionId,
+      'contract.awaiting_acceptance'
+    );
+    await expectContractCustomerDelivery(http.pool, f.row.id, versionId, 'contract.accepted');
+  }
 });
 it('carries the existing invoice and service period into an electricity amendment', async () => {
   const f = await fixture('electricity');
@@ -852,6 +862,13 @@ it('requests changes with a durable reason, revises, and publishes without expos
   expect(staleFeedback.status).toBe(409);
   expect(((await staleFeedback.json()) as FeedbackDto).error.fields).toBeUndefined();
   expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(progressed);
+  const delivery = await expectContractCustomerDelivery(
+    http.pool,
+    f.row.id,
+    f.row.currentVersionId,
+    'contract.changes_requested'
+  );
+  expect(delivery.payload.changesDescription).toBe('Correct the price');
 });
 it('accepts once with exact version, actor and timestamp evidence without activating or signing', async () => {
   const f = await fixture();
@@ -1097,13 +1114,20 @@ it('validates review and customer routes and requires legal staff authorization'
     ).status
   ).toBe(404);
 });
-it.each(['audit', 'notice'])(
+it.each(['audit', 'notice', 'outbox', 'job', 'history'])(
   'rolls back publication and retry claims when %s fails',
   async (failure) => {
     const f = await fixture();
     await action(f.row.id, 'submit', command(f.row.currentVersionId));
     const body = command(f.row.currentVersionId);
-    const table = failure === 'audit' ? 'audit_log' : 'in_app_notifications';
+    const table = {
+      audit: 'audit_log',
+      notice: 'in_app_notifications',
+      outbox: 'notification_outbox',
+      job: 'notification_job',
+      history: 'notification_delivery_log',
+    }[failure]!;
+    const saved = await contractJourneyEffects(http.pool, f.row.id, f.profile);
     await http.pool.query(
       "CREATE FUNCTION fail_contract_review() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'review evidence unavailable'; END $$"
     );
@@ -1126,7 +1150,18 @@ it.each(['audit', 'notice'])(
         ])
       ).rows
     ).toEqual([]);
+    expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(saved);
+    expect(
+      (await http.pool.query('SELECT * FROM notification_outbox WHERE profile_id=$1', [f.profile]))
+        .rows
+    ).toEqual([]);
     expect((await action(f.row.id, 'publish', body)).status).toBe(200);
+    await expectContractCustomerDelivery(
+      http.pool,
+      f.row.id,
+      f.row.currentVersionId,
+      'contract.awaiting_acceptance'
+    );
   }
 );
 it('rolls back acceptance evidence, version timestamp and state if notification delivery cannot be queued', async () => {

@@ -474,7 +474,13 @@ export class ContractSignatureService {
                 ...(financialReview ? { financialReview } : {}),
               }
             );
-            await notifyContractReview(client, id, 'signed_copy_recorded');
+            await notifyContractReview(
+              client,
+              id,
+              'signed_copy_recorded',
+              undefined,
+              input.expectedVersionId
+            );
             const result = await this.view(
               client,
               await this.parent(client, id),

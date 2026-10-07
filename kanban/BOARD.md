@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Complete demonstrated durable business-event producer gaps. Inspect canonical event/channel requirements and existing contract/order/ticket/document producers before edits. Retain immediate mandatory private in-app notices while enqueueing correctly typed external jobs atomically with the native event; preserve immutable read history,current recipients,transaction rollback andstable occurrence idempotency. Start with actual contract customer events andprove affected callers. No automatic resend of unknown delivery; earlier owner/provider/operations gates remain pending.
+Complete remaining contract lifecycle event producers before moving to other Appendix business notifications. Inspect existing create/activation/terminal cancellation engines and retained financial/audit/idempotency boundaries first. Enqueue canonical contract.created, contract.active and contract.cancelled customer events atomically, preserve current profile recipients, immediate private in-app delivery, exact version occurrence identity and refund/closure safety; verify affected native journeys. Keep all unrelated owner/provider/operations gates and production authorization separate.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 
