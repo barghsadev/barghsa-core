@@ -248,5 +248,11 @@
       "src/components/VerificationBanner.tsx"
     ],
     "limitKB": 500
+  },
+  {
+    "name": "Electricity increase form on demand",
+    "phase": "interaction",
+    "entries": ["src/components/ContractQuantityIncreasePanel.tsx"],
+    "limitKB": 80
   }
 ]

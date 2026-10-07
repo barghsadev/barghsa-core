@@ -13,6 +13,7 @@ import type { TeamAction } from './TeamActionDialog.js';
 import { documentUploadPolicy } from '../test/document-list-fixtures.js';
 import type { ContractDetailData, ContractVersion } from '../lib/contracts.js';
 import { en, fa } from '@barghsa/i18n/contracts';
+import { t } from '@barghsa/i18n/app';
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     children,
@@ -39,6 +40,24 @@ const harness = vi.hoisted(() => ({
   result: null as unknown,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
+vi.mock('../pages/ElectricityIncreasePanel.js', () => ({
+  ElectricityIncreasePanel: ({
+    contractId,
+    versionId,
+    profileId,
+  }: {
+    contractId: string;
+    versionId: string;
+    profileId: string;
+  }) => (
+    <section
+      aria-label="Quantity increase"
+      data-contract={contractId}
+      data-version={versionId}
+      data-profile={profileId}
+    />
+  ),
+}));
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (value: string) => value }),
 }));
@@ -209,6 +228,70 @@ function api(current = detail()) {
     });
   });
 }
+it.each(['en', 'fa'] as const)(
+  'opens the existing increase flow on the active current customer contract in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const current = detail({
+      state: 'Active',
+      orderId: OLD,
+      version: version({ acceptedAt: '2026-09-22T00:00:00Z' }),
+    });
+    const base = api(current);
+    vi.stubGlobal('fetch', async (raw: string) =>
+      raw.endsWith('/increase') ? response({ canRequest: true, request: null }) : base(raw)
+    );
+    await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
+    await click(t('electricity.increase.submit', locale));
+    await act(async () => vi.dynamicImportSettled());
+    const panel = container.querySelector('[aria-label="Quantity increase"]');
+    expect(panel).not.toBeNull();
+    expect(panel?.getAttribute('data-contract')).toBe(ID);
+    expect(panel?.getAttribute('data-version')).toBe(VERSION);
+    expect(panel?.getAttribute('data-profile')).toBe(PROFILE);
+  }
+);
+it.each([false, true])(
+  'hides the request entry after authoritative eligibility denies a new request (existing=%s)',
+  async (existing) => {
+    const current = detail({ state: 'Active', orderId: OLD, version: version() });
+    const base = api(current);
+    vi.stubGlobal('fetch', async (raw: string) =>
+      raw.endsWith('/increase')
+        ? response({ canRequest: false, request: existing ? { requestId: OLD } : null })
+        : base(raw)
+    );
+    await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
+    expect(
+      [...container.querySelectorAll('button')].some(
+        (node) => node.textContent === t('electricity.increase.submit', 'en')
+      )
+    ).toBe(false);
+    expect(container.querySelector('[aria-label="Quantity increase"]')).toBeNull();
+  }
+);
+it.each(['staff', 'inactive', 'saving', 'unlinked'] as const)(
+  'does not expose customer increase controls for a %s contract',
+  async (kind) => {
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          state: kind === 'inactive' ? 'Accepted' : 'Active',
+          orderId: kind === 'unlinked' ? null : OLD,
+          serviceType: kind === 'saving' ? 'savings' : 'electricity',
+          version: version(),
+          currentVersion: version(),
+          currentVersionId: VERSION,
+        })
+      )
+    );
+    await render(
+      <ContractDetail id={ID} staff={kind === 'staff'} onClose={() => {}} onChanged={() => {}} />
+    );
+    expect(container.querySelector('[aria-label="Quantity increase"]')).toBeNull();
+  }
+);
 it('submits the saved electricity snapshot as a PDF for staff document review', async () => {
   const current = detail({
     state: 'Accepted',

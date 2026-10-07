@@ -1,7 +1,16 @@
 import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
 import { Link } from '@tanstack/react-router';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
-import { useEffect, useMemo, useRef, useState, type FormEvent, type SyntheticEvent } from 'react';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type SyntheticEvent,
+} from 'react';
 import { Alert, AlertDescription, Button, PageLoading, StatusBadge, Textarea } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
@@ -46,6 +55,56 @@ import {
   type ContractFormCoordination,
   type ContractSigningSource,
 } from '../lib/contract-review-signature-form.js';
+
+const ElectricityIncreasePanel = lazy(() => import('./ContractQuantityIncreasePanel.js'));
+
+function ContractIncreaseEntry(props: {
+  contractId: string;
+  versionId: string;
+  profileId: string;
+  formatTimestamp: (value: string) => string;
+}) {
+  const locale = useLocale();
+  const [available, setAvailable] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    setAvailable(false);
+    setFailed(false);
+    void documentRequest<{ canRequest: unknown; request: unknown }>(
+      `/api/electricity/contracts/${encodeURIComponent(props.contractId)}/increase`,
+      { signal: controller.signal }
+    )
+      .then((value) => {
+        if (typeof value.canRequest !== 'boolean' || !Object.hasOwn(value, 'request'))
+          throw new Error('Invalid increase eligibility');
+        if (!controller.signal.aborted) setAvailable(value.canRequest && value.request === null);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setFailed(true);
+      });
+    return () => controller.abort();
+  }, [props.contractId, props.versionId, props.profileId, retry]);
+  if (opened)
+    return (
+      <Suspense fallback={<PageLoading label={t('electricity.increase.loading', locale)} />}>
+        <ElectricityIncreasePanel {...props} />
+      </Suspense>
+    );
+  if (failed)
+    return (
+      <Button variant="outline" onClick={() => setRetry((value) => value + 1)}>
+        {t('electricity.increase.retry', locale)}
+      </Button>
+    );
+  return available ? (
+    <Button variant="outline" onClick={() => setOpened(true)}>
+      {t('electricity.increase.submit', locale)}
+    </Button>
+  ) : null;
+}
 
 type DetailProps = {
   id: string;
@@ -651,6 +710,26 @@ function ContractDetailContent({
             >
               {word('openLinkedOrder')}
             </Link>
+          ) : null}
+          {!staff &&
+          isCurrent &&
+          data.contract.state === 'Active' &&
+          data.contract.serviceType === 'electricity' &&
+          data.contract.orderId ? (
+            <fieldset
+              disabled={blocked()}
+              onClickCapture={blockSibling}
+              onSubmitCapture={blockSibling}
+              className="contents"
+            >
+              <ContractIncreaseEntry
+                key={JSON.stringify([data.contract.id, data.version.id, data.contract.profileId])}
+                contractId={data.contract.id}
+                versionId={data.version.id}
+                profileId={data.contract.profileId}
+                formatTimestamp={time.format}
+              />
+            </fieldset>
           ) : null}
           {staff && data.contract.serviceType === 'electricity' && data.contract.orderId ? (
             <a
