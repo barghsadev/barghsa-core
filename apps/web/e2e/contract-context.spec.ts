@@ -35,6 +35,8 @@ for (const locale of ['en', 'fa'] as const) {
       );
       const original = {
         id: firstId,
+        contractId: id,
+        createdBy: 'contract-context-staff',
         versionNumber: 1,
         content: { price: '123', deliveryZone: 'Northern district' },
         changeDescription: 'Original terms',
@@ -49,6 +51,28 @@ for (const locale of ['en', 'fa'] as const) {
         serviceEndsAt: '2026-10-22T00:00:00Z',
       };
       let context = { ...originalContext };
+      const dto = () => ({
+        id,
+        contractNumber: '1',
+        profileId: '33333333-3333-4333-8333-333333333333',
+        orderId: null,
+        serviceType: 'savings',
+        state: 'Draft',
+        currentVersionId: current.id,
+        currentVersion: current,
+        createdAt: '2026-09-21T00:00:00Z',
+        updatedAt: '2026-09-21T00:00:00Z',
+        submittedAt: null,
+        acceptedAt: null,
+        signedAt: null,
+        activatedAt: null,
+        completedAt: null,
+        cancelledAt: null,
+        amendmentSupported: true,
+        linkedOrderStatus: null,
+        acceptedParty: null,
+        pendingAmendment: null,
+      });
       let verified = false;
       const attempts: Array<Record<string, unknown>> = [];
       await page.route('**/api/admin/contracts?*', (route) =>
@@ -81,20 +105,9 @@ for (const locale of ['en', 'fa'] as const) {
           };
           versions.unshift(current);
           context = body.activationContext;
-          return route.fulfill({
-            json: { id, currentVersionId: current.id, currentVersion: current },
-          });
+          return route.fulfill({ json: dto() });
         }
-        return route.fulfill({
-          json: {
-            id,
-            profileId: '33333333-3333-4333-8333-333333333333',
-            serviceType: 'savings',
-            state: 'Draft',
-            currentVersionId: current.id,
-            currentVersion: current,
-          },
-        });
+        return route.fulfill({ json: dto() });
       });
       await page.route(`**/api/admin/contracts/${id}/versions`, (route) =>
         route.fulfill({ json: { versions, nextBefore: null } })
@@ -114,13 +127,29 @@ for (const locale of ['en', 'fa'] as const) {
             ruleRevision: 1,
             ...(selected === current.id ? context : originalContext),
             evaluatedAt: '2026-09-21T00:00:00Z',
-            checks: [],
+            checks: [
+              { key: 'staffApproval', required: true, status: 'unmet' },
+              { key: 'customerAcceptance', required: true, status: 'unmet' },
+              { key: 'signature', required: false, status: 'not_required' },
+              { key: 'initialPayment', required: false, status: 'not_required' },
+              { key: 'serviceStart', required: false, status: 'not_required' },
+            ],
           },
         });
       });
       await page.route(`**/api/admin/contracts/${id}/signature?*`, (route) =>
         route.fulfill({
-          json: { request: null, signature: null, canRequest: false, canRecord: false },
+          json: {
+            contractId: id,
+            versionId: new URL(route.request().url()).searchParams.get('versionId'),
+            state: 'Draft',
+            isCurrent: new URL(route.request().url()).searchParams.get('versionId') === current.id,
+            isAmendment: false,
+            request: null,
+            signature: null,
+            canRequest: false,
+            canRecord: false,
+          },
         })
       );
       await page.route('**/api/admin/documents?*', (route) =>

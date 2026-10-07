@@ -229,7 +229,7 @@ it('allows only one concurrent next version', async () => {
   ).toBe('2');
 });
 
-it('upgrades migration 137 without changing existing profiles or opaque invoice contract references', async () => {
+it('upgrades migration 137 without changing profiles or opaque references, which later foreign keys require reconciling', async () => {
   const name = 'contract_upgrade_' + randomUUID().replaceAll('-', '');
   const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
   const url = new URL(process.env.TEST_DATABASE_URL!);
@@ -242,7 +242,8 @@ it('upgrades migration 137 without changing existing profiles or opaque invoice 
     cpSync(resolve(__dirname, '../drizzle/production'), folder, { recursive: true });
     const path = join(folder, 'meta/_journal.json'),
       journal = JSON.parse(readFileSync(path, 'utf8'));
-    journal.entries = journal.entries.filter((entry: { idx: number }) => entry.idx < 138);
+    const entries = journal.entries;
+    journal.entries = entries.filter((entry: { idx: number }) => entry.idx < 138);
     writeFileSync(path, JSON.stringify(journal));
     expect(
       (
@@ -260,8 +261,17 @@ it('upgrades migration 137 without changing existing profiles or opaque invoice 
       "INSERT INTO invoices(profile_id,contract_id,total_amount) VALUES($1,'contract-001',100)",
       [profile]
     );
-    expect((await runMigrations({ connection: { pgdirectUrl: url.toString() } })).ok).toBe(true);
-    expect((await runMigrations({ connection: { pgdirectUrl: url.toString() } })).ok).toBe(true);
+    journal.entries = entries.filter((entry: { idx: number }) => entry.idx <= 138);
+    writeFileSync(path, JSON.stringify(journal));
+    expect(
+      await runMigrations({ connection: { pgdirectUrl: url.toString() }, migrationsFolder: folder })
+    ).toEqual({ ok: true, applied: ['0138_contract_drafts'] });
+    expect(
+      await runMigrations({ connection: { pgdirectUrl: url.toString() }, migrationsFolder: folder })
+    ).toEqual({ ok: true, applied: [] });
+    const later = await runMigrations({ connection: { pgdirectUrl: url.toString() } });
+    expect(later).toMatchObject({ ok: false, applied: [] });
+    expect(later.error).toContain('invoices_contract_id_contracts_invoice_reference_fk');
     expect((await pool.query('SELECT contract_id FROM invoices')).rows).toEqual([
       { contract_id: 'contract-001' },
     ]);

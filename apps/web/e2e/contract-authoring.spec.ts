@@ -7,9 +7,11 @@ const ID = '11111111-1111-4111-8111-111111111111',
   PROFILE = '22222222-2222-4222-8222-222222222222',
   ORDER = '33333333-3333-4333-8333-333333333333';
 const V1 = '44444444-4444-4444-8444-444444444444',
-  V2 = '55555555-5555-4555-8555-555555555555';
+  V2 = '55555555-5555-4555-8555-555555555555',
+  CREATED = '66666666-6666-4666-8666-666666666666',
+  CREATED_VERSION = '77777777-7777-4777-8777-777777777777';
 for (const locale of ['en', 'fa'] as const) {
-  test(`staff creates and revises a contract draft with safe retries (${locale})`, async ({
+  test(`staff creates a draft safely and revises an imported snapshot (${locale})`, async ({
     page,
   }, testInfo) => {
     const words = locale === 'fa' ? fa : en,
@@ -61,13 +63,20 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/contracts/authoring-options?*', (r) =>
       r.fulfill({
         json: new URL(r.request().url()).searchParams.has('profileId')
-          ? { orders: [{ id: ORDER, serviceType: 'electricity' }], nextBefore: null }
+          ? {
+              orders: [
+                { id: ORDER, serviceType: 'electricity', createdAt: '2026-09-21T00:00:00Z' },
+              ],
+              nextBefore: null,
+            }
           : { profiles: [{ id: PROFILE, title: 'Acme', profileType: 'LEGAL' }], nextBefore: null },
       })
     );
     const versions = [
       {
         id: V1,
+        contractId: ID,
+        createdBy: 'contract-test-user',
         versionNumber: 1,
         content: {
           title: 'Supply contract',
@@ -84,12 +93,31 @@ for (const locale of ['en', 'fa'] as const) {
       created = false;
     const dto = () => ({
       id: ID,
+      contractNumber: '1',
       profileId: PROFILE,
+      orderId: ORDER,
       serviceType: 'electricity',
       state: 'Draft',
+      createdAt: '2026-09-21T00:00:00Z',
+      updatedAt: '2026-09-21T00:00:00Z',
+      submittedAt: null,
+      acceptedAt: null,
+      signedAt: null,
+      activatedAt: null,
+      completedAt: null,
+      cancelledAt: null,
+      amendmentSupported: true,
+      linkedOrderStatus: 'DRAFT',
+      acceptedParty: null,
+      pendingAmendment: null,
       currentVersionId: current.id,
       currentVersion: current,
     });
+    let createdDto: ReturnType<typeof dto> | undefined;
+    await page.route(`**/api/admin/contracts/${CREATED}`, (r) => r.fulfill({ json: createdDto }));
+    await page.route(`**/api/admin/contracts/${CREATED}/versions`, (r) =>
+      r.fulfill({ json: { versions: [createdDto!.currentVersion], nextBefore: null } })
+    );
     await page.route('**/api/admin/contracts?*', (r) =>
       r.fulfill({
         json: {
@@ -115,22 +143,50 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(`**/api/admin/contracts/${ID}/versions/*`, (r) =>
       r.fulfill({ json: versions.find((v) => r.request().url().endsWith(v.id)) })
     );
-    await page.route(`**/api/admin/contracts/${ID}/activation?*`, (r) =>
-      r.fulfill({
-        json: {
-          contractId: ID,
-          versionId: current.id,
-          state: 'Draft',
-          checks: [],
-          isCurrent: true,
-          ready: false,
-          initialInvoiceId: null,
-          serviceStartsAt: null,
-          serviceEndsAt: null,
-          evaluatedAt: '2026-09-21T00:00:00Z',
-        },
-      })
-    );
+    for (const contractId of [ID, CREATED]) {
+      await page.route(`**/api/admin/contracts/${contractId}/activation?*`, (r) =>
+        r.fulfill({
+          json: {
+            contractId,
+            versionId: new URL(r.request().url()).searchParams.get('versionId'),
+            state: 'Draft',
+            checks: [
+              { key: 'staffApproval', required: true, status: 'unmet' },
+              { key: 'customerAcceptance', required: true, status: 'unmet' },
+              { key: 'signature', required: false, status: 'not_required' },
+              { key: 'initialPayment', required: true, status: 'unmet' },
+              { key: 'serviceStart', required: false, status: 'not_required' },
+            ],
+            ruleRevision: 1,
+            isCurrent:
+              new URL(r.request().url()).searchParams.get('versionId') ===
+              (contractId === ID ? current.id : CREATED_VERSION),
+            ready: false,
+            initialInvoiceId: null,
+            serviceStartsAt: null,
+            serviceEndsAt: null,
+            evaluatedAt: '2026-09-21T00:00:00Z',
+          },
+        })
+      );
+      await page.route(`**/api/admin/contracts/${contractId}/signature?*`, (r) =>
+        r.fulfill({
+          json: {
+            contractId,
+            versionId: new URL(r.request().url()).searchParams.get('versionId'),
+            state: 'Draft',
+            isCurrent:
+              new URL(r.request().url()).searchParams.get('versionId') ===
+              (contractId === ID ? current.id : CREATED_VERSION),
+            isAmendment: false,
+            request: null,
+            signature: null,
+            canRequest: false,
+            canRecord: false,
+          },
+        })
+      );
+    }
     const attempts: unknown[] = [];
     await page.route('**/api/admin/contracts', (r) => {
       expect(r.request().method()).toBe('POST');
@@ -138,8 +194,23 @@ for (const locale of ['en', 'fa'] as const) {
       attempts.push(r.request().postDataJSON());
       if (attempts.length === 1)
         return r.fulfill({ status: 409, json: { error: 'CONFLICT:STATE' } });
+      if (attempts.length === 2) return r.fulfill({ status: 403, json: { requiresStepUp: true } });
       created = true;
-      return r.fulfill({ status: 201, json: dto() });
+      const body = r.request().postDataJSON();
+      createdDto = {
+        ...dto(),
+        id: CREATED,
+        contractNumber: '2',
+        currentVersionId: CREATED_VERSION,
+        currentVersion: {
+          ...current,
+          id: CREATED_VERSION,
+          contractId: CREATED,
+          content: body.content,
+          changeDescription: body.changeDescription,
+        },
+      };
+      return r.fulfill({ status: 201, json: createdDto });
     });
     await page.route(`**/api/admin/contracts/${ID}`, (r) => {
       if (r.request().method() === 'PATCH') {
@@ -194,6 +265,7 @@ for (const locale of ['en', 'fa'] as const) {
       .fill('Draft-password');
     await dialog.getByRole('button', { name: confirm, exact: true }).click();
     await expect(dialog).toContainText(words.conflict);
+    await dialog.getByRole('button', { name: confirm, exact: true }).click();
     await dialog
       .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password', {
         exact: true,
@@ -201,13 +273,21 @@ for (const locale of ['en', 'fa'] as const) {
       .fill('Draft-password');
     await dialog.getByRole('button', { name: confirm, exact: true }).click();
     await expect(dialog).toHaveCount(0);
-    expect(attempts).toHaveLength(2);
+    expect(attempts).toHaveLength(3);
     expect(attempts[0]).toEqual(attempts[1]);
+    expect(attempts[0]).toEqual(attempts[2]);
     expect(attempts[1]).toMatchObject({
       profileId: PROFILE,
       orderId: ORDER,
       content: { title: 'Supply contract', text: 'Initial terms' },
     });
+    // Revise the separately imported full snapshot, retaining its opaque fields.
+    await page
+      .getByRole('button', {
+        name: `${words.electricity} · ${words.version} ${(1).toLocaleString(locale)}`,
+        exact: true,
+      })
+      .click();
     const detail = page.getByRole('region', { name: words.terms, exact: true });
     await detail.getByRole('button', { name: words.draftEdit, exact: true }).click();
     const edit = detail.getByRole('form', { name: words.draftEdit });

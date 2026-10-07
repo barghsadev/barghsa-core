@@ -112,11 +112,15 @@ it('upgrades existing automatic history without changing old rows, evidence or c
   ).rows;
   expect(await runMigrations({ connection })).toEqual({
     ok: true,
-    applied: ['0250_contract_system_audit'],
+    applied: JSON.parse(readFileSync(join(production, 'meta/_journal.json'), 'utf8'))
+      .entries.filter((entry: { idx: number }) => entry.idx >= 250)
+      .map((entry: { tag: string }) => entry.tag),
   });
   expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
   expect((await audits(f.id)).rows).toEqual(history);
-  expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [f.id])).rows).toEqual(records);
+  expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [f.id])).rows).toEqual(
+    records.map((record) => ({ ...record, invoice_reference: record.id }))
+  );
   expect(
     (await pool.query('SELECT * FROM contract_activations WHERE contract_id=$1', [f.id])).rows
   ).toEqual(activation);

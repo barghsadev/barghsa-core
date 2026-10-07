@@ -128,7 +128,8 @@ for (const locale of ['en', 'fa'] as const) {
       );
       const id = '11111111-1111-4111-8111-111111111111',
         version = '22222222-2222-4222-8222-222222222222',
-        orderId = '44444444-4444-4444-8444-444444444444';
+        orderId = '44444444-4444-4444-8444-444444444444',
+        invoiceId = '55555555-5555-4555-8555-555555555555';
       await page.route('**/api/contracts?*', (route) =>
         route.fulfill({
           json: {
@@ -169,7 +170,17 @@ for (const locale of ['en', 'fa'] as const) {
       );
       await page.route(`**/api/contracts/${id}/signature?*`, (route) =>
         route.fulfill({
-          json: { request: null, signature: null, canRequest: false, canRecord: false },
+          json: {
+            contractId: id,
+            versionId: version,
+            state: dto.state,
+            isCurrent: true,
+            isAmendment: false,
+            request: null,
+            signature: null,
+            canRequest: false,
+            canRecord: false,
+          },
         })
       );
       let paid = false;
@@ -183,7 +194,7 @@ for (const locale of ['en', 'fa'] as const) {
             isCurrent: true,
             ready: paid && dto.state === 'Accepted',
             ruleRevision: 1,
-            initialInvoiceId: 'invoice',
+            initialInvoiceId: invoiceId,
             serviceStartsAt: null,
             serviceEndsAt: '2026-09-21T00:00:00Z',
             evaluatedAt: '2026-09-21T12:00:00Z',
@@ -212,7 +223,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(panel.getByRole('listitem')).toHaveCount(5);
       await expect(panel.getByRole('link', { name: words.openInitialInvoice })).toHaveAttribute(
         'href',
-        '/invoices/invoice'
+        `/invoices/${invoiceId}`
       );
       await expect(panel.getByText(words['prerequisite.unmet'], { exact: true })).toBeVisible();
       await expect(panel.getByText(words.activationNotice)).toBeVisible();

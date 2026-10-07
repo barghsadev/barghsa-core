@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T03:14:05.321350+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T04:25:04.133233+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 333 | Accepted with unchanged source bindings. |
-| verify | 971 | Existing work may be complete; inspect evidence before building. |
+| done | 347 | Accepted with unchanged source bindings. |
+| verify | 957 | Existing work may be complete; inspect evidence before building. |
 | partial | 55 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,22 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current contract/version schema,immutable material edits,lifecycle/state/audit,staff cancellation/customer request,amendments and per-service activation prerequisites. Reuse current source-bound cancellation/refund/read evidence and verify current affected callers/UI; build only demonstrated gaps. Preserve submitted/accepted/signing snapshots,current authority,profile isolation,money/rollback,idempotency and unfinished consultation patch/owner decisions. Earlier release dependencies and performance gate remain incomplete; no milestone deployment before acceptance.
+Inspect existing contract-document links,generated/signing/amendment documents,current base document lifecycle,immutable storage/provenance,review/replacement/supersession and signed-document locks. Reuse current source-bound contract/signature/read/browser evidence; build only demonstrated missing acceptance and verify actual affected callers. Preserve profile/current authority,template/version snapshots,financial review,concurrency/idempotency/audit/rollback and private download boundaries. Earlier owner/refund/performance/dependency gates remain unfinished; no milestone deployment before acceptance.
 
-- `04-invoices-wallet-contracts.md#T-04.5.01.01`: Create `contracts` table: `id` (UUIDv7), `profileId`, `orderId?`, `serviceType` (enum), `state`, `currentVersionId`, `submittedAt`, `acceptedAt?`, `signedAt?`, `activatedAt?`, `completedAt?`, `cancelledAt?`, timestamps
-- `04-invoices-wallet-contracts.md#T-04.5.01.02`: Create `contract_versions` table: `id`, `contractId`, `versionNumber`, `content` (JSONB — full snapshot), `changeDescription`, `createdBy`, `createdAt`, `acceptedAt?`
-- `04-invoices-wallet-contracts.md#T-04.5.01.03`: Implement `ContractStateMachine` with all transitions, guards, prerequisites, audit events
-- `04-invoices-wallet-contracts.md#T-04.5.01.04`: Activation prerequisite checker: evaluate all requirements, surface unmet ones
-- `04-invoices-wallet-contracts.md#T-04.5.01.05`: Staff cancellation endpoint: requires reason + refund decision + step-up auth
-- `04-invoices-wallet-contracts.md#T-04.5.01.06`: Customer cancellation request: creates staff review task, cannot cancel directly
-- `04-invoices-wallet-contracts.md#T-04.5.01.07`: DB constraints: terminal states cannot transition; version must increment on material edit
-- `04-invoices-wallet-contracts.md#T-04.5.02.01`: Enforce version increment in `ContractService.updateContract()` — inserts new version, never edits existing
-- `04-invoices-wallet-contracts.md#T-04.5.02.02`: API: GET contract versions list with metadata; GET specific version full content
-- `04-invoices-wallet-contracts.md#T-04.5.02.03`: UI: version timeline showing who changed what and when; "View previous version"
-- `04-invoices-wallet-contracts.md#T-04.5.02.04`: Support amendment workflow: create amendment version, new acceptance cycle, link to original
-- `04-invoices-wallet-contracts.md#T-04.5.03.01`: Add `serviceType` to contracts table; per-type activation rule configuration in admin
-- `04-invoices-wallet-contracts.md#T-04.5.03.02`: Build `ActivationRuleResolver` — given a contract, check which prerequisites are met, return unmet list
-- `04-invoices-wallet-contracts.md#T-04.5.03.03`: UI: contract detail page shows each prerequisite (Staff approval, Customer acceptance, Signature, Payment, Service start) with current state
+- `04-invoices-wallet-contracts.md#T-04.5.04.01`: Create `contract_documents` link table: `contractVersionId`, `documentId`, `role` (original, signed, amendment, superseded)
+- `04-invoices-wallet-contracts.md#T-04.5.04.02`: Document state machine integration: wire contract documents into E-05's state machine (`T-05.11.01`); contract-specific guards (e.g., signed contracts cannot be replaced) enforced via policy on top of the base lifecycle
+- `04-invoices-wallet-contracts.md#T-04.5.04.03`: Replacement rule: new document linked to superseded doc; rejection requires reason + Replace action
+- `04-invoices-wallet-contracts.md#T-04.5.04.04`: Immutable signed docs: once Signed state reached, no replacement; new version for amendments
+- `04-invoices-wallet-contracts.md#T-04.5.04.05`: UI: contract detail shows all linked docs with states and version history
 
 ## v0.2.0: Complete customer journeys
 
@@ -494,20 +485,20 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.4.02.03` | done | Recorded batch work | Block contract/order financial closure until linked refund obligations are Completed |
 | `04-invoices-wallet-contracts.md#T-04.4.02.04` | done | Recorded batch work | Finance queue: show failed auto-refund obligations with Retry action |
 | `04-invoices-wallet-contracts.md#T-04.4.02.05` | done | Recorded batch work | Notify customer on completion and on failure (with support path) |
-| `04-invoices-wallet-contracts.md#T-04.5.01.01` | verify | Recorded batch work | Create `contracts` table: `id` (UUIDv7), `profileId`, `orderId?`, `serviceType` (enum), `state`, `currentVersionId`, `submittedAt`, `acceptedAt?`, `signedAt?`, `activatedAt?`, `completedAt?`, `cancelledAt?`, timestamps |
-| `04-invoices-wallet-contracts.md#T-04.5.01.02` | verify | Recorded batch work | Create `contract_versions` table: `id`, `contractId`, `versionNumber`, `content` (JSONB — full snapshot), `changeDescription`, `createdBy`, `createdAt`, `acceptedAt?` |
-| `04-invoices-wallet-contracts.md#T-04.5.01.03` | verify | Recorded batch work | Implement `ContractStateMachine` with all transitions, guards, prerequisites, audit events |
-| `04-invoices-wallet-contracts.md#T-04.5.01.04` | verify | Recorded batch work | Activation prerequisite checker: evaluate all requirements, surface unmet ones |
-| `04-invoices-wallet-contracts.md#T-04.5.01.05` | verify | Recorded batch work | Staff cancellation endpoint: requires reason + refund decision + step-up auth |
-| `04-invoices-wallet-contracts.md#T-04.5.01.06` | verify | Recorded batch work | Customer cancellation request: creates staff review task, cannot cancel directly |
-| `04-invoices-wallet-contracts.md#T-04.5.01.07` | verify | Inventory needed | DB constraints: terminal states cannot transition; version must increment on material edit |
-| `04-invoices-wallet-contracts.md#T-04.5.02.01` | verify | Recorded batch work | Enforce version increment in `ContractService.updateContract()` — inserts new version, never edits existing |
-| `04-invoices-wallet-contracts.md#T-04.5.02.02` | verify | Recorded batch work | API: GET contract versions list with metadata; GET specific version full content |
-| `04-invoices-wallet-contracts.md#T-04.5.02.03` | verify | Recorded batch work | UI: version timeline showing who changed what and when; "View previous version" |
-| `04-invoices-wallet-contracts.md#T-04.5.02.04` | verify | Recorded batch work | Support amendment workflow: create amendment version, new acceptance cycle, link to original |
-| `04-invoices-wallet-contracts.md#T-04.5.03.01` | verify | Recorded batch work | Add `serviceType` to contracts table; per-type activation rule configuration in admin |
-| `04-invoices-wallet-contracts.md#T-04.5.03.02` | verify | Inventory needed | Build `ActivationRuleResolver` — given a contract, check which prerequisites are met, return unmet list |
-| `04-invoices-wallet-contracts.md#T-04.5.03.03` | verify | Recorded batch work | UI: contract detail page shows each prerequisite (Staff approval, Customer acceptance, Signature, Payment, Service start) with current state |
+| `04-invoices-wallet-contracts.md#T-04.5.01.01` | done | Recorded batch work | Create `contracts` table: `id` (UUIDv7), `profileId`, `orderId?`, `serviceType` (enum), `state`, `currentVersionId`, `submittedAt`, `acceptedAt?`, `signedAt?`, `activatedAt?`, `completedAt?`, `cancelledAt?`, timestamps |
+| `04-invoices-wallet-contracts.md#T-04.5.01.02` | done | Recorded batch work | Create `contract_versions` table: `id`, `contractId`, `versionNumber`, `content` (JSONB — full snapshot), `changeDescription`, `createdBy`, `createdAt`, `acceptedAt?` |
+| `04-invoices-wallet-contracts.md#T-04.5.01.03` | done | Recorded batch work | Implement `ContractStateMachine` with all transitions, guards, prerequisites, audit events |
+| `04-invoices-wallet-contracts.md#T-04.5.01.04` | done | Recorded batch work | Activation prerequisite checker: evaluate all requirements, surface unmet ones |
+| `04-invoices-wallet-contracts.md#T-04.5.01.05` | done | Recorded batch work | Staff cancellation endpoint: requires reason + refund decision + step-up auth |
+| `04-invoices-wallet-contracts.md#T-04.5.01.06` | done | Recorded batch work | Customer cancellation request: creates staff review task, cannot cancel directly |
+| `04-invoices-wallet-contracts.md#T-04.5.01.07` | done | Recorded batch work | DB constraints: terminal states cannot transition; version must increment on material edit |
+| `04-invoices-wallet-contracts.md#T-04.5.02.01` | done | Recorded batch work | Enforce version increment in `ContractService.updateContract()` — inserts new version, never edits existing |
+| `04-invoices-wallet-contracts.md#T-04.5.02.02` | done | Recorded batch work | API: GET contract versions list with metadata; GET specific version full content |
+| `04-invoices-wallet-contracts.md#T-04.5.02.03` | done | Recorded batch work | UI: version timeline showing who changed what and when; "View previous version" |
+| `04-invoices-wallet-contracts.md#T-04.5.02.04` | done | Recorded batch work | Support amendment workflow: create amendment version, new acceptance cycle, link to original |
+| `04-invoices-wallet-contracts.md#T-04.5.03.01` | done | Recorded batch work | Add `serviceType` to contracts table; per-type activation rule configuration in admin |
+| `04-invoices-wallet-contracts.md#T-04.5.03.02` | done | Recorded batch work | Build `ActivationRuleResolver` — given a contract, check which prerequisites are met, return unmet list |
+| `04-invoices-wallet-contracts.md#T-04.5.03.03` | done | Recorded batch work | UI: contract detail page shows each prerequisite (Staff approval, Customer acceptance, Signature, Payment, Service start) with current state |
 | `04-invoices-wallet-contracts.md#T-04.5.04.01` | verify | Recorded batch work | Create `contract_documents` link table: `contractVersionId`, `documentId`, `role` (original, signed, amendment, superseded) |
 | `04-invoices-wallet-contracts.md#T-04.5.04.02` | verify | Recorded batch work | Document state machine integration: wire contract documents into E-05's state machine (`T-05.11.01`); contract-specific guards (e.g., signed contracts cannot be replaced) enforced via policy on top of the base lifecycle |
 | `04-invoices-wallet-contracts.md#T-04.5.04.03` | verify | Recorded batch work | Replacement rule: new document linked to superseded doc; rejection requires reason + Replace action |
