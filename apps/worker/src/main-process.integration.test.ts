@@ -13,6 +13,7 @@ const intervals = [
   'INVOICE_REMINDER_SEND_MS',
   'WALLET_RECONCILIATION_SCAN_MS',
   'INVOICE_RECONCILIATION_SCAN_MS',
+  'PROVIDER_RECONCILIATION_SCAN_MS',
   'ONLINE_TOPUP_EXPIRY_SCAN_MS',
   'INVITATION_EXPIRY_SCAN_MS',
 ];
@@ -179,6 +180,7 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
       'invoice_reminder_sender',
       'wallet_reconciliation_scan',
       'invoice_reconciliation_scan',
+      'provider_reconciliation_scan',
       'online_topup_expiry_scan',
       'invitation_expiry_scan',
     ];
@@ -208,6 +210,7 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
 it('compiled worker falls back from invalid intervals and drains on SIGINT', async () => {
   const worker = await startWorker({
     ...Object.fromEntries(intervals.map((key) => [key, 'invalid'])),
+    PROVIDER_RECONCILIATION_SCAN_MS: '2147483648',
     OUTBOX_POLL_MS: 'NaN',
     SHUTDOWN_GRACE_PERIOD_MS: 'invalid',
   });
@@ -215,6 +218,87 @@ it('compiled worker falls back from invalid intervals and drains on SIGINT', asy
     for (const key of intervals) expect(worker.logs()).toContain(`Invalid ${key}`);
     expect(await worker.stop('SIGINT')).toEqual({ code: 0, signal: null });
     expect(worker.logs()).toContain('30s deadline');
+  } finally {
+    await worker.close();
+  }
+}, 20000);
+
+it('compiled worker schedules provider reconciliation, records failure and recovers without changing events', async () => {
+  const worker = await startWorker();
+  try {
+    const event = randomUUID();
+    await worker.pool
+      .query(`CREATE FUNCTION fail_provider_reconciliation() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.details->>'source'='provider_chargeback' THEN RAISE EXCEPTION 'fixture provider report failed'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER fail_provider_reconciliation BEFORE INSERT ON reconciliation_exceptions FOR EACH ROW EXECUTE FUNCTION fail_provider_reconciliation()`);
+    await worker.pool.query(
+      "INSERT INTO wallet_chargeback_events(id,event_id,status) VALUES($1,$1::uuid::text,'unmatched')",
+      [event]
+    );
+    const before = (
+      await worker.pool.query('SELECT * FROM wallet_chargeback_events WHERE id=$1', [event])
+    ).rows;
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT status FROM background_jobs WHERE job_type='provider_reconciliation_scan'"
+            )
+          ).rows[0]?.status,
+        { timeout: 6000 }
+      )
+      .toBe('failed');
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT id FROM reconciliation_exceptions WHERE details->>'recordId'=$1",
+          [event]
+        )
+      ).rows
+    ).toEqual([]);
+    expect(
+      (await worker.pool.query('SELECT * FROM wallet_chargeback_events WHERE id=$1', [event])).rows
+    ).toEqual(before);
+    await worker.pool.query(
+      'DROP TRIGGER fail_provider_reconciliation ON reconciliation_exceptions;DROP FUNCTION fail_provider_reconciliation()'
+    );
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT details FROM reconciliation_exceptions WHERE details->>'recordId'=$1",
+              [event]
+            )
+          ).rows,
+        { timeout: 6000 }
+      )
+      .toEqual([
+        expect.objectContaining({
+          details: expect.objectContaining({
+            source: 'provider_chargeback',
+            reason: 'unmatched',
+            recordId: event,
+          }),
+        }),
+      ]);
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT status FROM background_jobs WHERE job_type='provider_reconciliation_scan'"
+            )
+          ).rows[0]?.status,
+        { timeout: 6000 }
+      )
+      .toBe('resolved');
+    expect(
+      (await worker.pool.query('SELECT * FROM wallet_chargeback_events WHERE id=$1', [event])).rows
+    ).toEqual(before);
+    expect(await worker.stop()).toEqual({ code: 0, signal: null });
+    expect(worker.logs()).not.toMatch(/Fatal worker|Uncaught exception|failed to record/);
   } finally {
     await worker.close();
   }

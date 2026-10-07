@@ -7662,6 +7662,7 @@
                 "invoice_reminder_sender",
                 "wallet_reconciliation_scan",
                 "invoice_reconciliation_scan",
+                "provider_reconciliation_scan",
                 "online_topup_expiry_scan",
                 "invitation_expiry_scan",
                 "saving_inventory_expiry"

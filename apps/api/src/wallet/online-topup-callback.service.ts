@@ -57,6 +57,7 @@ export interface HandleProviderCallbackResult {
 }
 
 interface ProcessVerifiedPayloadInput {
+  authenticatedWebhook?: true;
   browserActor?: FinancialSubmissionActor | undefined;
   eventId: string;
   merchantOrderId: string;
@@ -200,6 +201,7 @@ export class OnlineTopUpCallbackService {
     }
 
     return this.processVerifiedPayload({
+      authenticatedWebhook: true,
       eventId,
       merchantOrderId: parsed.data.merchantOrderId,
       authority: parsed.data.authority,
@@ -261,7 +263,11 @@ export class OnlineTopUpCallbackService {
     try {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
-        const pending = await this.loadPendingTopUp(client, input.merchantOrderId);
+        const pending = await this.loadPendingTopUp(
+          client,
+          input.merchantOrderId,
+          input.authenticatedWebhook ? () => this.reportUnmatchedCallback(client, input) : undefined
+        );
         if (input.browserActor) {
           // Under the callback identity lock, authorize this provider enquiry and
           // settlement of the original payment intent. No DB lock spans the PSP call.
@@ -424,19 +430,57 @@ export class OnlineTopUpCallbackService {
 
   private async loadPendingTopUp(
     client: QueryClient,
-    merchantOrderId: string
+    merchantOrderId: string,
+    onMissing?: () => Promise<void>
   ): Promise<TransactionRow> {
     const result = await client.query(
       `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
       [merchantOrderId]
     );
     if (result.rows.length === 0) {
+      await onMissing?.();
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
         'Payment callback merchant order was not found'
       );
     }
     return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0]);
+  }
+
+  /** Only the signed, replay-window-checked, merchant-matching webhook reaches this path. */
+  private async reportUnmatchedCallback(client: QueryClient, input: ProcessVerifiedPayloadInput) {
+    if (!input.authenticatedWebhook || input.amountIrR === undefined)
+      throw new Error('Authenticated callback report context is missing');
+    const eventHash = createHash('sha256').update(input.eventId).digest('hex');
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        "SELECT pg_advisory_xact_lock(hashtext('provider-unmatched-callback'),hashtext($1))",
+        [eventHash]
+      );
+      await client.query(
+        `INSERT INTO reconciliation_exceptions(exception_type,severity,status,description,details)
+         SELECT 'payment_mismatch','high','open','Unmatched authenticated provider callback',$1::jsonb
+         WHERE NOT EXISTS (SELECT 1 FROM reconciliation_exceptions
+           WHERE details->>'source'='provider_callback' AND details->>'reason'='unmatched_callback'
+             AND details->>'eventHash'=$2)`,
+        [
+          JSON.stringify({
+            source: 'provider_callback',
+            reason: 'unmatched_callback',
+            eventHash,
+            merchantOrderId: input.merchantOrderId.toLowerCase(),
+            amount: input.amountIrR.toString(),
+            providerStatus: input.status,
+          }),
+          eventHash,
+        ]
+      );
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    }
   }
 
   private assertMerchantContext(

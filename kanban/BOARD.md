@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish financial reconciliation producers: inspect and implement locked bounded provider reports while the cumulative refund accounting decision remains pending; retain credit-note entitlement basis. Wallet budget now passes unchanged limits. Preserve the retained dev-reload trace, prior owner and release operational gates, and unfinished consultation work.
+Finish refund reconciliation: inspect existing refund-credit provenance and outstanding reservations, preserving the pending cumulative accounting decision and credit-note entitlement basis. Invoice/provider reports and Wallet budget are verified. Retain prior policy/release operational gates, the development-reload trace and unfinished consultation work.
 
 - `02-auth-users-admin.md#T-09.09.01`: Reconciliation exceptions view
 

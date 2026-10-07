@@ -72,6 +72,11 @@ import {
   reconcileInvoicePayments,
 } from './invoices/reconciliation-scanner.js';
 import {
+  reconcileProviderTransactions,
+  PROVIDER_RECONCILIATION_JOB_TYPE,
+  DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS,
+} from './wallet/provider-reconciliation-scanner.js';
+import {
   DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS,
   ONLINE_TOPUP_EXPIRY_JOB_TYPE,
   expireStaleOnlineTopUps,
@@ -860,6 +865,56 @@ async function main(): Promise<void> {
   invoiceReconciler.unref();
   process.on('SIGTERM', () => clearInterval(invoiceReconciler));
   process.on('SIGINT', () => clearInterval(invoiceReconciler));
+
+  // Provider transactions are reconciled separately so failures retain their own retry history.
+  const providerReconcileRaw = Number(
+    process.env['PROVIDER_RECONCILIATION_SCAN_MS'] ??
+      String(DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS)
+  );
+  const providerReconcileInterval =
+    Number.isSafeInteger(providerReconcileRaw) &&
+    providerReconcileRaw >= 1000 &&
+    providerReconcileRaw <= 2_147_483_647
+      ? providerReconcileRaw
+      : DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS;
+  if (providerReconcileInterval !== providerReconcileRaw)
+    logger.warn(
+      `Invalid PROVIDER_RECONCILIATION_SCAN_MS '${process.env['PROVIDER_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS}ms`
+    );
+  let providerReconcileInFlight = false;
+  const providerReconciler = pollers.every(async () => {
+    if (draining || providerReconcileInFlight) return;
+    providerReconcileInFlight = true;
+    try {
+      const result = await reconcileProviderTransactions();
+      if (result.reported || result.errors.length)
+        logger.info(
+          `Provider reconciliation: reported=${result.reported} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
+        );
+      if (result.errors.length)
+        await recordJobFailure({
+          jobType: PROVIDER_RECONCILIATION_JOB_TYPE,
+          error: result.errors.join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length, reported: result.reported },
+        });
+      else await recordJobSuccess(PROVIDER_RECONCILIATION_JOB_TYPE);
+    } catch (error) {
+      logger.error(
+        `Provider reconciliation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+      await recordJobFailure({
+        jobType: PROVIDER_RECONCILIATION_JOB_TYPE,
+        error: error instanceof Error ? error.message : 'Provider reconciliation failed',
+        errorCategory: 'transient',
+      });
+    } finally {
+      providerReconcileInFlight = false;
+    }
+  }, providerReconcileInterval);
+  providerReconciler.unref();
+  process.on('SIGTERM', () => clearInterval(providerReconciler));
+  process.on('SIGINT', () => clearInterval(providerReconciler));
 
   // ── Online top-up Pending TTL expiry (S-04.2.02, T-04.2.02.07) ──────
   // Minute cron: online Pending top-ups older than the TTL are
