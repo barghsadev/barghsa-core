@@ -133474,21 +133474,130 @@
         "story": "03-core-business.md#spec-c4d15e727c05"
       },
       "requirement": "| **T-03.10.03.01** | 🔧 Optional inventory tracking on hardware products: `stock_count`, `reserved_count` columns. Admin-configurable per product. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-saving-inventory"
+          "2026-09-23-saving-inventory",
+          "release-0.3-saving-inventory"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
+          "reviewed_base_commit": "be42b244c8704f88a531cc8839e716baa866e14d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue-forms.integration.test.ts",
+              "sha256": "05ffe97bffaea29e3f7be82814bb4e34b72a7cd4f61b16d98b3706b2e931a44e"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+              "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.integration.test.ts",
+              "sha256": "e0a8b296c9e0e80d6875bee7ae02d98a1c9eaef6fc058f17d23063b352339ef7"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.service.ts",
+              "sha256": "2535ab1ed97d1980b98814f54420c443577b9a20da534710abd2daf9df41b44e"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-inventory.controller.ts",
+              "sha256": "4d01202fa5d56df229619fd268fe010948f126a209f9a74fa178b2b35dd54105"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
+              "sha256": "3d0326391d62b731fc635847f8e8b2b52e5c9f119995f009a8befe3353022b7c"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+              "sha256": "104a4f1cea9c497de807177771023de890ff6e341c4305a3b064a0005bdd56dd"
+            },
+            {
+              "path": "apps/web/src/components/SavingInventoryPanel.tsx",
+              "sha256": "654ee49fbb55af0c2e2f4a7f679ae53a57e63ef191cb11e29e7180647b88263a"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/lib/saving-catalogue-form.test.ts",
+              "sha256": "6e9669017509bdc4d0495fa8fb023a0e73e73015b3113aa54bb97b14b1070d46"
+            },
+            {
+              "path": "apps/web/src/lib/saving-catalogue-form.ts",
+              "sha256": "3cc271fd9d3af195607033006f6754addd8c25f0e99dca3a66fa1fb1ed86cde0"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "077a3ca6d78ebb580b00351e540e70b7a5bdb7ff47d90f75e5600c6326c52cb3"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
+              "sha256": "8c066e329ab189ed17db7b528e66ac7649ec479145abf982214a4fd91ff13ce3"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue.test.tsx",
+              "sha256": "eee25ea4e9986b2b63eddc3ade5a9018af65eac17eeac882fe08e6bab0e5a76f"
+            },
+            {
+              "path": "apps/web/src/routes/admin/saving-orders.tsx",
+              "sha256": "826a59b261266c3caf324033cf1b52340b27fa0dc8a47d7f370b3ad04fceba75"
+            },
+            {
+              "path": "apps/web/src/test/saving-catalogue-fixtures.ts",
+              "sha256": "856a2843cc19817286d93112ffcd94977911c6251a5ced9100424363bde87c9b"
+            },
+            {
+              "path": "apps/worker/src/saving/inventory-expiry.ts",
+              "sha256": "827f533070537053f0fd6dce3ff8c8e19b19deed46a84ada554f90c5303b0312"
+            },
+            {
+              "path": "packages/db/drizzle/production/0164_saving_inventory.sql",
+              "sha256": "ec21c5461495accda1a4d05fc4afe5012aa0b0f95acd768577de656055fc725a"
+            },
+            {
+              "path": "packages/db/drizzle/production/0252_saving_inventory_upgrade_audit.sql",
+              "sha256": "5b80e019ef3bff9829633c181a78b93bd09a623437702eda9009f7c2d32500bf"
+            },
+            {
+              "path": "packages/db/src/saving-inventory.ts",
+              "sha256": "4ab31d8b90575452d6a1f1276b9358850b73764f15320bc8f33436ab9f90570f"
+            },
+            {
+              "path": "packages/db/src/schema/saving-orders.ts",
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct passing scoped cases:13 API (12 current configuration/shared-editor cases+1 exact-bound retained full PG/HTTP inventory journey),32 UI and26 bilingual light/dark desktop/mobile production-browser editor cases. Repeated/failed/stopped/skipped cases excluded.",
+            "Optional tracking/defaults,stock bounds/configurable expiry,subject-to-confirmation display,atomic reservation/allocation/release,current authority,stock conservation,upgrade coupling andexact reservation/system audit verified. No product edits orrebuild. Current final build/types reused bysource/output proof; Wallet300.10/300KB remains failed.",
+            "Three inventory tasks accepted independently; no agreement-policy,staging/Telegram orproduction acceptance inferred."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory",
+          "limitations": [
+            "Local feature verification; shared agreement/owner,operational release andWallet performance gates remain incomplete."
+          ]
+        }
       }
     },
     {
@@ -133502,19 +133611,129 @@
         "story": "03-core-business.md#spec-c4d15e727c05"
       },
       "requirement": "| **T-03.10.03.02** | ⚠️ When stock tracking is disabled: UI shows \"availability subject to staff confirmation\". | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-saving-inventory"
+        ],
+        "current_acceptance": {
+          "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
+          "reviewed_base_commit": "be42b244c8704f88a531cc8839e716baa866e14d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue-forms.integration.test.ts",
+              "sha256": "05ffe97bffaea29e3f7be82814bb4e34b72a7cd4f61b16d98b3706b2e931a44e"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+              "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.integration.test.ts",
+              "sha256": "e0a8b296c9e0e80d6875bee7ae02d98a1c9eaef6fc058f17d23063b352339ef7"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.service.ts",
+              "sha256": "2535ab1ed97d1980b98814f54420c443577b9a20da534710abd2daf9df41b44e"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-inventory.controller.ts",
+              "sha256": "4d01202fa5d56df229619fd268fe010948f126a209f9a74fa178b2b35dd54105"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
+              "sha256": "3d0326391d62b731fc635847f8e8b2b52e5c9f119995f009a8befe3353022b7c"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+              "sha256": "104a4f1cea9c497de807177771023de890ff6e341c4305a3b064a0005bdd56dd"
+            },
+            {
+              "path": "apps/web/src/components/SavingInventoryPanel.tsx",
+              "sha256": "654ee49fbb55af0c2e2f4a7f679ae53a57e63ef191cb11e29e7180647b88263a"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/lib/saving-catalogue-form.test.ts",
+              "sha256": "6e9669017509bdc4d0495fa8fb023a0e73e73015b3113aa54bb97b14b1070d46"
+            },
+            {
+              "path": "apps/web/src/lib/saving-catalogue-form.ts",
+              "sha256": "3cc271fd9d3af195607033006f6754addd8c25f0e99dca3a66fa1fb1ed86cde0"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "077a3ca6d78ebb580b00351e540e70b7a5bdb7ff47d90f75e5600c6326c52cb3"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
+              "sha256": "8c066e329ab189ed17db7b528e66ac7649ec479145abf982214a4fd91ff13ce3"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue.test.tsx",
+              "sha256": "eee25ea4e9986b2b63eddc3ade5a9018af65eac17eeac882fe08e6bab0e5a76f"
+            },
+            {
+              "path": "apps/web/src/routes/admin/saving-orders.tsx",
+              "sha256": "826a59b261266c3caf324033cf1b52340b27fa0dc8a47d7f370b3ad04fceba75"
+            },
+            {
+              "path": "apps/web/src/test/saving-catalogue-fixtures.ts",
+              "sha256": "856a2843cc19817286d93112ffcd94977911c6251a5ced9100424363bde87c9b"
+            },
+            {
+              "path": "apps/worker/src/saving/inventory-expiry.ts",
+              "sha256": "827f533070537053f0fd6dce3ff8c8e19b19deed46a84ada554f90c5303b0312"
+            },
+            {
+              "path": "packages/db/drizzle/production/0164_saving_inventory.sql",
+              "sha256": "ec21c5461495accda1a4d05fc4afe5012aa0b0f95acd768577de656055fc725a"
+            },
+            {
+              "path": "packages/db/drizzle/production/0252_saving_inventory_upgrade_audit.sql",
+              "sha256": "5b80e019ef3bff9829633c181a78b93bd09a623437702eda9009f7c2d32500bf"
+            },
+            {
+              "path": "packages/db/src/saving-inventory.ts",
+              "sha256": "4ab31d8b90575452d6a1f1276b9358850b73764f15320bc8f33436ab9f90570f"
+            },
+            {
+              "path": "packages/db/src/schema/saving-orders.ts",
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct passing scoped cases:13 API (12 current configuration/shared-editor cases+1 exact-bound retained full PG/HTTP inventory journey),32 UI and26 bilingual light/dark desktop/mobile production-browser editor cases. Repeated/failed/stopped/skipped cases excluded.",
+            "Optional tracking/defaults,stock bounds/configurable expiry,subject-to-confirmation display,atomic reservation/allocation/release,current authority,stock conservation,upgrade coupling andexact reservation/system audit verified. No product edits orrebuild. Current final build/types reused bysource/output proof; Wallet300.10/300KB remains failed.",
+            "Three inventory tasks accepted independently; no agreement-policy,staging/Telegram orproduction acceptance inferred."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory",
+          "limitations": [
+            "Local feature verification; shared agreement/owner,operational release andWallet performance gates remain incomplete."
+          ]
+        }
       }
     },
     {
@@ -133528,21 +133747,130 @@
         "story": "03-core-business.md#spec-c4d15e727c05"
       },
       "requirement": "| **T-03.10.03.03** | 🔧 When stock tracking is enabled: submission reserves 1 unit for configurable period. Payment/staff confirmation completes allocation. Timeout/cancellation releases inventory. | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-05-saving-hardware-forms"
+          "2026-10-05-saving-hardware-forms",
+          "release-0.3-saving-inventory"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
+          "reviewed_base_commit": "be42b244c8704f88a531cc8839e716baa866e14d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue-forms.integration.test.ts",
+              "sha256": "05ffe97bffaea29e3f7be82814bb4e34b72a7cd4f61b16d98b3706b2e931a44e"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+              "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.integration.test.ts",
+              "sha256": "e0a8b296c9e0e80d6875bee7ae02d98a1c9eaef6fc058f17d23063b352339ef7"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.service.ts",
+              "sha256": "2535ab1ed97d1980b98814f54420c443577b9a20da534710abd2daf9df41b44e"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-inventory.controller.ts",
+              "sha256": "4d01202fa5d56df229619fd268fe010948f126a209f9a74fa178b2b35dd54105"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
+              "sha256": "3d0326391d62b731fc635847f8e8b2b52e5c9f119995f009a8befe3353022b7c"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+              "sha256": "104a4f1cea9c497de807177771023de890ff6e341c4305a3b064a0005bdd56dd"
+            },
+            {
+              "path": "apps/web/src/components/SavingInventoryPanel.tsx",
+              "sha256": "654ee49fbb55af0c2e2f4a7f679ae53a57e63ef191cb11e29e7180647b88263a"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/lib/saving-catalogue-form.test.ts",
+              "sha256": "6e9669017509bdc4d0495fa8fb023a0e73e73015b3113aa54bb97b14b1070d46"
+            },
+            {
+              "path": "apps/web/src/lib/saving-catalogue-form.ts",
+              "sha256": "3cc271fd9d3af195607033006f6754addd8c25f0e99dca3a66fa1fb1ed86cde0"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "077a3ca6d78ebb580b00351e540e70b7a5bdb7ff47d90f75e5600c6326c52cb3"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
+              "sha256": "8c066e329ab189ed17db7b528e66ac7649ec479145abf982214a4fd91ff13ce3"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue.test.tsx",
+              "sha256": "eee25ea4e9986b2b63eddc3ade5a9018af65eac17eeac882fe08e6bab0e5a76f"
+            },
+            {
+              "path": "apps/web/src/routes/admin/saving-orders.tsx",
+              "sha256": "826a59b261266c3caf324033cf1b52340b27fa0dc8a47d7f370b3ad04fceba75"
+            },
+            {
+              "path": "apps/web/src/test/saving-catalogue-fixtures.ts",
+              "sha256": "856a2843cc19817286d93112ffcd94977911c6251a5ced9100424363bde87c9b"
+            },
+            {
+              "path": "apps/worker/src/saving/inventory-expiry.ts",
+              "sha256": "827f533070537053f0fd6dce3ff8c8e19b19deed46a84ada554f90c5303b0312"
+            },
+            {
+              "path": "packages/db/drizzle/production/0164_saving_inventory.sql",
+              "sha256": "ec21c5461495accda1a4d05fc4afe5012aa0b0f95acd768577de656055fc725a"
+            },
+            {
+              "path": "packages/db/drizzle/production/0252_saving_inventory_upgrade_audit.sql",
+              "sha256": "5b80e019ef3bff9829633c181a78b93bd09a623437702eda9009f7c2d32500bf"
+            },
+            {
+              "path": "packages/db/src/saving-inventory.ts",
+              "sha256": "4ab31d8b90575452d6a1f1276b9358850b73764f15320bc8f33436ab9f90570f"
+            },
+            {
+              "path": "packages/db/src/schema/saving-orders.ts",
+              "sha256": "26a27991553dc2a71c39069c8ab066db728ac71666dd64975e88a10b4c34f141"
+            },
+            {
+              "path": "packages/i18n/src/saving.ts",
+              "sha256": "49b9b55e33849751ba45b5fa673ab1720aab2ae21cb4486f72e2b238ebb6c501"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct passing scoped cases:13 API (12 current configuration/shared-editor cases+1 exact-bound retained full PG/HTTP inventory journey),32 UI and26 bilingual light/dark desktop/mobile production-browser editor cases. Repeated/failed/stopped/skipped cases excluded.",
+            "Optional tracking/defaults,stock bounds/configurable expiry,subject-to-confirmation display,atomic reservation/allocation/release,current authority,stock conservation,upgrade coupling andexact reservation/system audit verified. No product edits orrebuild. Current final build/types reused bysource/output proof; Wallet300.10/300KB remains failed.",
+            "Three inventory tasks accepted independently; no agreement-policy,staging/Telegram orproduction acceptance inferred."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory",
+          "limitations": [
+            "Local feature verification; shared agreement/owner,operational release andWallet performance gates remain incomplete."
+          ]
+        }
       }
     },
     {
@@ -174505,6 +174833,21 @@
         "Chronology/cursors,visible author role/name,immutable append,replay,one customer reply notice,current authority andscope fences verified. No product changes/rebuild. Exact source/output proof reuses current final build/types/budget; Wallet300.10/300KB stays failed."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments"
+    },
+    "release-0.3-saving-inventory": {
+      "title": "Accept optional saving hardware inventory and reservations",
+      "task_keys": [
+        "03-core-business.md#T-03.10.03.01",
+        "03-core-business.md#T-03.10.03.02",
+        "03-core-business.md#T-03.10.03.03"
+      ],
+      "summary": "All three inventory tasks accepted from existingimplementation. Actual stock lifecycle evidence reused narrowly; current configuration/captured editor checks pass.",
+      "validation": [
+        "71 distinct passing scoped cases:13 API (12 current configuration/shared-editor cases+1 exact-bound retained full PG/HTTP inventory journey),32 UI and26 bilingual light/dark desktop/mobile production-browser editor cases. Repeated/failed/stopped/skipped cases excluded.",
+        "Optional tracking/defaults,stock bounds/configurable expiry,subject-to-confirmation display,atomic reservation/allocation/release,current authority,stock conservation,upgrade coupling andexact reservation/system audit verified. No product edits orrebuild. Current final build/types reused bysource/output proof; Wallet300.10/300KB remains failed.",
+        "Three inventory tasks accepted independently; no agreement-policy,staging/Telegram orproduction acceptance inferred."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory"
     }
   },
   "historical_improvements": [
@@ -174544,13 +174887,20 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-saving-inventory",
+    "id": "release-0.3-solar-document-review",
     "release": "0.3.0",
-    "goal": "Inspect current optional hardware stock/reservation administration,availability messaging,submission reservation/configurable expiration,payment/staff allocation andtimeout/cancellation release. Verify stock conservation,concurrent consumers,authority/idempotency/rollback andupgrade callers; build only demonstrated gaps. Preserve earlier owner/dependency/performance gates.",
+    "goal": "Inspect current solar customer documents/photos/video upload,guidance andsuggested-only list,empty-set confirmation,replacement/deletion audit,staff per-file review/additional requests andexplicit advancement to postal. Verify profile/permission/session,retry/rollback/notification/history/scan boundaries andproduction-browser flows; build only demonstrated gaps. Earlier owner/release/performance gates remain unfinished.",
     "task_keys": [
-      "03-core-business.md#T-03.10.03.01",
-      "03-core-business.md#T-03.10.03.02",
-      "03-core-business.md#T-03.10.03.03"
+      "03-core-business.md#T-03.12.01.01",
+      "03-core-business.md#T-03.12.01.02",
+      "03-core-business.md#T-03.12.01.03",
+      "03-core-business.md#T-03.12.01.04",
+      "03-core-business.md#T-03.12.02.01",
+      "03-core-business.md#T-03.12.02.02",
+      "03-core-business.md#T-03.12.02.03",
+      "03-core-business.md#T-03.12.02.04",
+      "03-core-business.md#T-03.12.02.05",
+      "03-core-business.md#T-03.12.02.06"
     ]
   },
   "launch_forecast": {

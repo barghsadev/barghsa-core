@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 380 | Accepted with unchanged source bindings. |
-| verify | 912 | Existing work may be complete; inspect evidence before building. |
+| done | 383 | Accepted with unchanged source bindings. |
+| verify | 909 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,11 +39,18 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current optional hardware stock/reservation administration,availability messaging,submission reservation/configurable expiration,payment/staff allocation andtimeout/cancellation release. Verify stock conservation,concurrent consumers,authority/idempotency/rollback andupgrade callers; build only demonstrated gaps. Preserve earlier owner/dependency/performance gates.
+Inspect current solar customer documents/photos/video upload,guidance andsuggested-only list,empty-set confirmation,replacement/deletion audit,staff per-file review/additional requests andexplicit advancement to postal. Verify profile/permission/session,retry/rollback/notification/history/scan boundaries andproduction-browser flows; build only demonstrated gaps. Earlier owner/release/performance gates remain unfinished.
 
-- `03-core-business.md#T-03.10.03.01`: Optional inventory tracking on hardware products: `stock_count`, `reserved_count` columns. Admin-configurable per product.
-- `03-core-business.md#T-03.10.03.02`: When stock tracking is disabled: UI shows "availability subject to staff confirmation".
-- `03-core-business.md#T-03.10.03.03`: When stock tracking is enabled: submission reserves 1 unit for configurable period. Payment/staff confirmation completes allocation. Timeout/cancellation releases inventory.
+- `03-core-business.md#T-03.12.01.01`: Customer UI: upload documents, photos, and videos to construction request. Multiple files allowed. Guidance text is admin-editable. Display-only list of suggested/requested documents (no enforced minimum).
+- `03-core-business.md#T-03.12.01.02`: "I have uploaded all documents" checkbox — works even when no files uploaded.
+- `03-core-business.md#T-03.12.01.03`: Customer can delete or replace files even after submitting the set for review. Replacements must retain a link to the previous file and audit history (never erase).
+- `03-core-business.md#T-03.12.01.04`: Admin API: edit customer-facing document guidance text and maintain suggested document list.
+- `03-core-business.md#T-03.12.02.01`: Staff UI: document review queue — each document listed independently per request. Show file preview, uploader, timestamp, status.
+- `03-core-business.md#T-03.12.02.02`: Staff API: `POST /staff/solar/requests/:id/documents/:docId/approve` — approve individual file
+- `03-core-business.md#T-03.12.02.03`: Staff API: `POST /staff/solar/requests/:id/documents/:docId/reject` — with reason. Rejects only that file, not the entire submitted set.
+- `03-core-business.md#T-03.12.02.04`: Staff API: `POST /staff/solar/requests/:id/documents/request-additional` — request additional/replacement file with description.
+- `03-core-business.md#T-03.12.02.05`: When staff considers overall document set sufficient → staff advances request to postal submission stage (transition: `documents_under_review` → `waiting_for_postal_submission`).
+- `03-core-business.md#T-03.12.02.06`: Customer notified on each document decision (approve/reject/request).
 
 ## v0.2.0: Complete customer journeys
 
@@ -383,9 +390,9 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.10.02.01` | done | Recorded batch work | Customer UI: upload documents (PDF, images, video) to saving order. Multiple files allowed. Replace/delete own files before submission. |
 | `03-core-business.md#T-03.10.02.02` | done | Recorded batch work | Customer-Staff comment thread per order: chronological, author visible, staff comments trigger notification. No silent overwrites. |
 | `03-core-business.md#T-03.10.02.03` | done | Recorded batch work | Document upload follows file storage rules: validation, scan, quarantine. Files linked to order are soft-delete only. |
-| `03-core-business.md#T-03.10.03.01` | verify | Recorded batch work | Optional inventory tracking on hardware products: `stock_count`, `reserved_count` columns. Admin-configurable per product. |
-| `03-core-business.md#T-03.10.03.02` | verify | Inventory needed | When stock tracking is disabled: UI shows "availability subject to staff confirmation". |
-| `03-core-business.md#T-03.10.03.03` | verify | Recorded batch work | When stock tracking is enabled: submission reserves 1 unit for configurable period. Payment/staff confirmation completes allocation. Timeout/cancellation releases inventory. |
+| `03-core-business.md#T-03.10.03.01` | done | Recorded batch work | Optional inventory tracking on hardware products: `stock_count`, `reserved_count` columns. Admin-configurable per product. |
+| `03-core-business.md#T-03.10.03.02` | done | Recorded batch work | When stock tracking is disabled: UI shows "availability subject to staff confirmation". |
+| `03-core-business.md#T-03.10.03.03` | done | Recorded batch work | When stock tracking is enabled: submission reserves 1 unit for configurable period. Payment/staff confirmation completes allocation. Timeout/cancellation releases inventory. |
 | `03-core-business.md#T-03.12.01.01` | verify | Recorded batch work | Customer UI: upload documents, photos, and videos to construction request. Multiple files allowed. Guidance text is admin-editable. Display-only list of suggested/requested documents (no enforced minimum). |
 | `03-core-business.md#T-03.12.01.02` | verify | Inventory needed | "I have uploaded all documents" checkbox — works even when no files uploaded. |
 | `03-core-business.md#T-03.12.01.03` | verify | Inventory needed | Customer can delete or replace files even after submitting the set for review. Replacements must retain a link to the previous file and audit history (never erase). |
