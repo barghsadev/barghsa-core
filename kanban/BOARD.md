@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 393 | Accepted with unchanged source bindings. |
-| verify | 899 | Existing work may be complete; inspect evidence before building. |
-| partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 402 | Accepted with unchanged source bindings. |
+| verify | 889 | Existing work may be complete; inspect evidence before building. |
+| partial | 68 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,14 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current adminpostal guidance,customer courier/tracking/date/optional receipt image,staff received/incomplete/not-received decisions anddistinct postal states. Verifycurrentauthority,profile isolation,stage/session/reviewhash,retained receipt andnotifications/audit/retry/rollback,thenrelated production-browser checks. Build onlydemonstrated gaps;preserveearlier owner/release/performance criteria.
+Implement demonstrated actualtemplate/uploaded sourceuse gap inmanual solarcontract creation,thenverify itsgeneral lifecycle,customer cancellation,internal/customer/signature/payment activation gates. Inspect existing implementations andsource-bound evidence first; preserve earlier owner/release/performance blockers.
 
-- `03-core-business.md#T-03.12.03.01`: Admin-editable postal guidance: destination address, contact details, requested original-document list. Display on postal stage page.
-- `03-core-business.md#T-03.12.03.02`: Customer UI: record courier name, tracking number, send date, optional receipt image upload.
-- `03-core-business.md#T-03.12.03.03`: Staff API: `POST /staff/solar/requests/:id/postal/confirm-received` — mark as `received`.
-- `03-core-business.md#T-03.12.03.04`: Staff API: `POST /staff/solar/requests/:id/postal/mark-incomplete` — with reason. Returns to `waiting_for_postal_submission` with clear instructions. Does not terminate request.
-- `03-core-business.md#T-03.12.03.05`: Staff API: `POST /staff/solar/requests/:id/postal/mark-not-received` — with reason. Returns to waiting.
-- `03-core-business.md#T-03.12.03.06`: Postal stage distinguishes: `waiting_for_shipment` (customer hasn't sent yet) vs `shipped` (customer sent) vs `received` (staff confirmed) vs `incomplete`/`not_received` (staff issues).
+- `03-core-business.md#T-03.13.01.02`: Staff API: `POST /staff/solar/requests/:id/create-contract` — authorized staff manually creates a linked contract:
+- `03-core-business.md#T-03.13.02.01`: Solar contracts follow the general contract lifecycle (E-04):
+- `03-core-business.md#T-03.13.02.02`: Customer cancellation follows the general rule: customers submit cancellation request, staff resolves.
+- `03-core-business.md#T-03.13.02.03`: Contract activation requires: internal approval + customer acceptance + optionally signature + optionally payment. Unmet activation requirements visible on detail page.
 
 ## v0.2.0: Complete customer journeys
 
@@ -399,16 +397,16 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.12.02.04` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/documents/request-additional` — request additional/replacement file with description. |
 | `03-core-business.md#T-03.12.02.05` | done | Recorded batch work | When staff considers overall document set sufficient → staff advances request to postal submission stage (transition: `documents_under_review` → `waiting_for_postal_submission`). |
 | `03-core-business.md#T-03.12.02.06` | done | Recorded batch work | Customer notified on each document decision (approve/reject/request). |
-| `03-core-business.md#T-03.12.03.01` | verify | Recorded batch work | Admin-editable postal guidance: destination address, contact details, requested original-document list. Display on postal stage page. |
-| `03-core-business.md#T-03.12.03.02` | verify | Recorded batch work | Customer UI: record courier name, tracking number, send date, optional receipt image upload. |
-| `03-core-business.md#T-03.12.03.03` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/confirm-received` — mark as `received`. |
-| `03-core-business.md#T-03.12.03.04` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/mark-incomplete` — with reason. Returns to `waiting_for_postal_submission` with clear instructions. Does not terminate request. |
-| `03-core-business.md#T-03.12.03.05` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/mark-not-received` — with reason. Returns to waiting. |
-| `03-core-business.md#T-03.12.03.06` | verify | Recorded batch work | Postal stage distinguishes: `waiting_for_shipment` (customer hasn't sent yet) vs `shipped` (customer sent) vs `received` (staff confirmed) vs `incomplete`/`not_received` (staff issues). |
-| `03-core-business.md#T-03.13.01.01` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/final-approve` — final approval after postal receipt. No automatic side effects — just state transition to `approved`. |
-| `03-core-business.md#T-03.13.01.02` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/create-contract` — authorized staff manually creates a linked contract: |
-| `03-core-business.md#T-03.13.01.03` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/close-no-contract` — elevated permission. Requires reason. Closes request without contract. |
-| `03-core-business.md#T-03.13.01.04` | verify | Inventory needed | Final approval and contract availability + invoice issuance notify customer. All decisions and transitions auditable. |
+| `03-core-business.md#T-03.12.03.01` | done | Recorded batch work | Admin-editable postal guidance: destination address, contact details, requested original-document list. Display on postal stage page. |
+| `03-core-business.md#T-03.12.03.02` | done | Recorded batch work | Customer UI: record courier name, tracking number, send date, optional receipt image upload. |
+| `03-core-business.md#T-03.12.03.03` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/confirm-received` — mark as `received`. |
+| `03-core-business.md#T-03.12.03.04` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/mark-incomplete` — with reason. Returns to `waiting_for_postal_submission` with clear instructions. Does not terminate request. |
+| `03-core-business.md#T-03.12.03.05` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/mark-not-received` — with reason. Returns to waiting. |
+| `03-core-business.md#T-03.12.03.06` | done | Recorded batch work | Postal stage distinguishes: `waiting_for_shipment` (customer hasn't sent yet) vs `shipped` (customer sent) vs `received` (staff confirmed) vs `incomplete`/`not_received` (staff issues). |
+| `03-core-business.md#T-03.13.01.01` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/final-approve` — final approval after postal receipt. No automatic side effects — just state transition to `approved`. |
+| `03-core-business.md#T-03.13.01.02` | partial | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/create-contract` — authorized staff manually creates a linked contract: |
+| `03-core-business.md#T-03.13.01.03` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/close-no-contract` — elevated permission. Requires reason. Closes request without contract. |
+| `03-core-business.md#T-03.13.01.04` | done | Recorded batch work | Final approval and contract availability + invoice issuance notify customer. All decisions and transitions auditable. |
 | `03-core-business.md#T-03.13.02.01` | verify | Recorded batch work | Solar contracts follow the general contract lifecycle (E-04): |
 | `03-core-business.md#T-03.13.02.02` | verify | Inventory needed | Customer cancellation follows the general rule: customers submit cancellation request, staff resolves. |
 | `03-core-business.md#T-03.13.02.03` | verify | Inventory needed | Contract activation requires: internal approval + customer acceptance + optionally signature + optionally payment. Unmet activation requirements visible on detail page. |

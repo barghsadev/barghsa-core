@@ -1821,3 +1821,152 @@ it('audits guidance version changes and rolls back skipped writes and audit fail
   expect(after.global.version).toBe(before.global.version + 1);
   expect(after.audits.slice(0, -1)).toEqual(before.audits);
 });
+
+it('keeps the specified staff postal and final routes bound to current shipment and financial reviews', async () => {
+  const createTarget = async () =>
+    (
+      await http.pool.query<{ id: string }>(
+        `INSERT INTO solar_construction_requests
+         (id,profile_id,submitted_by,submission_key,status,building_type,grid_type,
+          property_form,structural_frame,building_completion_date,agreement_accepted,
+          agreement_version,agreement_snapshot,agreement_accepted_at)
+         SELECT uuid_generate_v7(),profile_id,submitted_by,uuid_generate_v7(),
+          'waiting_for_postal_submission',building_type,grid_type,property_form,
+          structural_frame,building_completion_date,agreement_accepted,agreement_version,
+          agreement_snapshot,agreement_accepted_at
+         FROM solar_construction_requests WHERE id=$1 RETURNING id`,
+        [requestId]
+      )
+    ).rows[0]!.id;
+  const target = await createTarget();
+  await http.pool.query('INSERT INTO solar_construction_postal(request_id) VALUES($1)', [target]);
+  const base = `staff/solar/requests/${target}`;
+  const counts = async () =>
+    (
+      await http.pool.query(
+        'SELECT (SELECT count(*) FROM contracts)::int AS contracts,(SELECT count(*) FROM invoices)::int AS invoices'
+      )
+    ).rows[0];
+  const before = await counts();
+  for (const [decision, action] of [
+    ['incomplete', 'mark-incomplete'],
+    ['not_received', 'mark-not-received'],
+    ['received', 'confirm-received'],
+  ] as const) {
+    // Isolate the staff-route fixture from the shared customer's shipment IP quota.
+    // Existing cases above exercise actual shipment submission and resubmission.
+    await http.pool.query(
+      `UPDATE solar_construction_postal SET status='shipped',courier=$2,
+       tracking_number=$3,send_date='2026-01-02' WHERE request_id=$1`,
+      [target, 'Alias parcel company', `ALIAS-${decision}`]
+    );
+    const reason = decision === 'received' ? undefined : `Parcel ${decision}`;
+    const review = await send('postal-reviewer', `${base}/postal/review`, 'POST', {
+      decision,
+      ...(reason ? { reason } : {}),
+    });
+    expect(review.status, http.logs()).toBe(200);
+    const body = {
+      expectedReviewHash: ((await review.json()) as { hash: string }).hash,
+      ...(reason ? { reason } : {}),
+    };
+    expect((await send('postal-buyer', `${base}/postal/${action}`, 'POST', body)).status).toBe(403);
+    const result = await send('postal-reviewer', `${base}/postal/${action}`, 'POST', body);
+    expect(result.status, http.logs()).toBe(200);
+    expect(await result.json()).toEqual({
+      status: decision,
+      requestStatus:
+        decision === 'received' ? 'postal_documents_received' : 'waiting_for_postal_submission',
+    });
+    expect((await send('postal-reviewer', `${base}/postal/${action}`, 'POST', body)).status).toBe(
+      409
+    );
+  }
+  expect((await send('postal-reviewer', `${base}/start-final-review`, 'POST', {})).status).toBe(
+    200
+  );
+  const approvalReview = await send('postal-reviewer', `${base}/final-decision/review`, 'POST', {
+    decision: 'approve',
+  });
+  expect(approvalReview.status, http.logs()).toBe(200);
+  const approved = await send('postal-reviewer', `${base}/final-approve`, 'POST', {
+    expectedReviewHash: ((await approvalReview.json()) as { hash: string }).hash,
+  });
+  expect(approved.status, http.logs()).toBe(200);
+  expect(await approved.json()).toEqual({ status: 'approved' });
+  expect(await counts()).toEqual(before);
+  const template = randomUUID(),
+    version = randomUUID();
+  await http.pool.query(
+    "INSERT INTO contract_templates(id,name,status,created_by) VALUES($1,'Staff route template','active','postal-reviewer')",
+    [template]
+  );
+  await http.pool.query(
+    "INSERT INTO contract_template_versions(id,template_id,version_number,storage_key,file_name,created_by) VALUES($1,$2,1,$3,'solar.txt','postal-reviewer')",
+    [version, template, `contract-templates/${version}.txt`]
+  );
+  const input = {
+    profileId,
+    idempotencyKey: randomUUID(),
+    title: 'Staff route solar contract',
+    text: 'Reviewed solar terms',
+    changeDescription: 'Initial solar draft',
+    commercialValue: { kind: 'fixed', amountIrr: '100000' },
+    source: { kind: 'template', templateVersionId: version },
+    invoiceLines: [
+      { description: 'Deposit', quantity: 1, unitPrice: '100000', vatRate: 0, isTaxable: false },
+    ],
+  };
+  const contractReview = await send(
+    'postal-reviewer',
+    `${base}/create-contract/review`,
+    'POST',
+    input
+  );
+  expect(contractReview.status, http.logs()).toBe(200);
+  const body = {
+    ...input,
+    expectedReviewHash: ((await contractReview.json()) as { hash: string }).hash,
+  };
+  expect((await send('postal-buyer', `${base}/create-contract`, 'POST', body)).status).toBe(403);
+  const creation = await send('postal-reviewer', `${base}/create-contract`, 'POST', body);
+  expect(creation.status, http.logs()).toBe(200);
+  const receipt = await creation.json();
+  expect(receipt).toMatchObject({
+    status: 'contract_created',
+    contractId: expect.any(String),
+    invoiceIds: [expect.any(String)],
+  });
+  const replay = await send('postal-reviewer', `${base}/create-contract`, 'POST', body);
+  expect(replay.status, http.logs()).toBe(200);
+  expect(await replay.json()).toEqual(receipt);
+  expect(await counts()).toEqual({
+    contracts: before.contracts + 1,
+    invoices: before.invoices + 1,
+  });
+  const closedTarget = await createTarget();
+  await http.pool.query("UPDATE solar_construction_requests SET status='approved' WHERE id=$1", [
+    closedTarget,
+  ]);
+  const closeBase = `staff/solar/requests/${closedTarget}`;
+  const reason = 'Owner chose not to proceed';
+  const closeReview = await send('postal-reviewer', `${closeBase}/final-decision/review`, 'POST', {
+    decision: 'close-no-contract',
+    reason,
+  });
+  expect(closeReview.status, http.logs()).toBe(200);
+  const closeBody = {
+    reason,
+    expectedReviewHash: ((await closeReview.json()) as { hash: string }).hash,
+  };
+  expect(
+    (await send('postal-buyer', `${closeBase}/close-no-contract`, 'POST', closeBody)).status
+  ).toBe(403);
+  const closed = await send('postal-reviewer', `${closeBase}/close-no-contract`, 'POST', closeBody);
+  expect(closed.status, http.logs()).toBe(200);
+  expect(await closed.json()).toEqual({ status: 'cancelled' });
+  expect(await counts()).toEqual({
+    contracts: before.contracts + 1,
+    invoices: before.invoices + 1,
+  });
+}, 90_000);

@@ -197,3 +197,13 @@ export class StaffSolarFinalController {
     );
   }
 }
+
+@ApiTags('Staff · Solar final decisions')
+@ApiBearerAuth()
+@Controller('api/staff/solar/requests/:id')
+@UseGuards(SessionAuthGuard)
+export class SolarStaffFinalController extends StaffSolarFinalController {
+  constructor(service: SolarFinalService, contracts: ContractService) {
+    super(service, contracts);
+  }
+}

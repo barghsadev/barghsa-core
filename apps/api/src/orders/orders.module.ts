@@ -55,10 +55,14 @@ import { DocumentModule } from '../documents/document.module.js';
 import {
   SolarPostalController,
   StaffSolarPostalController,
+  SolarStaffPostalController,
 } from '../solar/solar-postal.controller.js';
 import { SolarPostalService } from '../solar/solar-postal.service.js';
 import { SolarPostalTrackingService } from '../solar/solar-postal-tracking.service.js';
-import { StaffSolarFinalController } from '../solar/solar-final.controller.js';
+import {
+  StaffSolarFinalController,
+  SolarStaffFinalController,
+} from '../solar/solar-final.controller.js';
 import { SolarFinalService } from '../solar/solar-final.service.js';
 import { SolarProgressService } from '../solar/solar-progress.service.js';
 import { SolarProgressController } from '../solar/solar-progress.controller.js';
@@ -104,7 +108,9 @@ import { StaffAssignmentModule } from '../staff-assignment/staff-assignment.modu
     SolarStaffDocumentsController,
     SolarPostalController,
     StaffSolarPostalController,
+    SolarStaffPostalController,
     StaffSolarFinalController,
+    SolarStaffFinalController,
     SolarProgressController,
     ConsultationRequestController,
     StaffConsultationWorkflowController,

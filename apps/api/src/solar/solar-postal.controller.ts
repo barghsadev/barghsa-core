@@ -324,3 +324,13 @@ export class StaffSolarPostalController {
     );
   }
 }
+
+@ApiTags('Staff · Solar postal documents')
+@ApiBearerAuth()
+@Controller('api/staff/solar')
+@UseGuards(SessionAuthGuard)
+export class SolarStaffPostalController extends StaffSolarPostalController {
+  constructor(service: SolarPostalService, tracking: SolarPostalTrackingService) {
+    super(service, tracking);
+  }
+}

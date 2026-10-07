@@ -561,12 +561,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
                     disabled={commandPending || contractLocked}
                     className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
                     onClick={() => {
-                      if (
-                        contractOwner.current ||
-                        commandPendingRef.current ||
-                        preparingRef.current
-                      )
-                        return;
+                      if (contractOwner.current || commandPendingRef.current) return;
                       invalidateReview();
                       setSelected(item.id);
                       setPreview(null);
