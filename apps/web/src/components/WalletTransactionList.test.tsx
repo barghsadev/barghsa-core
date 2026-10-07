@@ -54,13 +54,14 @@ const response = (transactions = [tx], nextCursor: string | null = null) => ({
 async function render(
   profileId = 'profile-a',
   locale: 'en' | 'fa' = 'en',
-  account = 'wallet-user'
+  account = 'wallet-user',
+  staff = false
 ) {
   currentLocale = locale;
   await act(async () =>
     root.render(
       <AccountUserProvider value={account}>
-        <WalletTransactionList profileId={profileId} locale={locale} />
+        <WalletTransactionList profileId={profileId} locale={locale} staff={staff} />
       </AccountUserProvider>
     )
   );
@@ -81,6 +82,81 @@ async function select(selector: string, value: string) {
 }
 
 describe('WalletTransactionList', () => {
+  it('reads the staff endpoint, links staff invoices and separates saved view preferences', async () => {
+    const invoice = '11111111-1111-7111-8111-111111111111';
+    const fetcher = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        profileId: 'profile-a',
+        transactions: [
+          {
+            ...tx,
+            type: 'payment',
+            state: 'Completed',
+            amount: '-9007199254740993',
+            refId: invoice,
+          },
+        ],
+        nextCursor: null,
+      }),
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await render('profile-a', 'en', 'wallet-user', true);
+    expect(fetcher.mock.calls[0]![0]).toBe(
+      '/api/admin/reconciliation/wallets/profile-a/transactions?sort=desc&limit=25'
+    );
+    expect(
+      host.querySelector(`a[href="/admin/invoices?invoiceId=${invoice}"]`)?.textContent
+    ).toContain(invoice);
+    expect(host.querySelector('a[href^="/invoices/"]')).toBeNull();
+    expect(host.textContent).toContain('-9,007,199,254,740,993');
+    await click('Table');
+    expect(localStorage.getItem('barghsa.list-view:wallet-user:staff-wallet-transactions')).toBe(
+      'table'
+    );
+    expect(
+      localStorage.getItem('barghsa.list-view:wallet-user:customer-wallet-transactions')
+    ).toBeNull();
+  });
+  it('rejects a staff response identifying a different profile', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ profileId: 'profile-b', transactions: [tx], nextCursor: null }),
+      })
+    );
+    await render('profile-a', 'en', 'wallet-user', true);
+    expect(host.textContent).not.toContain('Bank transfer');
+    expect(host.querySelector('[role=alert]')).not.toBeNull();
+  });
+  it('discards a delayed customer page when switching to staff history for the same profile', async () => {
+    let release!: (value: unknown) => void;
+    const fetcher = vi
+      .fn()
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            release = resolve;
+          })
+      )
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          profileId: 'profile-a',
+          transactions: [{ ...tx, description: 'Staff history' }],
+          nextCursor: null,
+        }),
+      });
+    vi.stubGlobal('fetch', fetcher);
+    await render();
+    await render('profile-a', 'en', 'wallet-user', true);
+    expect(host.textContent).toContain('Staff history');
+    await act(async () => release(response([{ ...tx, description: 'Obsolete customer history' }])));
+    expect(host.textContent).not.toContain('Obsolete customer history');
+    expect(host.textContent).toContain('Staff history');
+    expect(fetcher.mock.calls[0]![1].signal.aborted).toBe(true);
+  });
   it('switches views without reading another page and keeps cursor/retry scope', async () => {
     const fetcher = vi
       .fn()

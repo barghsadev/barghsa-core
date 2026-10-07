@@ -4,6 +4,7 @@ import { CustomerWalletInvoicePaymentService } from './customer-wallet-invoice-p
 import { CustomerWalletReceiptController } from './customer-wallet-receipt.controller.js';
 import { WalletController } from './wallet.controller.js';
 import { StaffWalletBalanceController } from './staff-wallet-balance.controller.js';
+import { StaffWalletLedgerController } from './staff-wallet-ledger.controller.js';
 import { WalletService } from './wallet.service.js';
 import { OnlineTopUpService } from './online-topup.service.js';
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js';
@@ -25,6 +26,7 @@ import { InvoiceModule } from '../invoice/invoice.module.js';
   controllers: [
     WalletController,
     StaffWalletBalanceController,
+    StaffWalletLedgerController,
     CustomerWalletReceiptController,
     OnlineTopUpCallbackController,
     ChargebackDetectionController,

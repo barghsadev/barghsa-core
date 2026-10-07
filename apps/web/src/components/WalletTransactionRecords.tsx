@@ -57,12 +57,14 @@ export function WalletTransactionRecords({
   profileId,
   locale,
   formatTime,
+  staff = false,
 }: {
   items: readonly WalletTransaction[];
   view: ListView;
   profileId: string;
   locale: Locale;
   formatTime: ReturnType<typeof useAccountTime>['format'];
+  staff?: boolean;
 }) {
   const [opened, setOpened] = useState<ReadonlySet<string>>(new Set());
   useEffect(() => {
@@ -141,7 +143,11 @@ export function WalletTransactionRecords({
     item.type === 'payment' && item.refId && isInvoiceUuid(item.refId) ? (
       <a
         className="text-primary underline underline-offset-2"
-        href={`/invoices/${encodeURIComponent(item.refId)}`}
+        href={
+          staff
+            ? `/admin/invoices?invoiceId=${encodeURIComponent(item.refId)}`
+            : `/invoices/${encodeURIComponent(item.refId)}`
+        }
       >
         {word('viewInvoice')}: {identity(item.refId)}
       </a>

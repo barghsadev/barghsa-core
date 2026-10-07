@@ -778,12 +778,7 @@ for (const locale of ['en', 'fa'])
 
 for (const locale of ['en', 'fa'])
   test(`reconciliation review persists through the migrated API (${locale})`, async ({ page }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -1973,10 +1968,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
+      localStorage.setItem('barghsa.locale', value);
     }, locale);
     const headers = {
       cookie: `barghsa_session=${http.session}`,
@@ -2096,7 +2088,17 @@ for (const locale of ['en', 'fa'])
     await filters.getByLabel(fa ? 'جست‌وجوی کد' : 'Search code', { exact: true }).fill(code);
     await filters.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('inactive');
     await filters.getByRole('button', { name: fa ? 'جست‌وجو' : 'Search', exact: true }).click();
-    await expect(page.getByRole('heading', { name: code, exact: true })).toBeVisible();
+    const savedRecord =
+      (page.viewportSize()?.width ?? 1280) >= 768
+        ? page.getByRole('row').filter({
+            has: page.getByRole('button', {
+              name: `${fa ? 'ویرایش' : 'Edit'} ${code}`,
+              exact: true,
+            }),
+          })
+        : page.getByRole('heading', { name: code, exact: true });
+    await expect(savedRecord).toBeVisible();
+    await expect(savedRecord).toContainText(code);
     await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true

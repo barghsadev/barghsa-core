@@ -5,6 +5,7 @@ import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from './contract.service.js';
 import type { ContractCancellationService } from './contract-cancellation.service.js';
+import { GiftCodeService } from '../admin/gift-code.service.js';
 type Contract = Awaited<ReturnType<ContractService['get']>>;
 type Intent = Awaited<ReturnType<ContractCancellationService['get']>>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -73,7 +74,12 @@ async function reviewedRefundDecision(
   const expectedReviewHash = ((await review.json()) as { hash: string }).hash;
   return send(path, { ...body, expectedReviewHash }, user);
 }
-async function fixture(serviceType = 'electricity', paid = '100', state = 'Paid') {
+async function fixture(
+  serviceType = 'electricity',
+  paid = '100',
+  state = 'Paid',
+  giftPolicy?: { restoreOnCancel: boolean; restoreAfterPayment: boolean }
+) {
   const user = randomUUID(),
     profile = randomUUID(),
     invoice = randomUUID();
@@ -82,8 +88,55 @@ async function fixture(serviceType = 'electricity', paid = '100', state = 'Paid'
   ]);
   await http.pool.query('INSERT INTO profiles(id,user_id) VALUES($1,$2)', [profile, user]);
   await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [profile]);
+  let gift: { orderId: string; redemptionId: string; giftCodeId: string } | undefined;
+  if (giftPolicy) {
+    const client = await http.pool.connect();
+    try {
+      await client.query('BEGIN');
+      const product = (
+        await client.query(
+          "INSERT INTO products(type,system_key,title,price,status) VALUES('electricity','thermal','{\"en\":\"Gift cancellation test\"}',100,'active') ON CONFLICT(system_key) DO UPDATE SET status='active' RETURNING id"
+        )
+      ).rows[0].id;
+      const orderId = (
+        await client.query(
+          "INSERT INTO orders(user_id,profile_id,product_id,order_type,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code) VALUES($1,$2,$3,'electricity','province','city','Street','1234567890') RETURNING id",
+          [user, profile, product]
+        )
+      ).rows[0].id;
+      const code = 'CANCEL-' + randomUUID().toUpperCase();
+      await client.query(
+        "INSERT INTO gift_codes(code,discount_type,discount_value,total_limit,per_profile_limit,restore_on_cancel,restore_after_payment,valid_from,created_by) VALUES($1,'fixed_irr',10,1,1,$2,$3,'2026-01-01','cancel-legal')",
+        [code, giftPolicy.restoreOnCancel, giftPolicy.restoreAfterPayment]
+      );
+      const gifts = new GiftCodeService(
+        { getCorrelationId: () => randomUUID() } as never,
+        {} as never
+      );
+      const redemption = await gifts.redeem(
+        {
+          giftCode: code,
+          profileId: profile,
+          orderId,
+          orderAmount: '100',
+          category: 'electricity',
+          actorUserId: user,
+          ip: '127.0.0.1',
+        },
+        client
+      );
+      gift = { orderId, redemptionId: redemption.id, giftCodeId: redemption.giftCodeId };
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
   const response = await send('contracts', {
     profileId: profile,
+    ...(gift ? { orderId: gift.orderId } : {}),
     serviceType,
     content: { termMonths: 12 },
     changeDescription: 'Initial draft',
@@ -92,8 +145,8 @@ async function fixture(serviceType = 'electricity', paid = '100', state = 'Paid'
   expect(response.status).toBe(201);
   const contract = (await response.json()) as Contract;
   await http.pool.query(
-    'INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,paid_amount) VALUES($1,$2,$3,$4,100,$5)',
-    [invoice, profile, contract.id, state, paid]
+    'INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,paid_amount,order_id) VALUES($1,$2,$3,$4,100,$5,$6)',
+    [invoice, profile, contract.id, state, paid, gift?.orderId ?? null]
   );
   const preview = (await (
     await send(`contracts/${contract.id}/cancellation-preview`)
@@ -105,7 +158,7 @@ async function fixture(serviceType = 'electricity', paid = '100', state = 'Paid'
     refundDecision: { mode: 'full_wallet' },
     idempotencyKey: randomUUID(),
   };
-  return { contract, invoice, profile, body };
+  return { contract, invoice, profile, body, gift };
 }
 async function prepare(f: Awaited<ReturnType<typeof fixture>>) {
   const response = await send(`contracts/${f.contract.id}/cancellations`, f.body);
@@ -118,6 +171,144 @@ function execute(f: Awaited<ReturnType<typeof fixture>>, intent: Intent, key = r
     idempotencyKey: key,
   });
 }
+it.each([
+  ['Unpaid', '0', true, false, true],
+  ['Unpaid', '0', false, false, false],
+  ['Paid', '100', true, false, false],
+  ['Paid', '100', true, true, true],
+  ['Paid', '100', false, true, false],
+] as const)(
+  'applies gift cancellation policy for %s funds paid=%s restoreOnCancel=%s restoreAfterPayment=%s restored=%s',
+  async (state, paid, restoreOnCancel, restoreAfterPayment, restored) => {
+    const f = await fixture('electricity', paid, state, { restoreOnCancel, restoreAfterPayment });
+    const intent = await prepare(f);
+    const key = randomUUID();
+    const response = await execute(f, intent, key);
+    expect(response.status, await response.clone().text()).toBe(201);
+    const ledger = (
+      await http.pool.query('SELECT * FROM gift_code_redemptions WHERE id=$1', [
+        f.gift!.redemptionId,
+      ])
+    ).rows;
+    expect(ledger).toHaveLength(1);
+    expect(ledger[0]).toMatchObject({
+      gift_code_id: f.gift!.giftCodeId,
+      order_id: f.gift!.orderId,
+      profile_id: f.profile,
+      discount_amount: '10',
+      status: restored ? 'released' : 'consumed',
+      restored_at: restored ? expect.any(Date) : null,
+    });
+    const releaseAudits = (
+      await http.pool.query(
+        "SELECT user_id,metadata FROM audit_log WHERE event='change_recorded' AND metadata::jsonb->>'entityId'=$1 AND metadata::jsonb->>'action'='released'",
+        [f.gift!.redemptionId]
+      )
+    ).rows;
+    expect(releaseAudits).toHaveLength(restored ? 1 : 0);
+    if (restored)
+      expect(releaseAudits[0]).toEqual({ user_id: 'cancel-legal', metadata: expect.any(String) });
+    if (restored)
+      expect(JSON.parse(releaseAudits[0].metadata)).toMatchObject({
+        entity: 'gift_code_redemption',
+        entityId: f.gift!.redemptionId,
+        fromState: 'consumed',
+        toState: 'released',
+        reason: paid === '0' ? 'unpaid_cancellation' : 'paid_cancellation',
+        giftCodeId: f.gift!.giftCodeId,
+        profileId: f.profile,
+        orderId: f.gift!.orderId,
+      });
+    expect((await execute(f, intent, key)).status).toBe(201);
+    expect(
+      (
+        await http.pool.query('SELECT * FROM gift_code_redemptions WHERE id=$1', [
+          f.gift!.redemptionId,
+        ])
+      ).rows
+    ).toEqual(ledger);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT user_id,metadata FROM audit_log WHERE event='change_recorded' AND metadata::jsonb->>'entityId'=$1 AND metadata::jsonb->>'action'='released'",
+          [f.gift!.redemptionId]
+        )
+      ).rows
+    ).toEqual(releaseAudits);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT count(*)::int AS n FROM gift_code_redemptions WHERE gift_code_id=$1 AND status='consumed'",
+          [f.gift!.giftCodeId]
+        )
+      ).rows[0].n
+    ).toBe(restored ? 0 : 1);
+  }
+);
+it('rolls back paid gift restoration with a failed cancellation audit and retries once', async () => {
+  const f = await fixture('electricity', '100', 'Paid', {
+    restoreOnCancel: true,
+    restoreAfterPayment: true,
+  });
+  const intent = await prepare(f);
+  const key = randomUUID();
+  const before = (
+    await http.pool.query('SELECT * FROM gift_code_redemptions WHERE id=$1', [f.gift!.redemptionId])
+  ).rows;
+  await http.pool.query(
+    "CREATE FUNCTION fail_paid_gift_cancel_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='contract.cancelled' THEN RAISE EXCEPTION 'test paid gift cancellation audit failure'; END IF; RETURN NEW; END $$; CREATE TRIGGER fail_paid_gift_cancel_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_paid_gift_cancel_audit()"
+  );
+  try {
+    expect((await execute(f, intent, key)).status).toBe(500);
+    expect(
+      (
+        await http.pool.query('SELECT * FROM gift_code_redemptions WHERE id=$1', [
+          f.gift!.redemptionId,
+        ])
+      ).rows
+    ).toEqual(before);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT * FROM audit_log WHERE event='change_recorded' AND metadata::jsonb->>'entityId'=$1 AND metadata::jsonb->>'action'='released'",
+          [f.gift!.redemptionId]
+        )
+      ).rows
+    ).toEqual([]);
+    expect(
+      (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [f.contract.id])).rows[0]
+        .state
+    ).not.toBe('Cancelled');
+    expect(
+      (
+        await http.pool.query('SELECT * FROM contract_refund_obligations WHERE contract_id=$1', [
+          f.contract.id,
+        ])
+      ).rows
+    ).toEqual([]);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_paid_gift_cancel_audit ON audit_log; DROP FUNCTION fail_paid_gift_cancel_audit()'
+    );
+  }
+  expect((await execute(f, intent, key)).status).toBe(201);
+  expect(
+    (
+      await http.pool.query('SELECT status FROM gift_code_redemptions WHERE id=$1', [
+        f.gift!.redemptionId,
+      ])
+    ).rows[0].status
+  ).toBe('released');
+  expect((await execute(f, intent, key)).status).toBe(201);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS n FROM audit_log WHERE event='change_recorded' AND metadata::jsonb->>'entityId'=$1 AND metadata::jsonb->>'action'='released'",
+        [f.gift!.redemptionId]
+      )
+    ).rows[0].n
+  ).toBe(1);
+});
 it.each([
   ['Paid', '100'],
   ['PartiallyFunded', '40'],

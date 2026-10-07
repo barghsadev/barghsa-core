@@ -111,12 +111,12 @@ export function reconciliationLinks(details: ReconciliationItem['details']) {
   if (typeof details?.walletId === 'string' && isInvoiceUuid(details.walletId))
     links.push({
       label: 'walletLink',
-      href: `/admin/crm/profiles/${details.walletId.trim().toLowerCase()}`,
+      href: `/admin/wallet-ledger/${details.walletId.trim().toLowerCase()}`,
     });
   if (typeof details?.invoiceId === 'string' && isInvoiceUuid(details.invoiceId))
     links.push({
       label: 'invoiceLink',
-      href: `/invoices/${details.invoiceId.trim().toLowerCase()}`,
+      href: `/admin/invoices?invoiceId=${details.invoiceId.trim().toLowerCase()}`,
     });
   return links;
 }

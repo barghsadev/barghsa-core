@@ -20,17 +20,19 @@ export function TransactionList({
   profileId,
   locale,
   binding,
+  staff = false,
 }: {
   profileId: string;
   locale: Locale;
   binding?: ListQueryBinding;
+  staff?: boolean;
 }) {
   const [raw, setRaw] = useState<Record<string, unknown>>({});
   const local = useListQuery(walletHistoryQueryOptions, raw, (update) => setRaw(update));
   const query = binding ?? local;
   const account = useAccountUser();
   const revision = useProfileContextRevision();
-  const owner = JSON.stringify([account, revision, profileId]);
+  const owner = JSON.stringify([account, revision, profileId, staff]);
   const previousOwner = useRef(owner);
   const resettingCursor = previousOwner.current !== owner && !!query.query.cursor;
   useLayoutEffect(() => {
@@ -39,7 +41,7 @@ export function TransactionList({
     else previousOwner.current = owner;
   }, [owner, query.query.cursor]);
   return resettingCursor ? null : (
-    <History key={owner} profileId={profileId} locale={locale} binding={query} />
+    <History key={owner} profileId={profileId} locale={locale} binding={query} staff={staff} />
   );
 }
 export { TransactionList as WalletTransactionList };
@@ -47,13 +49,17 @@ function History({
   profileId,
   locale,
   binding,
+  staff,
 }: {
   profileId: string;
   locale: Locale;
   binding: ListQueryBinding;
+  staff: boolean;
 }) {
   const id = useId();
-  const { view, setView } = useListView('customer-wallet-transactions');
+  const { view, setView } = useListView(
+    staff ? 'staff-wallet-transactions' : 'customer-wallet-transactions'
+  );
   const time = useAccountTime(locale);
   const label = (key: string) => t(`wallet.history.${key}`, locale);
   const params = new URLSearchParams({ sort: binding.query.order });
@@ -95,6 +101,7 @@ function History({
           binding={binding}
           formatTime={time.format}
           view={view}
+          staff={staff}
         />
       </ListPage>
     </section>
@@ -107,6 +114,7 @@ function HistoryPage({
   binding,
   formatTime,
   view,
+  staff,
 }: {
   profileId: string;
   locale: Locale;
@@ -114,8 +122,9 @@ function HistoryPage({
   binding: ListQueryBinding;
   formatTime: ReturnType<typeof useAccountTime>['format'];
   view: ListView;
+  staff: boolean;
 }) {
-  const criteria = JSON.stringify([profileId, filters]);
+  const criteria = JSON.stringify([profileId, filters, staff]);
   const [accepted, setAccepted] = useState<{ criteria: string; page: Page | null }>({
     criteria,
     page: null,
@@ -145,7 +154,8 @@ function HistoryPage({
     const params = new URLSearchParams(filters);
     params.set('limit', '25');
     if (cursor) params.set('cursor', cursor);
-    void fetch(`/api/wallet/${encodeURIComponent(profileId)}/transactions?${params}`, {
+    const endpoint = staff ? '/api/admin/reconciliation/wallets' : '/api/wallet';
+    void fetch(`${endpoint}/${encodeURIComponent(profileId)}/transactions?${params}`, {
       credentials: 'include',
       signal: controller.signal,
     })
@@ -159,10 +169,11 @@ function HistoryPage({
           }
           throw new Error('History unavailable');
         }
-        const data = (await response.json()) as Page;
+        const data = (await response.json()) as Page & { profileId?: string };
         if (!current()) return;
         if (
           !Array.isArray(data.transactions) ||
+          (staff && data.profileId !== profileId) ||
           !(data.nextCursor === null || typeof data.nextCursor === 'string')
         )
           throw new Error('Invalid history');
@@ -216,6 +227,7 @@ function HistoryPage({
             profileId={profileId}
             locale={locale}
             formatTime={formatTime}
+            staff={staff}
           />
         ) : null}
       </ListPage.Content>

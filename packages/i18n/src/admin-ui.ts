@@ -3,6 +3,8 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.walletLedger.title': 'گردش کیف پول',
+  'admin.walletLedger.description': 'تراکنش‌های این پروفایل را برای بررسی مغایرت مالی مرور کنید.',
   'admin.operationalReview.title': 'بررسی نتیجه اقدام',
   'admin.operationalReview.description':
     'نتیجه اقدام تأیید نشد. پیش از اقدام دوباره، وضعیت فعلی رکوردهای انتخاب‌شده را بررسی کنید.',
@@ -936,7 +938,7 @@ export const fa: I18nDictionary = {
   'admin.reconciliation.savedStatus': 'وضعیت ذخیره‌شده',
   'admin.reconciliation.retainedResolution': 'نتیجه قبلی که حفظ می‌شود',
   'admin.reconciliation.related': 'سوابق مرتبط',
-  'admin.reconciliation.walletLink': 'مشاهده پروفایل کیف پول',
+  'admin.reconciliation.walletLink': 'مشاهده گردش کیف پول',
   'admin.reconciliation.invoiceLink': 'مشاهده فاکتور',
   'admin.reconciliation.title': 'مغایرت‌های مالی',
   'admin.reconciliation.description': 'مغایرت‌های گزارش‌شده را بررسی و نتیجه رسیدگی را ثبت کنید.',
@@ -1788,6 +1790,9 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.walletLedger.title': 'Wallet ledger',
+  'admin.walletLedger.description':
+    'Review this profile’s transactions to investigate a financial mismatch.',
   'admin.operationalReview.title': 'Review action outcome',
   'admin.operationalReview.description':
     'The action could not be confirmed. Review the current state of the selected records before another action.',
@@ -2730,7 +2735,7 @@ export const en: I18nDictionary = {
   'admin.reconciliation.savedStatus': 'Saved status',
   'admin.reconciliation.retainedResolution': 'Previous resolution that will be preserved',
   'admin.reconciliation.related': 'Related records',
-  'admin.reconciliation.walletLink': 'Open wallet profile',
+  'admin.reconciliation.walletLink': 'Open wallet ledger',
   'admin.reconciliation.invoiceLink': 'Open invoice',
   'admin.reconciliation.title': 'Reconciliation exceptions',
   'admin.reconciliation.description':

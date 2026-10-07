@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 432 | Accepted with unchanged source bindings. |
+| done | 433 | Accepted with unchanged source bindings. |
 | verify | 867 | Existing work may be complete; inspect evidence before building. |
-| partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,10 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing reconciliation exceptions andgift-code administration against current financial ledgers,matching-line category eligibility,limits,redemption/cancellation policy,current authority andoperator recovery. Reconcile old future-finance limitations with existing engines andapproved promotion representations. Build only demonstrated gaps;keep prior owner,release,quality andoperational gates open.
+Finish concrete reconciliation/quality criteria: inspect current invoice, receipt, refund and provider provenance before adding bounded locked reconciliation producers; fix the Wallet payload under the unchanged 300 KB gate and diagnose the retained filter-animation trace. Preserve accepted gift behavior, earlier owner/dependency/operational gates and the unfinished consultation patch.
 
 - `02-auth-users-admin.md#T-09.09.01`: Reconciliation exceptions view
-- `02-auth-users-admin.md#T-09.12.03`: Gift code management
 
 ## v0.2.0: Complete customer journeys
 
@@ -344,7 +343,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.10.03` | done | Earlier partial | Green rule activation safety check |
 | `02-auth-users-admin.md#T-09.12.01` | done | Earlier acceptance_verified | Product catalogue management |
 | `02-auth-users-admin.md#T-09.12.02` | done | Earlier acceptance_verified | VAT configuration |
-| `02-auth-users-admin.md#T-09.12.03` | partial | Earlier partial | Gift code management |
+| `02-auth-users-admin.md#T-09.12.03` | done | Earlier partial | Gift code management |
 | `02-auth-users-admin.md#T-09.12.04` | done | Earlier partial | Contract template management |
 | `02-auth-users-admin.md#T-09.12.05` | done | Earlier acceptance_verified | Upload policies configuration |
 | `02-auth-users-admin.md#T-09.12.06` | partial | Earlier partial | Contract electricity increase limits |

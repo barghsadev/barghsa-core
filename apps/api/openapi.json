@@ -12336,6 +12336,95 @@
         ]
       }
     },
+    "/api/admin/reconciliation/wallets/{profileId}/transactions": {
+      "get": {
+        "operationId": "StaffWalletLedgerController_transactions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "profileId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "transactions": {
+                      "items": {
+                        "properties": {
+                          "amount": {
+                            "pattern": "^-?[0-9]+$",
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "description": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "refId": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "amount",
+                          "state",
+                          "refId",
+                          "description",
+                          "createdAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "profileId",
+                    "transactions",
+                    "nextCursor"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read profile-scoped wallet history with current reconciliation authority",
+        "tags": [
+          "Staff · Reconciliation"
+        ]
+      }
+    },
     "/api/admin/roles": {
       "get": {
         "operationId": "AdminController_listRoles",

@@ -174,11 +174,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(s.dialog().locator('pre')).toContainText('9007199254740993');
     await expect(s.dialog().getByRole('link', { name: s.word('walletLink') })).toHaveAttribute(
       'href',
-      `/admin/crm/profiles/${paymentProfileId}`
+      `/admin/wallet-ledger/${paymentProfileId}`
     );
     await expect(s.dialog().getByRole('link', { name: s.word('invoiceLink') })).toHaveAttribute(
       'href',
-      `/invoices/${paymentInvoiceId}`
+      `/admin/invoices?invoiceId=${paymentInvoiceId}`
     );
     const note = page.getByLabel(s.word('note'), { exact: true });
     await note.fill('  ');
