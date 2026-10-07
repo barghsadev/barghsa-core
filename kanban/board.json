@@ -17716,7 +17716,8 @@
         "batches": [
           "release-0.2-electricity-legacy-refund-adoption",
           "release-0.2-step-up-action-audit",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -17724,7 +17725,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -18015,6 +18016,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit/renewal-proof.json",
             "scope": "Renew prior effective criteria only; no incomplete task or milestone accepted by association."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -21131,7 +21136,8 @@
           "apps/web/e2e/form-accessibility.spec.ts"
         ],
         "batches": [
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -21159,7 +21165,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -21433,6 +21439,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         },
         "solar_address_checkpoint": {
@@ -21838,14 +21848,16 @@
           "apps/web/e2e/registration-consent.spec.ts",
           "apps/web/e2e/admin-settings-live.spec.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -22133,6 +22145,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -22215,14 +22231,16 @@
           "apps/api/src/auth/otp.service.ts",
           "apps/web/e2e/registration-consent.spec.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -22510,6 +22528,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -22600,14 +22622,16 @@
           "apps/web/src/pages/DashboardLayout.tsx",
           "apps/web/src/pages/AdminLayout.tsx"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -22895,6 +22919,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-orphan-financial/renewal-proof.json",
             "scope": "Complete batch reviewed once with related findings corrected: query text/bigint inference, stored generated invoice field comparison, unsafe terminal state changes, receipt completeness, snapshot generation and browser media-query lag. History, actor/profile context, grant/step-up, second approval, full wallet return, pending money reconciliation, canonical audits and exact retry boundaries retained. Exact old invoice calculation, cancellation source after inlining, original linked obligation writer, all original refund-processing bytes and old journal/SQL retained. Existing API/UI case blocks and167 expect calls preserved; fixture-only temporal/config cleanup adds no waiver.238 distinct related outcomes and current source proof renew effective criteria narrowly."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -23010,7 +23038,8 @@
           "packages/i18n/src/crm.ts"
         ],
         "batches": [
-          "release-0.3-crm-acceptance"
+          "release-0.3-crm-acceptance",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -23018,7 +23047,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
@@ -23105,7 +23134,11 @@
           "limitations": [
             "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
             "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -23428,7 +23461,8 @@
         ],
         "batches": [
           "release-0.3-crm-acceptance",
-          "release-0.3-identity-and-membership"
+          "release-0.3-identity-and-membership",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -23436,7 +23470,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
@@ -23552,7 +23586,11 @@
           "limitations": [
             "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
             "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -23719,7 +23757,8 @@
           "apps/api/src/session/session-step-up.ts"
         ],
         "batches": [
-          "release-0.3-crm-acceptance"
+          "release-0.3-crm-acceptance",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -23727,7 +23766,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -23867,7 +23906,11 @@
           "limitations": [
             "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
             "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -25541,7 +25584,8 @@
         ],
         "batches": [
           "release-0.3-identity-and-membership",
-          "release-0.3-electricity-price-credit-settlement"
+          "release-0.3-electricity-price-credit-settlement",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -25549,7 +25593,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -25678,6 +25722,10 @@
           "price_credit_handoff_renewal": {
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-credit-settlement/renewal-proof.json",
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -26328,7 +26376,8 @@
           "apps/web/e2e/number-preferences.spec.ts"
         ],
         "batches": [
-          "release-0.3-staff-administration"
+          "release-0.3-staff-administration",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -26336,7 +26385,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
@@ -26405,7 +26454,11 @@
           "limitations": [
             "Local actual HTTP/PostgreSQL, source and production-browser fixtures. No milestone deployment, live external delivery or whole-launch certification.",
             "Broader domain role matrix and profile archival policy remain independently tracked."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -41619,7 +41672,8 @@
         ],
         "batches": [
           "2026-10-03-deadline-forms",
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -41627,7 +41681,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -41987,7 +42041,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -42168,7 +42226,8 @@
           "packages/i18n/src/invoice-due-periods.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -42176,7 +42235,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -42536,7 +42595,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -42717,7 +42780,8 @@
           "packages/i18n/src/invoice-due-periods.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -42725,7 +42789,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -43085,7 +43149,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -43266,7 +43334,8 @@
           "packages/i18n/src/invoice-due-periods.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -43274,7 +43343,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -43634,7 +43703,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -43815,7 +43888,8 @@
           "packages/i18n/src/invoice-due-periods.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -43823,7 +43897,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -44183,7 +44257,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -44364,7 +44442,8 @@
           "packages/i18n/src/invoice-due-periods.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -44372,7 +44451,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -44732,7 +44811,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -44995,7 +45078,8 @@
           "packages/shared/src/notification-delivery/sms.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -45003,7 +45087,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -45411,7 +45495,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -45592,7 +45680,8 @@
           "packages/i18n/src/invoice-due-periods.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -45600,7 +45689,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -45960,7 +46049,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -46223,7 +46316,8 @@
           "packages/shared/src/notification-delivery/sms.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -46231,7 +46325,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -46639,7 +46733,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -46820,7 +46918,8 @@
           "packages/i18n/src/invoice-due-periods.ts"
         ],
         "batches": [
-          "release-0.3-invoice-lifecycle"
+          "release-0.3-invoice-lifecycle",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -46828,7 +46927,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -47188,7 +47287,11 @@
           "limitations": [
             "Local PostgreSQL/compiled HTTP and browser evidence; external provider delivery and actual staging data remain operational gates.",
             "Global Wallet bundle budget, v0.2 owner decisions and generic invoice-engine disposition unresolved. No milestone acceptance or deployment."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -51169,7 +51272,8 @@
         "batches": [
           "2026-09-24-invoice-return-after-top-up",
           "2026-09-24-invoice-wallet-shortfall-handoff",
-          "release-0.3-wallet-payments-reversals"
+          "release-0.3-wallet-payments-reversals",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -51177,7 +51281,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -51293,7 +51397,11 @@
           "limitations": [
             "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
             "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
-          ]
+          ],
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
+          }
         }
       }
     },
@@ -91854,7 +91962,8 @@
           "2026-09-23-consultation-intake",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -91862,7 +91971,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -92319,6 +92428,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -92351,7 +92464,8 @@
           "2026-09-23-consultation-staff-workflow",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -92359,7 +92473,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -92816,6 +92930,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -92844,7 +92962,8 @@
           "2026-10-04-consultation-assignment",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -92852,7 +92971,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -93309,6 +93428,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -93336,7 +93459,8 @@
         "batches": [
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -93344,7 +93468,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -93801,6 +93925,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -93829,7 +93957,8 @@
           "2026-09-23-consultation-intake",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -93837,7 +93966,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -94294,6 +94423,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -94322,7 +94455,8 @@
           "2026-10-04-consultation-nonfinancial-forms",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -94330,7 +94464,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -94787,6 +94921,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -94820,7 +94958,8 @@
           "2026-10-04-consultation-nonfinancial-forms",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -94828,7 +94967,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -95285,6 +95424,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -95316,7 +95459,8 @@
           "2026-10-06-customer-consultation-history-scope",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -95324,7 +95468,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -95781,6 +95925,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -95810,7 +95958,8 @@
           "2026-09-23-consultation-staff-workflow",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -95818,7 +95967,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -96275,6 +96424,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -96307,7 +96460,8 @@
           "2026-10-06-staff-operation-tables",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -96315,7 +96469,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -96772,6 +96926,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -96806,7 +96964,8 @@
           "2026-10-05-consultation-paid-resolution-forms",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -96814,7 +96973,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -97271,6 +97430,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -97300,7 +97463,8 @@
           "2026-09-24-staff-consultation-offer-review",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -97308,7 +97472,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -97765,6 +97929,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -97793,7 +97961,8 @@
           "2026-09-23-consultation-staff-workflow",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -97801,7 +97970,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -98258,6 +98427,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -98287,7 +98460,8 @@
           "2026-10-04-consultation-nonfinancial-forms",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -98295,7 +98469,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -98752,6 +98926,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -98781,7 +98959,8 @@
           "2026-10-04-consultation-nonfinancial-forms",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -98789,7 +98968,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -99246,6 +99425,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -99276,7 +99459,8 @@
           "2026-09-23-consultation-refund-recovery",
           "release-0.2-consultation-lifecycle",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -99284,7 +99468,7 @@
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/common/activity-identity.ts",
@@ -99741,6 +99925,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -119279,11 +119467,11 @@
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
-              "sha256": "38c81a3a4ecd41dd029ad1db05c7b034ba5026fea3513c6beffc34a092aeb656"
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -119721,6 +119909,10 @@
           "price_credit_handoff_renewal": {
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-credit-settlement/renewal-proof.json",
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -133896,7 +134088,8 @@
         "batches": [
           "2026-09-23-solar-intake",
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -133904,7 +134097,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -134075,6 +134268,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -134101,7 +134298,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -134109,7 +134307,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -134280,6 +134478,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -134306,7 +134508,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -134314,7 +134517,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -134485,6 +134688,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -134513,7 +134720,8 @@
           "2026-09-23-solar-intake",
           "2026-09-24-solar-intake-drafts",
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -134521,7 +134729,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -134692,6 +134900,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -134717,7 +134929,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -134738,7 +134951,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -134886,6 +135099,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -134912,7 +135129,8 @@
         "changed_paths": [],
         "batches": [
           "2026-09-24-solar-address-return",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -134933,7 +135151,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -135081,6 +135299,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -135107,7 +135329,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -135115,7 +135338,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -135286,6 +135509,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -135312,7 +135539,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -135320,7 +135548,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -135491,6 +135719,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -135517,7 +135749,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -135525,7 +135758,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -135696,6 +135929,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -135723,7 +135960,8 @@
         "batches": [
           "2026-09-23-solar-intake",
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -135731,7 +135969,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -135902,6 +136140,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -135929,7 +136171,8 @@
         "batches": [
           "2026-09-30-solar-request-submission-review",
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -135937,7 +136180,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -136108,6 +136351,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -136136,7 +136383,8 @@
           "2026-09-23-customer-request-routing",
           "2026-09-23-solar-request-history",
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -136144,7 +136392,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -136315,6 +136563,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -136347,7 +136599,8 @@
           "2026-09-24-solar-final-review-handoff",
           "2026-09-30-solar-contract-invoice-review",
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -136355,7 +136608,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -136526,6 +136779,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -136552,7 +136809,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -136560,7 +136818,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -136731,6 +136989,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -136757,7 +137019,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-solar-request-lifecycle",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -136765,7 +137028,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-documents.service.ts",
@@ -136936,6 +137199,10 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/renewal-proof.json",
             "scope": "Renew only prior accepted criteria. No pending policy, whole milestone or live-provider acceptance inferred."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -136951,21 +137218,127 @@
         "story": "03-core-business.md#spec-2459901bde06"
       },
       "requirement": "| **T-03.12.01.01** | 📋 Customer UI: upload documents, photos, and videos to construction request. Multiple files allowed. Guidance text is admin-editable. Display-only list of suggested/requested documents (no enforced minimum). | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "2026-09-23-solar-documents"
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
         ],
-        "current_acceptance": null
+        "batches": [
+          "2026-09-23-solar-documents",
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -136979,19 +137352,126 @@
         "story": "03-core-business.md#spec-2459901bde06"
       },
       "requirement": "| **T-03.12.01.02** | 📋 \"I have uploaded all documents\" checkbox — works even when no files uploaded. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
+        ],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137005,19 +137485,126 @@
         "story": "03-core-business.md#spec-2459901bde06"
       },
       "requirement": "| **T-03.12.01.03** | 📋 Customer can delete or replace files even after submitting the set for review. Replacements must retain a link to the previous file and audit history (never erase). | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
+        ],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137031,21 +137618,127 @@
         "story": "03-core-business.md#spec-2459901bde06"
       },
       "requirement": "| **T-03.12.01.04** | 🔧 Admin API: edit customer-facing document guidance text and maintain suggested document list. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "2026-10-04-solar-document-review-forms"
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
         ],
-        "current_acceptance": null
+        "batches": [
+          "2026-10-04-solar-document-review-forms",
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137059,24 +137752,130 @@
         "story": "03-core-business.md#spec-a639a6bb29f9"
       },
       "requirement": "| **T-03.12.02.01** | 📋 Staff UI: document review queue — each document listed independently per request. Show file preview, uploader, timestamp, status. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
+        ],
         "batches": [
           "2026-09-23-solar-documents",
           "2026-09-23-solar-staff-work-queues",
           "2026-09-24-solar-individual-document-queue",
-          "2026-09-24-solar-staff-triage"
+          "2026-09-24-solar-staff-triage",
+          "release-0.3-solar-document-review"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137090,19 +137889,126 @@
         "story": "03-core-business.md#spec-a639a6bb29f9"
       },
       "requirement": "| **T-03.12.02.02** | 🔧 Staff API: `POST /staff/solar/requests/:id/documents/:docId/approve` — approve individual file | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
+        ],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137116,21 +138022,127 @@
         "story": "03-core-business.md#spec-a639a6bb29f9"
       },
       "requirement": "| **T-03.12.02.03** | 🔧 Staff API: `POST /staff/solar/requests/:id/documents/:docId/reject` — with reason. Rejects only that file, not the entire submitted set. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "2026-10-04-solar-document-review-forms"
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
         ],
-        "current_acceptance": null
+        "batches": [
+          "2026-10-04-solar-document-review-forms",
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137144,22 +138156,128 @@
         "story": "03-core-business.md#spec-a639a6bb29f9"
       },
       "requirement": "| **T-03.12.02.04** | 🔧 Staff API: `POST /staff/solar/requests/:id/documents/request-additional` — request additional/replacement file with description. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
+        ],
         "batches": [
           "2026-09-30-solar-document-set-review",
-          "2026-10-04-solar-document-review-forms"
+          "2026-10-04-solar-document-review-forms",
+          "release-0.3-solar-document-review"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137173,19 +138291,126 @@
         "story": "03-core-business.md#spec-a639a6bb29f9"
       },
       "requirement": "| **T-03.12.02.05** | 🔧 When staff considers overall document set sufficient → staff advances request to postal submission stage (transition: `documents_under_review` → `waiting_for_postal_submission`). | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
+        ],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137199,19 +138424,126 @@
         "story": "03-core-business.md#spec-a639a6bb29f9"
       },
       "requirement": "| **T-03.12.02.06** | ⚠️ Customer notified on each document decision (approve/reject/request). | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/api/src/orders/orders.module.ts",
+          "apps/api/src/solar/solar-documents.controller.ts",
+          "apps/api/src/solar/solar-documents.integration.test.ts",
+          "apps/api/openapi.json"
+        ],
+        "batches": [
+          "release-0.3-solar-document-review"
+        ],
+        "current_acceptance": {
+          "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
+          "reviewed_base_commit": "8a75c3b20b35aaa4c16cecbd9ac5b784c73e2c23",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "13c13d1aebded1fb329b000fe3c785a939e04596d1e43b28628c37afc371f324"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/orders.module.ts",
+              "sha256": "3983886e6d8deca6519ed8dd54c8562569b8b5099f8de47c5278651b39468052"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.test.ts",
+              "sha256": "4951d27190b9428e3310f5565754932061feec55f09332c8fdb17c5a87da8899"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "c9f7b8c61e7085715d9c9dd0baeeed193e447ff9619e50df2d40eae8c46a701c"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.integration.test.ts",
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.service.ts",
+              "sha256": "b8fca78fddbcc268c3dcd9bd8981f54eb174b92fc8a3e868cdeef98db7265e2b"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
+              "sha256": "069a50076cd94b839c2a466cd32bab51af9b8d4f3b050b0379fa400977926ab4"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "042ae30651e7dfee755fb435367d47a964467b5dab3edf725d5cc7c2a454449c"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form-schemas.ts",
+              "sha256": "5c0429fa15d058ca345dc9bbde0d125253b3fdb1a369617db3a2563da63d0f12"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.test.ts",
+              "sha256": "55d56faf563c83483344744f6f15a14b6e4a3b8be5101b28be561b2441a061ab"
+            },
+            {
+              "path": "apps/web/src/lib/solar-document-form.ts",
+              "sha256": "e3b1d8d3a6c3e2b9359def4ddbe3acee0208c0932911857d34c2c284645869a0"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
+              "sha256": "b379d6f94b3ab2b1bca66815f7c3465bb6a67cafb1a41003508afe23544d5b53"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "7c080239633628e12f7191247631dcad1967a65da1a478669bf4b7236526a0ba"
+            },
+            {
+              "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
+              "sha256": "d6791321317939929e55c047832de6d7c5f6ede2793c2c0250ac932a39912fd0"
+            },
+            {
+              "path": "apps/web/src/pages/solar-documents.test.tsx",
+              "sha256": "ee8355071d78beae2fc4a3b5b0641d865eeff6e89f1250c968bbd386c1a73746"
+            },
+            {
+              "path": "packages/db/drizzle/production/0166_solar_document_workflow.sql",
+              "sha256": "2648c544a9ab276c6288a6bf87d2675e443a5d1bcc92e79873ca504ca765e755"
+            },
+            {
+              "path": "packages/i18n/src/solar-document-forms.test.ts",
+              "sha256": "1493d6e83597dd6d59d3a59e53d395ebb4aa648b811630f3677c58ab6e52746d"
+            },
+            {
+              "path": "packages/i18n/src/solar.ts",
+              "sha256": "5aa62aa60b8e0dc4608602c7afebd11f69d06d635f92a2503869eb0fc2788d7d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+            "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+            "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review",
+          "limitations": [
+            "LocalPG/storage/HTTP plusfixturebrowser;operational external scanning/transport remainslaunchgate. Earlier owner/performance/dependency gatesunfinished."
+          ]
+        }
       }
     },
     {
@@ -137872,7 +139204,8 @@
           "release-0.2-common-business-gates",
           "release-0.2-wallet-review-disclosure",
           "release-0.2-electricity-legacy-refund-adoption",
-          "release-0.3-electricity-price-credit-settlement"
+          "release-0.3-electricity-price-credit-settlement",
+          "release-0.3-solar-document-review"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -137984,7 +139317,7 @@
             },
             {
               "path": "apps/api/openapi.json",
-              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+              "sha256": "0e7440ad09a529daff82b95804e3c1ce855fecbf47a19af27a726cae7d4978f3"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-balance-http.integration.test.ts",
@@ -138303,6 +139636,10 @@
           "price_credit_handoff_renewal": {
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-credit-settlement/renewal-proof.json",
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         }
       }
@@ -163934,7 +165271,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -164094,6 +165431,10 @@
           "price_credit_handoff_renewal": {
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-credit-settlement/renewal-proof.json",
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         },
         "batches": [
@@ -164106,7 +165447,8 @@
           "release-0.3-wallet-payments-reversals",
           "release-0.3-contract-document-lifecycle",
           "release-0.3-electricity-refund-obligations",
-          "release-0.3-electricity-price-credit-settlement"
+          "release-0.3-electricity-price-credit-settlement",
+          "release-0.3-solar-document-review"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -164706,7 +166048,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
-              "sha256": "e1c92b8f9f7b865f0ee5801e6142c2b2a483989aedf50864050123ce9e70a09c"
+              "sha256": "7266ba813895eacf27308d68fc9fb15dd5bff4b20372c0f331624afc70e6b042"
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
@@ -164862,6 +166204,10 @@
           "price_credit_handoff_renewal": {
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-credit-settlement/renewal-proof.json",
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
+          },
+          "solar_route_renewal": {
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review/renewal-proof.json",
+            "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           }
         },
         "batches": [
@@ -164870,7 +166216,8 @@
           "release-0.3-wallet-payments-reversals",
           "release-0.3-contract-document-lifecycle",
           "release-0.3-electricity-refund-obligations",
-          "release-0.3-electricity-price-credit-settlement"
+          "release-0.3-electricity-price-credit-settlement",
+          "release-0.3-solar-document-review"
         ]
       }
     },
@@ -174848,6 +176195,83 @@
         "Three inventory tasks accepted independently; no agreement-policy,staging/Telegram orproduction acceptance inferred."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory"
+    },
+    "release-0.3-solar-document-review": {
+      "title": "Accept solar document review andspecified staff routes",
+      "task_keys": [
+        "03-core-business.md#T-03.12.01.01",
+        "03-core-business.md#T-03.12.01.02",
+        "03-core-business.md#T-03.12.01.03",
+        "03-core-business.md#T-03.12.01.04",
+        "03-core-business.md#T-03.12.02.01",
+        "03-core-business.md#T-03.12.02.02",
+        "03-core-business.md#T-03.12.02.03",
+        "03-core-business.md#T-03.12.02.04",
+        "03-core-business.md#T-03.12.02.05",
+        "03-core-business.md#T-03.12.02.06",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.05.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "03-core-business.md#T-03.03.01.01",
+        "03-core-business.md#T-03.03.01.02",
+        "03-core-business.md#T-03.03.01.03",
+        "03-core-business.md#T-03.03.01.04",
+        "03-core-business.md#T-03.03.02.01",
+        "03-core-business.md#T-03.03.02.02",
+        "03-core-business.md#T-03.03.02.03",
+        "03-core-business.md#T-03.03.02.04",
+        "03-core-business.md#T-03.03.02.05",
+        "03-core-business.md#T-03.03.03.01",
+        "03-core-business.md#T-03.03.03.02",
+        "03-core-business.md#T-03.03.03.03",
+        "03-core-business.md#T-03.03.03.04",
+        "03-core-business.md#T-03.03.03.05",
+        "03-core-business.md#T-03.03.03.06",
+        "03-core-business.md#T-03.03.03.07",
+        "03-core-business.md#T-03.11.01.01",
+        "03-core-business.md#T-03.11.01.02",
+        "03-core-business.md#T-03.11.01.03",
+        "03-core-business.md#T-03.11.02.01",
+        "03-core-business.md#T-03.11.02.02",
+        "03-core-business.md#T-03.11.02.03",
+        "03-core-business.md#T-03.11.02.04",
+        "03-core-business.md#T-03.11.02.05",
+        "03-core-business.md#T-03.11.02.06",
+        "03-core-business.md#T-03.11.03.01",
+        "03-core-business.md#T-03.11.03.02",
+        "03-core-business.md#T-03.11.03.03",
+        "03-core-business.md#T-03.11.04.01",
+        "03-core-business.md#T-03.11.04.02",
+        "03-core-business.md#T-03.11.04.03",
+        "03-core-business.md#T-03.90.02",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04"
+      ],
+      "summary": "Ten solar document tasks accepted. Specified staff prefix addedwithout changinglegacy callers; prior route metadata acceptance renewednarrowly.",
+      "validation": [
+        "71 distinct scoped passing cases:26 API (22 unchanged controller/input cases+4 final real PG/HTTP/Minio journeys),22 UI,12 bilingual light/dark desktop/mobile production-browser and11 exact-bound shared scanning/DB cases retained. Red/failed/stopped/skipped andduplicate cases excluded.",
+        "Specified /api/staff/solar prefix available through inherited guarded handlers. Existing /api/admin/solar paths andalllegacy OpenAPI operations exact;9new paths anduniqueoperation IDs. Actualpermissions,stale revisions,emptyset,guidance,per-file decisions/replacement/removal/history,setreview/postal andnotices verified.",
+        "Final API build/types,changed lint/format,OpenAPI match andSemgrep2production files5rules0findings pass. No web/money/worker/migration changes. Current web build/budget reused byexactoutputproof;Wallet300.10/300KB failure remains. No release/staging/Telegram/production acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-document-review"
     }
   },
   "historical_improvements": [
@@ -174887,20 +176311,16 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-solar-document-review",
+    "id": "release-0.3-solar-postal",
     "release": "0.3.0",
-    "goal": "Inspect current solar customer documents/photos/video upload,guidance andsuggested-only list,empty-set confirmation,replacement/deletion audit,staff per-file review/additional requests andexplicit advancement to postal. Verify profile/permission/session,retry/rollback/notification/history/scan boundaries andproduction-browser flows; build only demonstrated gaps. Earlier owner/release/performance gates remain unfinished.",
+    "goal": "Inspect current adminpostal guidance,customer courier/tracking/date/optional receipt image,staff received/incomplete/not-received decisions anddistinct postal states. Verifycurrentauthority,profile isolation,stage/session/reviewhash,retained receipt andnotifications/audit/retry/rollback,thenrelated production-browser checks. Build onlydemonstrated gaps;preserveearlier owner/release/performance criteria.",
     "task_keys": [
-      "03-core-business.md#T-03.12.01.01",
-      "03-core-business.md#T-03.12.01.02",
-      "03-core-business.md#T-03.12.01.03",
-      "03-core-business.md#T-03.12.01.04",
-      "03-core-business.md#T-03.12.02.01",
-      "03-core-business.md#T-03.12.02.02",
-      "03-core-business.md#T-03.12.02.03",
-      "03-core-business.md#T-03.12.02.04",
-      "03-core-business.md#T-03.12.02.05",
-      "03-core-business.md#T-03.12.02.06"
+      "03-core-business.md#T-03.12.03.01",
+      "03-core-business.md#T-03.12.03.02",
+      "03-core-business.md#T-03.12.03.03",
+      "03-core-business.md#T-03.12.03.04",
+      "03-core-business.md#T-03.12.03.05",
+      "03-core-business.md#T-03.12.03.06"
     ]
   },
   "launch_forecast": {

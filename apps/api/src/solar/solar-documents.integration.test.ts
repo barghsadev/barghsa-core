@@ -57,11 +57,11 @@ async function submitSolar(body: Record<string, unknown>) {
   const { hash } = (await review.json()) as { hash: string };
   return send('solar-buyer', 'solar/requests', 'POST', { ...body, expectedReviewHash: hash });
 }
-async function documentCreate(replaces?: string) {
+async function documentCreate(replaces?: string, targetRequest = requestId) {
   const response = await send('solar-buyer', 'documents', 'POST', {
     profileId,
     businessRecordType: 'solar_request',
-    businessRecordId: requestId,
+    businessRecordId: targetRequest,
     category: 'document',
     fileName: 'solar-evidence.pdf',
     contentType: 'application/pdf',
@@ -568,4 +568,96 @@ it('pages more than 100 document requests without repeating tied timestamps', as
   expect(secondPage.requests).toHaveLength(1);
   expect(secondPage.nextBefore).toBeNull();
   expect(firstPage.requests.some((row) => row.id === secondPage.requests[0]!.id)).toBe(false);
+}, 90_000);
+
+it('uses the specified staff routes for the same protected per-file and document-set decisions', async () => {
+  // The pagination fixture exceeds the intake quota; route checks start from a valid submitted row.
+  const target = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO solar_construction_requests
+       (id,profile_id,submitted_by,submission_key,status,building_type,grid_type,
+        property_form,structural_frame,building_completion_date,agreement_accepted,
+        agreement_version,agreement_snapshot,agreement_accepted_at)
+       SELECT uuid_generate_v7(),profile_id,submitted_by,uuid_generate_v7(),
+        'submitted',building_type,grid_type,property_form,structural_frame,
+        building_completion_date,agreement_accepted,agreement_version,
+        agreement_snapshot,agreement_accepted_at
+       FROM solar_construction_requests WHERE id=$1 RETURNING id`,
+      [requestId]
+    )
+  ).rows[0]!.id;
+  const path = `staff/solar/requests/${target}/documents`;
+  const read = await send('solar-reviewer', path);
+  expect(read.status, http.logs()).toBe(200);
+  expect(await read.json()).toEqual(
+    await (await send('solar-reviewer', `admin/solar/requests/${target}/documents`)).json()
+  );
+  expect((await send('solar-buyer', path)).status).toBe(403);
+  const accepted = await documentCreate(undefined, target);
+  const declined = await documentCreate(undefined, target);
+  expect(
+    (
+      await send('solar-buyer', `solar/requests/${target}/documents/complete`, 'POST', {
+        allDocumentsUploaded: true,
+      })
+    ).status
+  ).toBe(200);
+  const rows = (
+    (await (await send('solar-reviewer', path)).json()) as {
+      documents: Array<{ document_id: string; revision: number }>;
+    }
+  ).documents;
+  for (const [document, action] of [
+    [accepted, 'approve'],
+    [declined, 'reject'],
+  ] as const) {
+    const body = {
+      expectedRevision: rows.find((row) => row.document_id === document.id)!.revision,
+      ...(action === 'reject' ? { reason: 'Unreadable ownership file' } : {}),
+    };
+    expect(
+      (await send('solar-buyer', `${path}/${document.id}/${action}`, 'POST', body)).status
+    ).toBe(403);
+    const result = await send('solar-reviewer', `${path}/${document.id}/${action}`, 'POST', body);
+    expect(result.status, http.logs()).toBe(200);
+    expect(await result.json()).toMatchObject({
+      id: document.id,
+      state: action === 'approve' ? 'Approved' : 'Rejected',
+    });
+    expect(
+      (await send('solar-reviewer', `${path}/${document.id}/${action}`, 'POST', body)).status
+    ).toBe(409);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM in_app_notifications WHERE recipient_user_id='solar-buyer' AND localized_content->'en'->>'body' LIKE '%' || $1 || '%'",
+          [document.id]
+        )
+      ).rows
+    ).toHaveLength(1);
+  }
+  const review = await send('solar-reviewer', `${path}/review-set-decision`, 'POST', {
+    decision: 'request_additional',
+    description: 'Provide a clearer ownership file',
+  });
+  expect(review.status, http.logs()).toBe(200);
+  const additional = await send('solar-reviewer', `${path}/request-additional`, 'POST', {
+    description: 'Provide a clearer ownership file',
+    expectedReviewHash: ((await review.json()) as { hash: string }).hash,
+  });
+  expect(additional.status, http.logs()).toBe(200);
+  expect(await additional.json()).toEqual({ status: 'changes_requested' });
+  const detail = await send('solar-buyer', `solar/requests/${target}/documents`);
+  expect(await detail.json()).toMatchObject({
+    requestedDocuments: [{ description: 'Provide a clearer ownership file' }],
+  });
+  const advanceReview = await send('solar-reviewer', `${path}/review-set-decision`, 'POST', {
+    decision: 'advance',
+  });
+  expect(advanceReview.status, http.logs()).toBe(200);
+  const advanced = await send('solar-reviewer', `${path}/advance`, 'POST', {
+    expectedReviewHash: ((await advanceReview.json()) as { hash: string }).hash,
+  });
+  expect(advanced.status, http.logs()).toBe(200);
+  expect(await advanced.json()).toEqual({ status: 'waiting_for_postal_submission' });
 }, 90_000);

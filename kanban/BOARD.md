@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 383 | Accepted with unchanged source bindings. |
-| verify | 909 | Existing work may be complete; inspect evidence before building. |
+| done | 393 | Accepted with unchanged source bindings. |
+| verify | 899 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,18 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current solar customer documents/photos/video upload,guidance andsuggested-only list,empty-set confirmation,replacement/deletion audit,staff per-file review/additional requests andexplicit advancement to postal. Verify profile/permission/session,retry/rollback/notification/history/scan boundaries andproduction-browser flows; build only demonstrated gaps. Earlier owner/release/performance gates remain unfinished.
+Inspect current adminpostal guidance,customer courier/tracking/date/optional receipt image,staff received/incomplete/not-received decisions anddistinct postal states. Verifycurrentauthority,profile isolation,stage/session/reviewhash,retained receipt andnotifications/audit/retry/rollback,thenrelated production-browser checks. Build onlydemonstrated gaps;preserveearlier owner/release/performance criteria.
 
-- `03-core-business.md#T-03.12.01.01`: Customer UI: upload documents, photos, and videos to construction request. Multiple files allowed. Guidance text is admin-editable. Display-only list of suggested/requested documents (no enforced minimum).
-- `03-core-business.md#T-03.12.01.02`: "I have uploaded all documents" checkbox — works even when no files uploaded.
-- `03-core-business.md#T-03.12.01.03`: Customer can delete or replace files even after submitting the set for review. Replacements must retain a link to the previous file and audit history (never erase).
-- `03-core-business.md#T-03.12.01.04`: Admin API: edit customer-facing document guidance text and maintain suggested document list.
-- `03-core-business.md#T-03.12.02.01`: Staff UI: document review queue — each document listed independently per request. Show file preview, uploader, timestamp, status.
-- `03-core-business.md#T-03.12.02.02`: Staff API: `POST /staff/solar/requests/:id/documents/:docId/approve` — approve individual file
-- `03-core-business.md#T-03.12.02.03`: Staff API: `POST /staff/solar/requests/:id/documents/:docId/reject` — with reason. Rejects only that file, not the entire submitted set.
-- `03-core-business.md#T-03.12.02.04`: Staff API: `POST /staff/solar/requests/:id/documents/request-additional` — request additional/replacement file with description.
-- `03-core-business.md#T-03.12.02.05`: When staff considers overall document set sufficient → staff advances request to postal submission stage (transition: `documents_under_review` → `waiting_for_postal_submission`).
-- `03-core-business.md#T-03.12.02.06`: Customer notified on each document decision (approve/reject/request).
+- `03-core-business.md#T-03.12.03.01`: Admin-editable postal guidance: destination address, contact details, requested original-document list. Display on postal stage page.
+- `03-core-business.md#T-03.12.03.02`: Customer UI: record courier name, tracking number, send date, optional receipt image upload.
+- `03-core-business.md#T-03.12.03.03`: Staff API: `POST /staff/solar/requests/:id/postal/confirm-received` — mark as `received`.
+- `03-core-business.md#T-03.12.03.04`: Staff API: `POST /staff/solar/requests/:id/postal/mark-incomplete` — with reason. Returns to `waiting_for_postal_submission` with clear instructions. Does not terminate request.
+- `03-core-business.md#T-03.12.03.05`: Staff API: `POST /staff/solar/requests/:id/postal/mark-not-received` — with reason. Returns to waiting.
+- `03-core-business.md#T-03.12.03.06`: Postal stage distinguishes: `waiting_for_shipment` (customer hasn't sent yet) vs `shipped` (customer sent) vs `received` (staff confirmed) vs `incomplete`/`not_received` (staff issues).
 
 ## v0.2.0: Complete customer journeys
 
@@ -393,16 +389,16 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.10.03.01` | done | Recorded batch work | Optional inventory tracking on hardware products: `stock_count`, `reserved_count` columns. Admin-configurable per product. |
 | `03-core-business.md#T-03.10.03.02` | done | Recorded batch work | When stock tracking is disabled: UI shows "availability subject to staff confirmation". |
 | `03-core-business.md#T-03.10.03.03` | done | Recorded batch work | When stock tracking is enabled: submission reserves 1 unit for configurable period. Payment/staff confirmation completes allocation. Timeout/cancellation releases inventory. |
-| `03-core-business.md#T-03.12.01.01` | verify | Recorded batch work | Customer UI: upload documents, photos, and videos to construction request. Multiple files allowed. Guidance text is admin-editable. Display-only list of suggested/requested documents (no enforced minimum). |
-| `03-core-business.md#T-03.12.01.02` | verify | Inventory needed | "I have uploaded all documents" checkbox — works even when no files uploaded. |
-| `03-core-business.md#T-03.12.01.03` | verify | Inventory needed | Customer can delete or replace files even after submitting the set for review. Replacements must retain a link to the previous file and audit history (never erase). |
-| `03-core-business.md#T-03.12.01.04` | verify | Recorded batch work | Admin API: edit customer-facing document guidance text and maintain suggested document list. |
-| `03-core-business.md#T-03.12.02.01` | verify | Recorded batch work | Staff UI: document review queue — each document listed independently per request. Show file preview, uploader, timestamp, status. |
-| `03-core-business.md#T-03.12.02.02` | verify | Inventory needed | Staff API: `POST /staff/solar/requests/:id/documents/:docId/approve` — approve individual file |
-| `03-core-business.md#T-03.12.02.03` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/documents/:docId/reject` — with reason. Rejects only that file, not the entire submitted set. |
-| `03-core-business.md#T-03.12.02.04` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/documents/request-additional` — request additional/replacement file with description. |
-| `03-core-business.md#T-03.12.02.05` | verify | Inventory needed | When staff considers overall document set sufficient → staff advances request to postal submission stage (transition: `documents_under_review` → `waiting_for_postal_submission`). |
-| `03-core-business.md#T-03.12.02.06` | verify | Inventory needed | Customer notified on each document decision (approve/reject/request). |
+| `03-core-business.md#T-03.12.01.01` | done | Recorded batch work | Customer UI: upload documents, photos, and videos to construction request. Multiple files allowed. Guidance text is admin-editable. Display-only list of suggested/requested documents (no enforced minimum). |
+| `03-core-business.md#T-03.12.01.02` | done | Recorded batch work | "I have uploaded all documents" checkbox — works even when no files uploaded. |
+| `03-core-business.md#T-03.12.01.03` | done | Recorded batch work | Customer can delete or replace files even after submitting the set for review. Replacements must retain a link to the previous file and audit history (never erase). |
+| `03-core-business.md#T-03.12.01.04` | done | Recorded batch work | Admin API: edit customer-facing document guidance text and maintain suggested document list. |
+| `03-core-business.md#T-03.12.02.01` | done | Recorded batch work | Staff UI: document review queue — each document listed independently per request. Show file preview, uploader, timestamp, status. |
+| `03-core-business.md#T-03.12.02.02` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/documents/:docId/approve` — approve individual file |
+| `03-core-business.md#T-03.12.02.03` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/documents/:docId/reject` — with reason. Rejects only that file, not the entire submitted set. |
+| `03-core-business.md#T-03.12.02.04` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/documents/request-additional` — request additional/replacement file with description. |
+| `03-core-business.md#T-03.12.02.05` | done | Recorded batch work | When staff considers overall document set sufficient → staff advances request to postal submission stage (transition: `documents_under_review` → `waiting_for_postal_submission`). |
+| `03-core-business.md#T-03.12.02.06` | done | Recorded batch work | Customer notified on each document decision (approve/reject/request). |
 | `03-core-business.md#T-03.12.03.01` | verify | Recorded batch work | Admin-editable postal guidance: destination address, contact details, requested original-document list. Display on postal stage page. |
 | `03-core-business.md#T-03.12.03.02` | verify | Recorded batch work | Customer UI: record courier name, tracking number, send date, optional receipt image upload. |
 | `03-core-business.md#T-03.12.03.03` | verify | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/confirm-received` — mark as `received`. |

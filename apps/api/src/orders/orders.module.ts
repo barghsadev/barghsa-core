@@ -48,6 +48,7 @@ import { SolarRequestService } from '../solar/solar-request.service.js';
 import {
   SolarDocumentsController,
   StaffSolarDocumentsController,
+  SolarStaffDocumentsController,
 } from '../solar/solar-documents.controller.js';
 import { SolarDocumentsService } from '../solar/solar-documents.service.js';
 import { DocumentModule } from '../documents/document.module.js';
@@ -100,6 +101,7 @@ import { StaffAssignmentModule } from '../staff-assignment/staff-assignment.modu
     SolarRequestController,
     SolarDocumentsController,
     StaffSolarDocumentsController,
+    SolarStaffDocumentsController,
     SolarPostalController,
     StaffSolarPostalController,
     StaffSolarFinalController,

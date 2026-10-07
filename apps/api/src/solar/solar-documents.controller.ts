@@ -281,3 +281,13 @@ export class StaffSolarDocumentsController {
     );
   }
 }
+
+@ApiTags('Staff · Solar documents')
+@ApiBearerAuth()
+@Controller('api/staff/solar')
+@UseGuards(SessionAuthGuard)
+export class SolarStaffDocumentsController extends StaffSolarDocumentsController {
+  constructor(service: SolarDocumentsService) {
+    super(service);
+  }
+}
