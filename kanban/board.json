@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "29b159c8d1f00d009a52226f71edef2b6f91b11c",
+  "source_commit": "6b139729c54dba23c0ce5fee04cda590aa57c4c4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24763,8 +24763,7 @@
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
-        "Local soft archival and retained records are verified. Retention duration, legal basis, holds, disposal authorization and production evidence require an approved organizational policy; see docs/runbooks/profile-archival.md."
+        "Local soft archival and retained records are verified. Retention duration, legal basis, holds, disposal authorization and production evidence require an approved organizational policy; see docs/runbooks/profile-archival.md. No policy approval, disposal or production exercise is inferred."
       ],
       "owner": null,
       "depends_on": [],
@@ -24964,10 +24963,88 @@
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
           "apps/web/src/components/TeamActionDialog.tsx",
           "packages/i18n/src/crm.ts",
-          "apps/api/src/session/session-step-up.ts"
+          "apps/api/src/session/session-step-up.ts",
+          "apps/api/src/crm/profile-archive-contract.integration.test.ts",
+          "docs/runbooks/profile-archival.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-profile-contract-archival"
+        ],
+        "current_acceptance": {
+          "kind": "verified-contract-archival-integration-with-retention-policy-pending",
+          "base_commit": "6b139729c54dba23c0ce5fee04cda590aa57c4c4",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/crm/profile-archive-contract.integration.test.ts",
+              "sha256": "6188db321c9358f31c29d3907ea95a7386d58eac500b28af594f836841984a2e"
+            },
+            {
+              "path": "docs/runbooks/profile-archival.md",
+              "sha256": "97ae93d26f83b4ab94a7a26416b933be6d8dc135d20d32a53fd86e322670f6c5"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "a87d0335e4e89d72ea5d0d0055cb03978b956d2da027eb8ca1ed0850afb6acc3"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "148c8ef482904560d5664e83a3f0c30766b951849d1a248c2e4a67dc5cf703a1"
+            },
+            {
+              "path": "apps/api/src/contract/contract.service.ts",
+              "sha256": "549e9a25dd172df4c9e9ed4bb29e2e67dc5d4f63988e00c326f98ec844b1c37e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-transactions.ts",
+              "sha256": "91279ef9d7f4cd648cbdf736e73603f992db89b43f9be052fe29f22080e8f261"
+            },
+            {
+              "path": "apps/api/src/database/idempotency.ts",
+              "sha256": "939b065943ccf6746fdbab13d97823b31130785c5cf02d397eb7f120e933a4d4"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.ts",
+              "sha256": "a28492c9dce0cfb1993e1047152fb6758c6e022a37386711a51d77cd812141f1"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "6c42df1949b2134d6c92083bd9a3dbe17058555e475651d485c9e6b25ce193e4"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "ae6166a97a6f5ba046d7ba9ca02258eaf28abe9b99b472d3c3939d8f99b50491"
+            },
+            {
+              "path": "apps/api/src/crm/profile-archive-acceptance.integration.test.ts",
+              "sha256": "9620d4d896f61442f504231c118601f59ebbf3f0cc4d5085c86682c7f5522555"
+            },
+            {
+              "path": "apps/api/src/contract/contract-authoring-authority.test.ts",
+              "sha256": "8e90c9d1def1e91658cb7107b2d69189581356f26b80f45f2f73a91f66311f7a"
+            },
+            {
+              "path": "apps/api/src/solar/solar-contract-authority.test.ts",
+              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "43 distinct passing cases across recorded targeted runs. New real HTTP/database races and blockers six; unchanged archive acceptance ten; existing contract/solar authority 27. Fixture failures preserved and corrected without product or assertion waivers.",
+            "API strict types and changed-file lint/format pass. Matching prior 3914-source/6232-compiled-output bindings verified before prebuilt use; no executable product source changed. Valid prior finance, permission, browser, build and budget evidence retained; no redundant whole-suite or launch claim.",
+            "One bounded review found no outstanding issue. Stale no-contract-writer limitation corrected in current acceptance and runbook. Historical limitations retained as history."
+          ],
+          "limitations": [
+            "Local soft archival and retained records are verified. Retention duration, legal basis, holds, disposal authorization and production evidence require an approved organizational policy; see docs/runbooks/profile-archival.md. No policy approval, disposal or production exercise is inferred."
+          ],
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-contract-archival"
+        }
       }
     },
     {
@@ -197295,6 +197372,21 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/credit-note-refund-scope",
       "release": false
+    },
+    "release-0.3-profile-contract-archival": {
+      "title": "Verify profile archival against production contract writers",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.06"
+      ],
+      "summary": "Close stale contract implementation prerequisite with source review and real profile-lock races; organizational retention remains pending.",
+      "validation": [
+        "43 distinct passing cases across recorded targeted runs. New real HTTP/database races and blockers six; unchanged archive acceptance ten; existing contract/solar authority 27. Fixture failures preserved and corrected without product or assertion waivers.",
+        "API strict types and changed-file lint/format pass. Matching prior 3914-source/6232-compiled-output bindings verified before prebuilt use; no executable product source changed. Valid prior finance, permission, browser, build and budget evidence retained; no redundant whole-suite or launch claim.",
+        "One bounded review found no outstanding issue. Stale no-contract-writer limitation corrected in current acceptance and runbook. Historical limitations retained as history.",
+        "No milestone release, version update, staging enqueue, Telegram announcement or production authorization."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-contract-archival",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -197334,11 +197426,11 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-financial-reconciliation-completion",
+    "id": "release-0.3-agent-operational-permissions",
     "release": "0.3.0",
-    "goal": "Finish retained dev-reload diagnosis and select the next independent authorized release work. Invoice/provider/refund checks and paid-original credit-note linkage are verified; preserve the pending C-04.CC.06 mathematical policy decision, prior owner/release operational gates and unfinished consultation work.",
+    "goal": "Reconcile implemented contract signing, legal documents and refund consumers with the existing additive agent permission matrix. Inspect current engines and acceptance before building gaps. Preserve retention, reconciliation mathematical policy, retained dev-reload diagnosis, owner/release gates and consultation work.",
     "task_keys": [
-      "02-auth-users-admin.md#T-09.09.01"
+      "02-auth-users-admin.md#T-05.04.04"
     ]
   },
   "launch_forecast": {

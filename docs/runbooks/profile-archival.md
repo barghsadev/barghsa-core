@@ -18,4 +18,6 @@ This endpoint performs no physical deletion and schedules no purge. Retention du
 
 Before any future disposal feature is built or operated, its owner must supply the applicable policy, hold rules, authorization and evidence requirements, including retained backups and linked business records. Record that operational approval separately from local software tests. No production retention or deletion exercise has been performed by this repair.
 
-The current repository has no implemented production contract table or contract writer. Its future implementation must use the same profile-first locking protocol and define which contract states block archival. The optional table-existence guard does not certify that integration.
+Production contracts and their creation writers are implemented. Staff contract authoring and solar contract issuance acquire the profile lock before contract writes; electricity and saving submissions use the same profile row through order authorization. These locks conflict with archival's exclusive profile lock, and writers reject an archived profile after waiting. A committed contract makes archival refuse the operation.
+
+The existing archival guard conservatively blocks every retained contract, including terminal history. Closing a contract does not authorize profile archival or disposal. The retention handoff above remains required before any future relaxation of that guard.

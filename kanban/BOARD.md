@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish retained dev-reload diagnosis and select the next independent authorized release work. Invoice/provider/refund checks and paid-original credit-note linkage are verified; preserve the pending C-04.CC.06 mathematical policy decision, prior owner/release operational gates and unfinished consultation work.
+Reconcile implemented contract signing, legal documents and refund consumers with the existing additive agent permission matrix. Inspect current engines and acceptance before building gaps. Preserve retention, reconciliation mathematical policy, retained dev-reload diagnosis, owner/release gates and consultation work.
 
-- `02-auth-users-admin.md#T-09.09.01`: Reconciliation exceptions view
+- `02-auth-users-admin.md#T-05.04.04`: Agent role permissions enforcement
 
 ## v0.2.0: Complete customer journeys
 
