@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 372 | Accepted with unchanged source bindings. |
-| verify | 920 | Existing work may be complete; inspect evidence before building. |
+| done | 377 | Accepted with unchanged source bindings. |
+| verify | 915 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,13 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing five-stage saving fulfillment,staff transitions and optional equipment handover,customer progress,terminal Completed/Cancelled,explanation/audit andcustomer notification. Verify current profile/authority/idempotency/concurrency/rollback and linked contract/payment boundaries; build only demonstrated gaps. Preserve earlier owner/dependency/performance gates.
+Inspect current saving order uploads,replacement/deletion authority,scan/quarantine/storage links andimmutable customer/staff comment thread with notifications. Verify profile isolation,state gates,file retention,current permission/replay/concurrency/rollback andactual production-browser flows; build only demonstrated gaps. Earlier owner/release/performance criteria remain open.
 
-- `03-core-business.md#T-03.10.01.01`: Define 5 fulfillment stages:
-- `03-core-business.md#T-03.10.01.02`: Staff UI: order detail with stage advancement controls. Each stage advancement records previous/new state, actor, timestamp, explanation.
-- `03-core-business.md#T-03.10.01.03`: Customer UI: progress bar showing 5 stages, current stage highlighted, completed stages marked.
-- `03-core-business.md#T-03.10.01.04`: Equipment handover (stage 4) is optional by default. If performed, record handed-over item description, staff member, time.
-- `03-core-business.md#T-03.10.01.05`: Completed and Cancelled are terminal states. Every customer-visible status change sends notification.
+- `03-core-business.md#T-03.10.02.01`: Customer UI: upload documents (PDF, images, video) to saving order. Multiple files allowed. Replace/delete own files before submission.
+- `03-core-business.md#T-03.10.02.02`: Customer-Staff comment thread per order: chronological, author visible, staff comments trigger notification. No silent overwrites.
+- `03-core-business.md#T-03.10.02.03`: Document upload follows file storage rules: validation, scan, quarantine. Files linked to order are soft-delete only.
 
 ## v0.2.0: Complete customer journeys
 
@@ -377,11 +375,11 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.09.05.03` | verify | Inventory needed | Staff API: `POST /staff/saving/orders/:id/approve-cancellation` — sets order, contract, invoice states consistently. Determines refund amount (full/partial) and destination (wallet/external). |
 | `03-core-business.md#T-03.09.05.04` | verify | Inventory needed | Staff API: `POST /staff/saving/orders/:id/reject-cancellation` — with explanation. Contract unchanged. |
 | `03-core-business.md#T-03.09.05.05` | verify | Recorded batch work | All state transitions must be consistent across order, contract, and invoice. Records are never deleted. |
-| `03-core-business.md#T-03.10.01.01` | verify | Recorded batch work | Define 5 fulfillment stages: |
-| `03-core-business.md#T-03.10.01.02` | verify | Recorded batch work | Staff UI: order detail with stage advancement controls. Each stage advancement records previous/new state, actor, timestamp, explanation. |
-| `03-core-business.md#T-03.10.01.03` | verify | Recorded batch work | Customer UI: progress bar showing 5 stages, current stage highlighted, completed stages marked. |
-| `03-core-business.md#T-03.10.01.04` | verify | Recorded batch work | Equipment handover (stage 4) is optional by default. If performed, record handed-over item description, staff member, time. |
-| `03-core-business.md#T-03.10.01.05` | verify | Inventory needed | Completed and Cancelled are terminal states. Every customer-visible status change sends notification. |
+| `03-core-business.md#T-03.10.01.01` | done | Recorded batch work | Define 5 fulfillment stages: |
+| `03-core-business.md#T-03.10.01.02` | done | Recorded batch work | Staff UI: order detail with stage advancement controls. Each stage advancement records previous/new state, actor, timestamp, explanation. |
+| `03-core-business.md#T-03.10.01.03` | done | Recorded batch work | Customer UI: progress bar showing 5 stages, current stage highlighted, completed stages marked. |
+| `03-core-business.md#T-03.10.01.04` | done | Recorded batch work | Equipment handover (stage 4) is optional by default. If performed, record handed-over item description, staff member, time. |
+| `03-core-business.md#T-03.10.01.05` | done | Recorded batch work | Completed and Cancelled are terminal states. Every customer-visible status change sends notification. |
 | `03-core-business.md#T-03.10.02.01` | verify | Recorded batch work | Customer UI: upload documents (PDF, images, video) to saving order. Multiple files allowed. Replace/delete own files before submission. |
 | `03-core-business.md#T-03.10.02.02` | verify | Recorded batch work | Customer-Staff comment thread per order: chronological, author visible, staff comments trigger notification. No silent overwrites. |
 | `03-core-business.md#T-03.10.02.03` | verify | Inventory needed | Document upload follows file storage rules: validation, scan, quarantine. Files linked to order are soft-delete only. |

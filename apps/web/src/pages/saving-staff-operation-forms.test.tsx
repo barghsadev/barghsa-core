@@ -360,9 +360,17 @@ it('discards held preview errors after the raw note is corrected', async () => {
   await click('Reject request');
   await fill('saving-staff-note', ' Corrected reason ');
   await act(async () => held.resolve(Response.json(publicError(['reason']), { status: 400 })));
-  await settled(() => expect(host.querySelector('[role="status"]')).toBeNull());
+  await settled(() =>
+    expect(
+      host.querySelector('[data-testid="saving-staff-operation-form"] [role="status"]')
+    ).toBeNull()
+  );
   expect(host.querySelector('[aria-invalid="true"]')).toBeNull();
   expect(document.querySelector('[role="dialog"]')).toBeNull();
+  expect((document.getElementById('saving-staff-note') as HTMLInputElement).value).toBe(
+    ' Corrected reason '
+  );
+  expect(writes(fetcher)).toEqual([]);
 });
 it.each(['0', '300000'])(
   'accepts the actual rejection refund %s branch and clears only its note',

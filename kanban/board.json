@@ -132334,21 +132334,124 @@
         "story": "03-core-business.md#spec-477c27688cc8"
       },
       "requirement": "| **T-03.10.01.01** | Define 5 fulfillment stages:\n  1. `request_confirmation` — staff confirms the request\n  2. `product_delivery` — hardware product delivered\n  3. `installation_and_document_upload` — installed, docs uploaded\n  4. `equipment_handover` (تحویل داغی) — old equipment handover (optional)\n  5. `process_completion` — order completed | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "2026-09-23-saving-fulfillment"
+        "changed_paths": [
+          "apps/web/src/pages/saving-staff-operation-forms.test.tsx"
         ],
-        "current_acceptance": null
+        "batches": [
+          "2026-09-23-saving-fulfillment",
+          "release-0.3-saving-fulfillment"
+        ],
+        "current_acceptance": {
+          "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
+          "reviewed_base_commit": "5af0b375efede029be3ff45f0e3fde057086ea19",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+              "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.controller.ts",
+              "sha256": "d9f022b9a9cdbfed708d5036e3621767d12265456d6128e80c1370b4ff34079c"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.service.ts",
+              "sha256": "c04b815e6cbd95b9763a8f88fe1da5dc9a99a185e43de5cedc1dce16aa098744"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+              "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
+              "sha256": "5e006db9cfeb8dfa9f3f45bb0096c8c4ee476255ef61e7d0a9ed2b9033a51e71"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
+              "sha256": "a4ce8aa4de5f2764f984cbe5487cc3ec7d8fd8062dca02f84bfe7e2e347e40ed"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+              "sha256": "bef900a3c22c26d2562ac04a4b9740a773fd2fc4e8aa6628739f02b37cdc92c3"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.test.tsx",
+              "sha256": "f6fb5fe6d18a99ac54fa7a7ab2d37f4c83e6477f9b425abad4f58612cf44073e"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.tsx",
+              "sha256": "19c07cb747250b72f5012e93c1fa20314fb1a5e91305515d31f98bc74458ba1d"
+            },
+            {
+              "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+              "sha256": "c52a12ccb3e5a98e2d7f025a4f1eb916a9fc48314386b1d2672dbf54ecdcea32"
+            },
+            {
+              "path": "apps/web/src/lib/saving-fulfillment.ts",
+              "sha256": "c827a546a6f16b6a05ba68bbf63335da16d7c0ac9610b906b371f3177c263514"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form-schemas.ts",
+              "sha256": "2c58eb60219989adb96d9b41b01cb082c11df6406e9deb4399d3f335573b4090"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.test.ts",
+              "sha256": "d2f1cc591ecc848c8e6e4776b81680287b7c8423d69c102f083ee1c10aea06c4"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.ts",
+              "sha256": "cc4e99f2828a2716a22e8948b52f1c7b65afe2768e09bdfff4e154115b3ac505"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "29123b935234f7516d529d7ef7451010c6c7b81b30e30f65b23d0382b465fb9d"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+              "sha256": "b6124c54482743443ca7464060db38e398f3a84c79fa17c1cf5b0a5c5807ac7d"
+            },
+            {
+              "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
+              "sha256": "c17bc15a382773823b7ce50955b025d627cdb0248a184acd2a9aab4a5d978c29"
+            },
+            {
+              "path": "apps/web/src/test/saving-staff-operation-fixtures.ts",
+              "sha256": "0a20f93f002571f0c8d940ee9b77663ef17d82f8b3cd148f9abe5867ef465f24"
+            },
+            {
+              "path": "packages/db/drizzle/production/0162_saving_fulfillment.sql",
+              "sha256": "f92db2667def4a64565266f106885c2d7c6582fa7dfa4455c6f8773dc49d9d38"
+            },
+            {
+              "path": "packages/shared/src/finance/saving-fulfillment-stage-review.ts",
+              "sha256": "72fcc7f058fb176e01cfc1040e19269afd90c6e48ca77f9b5cb32342f25a2131"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "61 distinct passing scoped cases:1 dense actual migrated-PG/compiled-HTTP journey,42 UI (18 complete unchanged initial files+24 final form cases),18 final production-browser cases across English/Persian desktop/mobile. Failed/stopped/skipped/duplicates excluded.",
+            "Exact ordered stages,optional skip/performed handover capture,current authority/step-up,review hashes,replay,paid delivery/upgrade andcontract completion prerequisites,atomic audits/rollback,terminal state andprivacy-preserving history/progress verified.",
+            "Only one test selector repaired; raw corrected draft andzero writes assertions added. Lint/format pass. All product/build/config source andcompiled outputs unchanged; final previous build/types/budget reused by exact hash proof. Existing Wallet300.10/300KB failure retained. No staging/Telegram/production milestone accepted."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
+          "limitations": [
+            "Existing complete implementation; only test repaired. Earlier owner/performance/dependency/release gates unfinished."
+          ]
+        }
       }
     },
     {
@@ -132362,25 +132465,128 @@
         "story": "03-core-business.md#spec-477c27688cc8"
       },
       "requirement": "| **T-03.10.01.02** | 📋 Staff UI: order detail with stage advancement controls. Each stage advancement records previous/new state, actor, timestamp, explanation. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/web/src/pages/saving-staff-operation-forms.test.tsx"
+        ],
         "batches": [
           "2026-09-23-saving-staff-queue",
           "2026-09-24-saving-fulfillment-prerequisites",
           "2026-09-24-saving-upgrade-delivery-guard",
           "2026-10-02-saving-fulfillment-history",
-          "2026-10-05-saving-staff-decision-fulfillment-forms"
+          "2026-10-05-saving-staff-decision-fulfillment-forms",
+          "release-0.3-saving-fulfillment"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
+          "reviewed_base_commit": "5af0b375efede029be3ff45f0e3fde057086ea19",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+              "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.controller.ts",
+              "sha256": "d9f022b9a9cdbfed708d5036e3621767d12265456d6128e80c1370b4ff34079c"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.service.ts",
+              "sha256": "c04b815e6cbd95b9763a8f88fe1da5dc9a99a185e43de5cedc1dce16aa098744"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+              "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
+              "sha256": "5e006db9cfeb8dfa9f3f45bb0096c8c4ee476255ef61e7d0a9ed2b9033a51e71"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
+              "sha256": "a4ce8aa4de5f2764f984cbe5487cc3ec7d8fd8062dca02f84bfe7e2e347e40ed"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+              "sha256": "bef900a3c22c26d2562ac04a4b9740a773fd2fc4e8aa6628739f02b37cdc92c3"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.test.tsx",
+              "sha256": "f6fb5fe6d18a99ac54fa7a7ab2d37f4c83e6477f9b425abad4f58612cf44073e"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.tsx",
+              "sha256": "19c07cb747250b72f5012e93c1fa20314fb1a5e91305515d31f98bc74458ba1d"
+            },
+            {
+              "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+              "sha256": "c52a12ccb3e5a98e2d7f025a4f1eb916a9fc48314386b1d2672dbf54ecdcea32"
+            },
+            {
+              "path": "apps/web/src/lib/saving-fulfillment.ts",
+              "sha256": "c827a546a6f16b6a05ba68bbf63335da16d7c0ac9610b906b371f3177c263514"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form-schemas.ts",
+              "sha256": "2c58eb60219989adb96d9b41b01cb082c11df6406e9deb4399d3f335573b4090"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.test.ts",
+              "sha256": "d2f1cc591ecc848c8e6e4776b81680287b7c8423d69c102f083ee1c10aea06c4"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.ts",
+              "sha256": "cc4e99f2828a2716a22e8948b52f1c7b65afe2768e09bdfff4e154115b3ac505"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "29123b935234f7516d529d7ef7451010c6c7b81b30e30f65b23d0382b465fb9d"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+              "sha256": "b6124c54482743443ca7464060db38e398f3a84c79fa17c1cf5b0a5c5807ac7d"
+            },
+            {
+              "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
+              "sha256": "c17bc15a382773823b7ce50955b025d627cdb0248a184acd2a9aab4a5d978c29"
+            },
+            {
+              "path": "apps/web/src/test/saving-staff-operation-fixtures.ts",
+              "sha256": "0a20f93f002571f0c8d940ee9b77663ef17d82f8b3cd148f9abe5867ef465f24"
+            },
+            {
+              "path": "packages/db/drizzle/production/0162_saving_fulfillment.sql",
+              "sha256": "f92db2667def4a64565266f106885c2d7c6582fa7dfa4455c6f8773dc49d9d38"
+            },
+            {
+              "path": "packages/shared/src/finance/saving-fulfillment-stage-review.ts",
+              "sha256": "72fcc7f058fb176e01cfc1040e19269afd90c6e48ca77f9b5cb32342f25a2131"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "61 distinct passing scoped cases:1 dense actual migrated-PG/compiled-HTTP journey,42 UI (18 complete unchanged initial files+24 final form cases),18 final production-browser cases across English/Persian desktop/mobile. Failed/stopped/skipped/duplicates excluded.",
+            "Exact ordered stages,optional skip/performed handover capture,current authority/step-up,review hashes,replay,paid delivery/upgrade andcontract completion prerequisites,atomic audits/rollback,terminal state andprivacy-preserving history/progress verified.",
+            "Only one test selector repaired; raw corrected draft andzero writes assertions added. Lint/format pass. All product/build/config source andcompiled outputs unchanged; final previous build/types/budget reused by exact hash proof. Existing Wallet300.10/300KB failure retained. No staging/Telegram/production milestone accepted."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
+          "limitations": [
+            "Existing complete implementation; only test repaired. Earlier owner/performance/dependency/release gates unfinished."
+          ]
+        }
       }
     },
     {
@@ -132394,21 +132600,124 @@
         "story": "03-core-business.md#spec-477c27688cc8"
       },
       "requirement": "| **T-03.10.01.03** | 📋 Customer UI: progress bar showing 5 stages, current stage highlighted, completed stages marked. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "2026-10-02-saving-fulfillment-history"
+        "changed_paths": [
+          "apps/web/src/pages/saving-staff-operation-forms.test.tsx"
         ],
-        "current_acceptance": null
+        "batches": [
+          "2026-10-02-saving-fulfillment-history",
+          "release-0.3-saving-fulfillment"
+        ],
+        "current_acceptance": {
+          "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
+          "reviewed_base_commit": "5af0b375efede029be3ff45f0e3fde057086ea19",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+              "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.controller.ts",
+              "sha256": "d9f022b9a9cdbfed708d5036e3621767d12265456d6128e80c1370b4ff34079c"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.service.ts",
+              "sha256": "c04b815e6cbd95b9763a8f88fe1da5dc9a99a185e43de5cedc1dce16aa098744"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+              "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
+              "sha256": "5e006db9cfeb8dfa9f3f45bb0096c8c4ee476255ef61e7d0a9ed2b9033a51e71"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
+              "sha256": "a4ce8aa4de5f2764f984cbe5487cc3ec7d8fd8062dca02f84bfe7e2e347e40ed"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+              "sha256": "bef900a3c22c26d2562ac04a4b9740a773fd2fc4e8aa6628739f02b37cdc92c3"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.test.tsx",
+              "sha256": "f6fb5fe6d18a99ac54fa7a7ab2d37f4c83e6477f9b425abad4f58612cf44073e"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.tsx",
+              "sha256": "19c07cb747250b72f5012e93c1fa20314fb1a5e91305515d31f98bc74458ba1d"
+            },
+            {
+              "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+              "sha256": "c52a12ccb3e5a98e2d7f025a4f1eb916a9fc48314386b1d2672dbf54ecdcea32"
+            },
+            {
+              "path": "apps/web/src/lib/saving-fulfillment.ts",
+              "sha256": "c827a546a6f16b6a05ba68bbf63335da16d7c0ac9610b906b371f3177c263514"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form-schemas.ts",
+              "sha256": "2c58eb60219989adb96d9b41b01cb082c11df6406e9deb4399d3f335573b4090"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.test.ts",
+              "sha256": "d2f1cc591ecc848c8e6e4776b81680287b7c8423d69c102f083ee1c10aea06c4"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.ts",
+              "sha256": "cc4e99f2828a2716a22e8948b52f1c7b65afe2768e09bdfff4e154115b3ac505"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "29123b935234f7516d529d7ef7451010c6c7b81b30e30f65b23d0382b465fb9d"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+              "sha256": "b6124c54482743443ca7464060db38e398f3a84c79fa17c1cf5b0a5c5807ac7d"
+            },
+            {
+              "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
+              "sha256": "c17bc15a382773823b7ce50955b025d627cdb0248a184acd2a9aab4a5d978c29"
+            },
+            {
+              "path": "apps/web/src/test/saving-staff-operation-fixtures.ts",
+              "sha256": "0a20f93f002571f0c8d940ee9b77663ef17d82f8b3cd148f9abe5867ef465f24"
+            },
+            {
+              "path": "packages/db/drizzle/production/0162_saving_fulfillment.sql",
+              "sha256": "f92db2667def4a64565266f106885c2d7c6582fa7dfa4455c6f8773dc49d9d38"
+            },
+            {
+              "path": "packages/shared/src/finance/saving-fulfillment-stage-review.ts",
+              "sha256": "72fcc7f058fb176e01cfc1040e19269afd90c6e48ca77f9b5cb32342f25a2131"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "61 distinct passing scoped cases:1 dense actual migrated-PG/compiled-HTTP journey,42 UI (18 complete unchanged initial files+24 final form cases),18 final production-browser cases across English/Persian desktop/mobile. Failed/stopped/skipped/duplicates excluded.",
+            "Exact ordered stages,optional skip/performed handover capture,current authority/step-up,review hashes,replay,paid delivery/upgrade andcontract completion prerequisites,atomic audits/rollback,terminal state andprivacy-preserving history/progress verified.",
+            "Only one test selector repaired; raw corrected draft andzero writes assertions added. Lint/format pass. All product/build/config source andcompiled outputs unchanged; final previous build/types/budget reused by exact hash proof. Existing Wallet300.10/300KB failure retained. No staging/Telegram/production milestone accepted."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
+          "limitations": [
+            "Existing complete implementation; only test repaired. Earlier owner/performance/dependency/release gates unfinished."
+          ]
+        }
       }
     },
     {
@@ -132422,21 +132731,124 @@
         "story": "03-core-business.md#spec-477c27688cc8"
       },
       "requirement": "| **T-03.10.01.04** | ⚠️ Equipment handover (stage 4) is optional by default. If performed, record handed-over item description, staff member, time. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "2026-10-02-saving-fulfillment-history"
+        "changed_paths": [
+          "apps/web/src/pages/saving-staff-operation-forms.test.tsx"
         ],
-        "current_acceptance": null
+        "batches": [
+          "2026-10-02-saving-fulfillment-history",
+          "release-0.3-saving-fulfillment"
+        ],
+        "current_acceptance": {
+          "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
+          "reviewed_base_commit": "5af0b375efede029be3ff45f0e3fde057086ea19",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+              "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.controller.ts",
+              "sha256": "d9f022b9a9cdbfed708d5036e3621767d12265456d6128e80c1370b4ff34079c"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.service.ts",
+              "sha256": "c04b815e6cbd95b9763a8f88fe1da5dc9a99a185e43de5cedc1dce16aa098744"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+              "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
+              "sha256": "5e006db9cfeb8dfa9f3f45bb0096c8c4ee476255ef61e7d0a9ed2b9033a51e71"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
+              "sha256": "a4ce8aa4de5f2764f984cbe5487cc3ec7d8fd8062dca02f84bfe7e2e347e40ed"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+              "sha256": "bef900a3c22c26d2562ac04a4b9740a773fd2fc4e8aa6628739f02b37cdc92c3"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.test.tsx",
+              "sha256": "f6fb5fe6d18a99ac54fa7a7ab2d37f4c83e6477f9b425abad4f58612cf44073e"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.tsx",
+              "sha256": "19c07cb747250b72f5012e93c1fa20314fb1a5e91305515d31f98bc74458ba1d"
+            },
+            {
+              "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+              "sha256": "c52a12ccb3e5a98e2d7f025a4f1eb916a9fc48314386b1d2672dbf54ecdcea32"
+            },
+            {
+              "path": "apps/web/src/lib/saving-fulfillment.ts",
+              "sha256": "c827a546a6f16b6a05ba68bbf63335da16d7c0ac9610b906b371f3177c263514"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form-schemas.ts",
+              "sha256": "2c58eb60219989adb96d9b41b01cb082c11df6406e9deb4399d3f335573b4090"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.test.ts",
+              "sha256": "d2f1cc591ecc848c8e6e4776b81680287b7c8423d69c102f083ee1c10aea06c4"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.ts",
+              "sha256": "cc4e99f2828a2716a22e8948b52f1c7b65afe2768e09bdfff4e154115b3ac505"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "29123b935234f7516d529d7ef7451010c6c7b81b30e30f65b23d0382b465fb9d"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+              "sha256": "b6124c54482743443ca7464060db38e398f3a84c79fa17c1cf5b0a5c5807ac7d"
+            },
+            {
+              "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
+              "sha256": "c17bc15a382773823b7ce50955b025d627cdb0248a184acd2a9aab4a5d978c29"
+            },
+            {
+              "path": "apps/web/src/test/saving-staff-operation-fixtures.ts",
+              "sha256": "0a20f93f002571f0c8d940ee9b77663ef17d82f8b3cd148f9abe5867ef465f24"
+            },
+            {
+              "path": "packages/db/drizzle/production/0162_saving_fulfillment.sql",
+              "sha256": "f92db2667def4a64565266f106885c2d7c6582fa7dfa4455c6f8773dc49d9d38"
+            },
+            {
+              "path": "packages/shared/src/finance/saving-fulfillment-stage-review.ts",
+              "sha256": "72fcc7f058fb176e01cfc1040e19269afd90c6e48ca77f9b5cb32342f25a2131"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "61 distinct passing scoped cases:1 dense actual migrated-PG/compiled-HTTP journey,42 UI (18 complete unchanged initial files+24 final form cases),18 final production-browser cases across English/Persian desktop/mobile. Failed/stopped/skipped/duplicates excluded.",
+            "Exact ordered stages,optional skip/performed handover capture,current authority/step-up,review hashes,replay,paid delivery/upgrade andcontract completion prerequisites,atomic audits/rollback,terminal state andprivacy-preserving history/progress verified.",
+            "Only one test selector repaired; raw corrected draft andzero writes assertions added. Lint/format pass. All product/build/config source andcompiled outputs unchanged; final previous build/types/budget reused by exact hash proof. Existing Wallet300.10/300KB failure retained. No staging/Telegram/production milestone accepted."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
+          "limitations": [
+            "Existing complete implementation; only test repaired. Earlier owner/performance/dependency/release gates unfinished."
+          ]
+        }
       }
     },
     {
@@ -132450,19 +132862,123 @@
         "story": "03-core-business.md#spec-477c27688cc8"
       },
       "requirement": "| **T-03.10.01.05** | ⚠️ Completed and Cancelled are terminal states. Every customer-visible status change sends notification. | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/src/pages/saving-staff-operation-forms.test.tsx"
+        ],
+        "batches": [
+          "release-0.3-saving-fulfillment"
+        ],
+        "current_acceptance": {
+          "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
+          "reviewed_base_commit": "5af0b375efede029be3ff45f0e3fde057086ea19",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+              "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.controller.ts",
+              "sha256": "d9f022b9a9cdbfed708d5036e3621767d12265456d6128e80c1370b4ff34079c"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.service.ts",
+              "sha256": "c04b815e6cbd95b9763a8f88fe1da5dc9a99a185e43de5cedc1dce16aa098744"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+              "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+            },
+            {
+              "path": "apps/web/e2e/saving-fulfillment-prerequisites.spec.ts",
+              "sha256": "5e006db9cfeb8dfa9f3f45bb0096c8c4ee476255ef61e7d0a9ed2b9033a51e71"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
+              "sha256": "a4ce8aa4de5f2764f984cbe5487cc3ec7d8fd8062dca02f84bfe7e2e347e40ed"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+              "sha256": "bef900a3c22c26d2562ac04a4b9740a773fd2fc4e8aa6628739f02b37cdc92c3"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.test.tsx",
+              "sha256": "f6fb5fe6d18a99ac54fa7a7ab2d37f4c83e6477f9b425abad4f58612cf44073e"
+            },
+            {
+              "path": "apps/web/src/components/SavingFulfillmentProgress.tsx",
+              "sha256": "19c07cb747250b72f5012e93c1fa20314fb1a5e91305515d31f98bc74458ba1d"
+            },
+            {
+              "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+              "sha256": "c52a12ccb3e5a98e2d7f025a4f1eb916a9fc48314386b1d2672dbf54ecdcea32"
+            },
+            {
+              "path": "apps/web/src/lib/saving-fulfillment.ts",
+              "sha256": "c827a546a6f16b6a05ba68bbf63335da16d7c0ac9610b906b371f3177c263514"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form-schemas.ts",
+              "sha256": "2c58eb60219989adb96d9b41b01cb082c11df6406e9deb4399d3f335573b4090"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.test.ts",
+              "sha256": "d2f1cc591ecc848c8e6e4776b81680287b7c8423d69c102f083ee1c10aea06c4"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.ts",
+              "sha256": "cc4e99f2828a2716a22e8948b52f1c7b65afe2768e09bdfff4e154115b3ac505"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "29123b935234f7516d529d7ef7451010c6c7b81b30e30f65b23d0382b465fb9d"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+              "sha256": "b6124c54482743443ca7464060db38e398f3a84c79fa17c1cf5b0a5c5807ac7d"
+            },
+            {
+              "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
+              "sha256": "c17bc15a382773823b7ce50955b025d627cdb0248a184acd2a9aab4a5d978c29"
+            },
+            {
+              "path": "apps/web/src/test/saving-staff-operation-fixtures.ts",
+              "sha256": "0a20f93f002571f0c8d940ee9b77663ef17d82f8b3cd148f9abe5867ef465f24"
+            },
+            {
+              "path": "packages/db/drizzle/production/0162_saving_fulfillment.sql",
+              "sha256": "f92db2667def4a64565266f106885c2d7c6582fa7dfa4455c6f8773dc49d9d38"
+            },
+            {
+              "path": "packages/shared/src/finance/saving-fulfillment-stage-review.ts",
+              "sha256": "72fcc7f058fb176e01cfc1040e19269afd90c6e48ca77f9b5cb32342f25a2131"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "61 distinct passing scoped cases:1 dense actual migrated-PG/compiled-HTTP journey,42 UI (18 complete unchanged initial files+24 final form cases),18 final production-browser cases across English/Persian desktop/mobile. Failed/stopped/skipped/duplicates excluded.",
+            "Exact ordered stages,optional skip/performed handover capture,current authority/step-up,review hashes,replay,paid delivery/upgrade andcontract completion prerequisites,atomic audits/rollback,terminal state andprivacy-preserving history/progress verified.",
+            "Only one test selector repaired; raw corrected draft andzero writes assertions added. Lint/format pass. All product/build/config source andcompiled outputs unchanged; final previous build/types/budget reused by exact hash proof. Existing Wallet300.10/300KB failure retained. No staging/Telegram/production milestone accepted."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
+          "limitations": [
+            "Existing complete implementation; only test repaired. Earlier owner/performance/dependency/release gates unfinished."
+          ]
+        }
       }
     },
     {
@@ -173557,6 +174073,23 @@
         "Final i18n/web build,API/web types,changed lint/format andSemgrep1production file5rules0findings pass. Price admin budget passes; only existing Wallet300.10/300KB fails. Actual captures retained/reviewed. No money/API/worker/schema/migration changes."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-credit-settlement"
+    },
+    "release-0.3-saving-fulfillment": {
+      "title": "Accept saving fulfillment stages and immutable history",
+      "task_keys": [
+        "03-core-business.md#T-03.10.01.01",
+        "03-core-business.md#T-03.10.01.02",
+        "03-core-business.md#T-03.10.01.03",
+        "03-core-business.md#T-03.10.01.04",
+        "03-core-business.md#T-03.10.01.05"
+      ],
+      "summary": "All five fulfillment tasks accepted from inspected existing implementation. One stale form-test selector repaired without changing product behavior.",
+      "validation": [
+        "61 distinct passing scoped cases:1 dense actual migrated-PG/compiled-HTTP journey,42 UI (18 complete unchanged initial files+24 final form cases),18 final production-browser cases across English/Persian desktop/mobile. Failed/stopped/skipped/duplicates excluded.",
+        "Exact ordered stages,optional skip/performed handover capture,current authority/step-up,review hashes,replay,paid delivery/upgrade andcontract completion prerequisites,atomic audits/rollback,terminal state andprivacy-preserving history/progress verified.",
+        "Only one test selector repaired; raw corrected draft andzero writes assertions added. Lint/format pass. All product/build/config source andcompiled outputs unchanged; final previous build/types/budget reused by exact hash proof. Existing Wallet300.10/300KB failure retained. No staging/Telegram/production milestone accepted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment"
     }
   },
   "historical_improvements": [
@@ -173596,15 +174129,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-saving-fulfillment",
+    "id": "release-0.3-saving-documents-comments",
     "release": "0.3.0",
-    "goal": "Inspect existing five-stage saving fulfillment,staff transitions and optional equipment handover,customer progress,terminal Completed/Cancelled,explanation/audit andcustomer notification. Verify current profile/authority/idempotency/concurrency/rollback and linked contract/payment boundaries; build only demonstrated gaps. Preserve earlier owner/dependency/performance gates.",
+    "goal": "Inspect current saving order uploads,replacement/deletion authority,scan/quarantine/storage links andimmutable customer/staff comment thread with notifications. Verify profile isolation,state gates,file retention,current permission/replay/concurrency/rollback andactual production-browser flows; build only demonstrated gaps. Earlier owner/release/performance criteria remain open.",
     "task_keys": [
-      "03-core-business.md#T-03.10.01.01",
-      "03-core-business.md#T-03.10.01.02",
-      "03-core-business.md#T-03.10.01.03",
-      "03-core-business.md#T-03.10.01.04",
-      "03-core-business.md#T-03.10.01.05"
+      "03-core-business.md#T-03.10.02.01",
+      "03-core-business.md#T-03.10.02.02",
+      "03-core-business.md#T-03.10.02.03"
     ]
   },
   "launch_forecast": {
