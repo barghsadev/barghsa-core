@@ -109,6 +109,25 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
         'utf8'
       )
     );
+    // The production renderer is part of the current receipt contract.
+    await ctx.pool.query(
+      readFileSync(
+        resolve(
+          __dirname,
+          '../../../../packages/db/drizzle/0024_create_notification_templates.sql'
+        ),
+        'utf8'
+      )
+    );
+    await ctx.pool.query(
+      readFileSync(
+        resolve(
+          __dirname,
+          '../../../../packages/db/drizzle/production/0270_native_inbox_templates.sql'
+        ),
+        'utf8'
+      )
+    );
     await ctx.pool.query(
       `INSERT INTO profiles (id,user_id) VALUES ($1,'online-expiry-scanner-actor'), ($2,'online-expiry-scanner-actor')`,
       [WALLET_A, WALLET_B]

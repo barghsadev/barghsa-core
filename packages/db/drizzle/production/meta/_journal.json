@@ -1331,6 +1331,13 @@
       "when": 1791407853467,
       "tag": "0269_wallet_low_balance_signals",
       "breakpoints": true
+    },
+    {
+      "idx": 270,
+      "version": "7",
+      "when": 1791411981806,
+      "tag": "0270_native_inbox_templates",
+      "breakpoints": true
     }
   ]
 }

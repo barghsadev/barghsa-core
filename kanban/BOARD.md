@@ -39,10 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current worker/DB/SQL nativeinbox writers andlateoutbox attachment order. Reuse existing validated plain-text/allowlisted engine semantics forfresh activefa/en templates only;choose smallest integration forcurrentprivate canonical receipts,lowbalance/scanner/admin/refund/contract/order snapshots. Preserve financial/provenance/audit/rollback/retry/lock order,mandatoryinstantinbox/nativeIDs/history,immutablepast read/signed/content andacceptedAPI behavior. SecureOTP/awaiting-staff owner dispositions,systempublication/alltemplatecontracts/liveprovider/storage/scanner/policy/operations/fourservice launch remainunfinished.
+Inspect existing notification template editor/entity/CRUD/preview/testsend/seeding implementation andrenewrelatedeffectiveacceptance togetheragainstcurrent sources. Reusevalid engine/native/42seed/fa-en/migration evidence;buildonlydemonstratedlifecycle/variable/authority/renderer/import gaps. Preserveactiveversion immutability/escaping/verifieddestination/currentadmin/session/privatecontext/atomicrecords andacceptednative receipts. Generic/legacy writers,secureOTP/awaiting-staff ownerdispositions/systempublication/liveprovider/storage/scanner/policy/operations/fourservicelaunch unfinished.
 
-- `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
+- `02-auth-users-admin.md#T-09.04.01`: Notification template editor
+- `05-notifications-documents-ai.md#T-05.04.01`: Template entity & CRUD API
 - `05-notifications-documents-ai.md#T-05.04.02`: Variable interpolation & escaping
+- `05-notifications-documents-ai.md#T-05.04.03`: Template preview
+- `05-notifications-documents-ai.md#T-05.04.04`: Test-send
 - `05-notifications-documents-ai.md#T-05.04.05`: Template seeding
 
 ## v0.2.0: Complete customer journeys

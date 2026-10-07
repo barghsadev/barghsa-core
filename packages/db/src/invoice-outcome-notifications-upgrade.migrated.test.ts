@@ -7,6 +7,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
 const production = resolve('drizzle/production');
 const previous = mkdtempSync(join(tmpdir(), 'invoice-outcome-notification-upgrade-'));
+const scoped = mkdtempSync(join(tmpdir(), 'migration-267-scope-'));
 const name = `test_invoice_outcome_notice_upgrade_${randomUUID().replaceAll('-', '')}`;
 let management: Pool, pool: Pool, connection: { pgdirectUrl: string };
 beforeAll(async () => {
@@ -19,6 +20,15 @@ beforeAll(async () => {
   writeFileSync(join(previous, 'meta/_journal.json'), JSON.stringify(prior));
   for (const entry of prior.entries)
     copyFileSync(join(production, entry.tag + '.sql'), join(previous, entry.tag + '.sql'));
+  // Keep this historical upgrade/replay proof bound to its original target.
+  const own = {
+    ...journal,
+    entries: journal.entries.filter((entry: { idx: number }) => entry.idx <= 267),
+  };
+  mkdirSync(join(scoped, 'meta'));
+  writeFileSync(join(scoped, 'meta/_journal.json'), JSON.stringify(own));
+  for (const entry of own.entries)
+    copyFileSync(join(production, entry.tag + '.sql'), join(scoped, entry.tag + '.sql'));
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
   await management.query(`CREATE DATABASE "${name}"`);
   const url = new URL(process.env.TEST_DATABASE_URL!);
@@ -34,6 +44,7 @@ afterAll(async () => {
   } finally {
     await management?.end();
     rmSync(previous, { recursive: true, force: true });
+    rmSync(scoped, { recursive: true, force: true });
   }
 });
 async function seed(amount = 1000n, due = '2000-01-01T00:00:00Z') {
@@ -183,14 +194,17 @@ it('preserves all old public rows/functions and scheduled reminder history on up
   );
   const before = await snapshot(),
     defs = await functions();
-  expect(await runMigrations({ connection })).toEqual({
+  expect(await runMigrations({ connection, migrationsFolder: scoped })).toEqual({
     ok: true,
     applied: ['0267_invoice_outcome_notifications'],
   });
   expect(await snapshot()).toEqual(before);
   const current = await functions();
   for (const d of defs) expect(current.find((r) => r.oid === d.oid)).toEqual(d);
-  expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+  expect(await runMigrations({ connection, migrationsFolder: scoped })).toEqual({
+    ok: true,
+    applied: [],
+  });
   expect(await snapshot()).toEqual(before);
   expect(await notices(p)).toEqual([]);
   expect(await notices(o)).toEqual([]);

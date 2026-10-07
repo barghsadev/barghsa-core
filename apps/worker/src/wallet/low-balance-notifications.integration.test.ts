@@ -429,3 +429,51 @@ it.each(['accepted', 'unknown'] as const)(
     ).toEqual(receipt);
   }
 );
+
+it('renders both active native low-balance snapshots without duplicating an observed episode', async () => {
+  const f = await fixture();
+  for (const locale of ['fa', 'en'])
+    await db.pool.query(
+      "INSERT INTO notification_templates(event_key,channel,locale,body_template,variables,status,is_active) VALUES('wallet.low_balance','in_app',$1,'Available {{balance}} / unpaid {{threshold}}','[\"balance\",\"threshold\"]','active',true)",
+      [locale]
+    );
+  expect(await evaluateWalletLowBalanceSignals(db.pool)).toMatchObject({ notified: 1, errors: [] });
+  const notice = (await notices(f.profile))[0];
+  const native = (
+    await db.pool.query(
+      "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+      [notice.id]
+    )
+  ).rows;
+  expect(native).toHaveLength(1);
+  expect(native[0]).toMatchObject({
+    profile_id: f.profile,
+    recipient_user_id: f.user,
+    operating_context: 'customer',
+    type: 'wallet.low_balance',
+  });
+  expect(native[0].localized_content.fa.body).toBe('Available 40 / unpaid 100');
+  expect(native[0].localized_content.en.body).toBe('Available 40 / unpaid 100');
+  const before = await snapshot();
+  expect(await evaluateWalletLowBalanceSignals(db.pool)).toMatchObject({ notified: 0, errors: [] });
+  expect(await snapshot()).toEqual(before);
+});
+it('retains committed wallet money and deficit signals after a malformed active template,then recovers once', async () => {
+  await db.pool.query(
+    "UPDATE notification_templates SET status='archived',is_active=false WHERE event_key='wallet.low_balance' AND channel='in_app' AND is_active"
+  );
+  await db.pool.query(
+    "INSERT INTO notification_templates(event_key,channel,locale,version,body_template,variables,status,is_active) SELECT 'wallet.low_balance','in_app','en',COALESCE(MAX(version),0)+1,'Missing {{unavailable}}','[\"unavailable\"]','active',true FROM notification_templates WHERE event_key='wallet.low_balance' AND channel='in_app' AND locale='en'"
+  );
+  const f = await fixture(),
+    before = await snapshot();
+  const failed = await evaluateWalletLowBalanceSignals(db.pool);
+  expect(failed.notified).toBe(0);
+  expect(failed.errors).toHaveLength(1);
+  expect(await snapshot()).toEqual(before);
+  await db.pool.query(
+    "UPDATE notification_templates SET status='archived',is_active=false WHERE event_key='wallet.low_balance' AND channel='in_app' AND is_active"
+  );
+  expect(await evaluateWalletLowBalanceSignals(db.pool)).toMatchObject({ notified: 1, errors: [] });
+  expect(await notices(f.profile)).toHaveLength(1);
+});

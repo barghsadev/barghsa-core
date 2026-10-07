@@ -361,8 +361,11 @@ async function rejectOneExpired(
   const outboxId = notice.rows[0]!.id;
   const inbox = await client.query(
     `UPDATE in_app_notifications n SET params=o.payload,
-       localized_content=jsonb_set(jsonb_set(n.localized_content,'{fa,body}',to_jsonb((n.localized_content#>>'{fa,body}')||' '||$2::text)),
-         '{en,body}',to_jsonb((n.localized_content#>>'{en,body}')||' '||$3::text))
+       localized_content=jsonb_set(
+         render_native_inbox_content(o.event_key,o.payload||jsonb_build_object('reason',$2::text),jsonb_set(jsonb_set(n.localized_content,'{fa,body}',to_jsonb((n.localized_content#>>'{fa,body}')||' '||$2::text)),
+           '{en,body}',to_jsonb((n.localized_content#>>'{en,body}')||' '||$3::text))),
+         '{en}',render_native_inbox_content(o.event_key,o.payload||jsonb_build_object('reason',$3::text),jsonb_set(jsonb_set(n.localized_content,'{fa,body}',to_jsonb((n.localized_content#>>'{fa,body}')||' '||$2::text)),
+           '{en,body}',to_jsonb((n.localized_content#>>'{en,body}')||' '||$3::text)))->'en')
      FROM notification_outbox o WHERE o.id=$1 AND n.delivery_key='outbox:'||o.id::text
        AND n.profile_id=o.profile_id AND n.recipient_user_id=o.user_id
        AND n.operating_context='customer' AND n.type=o.event_key AND NOT n.is_read

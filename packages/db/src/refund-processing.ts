@@ -279,6 +279,8 @@ async function notifyRefundFailure(
     link_route: `/admin/invoices?invoiceId=${row.invoice_id}#wallet-refunds-panel`,
   };
   const content = defaultInboxContent('payment.refund_failed', payload);
+  const generic = defaultInboxContent('payment.refund_failed');
+  const deliveryPayload = { ...payload, reason: `${generic.fa.body} / ${generic.en.body}` };
   for (const recipient of recipients.rows) {
     const permissions = resolveStaffPermissions(recipient.permissions);
     if (
@@ -299,7 +301,7 @@ async function notifyRefundFailure(
       [
         outboxId,
         recipient.user_id,
-        payload,
+        deliveryPayload,
         `payment.refund_failed:${auditId}:${recipient.user_id}`,
         auditId,
         row.id,
@@ -318,7 +320,7 @@ async function notifyRefundFailure(
     const job = await client.query(
       `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
        VALUES($1,'in_app','done','urgent',5,1,$2,$3)`,
-      [outboxId, inboxId, payload]
+      [outboxId, inboxId, deliveryPayload]
     );
     if (job.rowCount !== 1) throw new Error('Refund failure inbox job was not stored');
     const history = await client.query(
