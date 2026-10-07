@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T00:29:00.345945+00:00",
+  "updated": "2026-10-07T00:34:52.760556+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16642,8 +16642,8 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Refund/contract-cancellation/signing/legal-document and other unbuilt product consumers retain their exact V01/B01 prerequisite task keys in progress.json. No real identity provider exists; activation prerequisites remain.",
-        "Operational/deployed-state and older recorded source-refresh prerequisites remain; no whole-repository regression claimed."
+        "Renew current step-up session/guard/dialog and sensitive-action consumer bindings against this source, including recent proof, post-lock/final-commit rechecks, audit timestamp/flag, actionable requiresStepUp response and operation retry. Refund, cancellation, signing and legal-document consumers exist; retired progress.json and unbuilt-consumer statements are obsolete.",
+        "Complete the relevant production journey/deployed-state checks. Identity-provider availability remains a separate activation/recovery concern and does not certify this task."
       ],
       "owner": null,
       "depends_on": [],
@@ -91688,7 +91688,7 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Finish unversioned linked draft handling and any remaining demonstrated anomalous monetary association or effective reconciliation. Exact pending legacy full-wallet obligations now reuse their identities and original authors; current termination approval and committed authority continue their fulfillment without resetting retries. Partial/unbound/other-key obligations remain behind reconciliation. Pure saved wizard disposition still awaits the owner-only discard decision; other actors private progress remains untouched."
+        "Await the owner decision on owner-only discard of private saved wizard progress versus the literal business-order draft interpretation. All valid persisted pre-active electricity order states now have reviewed rejection/cancellation and exact committed wallet returns. Pending partial/unbound refunds use existing finance request/approve/process reconciliation before terminating only the remaining owed balance. Invalid/conflicting financial associations stay protected. Unversioned linked contracts are forbidden by current NOT NULL, deferred version FK/current-pointer checks and atomic creation; no invented version or migration required."
       ],
       "owner": null,
       "depends_on": [],
@@ -91707,7 +91707,8 @@
           "release-0.2-electricity-linked-intake",
           "release-0.2-electricity-orphan-draft-gifts",
           "release-0.2-electricity-orphan-financial",
-          "release-0.2-electricity-legacy-refund-adoption"
+          "release-0.2-electricity-legacy-refund-adoption",
+          "release-0.2-electricity-terminal-invariant-review"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-lifecycle-and-pre-active-rejection-with-exact-remaining-flows",
@@ -91815,7 +91816,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
-              "sha256": "12666f4b8a627f3a0251de52eefef898840cfaec94fe126459b4a6f2c6e92ede"
+              "sha256": "3d8a3427daf44d080947ca70417899534dd84f8be0607e92db5b28c19c1225d8"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -91944,6 +91945,30 @@
             {
               "path": "packages/db/drizzle/production/0257_electricity_legacy_refund_adoption.sql",
               "sha256": "9850b50d8f0cf32016fabea5a2dbbfa5ecf7986302c4b8edd2cfc126c792597d"
+            },
+            {
+              "path": "packages/db/src/contracts.migrated.test.ts",
+              "sha256": "e7ee334ec6809438282d94d0d5e71935d3eef91737fc8000842c80ba4c3027b2"
+            },
+            {
+              "path": "packages/db/src/schema/contracts.ts",
+              "sha256": "fa9afe17a07932feb9dae9b0ea5d2c9409b9f8b28313b778ee35cb2e0b72377c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0138_contract_drafts.sql",
+              "sha256": "aee3c31baa092883e3d48f0e2bb5597eccdc2683698fca46b6a336100b0cffb9"
+            },
+            {
+              "path": "packages/db/drizzle/production/0194_contract_amendment_drafts.sql",
+              "sha256": "ae5afeb43b186c535799f6149f92976a44066a304e0cb387c85a83705812fb17"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
             }
           ],
           "checks": [
@@ -92058,7 +92083,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/db-build.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/i18n-current.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/accepted-outcomes.json",
-            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
+            "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption",
+            "Terminal invariant/reconciliation review:60 current cases (41 real draft HTTP and19 migrated contract invariant/history cases), API types, changed-test lint/format and SAST pass. Prior runtime/output bindings and original assertions unchanged; one append-only test. /Users/majid/.local/state/barghsa-manual-batches/electricity-terminal-invariant-review"
           ],
           "criterion_result": "Real submitted/changes_requested/approved rejection with paid/unpaid snapshots, reason, one receipt/event and wallet refund completion is verified. Strict confirmation binds commercial state; shared policy/profile locks and fresh guard checks prevent stale valid confirmation bypass. Expand-only database rejection preserves signed/publication/acceptance/version evidence and saving rules, with rejected business record immutability. Full task remains partial for the listed draft, financial approval and full state-matrix flows. Direct HTTP rejection of Accepted/AwaitingSignature/Signed electricity contracts is accepted with both unpaid and paid ledgers, exact mandatory wallet return and retained signing/version/document history. The complete linked pre-active cancellation matrix is accepted across8 state pairs and2 payment states using existing immutable intents, stale fingerprint/version rejection, permissions/reason gates and concurrent once-only execution. Nullable retained draft submission timestamps now return null with35 related HTTP/UI outcomes and accurate client type. Raw/incomplete/private draft handling and second-approval/multi-invoice rejection remain explicit implementation gaps; full task stays partial. Raw unsubmitted/unlinked actual order records now have guarded reject/cancel routes and staff controls, with no invented submitted facts or financial records.271 related cases verify retained wizard privacy, exact reason/review fingerprint/idempotency, live authority, mandatory audit rollback, terminal history and future-association guards, production migration and affected consumers. Incomplete linked/funded drafts, saved wizard effective acceptance and advanced rejection remain open. Reviewed all-invoice rejection is accepted with the immutable target, second approval, exact full wallet return and current locked financial/profile facts.16 state/payment matrix cases plus3 boundary/legacy cases pass; signed/version/publication/document history retained, mandatory audit rollback and unknown concurrent replay verified.324 distinct related cases and applicable checks pass. Full lifecycle remains partial for orphan financial drafts, incomplete staff intake presentation and saved wizard acceptance. Incomplete versioned linked staff intake presentation is accepted: safe eligibility projection and existing contract screen reach the reviewed rejection editor without invented periods/pricing/invoices.100 related outcomes pass; generic orphan drafts, unversioned links and private wizard disposition remain open. Actual generic DRAFT creation and staff reject/cancel are accepted, including consumed/released gift ledgers and exact unpaid-cancellation policy disclosure. Existing gift service releases atomically; terminal order and gift history stay retained.205 distinct related cases pass across real API/database and production UI. Monetary orphan associations, unversioned linked drafts and private wizard acceptance remain open. Contractless draft financial termination is accepted for valid existing invoices: immutable order authority binds captured action/reason/profile/facts/policy and every mandatory wallet return. Required second approval is distinct and current; new invoice/stale policy or revoked finance review cannot execute.34 current raw HTTP cases cover funded/unfunded matrices, committed debt after grant withdrawal, rollback on mandatory audit failure, retained completed legacy debt/zero invoices and direct SQL omission rejection.238 distinct related outcomes pass. Full lifecycle remains partial for pending legacy adoption/reconciliation, unversioned links and saved wizard disposition.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-acceptance",
@@ -92215,6 +92241,11 @@
             ],
             "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption/renewal-proof.json",
             "scope": "Renew prior effective criteria only through exact source preservation and current affected checks. No whole partial task or release inferred."
+          },
+          "terminal_invariant_review": {
+            "base_commit": "3921875983c4041805ba9901b15fff80aa815cbe",
+            "proof": "/Users/majid/.local/state/barghsa-manual-batches/electricity-terminal-invariant-review/review.json",
+            "scope": "Valid pre-active electricity states and financial reconciliation are accepted through prior source-bound batches and current checks. Corrupt/mismatched associations remain fail-closed; no automatic rewrite or untested correction claimed. Pure private wizard acceptance still awaits owner disposition. No whole milestone or production acceptance."
           }
         }
       }
@@ -130756,13 +130787,8 @@
       "release": "0.2.0",
       "launch_required": true,
       "remaining": [
-        "Inspect the existing implementation and cited batches for authentication, profiles, products, simple/advanced electricity, saving, solar and consultation.",
-        "Disposition each original task in this scope using its own criterion. Shared primitives do not prove whole workflows.",
-        "Replace stale absent-module statements with exact current remaining criteria and bound check evidence.",
-        "Consultation lifecycle16 tasks accepted with final source/build-bound evidence; continue electricity, saving, solar and remaining identity/operational gates before whole milestone acceptance.",
-        "Electricity foundation17 tasks accepted with exact source/build-bound calculations, settings and activation-limit evidence. Complete simple/advanced intake, saving/solar and remaining identity/operational criteria before milestone acceptance.",
-        "Simple electricity22 tasks accepted; two naming/representation decisions remain partial. Continue advanced intake and saving/solar plus identity/operational gates before milestone acceptance.",
-        "Advanced electricity16 tasks accepted from final unchanged source/runtime evidence; electricity lifecycle and saving/solar plus pending identity/operational criteria remain."
+        "Renew remaining identity/step-up acceptance and complete the four-service production journey rehearsal in R-01.04.235 original v0.2 tasks have current accepted source-bound evidence; all four service implementations have been inspected and their remaining original criteria are explicitly dispositioned.",
+        "Pending owner decisions remain on callback/CSP CSRF exceptions, account recovery policy, electricity representation names, saving agreement version representation and private wizard disposition. These are not acceptance waivers. No real identity or live external provider certification inferred from fixtures."
       ],
       "owner": null,
       "depends_on": [],
@@ -130771,7 +130797,8 @@
         "batches": [
           "release-0.2-terms-acceptance",
           "release-0.2-account-lifecycle-context",
-          "release-0.2-closure-completion"
+          "release-0.2-closure-completion",
+          "release-0.2-electricity-terminal-invariant-review"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -140518,6 +140545,22 @@
         "Apply0257 before consumers. Retain the compatible refund executor until newly adopted debt completes or drain before application rollback. Pre0257 workers require the original author current finance grant; no old-worker compatibility inferred. SQL atomic rollback before commitment verified."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption"
+    },
+    "release-0.2-electricity-terminal-invariant-review": {
+      "title": "Verify contract version invariants and existing partial-refund reconciliation",
+      "task_keys": [
+        "03-core-business.md#T-03.07.01.01",
+        "release-readiness#R-01.01"
+      ],
+      "summary": "Inspect current sources before rebuilding: a committed unversioned contract is forbidden. Existing finance workflow already reconciles partial returns before exact remaining wallet termination. Update obsolete blockers without widening nullable identities or inventing history.",
+      "validation": [
+        "60 distinct current cases:41 real draft HTTP and19 migrated contract invariant/history cases. Types, changed-test lint/format and SAST pass.",
+        "One append-only HTTP test exercises real request/review/approve/process and terminal commands, exact350000 over3 credits, preserved completed refund, blocked pending decision, unchanged private wizard and no fabricated contract. Every original test byte/assertion retained.",
+        "All previously bound production sources and consumed compiled outputs unchanged. Previous source-bound UI/migration/cancellation/refund checks remain valid; no rebuild or repeated browser run needed.",
+        "Unversioned linked contracts rejected by required current pointer, deferred real version FK and latest-pointer check. Both API creation paths are atomic. Migration137 retains opaque invoice references and creates no counterfeit contracts.",
+        "Electricity terminal task stays partial solely for the pending private-wizard decision. Invalid financial associations remain protected; no untested automatic repair or whole release accepted. Remaining identity/step-up and four-service rehearsal work is explicit."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-terminal-invariant-review"
     }
   },
   "historical_improvements": [
@@ -140557,21 +140600,19 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.2-terminal-acceptance",
+    "id": "release-0.2-identity-journey-renewal",
     "release": "0.2.0",
-    "goal": "Finish unversioned linked draft termination and inspect remaining demonstrated anomalous monetary associations or effective reconciliation. Contractless financial drafts and exact legacy wallet returns are accepted, with full current approval and unchanged retry budgets. Preserve owner-only wizard and other representation decisions; complete all-four-service gates before release.",
+    "goal": "Renew current step-up protection across sensitive consumers and complete the deduplicated four-service production journey rehearsal. Persisted electricity terminal flows and exact finance reconciliation are accepted; retain pending owner policy/representation/private-wizard decisions. Prepare milestone gates without inferring live identity/provider or production authorization.",
     "task_keys": [
-      "03-core-business.md#T-03.07.01.01",
-      "03-core-business.md#T-03.09.01.01",
-      "03-core-business.md#T-03.05.01.04",
-      "03-core-business.md#T-03.05.03.02",
+      "02-auth-users-admin.md#T-02.02.04",
+      "release-readiness#R-01.04",
       "release-readiness#R-01.01"
     ]
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "235 v0.2 tasks accepted. Reviewed rejection, contractless financial termination and exact legacy wallet debt adoption are accepted. Unversioned linked intake, anomalous association reconciliation and owner-only saved wizard disposition remain. Unanswered owner schema/security/identity choices and operational/provider evidence still prevent a defensible launch date."
+    "method": "235 v0.2 tasks accepted. Valid persisted electricity terminal flows and finance reconciliation are accepted; impossible unversioned-contract blocker removed from current evidence. Renew step-up and four-service production rehearsal. Owner policy/representation/private-wizard choices and later operational/provider evidence still prevent a defensible launch date."
   },
   "capabilities": [
     {

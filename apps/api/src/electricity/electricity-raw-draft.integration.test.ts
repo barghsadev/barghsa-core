@@ -1265,3 +1265,91 @@ it('refuses an unbound partial legacy refund while retaining all records', async
   ).toBe(409);
   expect(await snapshot(id)).toEqual(before);
 });
+
+it('reconciles a prior partial refund through the existing finance workflow before terminating the remaining full wallet balance', async () => {
+  const { id } = await actualDraft(),
+    ids = await orphanFunding(id),
+    finance = await orphanFinance();
+  const post = (path: string, body: unknown) =>
+    fetch(http.base + '/api/admin/wallet-refunds' + path, {
+      method: 'POST',
+      headers: finance,
+      body: JSON.stringify(body),
+    });
+  const request = {
+    invoiceId: ids[0]!,
+    amount: '50000',
+    reason: 'Reconcile the existing partial wallet return',
+  };
+  const preview = await post('/review', request);
+  expect(preview.status, http.logs()).toBe(200);
+  const confirmation = (await preview.json()) as { hash: string };
+  const body = { ...request, expectedReviewHash: confirmation.hash, idempotencyKey: randomUUID() };
+  const requested = await post('', body);
+  expect(requested.status, http.logs()).toBe(201);
+  const partial = (await requested.json()) as { id: string; state: string };
+  expect(partial.state).toBe('Requested');
+  const before = await snapshot(id);
+  expect(
+    (
+      await send(id, '/draft-terminal/review', {
+        action: 'reject',
+        reason: 'Wait for prior financial reconciliation',
+      })
+    ).status
+  ).toBe(409);
+  expect(await snapshot(id)).toEqual(before);
+  expect((await post('', body)).status).toBe(201);
+  for (const action of ['approve', 'process']) {
+    const reviewed = await post('/' + partial.id + '/' + action + '/review', {});
+    expect(reviewed.status, http.logs()).toBe(200);
+    const facts = (await reviewed.json()) as { hash: string };
+    const executed = await post('/' + partial.id + '/' + action, {
+      expectedReviewHash: facts.hash,
+    });
+    expect(executed.status, http.logs()).toBe(200);
+    expect(await executed.json()).toMatchObject({
+      id: partial.id,
+      state: action === 'approve' ? 'Approved' : 'Completed',
+    });
+  }
+  const retained = (await http.pool.query('SELECT * FROM refunds WHERE id=$1', [partial.id]))
+    .rows[0];
+  expect(
+    (
+      await http.pool.query('SELECT state,paid_amount,refunded_amount FROM invoices WHERE id=$1', [
+        ids[0],
+      ])
+    ).rows[0]
+  ).toEqual({ state: 'PartiallyRefunded', paid_amount: '100000', refunded_amount: '50000' });
+  expect((await snapshot(id)).root.status).toBe('DRAFT');
+  const command = await review(id),
+    ended = await send(id, '/draft-terminal', command);
+  expect(ended.status, http.logs()).toBe(200);
+  const receipt = (await ended.json()) as {
+    refunds: Array<{ id: string; invoiceId: string; amount: string }>;
+  };
+  expect(receipt.refunds).toHaveLength(2);
+  expect(receipt.refunds.find((r) => r.invoiceId === ids[0])?.amount).toBe('50000');
+  expect(receipt.refunds.find((r) => r.invoiceId === ids[1])?.amount).toBe('250000');
+  for (const refund of receipt.refunds) {
+    expect(await runWalletRefund(http.pool, refund.id)).toBe('completed');
+    expect(await runWalletRefund(http.pool, refund.id)).toBe('deferred');
+  }
+  expect(
+    (await http.pool.query('SELECT * FROM refunds WHERE id=$1', [partial.id])).rows[0]
+  ).toEqual(retained);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT SUM(amount)::text AS amount,COUNT(*)::int AS count FROM wallet_transactions WHERE type='refund' AND ref_id=ANY($1::text[])",
+        [[partial.id, ...receipt.refunds.map((r) => r.id)]]
+      )
+    ).rows[0]
+  ).toEqual({ amount: '350000', count: 3 });
+  const after = await snapshot(id);
+  expect(after.wizard).toEqual(before.wizard);
+  expect(after.contracts).toBeNull();
+  expect(after.root.status).toBe('CANCELLED');
+  expect(after.draft.status).toBe('rejected');
+});

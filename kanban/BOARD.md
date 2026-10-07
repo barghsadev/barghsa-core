@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T00:29:00.345945+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T00:34:52.760556+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,12 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish unversioned linked draft termination and inspect remaining demonstrated anomalous monetary associations or effective reconciliation. Contractless financial drafts and exact legacy wallet returns are accepted, with full current approval and unchanged retry budgets. Preserve owner-only wizard and other representation decisions; complete all-four-service gates before release.
+Renew current step-up protection across sensitive consumers and complete the deduplicated four-service production journey rehearsal. Persisted electricity terminal flows and exact finance reconciliation are accepted; retain pending owner policy/representation/private-wizard decisions. Prepare milestone gates without inferring live identity/provider or production authorization.
 
-- `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
-- `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
-- `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
-- `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at`
+- `02-auth-users-admin.md#T-02.02.04`: Step-up authentication for sensitive actions
+- `release-readiness#R-01.04`: Verify four complete customer and staff intake journeys
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
 ## v0.2.0: Complete customer journeys
