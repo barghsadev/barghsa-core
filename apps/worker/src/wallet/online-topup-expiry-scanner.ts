@@ -14,7 +14,6 @@ import {
   buildBankReceiptTopUpFailedNotificationPayload,
   onlineTopUpExpiryNoticeReason,
 } from '@barghsa/shared/finance';
-import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 /**
  * Online top-up Pending TTL expiry scanner (S-04.2.02, T-04.2.02.07).
@@ -323,22 +322,60 @@ async function rejectOneExpired(
     input.now,
   ]);
 
-  await enqueueOutbox(client, {
-    correlationId: input.correlationId,
-    profileId: row.wallet_id,
-    userId: profile.user_id,
-    eventKey: 'payment.wallet_topup_failed',
-    idempotencyKey: `payment.wallet_topup_failed:expiry:${row.id}`,
-    channels: ['in_app', 'email'],
-    payload: {
-      ...buildBankReceiptTopUpFailedNotificationPayload({
-        amount: row.amount,
-        pendingTransactionId: row.id,
-        reason: onlineTopUpExpiryNoticeReason(user.locale),
-      }),
-      expired_at: input.now.toISOString(),
-    },
-  });
+  // The state trigger already stores the canonical private receipt. Enrich only
+  // this transaction's fresh receipt; never enqueue another logical outcome.
+  const payload = {
+    ...buildBankReceiptTopUpFailedNotificationPayload({
+      amount: row.amount,
+      pendingTransactionId: row.id,
+      reason: onlineTopUpExpiryNoticeReason(user.locale),
+    }),
+    expired_at: input.now.toISOString(),
+  };
+  const notice = await client.query<{ id: string }>(
+    `UPDATE notification_outbox o SET payload=o.payload||$4::jsonb,correlation_id=$5
+     WHERE o.idempotency_key=$1 AND o.user_id=$2 AND o.profile_id=$3
+       AND o.event_key='payment.wallet_topup_failed' AND o.channels=ARRAY['in_app','email']
+       AND o.status='queued' AND o.attempts=0 AND o.created_at=transaction_timestamp()
+       AND o.payload->>'transactionId'=$6
+       AND EXISTS(SELECT 1 FROM notification_job j WHERE j.outbox_id=o.id AND j.channel='email'
+         AND j.status='queued' AND j.attempts=0 AND j.delivery_payload IS NULL)
+       AND EXISTS(SELECT 1 FROM in_app_notifications n JOIN notification_job j ON j.outbox_id=o.id
+         AND j.channel='in_app' AND j.status='done' AND j.attempts=1 AND j.provider_ref=n.id::text
+         WHERE n.delivery_key='outbox:'||o.id::text AND n.profile_id=o.profile_id
+           AND n.recipient_user_id=o.user_id AND n.operating_context='customer' AND n.type=o.event_key
+           AND NOT n.is_read AND n.created_at=transaction_timestamp()
+           AND EXISTS(SELECT 1 FROM notification_delivery_log h WHERE h.notification_id=o.id
+             AND h.channel='in_app' AND h.status='delivered' AND h.attempt_number=1 AND h.provider_ref=n.id::text))
+     RETURNING o.id`,
+    [
+      `payment.wallet_topup_failed:online:${row.id}:${profile.user_id}`,
+      profile.user_id,
+      row.wallet_id,
+      JSON.stringify(payload),
+      input.correlationId,
+      row.id,
+    ]
+  );
+  if (notice.rows.length !== 1) throw new Error('Canonical expiry receipt unavailable');
+  const outboxId = notice.rows[0]!.id;
+  const inbox = await client.query(
+    `UPDATE in_app_notifications n SET params=o.payload,
+       localized_content=jsonb_set(jsonb_set(n.localized_content,'{fa,body}',to_jsonb((n.localized_content#>>'{fa,body}')||' '||$2::text)),
+         '{en,body}',to_jsonb((n.localized_content#>>'{en,body}')||' '||$3::text))
+     FROM notification_outbox o WHERE o.id=$1 AND n.delivery_key='outbox:'||o.id::text
+       AND n.profile_id=o.profile_id AND n.recipient_user_id=o.user_id
+       AND n.operating_context='customer' AND n.type=o.event_key AND NOT n.is_read
+       AND n.created_at=transaction_timestamp()`,
+    [outboxId, onlineTopUpExpiryNoticeReason('fa'), onlineTopUpExpiryNoticeReason('en')]
+  );
+  if (inbox.rowCount !== 1) throw new Error('Expiry inbox explanation was not stored');
+  const job = await client.query(
+    `UPDATE notification_job j SET delivery_payload=o.payload FROM notification_outbox o
+     WHERE o.id=$1 AND j.outbox_id=o.id AND j.channel='in_app' AND j.status='done' AND j.attempts=1`,
+    [outboxId]
+  );
+  if (job.rowCount !== 1) throw new Error('Expiry inbox snapshot was not stored');
 
   return true;
 }

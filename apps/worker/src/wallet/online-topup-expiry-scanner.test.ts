@@ -39,9 +39,11 @@ function makeFakeDb(
       ? { rows: [{ user_id: ACTOR }] }
       : sql.includes('SELECT locale FROM users')
         ? { rows: [{ locale: 'en' }] }
-        : sql.includes('INSERT INTO notification_outbox')
+        : sql.includes('UPDATE notification_outbox')
           ? { rows: [{ id: TX_ID }] }
-          : onSql(sql, params);
+          : sql.includes('UPDATE in_app_notifications') || sql.includes('UPDATE notification_job')
+            ? { rows: [], rowCount: 1 }
+            : onSql(sql, params);
     return { rows: result.rows ?? [], rowCount: result.rowCount ?? result.rows?.length ?? 0 };
   };
   const client = { query: respond, release: vi.fn() };

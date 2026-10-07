@@ -86,6 +86,29 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
         .split('--> statement-breakpoint')
         .find((sql) => sql.includes('ALTER TABLE "notification_outbox"'))!
     );
+    // Extend this legacy isolated schema with the actual canonical receipt
+    // trigger and its current inbox/job/history dependencies.
+    for (const file of [
+      '0028_create_in_app_notifications.sql',
+      '0026_create_notification_delivery_log.sql',
+    ])
+      await ctx.pool.query(
+        readFileSync(resolve(__dirname, '../../../../packages/db/drizzle', file), 'utf8')
+      );
+    await ctx.pool
+      .query(`ALTER TABLE in_app_notifications ADD COLUMN recipient_user_id text REFERENCES users(user_id),
+      ADD COLUMN localized_content jsonb, ADD COLUMN operating_context text,
+      ADD COLUMN delivery_key text UNIQUE;
+      ALTER TABLE notification_job ADD COLUMN provider_ref text, ADD COLUMN delivery_payload jsonb;`);
+    await ctx.pool.query(
+      readFileSync(
+        resolve(
+          __dirname,
+          '../../../../packages/db/drizzle/production/0266_online_topup_notifications.sql'
+        ),
+        'utf8'
+      )
+    );
     await ctx.pool.query(
       `INSERT INTO profiles (id,user_id) VALUES ($1,'online-expiry-scanner-actor'), ($2,'online-expiry-scanner-actor')`,
       [WALLET_A, WALLET_B]
@@ -107,6 +130,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
   });
 
   beforeEach(async () => {
+    await ctx.pool.query('DELETE FROM in_app_notifications');
     await ctx.pool.query('DELETE FROM notification_outbox');
     await ctx.pool.query('DELETE FROM audit_log');
     await ctx.pool.query('DELETE FROM wallet_transactions');

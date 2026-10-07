@@ -220,3 +220,80 @@ for (const locale of ['fa', 'en'] as const) {
     });
   }
 }
+
+async function expiryRowsSnapshot() {
+  const tables = (
+    await pool.query("SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename")
+  ).rows;
+  const snapshot: Record<string, unknown> = {};
+  for (const { tablename } of tables)
+    snapshot[tablename] = (
+      await pool.query(
+        `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${tablename}" t`
+      )
+    ).rows[0].rows;
+  return snapshot;
+}
+it.each(
+  [
+    ['notification_outbox', "NEW.event_key='payment.wallet_topup_failed'"],
+    ['in_app_notifications', "NEW.type='payment.wallet_topup_failed'"],
+    ['notification_job', "NEW.channel='in_app'"],
+  ].flatMap(([table, guard]) => ['raise', 'silent'].map((mode) => ({ table, guard, mode })))
+)(
+  'rolls expiry back after $mode in the fresh $table explanation update and recovers one private receipt',
+  async ({ table, guard, mode }) => {
+    const r = await customer('en');
+    await pendingTopup(r.profileId);
+    const before = await expiryRowsSnapshot();
+    await pool.query(
+      `CREATE FUNCTION reject_expiry_explanation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${guard} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'explanation unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END; $$; CREATE TRIGGER reject_expiry_explanation BEFORE UPDATE ON ${table} FOR EACH ROW EXECUTE FUNCTION reject_expiry_explanation()`
+    );
+    try {
+      const result = await expireStaleOnlineTopUps({
+        pool,
+        actorUserId: r.userId,
+        logger: { warn: () => {}, info: () => {} },
+      });
+      expect(result.rejected).toBe(0);
+      expect(result.errors).toHaveLength(1);
+      expect(await expiryRowsSnapshot()).toEqual(before);
+    } finally {
+      await pool.query(
+        `DROP TRIGGER reject_expiry_explanation ON ${table}; DROP FUNCTION reject_expiry_explanation()`
+      );
+    }
+    expect((await expireStaleOnlineTopUps({ pool, actorUserId: r.userId })).rejected).toBe(1);
+    const outbox = (
+      await pool.query('SELECT * FROM notification_outbox WHERE profile_id=$1', [r.profileId])
+    ).rows;
+    expect(outbox).toHaveLength(1);
+    expect(outbox[0].payload.reason).toBe(onlineTopUpExpiryNoticeReason('en'));
+    const inbox = (
+      await pool.query(
+        "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+        [outbox[0].id]
+      )
+    ).rows;
+    expect(inbox).toHaveLength(1);
+    expect(inbox[0].localized_content.fa.body).toContain(onlineTopUpExpiryNoticeReason('fa'));
+    expect(inbox[0].localized_content.en.body).toContain(onlineTopUpExpiryNoticeReason('en'));
+    expect(
+      (
+        await pool.query(
+          'SELECT channel,status,provider_ref FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+          [outbox[0].id]
+        )
+      ).rows
+    ).toEqual([
+      { channel: 'email', status: 'queued', provider_ref: null },
+      { channel: 'in_app', status: 'done', provider_ref: inbox[0].id },
+    ]);
+    await pool.query('UPDATE in_app_notifications SET is_read=true,read_at=now() WHERE id=$1', [
+      inbox[0].id,
+    ]);
+    const retained = await expiryRowsSnapshot();
+    expect((await expireStaleOnlineTopUps({ pool, actorUserId: r.userId })).rejected).toBe(0);
+    expect(await expiryRowsSnapshot()).toEqual(retained);
+  }
+);

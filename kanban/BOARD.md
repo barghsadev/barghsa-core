@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 438 | Accepted with unchanged source bindings. |
+| done | 439 | Accepted with unchanged source bindings. |
 | verify | 863 | Existing work may be complete; inspect evidence before building. |
-| partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Fix demonstrated duplicate online TTL failure receipt from existing expiry scanner enqueue plus migration0266 trigger. Inspect/use original trigger/scanner/locale reason and preserve old immutable migration history. Exactly one private canonical native inbox/outbox/done history/urgent email,correct original fa/en TTL reason,profile-first TTL/callback locks/metadata/audit/balance/late-paid recovery/no-resend and financial guard assertions. Retain internal/Completed refund acceptance;other Appendix and owner/live-launch gates remain partial.
+Inspect existing wallet credit/low-balance native writers and real callers before building remaining canonical Appendix wallet.credit_received/wallet.low_balance gaps. Reuse immutable exact amounts,original credit/payment/reversal/threshold/authorization/profile/concurrency/idempotency/audit/retry/rollback;avoid duplicate topup/refund/history alerts and private internal financial detail. Keep accepted TTL/refund/invoice/earlier families and pending secure OTP owner disposition intact. Native templates/live provider/storage/policy/operations/all-four launch remain unfinished.
 
-- `04-invoices-wallet-contracts.md#T-04.2.02.07`: Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL
+- `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 
 ## v0.2.0: Complete customer journeys
 
@@ -450,7 +450,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.2.02.04` | done | Earlier acceptance_verified | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` |
 | `04-invoices-wallet-contracts.md#T-04.2.02.05` | done | Earlier acceptance_verified | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet |
 | `04-invoices-wallet-contracts.md#T-04.2.02.06` | done | Earlier acceptance_verified | Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission |
-| `04-invoices-wallet-contracts.md#T-04.2.02.07` | partial | Earlier acceptance_verified | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL |
+| `04-invoices-wallet-contracts.md#T-04.2.02.07` | done | Earlier acceptance_verified | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL |
 | `04-invoices-wallet-contracts.md#T-04.2.03.01` | done | Earlier acceptance_verified | Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method |
 | `04-invoices-wallet-contracts.md#T-04.2.03.02` | done | Earlier acceptance_verified | Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit |
 | `04-invoices-wallet-contracts.md#T-04.2.03.03` | done | Earlier acceptance_verified | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry |

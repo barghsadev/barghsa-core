@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "d2261f9306233787e123b6f9e44f03e0b400b804",
+  "source_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -43008,7 +43008,7 @@
       "launch_required": true,
       "remaining": [
         "Inspect any remaining unaccepted generic/system order status paths. Native electricity review/revision/raw/protected legacy and SQL activation/completion/formal contract-cancellation now have scoped canonical owner delivery; accepted four-service submissions,customer cancellation,consultation/solar/saving/request families remain retained. Preserve true transitions versus internal/same-state information,Rejected versus formal Cancelled,and all financial/review/authority/session/audit/idempotency/ledger boundaries.",
-        "Repair demonstrated online TTL expiry duplicate delivery before any complete pipeline/milestone acceptance:existing scanner enqueue and migration0266 produce two payment.wallet_topup_failed notices,with generic versus original locale-specific expiry reason. Existing strict fa/en one-receipt tests fail;original TTL task returned partial. Newly audited wallet refund Failed attempts now have canonical private immediate in-app staff fanout tied to original audit/current finance authority,including before/final exhaustion/manual retry;original Failed/Rejected customer warnings and terminal legacy finance alert retained. Completed refund/Invoice Paid/Overdue/online andbanktopup/earlier accepted families retained. Inspect remaining Appendix auth.otp_sent,wallet credit/low balance,system/awaiting-staff and other native/generic/internal/review writers without exhaustive inference. OTP encrypted bound-destination/account notice reconciliation remains owner-pending;native templates/live provider/storage/policy/operations/all-four launch unfinished.",
+        "Inspect remaining unaccepted Appendix producers including auth.otp_sent,wallet credit/low balance,system/awaiting-staff and other native/generic/internal/review writers. Online TTL duplicate regression now repaired:scanner enriches only same-transaction native canonical receipt with original fa/en expiry explanation,one inbox/outbox/email;both strict locale one-receipt tests and whole-row fault rollback/current callback evidence pass. Original TTL task restored done. Accepted internal per-audited-wallet-refund-failure private finance fanout,Completed refunds,Invoice Paid/Overdue,online/bank topup andearlier families retained. Failed/Rejected customer and terminal exhaustion receipts remain original. OTP encrypted bound-destination/account notice reconciliation owner-pending;native templates/live provider/storage/policy/operations/all-four launch unfinished. No exhaustive producer acceptance.",
         "Verify and complete configured active in-app template rendering for native synchronous business notices with template tasks; current direct/native lifecycle writers preserve localized default content but do not establish custom active-template behavior. Preserve mandatory immediate delivery and immutable past read/content/history. Live template imports,provider callbacks/idempotency,alerts and production operations remain separate gates."
       ],
       "owner": null,
@@ -43097,7 +43097,8 @@
           "release-0.4-online-topup-notification-producers",
           "release-0.4-invoice-outcome-notification-producers",
           "release-0.4-refund-outcome-notification-producers",
-          "release-0.4-internal-refund-failure-notification-producers"
+          "release-0.4-internal-refund-failure-notification-producers",
+          "release-0.3-online-expiry-delivery-deduplication"
         ],
         "current_acceptance": {
           "kind": "partial-native-business-producer-acceptance",
@@ -43774,6 +43775,22 @@
             {
               "path": "packages/db/src/refund-processing.ts",
               "sha256": "b6c36d7f5b2c27565ff13a41f4ad4a7746a6c6ae86a9e062d1a418d2058b8e42"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+              "sha256": "ad7bf769b750aa6b0f43fb5947bd667e5ce106cc13ddf11578d7c2d21aa2c5ec"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+              "sha256": "bfd706b9a99070924e34c2ee7b14ce0fb4941b5beb330e3e1871cf849229cef1"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+              "sha256": "a04a5dc41318274a4d2cd41c4da472d858414f9da0b4aeebcbb4bb8bf2d9b6ba"
             }
           ],
           "checks": [
@@ -44017,10 +44034,15 @@
             "One coherent scoped review/proof preserves93 original DB,11 dictionary and234 worker assertions. Whole old processor AST exact after isolated new internal hook/helper and original audit ID/strict failure-store return. All original SQL/financial savepoint/immutable credit/dual obligation/payment provenance/threshold/authority/approval/step-up/CSRF/clock/concurrency/manual retry/bounded attempts/exhaustion/alert/caller domain behavior retained. Whole previous InApp transport/content AST exact outside the new event scope/authority/labels. Prior completion sink fault guards now bind only completion event in job/history,keeping their original financial/recovery assertions while not also deleting new mandatory failure notifications. Six source/test paths only;no old assertion,budget,floor or timeout relaxed.",
             "Rebuilding shared package regenerated282 CJS debug maps with temporary build directory names. Map source content verified against actual source;all unrelated shared production JavaScript byte exact. Fourteen other expected changed compiled artifacts plus2 web release metadata files;web production assets remain byte exact. All other source/config/dependency/migration/caller/API/i18n byte exact. Current web build/87 budgets renewed after shared dictionary;no browser/accessibility/liveprovider evidence invented. Final related DB/API/worker/shared types/builds and3-production-file5-rule Semgrep zero findings recorded.",
             "Demonstrated preexisting expiry regression:unchanged scanner calls enqueueOutbox after Pending->Rejected,while committed migration0266 now writes a second canonical payment.wallet_topup_failed row for the same transition. Its generic reason also differs from the original locale-specific TTL explanation. Two existing receipt-notices template cases fail count1 with2. Financial TTL/callback engine and strict assertions untouched. Original 04-invoices-wallet-contracts.md#T-04.2.02.07 downgraded done->partial with exact duplicate/locale receipt repair required. Preserve historical acceptance,record current regression separately;no whole-milestone acceptance/waiver. Next corrective batch will deduplicate actual future expiry delivery and retain metadata/audit/current owner/balance/late callback/sink rollback/no-resend.",
-            "Internal per-attempt refund failure producer accepted independently of unchanged TTL regression. Completed/Rejected/customer failure/refund-exhaustion originals retained;other Appendix including wallet credit/low balance/system/awaiting-staff,secure OTP owner disposition,native templates/live provider/storage/scanner/policy/operations/all-four launch unfinished. No release/version/staging/Telegram/production. All owner decisions and unfinished consultation patch retained."
+            "Internal per-attempt refund failure producer accepted independently of unchanged TTL regression. Completed/Rejected/customer failure/refund-exhaustion originals retained;other Appendix including wallet credit/low balance/system/awaiting-staff,secure OTP owner disposition,native templates/live provider/storage/scanner/policy/operations/all-four launch unfinished. No release/version/staging/Telegram/production. All owner decisions and unfinished consultation patch retained.",
+            "Online TTL expiry now reuses the canonical delivery created by original migration0266 state trigger,removing the second scanner enqueue. Within original transaction it enriches only fresh queued/unattempted canonical outbox/private unread inbox/native completed job/history with original locale-specific expiry reason/expired_at/correlation and original bilingual fa/en explanation. Retains transactionId and exact decimal amount/pending ID/private wallet route. Original native inbox/outbox IDs,key,user/profile,type/context/done providerRef and delivered history remain one manifest;no historical update/backfill/resend.",
+            "73 distinct current passing cases:41 worker expiry unit/real legacy schema/whole-journal native receipt-template cases and32 actual API signed callback/recovery cases. Both previously failing Persian/English one-outbox/one-email template cases now pass unchanged. Active template version900 and actual controlled provider receipt asserted;not live provider evidence. Six new raised/silent outbox/inbox/inapp snapshot UPDATE faults compare every public-table row after rollback,then one native receipt recovery and retained read history. Repeats/skips excluded.",
+            "All56 original scanner-unit,54 PostgreSQL and19 receipt-template assertions retained. Whole original scanner AST exact after isolated replacement of duplicate enqueue. Current candidate/TTL strict cutoff/state compare-and-set/metadata/gateway authority/current owner/profile-first lock/SKIP LOCKED/audit/correlation/clock/balances/idempotency/concurrent scanners/batch drain/failure isolation/late callback untouched. Fresh receipt enrichment demands matching private header/current transaction timestamps/queued email/unattempted snapshot/native done job/history andstrict update counts. Native prior migration/function bytes unchanged. All other financial/refund/session/API/db/shared/i18n/web production sources and outputs exact.",
+            "Legacy isolated PostgreSQL fixture adds actual0266 native trigger and current inbox/job/history dependencies without weakening original constraints or assertions;it is not claimed to be a full production schema. Separate14-case receipt-notices fixture applies whole current production journal and verifies actual native jobs/history/locale templates/one delivered email. Original unit fake acknowledges new enrichment operations instead of old enqueue;core lock/cutoff/state/audit assertions unchanged. Final worker build/type/lint/format and1-production-file5-rule Semgrep zero findings pass. Four source/test files,nine compiled JS/declaration map changes only. Unchanged current web/87 budgets and other checks source/output bound;no unnecessary rebuild/browser/liveprovider claim.",
+            "Corrects prior demonstrated regression recorded in internal-refund-failure-notification-producers/worker-related.log,without deleting that evidence. Original TTL task partial->done only after old full task criteria and new native integration/related callback evidence renewed. Canonical pipeline task remains partial;other Appendix wallet credit/low balance/system/awaiting-staff/OTP owner disposition/native templates/live provider/storage/policy/operations/all-four launch incomplete. No milestone/version/staging/Telegram/production;owner approvals andunfinished consultation patch retained."
           ],
           "limitations": [],
-          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/internal-refund-failure-notification-producers",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
           "scope_qualification": "Local real worker/HTTP/PostgreSQL plus fixture production-browser evidence. Live provider delivery,operational alerts andowner design dispositions remain separate.",
           "accepted_producer_events": [
             "contract.awaiting_acceptance",
@@ -44663,7 +44685,24 @@
             "packages/db/src/refund-processing.ts#notifyRefundFailure",
             "apps/worker/src/notifications/in-app-transport.ts#send",
             "packages/shared/src/notifications/inbox-content.ts"
-          ]
+          ],
+          "online_expiry_delivery_resolution": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "resolved_failed_cases": [
+              "real expiry template fa",
+              "real expiry template en"
+            ],
+            "passing_checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -80529,19 +80568,19 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+              "sha256": "ad7bf769b750aa6b0f43fb5947bd667e5ce106cc13ddf11578d7c2d21aa2c5ec"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
-              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+              "sha256": "bfd706b9a99070924e34c2ee7b14ce0fb4941b5beb330e3e1871cf849229cef1"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+              "sha256": "a04a5dc41318274a4d2cd41c4da472d858414f9da0b4aeebcbb4bb8bf2d9b6ba"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -80577,7 +80616,8 @@
             "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
             "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
-            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded.",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
           "limitations": [
@@ -80604,6 +80644,20 @@
               "fixture-format",
               "receipt-affected-final",
               "worker-related"
+            ]
+          },
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
             ]
           }
         }
@@ -81063,12 +81117,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d18942aedc0f"
       },
       "requirement": "| T-04.2.02.07 | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL | M |\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Deduplicate future online TTL Pending->Rejected delivery between original expiry scanner and canonical migration0266 trigger. Preserve exactly one private inbox/outbox/email and original Persian/English expiry explanation. Existing receipt-notices.integration fa/en expiry cases currently return2outboxes where1required. Preserve original profile-first locks,strict TTL eligibility/state/metadata/provider authority/audit/balances,late paid callback/recovery,read/provider receipts and full rollback;do not relax the one-receipt assertion or resend historical deliveries."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -81146,11 +81198,12 @@
           "release-0.3-invoice-reconciliation",
           "release-0.3-provider-reconciliation",
           "release-0.3-refund-reconciliation",
-          "release-0.4-internal-refund-failure-notification-producers"
+          "release-0.4-internal-refund-failure-notification-producers",
+          "release-0.3-online-expiry-delivery-deduplication"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
-          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "reviewed_base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/online-topup-authority.integration.test.ts",
@@ -81198,19 +81251,19 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+              "sha256": "ad7bf769b750aa6b0f43fb5947bd667e5ce106cc13ddf11578d7c2d21aa2c5ec"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
-              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+              "sha256": "bfd706b9a99070924e34c2ee7b14ce0fb4941b5beb330e3e1871cf849229cef1"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+              "sha256": "a04a5dc41318274a4d2cd41c4da472d858414f9da0b4aeebcbb4bb8bf2d9b6ba"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -81243,13 +81296,20 @@
             "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Provider reporting source renewal: prior worker statements and dictionary/job entries unchanged; contract adds one job enum only. Existing callback settlement/auth methods retained and affected callback/HTTP/monitoring cases pass. New provider criterion remains separate from whole-task acceptance; see release-0.3-provider-reconciliation source proofs and receipts.",
-            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts."
+            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts.",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance.",
+            "Online TTL expiry now reuses the canonical delivery created by original migration0266 state trigger,removing the second scanner enqueue. Within original transaction it enriches only fresh queued/unattempted canonical outbox/private unread inbox/native completed job/history with original locale-specific expiry reason/expired_at/correlation and original bilingual fa/en explanation. Retains transactionId and exact decimal amount/pending ID/private wallet route. Original native inbox/outbox IDs,key,user/profile,type/context/done providerRef and delivered history remain one manifest;no historical update/backfill/resend.",
+            "73 distinct current passing cases:41 worker expiry unit/real legacy schema/whole-journal native receipt-template cases and32 actual API signed callback/recovery cases. Both previously failing Persian/English one-outbox/one-email template cases now pass unchanged. Active template version900 and actual controlled provider receipt asserted;not live provider evidence. Six new raised/silent outbox/inbox/inapp snapshot UPDATE faults compare every public-table row after rollback,then one native receipt recovery and retained read history. Repeats/skips excluded.",
+            "All56 original scanner-unit,54 PostgreSQL and19 receipt-template assertions retained. Whole original scanner AST exact after isolated replacement of duplicate enqueue. Current candidate/TTL strict cutoff/state compare-and-set/metadata/gateway authority/current owner/profile-first lock/SKIP LOCKED/audit/correlation/clock/balances/idempotency/concurrent scanners/batch drain/failure isolation/late callback untouched. Fresh receipt enrichment demands matching private header/current transaction timestamps/queued email/unattempted snapshot/native done job/history andstrict update counts. Native prior migration/function bytes unchanged. All other financial/refund/session/API/db/shared/i18n/web production sources and outputs exact.",
+            "Legacy isolated PostgreSQL fixture adds actual0266 native trigger and current inbox/job/history dependencies without weakening original constraints or assertions;it is not claimed to be a full production schema. Separate14-case receipt-notices fixture applies whole current production journal and verifies actual native jobs/history/locale templates/one delivered email. Original unit fake acknowledges new enrichment operations instead of old enqueue;core lock/cutoff/state/audit assertions unchanged. Final worker build/type/lint/format and1-production-file5-rule Semgrep zero findings pass. Four source/test files,nine compiled JS/declaration map changes only. Unchanged current web/87 budgets and other checks source/output bound;no unnecessary rebuild/browser/liveprovider claim.",
+            "Corrects prior demonstrated regression recorded in internal-refund-failure-notification-producers/worker-related.log,without deleting that evidence. Original TTL task partial->done only after old full task criteria and new native integration/related callback evidence renewed. Canonical pipeline task remains partial;other Appendix wallet credit/low balance/system/awaiting-staff/OTP owner disposition/native templates/live provider/storage/policy/operations/all-four launch incomplete. No milestone/version/staging/Telegram/production;owner approvals andunfinished consultation patch retained."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
           "limitations": [
             "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
             "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization.",
-            "Whole TTL notification acceptance revoked by current unchanged-source regression: /Users/majid/.local/state/barghsa-manual-batches/internal-refund-failure-notification-producers/worker-related.log. Two real locale expiry template cases fail duplicate outbox count1->2;scanner and migration0266 source exact. Financial expiry/callback criteria retained,once-only notification/locale reason unaccepted until repair."
+            "Whole TTL notification acceptance revoked by current unchanged-source regression: /Users/majid/.local/state/barghsa-manual-batches/internal-refund-failure-notification-producers/worker-related.log. Two real locale expiry template cases fail duplicate outbox count1->2;scanner and migration0266 source exact. Financial expiry/callback criteria retained,once-only notification/locale reason unaccepted until repair.",
+            "Previous TTL duplicate regression and its failing evidence remain historical;current73-case native deduplication acceptance repairs once-only locale delivery. Live provider/deployment/operations gates remain separate."
           ],
           "current_regression": {
             "base_commit": "d2261f9306233787e123b6f9e44f03e0b400b804",
@@ -81262,7 +81322,56 @@
               "real expiry template en"
             ],
             "cause": "Preexisting migration0266 emits failure on Pending->Rejected,while existing expiry scanner then enqueues a second payment.wallet_topup_failed:expiry row. Canonicaltrigger genericreason also differs from original TTL reason. Two delivered receipts are possible;strict existing one-row assertion catches duplicate before provider work.",
-            "blocking_acceptance": true
+            "blocking_acceptance": false,
+            "resolution": {
+              "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+              "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+              "resolved_failed_cases": [
+                "real expiry template fa",
+                "real expiry template en"
+              ],
+              "passing_checks": [
+                "worker-build-final",
+                "worker-related",
+                "api-related",
+                "types",
+                "lint",
+                "format",
+                "sast"
+              ]
+            }
+          },
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          },
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+          "online_expiry_delivery_resolution": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "resolved_failed_cases": [
+              "real expiry template fa",
+              "real expiry template en"
+            ],
+            "passing_checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
           }
         }
       }
@@ -82964,7 +83073,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/drizzle/0078_create_bank_receipts.sql",
@@ -83041,13 +83150,28 @@
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -83364,7 +83488,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -83451,13 +83575,28 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -83769,7 +83908,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -83863,13 +84002,28 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -84201,19 +84355,19 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+              "sha256": "ad7bf769b750aa6b0f43fb5947bd667e5ce106cc13ddf11578d7c2d21aa2c5ec"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
-              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+              "sha256": "bfd706b9a99070924e34c2ee7b14ce0fb4941b5beb330e3e1871cf849229cef1"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+              "sha256": "a04a5dc41318274a4d2cd41c4da472d858414f9da0b4aeebcbb4bb8bf2d9b6ba"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -84315,13 +84469,28 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -84626,7 +84795,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -84720,13 +84889,28 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -84925,7 +85109,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -84998,13 +85182,28 @@
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -85203,7 +85402,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -85276,13 +85475,28 @@
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -85482,7 +85696,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -85555,13 +85769,28 @@
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -85762,7 +85991,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -85835,13 +86064,28 @@
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -86050,7 +86294,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -86123,13 +86367,28 @@
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -86330,7 +86589,7 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -86403,13 +86662,28 @@
             "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance.",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
             "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
             "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
-          ]
+          ],
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
+          }
         }
       }
     },
@@ -267988,19 +268262,19 @@
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
-              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+              "sha256": "663a324a155433d217266e7936cead3eb7a97ea540eaf029aded9df66c9a714a"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+              "sha256": "ad7bf769b750aa6b0f43fb5947bd667e5ce106cc13ddf11578d7c2d21aa2c5ec"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
-              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+              "sha256": "bfd706b9a99070924e34c2ee7b14ce0fb4941b5beb330e3e1871cf849229cef1"
             },
             {
               "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+              "sha256": "a04a5dc41318274a4d2cd41c4da472d858414f9da0b4aeebcbb4bb8bf2d9b6ba"
             },
             {
               "path": "packages/i18n/src/wallet-receipts.ts",
@@ -269579,7 +269853,8 @@
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
             "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
             "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound.",
-            "Scoped internal per-audited-refund-failure delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/internal-refund-failure-notification-producers.358 current passing cases;2 unchanged TTL fa/en duplicate-outbox regressions separately recorded and original TTL task partial. Whole original financial processor/transport/content AST preserved after isolated failure hook/audit-ID/strict storage,event-private authority and bilingual label. All old assertions retained;10 full public-row fault rollbacks and NOWAIT collision recovery. Prior completion fault guards bind only intended completion event without weakening money/recovery assertions. Original other events/caller/financial/shared source and production JS unchanged;282 regenerated CJS debug maps source-content validated. Current web build and87 budgets pass. Remaining Appendix/live launch not inferred accepted."
+            "Scoped internal per-audited-refund-failure delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/internal-refund-failure-notification-producers.358 current passing cases;2 unchanged TTL fa/en duplicate-outbox regressions separately recorded and original TTL task partial. Whole original financial processor/transport/content AST preserved after isolated failure hook/audit-ID/strict storage,event-private authority and bilingual label. All old assertions retained;10 full public-row fault rollbacks and NOWAIT collision recovery. Prior completion fault guards bind only intended completion event without weakening money/recovery assertions. Original other events/caller/financial/shared source and production JS unchanged;282 regenerated CJS debug maps source-content validated. Current web build and87 budgets pass. Remaining Appendix/live launch not inferred accepted.",
+            "Scoped online TTL native delivery deduplication renewal: /Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication.73 passing cases;original expiry financial/authority/lock/clock/state/audit/metadata AST retained outside duplicate enqueue replacement. Actual native receipt enrichment preserves one ID/private manifest and original bilingual TTL reason;both failed fa/en receipt templates pass unchanged. All original assertions retained,six full public-row rollback/recovery checks. All other production/source/output/migration bytes and current web87budgets exact. No historical delivery changes/backfill/resend or broad launch acceptance."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -270033,6 +270308,20 @@
               "sast"
             ],
             "known_regression": "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          },
+          "online_expiry_dedup_scoped_renewal": {
+            "base_commit": "2032033d2eff17f3f0bfe6ded9a45542596a8fac",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+            "proof": "scope-proof.json",
+            "checks": [
+              "worker-build-final",
+              "worker-related",
+              "api-related",
+              "types",
+              "lint",
+              "format",
+              "sast"
+            ]
           }
         },
         "batches": [
@@ -285339,6 +285628,23 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/internal-refund-failure-notification-producers",
       "release": false
+    },
+    "release-0.3-online-expiry-delivery-deduplication": {
+      "title": "Online TTL expiry canonical receipt deduplication",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "05-notifications-documents-ai.md#T-05.01.02"
+      ],
+      "summary": "Original TTL scanner reuses one same-transaction native receipt and keeps original localized expiry explanation/correlation/history without second enqueue. Both prior locale regression cases now pass unchanged;all original financial/lock/callback/TTL assertions retained andsix new whole-row fault rollbacks verified. TTL task accepted;canonical pipeline/milestone/other Appendix/live launch remains partial.",
+      "validation": [
+        "Online TTL expiry now reuses the canonical delivery created by original migration0266 state trigger,removing the second scanner enqueue. Within original transaction it enriches only fresh queued/unattempted canonical outbox/private unread inbox/native completed job/history with original locale-specific expiry reason/expired_at/correlation and original bilingual fa/en explanation. Retains transactionId and exact decimal amount/pending ID/private wallet route. Original native inbox/outbox IDs,key,user/profile,type/context/done providerRef and delivered history remain one manifest;no historical update/backfill/resend.",
+        "73 distinct current passing cases:41 worker expiry unit/real legacy schema/whole-journal native receipt-template cases and32 actual API signed callback/recovery cases. Both previously failing Persian/English one-outbox/one-email template cases now pass unchanged. Active template version900 and actual controlled provider receipt asserted;not live provider evidence. Six new raised/silent outbox/inbox/inapp snapshot UPDATE faults compare every public-table row after rollback,then one native receipt recovery and retained read history. Repeats/skips excluded.",
+        "All56 original scanner-unit,54 PostgreSQL and19 receipt-template assertions retained. Whole original scanner AST exact after isolated replacement of duplicate enqueue. Current candidate/TTL strict cutoff/state compare-and-set/metadata/gateway authority/current owner/profile-first lock/SKIP LOCKED/audit/correlation/clock/balances/idempotency/concurrent scanners/batch drain/failure isolation/late callback untouched. Fresh receipt enrichment demands matching private header/current transaction timestamps/queued email/unattempted snapshot/native done job/history andstrict update counts. Native prior migration/function bytes unchanged. All other financial/refund/session/API/db/shared/i18n/web production sources and outputs exact.",
+        "Legacy isolated PostgreSQL fixture adds actual0266 native trigger and current inbox/job/history dependencies without weakening original constraints or assertions;it is not claimed to be a full production schema. Separate14-case receipt-notices fixture applies whole current production journal and verifies actual native jobs/history/locale templates/one delivered email. Original unit fake acknowledges new enrichment operations instead of old enqueue;core lock/cutoff/state/audit assertions unchanged. Final worker build/type/lint/format and1-production-file5-rule Semgrep zero findings pass. Four source/test files,nine compiled JS/declaration map changes only. Unchanged current web/87 budgets and other checks source/output bound;no unnecessary rebuild/browser/liveprovider claim.",
+        "Corrects prior demonstrated regression recorded in internal-refund-failure-notification-producers/worker-related.log,without deleting that evidence. Original TTL task partial->done only after old full task criteria and new native integration/related callback evidence renewed. Canonical pipeline task remains partial;other Appendix wallet credit/low balance/system/awaiting-staff/OTP owner disposition/native templates/live provider/storage/policy/operations/all-four launch incomplete. No milestone/version/staging/Telegram/production;owner approvals andunfinished consultation patch retained."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/online-expiry-delivery-deduplication",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -285378,11 +285684,11 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-online-expiry-delivery-deduplication",
-    "release": "0.3.0",
-    "goal": "Fix demonstrated duplicate online TTL failure receipt from existing expiry scanner enqueue plus migration0266 trigger. Inspect/use original trigger/scanner/locale reason and preserve old immutable migration history. Exactly one private canonical native inbox/outbox/done history/urgent email,correct original fa/en TTL reason,profile-first TTL/callback locks/metadata/audit/balance/late-paid recovery/no-resend and financial guard assertions. Retain internal/Completed refund acceptance;other Appendix and owner/live-launch gates remain partial.",
+    "id": "release-0.4-wallet-credit-alert-notification-producers",
+    "release": "0.4.0",
+    "goal": "Inspect existing wallet credit/low-balance native writers and real callers before building remaining canonical Appendix wallet.credit_received/wallet.low_balance gaps. Reuse immutable exact amounts,original credit/payment/reversal/threshold/authorization/profile/concurrency/idempotency/audit/retry/rollback;avoid duplicate topup/refund/history alerts and private internal financial detail. Keep accepted TTL/refund/invoice/earlier families and pending secure OTP owner disposition intact. Native templates/live provider/storage/policy/operations/all-four launch remain unfinished.",
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.02.07"
+      "05-notifications-documents-ai.md#T-05.01.02"
     ]
   },
   "launch_forecast": {
