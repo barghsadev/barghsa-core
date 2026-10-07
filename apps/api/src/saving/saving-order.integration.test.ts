@@ -1,3 +1,9 @@
+import {
+  expectSavingStatusDeliveries,
+  expectSavingStatusRollback,
+  savingDeliverySnapshot,
+} from '../test/saving-status-notification-proof.js';
+import { notifySavingStatus } from './saving-status-notifications.js';
 import { expectCoreAudit } from '../test/core-audit.js';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
@@ -1485,6 +1491,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   await expectSavingStageAuditRollback(result.savingOrderId, () =>
     request(approvePath, 'POST', approval, staffHeaders)
   );
+
   const approved = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
@@ -1534,9 +1541,16 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).rows[0]
   ).toMatchObject({ stock_count: 1, reserved_count: 1 });
+  await expectSavingStatusDeliveries(http.pool, result.savingOrderId, 'saving-order-buyer', [
+    'approved',
+  ]);
+  const approvalDeliveryBefore = await savingDeliverySnapshot(http.pool, result.savingOrderId);
   const approvalRetry = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approvalRetry.status, http.logs()).toBe(200);
   expect(await approvalRetry.json()).toMatchObject({ status: 'approved' });
+  expect(await savingDeliverySnapshot(http.pool, result.savingOrderId)).toEqual(
+    approvalDeliveryBefore
+  );
   expect(
     (
       await request(
@@ -2912,6 +2926,13 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   await expectSavingStageAuditRollback(result.savingOrderId, () =>
     request(stagePath('product_delivery'), 'POST', deliveryInput, staffHeaders)
   );
+  await expectSavingStatusRollback(
+    http.pool,
+    result.savingOrderId,
+    'in_progress',
+    () => request(stagePath('product_delivery'), 'POST', deliveryInput, staffHeaders),
+    true
+  );
   const delivered = await request(
     stagePath('product_delivery'),
     'POST',
@@ -3012,6 +3033,11 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(completed.status, http.logs()).toBe(200);
   expect(await completed.json()).toMatchObject({ status: 'completed', nextStage: null });
+  await expectSavingStatusDeliveries(http.pool, result.savingOrderId, 'saving-order-buyer', [
+    'approved',
+    'in_progress',
+    'completed',
+  ]);
   const finalReplaySnapshot = await savingOperationsSnapshot(result.savingOrderId);
   const terminalStageReplay = await request(
     stagePath('product_delivery'),
@@ -3228,6 +3254,12 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(rejected.status, http.logs()).toBe(200);
   expect(await rejected.json()).toMatchObject({ status: 'rejected' });
+  await expectSavingStatusDeliveries(
+    http.pool,
+    discountedOrder.savingOrderId,
+    'saving-order-buyer',
+    ['rejected']
+  );
   await expectCoreAudit(http.pool, 'saving.order_review.reject', discountedOrder.savingOrderId, {
     entity: 'saving_order',
     fromState: 'awaiting_staff_review',
@@ -3870,6 +3902,7 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
   };
   const addressResult = await request(`${path}/change`, 'POST', addressSubmission);
   expect(addressResult.status, http.logs()).toBe(201);
+  await expectSavingStatusDeliveries(http.pool, order.savingOrderId, 'saving-order-buyer', []);
   const firstRevision = (await addressResult.json()) as { contractVersionId: string };
   const priorVersionId = (
     await http.pool.query<{ previous_version_id: string }>(
@@ -4055,6 +4088,10 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     expectedQuoteDigest: approvedQuote.reviewDigest,
   });
   expect(reopened.status, http.logs()).toBe(201);
+  await expectSavingStatusDeliveries(http.pool, order.savingOrderId, 'saving-order-buyer', [
+    'approved',
+    'awaiting_staff_review',
+  ]);
   await expectSavingStageResetAudits(
     order.savingOrderId,
     revisionStagesBefore,
@@ -4095,6 +4132,10 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     expectedQuoteDigest: secondApprovedQuote.reviewDigest,
   });
   expect(secondReopened.status, http.logs()).toBe(201);
+  await expectSavingStatusDeliveries(http.pool, order.savingOrderId, 'saving-order-buyer', [
+    'approved',
+    'awaiting_staff_review',
+  ]);
   const reopenedVersion = ((await secondReopened.json()) as { contractVersionId: string })
     .contractVersionId;
   expect(await (await request(path, 'GET')).json()).toMatchObject({
@@ -4145,6 +4186,11 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     staffHeaders
   );
   expect(reapproval.status, http.logs()).toBe(200);
+  await expectSavingStatusDeliveries(http.pool, order.savingOrderId, 'saving-order-buyer', [
+    'approved',
+    'awaiting_staff_review',
+    'approved',
+  ]);
   await expectSavingInventoryHistory(order.savingOrderId);
   expect(await (await request(path, 'GET')).json()).toMatchObject({ can_edit: true });
   expect(
@@ -4929,3 +4975,66 @@ it('binds specified saving cancellation routes to customer requests, approved de
   ).not.toBeNull();
   expect(await financialHistory()).toEqual(historyBefore);
 }, 90000);
+
+it('holds the current private owner and rejects mismatched saving status notices', async () => {
+  await http.pool.query('UPDATE products SET stock_count=stock_count+2 WHERE id=$1', [
+    input.hardwareProductId,
+  ]);
+  const fresh = { ...input, billIdentifier: '9988776655443' };
+  const quote = await request('/api/saving/orders/quote', 'POST', fresh);
+  expect(quote.status, http.logs()).toBe(201);
+  const digest = ((await quote.json()) as { reviewDigest: string }).reviewDigest;
+  const submitted = await request('/api/saving/orders', 'POST', {
+    ...fresh,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: digest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(submitted.status, http.logs()).toBe(201);
+  const id = ((await submitted.json()) as { savingOrderId: string }).savingOrderId;
+  const next = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES($1,$2,'fixture')",
+    [next, next + '@example.test']
+  );
+  const content = {
+    title: 'Saving order',
+    localizedContent: {
+      fa: { title: 'سفارش صرفه‌جویی', body: 'وضعیت سفارش تغییر کرد.' },
+      en: { title: 'Saving order', body: 'Order status changed.' },
+    },
+  };
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await expect(
+      notifySavingStatus(client, id, 'awaiting_staff_review', 'approved', content)
+    ).rejects.toThrow('saved status');
+    await client.query('ROLLBACK');
+    await expectSavingStatusDeliveries(http.pool, id, 'saving-order-buyer', []);
+    await client.query('BEGIN');
+    await client.query('UPDATE profiles SET user_id=$2 WHERE id=$1', [input.profileId, next]);
+    // Same-state information must use the owner at the time of the guarded transaction.
+    await notifySavingStatus(client, id, 'awaiting_staff_review', 'awaiting_staff_review', content);
+    const notices = (
+      await client.query(
+        "SELECT recipient_user_id,type FROM in_app_notifications WHERE link_route=$1 AND type='general'",
+        ['/savings/orders/' + id]
+      )
+    ).rows;
+    expect(notices).toEqual([{ recipient_user_id: next, type: 'general' }]);
+    expect(
+      (
+        await client.query(
+          "SELECT * FROM notification_outbox WHERE payload->>'orderNumber'=$1 AND event_key='order.status_changed'",
+          [id]
+        )
+      ).rows
+    ).toEqual([]);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+});

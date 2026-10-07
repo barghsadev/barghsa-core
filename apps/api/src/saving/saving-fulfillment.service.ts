@@ -22,7 +22,7 @@ import {
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { CreateAdjustmentInvoiceService } from '../invoice/create-adjustment-invoice.service.js';
-import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifySavingStatus } from './saving-status-notifications.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
@@ -465,22 +465,20 @@ export class SavingFulfillmentService {
     return row;
   }
 
-  private async notify(client: PoolClient, row: ReviewRow, fa: string, en: string) {
-    await new NotificationsService().create(
-      {
-        userId: row.customer_id,
-        profileId: row.profile_id,
-        operatingContext: 'customer',
-        type: 'general',
-        title: 'Saving order',
-        link: `/savings/orders/${row.id}`,
-        localizedContent: {
-          fa: { title: 'سفارش صرفه‌جویی برق', body: fa },
-          en: { title: 'Power-saving order', body: en },
-        },
+  private async notify(
+    client: PoolClient,
+    row: ReviewRow,
+    fa: string,
+    en: string,
+    to = row.status
+  ) {
+    await notifySavingStatus(client, row.id, row.status, to, {
+      title: 'Saving order',
+      localizedContent: {
+        fa: { title: 'سفارش صرفه‌جویی برق', body: fa },
+        en: { title: 'Power-saving order', body: en },
       },
-      client
-    );
+    });
   }
 
   private async event(
@@ -836,7 +834,8 @@ export class SavingFulfillmentService {
                     : `سفارش صرفه‌جویی شما رد شد. دلیل: ${reason}`,
                   action === 'approve'
                     ? 'Your power-saving order was approved. Review the contract and invoice.'
-                    : `Your power-saving order was rejected. Reason: ${reason}`
+                    : `Your power-saving order was rejected. Reason: ${reason}`,
+                  status
                 ),
             });
           }
@@ -1888,7 +1887,8 @@ export class SavingFulfillmentService {
                 : 'اجرای سفارش صرفه‌جویی شما تکمیل شد.',
               next
                 ? 'A stage of your power-saving order was completed.'
-                : 'Your power-saving order is complete.'
+                : 'Your power-saving order is complete.',
+              commercialStatus
             );
             return {
               savingOrderId: id,

@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect native saving review/revision/fulfillment/status and cancellation-request writers before edits. Complete canonical order.status_changed/order.cancellation_requested with current private recipients,immediate inbox and same-transaction email,without duplicates or false same-state information. Preserve inventory/financial/refund/review/audit/authorization/session/idempotency/replay boundaries. Reuse accepted submission/contract/other-service producers; keep remaining electricity/Appendix/template/provider/owner/operations criteria explicit.
+Inspect native contract/order cancellation-request writers and saving SQL cancellation propagation. Complete required canonical request/status intents with current private recipients and immediate inbox plus same-transaction external intent, preserving full-refund/partial-return/inventory/contract/audit/authorization/session/idempotency/replay boundaries. Reuse accepted native status/submission/contract families; retain remaining electricity/generic/Appendix/template/owner/provider/operations criteria.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

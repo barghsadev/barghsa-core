@@ -1,3 +1,5 @@
+import { tSaving } from '@barghsa/i18n/saving';
+import { notifySavingStatus } from './saving-status-notifications.js';
 import { auditContract } from '../contract/contract-transactions.js';
 import { notifyOrderSubmitted } from '../notifications/order-notifications.js';
 import {
@@ -1076,6 +1078,14 @@ export class SavingOrderService {
           ip,
         ]
       );
+      if (context.status !== 'awaiting_staff_review')
+        await notifySavingStatus(client, savingOrderId, context.status, 'awaiting_staff_review', {
+          title: 'Saving order',
+          localizedContent: {
+            fa: { title: tSaving('orderDetail', 'fa'), body: tSaving('changeOrderHelp', 'fa') },
+            en: { title: tSaving('orderDetail', 'en'), body: tSaving('changeOrderHelp', 'en') },
+          },
+        });
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return response;
