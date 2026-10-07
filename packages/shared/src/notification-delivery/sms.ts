@@ -8,7 +8,7 @@ import { PostgresRateLimiterStore } from '../rate-limit/index.js';
 import type { DeliveryPool } from './email.js';
 import { SmsCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
 import { isTransientProviderError } from './email-errors.js';
-import type { DeliveryExecutor } from './execution.js';
+import { DeliveryRejected, type DeliveryExecutor } from './execution.js';
 
 export interface SmsMessage {
   providerId: string;
@@ -25,7 +25,8 @@ export async function prepareSmsMessage(
   data: Record<string, unknown>,
   locale?: 'fa' | 'en'
 ): Promise<SmsMessage> {
-  if (!/^(?:\+98|0)9\d{9}$/.test(destination)) throw new Error('Invalid SMS destination');
+  if (!/^(?:\+98|0)9\d{9}$/.test(destination))
+    throw new DeliveryRejected('Invalid SMS destination');
   const rows = (
     await pool.query(
       "SELECT id,transport,config FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'"
@@ -44,14 +45,15 @@ export async function prepareSmsMessage(
   if (!mapping.variables || !Object.keys(mapping.variables).length)
     throw new Error('SMS template variables unavailable');
   const parameters = Object.entries(mapping.variables).map(([variable, name]) => {
-    if (!allowList.includes(variable)) throw new Error('SMS mapping variable is not approved');
+    if (!allowList.includes(variable))
+      throw new DeliveryRejected('SMS mapping variable is not approved');
     const value = resolvePath(data, variable);
     if ((typeof value !== 'string' && typeof value !== 'number') || String(value).length === 0)
-      throw new Error('SMS template data incomplete');
+      throw new DeliveryRejected('SMS template data incomplete');
     return { name, value: String(value) };
   });
   if (new Set(parameters.map((item) => item.name)).size !== parameters.length)
-    throw new Error('Duplicate SMS provider parameter');
+    throw new DeliveryRejected('Duplicate SMS provider parameter');
   return {
     providerId: rows[0]!.id as string,
     destination,
@@ -74,7 +76,7 @@ export function createSmsSender(
       !Number.isSafeInteger(Number(message.templateId)) ||
       Number(message.templateId) <= 0
     )
-      throw new Error('Invalid SMS message');
+      throw new DeliveryRejected('Invalid SMS message');
     const rows = (
       await pool.query(
         "SELECT id,transport,config FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'"

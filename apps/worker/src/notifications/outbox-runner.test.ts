@@ -1,10 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
+import { createEmailSender, prepareSmsMessage } from '@barghsa/shared/notification-delivery';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { runOutboxPoll, sanitizeLastError } from './outbox-runner.js';
 import type {
   INotificationTransport,
   NotificationSendPayload,
   NotificationSendResult,
 } from '@barghsa/shared/notifications';
+
+afterEach(() => vi.restoreAllMocks());
 
 /**
  * Outbox runner unit tests (E-05, T-05.01.02).
@@ -393,3 +396,53 @@ describe('sanitizeLastError', () => {
     expect(s).not.toContain('sk_live_aaaaaaaaaaaaaaaaaaaaaaaa');
   });
 });
+
+for (const channel of ['email', 'sms'] as const) {
+  it(`${channel}: real sender preflight invalid destination is dead-lettered on attempt one without retry or provider I/O`, async () => {
+    const { pool, updates } = makePool([channel]);
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
+      { ...baseRow, channels: [channel] },
+    ]);
+    const request = vi.fn<typeof fetch>();
+    const transport: INotificationTransport = {
+      channel,
+      async send() {
+        if (channel === 'email')
+          await createEmailSender(
+            pool,
+            request
+          )({
+            destination: 'invalid-private-contact',
+            subject: 'Fixture',
+            text: 'Fixture',
+            idempotencyKey: 'fixture-preflight',
+          });
+        else
+          await prepareSmsMessage(pool, 'invalid-private-contact', 'invoice.created', ['amount'], {
+            amount: 5000,
+          });
+        return { status: 'delivered', providerRef: 'unexpected' };
+      },
+    };
+    expect(
+      await runOutboxPoll({
+        pool,
+        transports: { [channel]: transport },
+        availability: fullyAvailable,
+      })
+    ).toEqual({ leased: 1, delivered: 0, failed: 1 });
+    const job = updates.find(
+      (item) => item.sql.includes('UPDATE notification_job') && item.params[5] === channel
+    );
+    expect(job?.params[1]).toBe('dead_letter');
+    expect(job?.params[3]).toBe(1);
+    expect(job?.params[6]).toBeNull();
+    const log = updates.find((item) => item.sql.includes('INSERT INTO notification_delivery_log'));
+    expect(log?.params[6]).toBe('permanent');
+    expect(JSON.stringify(updates)).not.toContain('invalid-private-contact');
+    expect(updates.some((item) => item.sql.includes('INSERT INTO notification_dead_letter'))).toBe(
+      true
+    );
+    expect(request).not.toHaveBeenCalled();
+  });
+}

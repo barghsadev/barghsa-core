@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 464 | Accepted with unchanged source bindings. |
+| done | 465 | Accepted with unchanged source bindings. |
 | verify | 832 | Existing work may be complete; inspect evidence before building. |
-| partial | 65 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 64 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Mark controlled invalid email/SMS destination/message/template-data preflight errors permanent before I/O. Retain unknown external receipt reconciliation, typed provider health, quotas/circuits and native financial/auth delivery boundaries. Pending permanent-pause and SMS dispositions stay open.
+Inspect current email provider callback verification, receipt correlation, idempotency, suppression and failure boundaries. Reuse matching authority/provider evidence, build only demonstrated gaps, keep live provider receipts and callback/CSP owner policy gates open.
 
-- `05-notifications-documents-ai.md#T-05.08.01`: Error classification utility
+- `05-notifications-documents-ai.md#T-05.06.07`: Email delivery callback handling
 
 ## v0.2.0: Complete customer journeys
 
@@ -565,7 +565,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.07.03` | done | Recorded batch work | SMS.ir adapter |
 | `05-notifications-documents-ai.md#T-05.07.04` | partial | Recorded batch work | Credit monitoring |
 | `05-notifications-documents-ai.md#T-05.07.05` | partial | Recorded batch work | SMS.ir admin UI |
-| `05-notifications-documents-ai.md#T-05.08.01` | partial | Recorded batch work | Error classification utility |
+| `05-notifications-documents-ai.md#T-05.08.01` | done | Recorded batch work | Error classification utility |
 | `05-notifications-documents-ai.md#T-05.08.02` | partial | Recorded batch work | Circuit breaker implementation |
 | `05-notifications-documents-ai.md#T-05.08.03` | done | Recorded batch work | Provider health dashboard |
 | `05-notifications-documents-ai.md#T-05.08.04` | done | Recorded batch work | Provider runbook documentation |

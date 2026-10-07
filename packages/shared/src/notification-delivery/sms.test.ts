@@ -2,6 +2,7 @@ import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { createSmsSender, prepareSmsMessage } from './sms.js';
 import { DeliveryRejected } from './execution.js';
+import { classifyProviderError } from './email-errors.js';
 let server: Server,
   endpoint: string,
   response: unknown = { status: 1, data: { messageId: 123 } };
@@ -239,4 +240,38 @@ it('rejects unsupported SMS mapping languages', async () => {
   await expect(
     prepareSmsMessage(pool, '+989121234567', 'event', ['value'], { value: 'one' }, 'en')
   ).rejects.toThrow();
+});
+
+it('classifies controlled SMS destination, template and variable preflight failures as permanent before I/O', async () => {
+  const { pool, request } = setup();
+  const execute = vi.fn<NonNullable<Parameters<typeof createSmsSender>[2]>>();
+  const cases = [
+    () =>
+      prepareSmsMessage(pool, 'invalid-destination', 'invoice.created', ['amount'], {
+        amount: 5000,
+      }),
+    () => prepareSmsMessage(pool, '+989121234567', 'invoice.created', [], { amount: 5000 }),
+    () => prepareSmsMessage(pool, '+989121234567', 'invoice.created', ['amount'], {}),
+    () =>
+      createSmsSender(
+        pool,
+        request,
+        execute
+      )({
+        providerId: 'sms-provider',
+        destination: '+989121234567',
+        templateId: 'invalid-template',
+        parameters: [{ name: 'AMOUNT', value: '5000' }],
+      }),
+  ];
+  for (const run of cases) {
+    const error = await run().catch((error: unknown) => error);
+    expect(error).toBeInstanceOf(DeliveryRejected);
+    expect(classifyProviderError(error)).toBe('permanent');
+    expect((error as Error).message).not.toContain('invalid-destination');
+    expect((error as Error).message).not.toContain('invalid-template');
+  }
+  expect(request).not.toHaveBeenCalled();
+  expect(execute).not.toHaveBeenCalled();
+  expect(pool.query.mock.calls.every(([sql]) => sql.startsWith('SELECT'))).toBe(true);
 });

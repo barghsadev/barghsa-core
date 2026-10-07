@@ -38,14 +38,14 @@ export function createEmailSender(
       !message.idempotencyKey ||
       (!message.html && !message.text)
     ) {
-      throw new Error('Invalid email message');
+      throw new DeliveryRejected('Invalid email message');
     }
     message.signal?.throwIfAborted();
     const suppressed = await pool.query(
       'SELECT id FROM email_suppressions WHERE lower(address)=lower($1) LIMIT 1',
       [message.destination]
     );
-    if (suppressed.rows.length) throw new Error('Email address suppressed');
+    if (suppressed.rows.length) throw new DeliveryRejected('Email address suppressed');
     const providers = await pool.query(
       "SELECT id,transport,config FROM email_provider_configs WHERE status='active' AND last_test_status='passed'"
     );

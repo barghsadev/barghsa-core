@@ -12,6 +12,8 @@ vi.mock('./email-breaker.js', () => ({
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { createEmailSender } from './email.js';
+import { classifyProviderError } from './email-errors.js';
+import { DeliveryRejected } from './execution.js';
 
 let server: Server, endpoint: string;
 let code = 200,
@@ -144,4 +146,31 @@ it('refuses to replay an occurrence through a replacement provider', async () =>
     'requires reconciliation'
   );
   expect(request).not.toHaveBeenCalled();
+});
+
+it('classifies controlled email preflight rejection as permanent before durable intent or network I/O', async () => {
+  const execute = vi.fn<NonNullable<Parameters<typeof createEmailSender>[2]>>();
+  const { send, request } = setup(false, true, execute);
+  for (const invalid of [
+    { ...message, destination: 'invalid-destination' },
+    { ...message, subject: 'header\r\ninjection' },
+    { ...message, idempotencyKey: '' },
+    {
+      destination: message.destination,
+      subject: message.subject,
+      idempotencyKey: message.idempotencyKey,
+    },
+  ]) {
+    const error = await send(invalid).catch((error: unknown) => error);
+    expect(error).toBeInstanceOf(DeliveryRejected);
+    expect(classifyProviderError(error)).toBe('permanent');
+    expect((error as Error).message).toBe('Invalid email message');
+  }
+  const suppressed = setup(true, true, execute);
+  const error = await suppressed.send(message).catch((error: unknown) => error);
+  expect(error).toBeInstanceOf(DeliveryRejected);
+  expect(classifyProviderError(error)).toBe('permanent');
+  expect(suppressed.request).not.toHaveBeenCalled();
+  expect(request).not.toHaveBeenCalled();
+  expect(execute).not.toHaveBeenCalled();
 });
