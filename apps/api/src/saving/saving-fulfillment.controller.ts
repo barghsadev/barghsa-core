@@ -124,6 +124,7 @@ export class SavingFulfillmentController {
   ) {
     this.permission(req, false);
     return this.service.queue(
+      req.session,
       lane ? parse(z.enum(['all', 'review', 'fulfillment']), lane) : 'all',
       after ? parse(z.string().uuid(), after) : undefined
     );

@@ -12,8 +12,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | --- | ---: | --- |
 | done | 435 | Accepted with unchanged source bindings. |
 | verify | 867 | Existing work may be complete; inspect evidence before building. |
-| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 10 | New, concrete work or release checks. |
+| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
+| todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 1 | Explicit approved scope disposition. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile existing staff operations and customer-support implementation across electricity,saving,solar andconsultation. Inspect current permission/team assignment,queue/detail recovery,support record links and audit history; reuse source-bound accepted evidence and verify only exact uncovered boundaries. Preserve pending owner representations,retention/reconciliation/dev-reload/provider gates and unfinished consultation work.
+Reproduce and complete current authorization for electricity/saving staff detail reads using existing grant/session helpers. Inspect callers first; preserve electricity repeatable-read financial snapshots and saving invoice-edit capability. Verify concurrent role revocation, disabled accounts, expired sessions and affected callers before closing the four-service staff/support gate. Reuse the accepted queue checks unless their sources change.
 
 - `release-readiness#R-02.02`: Verify staff operations and customer support for all services
 
@@ -302,7 +302,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-02.01` | partial | Recorded batch work | Renew fulfillment and financial closure acceptance |
-| `release-readiness#R-02.02` | todo | Inventory needed | Verify staff operations and customer support for all services |
+| `release-readiness#R-02.02` | partial | Recorded batch work | Verify staff operations and customer support for all services |
 | `02-auth-users-admin.md#T-05.01.01` | done | Earlier acceptance_verified | CRM users list page |
 | `02-auth-users-admin.md#T-05.01.02` | done | Earlier acceptance_verified | CRM filters and search |
 | `02-auth-users-admin.md#T-05.02.01` | done | Earlier acceptance_verified | Full profile view for CRM staff |

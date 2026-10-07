@@ -1,3 +1,4 @@
+import { staffOrderRead } from '../orders/staff-order-read.js';
 import { activityNames } from '../common/activity-identity.js';
 import { runBusinessTransition } from '../common/business-transition.js';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
@@ -252,77 +253,83 @@ export class ElectricityStaffReviewService {
     );
   }
 
-  async queue(after?: string) {
-    const cursor = after
-      ? (
-          await getDbPool().query<{ submitted_at: string; id: string }>(
-            'SELECT submitted_at::text AS submitted_at,id FROM electricity_orders WHERE id=$1 AND submitted_at IS NOT NULL',
-            [after]
-          )
-        ).rows[0]
-      : undefined;
-    if (after && !cursor) throw new NotFoundException('Order cursor not found');
-    const rows = (
-      await getDbPool().query<ReviewRow>(
-        `${reviewQuery} WHERE e.status='awaiting_staff_review'
+  async queue(actor: Actor, after?: string) {
+    return staffOrderRead(actor, async (client) => {
+      const cursor = after
+        ? (
+            await client.query<{ submitted_at: string; id: string }>(
+              'SELECT submitted_at::text AS submitted_at,id FROM electricity_orders WHERE id=$1 AND submitted_at IS NOT NULL',
+              [after]
+            )
+          ).rows[0]
+        : undefined;
+      if (after && !cursor) throw new NotFoundException('Order cursor not found');
+      const rows = (
+        await client.query<ReviewRow>(
+          `${reviewQuery} WHERE e.status='awaiting_staff_review'
          AND ($1::timestamptz IS NULL OR (e.submitted_at,o.id)>($1::timestamptz,$2::uuid))
          ORDER BY e.submitted_at ASC,o.id ASC LIMIT 51`,
-        [cursor?.submitted_at ?? null, cursor?.id ?? null]
-      )
-    ).rows;
-    const now = Date.now();
-    return {
-      orders: rows.slice(0, 50).map((row) => ({
-        ...present(row),
-        ageHours: Math.max(0, Math.floor((now - row.submitted_at.getTime()) / 3_600_000)),
-        priority:
-          now - row.submitted_at.getTime() >= 72 * 3_600_000
-            ? 'urgent'
-            : now - row.submitted_at.getTime() >= 24 * 3_600_000
-              ? 'high'
-              : 'normal',
-      })),
-      nextAfter: rows.length > 50 ? rows[49]!.id : null,
-    };
+          [cursor?.submitted_at ?? null, cursor?.id ?? null]
+        )
+      ).rows;
+      const now = Date.now();
+      return {
+        orders: rows.slice(0, 50).map((row) => ({
+          ...present(row),
+          ageHours: Math.max(0, Math.floor((now - row.submitted_at.getTime()) / 3_600_000)),
+          priority:
+            now - row.submitted_at.getTime() >= 72 * 3_600_000
+              ? 'urgent'
+              : now - row.submitted_at.getTime() >= 24 * 3_600_000
+                ? 'high'
+                : 'normal',
+        })),
+        nextAfter: rows.length > 50 ? rows[49]!.id : null,
+      };
+    });
   }
 
   /** Keep replied-to orders reachable after they leave the review queue. */
-  async conversations(after?: string) {
-    const cursor = after
-      ? (
-          await getDbPool().query<{ created_at: string; id: string }>(
-            `SELECT created_at::text AS created_at,id FROM electricity_order_comments WHERE id=$1`,
-            [after]
-          )
-        ).rows[0]
-      : undefined;
-    if (after && !cursor) throw new NotFoundException('Comment cursor not found');
-    const recent = (
-      await getDbPool().query<{ order_id: string; id: string; created_at: Date }>(
-        `SELECT order_id,id,created_at FROM (
+  async conversations(actor: Actor, after?: string) {
+    return staffOrderRead(actor, async (client) => {
+      const cursor = after
+        ? (
+            await client.query<{ created_at: string; id: string }>(
+              `SELECT created_at::text AS created_at,id FROM electricity_order_comments WHERE id=$1`,
+              [after]
+            )
+          ).rows[0]
+        : undefined;
+      if (after && !cursor) throw new NotFoundException('Comment cursor not found');
+      const recent = (
+        await client.query<{ order_id: string; id: string; created_at: Date }>(
+          `SELECT order_id,id,created_at FROM (
            SELECT DISTINCT ON (order_id) order_id,id,created_at
            FROM electricity_order_comments ORDER BY order_id,created_at DESC,id DESC
          ) latest
          WHERE ($1::timestamptz IS NULL OR (created_at,id)<($1::timestamptz,$2::uuid))
          ORDER BY created_at DESC,id DESC LIMIT 51`,
-        [cursor?.created_at ?? null, cursor?.id ?? null]
-      )
-    ).rows;
-    const page = recent.slice(0, 50);
-    if (!page.length) return { orders: [], nextAfter: null };
-    const rows = (
-      await getDbPool().query<ReviewRow>(`${reviewQuery} WHERE o.id=ANY($1::uuid[])`, [
-        page.map((row) => row.order_id),
-      ])
-    ).rows;
-    const byId = new Map(rows.map((row) => [row.id, row]));
-    return {
-      orders: page.flatMap((comment) => {
-        const row = byId.get(comment.order_id);
-        return row ? [{ ...present(row), latestCommentAt: comment.created_at.toISOString() }] : [];
-      }),
-      nextAfter: recent.length > 50 ? page[49]!.id : null,
-    };
+          [cursor?.created_at ?? null, cursor?.id ?? null]
+        )
+      ).rows;
+      const page = recent.slice(0, 50);
+      if (!page.length) return { orders: [], nextAfter: null };
+      const rows = (
+        await client.query<ReviewRow>(`${reviewQuery} WHERE o.id=ANY($1::uuid[])`, [
+          page.map((row) => row.order_id),
+        ])
+      ).rows;
+      const byId = new Map(rows.map((row) => [row.id, row]));
+      return {
+        orders: page.flatMap((comment) => {
+          const row = byId.get(comment.order_id);
+          return row
+            ? [{ ...present(row), latestCommentAt: comment.created_at.toISOString() }]
+            : [];
+        }),
+        nextAfter: recent.length > 50 ? page[49]!.id : null,
+      };
+    });
   }
 
   async detail(id: string) {

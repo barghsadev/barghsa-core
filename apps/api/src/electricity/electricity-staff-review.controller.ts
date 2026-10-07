@@ -101,7 +101,7 @@ export class ElectricityStaffReviewController {
     this.requirePermission(req, false);
     if (after && !z.string().uuid().safeParse(after).success)
       throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
-    return this.service.queue(after);
+    return this.service.queue(req.session, after);
   }
 
   @Get('conversations')
@@ -112,7 +112,7 @@ export class ElectricityStaffReviewController {
     this.requirePermission(req, false);
     if (after && !z.string().uuid().safeParse(after).success)
       throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
-    return this.service.conversations(after);
+    return this.service.conversations(req.session, after);
   }
 
   @Get('drafts')

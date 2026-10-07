@@ -7,6 +7,11 @@ vi.mock('@barghsa/db', async (original) => ({
   getDbPool: () => ({ query }),
 }));
 
+vi.mock('../orders/staff-order-read.js', () => ({
+  staffOrderRead: (_actor: unknown, work: (client: { query: typeof query }) => Promise<unknown>) =>
+    work({ query }),
+}));
+
 it('exposes a cursor after 50 pending reviews and returns the following page', async () => {
   const submittedAt = new Date('2026-09-23T00:00:00.000Z');
   const rows = Array.from({ length: 51 }, (_, index) => ({
@@ -42,10 +47,11 @@ it('exposes a cursor after 50 pending reviews and returns the following page', a
     .mockResolvedValueOnce({ rows: [{ id: rows[49]!.id, submitted_at: submittedAt }] })
     .mockResolvedValueOnce({ rows: [rows[50]] });
   const service = new ElectricityStaffReviewService({} as never, {} as never, {} as never);
-  const first = await service.queue();
+  const actor = { userId: 'staff', sessionId: 'session', csrfToken: 'csrf' };
+  const first = await service.queue(actor);
   expect(first.orders).toHaveLength(50);
   expect(first.nextAfter).toBe(rows[49]!.id);
-  const second = await service.queue(first.nextAfter!);
+  const second = await service.queue(actor, first.nextAfter!);
   expect(second.orders.map((order) => order.orderId)).toEqual([rows[50]!.id]);
   expect(second.nextAfter).toBeNull();
 });
