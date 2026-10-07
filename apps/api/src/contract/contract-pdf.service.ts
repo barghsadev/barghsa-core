@@ -4,7 +4,7 @@ import { contractDocuments, createDbClient, documents, eq, getDbPool } from '@ba
 import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage';
 import type { PoolClient } from 'pg';
 import { DocumentService, recordEvent } from '../documents/document.service.js';
-import { notifyDocumentReview } from '../documents/document-notifications.js';
+import { notifyDocumentReview, notifyDocumentUpload } from '../documents/document-notifications.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
@@ -179,6 +179,7 @@ export class ContractPdfService {
         .returning()
     )[0]!;
     await recordEvent(client, available, 'PendingScan', actor, ip);
+    await notifyDocumentUpload(client, available);
     if (scannerConfigured) {
       await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [created.id]);
       return available.id;

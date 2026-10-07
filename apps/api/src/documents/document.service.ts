@@ -34,7 +34,7 @@ import {
 import { DocumentStorageService } from './document-storage.service.js';
 import type { DocumentCommand, DocumentCreate, DocumentListSchema } from './document-validation.js';
 import type { z } from 'zod';
-import { notifyDocumentReview } from './document-notifications.js';
+import { notifyDocumentReview, notifyDocumentUpload } from './document-notifications.js';
 
 type LinkedDocument = {
   document: Document;
@@ -791,6 +791,7 @@ export class DocumentService {
               .returning()
           )[0]!;
           await recordEvent(client, changed, 'PendingScan', actor, ip);
+          await notifyDocumentUpload(client, changed);
           if (scannerConfigured) {
             await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [id]);
           } else if (changed.supersedesDocumentId) {

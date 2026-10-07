@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect document.uploaded successful sealing/generated-document writers and manual quarantine internal producer paths. Implement only missing native durable boundaries with actual uploader/private staff scope; preserve two-phase pending/confirm and copy retry,all storage/scanner/quarantine/preview/access and immutable signed/history safeguards. Reuse accepted review/scanner delivery,stable occurrence/audit/rollback/replay; keep active templates/live provider/storage/scanner/owner/operations/launch explicit.
+Inspect existing verification_status,invitation_received and agent_role_changed profile producers and Appendix requirements. Implement only demonstrated missing durable notification boundaries. Preserve current profile ownership/private recipient grants,invitation/token/verification/state transitions,audits,stable occurrence/rollback/replay and original money/authorization; keep other producers,active custom templates and live provider/owner/operations/launch gates explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

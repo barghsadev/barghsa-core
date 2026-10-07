@@ -1,3 +1,9 @@
+import { NotificationsService } from '../notifications/notifications.service.js';
+import {
+  expectPrivateDocumentDelivery,
+  expectPrivateDocumentRollback,
+  privateDocumentSnapshot,
+} from '../test/private-document-notification-proof.js';
 import {
   expectDocumentReviewDelivery,
   expectDocumentReviewRollback,
@@ -2639,5 +2645,237 @@ it('holds document state through mandatory scanner queue failures and delivers o
     http = original;
     await configured.close();
     delete process.env['DOCUMENT_CLAMAV_HOST'];
+  }
+});
+
+it('queues successful user sealing once and preserves literal document names, recipients and read history', async () => {
+  const f = await owner(),
+    created = await create(f.user, { fileName: 'proof-$&-{reference}.pdf' });
+  expect(
+    (
+      await http.pool.query("SELECT id FROM notification_outbox WHERE payload->>'documentId'=$1", [
+        created.document.id,
+      ])
+    ).rows
+  ).toEqual([]);
+  await upload(created);
+  const body = command(1),
+    work = () => send(`documents/${created.document.id}/confirm`, f.user, 'POST', body);
+  const response = await work();
+  expect(response.status, http.logs()).toBe(200);
+  const document = (await response.json()) as DocumentDto;
+  await expectPrivateDocumentDelivery(http.pool, document.id, 'document.uploaded', [
+    { user: f.user, context: 'customer', profile: f.profile },
+  ]);
+  await http.pool.query(
+    "UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE delivery_key IN(SELECT 'outbox:'||id::text FROM notification_outbox WHERE payload->>'documentId'=$1)",
+    [document.id]
+  );
+  const before = await privateDocumentSnapshot(http.pool, document.id);
+  expect((await work()).status).toBe(200);
+  expect(await privateDocumentSnapshot(http.pool, document.id)).toEqual(before);
+});
+it('keeps pending confirmation and independent cleanup intent through every mandatory upload sink failure', async () => {
+  const f = await owner(),
+    created = await create(f.user);
+  await upload(created);
+  const body = command(1),
+    work = () => send(`documents/${created.document.id}/confirm`, f.user, 'POST', body);
+  const match = `event_key='document.uploaded' AND payload->>'documentId'='${created.document.id}'`;
+  const tables = (
+    await http.pool.query(
+      "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN ('sessions','rate_limit_counters','rate_limit_windows','storage_records') ORDER BY tablename"
+    )
+  ).rows.map((r) => r.tablename as string);
+  const snapshot = async () =>
+    Object.fromEntries(
+      await Promise.all(
+        tables.map(async (table) => [
+          table,
+          (
+            await http.pool.query(
+              `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${table.replaceAll('"', '""')}" t`
+            )
+          ).rows[0].rows,
+        ])
+      )
+    );
+  let failed = 0;
+  for (const [table, predicate] of [
+    [
+      'notification_outbox',
+      `NEW.event_key='document.uploaded' AND NEW.payload->>'documentId'='${created.document.id}'`,
+    ],
+    [
+      'in_app_notifications',
+      `NEW.type='document.uploaded' AND EXISTS(SELECT 1 FROM notification_outbox WHERE 'outbox:'||id::text=NEW.delivery_key AND ${match})`,
+    ],
+    [
+      'notification_job',
+      `EXISTS(SELECT 1 FROM notification_outbox WHERE id=NEW.outbox_id AND ${match})`,
+    ],
+    [
+      'notification_delivery_log',
+      `EXISTS(SELECT 1 FROM notification_outbox WHERE id=NEW.notification_id AND ${match})`,
+    ],
+  ])
+    for (const mode of ['raise', 'suppress']) {
+      const before = await snapshot();
+      await http.pool.query(
+        `CREATE FUNCTION fail_upload_delivery() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'upload delivery unavailable';" : 'RETURN NULL;'} END IF;RETURN NEW;END $$;CREATE TRIGGER fail_upload_delivery BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_upload_delivery()`
+      );
+      try {
+        expect((await work()).status, http.logs()).toBe(500);
+      } finally {
+        await http.pool.query(
+          `DROP TRIGGER fail_upload_delivery ON ${table};DROP FUNCTION fail_upload_delivery()`
+        );
+      }
+      failed++;
+      expect(
+        (
+          await http.pool.query('SELECT state,storage_key,revision FROM documents WHERE id=$1', [
+            created.document.id,
+          ])
+        ).rows
+      ).toEqual([{ state: 'PendingScan', storage_key: null, revision: 2 }]);
+      if (failed > 1) expect(await snapshot()).toEqual(before);
+      const cleanup = (
+        await http.pool.query(
+          "SELECT status,metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+          [created.upload.key]
+        )
+      ).rows;
+      expect(cleanup).toHaveLength(failed);
+      for (const record of cleanup)
+        expect(record).toMatchObject({
+          status: 'removed',
+          metadata: { provisionalCopy: true, deletionRequested: true },
+        });
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM notification_outbox WHERE payload->>'documentId'=$1",
+            [created.document.id]
+          )
+        ).rows
+      ).toEqual([]);
+    }
+  expect((await work()).status, http.logs()).toBe(200);
+  await expectPrivateDocumentDelivery(http.pool, created.document.id, 'document.uploaded', [
+    { user: f.user, context: 'customer', profile: f.profile },
+  ]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT status FROM storage_records WHERE metadata->>'sourceKey'=$1 ORDER BY status",
+        [created.upload.key]
+      )
+    ).rows.map((r) => r.status)
+  ).toEqual(['immutable', ...Array(failed).fill('removed')]);
+  const saved = await privateDocumentSnapshot(http.pool, created.document.id);
+  expect((await work()).status).toBe(200);
+  expect(await privateDocumentSnapshot(http.pool, created.document.id)).toEqual(saved);
+});
+it('queues manual quarantine privately to active administrators with atomic rollback and a distinct retained occurrence', async () => {
+  const admin = await login(),
+    pendingAdmin = await login();
+  await http.pool.query(
+    'UPDATE users SET is_staff=true,is_admin=true WHERE user_id=ANY($1::text[])',
+    [[admin, pendingAdmin]]
+  );
+  await http.pool.query("UPDATE users SET activation_token='pending' WHERE user_id=$1", [
+    pendingAdmin,
+  ]);
+  try {
+    const f = await owner(),
+      document = await confirm(await create(f.user), f.user),
+      body = {
+        ...command(document.revision),
+        reason: 'Internal staff restriction; no malware verdict',
+      },
+      work = () =>
+        send(`admin/documents/${document.id}/quarantine`, 'document-legal', 'POST', body);
+    await expectPrivateDocumentRollback(http.pool, document.id, work, 'document.quarantined');
+    const response = await work();
+    expect(response.status).toBe(200);
+    const result = (await response.json()) as DocumentDto;
+    await expectPrivateDocumentDelivery(
+      http.pool,
+      document.id,
+      'document.quarantined',
+      [{ user: admin, context: 'staff', profile: null }],
+      result.revision
+    );
+    const before = await privateDocumentSnapshot(http.pool, document.id);
+    expect(JSON.stringify(before.inbox)).not.toContain('malware detection');
+    expect(JSON.stringify(before.inbox)).toContain(body.reason);
+    expect((await work()).status).toBe(200);
+    expect(await privateDocumentSnapshot(http.pool, document.id)).toEqual(before);
+    const customer = (
+      await http.pool.query(
+        'SELECT localized_content FROM in_app_notifications WHERE recipient_user_id=$1 AND localized_content::text LIKE $2',
+        [f.user, '%' + document.id + '%']
+      )
+    ).rows;
+    expect(JSON.stringify(customer)).not.toContain(body.reason);
+    expect((await send(`documents/${document.id}/download`, f.user)).status).toBe(409);
+  } finally {
+    await http.pool.query(
+      'UPDATE users SET is_admin=false,is_staff=false WHERE user_id=ANY($1::text[])',
+      [[admin, pendingAdmin]]
+    );
+  }
+});
+
+it('enforces current staff permission on a new private document receipt and preserves a historical duplicate after revocation', async () => {
+  const f = await owner(),
+    document = await confirm(await create(f.user), f.user),
+    recipient = await login(randomUUID(), 'role-legal-contracts');
+  const params = {
+    userId: recipient,
+    profileId: f.profile,
+    operatingContext: 'staff' as const,
+    type: 'general' as const,
+    title: 'Document uploaded',
+    localizedContent: {
+      fa: { title: 'مدرک', body: `evidence.pdf ${document.id}` },
+      en: { title: 'Document', body: `evidence.pdf ${document.id}` },
+    },
+    link: '/admin/documents',
+    eventKey: 'document.uploaded' as const,
+    occurrenceKey: `document.uploaded:${document.id}:${recipient}`,
+    payload: { documentId: document.id, documentName: 'evidence.pdf' },
+    requiredStaffPermission: 'legal:write',
+  };
+  const client = await http.pool.connect();
+  try {
+    await http.pool.query('DELETE FROM user_roles WHERE user_id=$1', [recipient]);
+    const before = await privateDocumentSnapshot(http.pool, document.id);
+    await client.query('BEGIN');
+    await expect(
+      new NotificationsService().createPrivateDocumentEvent(params, client)
+    ).rejects.toThrow('Mandatory private document inbox');
+    await client.query('ROLLBACK');
+    expect(await privateDocumentSnapshot(http.pool, document.id)).toEqual(before);
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES($1,'role-legal-contracts')",
+      [recipient]
+    );
+    await client.query('BEGIN');
+    expect(await new NotificationsService().createPrivateDocumentEvent(params, client)).toBe(true);
+    await client.query('COMMIT');
+    const saved = await privateDocumentSnapshot(http.pool, document.id);
+    await http.pool.query('DELETE FROM user_roles WHERE user_id=$1', [recipient]);
+    await client.query('BEGIN');
+    expect(await new NotificationsService().createPrivateDocumentEvent(params, client)).toBe(false);
+    await client.query('COMMIT');
+    expect(await privateDocumentSnapshot(http.pool, document.id)).toEqual(saved);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await http.pool.query('UPDATE users SET is_staff=false,disabled_at=NOW() WHERE user_id=$1', [
+      recipient,
+    ]);
   }
 });

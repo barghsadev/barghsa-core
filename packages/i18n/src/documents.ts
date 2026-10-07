@@ -1,6 +1,12 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  uploadNoticeTitle: 'Document uploaded',
+  uploadNoticeBody: 'Document "{name}" was uploaded. Reference: {reference}.',
+  quarantineStaffNoticeTitle: 'Document quarantined',
+  quarantineStaffNoticeBody:
+    'Document "{name}" was quarantined. Reference: {reference}. Reason: {reason}',
+
   dropFiles: 'Drag files here or click to browse',
   fileRequirements: 'Accepted: {formats}. Maximum size: {size}. Up to {count} file(s).',
   fileErrorCount: 'Select up to {count} file(s).',
@@ -166,6 +172,10 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  uploadNoticeTitle: 'مدرک بارگذاری شد',
+  uploadNoticeBody: 'مدرک «{name}» بارگذاری شد. شناسه: {reference}.',
+  quarantineStaffNoticeTitle: 'مدرک قرنطینه شد',
+  quarantineStaffNoticeBody: 'مدرک «{name}» قرنطینه شد. شناسه: {reference}. دلیل: {reason}',
   dropFiles: 'فایل\u200cها را اینجا رها کنید یا برای انتخاب کلیک کنید',
   fileRequirements:
     'فرمت\u200cهای مجاز: {formats}. حداکثر اندازه: {size}. حداکثر تعداد فایل: {count}.',

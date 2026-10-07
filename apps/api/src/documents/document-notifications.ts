@@ -1,3 +1,4 @@
+import { documentText } from '@barghsa/i18n/documents';
 import type { Document } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
@@ -21,12 +22,113 @@ const messages = {
     en: 'This file was not accepted and cannot be downloaded.',
   },
 };
+function privateDocumentContent(document: Document, event: 'upload' | 'quarantine', reason = '') {
+  return Object.fromEntries(
+    (['fa', 'en'] as const).map((locale) => [
+      locale,
+      {
+        title: documentText(
+          event === 'upload' ? 'uploadNoticeTitle' : 'quarantineStaffNoticeTitle',
+          locale
+        ),
+        body: documentText(
+          event === 'upload' ? 'uploadNoticeBody' : 'quarantineStaffNoticeBody',
+          locale
+        ).replace(
+          /\{(name|reference|reason)\}/g,
+          (_match, key: string) =>
+            (
+              ({ name: document.originalName, reference: document.id, reason }) as Record<
+                string,
+                string
+              >
+            )[key]!
+        ),
+      },
+    ])
+  ) as Record<'fa' | 'en', { title: string; body: string }>;
+}
+async function documentReviewStaff(client: PoolClient, document: Document) {
+  const users = await client.query<{ user_id: string; is_admin: boolean; permissions: unknown }>(
+    `SELECT u.user_id,u.is_admin,array_agg(r.permissions) FILTER(WHERE r.role_id IS NOT NULL) AS permissions
+     FROM users u LEFT JOIN user_roles ur ON ur.user_id=u.user_id LEFT JOIN staff_roles r ON r.role_id=ur.role_id
+     WHERE (u.is_staff OR u.is_admin) AND u.disabled_at IS NULL AND u.activation_token IS NULL GROUP BY u.user_id,u.is_admin`
+  );
+  const permission = staffDocumentPermission(document.businessRecordType as BusinessType, true);
+  return users.rows
+    .filter(
+      (u) =>
+        u.is_admin ||
+        resolveStaffPermissions(u.permissions).some((p) => p === '*' || p === permission)
+    )
+    .map((u) => u.user_id);
+}
+export async function notifyDocumentUpload(client: PoolClient, document: Document) {
+  if (
+    !document.storageKey ||
+    !document.checksum ||
+    !['PendingScan', 'Available'].includes(document.state)
+  )
+    throw new Error('Document upload notice requires its successful sealed copy');
+  const system = document.uploadedByType === 'system';
+  const users = system ? await documentReviewStaff(client, document) : [document.uploadedBy];
+  for (const userId of users) {
+    const staff = system || document.uploadedByType === 'staff';
+    const content = privateDocumentContent(document, 'upload');
+    await new NotificationsService().createPrivateDocumentEvent(
+      {
+        userId,
+        profileId: document.profileId,
+        operatingContext: staff ? 'staff' : 'customer',
+        type: 'general',
+        title: content.en.title,
+        localizedContent: content,
+        ...(staff ? { link: '/admin/documents' } : {}),
+        eventKey: 'document.uploaded',
+        ...(system
+          ? {
+              requiredStaffPermission: staffDocumentPermission(
+                document.businessRecordType as BusinessType,
+                true
+              ),
+            }
+          : {}),
+        payload: { documentId: document.id, documentName: document.originalName },
+        occurrenceKey: `document.uploaded:${document.id}:${userId}`,
+      },
+      client
+    );
+  }
+}
+async function notifyManualQuarantine(client: PoolClient, document: Document, reason: string) {
+  const users = await client.query<{ user_id: string }>(
+    'SELECT user_id FROM users WHERE is_staff=true AND is_admin=true AND disabled_at IS NULL AND activation_token IS NULL'
+  );
+  const content = privateDocumentContent(document, 'quarantine', reason);
+  for (const user of users.rows)
+    await new NotificationsService().createPrivateDocumentEvent(
+      {
+        userId: user.user_id,
+        operatingContext: 'staff',
+        type: 'general',
+        title: content.en.title,
+        localizedContent: content,
+        link: '/admin/documents',
+        eventKey: 'document.quarantined',
+        payload: { documentId: document.id, documentName: document.originalName, reason },
+        occurrenceKey: `document.quarantined:${document.id}:manual:${document.revision}:${user.user_id}`,
+      },
+      client
+    );
+}
+
 export async function notifyDocumentReview(
   client: PoolClient,
   document: Document,
   event: keyof typeof messages,
   reason?: string
 ) {
+  if (event === 'quarantine') await notifyManualQuarantine(client, document, reason ?? '');
   if (event !== 'submit' && document.businessRecordType === 'contract') {
     const published = await client.query(
       `SELECT 1 FROM contract_documents cd JOIN contract_publications p

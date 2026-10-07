@@ -27,6 +27,8 @@ export type CustomerBusinessEvent =
 
 export type TicketBusinessEvent = 'ticket.new_reply' | 'ticket.assigned';
 
+export type PrivateDocumentEvent = 'document.uploaded' | 'document.quarantined';
+
 export interface CreateNotificationParams {
   userId: string;
   profileId?: string;
@@ -87,7 +89,10 @@ export class NotificationsService {
   async create(
     params: CreateNotificationParams,
     transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
-    delivery?: { outboxId: string; eventKey: CustomerBusinessEvent | TicketBusinessEvent }
+    delivery?: {
+      outboxId: string;
+      eventKey: CustomerBusinessEvent | TicketBusinessEvent | PrivateDocumentEvent;
+    }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
     const id = uuidv7();
@@ -132,6 +137,110 @@ export class NotificationsService {
   }
 
   /** The caller owns the native business transaction and its stable occurrence identity. */
+  async createPrivateDocumentEvent(
+    params: CreateNotificationParams & {
+      eventKey: PrivateDocumentEvent;
+      occurrenceKey: string;
+      payload: Record<string, string>;
+      requiredStaffPermission?: string;
+    },
+    transaction: PoolClient
+  ): Promise<boolean> {
+    if (
+      !params.userId.trim() ||
+      !params.occurrenceKey.trim() ||
+      !['customer', 'staff'].includes(params.operatingContext) ||
+      (params.eventKey === 'document.uploaded'
+        ? !params.profileId
+        : params.profileId || params.operatingContext !== 'staff')
+    )
+      throw new Error('Document delivery requires its original private recipient');
+    const payload = {
+      ...params.payload,
+      ...(params.link ? { link_route: notificationLink(params.link) } : {}),
+    };
+    const id = uuidv7();
+    const inserted = await transaction.query(
+      `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$3,$4,$5,ARRAY['in_app'],'queued',$6,5,$7) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
+      [
+        id,
+        params.profileId ?? null,
+        params.userId,
+        params.eventKey,
+        payload,
+        params.occurrenceKey,
+        correlationIdStorage.getStore() ?? null,
+      ]
+    );
+    if (!inserted.rows[0]) {
+      const existing = await transaction.query(
+        `SELECT o.id FROM notification_outbox o JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+         WHERE o.idempotency_key=$1 AND o.profile_id IS NOT DISTINCT FROM $2::uuid AND o.user_id=$3
+          AND o.event_key=$4 AND o.payload=$5::jsonb AND o.channels=ARRAY['in_app']
+          AND n.profile_id IS NOT DISTINCT FROM o.profile_id AND n.recipient_user_id=o.user_id AND n.type=o.event_key AND n.operating_context=$6
+          AND EXISTS(SELECT 1 FROM notification_job WHERE outbox_id=o.id AND channel='in_app')
+          AND EXISTS(SELECT 1 FROM notification_delivery_log WHERE notification_id=o.id AND channel='in_app' AND status='delivered' AND attempt_number=1 AND provider_ref=n.id::text)`,
+        [
+          params.occurrenceKey,
+          params.profileId ?? null,
+          params.userId,
+          params.eventKey,
+          payload,
+          params.operatingContext,
+        ]
+      );
+      if (!existing.rows[0])
+        throw new Error('Private document occurrence conflicts with saved delivery');
+      return false;
+    }
+    const notice = { id: uuidv7() };
+    const inbox = await transaction.query(
+      `INSERT INTO in_app_notifications(id,recipient_user_id,profile_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,delivery_key,params)
+       SELECT $1,$2,$3,$4,$5,'notifications.legacy.title','notifications.legacy.body',$6,$7,'outbox:'||$8::text,$9
+       WHERE EXISTS(SELECT 1 FROM users u WHERE u.user_id=$2 AND u.disabled_at IS NULL AND u.activation_token IS NULL
+        AND ($4='customer' OR u.is_staff OR u.is_admin)
+        AND ($5<>'document.quarantined' OR (u.is_staff AND u.is_admin))
+        AND ($10::text IS NULL OR u.is_admin OR EXISTS(
+          SELECT 1 FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id
+           AND (CASE WHEN r.permissions IS JSON ARRAY THEN r.permissions::jsonb ELSE '[]'::jsonb END) ?| ARRAY['*',$10]
+        ))) RETURNING id`,
+      [
+        notice.id,
+        params.userId,
+        params.profileId ?? null,
+        params.operatingContext,
+        params.eventKey,
+        params.localizedContent ?? {
+          fa: { title: params.title, body: params.body ?? '' },
+          en: { title: params.title, body: params.body ?? '' },
+        },
+        notificationLink(params.link),
+        id,
+        payload,
+        params.requiredStaffPermission ?? null,
+      ]
+    );
+    if (inbox.rowCount !== 1 || inbox.rows[0]?.id !== notice.id)
+      throw new Error('Mandatory private document inbox was not stored');
+    const priority =
+      classifyNotificationType(params.eventKey) === 'immediate' ? 'urgent' : 'normal';
+    const job = await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done',$2,5,1,$3,$4)`,
+      [id, priority, notice.id, payload]
+    );
+    if (job.rowCount !== 1) throw new Error('Mandatory private document inbox job was not stored');
+    const history = await transaction.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [id, notice.id]
+    );
+    if (history.rowCount !== 1)
+      throw new Error('Mandatory private document delivery history was not stored');
+    return true;
+  }
+
   async createTicketBusinessEvent(
     params: CreateNotificationParams & {
       eventKey: TicketBusinessEvent;

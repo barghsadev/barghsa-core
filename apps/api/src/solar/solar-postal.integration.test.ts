@@ -1,3 +1,4 @@
+import { expectPrivateDocumentDelivery } from '../test/private-document-notification-proof.js';
 import { expectCancellationRequestDelivery } from '../test/cancellation-request-notification-proof.js';
 import {
   expectSolarAudit,
@@ -996,6 +997,17 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       template: { text: expect.stringContaining('deposit 100000 IRR.') },
     },
   });
+  await expectPrivateDocumentDelivery(http.pool, sourceAttachment[0].id, 'document.uploaded', [
+    { user: 'postal-reviewer', context: 'staff', profile: profileId },
+  ]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM notification_outbox WHERE event_key='document.uploaded' AND user_id='postal-buyer' AND payload->>'documentId'=$1",
+        [sourceAttachment[0].id]
+      )
+    ).rows
+  ).toEqual([]);
   expect(sourceAttachment[0].content.template.text).toContain(input.text);
   expect(sourceAttachment[0].content.template.text).not.toContain('{{');
   expect((await send('postal-buyer', `documents/${sourceAttachment[0].id}/download`)).status).toBe(

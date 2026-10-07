@@ -1,3 +1,4 @@
+import { expectPrivateDocumentDelivery } from '../test/private-document-notification-proof.js';
 import { createServer, type Server } from 'node:http';
 import { once } from 'node:events';
 import { randomUUID } from 'node:crypto';
@@ -240,6 +241,17 @@ it('embeds the selected template version and rendered text in a new preliminary 
     uploaded_by_type: 'system',
     role: 'original',
   });
+  await expectPrivateDocumentDelivery(http.pool, document.id, 'document.uploaded', [
+    { user: 'editor', context: 'staff', profile: profileId },
+  ]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM notification_outbox WHERE event_key='document.uploaded' AND user_id='buyer' AND payload->>'documentId'=$1",
+        [document.id]
+      )
+    ).rows
+  ).toEqual([]);
   const version = await http.pool.query<{ id: string }>(
     'SELECT id FROM contract_versions WHERE contract_id=$1',
     [contractId]
@@ -330,6 +342,46 @@ it('rolls back an order when automatic PDF storage fails and succeeds on retry',
      AND metadata->>'deletionRequested'='true'`
   );
   expect(Number(cleanup.rows[0]!.count)).toBeGreaterThanOrEqual(1);
+  for (const mode of ['raise', 'suppress']) {
+    await http.pool.query(
+      `CREATE FUNCTION fail_generated_upload_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event_key='document.uploaded' AND NEW.profile_id='${profileId}'::uuid THEN ${mode === 'raise' ? "RAISE EXCEPTION 'generated upload notice unavailable';" : 'RETURN NULL;'} END IF;RETURN NEW;END $$;CREATE TRIGGER fail_generated_upload_notice BEFORE INSERT ON notification_outbox FOR EACH ROW EXECUTE FUNCTION fail_generated_upload_notice()`
+    );
+    const tables = (
+      await http.pool.query(
+        "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN ('sessions','rate_limit_counters','rate_limit_windows','storage_records') ORDER BY tablename"
+      )
+    ).rows.map((r) => r.tablename as string);
+    const snapshot = async () =>
+      Object.fromEntries(
+        await Promise.all(
+          tables.map(async (table) => [
+            table,
+            (
+              await http.pool.query(
+                `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${table.replaceAll('"', '""')}" t`
+              )
+            ).rows[0].rows,
+          ])
+        )
+      );
+    const before = await snapshot();
+    try {
+      expect(
+        (
+          await fetch(`${http.base}/api/electricity/orders/simple`, {
+            method: 'POST',
+            headers: buyerHeaders,
+            body,
+          })
+        ).status
+      ).toBe(500);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await http.pool.query(
+        'DROP TRIGGER fail_generated_upload_notice ON notification_outbox;DROP FUNCTION fail_generated_upload_notice()'
+      );
+    }
+  }
   const retry = await fetch(`${http.base}/api/electricity/orders/simple`, {
     method: 'POST',
     headers: buyerHeaders,

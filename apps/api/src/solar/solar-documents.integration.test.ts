@@ -649,11 +649,19 @@ it('uses the specified staff routes for the same protected per-file and document
     expect(
       (
         await http.pool.query(
-          "SELECT id FROM in_app_notifications WHERE recipient_user_id='solar-buyer' AND localized_content->'en'->>'body' LIKE '%' || $1 || '%'",
+          "SELECT id FROM in_app_notifications WHERE recipient_user_id='solar-buyer' AND type='document.review_completed' AND localized_content->'en'->>'body' LIKE '%' || $1 || '%'",
           [document.id]
         )
       ).rows
     ).toHaveLength(1);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT type FROM in_app_notifications WHERE recipient_user_id='solar-buyer' AND localized_content->'en'->>'body' LIKE '%'||$1||'%' ORDER BY type",
+          [document.id]
+        )
+      ).rows
+    ).toEqual([{ type: 'document.review_completed' }, { type: 'document.uploaded' }]);
   }
   const review = await send('solar-reviewer', `${path}/review-set-decision`, 'POST', {
     decision: 'request_additional',

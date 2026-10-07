@@ -7,7 +7,7 @@ import { contractDocuments, createDbClient, documents, eq } from '@barghsa/db';
 import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
 import { reserveUpload } from '../upload/upload-reservations.js';
 import { recordEvent } from '../documents/document.service.js';
-import { notifyDocumentReview } from '../documents/document-notifications.js';
+import { notifyDocumentReview, notifyDocumentUpload } from '../documents/document-notifications.js';
 import { renderContractPdf } from '../contract/contract-pdf.js';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
@@ -243,6 +243,7 @@ export class SolarContractSourceService {
         .returning()
     )[0]!;
     await recordEvent(client, available, 'PendingScan', { userId: actorId }, ip);
+    await notifyDocumentUpload(client, available);
     if (scan)
       await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [created.id]);
     else {
