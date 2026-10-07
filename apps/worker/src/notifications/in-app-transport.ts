@@ -1,7 +1,7 @@
 import {
   defaultInboxContent,
   defaultInboxLink,
-  renderTemplate,
+  renderInboxTemplates,
 } from '@barghsa/shared/notifications';
 export { relativeLinkRoute } from '@barghsa/shared/notifications';
 import { getDbPool } from '@barghsa/db';
@@ -146,43 +146,17 @@ export class InAppNotificationTransport implements INotificationTransport {
       if (!allowed.rows[0])
         throw new Error('Document alert recipient is no longer an active administrator');
     }
-    const content = defaultInboxContent(payload.eventKey, payload.payload);
+
     const templates = await pool.query(
       `SELECT locale,subject,body_template,variables FROM notification_templates
       WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,
       [payload.eventKey]
     );
-    for (const template of templates.rows) {
-      if (template.locale !== 'fa' && template.locale !== 'en')
-        throw new Error('Invalid inbox template locale');
-      if (!Array.isArray(template.variables) || typeof template.body_template !== 'string')
-        throw new Error('Invalid inbox template');
-      const names = template.variables.map((item: unknown) =>
-        typeof item === 'string'
-          ? item.trim()
-          : item && typeof item === 'object' && 'name' in item && typeof item.name === 'string'
-            ? item.name.trim()
-            : ''
-      );
-      if (names.some((name: string) => !name)) throw new Error('Invalid inbox template variables');
-      const title = renderTemplate(
-        template.subject ?? content[template.locale as 'fa' | 'en'].title,
-        names,
-        { data: payload.payload, escapeValues: false }
-      );
-      const body = renderTemplate(template.body_template, names, {
-        data: payload.payload,
-        escapeValues: false,
-      });
-      if (
-        title.missing.length ||
-        title.unknown.length ||
-        body.missing.length ||
-        body.unknown.length
-      )
-        throw new Error('Inbox template data incomplete');
-      content[template.locale as 'fa' | 'en'] = { title: title.output, body: body.output };
-    }
+    const content = renderInboxTemplates(
+      defaultInboxContent(payload.eventKey, payload.payload),
+      templates.rows,
+      payload.payload
+    );
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
          (profile_id, operating_context, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key,recipient_user_id,localized_content)

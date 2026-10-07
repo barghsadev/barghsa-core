@@ -1071,7 +1071,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     );
   } finally {
     await http.pool.query(
-      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+      "UPDATE sessions SET step_up_verified_at=LEAST(NOW(),$1::timestamptz) WHERE user_id='saving-order-staff'",
+      [new Date()]
     );
   }
   await rejectedComment(
@@ -1443,7 +1444,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       );
     } finally {
       await http.pool.query(
-        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+        "UPDATE sessions SET step_up_verified_at=LEAST(NOW(),$1::timestamptz) WHERE user_id='saving-order-staff'",
+        [new Date()]
       );
     }
     await http.pool.query(
@@ -1710,7 +1712,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       );
     } finally {
       await http.pool.query(
-        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+        "UPDATE sessions SET step_up_verified_at=LEAST(NOW(),$1::timestamptz) WHERE user_id='saving-order-staff'",
+        [new Date()]
       );
     }
     await http.pool.query(
@@ -1919,7 +1922,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       );
     } finally {
       await http.pool.query(
-        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+        "UPDATE sessions SET step_up_verified_at=LEAST(NOW(),$1::timestamptz) WHERE user_id='saving-order-staff'",
+        [new Date()]
       );
     }
     await http.pool.query(
@@ -2315,7 +2319,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     );
   } finally {
     await http.pool.query(
-      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+      "UPDATE sessions SET step_up_verified_at=LEAST(NOW(),$1::timestamptz) WHERE user_id='saving-order-staff'",
+      [new Date()]
     );
   }
   const maximalPreview = await request(
@@ -2689,7 +2694,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       );
     } finally {
       await http.pool.query(
-        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='saving-order-staff'"
+        "UPDATE sessions SET step_up_verified_at=LEAST(NOW(),$1::timestamptz) WHERE user_id='saving-order-staff'",
+        [new Date()]
       );
     }
   });

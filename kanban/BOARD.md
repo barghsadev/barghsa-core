@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect/reuse existing shared allowlisted renderer andworker active fa/en template semantics for fresh synchronous canonical inbox writes. Implement demonstrated active-template gap in bounded native helper scope with exact payload/private context,caller-owned transaction,failure rollback andimmutable historic read/content/idempotency/receipts. Check changed shared/API/worker consumers proportionally;SQL-native receipts remain explicit separate scope. Awaiting-staff appendix andsecureOTP owner dispositions remain pending;system publication/live provider/storage/scanner/policy/operations/fourservice launch unfinished.
+Inspect/reuse current shared active-inbox renderer for freshprivate API ticket/invitation/document andaccount/verification receipts. Batch complete compatible private payloads first;inspect actualsafe authnewdevice audit snapshot beforedevice/loginTime seedintegration. Preserve authorization/privateworkspace/transaction/strictsinks/idempotency/immutablehistoricalread/content/providerreceipt andacceptedcustomer template behavior. SQL/worker nativewriters,secureOTP/awaiting-staff owner dispositions,systempublication/alltemplatecontracts/liveprovider/storage/scanner/policy/operations/fourservice launch remainunfinished.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 - `05-notifications-documents-ai.md#T-05.04.02`: Variable interpolation & escaping

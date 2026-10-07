@@ -1,10 +1,48 @@
 import { notificationLink } from './navigation.js';
+import { renderTemplate } from './template-engine.js';
 
 export interface InboxText {
   title: string;
   body: string;
 }
 export type InboxContent = Record<'fa' | 'en', InboxText>;
+
+/** Render only fresh inbox content; callers retain existing receipts unchanged. */
+export function renderInboxTemplates(
+  fallback: InboxContent,
+  templates: Array<{
+    locale: unknown;
+    subject: string | null;
+    body_template: unknown;
+    variables: unknown;
+  }>,
+  data: Record<string, unknown>
+): InboxContent {
+  const content = { ...fallback };
+  for (const template of templates) {
+    if (template.locale !== 'fa' && template.locale !== 'en')
+      throw new Error('Invalid inbox template locale');
+    if (!Array.isArray(template.variables) || typeof template.body_template !== 'string')
+      throw new Error('Invalid inbox template');
+    const names = template.variables.map((item: unknown) =>
+      typeof item === 'string'
+        ? item.trim()
+        : item && typeof item === 'object' && 'name' in item && typeof item.name === 'string'
+          ? item.name.trim()
+          : ''
+    );
+    if (names.some((name: string) => !name)) throw new Error('Invalid inbox template variables');
+    const title = renderTemplate(template.subject ?? content[template.locale].title, names, {
+      data,
+      escapeValues: false,
+    });
+    const body = renderTemplate(template.body_template, names, { data, escapeValues: false });
+    if (title.missing.length || title.unknown.length || body.missing.length || body.unknown.length)
+      throw new Error('Inbox template data incomplete');
+    content[template.locale] = { title: title.output, body: body.output };
+  }
+  return content;
+}
 const labels: Record<string, [string, string, string, string]> = {
   'wallet.low_balance': [
     'موجودی کیف پول پایین',

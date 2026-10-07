@@ -1,5 +1,9 @@
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
-import { classifyNotificationType, notificationLink } from '@barghsa/shared/notifications';
+import {
+  classifyNotificationType,
+  notificationLink,
+  renderInboxTemplates,
+} from '@barghsa/shared/notifications';
 import { NotificationCenterService, notificationScope } from './notification-center.service.js';
 import { Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -571,7 +575,23 @@ export class NotificationsService {
         throw new Error('Business notification occurrence conflicts with saved delivery');
       return false;
     }
-    const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
+    const templates = await transaction.query(
+      `SELECT locale,subject,body_template,variables FROM notification_templates
+       WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,
+      [params.eventKey]
+    );
+    const localizedContent = renderInboxTemplates(
+      params.localizedContent ?? {
+        fa: { title: params.title, body: params.body ?? '' },
+        en: { title: params.title, body: params.body ?? '' },
+      },
+      templates.rows,
+      payload
+    );
+    const notice = await this.create({ ...params, localizedContent }, transaction, {
+      outboxId,
+      eventKey: params.eventKey,
+    });
     const priority =
       classifyNotificationType(params.eventKey) === 'immediate' ? 'urgent' : 'normal';
     // In-app delivery is immediate and already persisted; only email awaits the worker/window.
