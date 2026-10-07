@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing document.uploaded/review_completed/scan_failed/quarantined producers and recipient pipelines,including worker scans; implement only demonstrated Appendix gaps atomically. Preserve storage/scan/quarantine/preview/access,immutable signed evidence/history,profile isolation,staff/private scope,current eligibility,idempotency and rollback/retry. Keep live storage/scanner/template/provider and owner/operations/launch criteria explicit.
+Inspect existing document.uploaded and internal scan_failed/quarantined producers and recipient pipelines. Implement only missing durable upload/alert boundaries and retain accepted shared review delivery. Preserve two-phase pending/confirm upload and external copy retry,scanner/quarantine/preview/private access,immutable signed evidence/history,current staff/uploader scope,stable occurrences,rollback/retry and unknown receipts. Keep live storage/scanner/templates/providers and owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

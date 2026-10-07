@@ -1,3 +1,8 @@
+import {
+  expectDocumentReviewDelivery,
+  expectDocumentReviewRollback,
+  documentReviewDeliverySnapshot,
+} from '../test/document-review-notification-proof.js';
 import { expectDocumentAuditHistory } from '../test/core-audit.js';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { createHash, randomUUID } from 'node:crypto';
@@ -2323,4 +2328,63 @@ it('exposes effective file constraints in both authenticated contexts without gr
   }
   expect((await fetch(`${http.base}/api/upload/policy/document`)).status).toBe(401);
   expect((await send('upload/policy/document', f.user, 'POST', {})).status).toBe(404);
+});
+
+it.each(['approve', 'reject'] as const)(
+  'atomically queues canonical document %s review and recovers/replays the exact command',
+  async (action) => {
+    const f = await owner(),
+      document = await act(await confirm(await create(f.user), f.user), 'submit', f.user);
+    const reason = action === 'reject' ? 'Unreadable replacement required' : undefined;
+    const body = { ...command(document.revision), ...(reason ? { reason } : {}) };
+    const work = () =>
+      send(`admin/documents/${document.id}/${action}`, 'document-legal', 'POST', body);
+    await expectDocumentReviewRollback(http.pool, document.id, work);
+    const response = await work();
+    expect(response.status, http.logs()).toBe(200);
+    const reviewed = (await response.json()) as DocumentDto;
+    expect(reviewed.state).toBe(action === 'approve' ? 'Approved' : 'Rejected');
+    await expectDocumentReviewDelivery(
+      http.pool,
+      document.id,
+      reviewed.revision,
+      f.profile,
+      f.user,
+      reason
+    );
+    await http.pool.query(
+      "UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE delivery_key IN (SELECT 'outbox:'||id::text FROM notification_outbox WHERE payload->>'documentId'=$1)",
+      [document.id]
+    );
+    const before = await documentReviewDeliverySnapshot(http.pool, document.id);
+    expect((await work()).status).toBe(200);
+    expect(await documentReviewDeliverySnapshot(http.pool, document.id)).toEqual(before);
+    await expectDocumentAuditHistory(http.pool, document.id);
+  }
+);
+it('targets the current private document owner without changing old submission notices or uploader evidence', async () => {
+  const f = await owner(),
+    document = await act(await confirm(await create(f.user), f.user), 'submit', f.user),
+    next = await login();
+  const oldNotices = (
+    await http.pool.query(
+      'SELECT * FROM in_app_notifications WHERE localized_content::text LIKE $1 ORDER BY id',
+      ['%' + document.id + '%']
+    )
+  ).rows;
+  await http.pool.query('UPDATE profiles SET user_id=$2 WHERE id=$1', [f.profile, next]);
+  const reviewed = await act(document, 'approve', 'document-legal', true);
+  await expectDocumentReviewDelivery(http.pool, document.id, reviewed.revision, f.profile, next);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT * FROM in_app_notifications WHERE id=ANY($1::uuid[]) ORDER BY id',
+        [oldNotices.map((r) => r.id)]
+      )
+    ).rows
+  ).toEqual(oldNotices);
+  expect(
+    (await http.pool.query('SELECT uploaded_by FROM documents WHERE id=$1', [document.id])).rows[0]
+      .uploaded_by
+  ).toBe(f.user);
 });

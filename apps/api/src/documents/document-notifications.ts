@@ -36,7 +36,7 @@ export async function notifyDocumentReview(
     if (!published.rows.length) return;
   }
   const owner = (
-    await client.query<{ user_id: string }>('SELECT user_id FROM profiles WHERE id=$1', [
+    await client.query<{ user_id: string }>('SELECT user_id FROM profiles WHERE id=$1 FOR SHARE', [
       document.profileId,
     ])
   ).rows[0]!.user_id;
@@ -55,33 +55,47 @@ export async function notifyDocumentReview(
     }
   } else recipients.add(owner);
   const message = messages[event];
-  for (const userId of recipients)
-    await new NotificationsService().create(
-      {
-        userId,
-        ...(event !== 'submit' && userId === owner ? { profileId: document.profileId } : {}),
-        operatingContext: event === 'submit' ? 'staff' : 'customer',
-        type: 'general',
-        title: message.en,
-        localizedContent: {
-          fa: {
-            title: 'مدارک',
-            body:
-              message.fa +
-              ' شناسه مدرک: ' +
-              document.id +
-              (reason && event !== 'quarantine' ? ' ' + reason : ''),
-          },
-          en: {
-            title: 'Documents',
-            body:
-              message.en +
-              ' Document reference: ' +
-              document.id +
-              (reason && event !== 'quarantine' ? ' ' + reason : ''),
-          },
+  for (const userId of recipients) {
+    const params = {
+      userId,
+      ...(event !== 'submit' && userId === owner ? { profileId: document.profileId } : {}),
+      operatingContext: event === 'submit' ? 'staff' : 'customer',
+      type: 'general',
+      title: message.en,
+      localizedContent: {
+        fa: {
+          title: 'مدارک',
+          body:
+            message.fa +
+            ' شناسه مدرک: ' +
+            document.id +
+            (reason && event !== 'quarantine' ? ' ' + reason : ''),
+        },
+        en: {
+          title: 'Documents',
+          body:
+            message.en +
+            ' Document reference: ' +
+            document.id +
+            (reason && event !== 'quarantine' ? ' ' + reason : ''),
         },
       },
-      client
-    );
+    } as const;
+    if (event === 'approve' || event === 'reject')
+      await new NotificationsService().createCustomerBusinessEvent(
+        {
+          ...params,
+          profileId: document.profileId,
+          eventKey: 'document.review_completed',
+          occurrenceKey: `document.review_completed:${document.id}:${document.revision}:${userId}`,
+          payload: {
+            documentId: document.id,
+            documentName: document.originalName,
+            reviewResult: message.fa + ' / ' + message.en + (reason ? ' ' + reason : ''),
+          },
+        },
+        client
+      );
+    else await new NotificationsService().create(params, client);
+  }
 }

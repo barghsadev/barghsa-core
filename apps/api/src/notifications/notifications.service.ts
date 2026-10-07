@@ -22,7 +22,8 @@ export type CustomerBusinessEvent =
   | ContractCustomerEvent
   | 'order.submitted'
   | 'order.status_changed'
-  | 'order.cancellation_requested';
+  | 'order.cancellation_requested'
+  | 'document.review_completed';
 
 export type TicketBusinessEvent = 'ticket.new_reply' | 'ticket.assigned';
 
