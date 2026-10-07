@@ -99,7 +99,9 @@ export class NotificationsService {
         | 'profile.agent_role_changed'
         | 'auth.password_changed'
         | 'auth.session_revoked'
-        | 'auth.new_device_login';
+        | 'auth.new_device_login'
+        | 'payment.wallet_topup_completed'
+        | 'payment.wallet_topup_failed';
     }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();

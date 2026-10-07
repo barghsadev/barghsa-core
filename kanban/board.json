@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "69824293be73ffd29abcf07408d2b14843b192e2",
+  "source_commit": "777507a1071de70579c1bafae831634548ec1bc1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -19251,7 +19251,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -19632,6 +19632,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -19675,7 +19679,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -20033,6 +20038,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -23772,7 +23799,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "9c4105d07414231f2c9d1db058407506b95a4309ec23cb0bd51c49db92ee71b6"
+              "sha256": "a85d9a4a31e0e10fd0dc8360db51bfb8278cf750a7abf02350d9c285d108e728"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -23812,7 +23839,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "96bad5514fd0beae6e1354dd4614f6f0551f1a856c1a805d85f4740e795d6fe3"
+              "sha256": "e3c5874304cebbedffaf72da32927a234f66b2958ebfc87e57d72eaf752d2435"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -23865,6 +23892,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -23890,7 +23921,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -24137,6 +24169,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -29565,7 +29619,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -29750,6 +29804,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -29785,7 +29843,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -30127,6 +30186,28 @@
               "trust-callers",
               "worker-related"
             ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
+              "worker-related"
+            ]
           }
         }
       }
@@ -30263,7 +30344,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -30420,6 +30501,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -30449,7 +30534,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -30774,6 +30860,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -30934,7 +31042,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -31095,6 +31203,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -31124,7 +31236,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -31449,6 +31562,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -38466,7 +38601,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
@@ -38711,6 +38846,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -38739,7 +38878,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "limitations": [
             "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
@@ -39063,6 +39203,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -42033,7 +42195,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -42117,7 +42279,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -42246,6 +42408,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -42274,7 +42440,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -42617,6 +42784,28 @@
               "trust-callers",
               "worker-related"
             ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
+              "worker-related"
+            ]
           }
         }
       }
@@ -42637,7 +42826,7 @@
       "launch_required": true,
       "remaining": [
         "Inspect any remaining unaccepted generic/system order status paths. Native electricity review/revision/raw/protected legacy and SQL activation/completion/formal contract-cancellation now have scoped canonical owner delivery; accepted four-service submissions,customer cancellation,consultation/solar/saving/request families remain retained. Preserve true transitions versus internal/same-state information,Rejected versus formal Cancelled,and all financial/review/authority/session/audit/idempotency/ledger boundaries.",
-        "Inspect remaining unaccepted Appendix producers,including auth.otp_sent,payments/wallet/system/awaiting-staff and other native/generic/internal/review writers. OTP representation clarification is pending: appendix code-bearing in-app/email/SMS versus existing encrypted auth_delivery_outbox,bound challenge destination and registration before account; proposed code-free private account inbox has not yet been accepted or built. New-device login now has conditional post-authentication canonical private account audit/inbox/email,recognized-device/concurrent no-op,atomic sink/expiry/replay and current private recipient/provider receipt acceptance. Refresh/bulk/self/CRM/logout/cap/family,password/profile/document/native contract/order/ticket families retained. Preserve natural expiry/rotation/device-trust-only,initial credentials,password-required versus completed,unregistered invitations and financial/privacy/ownership/storage boundaries; do not infer exhaustive coverage.",
+        "Inspect remaining unaccepted Appendix producers,including auth.otp_sent,online wallet topup outcomes,invoice paid/overdue,refund outcomes,wallet credit/low balance,system/awaiting-staff and other native/generic/internal/review writers. Bank-receipt topup success/failure now preserves native canonical outbox keys/payloads while adding mandatory immediate private inbox/completed job/history,email queue and strict missing-sink/private-conflict guards; all money/approval/invoice/actor/deadline effects and old assertions retained. OTP representation clarification remains pending:appendix code-bearing in-app/email/SMS versus existing encrypted auth_delivery_outbox,bound destination and registration before account; proposed code-free account inbox not yet accepted/built. Accepted new-device/session/password/profile/document/native contract/order/ticket families retained. Preserve natural expiry/rotation/device-trust-only,initial credentials,password-required versus completed,unregistered invitations and financial/privacy/ownership/storage boundaries; do not infer exhaustive coverage.",
         "Verify and complete configured active in-app template rendering for native synchronous business notices with template tasks; current direct/native lifecycle writers preserve localized default content but do not establish custom active-template behavior. Preserve mandatory immediate delivery and immutable past read/content/history. Live template imports,provider callbacks/idempotency,alerts and production operations remain separate gates."
       ],
       "owner": null,
@@ -42721,7 +42910,8 @@
           "release-0.4-session-lifecycle-notification-producers",
           "release-0.4-bulk-session-notification-producers",
           "release-0.4-refresh-compromise-notification-producers",
-          "release-0.4-login-device-notification-producer"
+          "release-0.4-login-device-notification-producer",
+          "release-0.4-bank-receipt-notification-producers"
         ],
         "current_acceptance": {
           "kind": "partial-native-business-producer-acceptance",
@@ -42753,15 +42943,15 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "abfa5762b9d80a65bd367b1e1649c99649722e00448f3b55f7de94a640c60a55"
+              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -43017,7 +43207,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "9c4105d07414231f2c9d1db058407506b95a4309ec23cb0bd51c49db92ee71b6"
+              "sha256": "a85d9a4a31e0e10fd0dc8360db51bfb8278cf750a7abf02350d9c285d108e728"
             },
             {
               "path": "apps/api/src/orders/order-actor-lock.integration.test.ts",
@@ -43025,7 +43215,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "96bad5514fd0beae6e1354dd4614f6f0551f1a856c1a805d85f4740e795d6fe3"
+              "sha256": "e3c5874304cebbedffaf72da32927a234f66b2958ebfc87e57d72eaf752d2435"
             },
             {
               "path": "apps/api/src/test/order-status-notification-proof.ts",
@@ -43346,6 +43536,14 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
+              "sha256": "87ec24a6a323093e62959bb5782046feeb1ccf33af8adf9d60f664d05848c6db"
             }
           ],
           "checks": [
@@ -43549,10 +43747,18 @@
             "Worker binds account-private new-device email to original user,audit/new-device fact and canonical inbox; recognized audit,foreign account,inbox/disabled/activation/contact changes denied. Incidental profile archive/ownership never retargets. Active template controlled email sends once with durable receipt; accepted/unknown receipt states remain authoritative without resend after eligibility changes. Current contact rechecked after rendering before provider call. No fingerprint,IP,user-agent,OTP/hash/challenge/session/refresh/CSRF credentials in alert payloads.",
             "One coherent scoped review/proof preserves whole original notification runtime after one new-device dispatch/type extension,previous session/refresh helper and snapshot/sink/assertion helper AST after isolated new helpers,original worker/email after new event eligibility only. All old dictionary keys/values remain exact; four bilingual new-device keys added. Original176 worker assertions and all unchanged API caller sources/assertions preserved. Nine scoped source files only; all other tracked/config/dependency sources exact;427 baseline compiled output changes attributable to API/worker/i18n/web rebuild,plus new test output.",
             "Initial API typecheck exposed the missing auth.new_device_login member in internal create delivery typing. Corrected only that event union; final matching API rebuild/typecheck and writer lint/format/Semgrep pass. i18n/API/worker/web builds,API/worker types,nine-path lint/format,five production files/five-rule Semgrep zero findings pass. Shared dictionary justified web rebuild; all87 original gzip budgets pass without thresholds changed. No new browser/RTL/a11y or live provider/storage/scanner/operational acceptance claimed.",
-            "Task/release remain partial. Owner clarification requested for OTP appendix code-bearing in-app/email/SMS versus existing encrypted auth_delivery_outbox bound to challenge destination and registration-before-account. No OTP representation silently reconciled. Other Appendix order/payment/wallet/system/awaiting-staff,active native templates and live provider/storage/scanner/owner/operations/launch gates unfinished. No version/release/staging/Telegram/production. Approved owner decisions and unfinished consultation patch retained."
+            "Task/release remain partial. Owner clarification requested for OTP appendix code-bearing in-app/email/SMS versus existing encrypted auth_delivery_outbox bound to challenge destination and registration-before-account. No OTP representation silently reconciled. Other Appendix order/payment/wallet/system/awaiting-staff,active native templates and live provider/storage/scanner/owner/operations/launch gates unfinished. No version/release/staging/Telegram/production. Approved owner decisions and unfinished consultation patch retained.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded.",
+            "Bank-receipt wallet confirm/reject now synchronously persist canonical payment.wallet_topup_completed/payment.wallet_topup_failed private customer inbox records on the original native outbox,complete its in-app job and record delivered history while retaining urgent queued email. Original event keys,profile/user,payload,occurrence/idempotency,channels,max attempts,scheduling,correlation and returned outbox IDs unchanged; existing fallback bilingual content/amount/reason/wallet route reused.",
+            "Only private enqueueCustomerNotice implementation and imports change in the receipt service. Whole original class outside it remains AST exact:wallet/invoice ledger mutations,posted/reserved/version money,overpayment/exact/partial allocation,dual approval/emergency override,actor/session/CSRF/step-up/current permission/profile locks/audit/idempotency/final deadlines/retry/result members all retained. Original outbox INSERT and parameter AST exact. Persisted row counts and original private occurrence matching now fail closed for missing/conflicting required sinks.",
+            "291 distinct current passing cases:97 API cases accepted from initial94 passing/three new fixture failures after all three corrected cases passed;194 worker cases. Initial mixed suite is not called green. Final selection passed three and skipped33; skips/repeats excluded. Three grouped new cases exercise20 raised/silent failures across outbox/inbox/job insert/job completion update/history on confirm and reject; full public-row equality proves rollback including invoice settlement and wallet excess. Recovery credits only50000 excess against200000 invoice allocation,keeps rejection balance exact,preserves literal reason/read/history/queue replay,and rejects foreign occurrence without financial commit.",
+            "Initial API typing failures diagnosed as exact-optional test invoiceId and typed payload missing Record index signature; omitted optional test field and shallow read-only copies for existing fallback renderer fixed typing without changing saved payload. Initial fixture failures diagnosed as receiptKey truncation before random suffix causing unique attachment collision; only new fixtures now put random UUID first. Unique constraint,original fixtures,source behavior and every old assertion preserved. All three failed cases rerun after fix; final API build includes corrected fixture outputs.",
+            "Worker protects both payment wallet events with original current owner/nonarchived profile and active account/contact/consent/suppression rules; new owner/archived denial cases pass. Existing private staff exception and accepted/unknown provider receipt precedence stay exact. No retarget/resend guard or financial provider behavior rebuilt.",
+            "One coherent scoped review/proof preserves91 original unit,185 receipt integration and200 worker assertions. NS runtime exact with only two internal inbox delivery event types added; worker runtime exact after two protected payment names. Seven sources,12 baseline compiled changes plus new helper outputs only; all other tracked/config/dependency/source/compiled outputs including shared/db/i18n/web exact. Final API/worker builds/types,seven-path lint/format,fixture/fixed followups and three-production-file/five-rule Semgrep zero findings pass. Prior unchanged web build/all87 original budgets retained with exact source/output binding; no new browser or broad regression claim.",
+            "Task/release partial:online topup success/failure,invoice paid/overdue,refund outcomes,wallet credit/low balance,other Appendix/awaiting-staff/system,native active templates and live provider/storage/scanner/owner/operations/launch gates unfinished. OTP encrypted-destination delivery clarification remains pending,not silently accepted or built. No version/release/staging/Telegram/production. Owner dispositions and unfinished consultation patch unchanged."
           ],
           "limitations": [],
-          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
           "scope_qualification": "Local real worker/HTTP/PostgreSQL plus fixture production-browser evidence. Live provider delivery,operational alerts andowner design dispositions remain separate.",
           "accepted_producer_events": [
             "contract.awaiting_acceptance",
@@ -44074,6 +44280,33 @@
             "apps/api/src/auth/session-notifications.ts#notifyNewDeviceLogin",
             "apps/api/src/notifications/notifications.service.ts#createAccountBusinessEvent",
             "apps/worker/src/notifications/channel-availability-loader.ts#loadNotificationRecipient"
+          ],
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
+              "worker-related"
+            ]
+          },
+          "accepted_bank_receipt_paths": [
+            "apps/api/src/wallet/bank-receipt-confirmation.service.ts#enqueueCustomerNotice",
+            "apps/api/src/notifications/notifications.service.ts#create",
+            "apps/worker/src/notifications/channel-availability-loader.ts#loadNotificationRecipient"
           ]
         }
       }
@@ -44173,7 +44406,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -44257,7 +44490,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -44386,6 +44619,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -44414,7 +44651,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -44755,6 +44993,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -44991,7 +45251,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -45071,7 +45331,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -45196,6 +45456,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -45224,7 +45488,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "limitations": [
             "Migration0128 preserves earlier processing rows and snapshots retained receipts. It cannot reconstruct already missing historical attempts; legacy rows must not be summed as physical sends. Drain old workers before rollout."
@@ -45567,6 +45832,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -47079,7 +47366,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "9c4105d07414231f2c9d1db058407506b95a4309ec23cb0bd51c49db92ee71b6"
+              "sha256": "a85d9a4a31e0e10fd0dc8360db51bfb8278cf750a7abf02350d9c285d108e728"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -47107,7 +47394,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "96bad5514fd0beae6e1354dd4614f6f0551f1a856c1a805d85f4740e795d6fe3"
+              "sha256": "e3c5874304cebbedffaf72da32927a234f66b2958ebfc87e57d72eaf752d2435"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -47160,6 +47447,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -47178,7 +47469,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "order_submission_scoped_renewal": {
             "base_commit": "566f886b1b56e91bad7d8f5c4861296b3c5c8e74",
@@ -47420,6 +47712,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -50165,7 +50479,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -50438,6 +50752,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -50475,7 +50793,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -50818,6 +51137,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -51042,7 +51383,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -51315,6 +51656,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -51352,7 +51697,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -51695,6 +52041,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -55111,7 +55479,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "023b062a2c109b98539cf8277ed13877691c2d5c3cc0dea399c1c56124979da7"
+              "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -55384,6 +55752,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -55421,7 +55793,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -55764,6 +56137,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -78409,11 +78804,11 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "abfa5762b9d80a65bd367b1e1649c99649722e00448f3b55f7de94a640c60a55"
+              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -78502,19 +78897,46 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
             "Current Finance list/detail/UI/API reviews frozen receipt data and captured target/hash; dedicated permission,current session/CSRF/recent proof and threshold/approval locks are rechecked inside the transaction and before commit. Confirm posts one verified Completed credit and releases the Pending intent; reject requires a visible reason and never credits. Decision/audit/customer outbox commit atomically or fully roll back; concurrent retry and revocation/expiry preserve boundaries.72 staff UI cases and current HTTP/PG plus captured approval/denial/owned-feedback browsers pass.",
             "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
             "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
           "limitations": [
             "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
             "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
-          ]
+          ],
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
+              "worker-related"
+            ]
+          }
         }
       }
     },
@@ -78654,11 +79076,11 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "abfa5762b9d80a65bd367b1e1649c99649722e00448f3b55f7de94a640c60a55"
+              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -78715,6 +79137,10 @@
             {
               "path": "packages/shared/src/finance/bank-receipt-fields.ts",
               "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -78722,13 +79148,36 @@
             "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
             "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
-            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof."
+            "Wallet payload extraction renewal: all 105 prior finance declarations remain unchanged in original or leaf modules; unchanged callers and tests retained. Current 169 shared, 84 affected API, 77 UI and 20 production-browser cases pass. Existing criteria retained; no new task completion claimed. See release-0.3-wallet-payload receipts and source proof.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
           "limitations": [
             "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
             "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
-          ]
+          ],
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
+              "worker-related"
+            ]
+          }
         }
       }
     },
@@ -261303,11 +261752,11 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
-              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+              "sha256": "17f7139fafb25b1fe7c1971957dc9b229fbb8814f40a9a704885cc15faefaee4"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "abfa5762b9d80a65bd367b1e1649c99649722e00448f3b55f7de94a640c60a55"
+              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
             },
             {
               "path": "apps/web/e2e/receipt-emergency.spec.ts",
@@ -262860,6 +263309,10 @@
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
               "sha256": "f330a066e669f91829017499bf3d4bc50057cb6b8286a3be83c9e350c50e15e8"
+            },
+            {
+              "path": "apps/api/src/test/wallet-notification-proof.ts",
+              "sha256": "41e6f2c4f848f8279aba379be063ea1573b547981680b699ff78edc20220caee"
             }
           ],
           "checks": [
@@ -262893,7 +263346,8 @@
             "Scoped logout/cap/family lifecycle delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/session-lifecycle-notification-producers.314 distinct current passing cases. Original domain/finance/credential/namespace/actor/session/count/lock behavior and assertions retained after actual effect capture/audits/private delivery and final trust clock guard. Mandatory sinks,rollback/noop/replay/current private recipients accepted. All87 unchanged budgets source/output bound. Bulk/compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped bulk parent session-delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/bulk-session-notification-producers.324 distinct current passing cases. Original parent financial/identity/authority/audit/clock,bulk session/refresh mutation/locks and critical assertions retained. Required sink rollback,current private recipients and stable replay accepted. Unchanged web and87 budgets source/output bound. Refresh compromise/other auth/Appendix/templates/live launch excluded.",
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
-            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -263248,6 +263702,28 @@
               "writer-sast",
               "api-related",
               "trust-callers",
+              "worker-related"
+            ]
+          },
+          "bank_receipt_notice_scoped_renewal": {
+            "base_commit": "777507a1071de70579c1bafae831634548ec1bc1",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build-fixture-final",
+              "worker-build",
+              "api-types-final",
+              "worker-types",
+              "lint",
+              "format",
+              "sast",
+              "fixed-lint",
+              "fixed-format",
+              "fixed-sast",
+              "fixture-types",
+              "fixture-lint",
+              "fixture-format",
+              "receipt-affected-final",
               "worker-related"
             ]
           }
@@ -278370,6 +278846,24 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer",
       "release": false
+    },
+    "release-0.4-bank-receipt-notification-producers": {
+      "title": "Immediate private bank-receipt wallet notices",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02"
+      ],
+      "summary": "Native receipt topup completed/failed outboxes now deliver immediate private customer inbox/history and urgent email queues with strict sink/conflict guards. Original money/ledger/invoice/overpayment/approval/session/actor/deadline methods and occurrence/payload keys preserved. Other payment/Appendix/OTP disposition/templates/live launch partial.",
+      "validation": [
+        "Bank-receipt wallet confirm/reject now synchronously persist canonical payment.wallet_topup_completed/payment.wallet_topup_failed private customer inbox records on the original native outbox,complete its in-app job and record delivered history while retaining urgent queued email. Original event keys,profile/user,payload,occurrence/idempotency,channels,max attempts,scheduling,correlation and returned outbox IDs unchanged; existing fallback bilingual content/amount/reason/wallet route reused.",
+        "Only private enqueueCustomerNotice implementation and imports change in the receipt service. Whole original class outside it remains AST exact:wallet/invoice ledger mutations,posted/reserved/version money,overpayment/exact/partial allocation,dual approval/emergency override,actor/session/CSRF/step-up/current permission/profile locks/audit/idempotency/final deadlines/retry/result members all retained. Original outbox INSERT and parameter AST exact. Persisted row counts and original private occurrence matching now fail closed for missing/conflicting required sinks.",
+        "291 distinct current passing cases:97 API cases accepted from initial94 passing/three new fixture failures after all three corrected cases passed;194 worker cases. Initial mixed suite is not called green. Final selection passed three and skipped33; skips/repeats excluded. Three grouped new cases exercise20 raised/silent failures across outbox/inbox/job insert/job completion update/history on confirm and reject; full public-row equality proves rollback including invoice settlement and wallet excess. Recovery credits only50000 excess against200000 invoice allocation,keeps rejection balance exact,preserves literal reason/read/history/queue replay,and rejects foreign occurrence without financial commit.",
+        "Initial API typing failures diagnosed as exact-optional test invoiceId and typed payload missing Record index signature; omitted optional test field and shallow read-only copies for existing fallback renderer fixed typing without changing saved payload. Initial fixture failures diagnosed as receiptKey truncation before random suffix causing unique attachment collision; only new fixtures now put random UUID first. Unique constraint,original fixtures,source behavior and every old assertion preserved. All three failed cases rerun after fix; final API build includes corrected fixture outputs.",
+        "Worker protects both payment wallet events with original current owner/nonarchived profile and active account/contact/consent/suppression rules; new owner/archived denial cases pass. Existing private staff exception and accepted/unknown provider receipt precedence stay exact. No retarget/resend guard or financial provider behavior rebuilt.",
+        "One coherent scoped review/proof preserves91 original unit,185 receipt integration and200 worker assertions. NS runtime exact with only two internal inbox delivery event types added; worker runtime exact after two protected payment names. Seven sources,12 baseline compiled changes plus new helper outputs only; all other tracked/config/dependency/source/compiled outputs including shared/db/i18n/web exact. Final API/worker builds/types,seven-path lint/format,fixture/fixed followups and three-production-file/five-rule Semgrep zero findings pass. Prior unchanged web build/all87 original budgets retained with exact source/output binding; no new browser or broad regression claim.",
+        "Task/release partial:online topup success/failure,invoice paid/overdue,refund outcomes,wallet credit/low balance,other Appendix/awaiting-staff/system,native active templates and live provider/storage/scanner/owner/operations/launch gates unfinished. OTP encrypted-destination delivery clarification remains pending,not silently accepted or built. No version/release/staging/Telegram/production. Owner dispositions and unfinished consultation patch unchanged."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -278409,9 +278903,9 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-otp-payment-notification-producers",
+    "id": "release-0.4-online-topup-notification-producers",
     "release": "0.4.0",
-    "goal": "Reconcile owner reply for OTP secure encrypted auth-delivery design if available; do not copy codes to generic inbox or silently waive appendix. Inspect existing payment/refund/wallet notification writers while OTP clarification is pending. Reuse native ledger/receipt/idempotency and original customer/staff ownership/authorization/money/rollback/retry boundaries; build only demonstrated canonical delivery gaps with affected callers. Keep active templates,live provider/owner/operations/launch explicit.",
+    "goal": "Inspect existing online wallet topup successful credit and failed intent transitions/native warnings before rebuilding. Complete demonstrated canonical private durable delivery gaps in original ledger/state transaction while preserving gateway verification,signature/replay,event claim/crash resume/unpaid reopen/intent release,owned/caller-owned transactions,profile/account locks,amount/idempotency/audit and late-paid reconciliation. Avoid duplicate bank-receipt or generic wallet-credit notices. Reconcile pending OTP owner reply if available; keep invoice/refund/wallet low-balance/other Appendix/templates/live provider/owner/operations/launch explicit.",
     "task_keys": [
       "05-notifications-documents-ai.md#T-05.01.02"
     ]

@@ -90,6 +90,8 @@ const events = [
   'order.cancellation_requested',
   'document.review_completed',
   'profile.verification_status',
+  'payment.wallet_topup_completed',
+  'payment.wallet_topup_failed',
 ];
 it.each(events.flatMap((event) => ['owner', 'archived'].map((change) => [event, change] as const)))(
   'denies private %s delivery after its profile %s changes',

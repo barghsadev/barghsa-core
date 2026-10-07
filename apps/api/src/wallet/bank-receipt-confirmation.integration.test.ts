@@ -1,3 +1,10 @@
+import { randomUUID } from 'node:crypto';
+import { sessionNoticeState } from '../test/session-notification-proof.js';
+import {
+  failWalletNotice,
+  expectWalletNotice,
+  walletNoticeState,
+} from '../test/wallet-notification-proof.js';
 import {
   receiptDecisionSession,
   seedReceiptDecisionSessions,
@@ -1156,5 +1163,107 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     );
     expect(overpayCredits.rows).toHaveLength(1);
     expect(BigInt(overpayCredits.rows[0]!.amount)).toBe(300_000n);
+  });
+  const noticeFailures = [
+    ...[
+      'notification_outbox',
+      'in_app_notifications',
+      'notification_job',
+      'notification_delivery_log',
+    ].flatMap((table) =>
+      (['raise', 'suppress'] as const).map((mode) => ({ table, mode, operation: 'INSERT' }))
+    ),
+    ...(['raise', 'suppress'] as const).map((mode) => ({
+      table: 'notification_job',
+      mode,
+      operation: 'UPDATE',
+    })),
+  ];
+  it.each(['confirm', 'reject'] as const)(
+    'rolls back every required notice sink and financial effect on %s,then retries once',
+    async (action) => {
+      for (const { table, mode, operation } of noticeFailures) {
+        const pendingId = await insertPending(
+          `${randomUUID()}-${action}-${table}-${mode}-${operation}`
+        );
+        const invoiceId =
+          action === 'confirm' ? await insertInvoice({ total: 200000n, paid: 0n }) : undefined;
+        const reason = 'Receipt review $& {amount}';
+        const work = () =>
+          action === 'confirm'
+            ? service.confirm({
+                transactionId: pendingId,
+                actorUserId: ACTOR_USER_ID,
+                ...receiptDecisionSession(ACTOR_USER_ID),
+                ip: '10.0.0.9',
+                now: NOW,
+                ...(invoiceId ? { invoiceId } : {}),
+              })
+            : service.reject({
+                transactionId: pendingId,
+                actorUserId: ACTOR_USER_ID,
+                ...receiptDecisionSession(ACTOR_USER_ID),
+                ip: '10.0.0.9',
+                now: NOW,
+                raw: { reason },
+              });
+        const before = await sessionNoticeState(ctx.pool),
+          balance = await walletBalances(),
+          drop = await failWalletNotice(ctx.pool, table, mode, operation);
+        try {
+          await expect(work()).rejects.toThrow();
+          expect(await sessionNoticeState(ctx.pool)).toEqual(before);
+        } finally {
+          await drop();
+        }
+        const result = await work();
+        expect(result.state).toBe(action === 'confirm' ? 'Released' : 'Rejected');
+        const key =
+          action === 'confirm'
+            ? bankReceiptTopUpCompletedNotificationIdempotencyKey(pendingId)
+            : bankReceiptTopUpFailedNotificationIdempotencyKey(pendingId);
+        const saved = await expectWalletNotice(
+          ctx.pool,
+          key,
+          CUSTOMER_USER_ID,
+          PROFILE_A,
+          action === 'confirm' ? 'payment.wallet_topup_completed' : 'payment.wallet_topup_failed',
+          action === 'confirm' ? '50000' : AMOUNT.toString(),
+          action === 'reject' ? reason : undefined
+        );
+        expect(saved.outbox[0].id).toBe(result.notificationOutboxId);
+        if (invoiceId) {
+          expect(await invoicePaid(invoiceId)).toBe(200000n);
+          expect((await walletBalances()).posted).toBe(balance.posted + 50000n);
+        } else expect(await walletBalances()).toEqual(balance);
+        await ctx.pool.query(
+          'UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1',
+          [saved.inbox[0].id]
+        );
+        const delivered = await walletNoticeState(ctx.pool, key);
+        await work();
+        expect(await walletNoticeState(ctx.pool, key)).toEqual(delivered);
+      }
+    },
+    30000
+  );
+  it('rejects a foreign conflicting notification occurrence without committing a credit or receipt change', async () => {
+    const pendingId = await insertPending(`${randomUUID()}-notice-conflicting-owner`);
+    const key = bankReceiptTopUpCompletedNotificationIdempotencyKey(pendingId);
+    await ctx.pool.query(
+      "INSERT INTO notification_outbox(profile_id,user_id,event_key,payload,channels,status,idempotency_key) VALUES($1,$2,'payment.wallet_topup_completed','{}',ARRAY['in_app','email'],'queued',$3)",
+      [PROFILE_B, ACTOR_USER_ID, key]
+    );
+    const before = await sessionNoticeState(ctx.pool);
+    await expect(
+      service.confirm({
+        transactionId: pendingId,
+        actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+    ).rejects.toThrow();
+    expect(await sessionNoticeState(ctx.pool)).toEqual(before);
   });
 });

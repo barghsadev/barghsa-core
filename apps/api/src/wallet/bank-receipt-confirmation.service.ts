@@ -1,3 +1,5 @@
+import { NotificationsService } from '../notifications/notifications.service.js';
+import { defaultInboxContent, defaultInboxLink } from '@barghsa/shared/notifications';
 import { InputFieldException } from '../common/input-field.exception.js';
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import { literalSearchPattern } from '@barghsa/shared/validation';
@@ -1083,7 +1085,9 @@ export class BankReceiptConfirmationService {
   private async enqueueCustomerNotice(
     client: WalletQueryClient,
     input: {
-      eventKey: string;
+      eventKey:
+        | typeof BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY
+        | typeof BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY;
       idempotencyKey: string;
       profileId: string;
       userId: string;
@@ -1119,11 +1123,19 @@ export class BankReceiptConfirmationService {
     const inserted = Boolean(outboxId);
     if (!outboxId) {
       const existing = await client.query(
-        `SELECT id FROM notification_outbox WHERE idempotency_key = $1 LIMIT 1`,
-        [input.idempotencyKey]
+        `SELECT id FROM notification_outbox WHERE idempotency_key = $1 AND profile_id=$2 AND user_id=$3
+           AND event_key=$4 AND payload=$5::jsonb AND channels=$6::text[] LIMIT 1`,
+        [
+          input.idempotencyKey,
+          input.profileId,
+          input.userId,
+          input.eventKey,
+          input.payload,
+          channels,
+        ]
       );
       outboxId = (existing.rows[0] as { id: string } | undefined)?.id;
-      if (!outboxId) return { outboxId: null, inserted: false };
+      if (!outboxId) throw new Error('Wallet receipt notification occurrence was not stored');
     }
 
     const jobValues: unknown[] = [];
@@ -1133,13 +1145,60 @@ export class BankReceiptConfirmationService {
       placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`);
       jobValues.push(outboxId, channel, 'queued', priority, CUSTOMER_NOTIFICATION_MAX_ATTEMPTS);
     });
-    await client.query(
+    const jobs = await client.query(
       `INSERT INTO notification_job
          (outbox_id, channel, status, priority, max_attempts)
        VALUES ${placeholders.join(', ')}
-       ON CONFLICT (outbox_id, channel) DO NOTHING`,
+       ON CONFLICT (outbox_id, channel) DO NOTHING RETURNING channel`,
       jobValues
     );
+    if (inserted) {
+      if (jobs.rows.length !== channels.length)
+        throw new Error('Wallet receipt delivery jobs were not stored');
+      const localizedContent = defaultInboxContent(input.eventKey, { ...input.payload });
+      const notice = await new NotificationsService().create(
+        {
+          userId: input.userId,
+          profileId: input.profileId,
+          operatingContext: 'customer',
+          type: 'general',
+          ...localizedContent.fa,
+          localizedContent,
+          link: defaultInboxLink(input.eventKey, { ...input.payload }) ?? '/wallet',
+        },
+        client,
+        { outboxId, eventKey: input.eventKey }
+      );
+      const completed = await client.query(
+        `UPDATE notification_job SET status='done',attempts=1,provider_ref=$2,delivery_payload=$3
+         WHERE outbox_id=$1 AND channel='in_app' AND status='queued' RETURNING channel`,
+        [outboxId, notice.id, input.payload]
+      );
+      if (completed.rows.length !== 1)
+        throw new Error('Wallet receipt inbox job was not completed');
+      const history = await client.query(
+        `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+         VALUES($1,'in_app','delivered',1,$2)`,
+        [outboxId, notice.id]
+      );
+      if (history.rowCount !== 1)
+        throw new Error('Wallet receipt inbox delivery history was not stored');
+    } else {
+      // Preserve existing content/read/provider state; never replace a prior occurrence.
+      const saved = await client.query(
+        `SELECT ob.id FROM notification_outbox ob JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+         WHERE ob.id=$1 AND n.profile_id=ob.profile_id AND n.recipient_user_id=ob.user_id
+          AND n.operating_context='customer' AND n.type=ob.event_key
+          AND EXISTS(SELECT 1 FROM notification_job j WHERE j.outbox_id=ob.id AND j.channel='in_app'
+            AND j.status='done' AND j.provider_ref=n.id::text)
+          AND EXISTS(SELECT 1 FROM notification_job j WHERE j.outbox_id=ob.id AND j.channel='email')
+          AND EXISTS(SELECT 1 FROM notification_delivery_log h WHERE h.notification_id=ob.id
+            AND h.channel='in_app' AND h.status='delivered' AND h.provider_ref=n.id::text)`,
+        [outboxId]
+      );
+      if (saved.rows.length !== 1)
+        throw new Error('Wallet receipt notification occurrence conflicts with saved delivery');
+    }
     return { outboxId, inserted };
   }
 

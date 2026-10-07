@@ -127,7 +127,7 @@ type ScriptOptions = {
 };
 
 function script(opts: ScriptOptions = {}) {
-  mockClient.query.mockImplementation(async (sql: string) => {
+  mockClient.query.mockImplementation(async (sql: string, params: unknown[]) => {
     if (sql.startsWith('SELECT id, archived FROM profiles')) {
       return { rows: [{ id: PROFILE_ID, archived: false }] };
     }
@@ -212,8 +212,15 @@ function script(opts: ScriptOptions = {}) {
       return { rows: [{ id: 'outbox-1' }] };
     }
     if (sql.includes('INSERT INTO notification_job')) {
-      return { rows: [] };
+      return { rows: [{ channel: 'in_app' }, { channel: 'email' }] };
     }
+    if (sql.includes('INSERT INTO in_app_notifications'))
+      return { rows: [{ id: params[0] }], rowCount: 1 };
+    if (sql.includes('UPDATE notification_job'))
+      return { rows: [{ channel: 'in_app' }], rowCount: 1 };
+    if (sql.includes('INSERT INTO notification_delivery_log')) return { rows: [], rowCount: 1 };
+    if (sql.includes('SELECT ob.id FROM notification_outbox'))
+      return { rows: [{ id: 'outbox-1' }] };
     if (sql.includes('INSERT INTO audit_log')) {
       return { rows: [] };
     }

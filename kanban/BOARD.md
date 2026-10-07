@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile owner reply for OTP secure encrypted auth-delivery design if available; do not copy codes to generic inbox or silently waive appendix. Inspect existing payment/refund/wallet notification writers while OTP clarification is pending. Reuse native ledger/receipt/idempotency and original customer/staff ownership/authorization/money/rollback/retry boundaries; build only demonstrated canonical delivery gaps with affected callers. Keep active templates,live provider/owner/operations/launch explicit.
+Inspect existing online wallet topup successful credit and failed intent transitions/native warnings before rebuilding. Complete demonstrated canonical private durable delivery gaps in original ledger/state transaction while preserving gateway verification,signature/replay,event claim/crash resume/unpaid reopen/intent release,owned/caller-owned transactions,profile/account locks,amount/idempotency/audit and late-paid reconciliation. Avoid duplicate bank-receipt or generic wallet-credit notices. Reconcile pending OTP owner reply if available; keep invoice/refund/wallet low-balance/other Appendix/templates/live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 
