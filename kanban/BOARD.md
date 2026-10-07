@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 466 | Accepted with unchanged source bindings. |
-| verify | 831 | Existing work may be complete; inspect evidence before building. |
+| done | 467 | Accepted with unchanged source bindings. |
+| verify | 830 | Existing work may be complete; inspect evidence before building. |
 | partial | 64 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,9 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current profile notification consent UI, scoped read/mutation/recovery and active-channel availability. Reuse registry/channel policy proofs; verify actual FA/EN customer journey, build only demonstrated gaps and retain launch/owner gates.
+Inspect existing storage abstraction, S3 adapter, configured storage lifecycle/admin UI and safe preview derivatives together. Reuse current document/provider/authority evidence; build only demonstrated gaps and keep required live object-storage receipts and scanner/ops evidence open.
 
-- `05-notifications-documents-ai.md#T-05.05.03`: Consent UI in profile settings
+- `05-notifications-documents-ai.md#T-05.09.01`: File storage abstraction interface
+- `05-notifications-documents-ai.md#T-05.09.02`: S3 adapter
+- `05-notifications-documents-ai.md#T-05.09.03`: Storage config entity & admin UI
+- `05-notifications-documents-ai.md#T-05.09.04`: Preview derivative generation
 
 ## v0.2.0: Complete customer journeys
 
@@ -552,7 +555,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.04.05` | done | Earlier acceptance_verified | Template seeding |
 | `05-notifications-documents-ai.md#T-05.05.01` | done | Earlier acceptance_verified | Notification category model |
 | `05-notifications-documents-ai.md#T-05.05.02` | done | Earlier acceptance_verified | Channel availability rules |
-| `05-notifications-documents-ai.md#T-05.05.03` | verify | Earlier acceptance_verified | Consent UI in profile settings |
+| `05-notifications-documents-ai.md#T-05.05.03` | done | Earlier acceptance_verified | Consent UI in profile settings |
 | `05-notifications-documents-ai.md#T-05.06.01` | done | Earlier acceptance_verified | Provider config entity & lifecycle |
 | `05-notifications-documents-ai.md#T-05.06.02` | done | Earlier acceptance_verified | SMTP configuration |
 | `05-notifications-documents-ai.md#T-05.06.03` | done | Earlier acceptance_verified | Resend configuration |
