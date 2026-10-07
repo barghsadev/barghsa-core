@@ -1,3 +1,7 @@
+import {
+  expectContractCustomerDelivery,
+  expectContractNoticeRollback,
+} from '../test/contract-notification-proof.js';
 import { expectCancellationRequestDelivery } from '../test/cancellation-request-notification-proof.js';
 import {
   expectSavingStatusDeliveries,
@@ -1493,9 +1497,31 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     request(approvePath, 'POST', approval, staffHeaders)
   );
 
+  await expectContractNoticeRollback(
+    http.pool,
+    result.contractId,
+    'contract.awaiting_acceptance',
+    () => request(approvePath, 'POST', approval, staffHeaders),
+    true
+  );
   const approved = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
+  const contractNotice = await expectContractCustomerDelivery(
+    http.pool,
+    result.contractId,
+    staffDetail.versionId,
+    'contract.awaiting_acceptance'
+  );
+  expect((await request(approvePath, 'POST', approval, staffHeaders)).status).toBe(200);
+  expect(
+    await expectContractCustomerDelivery(
+      http.pool,
+      result.contractId,
+      staffDetail.versionId,
+      'contract.awaiting_acceptance'
+    )
+  ).toEqual(contractNotice);
   const decisionAudit = (
     await http.pool.query<{ metadata: { reviewHash: string; financialReview: { hash: string } } }>(
       `SELECT metadata::jsonb AS metadata FROM audit_log

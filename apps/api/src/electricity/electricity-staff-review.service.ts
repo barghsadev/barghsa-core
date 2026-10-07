@@ -1,3 +1,4 @@
+import { notifyContractReview } from '../contract/contract-review-notifications.js';
 import { staffOrderRead } from '../orders/staff-order-read.js';
 import { activityNames } from '../common/activity-identity.js';
 import { runBusinessTransition } from '../common/business-transition.js';
@@ -627,7 +628,17 @@ export class ElectricityStaffReviewService {
                   refundId,
                 };
               },
-              notify: () => this.notifyCustomer(client, row, action, reason),
+              notify: async () => {
+                await this.notifyCustomer(client, row, action, reason);
+                if (action !== 'reject')
+                  await notifyContractReview(
+                    client,
+                    row.contract_id,
+                    action === 'approve' ? 'published' : 'changes_requested',
+                    reason,
+                    row.version_id
+                  );
+              },
             });
           }
         ),

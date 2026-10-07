@@ -70,3 +70,69 @@ export async function expectContractCustomerDelivery(
   }
   return rows[0];
 }
+
+export async function expectContractNoticeRollback(
+  pool: Pool,
+  id: string,
+  event: ContractCustomerEvent,
+  work: () => Promise<Response>,
+  outboxOnly = false,
+  failureStatuses: Record<'raise' | 'suppress', number> = { raise: 500, suppress: 500 }
+) {
+  const tables = (
+    await pool.query(
+      "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN ('sessions','rate_limit_counters','rate_limit_windows') ORDER BY tablename"
+    )
+  ).rows.map((r) => r.tablename as string);
+  const snapshot = async (): Promise<Record<string, Array<Record<string, unknown>>>> =>
+    Object.fromEntries(
+      await Promise.all(
+        tables.map(async (table) => [
+          table,
+          (
+            await pool.query(
+              `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${table.replaceAll('"', '""')}" t`
+            )
+          ).rows[0].rows,
+        ])
+      )
+    );
+  const match = `event_key='${event}' AND idempotency_key LIKE '${event}:${id}:%'`;
+  for (const [table, predicate] of [
+    [
+      'notification_outbox',
+      `NEW.event_key='${event}' AND NEW.idempotency_key LIKE '${event}:${id}:%'`,
+    ],
+    ...(!outboxOnly
+      ? [
+          [
+            'in_app_notifications',
+            `NEW.type='${event}' AND EXISTS(SELECT 1 FROM notification_outbox WHERE 'outbox:'||id::text=NEW.delivery_key AND ${match})`,
+          ],
+          [
+            'notification_job',
+            `EXISTS(SELECT 1 FROM notification_outbox WHERE id=NEW.outbox_id AND ${match})`,
+          ],
+          [
+            'notification_delivery_log',
+            `EXISTS(SELECT 1 FROM notification_outbox WHERE id=NEW.notification_id AND ${match})`,
+          ],
+        ]
+      : []),
+  ])
+    for (const mode of ['raise', 'suppress'] as const) {
+      const before = await snapshot();
+      await pool.query(
+        `CREATE FUNCTION fail_native_contract_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'native contract notice unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_native_contract_notice BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_native_contract_notice()`
+      );
+      try {
+        expect((await work()).status).toBe(failureStatuses[mode]);
+        const after = await snapshot();
+        expect(after).toEqual(before);
+      } finally {
+        await pool.query(
+          `DROP TRIGGER fail_native_contract_notice ON ${table}; DROP FUNCTION fail_native_contract_notice()`
+        );
+      }
+    }
+}

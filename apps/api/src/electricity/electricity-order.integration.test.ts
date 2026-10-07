@@ -1,3 +1,7 @@
+import {
+  expectContractCustomerDelivery,
+  expectContractNoticeRollback,
+} from '../test/contract-notification-proof.js';
 import { expectProtectedLegacyCancellation } from '../test/electricity-status-notification-proof.js';
 import {
   expectElectricityStatusDeliveries,
@@ -1391,6 +1395,12 @@ it('rolls back transition effects and receipt when notification fails, then retr
   await expectElectricityStatusRollback(http.pool, order.orderId, 'approved', () =>
     staffPost(order.orderId, 'approve', command)
   );
+  await expectContractNoticeRollback(
+    http.pool,
+    order.contractId,
+    'contract.awaiting_acceptance',
+    () => staffPost(order.orderId, 'approve', command)
+  );
   const response = await staffPost(order.orderId, 'approve', command);
   expect(response.status, http.logs()).toBe(200);
   expect(await response.json()).toMatchObject({ orderId: order.orderId, status: 'approved' });
@@ -1407,12 +1417,26 @@ it('rolls back transition effects and receipt when notification fails, then retr
       "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
     )
   ).rows[0].count;
-  expect(notices - initialNotices).toBe(1);
-  expect(notices).toBe(3);
+  expect(notices - initialNotices).toBe(2);
+  expect(notices).toBe(4);
   await expectElectricityStatusDeliveries(http.pool, order.orderId, 'buyer', ['approved']);
+  const contractNotice = await expectContractCustomerDelivery(
+    http.pool,
+    order.contractId,
+    versionId,
+    'contract.awaiting_acceptance'
+  );
   const statusDelivery = await electricityDeliverySnapshot(http.pool, order.orderId);
   expect((await staffPost(order.orderId, 'approve', command)).status).toBe(200);
   expect(await electricityDeliverySnapshot(http.pool, order.orderId)).toEqual(statusDelivery);
+  expect(
+    await expectContractCustomerDelivery(
+      http.pool,
+      order.contractId,
+      versionId,
+      'contract.awaiting_acceptance'
+    )
+  ).toEqual(contractNotice);
   expect(
     (
       await http.pool.query(
@@ -1647,13 +1671,37 @@ it('requests changes with a reason and returns the order to the customer', async
       order.contractId,
     ])
   ).rows[0].current_version_id;
-  const response = await staffPost(order.orderId, 'request-changes', {
+  const command = {
     idempotencyKey: randomUUID(),
     expectedVersionId: versionId,
     reason: 'Please correct the delivery address',
-  });
+  };
+  const requestChanges = () => staffPost(order.orderId, 'request-changes', command);
+  await expectContractNoticeRollback(
+    http.pool,
+    order.contractId,
+    'contract.changes_requested',
+    requestChanges
+  );
+  const response = await requestChanges();
   expect(response.status, http.logs()).toBe(200);
   expect(await response.json()).toMatchObject({ status: 'changes_requested' });
+  const contractNotice = await expectContractCustomerDelivery(
+    http.pool,
+    order.contractId,
+    versionId,
+    'contract.changes_requested'
+  );
+  expect(contractNotice.payload.changesDescription).toBe(command.reason);
+  expect((await requestChanges()).status).toBe(200);
+  expect(
+    await expectContractCustomerDelivery(
+      http.pool,
+      order.contractId,
+      versionId,
+      'contract.changes_requested'
+    )
+  ).toEqual(contractNotice);
   const detail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
   expect(await detail.json()).toMatchObject({
     electricityStatus: 'changes_requested',

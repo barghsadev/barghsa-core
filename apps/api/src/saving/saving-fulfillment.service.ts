@@ -1,3 +1,4 @@
+import { notifyContractReview } from '../contract/contract-review-notifications.js';
 import { staffOrderRead } from '../orders/staff-order-read.js';
 import {
   ConflictException,
@@ -825,8 +826,8 @@ export class SavingFulfillmentService {
                   refundId,
                 };
               },
-              notify: () =>
-                this.notify(
+              notify: async () => {
+                await this.notify(
                   client,
                   row,
                   action === 'approve'
@@ -836,7 +837,16 @@ export class SavingFulfillmentService {
                     ? 'Your power-saving order was approved. Review the contract and invoice.'
                     : `Your power-saving order was rejected. Reason: ${reason}`,
                   status
-                ),
+                );
+                if (action === 'approve')
+                  await notifyContractReview(
+                    client,
+                    row.contract_id,
+                    'published',
+                    undefined,
+                    row.version_id
+                  );
+              },
             });
           }
         )
