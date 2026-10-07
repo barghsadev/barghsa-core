@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish refund reconciliation: inspect existing refund-credit provenance and outstanding reservations, preserving the pending cumulative accounting decision and credit-note entitlement basis. Invoice/provider reports and Wallet budget are verified. Retain prior policy/release operational gates, the development-reload trace and unfinished consultation work.
+Reconcile remaining financial policy and credit-note capacity evidence without silently accepting the contradictory C-04.CC.06 formula; current regular refund/provenance reports, invoice/provider reports and Wallet budget are verified. Diagnose any recurrent dev reload, retain prior owner/release operational gates and unfinished consultation work, then select the next independent authorized release work.
 
 - `02-auth-users-admin.md#T-09.09.01`: Reconciliation exceptions view
 

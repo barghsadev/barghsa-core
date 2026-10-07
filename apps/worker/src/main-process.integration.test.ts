@@ -14,6 +14,7 @@ const intervals = [
   'WALLET_RECONCILIATION_SCAN_MS',
   'INVOICE_RECONCILIATION_SCAN_MS',
   'PROVIDER_RECONCILIATION_SCAN_MS',
+  'REFUND_RECONCILIATION_SCAN_MS',
   'ONLINE_TOPUP_EXPIRY_SCAN_MS',
   'INVITATION_EXPIRY_SCAN_MS',
 ];
@@ -181,6 +182,7 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
       'wallet_reconciliation_scan',
       'invoice_reconciliation_scan',
       'provider_reconciliation_scan',
+      'refund_reconciliation_scan',
       'online_topup_expiry_scan',
       'invitation_expiry_scan',
     ];
@@ -211,6 +213,7 @@ it('compiled worker falls back from invalid intervals and drains on SIGINT', asy
   const worker = await startWorker({
     ...Object.fromEntries(intervals.map((key) => [key, 'invalid'])),
     PROVIDER_RECONCILIATION_SCAN_MS: '2147483648',
+    REFUND_RECONCILIATION_SCAN_MS: '2147483648',
     OUTBOX_POLL_MS: 'NaN',
     SHUTDOWN_GRACE_PERIOD_MS: 'invalid',
   });
@@ -218,6 +221,113 @@ it('compiled worker falls back from invalid intervals and drains on SIGINT', asy
     for (const key of intervals) expect(worker.logs()).toContain(`Invalid ${key}`);
     expect(await worker.stop('SIGINT')).toEqual({ code: 0, signal: null });
     expect(worker.logs()).toContain('30s deadline');
+  } finally {
+    await worker.close();
+  }
+}, 20000);
+
+it('compiled worker schedules refund reconciliation, isolates failure and recovers without changing refunds', async () => {
+  const worker = await startWorker();
+  try {
+    const profile = randomUUID(),
+      invoice = randomUUID(),
+      refund = randomUUID();
+    await worker.pool
+      .query(`CREATE FUNCTION fail_refund_reconciliation() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.details->>'source'='refund_accounting' THEN RAISE EXCEPTION 'fixture refund report failed'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER fail_refund_reconciliation BEFORE INSERT ON reconciliation_exceptions FOR EACH ROW EXECUTE FUNCTION fail_refund_reconciliation()`);
+    const client = await worker.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query("INSERT INTO profiles(id,user_id) VALUES($1,'worker-process-actor')", [
+        profile,
+      ]);
+      await client.query('INSERT INTO wallets(profile_id,posted_balance) VALUES($1,20)', [profile]);
+      await client.query(
+        "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount) VALUES($1,$2,'Paid',100,100)",
+        [invoice, profile]
+      );
+      await client.query(
+        "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,$3,20,'wallet',$1::uuid::text)",
+        [refund, invoice, profile]
+      );
+      await client.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refund]);
+      await client.query(
+        "INSERT INTO wallet_transactions(wallet_id,type,state,amount,idempotency_key,ref_id) VALUES($1,'refund','Completed',20,$2,$3)",
+        [profile, `refund-wallet-credit:${refund}`, refund]
+      );
+      await client.query("UPDATE refunds SET state='Completed' WHERE id=$1", [refund]);
+      await client.query('SET LOCAL session_replication_role=replica');
+      await client.query('UPDATE invoices SET refunded_amount=19 WHERE id=$1', [invoice]);
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
+    const before = (await worker.pool.query('SELECT * FROM refunds WHERE id=$1', [refund])).rows;
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT status FROM background_jobs WHERE job_type='refund_reconciliation_scan'"
+            )
+          ).rows[0]?.status,
+        { timeout: 6000 }
+      )
+      .toBe('failed');
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT id FROM reconciliation_exceptions WHERE details->>'source'='refund_accounting' AND details->>'invoiceId'=$1",
+          [invoice]
+        )
+      ).rows
+    ).toEqual([]);
+    expect((await worker.pool.query('SELECT * FROM refunds WHERE id=$1', [refund])).rows).toEqual(
+      before
+    );
+    await worker.pool.query(
+      'DROP TRIGGER fail_refund_reconciliation ON reconciliation_exceptions;DROP FUNCTION fail_refund_reconciliation()'
+    );
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT details FROM reconciliation_exceptions WHERE details->>'source'='refund_accounting' AND details->>'invoiceId'=$1",
+              [invoice]
+            )
+          ).rows,
+        { timeout: 6000 }
+      )
+      .toEqual([
+        expect.objectContaining({
+          details: expect.objectContaining({
+            completedRefunds: '20',
+            refundedAmount: '19',
+            completedExceedsCounter: true,
+          }),
+        }),
+      ]);
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT status FROM background_jobs WHERE job_type='refund_reconciliation_scan'"
+            )
+          ).rows[0]?.status,
+        { timeout: 6000 }
+      )
+      .toBe('resolved');
+    expect((await worker.pool.query('SELECT * FROM refunds WHERE id=$1', [refund])).rows).toEqual(
+      before
+    );
+    expect(await worker.stop()).toEqual({ code: 0, signal: null });
+    expect(worker.logs()).not.toMatch(/Fatal worker|Uncaught exception|failed to record/);
   } finally {
     await worker.close();
   }

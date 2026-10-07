@@ -60,6 +60,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'wallet_reconciliation_scan', label: 'Wallet ledger reconciliation' },
   { key: 'invoice_reconciliation_scan', label: 'Invoice funding reconciliation' },
   { key: 'provider_reconciliation_scan', label: 'Payment provider reconciliation' },
+  { key: 'refund_reconciliation_scan', label: 'Refund provenance reconciliation' },
   { key: 'online_topup_expiry_scan', label: 'Online top-up Pending TTL expiry' },
   { key: 'invitation_expiry_scan', label: 'Team invitation expiry' },
   { key: 'saving_inventory_expiry', label: 'Saving hardware reservation expiry' },

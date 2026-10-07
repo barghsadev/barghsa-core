@@ -7663,6 +7663,7 @@
                 "wallet_reconciliation_scan",
                 "invoice_reconciliation_scan",
                 "provider_reconciliation_scan",
+                "refund_reconciliation_scan",
                 "online_topup_expiry_scan",
                 "invitation_expiry_scan",
                 "saving_inventory_expiry"
