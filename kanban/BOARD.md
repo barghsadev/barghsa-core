@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile remaining financial policy and credit-note capacity evidence without silently accepting the contradictory C-04.CC.06 formula; current regular refund/provenance reports, invoice/provider reports and Wallet budget are verified. Diagnose any recurrent dev reload, retain prior owner/release operational gates and unfinished consultation work, then select the next independent authorized release work.
+Finish retained dev-reload diagnosis and select the next independent authorized release work. Invoice/provider/refund checks and paid-original credit-note linkage are verified; preserve the pending C-04.CC.06 mathematical policy decision, prior owner/release operational gates and unfinished consultation work.
 
 - `02-auth-users-admin.md#T-09.09.01`: Reconciliation exceptions view
 

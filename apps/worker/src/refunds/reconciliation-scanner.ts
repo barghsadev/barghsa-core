@@ -13,6 +13,7 @@ function snapshotSql(target: string) {
     SELECT r.invoice_id,r.id,r.state,r.amount,t.id AS intent_id,
       (
         r.profile_id IS DISTINCT FROM i.profile_id
+        OR i.adjustment_kind IS NOT DISTINCT FROM 'credit'
         OR (r.state IN ('Approved','Processing','Failed') AND
           (t.id IS NULL OR t.state IS DISTINCT FROM 'Pending' OR t.wallet_transaction_id IS NOT NULL OR t.finished_at IS NOT NULL))
         OR (r.state='Requested' AND t.id IS NOT NULL)
@@ -54,11 +55,11 @@ const activeInvoice = `NOT EXISTS (SELECT 1 FROM reconciliation_exceptions e
     AND e.details->>'source'='refund_accounting' AND e.details->>'invoiceId'=s.id::text)`;
 export const FIND_REFUND_RECONCILIATION_CANDIDATES_SQL = `SELECT s.id FROM (${snapshotSql('')}) s
   WHERE (s.completed::numeric>s.refunded_amount::numeric OR s.invalid_count::numeric>0
-    OR (s.adjustment_kind IS DISTINCT FROM 'credit' AND s.reserved::numeric+s.refunded_amount::numeric>s.paid_amount::numeric))
+    OR s.reserved::numeric+s.refunded_amount::numeric>s.paid_amount::numeric)
     AND ${activeInvoice} ORDER BY s.id LIMIT $1`;
 
-// Other legitimate wallet refunds (for example credit-note entitlements) use
-// their own keys. Only the regular refund engine's key namespace is inspected.
+// Only the regular refund engine's key namespace is inspected. Independently
+// keyed wallet credits are not interpreted as refund-request ledger entries.
 const orphanSql = `SELECT c.id,c.wallet_id,c.amount::text,c.idempotency_key FROM wallet_transactions c
   WHERE c.type='refund' AND c.state='Completed' AND c.idempotency_key LIKE 'refund-wallet-credit:%'
     AND NOT EXISTS (SELECT 1 FROM refunds r WHERE c.idempotency_key='refund-wallet-credit:'||r.id::text)
@@ -147,7 +148,7 @@ export async function reconcileRefunds(options: { pool?: Pool; batchSize?: numbe
             reserved = parseLedgerAmount(s.reserved),
             paid = parseLedgerAmount(s.paid_amount),
             invalid = parseLedgerAmount(s.invalid_count);
-          const reservationsExceeded = s.adjustment_kind !== 'credit' && reserved + returned > paid;
+          const reservationsExceeded = reserved + returned > paid;
           if (completed > returned || invalid > 0n || reservationsExceeded)
             details = {
               source: 'refund_accounting',
@@ -159,7 +160,8 @@ export async function reconcileRefunds(options: { pool?: Pool; batchSize?: numbe
               outstandingReservations: reserved.toString(),
               completedExceedsCounter: completed > returned,
               reservationsExceeded,
-              paidCapacityApplicable: s.adjustment_kind !== 'credit',
+              paidCapacityApplicable: true,
+              refundInvoiceKind: s.adjustment_kind,
               invalidRefundCount: invalid.toString(),
               invalidRefundIds: s.invalid_ids,
               invalidRefundIdsTruncated: invalid > BigInt(s.invalid_ids.length),

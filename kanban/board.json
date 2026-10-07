@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "45ef2a8edbd2f57a2c40d4f1992c8c76e20a8f4d",
+  "source_commit": "29b159c8d1f00d009a52226f71edef2b6f91b11c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -284,7 +284,8 @@
       ],
       "asked_once": "Current goal chat via request_user_input_async; do not repeat the pending question.",
       "new_evidence": "0135 production guards and current migrated tests allow legacy refunded counter residuals, while the real pre-0137 upgrade preserves completed refunds without modern financial intents. Blanket completed=sum(refundedAmount) is not universally valid.",
-      "qualified_recommendation": "Retain the accepted normal-refund engine: SUM(current Completed refunds)<=cumulative refundedAmount; ordinary outstanding reservations+cumulative returned<=paid, with legacy residuals retained. Require separate entitlement evidence for credit notes. No owner approval inferred; original question remains pending and is not repeated."
+      "qualified_recommendation": "Retain accepted normal-refund engine: SUM(current Completed refunds)<=cumulative refundedAmount, with legacy residuals; outstanding reservations+cumulative returned<=paid. Credit-note-related refunds use the ordinary paid original, not note value as a second pool. Mathematical owner approval remains pending; original question is not repeated.",
+      "credit_note_scope_evidence": "Verified issuer/writer and actual protected HTTP: notes themselves are not refund parents; any refund of their entitlement targets the ordinary paid original and its existing reservation budget. No independent credit-note refund capacity assumption retained."
     }
   },
   "specification_sources": {
@@ -17056,7 +17057,8 @@
           "release-0.3-staff-support-escalation",
           "release-0.3-service-configuration-readiness",
           "release-0.3-financial-operations-promotion",
-          "release-0.3-invoice-reconciliation"
+          "release-0.3-invoice-reconciliation",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -17184,7 +17186,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -17418,7 +17420,8 @@
             "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
             "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -38527,7 +38530,7 @@
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Invoice/provider reports and the existing regular-refund engine’s provenance, counter lower bound and reservation checks are verified. Complete C-04.CC.06 policy acceptance: the original completed-refund inequality remains contradictory and the owner decision remains pending. Newly verified legacy counter residuals also disprove blanket completed-sum equality. Preserve pre-intent completed history and independently verify any credit-note entitlement capacity before whole reconciliation acceptance.",
+        "Invoice/provider and regular refund reporting checks, including credit-note refund-parent exclusion and paid-original capacity, are verified. Complete C-04.CC.06 policy acceptance: original completed-refund inequality remains contradictory; owner decision pending. Preserve verified legacy counter residuals and pre-intent completed history; blanket completed-sum equality is not valid. The prior separate credit-note refund-pool gap was an unsupported assumption and has been corrected from actual writer/linkage evidence.",
         "Wallet budget now passes at 299206/300000 bytes; all 87 unchanged route/interaction budgets pass. Retained dev-server filter failure shows a fresh page bootstrap interrupting the open dialog; the reload initiator remains unidentified. Current production-build receipt histories and Wallet finance journeys pass 20 cases with unchanged assertions. Resolve any recurrent development reload and complete the required launch rehearsal before whole quality acceptance."
       ],
       "owner": null,
@@ -38629,7 +38632,8 @@
           "release-0.3-invoice-reconciliation",
           "release-0.3-wallet-payload",
           "release-0.3-provider-reconciliation",
-          "release-0.3-refund-reconciliation"
+          "release-0.3-refund-reconciliation",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -39121,7 +39125,7 @@
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
-              "sha256": "1cd4e31641e08597ba1d4ec8557a65df69e3125e1b33013c58cee37ce4550568"
+              "sha256": "c8a33bf0d3f4dfc79af2b3104c9f3ab1239efc20b426d8d462541336857b28ce"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.test.ts",
@@ -39129,7 +39133,11 @@
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.ts",
-              "sha256": "64010569567d1848b364838d98bf90071dbdf9479a66a245c2464389479ff52a"
+              "sha256": "cdaf2239a3c2512a11bbf3cedae81f223ac4d3e808297d22c6d4d4d9c9d43733"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             }
           ],
           "checks": [
@@ -39165,7 +39173,13 @@
             "Genuine production-journal upgrade through pre-0137 refund history proves completed legacy requests have no modern intent/credit backfill and a cumulative counter can include earlier returns. Those rows and valid full/partial/external refunds, failed reservations, uppercase UUID references and absent optional legacy metadata remain valid. No blanket counter equality, disputed completed<=paid-refunded formula or credit-note paid-capacity interpretation is certified. Independently keyed credit-note entitlement credits are excluded from regular-refund orphan classification.",
             "Actual compiled worker independently schedules refund_reconciliation_scan, records report failure, then reports and resolves its job on recovery without changing refunds. Startup, SIGTERM/SIGINT and Node timer overflow fallback pass. All earlier worker statements and labels retained; Persian/English monitor and allowlist add one key, contract one enum only. One bounded review found no outstanding issue.",
             "Initial fixtures used a non-exported helper and omitted a required correction parent link; both corrected without assertion changes. Stale shared declarations were rebuilt in dependency order. Two Testcontainers reaper startup failures ran no behavior cases; diagnostics observed valid port/SQL readiness and cleanup, and final suites passed with logging enabled. Root cause remains unconfirmed; no daemon restart, dependency patch, disabled reaper, relaxed readiness, isolation or assertion change.",
-            "Wallet remains under its unchanged 300000-byte limit at 299206 bytes; all 87 payload budgets pass. Existing-engine refund report criterion verified; owner accounting policy, credit-note capacity, retained dev reload, prior dependencies/operational gates and launch rehearsal remain unaccepted. No milestone release, version change, staging enqueue, Telegram message or production deployment."
+            "Wallet remains under its unchanged 300000-byte limit at 299206 bytes; all 87 payload budgets pass. Existing-engine refund report criterion verified; owner accounting policy, credit-note capacity, retained dev reload, prior dependencies/operational gates and launch rehearsal remain unaccepted. No milestone release, version change, staging enqueue, Telegram message or production deployment.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts.",
+            "59 distinct current passing behavior cases: all 27 wallet-refund HTTP cases including the new note-parent/linkage case, all 24 real migrated-SQL refund scanner cases plus seven options/connection cases, and one actual compiled refund report failure/recovery case. Skipped and duplicate focused cases excluded. Worker build, affected strict types, changed-file lint/format and one-file/five-rule Semgrep checks pass separately. Web/shared/schema/API contracts unchanged; their valid previous evidence retained without rebuilding or re-running unrelated gates.",
+            "Existing issuer creates non-payable negative accounting documents, while consultation refund allocations target ordinary paid original invoices. RefundService.refundableInvoice and runWalletRefund both reject credit-note refund parents. Actual protected HTTP rejects issued and artificially paid notes without creating refunds, then approves/completes a reviewed refund on the original with exact returned/wallet amounts and both notes unchanged.",
+            "Correct the earlier unsupported credit-kind paid-capacity bypass. All regular refund rows use their paid original capacity; an illegally attached note refund is provenance-invalid and reportable. Issued notes without refund rows and independently keyed wallet operations remain outside the ordinary refund-request namespace. Prior permissive fixture was replaced by stronger invalid-parent detection assertions, not a waiver. Legacy cumulative residuals, genuine pre-intent history, exact sums, locks, bounded data and no financial mutation remain verified.",
+            "One bounded review found no outstanding issue. Production money writers, API routes/contracts, shared packages, UI assets and other tracked product sources retained. AST proof preserves every old wallet HTTP test/fixture; full current suite passes. Source bindings renewed only for affected acceptance. Earlier credit-note capacity-gap claim is superseded by this source-grounded correction; the mathematical owner question is not answered or repeated.",
+            "Reconciliation remains partial for the disputed formula and retained dev-reload/launch gates. No milestone release, version change, staging deployment, Telegram notification or production authorization inferred."
           ],
           "limitations": [
             "Invoice receipt/wallet funding producer is now verified. Finish the C-04.CC.06 refund/provider reconciliation producers, including immutable refund credit provenance, outstanding reservations, unmatched authenticated callbacks/chargebacks, stale processing and expired intents. The owner accounting clarification remains pending; do not silently apply the contradictory completed-refund inequality.",
@@ -64635,7 +64649,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -64699,7 +64714,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -64839,7 +64854,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -64895,7 +64911,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -64959,7 +64976,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -65099,7 +65116,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -65629,7 +65647,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -65693,7 +65712,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -65833,7 +65852,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -65890,7 +65910,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -65954,7 +65975,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -66094,7 +66115,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -66148,7 +66170,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -66212,7 +66235,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -66352,7 +66375,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -66406,7 +66430,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -66470,7 +66495,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -66610,7 +66635,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -66899,7 +66925,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -66963,7 +66990,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -67103,7 +67130,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -67156,7 +67184,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -67220,7 +67249,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -67360,7 +67389,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -67413,7 +67443,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-financial-operations-promotion"
+          "release-0.3-financial-operations-promotion",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -67477,7 +67508,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -67617,7 +67648,8 @@
             "333 distinct cases pass:163 API (97 retained passing final-source cases+2 corrected notice cases,57 electricity+7 saving callers),58 migrated DB,2 worker,62 UI,48 browser. Initial overlapping runs,deliberate1red regression,intermediate2API failures and skipped cases excluded. Build DB once after consumers terminal; emitted processor/notice inspected. Source and5505 current outputs bound. UI/browser consume unchanged web/shared/UI artifacts with mocked HTTP and remain valid. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Complete bounded final5-file diff reviewed once. First failure notification is mandatory/atomic/idempotent; ledger/locks/authority/review/audit/amount/backoff/exhaustion unchanged. API tests require one Failed+one Completed notice with exactly one credit. Completion-specific notice fault retains original money rollback; new failure-notice fault covers entire attempt rollback. DB/API/worker types,changed lint/format and pinned5-rule SAST of2 changed production sources pass. Initial PATH-missing scanner failure retained; resolved using existing binary. Earlier owner/release dependencies and Wallet300.08KB/300KB gate remain unfinished; no milestone deployment/Telegram/production acceptance.",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred."
+            "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -143212,7 +143244,8 @@
           "release-0.3-financial-operations-promotion",
           "release-0.3-invoice-reconciliation",
           "release-0.3-provider-reconciliation",
-          "release-0.3-refund-reconciliation"
+          "release-0.3-refund-reconciliation",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -143320,7 +143353,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -143541,7 +143574,8 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Provider reporting source renewal: prior worker statements and dictionary/job entries unchanged; contract adds one job enum only. Existing callback settlement/auth methods retained and affected callback/HTTP/monitoring cases pass. New provider criterion remains separate from whole-task acceptance; see release-0.3-provider-reconciliation source proofs and receipts.",
-            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts."
+            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -143575,7 +143609,8 @@
           "release-0.3-financial-operations-promotion",
           "release-0.3-invoice-reconciliation",
           "release-0.3-provider-reconciliation",
-          "release-0.3-refund-reconciliation"
+          "release-0.3-refund-reconciliation",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -143683,7 +143718,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -143904,7 +143939,8 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Provider reporting source renewal: prior worker statements and dictionary/job entries unchanged; contract adds one job enum only. Existing callback settlement/auth methods retained and affected callback/HTTP/monitoring cases pass. New provider criterion remains separate from whole-task acceptance; see release-0.3-provider-reconciliation source proofs and receipts.",
-            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts."
+            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -143938,7 +143974,8 @@
           "release-0.3-financial-operations-promotion",
           "release-0.3-invoice-reconciliation",
           "release-0.3-provider-reconciliation",
-          "release-0.3-refund-reconciliation"
+          "release-0.3-refund-reconciliation",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -144046,7 +144083,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -144267,7 +144304,8 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Provider reporting source renewal: prior worker statements and dictionary/job entries unchanged; contract adds one job enum only. Existing callback settlement/auth methods retained and affected callback/HTTP/monitoring cases pass. New provider criterion remains separate from whole-task acceptance; see release-0.3-provider-reconciliation source proofs and receipts.",
-            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts."
+            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -144301,7 +144339,8 @@
           "release-0.3-financial-operations-promotion",
           "release-0.3-invoice-reconciliation",
           "release-0.3-provider-reconciliation",
-          "release-0.3-refund-reconciliation"
+          "release-0.3-refund-reconciliation",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -144409,7 +144448,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -144630,7 +144669,8 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Provider reporting source renewal: prior worker statements and dictionary/job entries unchanged; contract adds one job enum only. Existing callback settlement/auth methods retained and affected callback/HTTP/monitoring cases pass. New provider criterion remains separate from whole-task acceptance; see release-0.3-provider-reconciliation source proofs and receipts.",
-            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts."
+            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -144665,7 +144705,8 @@
           "release-0.3-financial-operations-promotion",
           "release-0.3-invoice-reconciliation",
           "release-0.3-provider-reconciliation",
-          "release-0.3-refund-reconciliation"
+          "release-0.3-refund-reconciliation",
+          "release-0.3-credit-note-refund-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -144773,7 +144814,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "a119cb3c8890dc43154057aec5df0a24df4c178dfffd25f1c81644b7ec7dad0e"
+              "sha256": "d905159c02ead5ce97bd2f33621dad6a768bccd14f3726b7fd1ee6d4e4d6e1be"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -144994,7 +145035,8 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Provider reporting source renewal: prior worker statements and dictionary/job entries unchanged; contract adds one job enum only. Existing callback settlement/auth methods retained and affected callback/HTTP/monitoring cases pass. New provider criterion remains separate from whole-task acceptance; see release-0.3-provider-reconciliation source proofs and receipts.",
-            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts."
+            "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts.",
+            "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -197222,6 +197264,37 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-reconciliation",
       "release": false
+    },
+    "release-0.3-credit-note-refund-scope": {
+      "title": "Correct credit-note refund scope and verify paid-original linkage",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-09.09.01",
+        "03-core-business.md#T-03.09.05.01",
+        "03-core-business.md#T-03.09.05.02",
+        "03-core-business.md#T-03.09.05.03",
+        "03-core-business.md#T-03.09.05.04",
+        "03-core-business.md#T-03.09.05.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.4.01.07",
+        "04-invoices-wallet-contracts.md#T-04.4.02.01",
+        "04-invoices-wallet-contracts.md#T-04.4.02.03",
+        "04-invoices-wallet-contracts.md#T-04.4.02.04",
+        "04-invoices-wallet-contracts.md#T-04.4.02.05"
+      ],
+      "summary": "Remove an unsupported refund capacity exception. Credit notes are not refund parents; paid-original linkage verified. Reconciliation policy remains pending.",
+      "validation": [
+        "59 distinct current passing behavior cases: all 27 wallet-refund HTTP cases including the new note-parent/linkage case, all 24 real migrated-SQL refund scanner cases plus seven options/connection cases, and one actual compiled refund report failure/recovery case. Skipped and duplicate focused cases excluded. Worker build, affected strict types, changed-file lint/format and one-file/five-rule Semgrep checks pass separately. Web/shared/schema/API contracts unchanged; their valid previous evidence retained without rebuilding or re-running unrelated gates.",
+        "Existing issuer creates non-payable negative accounting documents, while consultation refund allocations target ordinary paid original invoices. RefundService.refundableInvoice and runWalletRefund both reject credit-note refund parents. Actual protected HTTP rejects issued and artificially paid notes without creating refunds, then approves/completes a reviewed refund on the original with exact returned/wallet amounts and both notes unchanged.",
+        "Correct the earlier unsupported credit-kind paid-capacity bypass. All regular refund rows use their paid original capacity; an illegally attached note refund is provenance-invalid and reportable. Issued notes without refund rows and independently keyed wallet operations remain outside the ordinary refund-request namespace. Prior permissive fixture was replaced by stronger invalid-parent detection assertions, not a waiver. Legacy cumulative residuals, genuine pre-intent history, exact sums, locks, bounded data and no financial mutation remain verified.",
+        "One bounded review found no outstanding issue. Production money writers, API routes/contracts, shared packages, UI assets and other tracked product sources retained. AST proof preserves every old wallet HTTP test/fixture; full current suite passes. Source bindings renewed only for affected acceptance. Earlier credit-note capacity-gap claim is superseded by this source-grounded correction; the mathematical owner question is not answered or repeated.",
+        "Reconciliation remains partial for the disputed formula and retained dev-reload/launch gates. No milestone release, version change, staging deployment, Telegram notification or production authorization inferred."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/credit-note-refund-scope",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -197263,7 +197336,7 @@
   "next_batch": {
     "id": "release-0.3-financial-reconciliation-completion",
     "release": "0.3.0",
-    "goal": "Reconcile remaining financial policy and credit-note capacity evidence without silently accepting the contradictory C-04.CC.06 formula; current regular refund/provenance reports, invoice/provider reports and Wallet budget are verified. Diagnose any recurrent dev reload, retain prior owner/release operational gates and unfinished consultation work, then select the next independent authorized release work.",
+    "goal": "Finish retained dev-reload diagnosis and select the next independent authorized release work. Invoice/provider/refund checks and paid-original credit-note linkage are verified; preserve the pending C-04.CC.06 mathematical policy decision, prior owner/release operational gates and unfinished consultation work.",
     "task_keys": [
       "02-auth-users-admin.md#T-09.09.01"
     ]

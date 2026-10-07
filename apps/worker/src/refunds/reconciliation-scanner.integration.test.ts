@@ -278,21 +278,42 @@ it('reports a completed modern intent that lost its credit identity, while accep
   expect(await scan()).toMatchObject({ reported: 1, errors: [] });
   expect((await rows())[0].details.invalidRefundCount).toBe('1');
 });
-it('does not reinterpret separate credit-note entitlement credits as regular paid-refund reservations or orphan credits', async () => {
-  const o = await owner('100', '10', 'credit'),
-    r = await request(o, '50');
-  await corrupt('UPDATE invoices SET paid_amount=20 WHERE id=$1', [o.invoice]);
-  await orphan(o.profile, `fixture-credit-note-entitlement:${randomUUID()}`);
+it('keeps issued credit notes and independently keyed credits outside the regular refund namespace', async () => {
+  const o = await owner(),
+    credit = randomUUID();
+  await db.pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount,adjustment_kind,adjustment_for_invoice_id) VALUES($1,$2,'Unpaid',50,0,'credit',$3)",
+    [credit, o.profile, o.invoice]
+  );
+  await orphan(o.profile, `fixture-independent-credit:${randomUUID()}`);
   const before = await snapshot();
   expect(await scan()).toMatchObject({ reported: 0, errors: [] });
   expect(await snapshot()).toEqual(before);
-  // Provenance is still checked for an actual regular-engine credit on a credit note.
-  await corrupt(
-    "INSERT INTO wallet_transactions(wallet_id,type,state,amount,idempotency_key,ref_id) VALUES($1,'refund','Completed',50,$2,$3)",
-    [o.profile, `refund-wallet-credit:${r}`, r]
+});
+it('reports a regular refund illegally attached to a credit note instead of treating note value as paid capacity', async () => {
+  const o = await owner(),
+    credit = randomUUID(),
+    refund = randomUUID();
+  await db.pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount,adjustment_kind,adjustment_for_invoice_id) VALUES($1,$2,'Unpaid',50,0,'credit',$3)",
+    [credit, o.profile, o.invoice]
   );
+  await corrupt(
+    "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,$3,40,'wallet',$1::uuid::text)",
+    [refund, credit, o.profile]
+  );
+  const before = await snapshot();
   expect(await scan()).toMatchObject({ reported: 1, errors: [] });
-  expect((await rows())[0].details.paidCapacityApplicable).toBe(false);
+  expect((await rows())[0].details).toMatchObject({
+    invoiceId: credit,
+    refundInvoiceKind: 'credit',
+    paidCapacityApplicable: true,
+    paidAmount: '0',
+    outstandingReservations: '40',
+    reservationsExceeded: true,
+    invalidRefundIds: [refund],
+  });
+  expect(await snapshot()).toEqual(before);
 });
 it('reports canonical orphan credits, keeps identifiers/amounts exact and omits their raw keys and private metadata', async () => {
   const o = await owner(),

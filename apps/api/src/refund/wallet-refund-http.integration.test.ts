@@ -145,6 +145,53 @@ async function balances(f: Awaited<ReturnType<typeof invoice>>) {
   ).rows[0];
 }
 
+it('refunds a credit-note entitlement through its paid original and rejects credit-note refund parents', async () => {
+  const f = await invoice('100'),
+    credit = randomUUID(),
+    paidCredit = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount,adjustment_kind,adjustment_for_invoice_id) VALUES($1,$3,'Unpaid',50,0,'credit',$4),($2,$3,'Paid',100,100,'credit',$4)",
+    [credit, paidCredit, f.profile, f.id]
+  );
+  const before = (
+    await http.pool.query('SELECT * FROM invoices WHERE id IN ($1,$2) ORDER BY id', [
+      credit,
+      paidCredit,
+    ])
+  ).rows;
+  for (const id of [credit, paidCredit]) {
+    const response = await post('wallet-refunds', requestBody(id, '50'));
+    expect(response.status).toBe(409);
+    expect(
+      (await http.pool.query('SELECT id FROM refunds WHERE invoice_id=$1', [id])).rows
+    ).toEqual([]);
+  }
+  const refund = await request(requestBody(f.id, '50'));
+  expect(refund.invoiceId).toBe(f.id);
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  expect((await decide(refund.id, 'process')).status).toBe(200);
+  expect(await balances(f)).toEqual({
+    refunded_amount: '50',
+    state: 'PartiallyRefunded',
+    posted_balance: '50',
+  });
+  expect(
+    (
+      await http.pool.query('SELECT * FROM invoices WHERE id IN ($1,$2) ORDER BY id', [
+        credit,
+        paidCredit,
+      ])
+    ).rows
+  ).toEqual(before);
+  expect(
+    (
+      await http.pool.query('SELECT invoice_id,profile_id,amount,state FROM refunds WHERE id=$1', [
+        refund.id,
+      ])
+    ).rows
+  ).toEqual([{ invoice_id: f.id, profile_id: f.profile, amount: '50', state: 'Completed' }]);
+});
+
 it('requires the displayed refund snapshot and rejects a stale balance after another request', async () => {
   const f = await invoice('100');
   const body = requestBody(f.id, '60');
