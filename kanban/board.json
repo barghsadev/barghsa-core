@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "3fce06de454734f316c65eaf104a160077093d3d",
+  "source_commit": "ea0f77d62873d321fdc418e28d9760515484b5cc",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -43332,7 +43332,7 @@
       "launch_required": true,
       "remaining": [
         "Inspect any remaining unaccepted generic/system order status paths. Native electricity review/revision/raw/protected legacy and SQL activation/completion/formal contract-cancellation now have scoped canonical owner delivery; accepted four-service submissions,customer cancellation,consultation/solar/saving/request families remain retained. Preserve true transitions versus internal/same-state information,Rejected versus formal Cancelled,and all financial/review/authority/session/audit/idempotency/ledger boundaries.",
-        "Inspect remaining Appendix order.awaiting_staff,auth.otp_sent,system andother native/generic/internal/review writers without exhaustive producer inference. Wallet.low_balance now uses existing customer available balance/unpaid invoice threshold,additive269 strict independent write signals,current observed episode recovery/owner change andexisting workerpoll with private mandatory native history/urgent email/current deficit guard. Current492 runtime cases verify rollback/concurrency/upgrade/caller/actualworker/receipt boundaries. Acceptedwalletcredit/refund/TTL/invoice/topup/earlierfamilies retained;original financial/history/read/provider retry logic unchanged. SecureOTP owner disposition remains pending;native templates/liveprovider/storage/policy/operations/allfourlaunch unfinished.",
+        "Inspect remaining Appendix order.awaiting_staff,auth.otp_sent,system andother native/generic/internal/review writers without exhaustive producer inference. Wallet.low_balance now uses existing customer available balance/unpaid invoice threshold,additive269 strict independent write signals,current observed episode recovery/owner change andexisting workerpoll with private mandatory native history/urgent email/current deficit guard. Current492 runtime cases verify rollback/concurrency/upgrade/caller/actualworker/receipt boundaries. Acceptedwalletcredit/refund/TTL/invoice/topup/earlierfamilies retained;original financial/history/read/provider retry logic unchanged. SecureOTP owner disposition remains pending;native templates/liveprovider/storage/policy/operations/allfourlaunch unfinished. Awaiting-staff appendix owner disposition is now pending:retain existing customer order.submitted/status review notices versus add separate order.awaiting_staff occurrence. No approval inferred. System outage publication/audience remains to scope.",
         "Verify and complete configured active in-app template rendering for native synchronous business notices with template tasks; current direct/native lifecycle writers preserve localized default content but do not establish custom active-template behavior. Preserve mandatory immediate delivery and immutable past read/content/history. Live template imports,provider callbacks/idempotency,alerts and production operations remain separate gates."
       ],
       "owner": null,
@@ -43424,7 +43424,8 @@
           "release-0.4-internal-refund-failure-notification-producers",
           "release-0.3-online-expiry-delivery-deduplication",
           "release-0.4-wallet-credit-alert-notification-producers",
-          "release-0.4-wallet-low-balance-notification-producer"
+          "release-0.4-wallet-low-balance-notification-producer",
+          "release-0.4-awaiting-staff-producer-inspection"
         ],
         "current_acceptance": {
           "kind": "partial-native-business-producer-acceptance",
@@ -44426,7 +44427,10 @@
             "Existing worker poll evaluates committed signals under profile UPDATE NOWAIT and recipient KEY SHARE NOWAIT,retains busy/error signals,then drains original dispatch. Exact bigint deficit starts one private canonical wallet.low_balance episode with synchronous native inbox/done urgent inapp job/delivered history andqueued urgent email. Every mandatory sink validated;failure rolls evaluation/cache/history back without altering committed money. Current recovered state rearms;owner change creates owner-specific episode,old email suppressed. Current cache episode/private inbox/actual current deficit/current owner/nonarchive required for fresh email. Prior accepted/unknown provider receipts remain first;immutable history andread content retained. Signals are coalesced into observed committed episodes,not an alert for every intermediate financial write.",
             "492 distinct current passing runtime cases:177 DB upgrade/snapshot,30 new worker low-balance,168 related worker,15 actual compiled worker process,80 API money/dashboard caller,22 shared. Separately27 shared import/export contracts,2 snapshot guards and87 unchanged budget checks. Fourteen raised/silent evaluation sink faults andsix business capture fault scenarios prove full public-row rollback/recovery;exact bigint,reserves,equality,owner/archive/paid/cancel,profile/account contention,parallel evaluators,independent financial row locks,current upgrade/no-op/replay/trigger rollback andcontrolled accepted/unknown email receipt tests pass. No live provider claim.",
             "One scoped review andproof preserves whole original DB index/main poll/loader/shared content AST outside isolated additions,all original compiled-process source prefix,and all other previous source/financial API/provider JavaScript bytes. Prior journal prefix and265 schema snapshot retained exactly excepttwo new tables/idchain. Rebuilt282 CJS debug maps source content verified;other changed outputs limited reviewed sources plus2 web release metadata. Final builds/types/lint/format/SAST pass. Initial worker build missing uuid dependency was fixed using existing DB uuid_generate_v7;initial lint unused test import removed,final DB output refreshed. Final runtime tests retain exact calls/assertions;unused import removal has no runtime behavior. SQL certified by real PostgreSQL rather than JavaScript SAST. No assertion/floor/budget/timeout waiver.",
-            "Low-balance producer accepted;notification pipeline task and milestone remain partial. Next inspect existing order.awaiting_staff recipients,assignments andpending routes before building a gap. SecureOTP owner disposition,system/other Appendix,native active templates,live provider/storage/scanner/policy/operations andfour-service launch remain unfinished. No version/release/staging/Telegram/production;owner-approved representations andunfinished consultation work retained."
+            "Low-balance producer accepted;notification pipeline task and milestone remain partial. Next inspect existing order.awaiting_staff recipients,assignments andpending routes before building a gap. SecureOTP owner disposition,system/other Appendix,native active templates,live provider/storage/scanner/policy/operations andfour-service launch remain unfinished. No version/release/staging/Telegram/production;owner-approved representations andunfinished consultation work retained.",
+            "Bounded graph/source inspection,not new runtime acceptance:notifyOrderSubmitted has four native submit callers andcreates private customer canonical order.submitted with staff-review content;electricity/saving actual return-to-awaiting_staff_review uses canonical order.status_changed after saved state guard. Solar/consultation status helpers inspected for actual saved status/history/currentowner semantics. Original submission/status events remain intact. Appendix order.awaiting_staff has separate registry/seed customer message;no literal producer found by full literal graph lookup. Owner asked whether existing equivalent customer events may reconcile appendix or separate notice is required;no disposition inferred,no superseding/done claim.",
+            "System.service_outage has registry/seed with details/eta butno literal production producer found by bounded graph lookup;notifications controller only lists/reads private inboxes. Audience/publication trigger/admin workflow remain unaccepted andneed bounded policy/operational scoping before automatic broadcast. No claim that graph absence alone certifies absence across all indirect paths.",
+            "Independent demonstrated native-template gap:NotificationsService.create writes supplied native localizedContent directly even with canonical delivery,andcreateCustomerBusinessEvent marks inapp done before worker. InAppNotificationTransport selects active fa/en templates andvalidates/render allowlisted payload only for fresh delivery,returning existingreceipt first. Next scoped batch must reuse current renderer/template engine for fresh native canonical receipts,preserve immutable historical read/content/receipt andatomic failure behavior;SQL native writers remain separate affected scope. No code/build/runtime changes in this inspection;previous492 passing bound cases retained,not recounted as new checks."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/wallet-low-balance-notification-producer",
@@ -45139,7 +45143,70 @@
             "apps/worker/src/wallet/low-balance-notifications.ts#evaluateWalletLowBalanceSignals",
             "apps/worker/src/main.ts#notification_outbox_poll",
             "apps/worker/src/notifications/channel-availability-loader.ts#loadNotificationRecipient"
-          ]
+          ],
+          "awaiting_staff_inspection": {
+            "base_commit": "ea0f77d62873d321fdc418e28d9760515484b5cc",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/awaiting-staff-producer-inspection",
+            "source_evidence": [
+              {
+                "path": "apps/api/src/notifications/order-notifications.ts",
+                "sha256": "7b889fc1fa4f91f31afab1568c5030a9494380f2475c0128d02ee9461e101df1"
+              },
+              {
+                "path": "apps/api/src/notifications/notifications.service.ts",
+                "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
+              },
+              {
+                "path": "apps/api/src/electricity/electricity-status-notifications.ts",
+                "sha256": "2620269bde47105775946df3fb040c0a903e66b0d5830ab51b8ba936cd643ae6"
+              },
+              {
+                "path": "apps/api/src/saving/saving-status-notifications.ts",
+                "sha256": "6ee8bb4537cf91f31fe863e390e4a22e46c0cfa7a35076b14fc79f8991fc4821"
+              },
+              {
+                "path": "apps/api/src/solar/solar-status-notifications.ts",
+                "sha256": "e949f678fe4c270f89e601a81515b88c163d621d05fe1a2260e467080a375779"
+              },
+              {
+                "path": "apps/api/src/consultation/consultation-status-notifications.ts",
+                "sha256": "dbfc6a43e9a52211b1d6b3556bc289e23bc872fe612849ba767b5f7a63d1cd2f"
+              },
+              {
+                "path": "apps/api/src/electricity/electricity-order.service.ts",
+                "sha256": "5bde0e52488d27d0c65333e48f1aaa9780f544c0b94bb79c6c62f699c418bafb"
+              },
+              {
+                "path": "apps/api/src/saving/saving-order.service.ts",
+                "sha256": "59283771109f1752ea05f8cc4f7f8208b6bcf97b91b98ef9fa54483747b27bed"
+              },
+              {
+                "path": "apps/api/src/solar/solar-request.service.ts",
+                "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              },
+              {
+                "path": "apps/api/src/consultation/consultation-request.service.ts",
+                "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              },
+              {
+                "path": "apps/api/src/notifications/notifications.controller.ts",
+                "sha256": "0f67276d6e622616cf4b0c0ae0675e77a07891d512275a33ea1b3129a0569b8a"
+              },
+              {
+                "path": "apps/worker/src/notifications/in-app-transport.ts",
+                "sha256": "e3dd6d38e860c1aa7141973d9899cc46d83efb401b03215540aeb94595c14170"
+              },
+              {
+                "path": "packages/shared/src/notifications/notification-registry.ts",
+                "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+              },
+              {
+                "path": "packages/db/src/seed/notification-templates.ts",
+                "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
+              }
+            ],
+            "disposition": "Owner appendix reconciliation pending;existing events retained. Native active-template gap independently actionable."
+          }
         }
       }
     },
@@ -293347,6 +293414,78 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/wallet-low-balance-notification-producer",
       "release": false
+    },
+    "release-0.4-awaiting-staff-producer-inspection": {
+      "title": "Scope awaiting-review semantics and native template gap",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02"
+      ],
+      "summary": "Existing customer review notices found;awaiting-staff appendix reconciliation awaits owner. Fresh native canonical inapp writes bypass active templates,an independent demonstrated gap selected next.",
+      "validation": [
+        "Bounded graph/source inspection,not new runtime acceptance:notifyOrderSubmitted has four native submit callers andcreates private customer canonical order.submitted with staff-review content;electricity/saving actual return-to-awaiting_staff_review uses canonical order.status_changed after saved state guard. Solar/consultation status helpers inspected for actual saved status/history/currentowner semantics. Original submission/status events remain intact. Appendix order.awaiting_staff has separate registry/seed customer message;no literal producer found by full literal graph lookup. Owner asked whether existing equivalent customer events may reconcile appendix or separate notice is required;no disposition inferred,no superseding/done claim.",
+        "System.service_outage has registry/seed with details/eta butno literal production producer found by bounded graph lookup;notifications controller only lists/reads private inboxes. Audience/publication trigger/admin workflow remain unaccepted andneed bounded policy/operational scoping before automatic broadcast. No claim that graph absence alone certifies absence across all indirect paths.",
+        "Independent demonstrated native-template gap:NotificationsService.create writes supplied native localizedContent directly even with canonical delivery,andcreateCustomerBusinessEvent marks inapp done before worker. InAppNotificationTransport selects active fa/en templates andvalidates/render allowlisted payload only for fresh delivery,returning existingreceipt first. Next scoped batch must reuse current renderer/template engine for fresh native canonical receipts,preserve immutable historical read/content/receipt andatomic failure behavior;SQL native writers remain separate affected scope. No code/build/runtime changes in this inspection;previous492 passing bound cases retained,not recounted as new checks."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/notifications/order-notifications.ts",
+          "sha256": "7b889fc1fa4f91f31afab1568c5030a9494380f2475c0128d02ee9461e101df1"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "21c3f61bba7cce2bbaf8687840e876344015881f27c21e5992b6b2b13cee04f1"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-status-notifications.ts",
+          "sha256": "2620269bde47105775946df3fb040c0a903e66b0d5830ab51b8ba936cd643ae6"
+        },
+        {
+          "path": "apps/api/src/saving/saving-status-notifications.ts",
+          "sha256": "6ee8bb4537cf91f31fe863e390e4a22e46c0cfa7a35076b14fc79f8991fc4821"
+        },
+        {
+          "path": "apps/api/src/solar/solar-status-notifications.ts",
+          "sha256": "e949f678fe4c270f89e601a81515b88c163d621d05fe1a2260e467080a375779"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-status-notifications.ts",
+          "sha256": "dbfc6a43e9a52211b1d6b3556bc289e23bc872fe612849ba767b5f7a63d1cd2f"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "5bde0e52488d27d0c65333e48f1aaa9780f544c0b94bb79c6c62f699c418bafb"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.service.ts",
+          "sha256": "59283771109f1752ea05f8cc4f7f8208b6bcf97b91b98ef9fa54483747b27bed"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.service.ts",
+          "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.controller.ts",
+          "sha256": "0f67276d6e622616cf4b0c0ae0675e77a07891d512275a33ea1b3129a0569b8a"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.ts",
+          "sha256": "e3dd6d38e860c1aa7141973d9899cc46d83efb401b03215540aeb94595c14170"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
+        }
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/awaiting-staff-producer-inspection",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -293386,11 +293525,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-awaiting-staff-notification-producers",
+    "id": "release-0.4-native-active-inbox-template-rendering",
     "release": "0.4.0",
-    "goal": "Inspect existing order.awaiting_staff native writers,actual staff recipients/permission/assignment/private pending routes andbusiness transitions. Reuse existing mandatory immediate canonical helpers andonlybuild demonstrated missing delivery boundaries. Preserve money/authority/currentassignment/profile/privatecontext/concurrency/idempotency/history andacceptedwallet/refund/TTL/invoice/earlierfamilies. SecureOTP owner disposition,system/otherAppendix/native templates/liveprovider/policy/operations/fourservice launch remainunfinished.",
+    "goal": "Inspect/reuse existing shared allowlisted renderer andworker active fa/en template semantics for fresh synchronous canonical inbox writes. Implement demonstrated active-template gap in bounded native helper scope with exact payload/private context,caller-owned transaction,failure rollback andimmutable historic read/content/idempotency/receipts. Check changed shared/API/worker consumers proportionally;SQL-native receipts remain explicit separate scope. Awaiting-staff appendix andsecureOTP owner dispositions remain pending;system publication/live provider/storage/scanner/policy/operations/fourservice launch unfinished.",
     "task_keys": [
-      "05-notifications-documents-ai.md#T-05.01.02"
+      "05-notifications-documents-ai.md#T-05.01.02",
+      "05-notifications-documents-ai.md#T-05.04.02",
+      "05-notifications-documents-ai.md#T-05.04.05"
     ]
   },
   "launch_forecast": {

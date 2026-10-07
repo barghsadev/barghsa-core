@@ -39,9 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing order.awaiting_staff native writers,actual staff recipients/permission/assignment/private pending routes andbusiness transitions. Reuse existing mandatory immediate canonical helpers andonlybuild demonstrated missing delivery boundaries. Preserve money/authority/currentassignment/profile/privatecontext/concurrency/idempotency/history andacceptedwallet/refund/TTL/invoice/earlierfamilies. SecureOTP owner disposition,system/otherAppendix/native templates/liveprovider/policy/operations/fourservice launch remainunfinished.
+Inspect/reuse existing shared allowlisted renderer andworker active fa/en template semantics for fresh synchronous canonical inbox writes. Implement demonstrated active-template gap in bounded native helper scope with exact payload/private context,caller-owned transaction,failure rollback andimmutable historic read/content/idempotency/receipts. Check changed shared/API/worker consumers proportionally;SQL-native receipts remain explicit separate scope. Awaiting-staff appendix andsecureOTP owner dispositions remain pending;system publication/live provider/storage/scanner/policy/operations/fourservice launch unfinished.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
+- `05-notifications-documents-ai.md#T-05.04.02`: Variable interpolation & escaping
+- `05-notifications-documents-ai.md#T-05.04.05`: Template seeding
 
 ## v0.2.0: Complete customer journeys
 
