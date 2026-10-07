@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 429 | Accepted with unchanged source bindings. |
+| done | 432 | Accepted with unchanged source bindings. |
 | verify | 867 | Existing work may be complete; inspect evidence before building. |
-| partial | 63 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,11 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and reconcile existing mandatory green-electricity rules,activation safety and contract template management against current source and approved configuration/catalogue representations. Build only demonstrated gaps;retain owner-dependent quantity/price/consent questions and earlier release,quality andoperational gates.
+Inspect existing reconciliation exceptions andgift-code administration against current financial ledgers,matching-line category eligibility,limits,redemption/cancellation policy,current authority andoperator recovery. Reconcile old future-finance limitations with existing engines andapproved promotion representations. Build only demonstrated gaps;keep prior owner,release,quality andoperational gates open.
 
-- `02-auth-users-admin.md#T-09.10.02`: Mandatory green-electricity rules
-- `02-auth-users-admin.md#T-09.10.03`: Green rule activation safety check
-- `02-auth-users-admin.md#T-09.12.04`: Contract template management
+- `02-auth-users-admin.md#T-09.09.01`: Reconciliation exceptions view
+- `02-auth-users-admin.md#T-09.12.03`: Gift code management
 
 ## v0.2.0: Complete customer journeys
 
@@ -341,12 +340,12 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.09.02` | done | Earlier acceptance_verified | Failed jobs dashboard |
 | `02-auth-users-admin.md#T-09.09.03` | done | Earlier acceptance_verified | Dead-letter notifications |
 | `02-auth-users-admin.md#T-09.10.01` | done | Earlier acceptance_verified | Online wallet top-up limit |
-| `02-auth-users-admin.md#T-09.10.02` | partial | Earlier partial | Mandatory green-electricity rules |
-| `02-auth-users-admin.md#T-09.10.03` | partial | Earlier partial | Green rule activation safety check |
+| `02-auth-users-admin.md#T-09.10.02` | done | Earlier partial | Mandatory green-electricity rules |
+| `02-auth-users-admin.md#T-09.10.03` | done | Earlier partial | Green rule activation safety check |
 | `02-auth-users-admin.md#T-09.12.01` | done | Earlier acceptance_verified | Product catalogue management |
 | `02-auth-users-admin.md#T-09.12.02` | done | Earlier acceptance_verified | VAT configuration |
 | `02-auth-users-admin.md#T-09.12.03` | partial | Earlier partial | Gift code management |
-| `02-auth-users-admin.md#T-09.12.04` | partial | Earlier partial | Contract template management |
+| `02-auth-users-admin.md#T-09.12.04` | done | Earlier partial | Contract template management |
 | `02-auth-users-admin.md#T-09.12.05` | done | Earlier acceptance_verified | Upload policies configuration |
 | `02-auth-users-admin.md#T-09.12.06` | partial | Earlier partial | Contract electricity increase limits |
 | `02-auth-users-admin.md#T-10.01.01` | done | Earlier acceptance_verified | Staff user list (admin) |

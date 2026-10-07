@@ -323,3 +323,62 @@ it('does not write storage when the durable reservation cannot commit', async ()
 });
 
 const auditWindow = new AuditWindow(() => http.pool);
+
+it('protects a referenced template through HTTP and the database before permitting an unlinked deletion', async () => {
+  const contractTypeId = randomUUID();
+  await http.pool.query(
+    'INSERT INTO contract_type_templates(contract_type_id,template_id) VALUES ($1,$2)',
+    [contractTypeId, templateId]
+  );
+  try {
+    expect((await mutation('delete')).status).toBe(409);
+    await expect(
+      http.pool.query('DELETE FROM contract_templates WHERE id=$1', [templateId])
+    ).rejects.toMatchObject({ code: '23503' });
+    expect(
+      (await http.pool.query('SELECT id FROM contract_templates WHERE id=$1', [templateId])).rows
+    ).toEqual([{ id: templateId }]);
+    expect(
+      (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    ).toEqual([]);
+    expect(objects.size).toBe(0);
+    await http.pool.query('DELETE FROM contract_type_templates WHERE contract_type_id=$1', [
+      contractTypeId,
+    ]);
+    const verifiedAt = (
+      await http.pool.query(
+        "SELECT step_up_verified_at FROM sessions WHERE user_id='template-admin'"
+      )
+    ).rows[0].step_up_verified_at as Date;
+    expect(verifiedAt).toBeInstanceOf(Date);
+    const response = await mutation('delete');
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ deleted: true });
+    expect(
+      (await http.pool.query('SELECT id FROM contract_templates WHERE id=$1', [templateId])).rows
+    ).toEqual([]);
+    expect(
+      (
+        await auditWindow.query(
+          "SELECT user_id,metadata::jsonb AS metadata FROM audit_log WHERE event='change_recorded'"
+        )
+      ).rows
+    ).toEqual([
+      {
+        user_id: 'template-admin',
+        metadata: {
+          entity: 'contract_template',
+          action: 'deleted',
+          templateId,
+          name: 'Original',
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        },
+      },
+    ]);
+  } finally {
+    await http.pool.query('DELETE FROM contract_type_templates WHERE contract_type_id=$1', [
+      contractTypeId,
+    ]);
+  }
+});

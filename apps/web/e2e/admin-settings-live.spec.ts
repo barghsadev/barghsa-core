@@ -881,7 +881,7 @@ for (const locale of ['en', 'fa'])
         page.waitForResponse(
           (response) =>
             new URL(response.url()).pathname === '/api/admin/config/green-electricity-rules' &&
-            response.request().method() === 'GET'
+            response.request().method() === 'PUT'
         ),
         page.waitForResponse(
           (response) =>
@@ -939,6 +939,37 @@ for (const locale of ['en', 'fa'])
     await page.keyboard.press('ArrowUp');
     await advanced.getByRole('slider').focus();
     await page.keyboard.press('End');
+    const readRules = async () => {
+      const response = await page.request.get(
+        `${http.base}/api/admin/config/green-electricity-rules`,
+        { headers }
+      );
+      expect(response.status()).toBe(200);
+      return response.json();
+    };
+    const beforeIncompatible = await readRules();
+    const incompatible = await page.request.put(
+      `${http.base}/api/admin/config/green-electricity-rules`,
+      {
+        headers,
+        data: {
+          simpleOrder: {
+            mandatoryGreenEnabled: true,
+            averagePowerThresholdKw: 1500,
+            mandatoryGreenSharePercent: 0.1,
+          },
+          advancedOrder: {
+            mandatoryGreenEnabled: true,
+            averagePowerThresholdKw: 2100,
+            mandatoryGreenSharePercent: 100,
+          },
+        },
+      }
+    );
+    expect(incompatible.status()).toBe(400);
+    expect(await readRules()).toEqual(beforeIncompatible);
+    await expect(advanced.getByRole('slider')).toHaveValue('100');
+    await page.keyboard.press('ArrowDown');
     await page
       .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
       .click();
@@ -952,7 +983,7 @@ for (const locale of ['en', 'fa'])
       new RegExp(fa ? '0\\.1%' : '۰٫۱٪')
     );
     await expect(advanced.getByRole('slider')).toHaveAccessibleName(
-      new RegExp(fa ? '100%' : '۱۰۰٪')
+      new RegExp(fa ? '99\\.9%' : '۹۹٫۹٪')
     );
     const config = await (
       await page.request.get(`${http.base}/api/admin/config/green-electricity-rules`, { headers })
@@ -966,7 +997,7 @@ for (const locale of ['en', 'fa'])
       advancedOrder: {
         mandatoryGreenEnabled: true,
         averagePowerThresholdKw: 2100,
-        mandatoryGreenSharePercent: 100,
+        mandatoryGreenSharePercent: 99.9,
       },
     });
     expect(
@@ -1760,8 +1791,11 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${renamed}`, exact: true })
       .click();
     await expect(page.getByLabel(fa ? 'فعال' : 'Active', { exact: true })).not.toBeChecked();
-    await expect(page.getByText('first.txt', { exact: true })).toBeVisible();
-    await expect(page.getByText('second.txt', { exact: true })).toBeVisible();
+    const versionHistory = page.getByLabel(fa ? 'تاریخچه نسخه‌ها' : 'Version history', {
+      exact: true,
+    });
+    await expect(versionHistory.getByText('first.txt', { exact: true })).toBeVisible();
+    await expect(versionHistory.getByText('second.txt', { exact: true })).toBeVisible();
     await expect(
       page.getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
     ).toBeDisabled();

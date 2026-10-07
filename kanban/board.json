@@ -17040,7 +17040,8 @@
           "release-0.3-electricity-price-credit-settlement",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -17300,7 +17301,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -17399,7 +17400,8 @@
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -17414,9 +17416,9 @@
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
           },
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -21890,7 +21892,8 @@
           "release-0.3-admin-geography-terms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -21954,7 +21957,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22090,7 +22093,8 @@
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22196,9 +22200,9 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -22289,7 +22293,8 @@
           "release-0.3-admin-geography-terms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -22353,7 +22358,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22489,7 +22494,8 @@
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22595,9 +22601,9 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -22696,7 +22702,8 @@
           "release-0.3-admin-geography-terms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -22760,7 +22767,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22896,7 +22903,8 @@
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -23002,9 +23010,9 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -26881,7 +26889,8 @@
         "batches": [
           "2026-10-02-ticket-related-records",
           "2026-10-05-ticket-intake-conversation-staff-forms",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -27045,7 +27054,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -27295,12 +27304,21 @@
             "Versioned response targets andtier delays/channels have current edit grants,initial/final real step-up,absent-row serialization,config/global version audits and rollback. Targets create staff alerts without promising service levels. Teams/member/lead edits retainactive account/grant locks,priority fallback/manual assignment and round-robin/expertise/load strategies;ticket,verification andconsultation callers pass.",
             "Two migratedDB red failures reproduced stale ticket/case escalation after activity between scans. Existing consultation activity snapshot logic nowcovers allthree types at full PostgreSQL precision,with source share locks,responded-episode resets and matching activity before escalation. Defaultrecipient fallback,tier delays/channels,conditional claims,paging,failure isolation,outbox/ledger transaction andidempotency remain. Six new cases cover response-between-passes,transactions begun before alerting,andlegacy null snapshot adoption without duplicate alerts. Existing consultation andconcurrent scanner cases pass. No schema/migration required.",
             "Allother3888 source paths andAPI/webcompiledoutputs exact;worker build/typecheck,finalchangedlint/format/diff andSemgrep2productionfiles5rules0findings pass. No product API/web/financial engine change. Existing Wallet300.13KB/300KBlaunchbudget failure,earlierowner/dependency/globalquality/operational/productionauthorization gates retained.",
-            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained."
+            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
             "Local support/config/scanner acceptance does not certify external email delivery or all-service launch rehearsal. Earlier owner,release,global quality andoperational gates remain open. Production requires explicit owner authorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -27439,7 +27457,8 @@
         ],
         "batches": [
           "2026-10-02-ticket-related-records",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -27603,7 +27622,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -27853,12 +27872,21 @@
             "Versioned response targets andtier delays/channels have current edit grants,initial/final real step-up,absent-row serialization,config/global version audits and rollback. Targets create staff alerts without promising service levels. Teams/member/lead edits retainactive account/grant locks,priority fallback/manual assignment and round-robin/expertise/load strategies;ticket,verification andconsultation callers pass.",
             "Two migratedDB red failures reproduced stale ticket/case escalation after activity between scans. Existing consultation activity snapshot logic nowcovers allthree types at full PostgreSQL precision,with source share locks,responded-episode resets and matching activity before escalation. Defaultrecipient fallback,tier delays/channels,conditional claims,paging,failure isolation,outbox/ledger transaction andidempotency remain. Six new cases cover response-between-passes,transactions begun before alerting,andlegacy null snapshot adoption without duplicate alerts. Existing consultation andconcurrent scanner cases pass. No schema/migration required.",
             "Allother3888 source paths andAPI/webcompiledoutputs exact;worker build/typecheck,finalchangedlint/format/diff andSemgrep2productionfiles5rules0findings pass. No product API/web/financial engine change. Existing Wallet300.13KB/300KBlaunchbudget failure,earlierowner/dependency/globalquality/operational/productionauthorization gates retained.",
-            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained."
+            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
             "Local support/config/scanner acceptance does not certify external email delivery or all-service launch rehearsal. Earlier owner,release,global quality andoperational gates remain open. Production requires explicit owner authorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -27997,7 +28025,8 @@
           "packages/db/src/migrate.preauth-sessions.test.ts"
         ],
         "batches": [
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -28161,7 +28190,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -28411,12 +28440,21 @@
             "Versioned response targets andtier delays/channels have current edit grants,initial/final real step-up,absent-row serialization,config/global version audits and rollback. Targets create staff alerts without promising service levels. Teams/member/lead edits retainactive account/grant locks,priority fallback/manual assignment and round-robin/expertise/load strategies;ticket,verification andconsultation callers pass.",
             "Two migratedDB red failures reproduced stale ticket/case escalation after activity between scans. Existing consultation activity snapshot logic nowcovers allthree types at full PostgreSQL precision,with source share locks,responded-episode resets and matching activity before escalation. Defaultrecipient fallback,tier delays/channels,conditional claims,paging,failure isolation,outbox/ledger transaction andidempotency remain. Six new cases cover response-between-passes,transactions begun before alerting,andlegacy null snapshot adoption without duplicate alerts. Existing consultation andconcurrent scanner cases pass. No schema/migration required.",
             "Allother3888 source paths andAPI/webcompiledoutputs exact;worker build/typecheck,finalchangedlint/format/diff andSemgrep2productionfiles5rules0findings pass. No product API/web/financial engine change. Existing Wallet300.13KB/300KBlaunchbudget failure,earlierowner/dependency/globalquality/operational/productionauthorization gates retained.",
-            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained."
+            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
             "Local support/config/scanner acceptance does not certify external email delivery or all-service launch rehearsal. Earlier owner,release,global quality andoperational gates remain open. Production requires explicit owner authorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -29857,7 +29895,8 @@
           "release-0.3-admin-geography-terms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -29973,7 +30012,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -30091,7 +30130,8 @@
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -30099,9 +30139,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -30221,7 +30261,8 @@
           "release-0.3-admin-geography-terms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -30337,7 +30378,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -30455,7 +30496,8 @@
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -30463,9 +30505,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -30584,7 +30626,8 @@
           "release-0.3-admin-geography-terms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -30700,7 +30743,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -30818,7 +30861,8 @@
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -30826,9 +30870,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -30946,7 +30990,8 @@
           "release-0.3-admin-geography-terms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -31062,7 +31107,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -31180,7 +31225,8 @@
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -31188,9 +31234,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -36850,7 +36896,8 @@
         "batches": [
           "2026-10-03-service-settings-forms",
           "2026-10-04-consultation-response-targets",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -37014,7 +37061,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -37264,12 +37311,21 @@
             "Versioned response targets andtier delays/channels have current edit grants,initial/final real step-up,absent-row serialization,config/global version audits and rollback. Targets create staff alerts without promising service levels. Teams/member/lead edits retainactive account/grant locks,priority fallback/manual assignment and round-robin/expertise/load strategies;ticket,verification andconsultation callers pass.",
             "Two migratedDB red failures reproduced stale ticket/case escalation after activity between scans. Existing consultation activity snapshot logic nowcovers allthree types at full PostgreSQL precision,with source share locks,responded-episode resets and matching activity before escalation. Defaultrecipient fallback,tier delays/channels,conditional claims,paging,failure isolation,outbox/ledger transaction andidempotency remain. Six new cases cover response-between-passes,transactions begun before alerting,andlegacy null snapshot adoption without duplicate alerts. Existing consultation andconcurrent scanner cases pass. No schema/migration required.",
             "Allother3888 source paths andAPI/webcompiledoutputs exact;worker build/typecheck,finalchangedlint/format/diff andSemgrep2productionfiles5rules0findings pass. No product API/web/financial engine change. Existing Wallet300.13KB/300KBlaunchbudget failure,earlierowner/dependency/globalquality/operational/productionauthorization gates retained.",
-            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained."
+            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
             "Local support/config/scanner acceptance does not certify external email delivery or all-service launch rehearsal. Earlier owner,release,global quality andoperational gates remain open. Production requires explicit owner authorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -37340,7 +37396,8 @@
           "2026-10-04-consultation-assignment",
           "2026-10-04-staff-team-forms",
           "2026-10-06-staff-operation-tables",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -37504,7 +37561,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -37754,12 +37811,21 @@
             "Versioned response targets andtier delays/channels have current edit grants,initial/final real step-up,absent-row serialization,config/global version audits and rollback. Targets create staff alerts without promising service levels. Teams/member/lead edits retainactive account/grant locks,priority fallback/manual assignment and round-robin/expertise/load strategies;ticket,verification andconsultation callers pass.",
             "Two migratedDB red failures reproduced stale ticket/case escalation after activity between scans. Existing consultation activity snapshot logic nowcovers allthree types at full PostgreSQL precision,with source share locks,responded-episode resets and matching activity before escalation. Defaultrecipient fallback,tier delays/channels,conditional claims,paging,failure isolation,outbox/ledger transaction andidempotency remain. Six new cases cover response-between-passes,transactions begun before alerting,andlegacy null snapshot adoption without duplicate alerts. Existing consultation andconcurrent scanner cases pass. No schema/migration required.",
             "Allother3888 source paths andAPI/webcompiledoutputs exact;worker build/typecheck,finalchangedlint/format/diff andSemgrep2productionfiles5rules0findings pass. No product API/web/financial engine change. Existing Wallet300.13KB/300KBlaunchbudget failure,earlierowner/dependency/globalquality/operational/productionauthorization gates retained.",
-            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained."
+            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
             "Local support/config/scanner acceptance does not certify external email delivery or all-service launch rehearsal. Earlier owner,release,global quality andoperational gates remain open. Production requires explicit owner authorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -37836,7 +37902,8 @@
         "batches": [
           "2026-10-03-service-settings-forms",
           "2026-10-04-consultation-response-targets",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -38000,7 +38067,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -38250,12 +38317,21 @@
             "Versioned response targets andtier delays/channels have current edit grants,initial/final real step-up,absent-row serialization,config/global version audits and rollback. Targets create staff alerts without promising service levels. Teams/member/lead edits retainactive account/grant locks,priority fallback/manual assignment and round-robin/expertise/load strategies;ticket,verification andconsultation callers pass.",
             "Two migratedDB red failures reproduced stale ticket/case escalation after activity between scans. Existing consultation activity snapshot logic nowcovers allthree types at full PostgreSQL precision,with source share locks,responded-episode resets and matching activity before escalation. Defaultrecipient fallback,tier delays/channels,conditional claims,paging,failure isolation,outbox/ledger transaction andidempotency remain. Six new cases cover response-between-passes,transactions begun before alerting,andlegacy null snapshot adoption without duplicate alerts. Existing consultation andconcurrent scanner cases pass. No schema/migration required.",
             "Allother3888 source paths andAPI/webcompiledoutputs exact;worker build/typecheck,finalchangedlint/format/diff andSemgrep2productionfiles5rules0findings pass. No product API/web/financial engine change. Existing Wallet300.13KB/300KBlaunchbudget failure,earlierowner/dependency/globalquality/operational/productionauthorization gates retained.",
-            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained."
+            "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
             "Local support/config/scanner acceptance does not certify external email delivery or all-service launch rehearsal. Earlier owner,release,global quality andoperational gates remain open. Production requires explicit owner authorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -38430,7 +38506,8 @@
           "2026-10-05-operational-command-review",
           "2026-10-05-operational-queue-tables",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -38482,7 +38559,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -38592,16 +38669,17 @@
             "Notification-specific queue exposes masked payload/history and view/retry/resolve/dismiss actions. Current authority and verified proof checked through writes; parent-before-channel locking, exact acknowledgement and pending-command ownership preserved. Sending/unknown receipts refuse manual retry; idempotency, immutable delivery snapshots, cumulative attempts and active-claim/cancellation boundaries retained. Audit failure rolls back queue/triage changes; dismiss/resolve do not resend.",
             "Worker build/typecheck, final changed-file lint/format, and Semgrep one production file/five rules/zero findings pass. API/web compiled outputs and all other tracked source remain exact to prior binding. No API contract/schema/migration/web product/financial engine change. Existing Wallet 300.13KB/300KB launch budget failure and prior owner/dependency/operational gates remain open.",
             "Live test fixes only saved locale and obsolete desktop-row/mobile-card selectors in two queue flows. Actual accessible job names include status; identify escaped immutable job type at whitespace/end boundary. All old action/state/count/masking/actor/reload assertions retained, with one new protected-read HTTP 200 assertion. Entire file outside those two flows is byte-exact. Earlier errors and failed receipts retained for diagnosis.",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
           "limitations": [
             "Local triage acceptance does not certify external provider delivery or whole milestone operational readiness. Earlier owner/release/global quality gates remain open. Production requires explicit owner authorization."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -38676,7 +38754,8 @@
         ],
         "batches": [
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -38728,7 +38807,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -38838,16 +38917,17 @@
             "Notification-specific queue exposes masked payload/history and view/retry/resolve/dismiss actions. Current authority and verified proof checked through writes; parent-before-channel locking, exact acknowledgement and pending-command ownership preserved. Sending/unknown receipts refuse manual retry; idempotency, immutable delivery snapshots, cumulative attempts and active-claim/cancellation boundaries retained. Audit failure rolls back queue/triage changes; dismiss/resolve do not resend.",
             "Worker build/typecheck, final changed-file lint/format, and Semgrep one production file/five rules/zero findings pass. API/web compiled outputs and all other tracked source remain exact to prior binding. No API contract/schema/migration/web product/financial engine change. Existing Wallet 300.13KB/300KB launch budget failure and prior owner/dependency/operational gates remain open.",
             "Live test fixes only saved locale and obsolete desktop-row/mobile-card selectors in two queue flows. Actual accessible job names include status; identify escaped immutable job type at whitespace/end boundary. All old action/state/count/masking/actor/reload assertions retained, with one new protected-read HTTP 200 assertion. Entire file outside those two flows is byte-exact. Earlier errors and failed receipts retained for diagnosis.",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
           "limitations": [
             "Local triage acceptance does not certify external provider delivery or whole milestone operational readiness. Earlier owner/release/global quality gates remain open. Production requires explicit owner authorization."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -39184,12 +39264,10 @@
         "story": "02-auth-users-admin.md#spec-b1dfd02d68b5"
       },
       "requirement": "**T-09.10.02 — Mandatory green-electricity rules**\n\n- Description: Admin configures independent settings for simple and advanced ordering:\n  - Simple order: mandatory green rule enabled by default\n  - Advanced order: mandatory green rule disabled by default\n  - Average-power threshold (default 1000 kW)\n  - Mandatory green share percentage (default 4%)\n- Technical notes: All values independently configurable per mode. Validation: threshold ≥ 0, percentage 0–100. Activating green rule blocked if green electricity product is inactive, unpriced, or incompatible with its limits. Changes affect new orders only. Audit: change_recorded. Safety: if green product is deactivated while rule is active, system must fail closed with admin alert.\n- UI/UX: Two sections (Simple/Advanced). Each with enable toggle, threshold input, percentage slider. Validation warnings. Note: Existing orders retain the rule snapshot at confirmation.\n- Dependencies: T-09.10.01, products module\n- Complexity: L",
-      "status": "partial",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Reconcile the historical limitations below with the linked later batches and current code; do not rebuild the former missing module."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -39247,9 +39325,300 @@
           "apps/api/src/admin/green-electricity-http.integration.test.ts"
         ],
         "batches": [
-          "2026-10-03-electricity-settings-forms"
+          "2026-10-03-electricity-settings-forms",
+          "release-0.3-service-configuration-readiness"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-green-activation-submission-and-template-consumers",
+          "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
+              "sha256": "847dad0492206df5c6f3abc5d55a1333cd327eb62322371f8d3d66f4f07e29ba"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
+              "sha256": "fdec65901b5803a4cfc3ca08abc6954899fe37e103998673423c0148f63e874a"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.controller.test.ts",
+              "sha256": "435dc569e2703a8a26a2baec8a117bee78848aa5c1c925d8ab29fa2a122d6405"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.controller.ts",
+              "sha256": "fe76c61ee5355315cea4ce78709f54601fb54f02683f242e02628b44db071549"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.service.test.ts",
+              "sha256": "0d715f70aab053fe021c6fd6644a4f08930af97397d72b4a30baaeab9565a0d6"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.service.ts",
+              "sha256": "2a367c097de2d0d56dd6fa2d5cf64ca20b8cb971a8ba9c8579b4e3a499e5b9ec"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
+              "sha256": "1aa7c62722bdd45433d90a2cf2d394e6049fc5165959adfba1d7d34a65784c55"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-fields.ts",
+              "sha256": "a4c3c0a67b34570b36c6a82e7cf5799a5715519dcab76f2d0d061ab488d97a26"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-receipt.test.ts",
+              "sha256": "ab12b9365a0a54b55afad1fbc1c4ff77bb01f88a63c28522004116738c813e2f"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
+              "sha256": "2f5789e75f46a50ce5a6dfa9b3156605889574c78fafe23691c3374c384dbfdb"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-config.service.test.ts",
+              "sha256": "eca9036f1ca9abf2d2a6581e1336078dab40f34d35f8846bda448496aca42d39"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-http.integration.test.ts",
+              "sha256": "1aafd55d6715bf924eb0fcb9a4046688b380d07b3bf4f28ca05353eb8e0ad128"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+              "sha256": "74d00489ed954606d57d49f32c7665b45516e7bdf462c24e586b0edc9e8b02fb"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+              "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+              "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
+              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
+              "sha256": "014c6b0cc99e1d20810c42b10a547b32e0899af21b51203729e5dc45c656d24f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.test.ts",
+              "sha256": "a36ae22d6c0489cafafa196bf889a9ab7c1ba956df1745eff74f5a6732d93fbb"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.ts",
+              "sha256": "87047ef77c1462dcdcb9060c3e1e0c2e0c4245eb4a0684310d696c657ae12a38"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "949ef8870987de7fa1f7d0048b7bf3c866c37a9b08d29f4e75ffac69535399f2"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "6c42df1949b2134d6c92083bd9a3dbe17058555e475651d485c9e6b25ce193e4"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-submission-snapshot.ts",
+              "sha256": "3498838860f1aebe3d1dfd1e73dfa3e266aaa83cb9fbb257323538ed10aa1d17"
+            },
+            {
+              "path": "apps/api/src/electricity/green-rule-limits.test.ts",
+              "sha256": "709104488b4c60901e0265f1f030472275c3313036f8f2c755bb2aea8033e8c8"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.test.ts",
+              "sha256": "ccbe549ee1d7343609c18660663636d30809811720d484e26048b15914831770"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.ts",
+              "sha256": "a28492c9dce0cfb1993e1047152fb6758c6e022a37386711a51d77cd812141f1"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/storage/reserve-storage-copy.ts",
+              "sha256": "d0f14568e782f9da116b5c33e4f349fd8599520ac92fa2ad964f61662c2490cc"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
+            },
+            {
+              "path": "apps/web/e2e/contract-templates.spec.ts",
+              "sha256": "3a9016bb3766493442c39fd71d8d674a0867f40556c533686f911b982d904a35"
+            },
+            {
+              "path": "apps/web/e2e/document-template-forms.spec.ts",
+              "sha256": "5c33663226567863e22754675690335bf0188d9f67771519f7273ad5bed0b8ac"
+            },
+            {
+              "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+              "sha256": "b8b4428ad8ad1c0ee11cdd0bfa181f02343137e7d50bf435e85c2bfe958557f1"
+            },
+            {
+              "path": "apps/web/e2e/green-rules.spec.ts",
+              "sha256": "c349a54b7a6cca1fec3d0ef28cbce5b828ea285da89880961acd707a32d8926f"
+            },
+            {
+              "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
+              "sha256": "453c9aff3e82ab1683309ec5e4d48a962ba494b525eeeddad53fb3ff95fe43c6"
+            },
+            {
+              "path": "apps/web/e2e/template-catalogue-query.spec.ts",
+              "sha256": "9613a8f67cbe3bfcd29f8ae4291ab64f06f68049d783b5eded427c94c35b3ccb"
+            },
+            {
+              "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
+              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+            },
+            {
+              "path": "apps/web/src/lib/document-template-form.test.ts",
+              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+            },
+            {
+              "path": "apps/web/src/lib/document-template-form.ts",
+              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.test.ts",
+              "sha256": "df87ee38d7ca32226d70d137174646291030a705a7e054a08b295756e3980e64"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.ts",
+              "sha256": "c052cbb7a4744a5237486fcf346f3e6e148889669d3d1ce9f039e3a2d7984818"
+            },
+            {
+              "path": "apps/web/src/lib/template-catalogue-query.test.ts",
+              "sha256": "cac3a1fb1ff0e964c43f544f359ce7bc82a0b6a31d261b475b56ddf6d920bd1f"
+            },
+            {
+              "path": "apps/web/src/lib/template-catalogue-query.ts",
+              "sha256": "b6a5fd7b20cbfb0c116f6fa10817a145763b555c9983fad8041c6175e3670126"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
+              "sha256": "5524090ac045b0a2c9d20b6d195d4591af1a3d87cbaac429799a2fbdcf9f23ae"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+              "sha256": "e2ed1b7324afef6cb11bd2a3b41d9af5eec8ac16be72a58451573d32c1976280"
+            },
+            {
+              "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
+              "sha256": "b6acf421e2e62775f0f457230588bad916d13e8e8d60ab863209b30e6b38727b"
+            },
+            {
+              "path": "apps/web/src/routes/admin/contract-templates.tsx",
+              "sha256": "149b3b237533a5854a9a3b44e5fdabef15752f64ba8b0e72f5b3e20982e756a8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+              "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.integration.test.ts",
+              "sha256": "1e014ededc9afb240f0a16c9e6f43398dcb9ff4c7a57f82de6f100b24837495c"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.ts",
+              "sha256": "f2606cb358317f951f950d573cf81e32cdaac9ecb1ecfbee3f1e5d21d76071b1"
+            },
+            {
+              "path": "packages/db/src/schema/contract-templates.test.ts",
+              "sha256": "fa80c4182be025eeeb73695dfa52c2ef1fc1328de9acf696146c86fd194ba49b"
+            },
+            {
+              "path": "packages/db/src/schema/contract-templates.ts",
+              "sha256": "245b468b1e964589bead23df0c7911c25fca6af7219aee400c28771fcaa2e614"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "e106084087de5140d138824e189d51330e6c3e8eade12eb56d22fc629caeeaa6"
+            },
+            {
+              "path": "packages/i18n/src/contract-templates.ts",
+              "sha256": "fd67bdeef4bd38e3cede92c12363bae4dca3457aad921006780d2033d3e16578"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-templates.test.ts",
+              "sha256": "b65bd8b2368c53b142c6f12b39584a299f028dbeb6cd42ea3e19f3e529dcdba8"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-templates.ts",
+              "sha256": "47f9c1ea1a7665ea47771658ae86de01190c46b05d712a31d98ade96243a6cd8"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-config.test.ts",
+              "sha256": "c956541d966d078e13662dd5ea229761ca8240d28e0c3c44fa12e1351a62b57c"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-config.ts",
+              "sha256": "b6dcb786a817e606bbebcbac0b105d52da01bf98c69acdbdaa5f4401e3c9ebdd"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-safety.test.ts",
+              "sha256": "fc9eb14089f0a81aff2c443643cf76b3d19ec35405079f2247d3287f8eb99d58"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-safety.ts",
+              "sha256": "e32900ecfb01ff938d84b16a46f0d91cd6b8735df7954e6317045338a34ef0b3"
+            },
+            {
+              "path": "packages/shared/src/notifications/template-catalogue-filter.ts",
+              "sha256": "8817ef8aca06d104da02146277b5d00c2d468d1d9ec1a4d5f21118a866fa22b3"
+            }
+          ],
+          "checks": [
+            "426 distinct passing cases:367 fresh (210 API =209 current thirteen-file checks plus one added real HTTP/FK reference case;34 shared;47 UI;68 production-browser fixtures;eight real migrated-API green/template live journeys) plus59 exact-source catalogue API unit/controller/HTTP cases retained from admin-catalogue-vat-upload. Previous template HTTP file is a byte-exact prefix,so its20 cases retain current acceptance. No failed/skipped/unrun/duplicate case counted andno failed-suite pass claimed. Incidental retained caller checks do notcertify unrelated whole tasks.",
+            "Independent simple/advanced settings have required defaults,nonnegative integer thresholds,0–100 shares andlocalized accessible sliders. Current grants,account/session/CSRF/step-up initial/final writes,absent-row advisory locking,product/limit locking,effectiveprice checks,configuration/global versions andexact audit rollback retained. Approved versioned app_config andcatalogue representations used.",
+            "Actual simple andfour-product advanced submission engines recompute current required green quantities with exact bigint/decimal ceiling calculations andproduct limit compatibility,bind review digests,reject stale rules/prices/unavailable products,andcommit one immutable submitted settings/pricing/invoice/contract snapshot. Existing orders andmoney/history do notchange whenrules orproducts change. Current protected admin safety banners report inactive/unpriced/archived/missing/limit conditions;activation andordering failclosed. Historical future-engine deferrals reconciled only forthese effective criteria.",
+            "Contract templates retain bounded UTF-8 text/metadata/placeholder validation,immutable object reservations anddurable rollback cleanup,serialized version allocation andpartial metadata edits,complete ordered file/version archive andpermission/step-up audits. Current configured version consumer renders date/customerName/exact amount,freezes template version/text into generated contract/PDF documents andpreserves prior versions. Versioned deletion always409;referenced unversioned templates protectedby service andRESTRICT FK. Added real HTTP/SQL case proves409 and23503 withunchanged row/noaudit/noobject effects,then exact safe unlinked deletion andpersisted step-up timestamp/flag.",
+            "Only two live-test flows corrected. Reject enabled advanced100% withreal400 andunchanged stored rules;verifymaximum slider value,then save compatible99.9% withstrict independent mode/threshold/share receipts. Await actualPUT acknowledgement andfresh safetyGET,then reload andprotectedGET independentlyverify persistence. Exact filenames scoped to labeled version history.304 of306prior predicates remain in order;two strict configured-value comparisons followcompatible99.9% fixture andfour additional upper-bound/rejection assertions strengthen safety. Whole file outside thoseflows byte-exact. No money,authorization,privacy,immutability,version/deletion orinput assertions relaxed.",
+            "All3892 other source paths andall6127 compiled outputs exact toprior binding;production API/web/shared/worker runtime outputs reused. Final changed-file lint/format/diff pass; no product code,API contract,schema/migration orfinancial engine change requiringanotherbuild/scanner/typecheck. One bounded complete review andactual Persian mobile captures recorded. Earlier failed browser andaudit expectation receipts retained; exact audit expectation expanded toactual persisted verified timestamp,never dropped.",
+            "Local configuration/template acceptance does notcertifyexternal object-store operation,provider delivery orcomplete four-service launch rehearsal. Existing Wallet300.13KB/300KBglobal budget failure,owner decisions,earlier release dependencies andoperational/productionauthorization gates remainopen. Batch isnotamilestone release."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+          "limitations": [
+            "External storage/provider delivery andfull launch rehearsal remain separate operational gates. Existing owner,earlier-release andglobal-quality blockers retained. Production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -39263,14 +39632,14 @@
         "story": "02-auth-users-admin.md#spec-b1dfd02d68b5"
       },
       "requirement": "**T-09.10.03 — Green rule activation safety check**\n\n- Description: When admin tries to activate mandatory green rule, system checks green electricity product is Active, priced, and within limits. If not, block activation and explain why.\n- Technical notes: Validation on config save. If green product state changes while rule is active, system must fail closed: prevent ordering and alert admin.\n- UI/UX: Clear error: \"Cannot activate: Green electricity product is [inactive/unpriced]. [Fix issue or disable rule].\"\n- Dependencies: T-09.10.02\n- Complexity: M",
-      "status": "partial",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Reconcile the historical limitations below with the linked later batches and current code; do not rebuild the former missing module."
-      ],
+      "remaining": [],
       "owner": null,
-      "depends_on": [],
+      "depends_on": [
+        "02-auth-users-admin.md#T-09.10.02"
+      ],
       "evidence": {
         "historical_acceptance": {
           "status": "partial",
@@ -39355,9 +39724,300 @@
           "apps/api/src/catalogue/catalogue.module.ts"
         ],
         "batches": [
-          "2026-10-03-electricity-settings-forms"
+          "2026-10-03-electricity-settings-forms",
+          "release-0.3-service-configuration-readiness"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-green-activation-submission-and-template-consumers",
+          "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
+              "sha256": "847dad0492206df5c6f3abc5d55a1333cd327eb62322371f8d3d66f4f07e29ba"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
+              "sha256": "fdec65901b5803a4cfc3ca08abc6954899fe37e103998673423c0148f63e874a"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.controller.test.ts",
+              "sha256": "435dc569e2703a8a26a2baec8a117bee78848aa5c1c925d8ab29fa2a122d6405"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.controller.ts",
+              "sha256": "fe76c61ee5355315cea4ce78709f54601fb54f02683f242e02628b44db071549"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.service.test.ts",
+              "sha256": "0d715f70aab053fe021c6fd6644a4f08930af97397d72b4a30baaeab9565a0d6"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.service.ts",
+              "sha256": "2a367c097de2d0d56dd6fa2d5cf64ca20b8cb971a8ba9c8579b4e3a499e5b9ec"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
+              "sha256": "1aa7c62722bdd45433d90a2cf2d394e6049fc5165959adfba1d7d34a65784c55"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-fields.ts",
+              "sha256": "a4c3c0a67b34570b36c6a82e7cf5799a5715519dcab76f2d0d061ab488d97a26"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-receipt.test.ts",
+              "sha256": "ab12b9365a0a54b55afad1fbc1c4ff77bb01f88a63c28522004116738c813e2f"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
+              "sha256": "2f5789e75f46a50ce5a6dfa9b3156605889574c78fafe23691c3374c384dbfdb"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-config.service.test.ts",
+              "sha256": "eca9036f1ca9abf2d2a6581e1336078dab40f34d35f8846bda448496aca42d39"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-http.integration.test.ts",
+              "sha256": "1aafd55d6715bf924eb0fcb9a4046688b380d07b3bf4f28ca05353eb8e0ad128"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+              "sha256": "74d00489ed954606d57d49f32c7665b45516e7bdf462c24e586b0edc9e8b02fb"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+              "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+              "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
+              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
+              "sha256": "014c6b0cc99e1d20810c42b10a547b32e0899af21b51203729e5dc45c656d24f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.test.ts",
+              "sha256": "a36ae22d6c0489cafafa196bf889a9ab7c1ba956df1745eff74f5a6732d93fbb"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.ts",
+              "sha256": "87047ef77c1462dcdcb9060c3e1e0c2e0c4245eb4a0684310d696c657ae12a38"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "949ef8870987de7fa1f7d0048b7bf3c866c37a9b08d29f4e75ffac69535399f2"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "6c42df1949b2134d6c92083bd9a3dbe17058555e475651d485c9e6b25ce193e4"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-submission-snapshot.ts",
+              "sha256": "3498838860f1aebe3d1dfd1e73dfa3e266aaa83cb9fbb257323538ed10aa1d17"
+            },
+            {
+              "path": "apps/api/src/electricity/green-rule-limits.test.ts",
+              "sha256": "709104488b4c60901e0265f1f030472275c3313036f8f2c755bb2aea8033e8c8"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.test.ts",
+              "sha256": "ccbe549ee1d7343609c18660663636d30809811720d484e26048b15914831770"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.ts",
+              "sha256": "a28492c9dce0cfb1993e1047152fb6758c6e022a37386711a51d77cd812141f1"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/storage/reserve-storage-copy.ts",
+              "sha256": "d0f14568e782f9da116b5c33e4f349fd8599520ac92fa2ad964f61662c2490cc"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
+            },
+            {
+              "path": "apps/web/e2e/contract-templates.spec.ts",
+              "sha256": "3a9016bb3766493442c39fd71d8d674a0867f40556c533686f911b982d904a35"
+            },
+            {
+              "path": "apps/web/e2e/document-template-forms.spec.ts",
+              "sha256": "5c33663226567863e22754675690335bf0188d9f67771519f7273ad5bed0b8ac"
+            },
+            {
+              "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+              "sha256": "b8b4428ad8ad1c0ee11cdd0bfa181f02343137e7d50bf435e85c2bfe958557f1"
+            },
+            {
+              "path": "apps/web/e2e/green-rules.spec.ts",
+              "sha256": "c349a54b7a6cca1fec3d0ef28cbce5b828ea285da89880961acd707a32d8926f"
+            },
+            {
+              "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
+              "sha256": "453c9aff3e82ab1683309ec5e4d48a962ba494b525eeeddad53fb3ff95fe43c6"
+            },
+            {
+              "path": "apps/web/e2e/template-catalogue-query.spec.ts",
+              "sha256": "9613a8f67cbe3bfcd29f8ae4291ab64f06f68049d783b5eded427c94c35b3ccb"
+            },
+            {
+              "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
+              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+            },
+            {
+              "path": "apps/web/src/lib/document-template-form.test.ts",
+              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+            },
+            {
+              "path": "apps/web/src/lib/document-template-form.ts",
+              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.test.ts",
+              "sha256": "df87ee38d7ca32226d70d137174646291030a705a7e054a08b295756e3980e64"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.ts",
+              "sha256": "c052cbb7a4744a5237486fcf346f3e6e148889669d3d1ce9f039e3a2d7984818"
+            },
+            {
+              "path": "apps/web/src/lib/template-catalogue-query.test.ts",
+              "sha256": "cac3a1fb1ff0e964c43f544f359ce7bc82a0b6a31d261b475b56ddf6d920bd1f"
+            },
+            {
+              "path": "apps/web/src/lib/template-catalogue-query.ts",
+              "sha256": "b6a5fd7b20cbfb0c116f6fa10817a145763b555c9983fad8041c6175e3670126"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
+              "sha256": "5524090ac045b0a2c9d20b6d195d4591af1a3d87cbaac429799a2fbdcf9f23ae"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+              "sha256": "e2ed1b7324afef6cb11bd2a3b41d9af5eec8ac16be72a58451573d32c1976280"
+            },
+            {
+              "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
+              "sha256": "b6acf421e2e62775f0f457230588bad916d13e8e8d60ab863209b30e6b38727b"
+            },
+            {
+              "path": "apps/web/src/routes/admin/contract-templates.tsx",
+              "sha256": "149b3b237533a5854a9a3b44e5fdabef15752f64ba8b0e72f5b3e20982e756a8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+              "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.integration.test.ts",
+              "sha256": "1e014ededc9afb240f0a16c9e6f43398dcb9ff4c7a57f82de6f100b24837495c"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.ts",
+              "sha256": "f2606cb358317f951f950d573cf81e32cdaac9ecb1ecfbee3f1e5d21d76071b1"
+            },
+            {
+              "path": "packages/db/src/schema/contract-templates.test.ts",
+              "sha256": "fa80c4182be025eeeb73695dfa52c2ef1fc1328de9acf696146c86fd194ba49b"
+            },
+            {
+              "path": "packages/db/src/schema/contract-templates.ts",
+              "sha256": "245b468b1e964589bead23df0c7911c25fca6af7219aee400c28771fcaa2e614"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "e106084087de5140d138824e189d51330e6c3e8eade12eb56d22fc629caeeaa6"
+            },
+            {
+              "path": "packages/i18n/src/contract-templates.ts",
+              "sha256": "fd67bdeef4bd38e3cede92c12363bae4dca3457aad921006780d2033d3e16578"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-templates.test.ts",
+              "sha256": "b65bd8b2368c53b142c6f12b39584a299f028dbeb6cd42ea3e19f3e529dcdba8"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-templates.ts",
+              "sha256": "47f9c1ea1a7665ea47771658ae86de01190c46b05d712a31d98ade96243a6cd8"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-config.test.ts",
+              "sha256": "c956541d966d078e13662dd5ea229761ca8240d28e0c3c44fa12e1351a62b57c"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-config.ts",
+              "sha256": "b6dcb786a817e606bbebcbac0b105d52da01bf98c69acdbdaa5f4401e3c9ebdd"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-safety.test.ts",
+              "sha256": "fc9eb14089f0a81aff2c443643cf76b3d19ec35405079f2247d3287f8eb99d58"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-safety.ts",
+              "sha256": "e32900ecfb01ff938d84b16a46f0d91cd6b8735df7954e6317045338a34ef0b3"
+            },
+            {
+              "path": "packages/shared/src/notifications/template-catalogue-filter.ts",
+              "sha256": "8817ef8aca06d104da02146277b5d00c2d468d1d9ec1a4d5f21118a866fa22b3"
+            }
+          ],
+          "checks": [
+            "426 distinct passing cases:367 fresh (210 API =209 current thirteen-file checks plus one added real HTTP/FK reference case;34 shared;47 UI;68 production-browser fixtures;eight real migrated-API green/template live journeys) plus59 exact-source catalogue API unit/controller/HTTP cases retained from admin-catalogue-vat-upload. Previous template HTTP file is a byte-exact prefix,so its20 cases retain current acceptance. No failed/skipped/unrun/duplicate case counted andno failed-suite pass claimed. Incidental retained caller checks do notcertify unrelated whole tasks.",
+            "Independent simple/advanced settings have required defaults,nonnegative integer thresholds,0–100 shares andlocalized accessible sliders. Current grants,account/session/CSRF/step-up initial/final writes,absent-row advisory locking,product/limit locking,effectiveprice checks,configuration/global versions andexact audit rollback retained. Approved versioned app_config andcatalogue representations used.",
+            "Actual simple andfour-product advanced submission engines recompute current required green quantities with exact bigint/decimal ceiling calculations andproduct limit compatibility,bind review digests,reject stale rules/prices/unavailable products,andcommit one immutable submitted settings/pricing/invoice/contract snapshot. Existing orders andmoney/history do notchange whenrules orproducts change. Current protected admin safety banners report inactive/unpriced/archived/missing/limit conditions;activation andordering failclosed. Historical future-engine deferrals reconciled only forthese effective criteria.",
+            "Contract templates retain bounded UTF-8 text/metadata/placeholder validation,immutable object reservations anddurable rollback cleanup,serialized version allocation andpartial metadata edits,complete ordered file/version archive andpermission/step-up audits. Current configured version consumer renders date/customerName/exact amount,freezes template version/text into generated contract/PDF documents andpreserves prior versions. Versioned deletion always409;referenced unversioned templates protectedby service andRESTRICT FK. Added real HTTP/SQL case proves409 and23503 withunchanged row/noaudit/noobject effects,then exact safe unlinked deletion andpersisted step-up timestamp/flag.",
+            "Only two live-test flows corrected. Reject enabled advanced100% withreal400 andunchanged stored rules;verifymaximum slider value,then save compatible99.9% withstrict independent mode/threshold/share receipts. Await actualPUT acknowledgement andfresh safetyGET,then reload andprotectedGET independentlyverify persistence. Exact filenames scoped to labeled version history.304 of306prior predicates remain in order;two strict configured-value comparisons followcompatible99.9% fixture andfour additional upper-bound/rejection assertions strengthen safety. Whole file outside thoseflows byte-exact. No money,authorization,privacy,immutability,version/deletion orinput assertions relaxed.",
+            "All3892 other source paths andall6127 compiled outputs exact toprior binding;production API/web/shared/worker runtime outputs reused. Final changed-file lint/format/diff pass; no product code,API contract,schema/migration orfinancial engine change requiringanotherbuild/scanner/typecheck. One bounded complete review andactual Persian mobile captures recorded. Earlier failed browser andaudit expectation receipts retained; exact audit expectation expanded toactual persisted verified timestamp,never dropped.",
+            "Local configuration/template acceptance does notcertifyexternal object-store operation,provider delivery orcomplete four-service launch rehearsal. Existing Wallet300.13KB/300KBglobal budget failure,owner decisions,earlier release dependencies andoperational/productionauthorization gates remainopen. Batch isnotamilestone release."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+          "limitations": [
+            "External storage/provider delivery andfull launch rehearsal remain separate operational gates. Existing owner,earlier-release andglobal-quality blockers retained. Production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -40509,7 +41169,8 @@
           "2026-10-03-saving-catalogue-forms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -40717,7 +41378,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -40845,16 +41506,17 @@
             "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
             "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
             "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -41007,7 +41669,8 @@
           "2026-10-03-vat-forms",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -41215,7 +41878,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -41343,16 +42006,17 @@
             "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
             "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
             "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -41485,12 +42149,10 @@
         "story": "02-auth-users-admin.md#spec-c21690a72109"
       },
       "requirement": "**T-09.12.04 — Contract template management**\n\n- Description: Admin manages contract templates (document templates with placeholders). Upload, edit, version. Placeholders extracted at upload time and stored.\n- Technical notes: Template files stored in object storage. Placeholders: `{{date}}`, `{{customerName}}`, `{{amount}}`, etc. Extracted via regex. Versioned. A new version keeps all files as archive of previous version. Cannot delete a template referenced by active contract types.\n- UI/UX: Template list with version history. Upload: drag & drop files. Placeholder extraction result shown after upload. Edit template metadata.\n- Dependencies: document storage module\n- Complexity: L",
-      "status": "partial",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Reconcile the historical limitations below with the linked later batches and current code; do not rebuild the former missing module."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -41545,9 +42207,300 @@
           "apps/web/src/pages/AdminContractTemplatesPage.tsx"
         ],
         "batches": [
-          "2026-10-05-template-catalogue-tables"
+          "2026-10-05-template-catalogue-tables",
+          "release-0.3-service-configuration-readiness"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-green-activation-submission-and-template-consumers",
+          "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
+              "sha256": "847dad0492206df5c6f3abc5d55a1333cd327eb62322371f8d3d66f4f07e29ba"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
+              "sha256": "fdec65901b5803a4cfc3ca08abc6954899fe37e103998673423c0148f63e874a"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.controller.test.ts",
+              "sha256": "435dc569e2703a8a26a2baec8a117bee78848aa5c1c925d8ab29fa2a122d6405"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.controller.ts",
+              "sha256": "fe76c61ee5355315cea4ce78709f54601fb54f02683f242e02628b44db071549"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.service.test.ts",
+              "sha256": "0d715f70aab053fe021c6fd6644a4f08930af97397d72b4a30baaeab9565a0d6"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.service.ts",
+              "sha256": "2a367c097de2d0d56dd6fa2d5cf64ca20b8cb971a8ba9c8579b4e3a499e5b9ec"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
+              "sha256": "1aa7c62722bdd45433d90a2cf2d394e6049fc5165959adfba1d7d34a65784c55"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-fields.ts",
+              "sha256": "a4c3c0a67b34570b36c6a82e7cf5799a5715519dcab76f2d0d061ab488d97a26"
+            },
+            {
+              "path": "apps/api/src/admin/electricity-settings-receipt.test.ts",
+              "sha256": "ab12b9365a0a54b55afad1fbc1c4ff77bb01f88a63c28522004116738c813e2f"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
+              "sha256": "2f5789e75f46a50ce5a6dfa9b3156605889574c78fafe23691c3374c384dbfdb"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-config.service.test.ts",
+              "sha256": "eca9036f1ca9abf2d2a6581e1336078dab40f34d35f8846bda448496aca42d39"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-http.integration.test.ts",
+              "sha256": "1aafd55d6715bf924eb0fcb9a4046688b380d07b3bf4f28ca05353eb8e0ad128"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+              "sha256": "74d00489ed954606d57d49f32c7665b45516e7bdf462c24e586b0edc9e8b02fb"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+              "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+              "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
+              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
+              "sha256": "014c6b0cc99e1d20810c42b10a547b32e0899af21b51203729e5dc45c656d24f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.test.ts",
+              "sha256": "a36ae22d6c0489cafafa196bf889a9ab7c1ba956df1745eff74f5a6732d93fbb"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-contract-template.ts",
+              "sha256": "87047ef77c1462dcdcb9060c3e1e0c2e0c4245eb4a0684310d696c657ae12a38"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "949ef8870987de7fa1f7d0048b7bf3c866c37a9b08d29f4e75ffac69535399f2"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "6c42df1949b2134d6c92083bd9a3dbe17058555e475651d485c9e6b25ce193e4"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-submission-snapshot.ts",
+              "sha256": "3498838860f1aebe3d1dfd1e73dfa3e266aaa83cb9fbb257323538ed10aa1d17"
+            },
+            {
+              "path": "apps/api/src/electricity/green-rule-limits.test.ts",
+              "sha256": "709104488b4c60901e0265f1f030472275c3313036f8f2c755bb2aea8033e8c8"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.test.ts",
+              "sha256": "ccbe549ee1d7343609c18660663636d30809811720d484e26048b15914831770"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.ts",
+              "sha256": "a28492c9dce0cfb1993e1047152fb6758c6e022a37386711a51d77cd812141f1"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/storage/reserve-storage-copy.ts",
+              "sha256": "d0f14568e782f9da116b5c33e4f349fd8599520ac92fa2ad964f61662c2490cc"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
+            },
+            {
+              "path": "apps/web/e2e/contract-templates.spec.ts",
+              "sha256": "3a9016bb3766493442c39fd71d8d674a0867f40556c533686f911b982d904a35"
+            },
+            {
+              "path": "apps/web/e2e/document-template-forms.spec.ts",
+              "sha256": "5c33663226567863e22754675690335bf0188d9f67771519f7273ad5bed0b8ac"
+            },
+            {
+              "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+              "sha256": "b8b4428ad8ad1c0ee11cdd0bfa181f02343137e7d50bf435e85c2bfe958557f1"
+            },
+            {
+              "path": "apps/web/e2e/green-rules.spec.ts",
+              "sha256": "c349a54b7a6cca1fec3d0ef28cbce5b828ea285da89880961acd707a32d8926f"
+            },
+            {
+              "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
+              "sha256": "453c9aff3e82ab1683309ec5e4d48a962ba494b525eeeddad53fb3ff95fe43c6"
+            },
+            {
+              "path": "apps/web/e2e/template-catalogue-query.spec.ts",
+              "sha256": "9613a8f67cbe3bfcd29f8ae4291ab64f06f68049d783b5eded427c94c35b3ccb"
+            },
+            {
+              "path": "apps/web/e2e/template-catalogue-tables.spec.ts",
+              "sha256": "1f960e2f21d460fdeb9e3e3812b9808d779107e4d45ce33cbb172c353a5c4560"
+            },
+            {
+              "path": "apps/web/src/lib/document-template-form.test.ts",
+              "sha256": "4a3e6ba2e3e3dcb5a582603a11459164a64783ce3260c0b5988fd998875db734"
+            },
+            {
+              "path": "apps/web/src/lib/document-template-form.ts",
+              "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.test.ts",
+              "sha256": "df87ee38d7ca32226d70d137174646291030a705a7e054a08b295756e3980e64"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.ts",
+              "sha256": "c052cbb7a4744a5237486fcf346f3e6e148889669d3d1ce9f039e3a2d7984818"
+            },
+            {
+              "path": "apps/web/src/lib/template-catalogue-query.test.ts",
+              "sha256": "cac3a1fb1ff0e964c43f544f359ce7bc82a0b6a31d261b475b56ddf6d920bd1f"
+            },
+            {
+              "path": "apps/web/src/lib/template-catalogue-query.ts",
+              "sha256": "b6a5fd7b20cbfb0c116f6fa10817a145763b555c9983fad8041c6175e3670126"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
+              "sha256": "5524090ac045b0a2c9d20b6d195d4591af1a3d87cbaac429799a2fbdcf9f23ae"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+              "sha256": "e2ed1b7324afef6cb11bd2a3b41d9af5eec8ac16be72a58451573d32c1976280"
+            },
+            {
+              "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
+              "sha256": "b6acf421e2e62775f0f457230588bad916d13e8e8d60ab863209b30e6b38727b"
+            },
+            {
+              "path": "apps/web/src/routes/admin/contract-templates.tsx",
+              "sha256": "149b3b237533a5854a9a3b44e5fdabef15752f64ba8b0e72f5b3e20982e756a8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+              "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.integration.test.ts",
+              "sha256": "1e014ededc9afb240f0a16c9e6f43398dcb9ff4c7a57f82de6f100b24837495c"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.ts",
+              "sha256": "f2606cb358317f951f950d573cf81e32cdaac9ecb1ecfbee3f1e5d21d76071b1"
+            },
+            {
+              "path": "packages/db/src/schema/contract-templates.test.ts",
+              "sha256": "fa80c4182be025eeeb73695dfa52c2ef1fc1328de9acf696146c86fd194ba49b"
+            },
+            {
+              "path": "packages/db/src/schema/contract-templates.ts",
+              "sha256": "245b468b1e964589bead23df0c7911c25fca6af7219aee400c28771fcaa2e614"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "e106084087de5140d138824e189d51330e6c3e8eade12eb56d22fc629caeeaa6"
+            },
+            {
+              "path": "packages/i18n/src/contract-templates.ts",
+              "sha256": "fd67bdeef4bd38e3cede92c12363bae4dca3457aad921006780d2033d3e16578"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-templates.test.ts",
+              "sha256": "b65bd8b2368c53b142c6f12b39584a299f028dbeb6cd42ea3e19f3e529dcdba8"
+            },
+            {
+              "path": "packages/shared/src/admin/contract-templates.ts",
+              "sha256": "47f9c1ea1a7665ea47771658ae86de01190c46b05d712a31d98ade96243a6cd8"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-config.test.ts",
+              "sha256": "c956541d966d078e13662dd5ea229761ca8240d28e0c3c44fa12e1351a62b57c"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-config.ts",
+              "sha256": "b6dcb786a817e606bbebcbac0b105d52da01bf98c69acdbdaa5f4401e3c9ebdd"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-safety.test.ts",
+              "sha256": "fc9eb14089f0a81aff2c443643cf76b3d19ec35405079f2247d3287f8eb99d58"
+            },
+            {
+              "path": "packages/shared/src/finance/green-electricity-safety.ts",
+              "sha256": "e32900ecfb01ff938d84b16a46f0d91cd6b8735df7954e6317045338a34ef0b3"
+            },
+            {
+              "path": "packages/shared/src/notifications/template-catalogue-filter.ts",
+              "sha256": "8817ef8aca06d104da02146277b5d00c2d468d1d9ec1a4d5f21118a866fa22b3"
+            }
+          ],
+          "checks": [
+            "426 distinct passing cases:367 fresh (210 API =209 current thirteen-file checks plus one added real HTTP/FK reference case;34 shared;47 UI;68 production-browser fixtures;eight real migrated-API green/template live journeys) plus59 exact-source catalogue API unit/controller/HTTP cases retained from admin-catalogue-vat-upload. Previous template HTTP file is a byte-exact prefix,so its20 cases retain current acceptance. No failed/skipped/unrun/duplicate case counted andno failed-suite pass claimed. Incidental retained caller checks do notcertify unrelated whole tasks.",
+            "Independent simple/advanced settings have required defaults,nonnegative integer thresholds,0–100 shares andlocalized accessible sliders. Current grants,account/session/CSRF/step-up initial/final writes,absent-row advisory locking,product/limit locking,effectiveprice checks,configuration/global versions andexact audit rollback retained. Approved versioned app_config andcatalogue representations used.",
+            "Actual simple andfour-product advanced submission engines recompute current required green quantities with exact bigint/decimal ceiling calculations andproduct limit compatibility,bind review digests,reject stale rules/prices/unavailable products,andcommit one immutable submitted settings/pricing/invoice/contract snapshot. Existing orders andmoney/history do notchange whenrules orproducts change. Current protected admin safety banners report inactive/unpriced/archived/missing/limit conditions;activation andordering failclosed. Historical future-engine deferrals reconciled only forthese effective criteria.",
+            "Contract templates retain bounded UTF-8 text/metadata/placeholder validation,immutable object reservations anddurable rollback cleanup,serialized version allocation andpartial metadata edits,complete ordered file/version archive andpermission/step-up audits. Current configured version consumer renders date/customerName/exact amount,freezes template version/text into generated contract/PDF documents andpreserves prior versions. Versioned deletion always409;referenced unversioned templates protectedby service andRESTRICT FK. Added real HTTP/SQL case proves409 and23503 withunchanged row/noaudit/noobject effects,then exact safe unlinked deletion andpersisted step-up timestamp/flag.",
+            "Only two live-test flows corrected. Reject enabled advanced100% withreal400 andunchanged stored rules;verifymaximum slider value,then save compatible99.9% withstrict independent mode/threshold/share receipts. Await actualPUT acknowledgement andfresh safetyGET,then reload andprotectedGET independentlyverify persistence. Exact filenames scoped to labeled version history.304 of306prior predicates remain in order;two strict configured-value comparisons followcompatible99.9% fixture andfour additional upper-bound/rejection assertions strengthen safety. Whole file outside thoseflows byte-exact. No money,authorization,privacy,immutability,version/deletion orinput assertions relaxed.",
+            "All3892 other source paths andall6127 compiled outputs exact toprior binding;production API/web/shared/worker runtime outputs reused. Final changed-file lint/format/diff pass; no product code,API contract,schema/migration orfinancial engine change requiringanotherbuild/scanner/typecheck. One bounded complete review andactual Persian mobile captures recorded. Earlier failed browser andaudit expectation receipts retained; exact audit expectation expanded toactual persisted verified timestamp,never dropped.",
+            "Local configuration/template acceptance does notcertifyexternal object-store operation,provider delivery orcomplete four-service launch rehearsal. Existing Wallet300.13KB/300KBglobal budget failure,owner decisions,earlier release dependencies andoperational/productionauthorization gates remainopen. Batch isnotamilestone release."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
+          "limitations": [
+            "External storage/provider delivery andfull launch rehearsal remain separate operational gates. Existing owner,earlier-release andglobal-quality blockers retained. Production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -41651,7 +42604,8 @@
           "2026-10-05-admin-policy-tables",
           "release-0.3-admin-catalogue-vat-upload",
           "release-0.3-admin-operational-triage",
-          "release-0.3-staff-support-escalation"
+          "release-0.3-staff-support-escalation",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -41859,7 +42813,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "e1290f2226386dafd8011af889bc05ee70c9abefa03899b54db35900d7232042"
+              "sha256": "8d68c8282d5ba8c5be5490833a9899b5f8bf9e22fc88199dbc7aa2f89fdd26bd"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -41987,16 +42941,17 @@
             "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
             "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease.",
             "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
-            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+            "Scoped staff-support renewal: only response-target saved-locale initializer changes in large live test; reversing it recovers prior full file. All other flows byte-exact; eight current real team/target journeys pass. Prior unrelated acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
             "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
           ],
           "scoped_renewal": {
-            "base_commit": "3603020cd15296af1f649a0ebae30a27c47ef407",
-            "batch": "release-0.3-staff-support-escalation",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -155971,7 +156926,8 @@
           "release-0.3-contract-document-lifecycle",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-service-configuration-readiness"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -156099,7 +157055,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
-              "sha256": "575266482789223f534a400b603447ff9a8456be66df2a0e15493c185e3e2f6a"
+              "sha256": "fdec65901b5803a4cfc3ca08abc6954899fe37e103998673423c0148f63e874a"
             },
             {
               "path": "apps/api/src/admin/failed-jobs-http.integration.test.ts",
@@ -156586,7 +157542,8 @@
             "Scoped migration test renewal only: exact current journal suffix,exact generated invoice_reference=id addition,all old contract/history/activation/completion/audit bytes preserved. All5 actual PG system-audit upgrade/rollback/replay cases pass; production audit triggers unchanged. Other original criteria and limits retained. /Users/majid/.local/state/barghsa-manual-batches/contract-lifecycle-versioning-activation",
             "Scoped contract-document renewal: changed PDF/dictionary/feedback/test paths verified by current54 API,15 DB,184 UI and76 browser cases; unchanged prior contract/identity/four-service intake criteria retained. No whole milestone/provider acceptance. /Users/majid/.local/state/barghsa-manual-batches/contract-document-lifecycle",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
           ],
           "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open. Paid consultation settlement now records consultation entity/id, actual locked offer_pending→offer_accepted state, acceptance/payment actor, profile and reason alongside existing invoice/acceptedBy provenance.11 payment/workflow outcomes preserve135 original payment-test expects; both payment/acceptance orders verify mandatory-audit rollback/retry and duplicate/unmatched/unaccepted no-op boundaries. Only solar progress/final/postal audit families remain open. Solar progress/final/postal/shipment/tracking and versioned guidance audit families now record actual entity/key and prior/new state with actor/reason and existing timestamp/correlation provenance. Postal records use their actual locked UUID; progress/tracking aggregates use their actual request key.27 solar and4 model cases pass, with11 audit-failure rollback/retries plus a skipped guidance write probe.362 original expectations retained. Historical state bindings renewed through exact-hash lookup and324 valid-pair comparisons. All explicitly remaining audit families are accepted; this task does not certify broader service journey, schema, identity, operational or release gates.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
@@ -156773,11 +157730,11 @@
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "afc4cf06b5054fce5bf1f0e119c754e1dd5633c5",
+            "batch": "release-0.3-service-configuration-readiness",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
-              "apps/api/src/admin/tos-http.integration.test.ts"
+              "apps/api/src/admin/contract-template-http.integration.test.ts"
             ]
           }
         }
@@ -193106,6 +194063,45 @@
         "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation"
+    },
+    "release-0.3-service-configuration-readiness": {
+      "title": "Accept green activation/submission andcontract template consumers",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.05",
+        "03-core-business.md#T-03.90.03"
+      ],
+      "summary": "Three effective criteria accepted;existing implementation retained. Add real reference/FK/audit acceptance andcorrect twoobsolete livefixtures;20prior bindings renewed narrowly.",
+      "validation": [
+        "426 distinct passing cases:367 fresh (210 API =209 current thirteen-file checks plus one added real HTTP/FK reference case;34 shared;47 UI;68 production-browser fixtures;eight real migrated-API green/template live journeys) plus59 exact-source catalogue API unit/controller/HTTP cases retained from admin-catalogue-vat-upload. Previous template HTTP file is a byte-exact prefix,so its20 cases retain current acceptance. No failed/skipped/unrun/duplicate case counted andno failed-suite pass claimed. Incidental retained caller checks do notcertify unrelated whole tasks.",
+        "Independent simple/advanced settings have required defaults,nonnegative integer thresholds,0–100 shares andlocalized accessible sliders. Current grants,account/session/CSRF/step-up initial/final writes,absent-row advisory locking,product/limit locking,effectiveprice checks,configuration/global versions andexact audit rollback retained. Approved versioned app_config andcatalogue representations used.",
+        "Actual simple andfour-product advanced submission engines recompute current required green quantities with exact bigint/decimal ceiling calculations andproduct limit compatibility,bind review digests,reject stale rules/prices/unavailable products,andcommit one immutable submitted settings/pricing/invoice/contract snapshot. Existing orders andmoney/history do notchange whenrules orproducts change. Current protected admin safety banners report inactive/unpriced/archived/missing/limit conditions;activation andordering failclosed. Historical future-engine deferrals reconciled only forthese effective criteria.",
+        "Contract templates retain bounded UTF-8 text/metadata/placeholder validation,immutable object reservations anddurable rollback cleanup,serialized version allocation andpartial metadata edits,complete ordered file/version archive andpermission/step-up audits. Current configured version consumer renders date/customerName/exact amount,freezes template version/text into generated contract/PDF documents andpreserves prior versions. Versioned deletion always409;referenced unversioned templates protectedby service andRESTRICT FK. Added real HTTP/SQL case proves409 and23503 withunchanged row/noaudit/noobject effects,then exact safe unlinked deletion andpersisted step-up timestamp/flag.",
+        "Only two live-test flows corrected. Reject enabled advanced100% withreal400 andunchanged stored rules;verifymaximum slider value,then save compatible99.9% withstrict independent mode/threshold/share receipts. Await actualPUT acknowledgement andfresh safetyGET,then reload andprotectedGET independentlyverify persistence. Exact filenames scoped to labeled version history.304 of306prior predicates remain in order;two strict configured-value comparisons followcompatible99.9% fixture andfour additional upper-bound/rejection assertions strengthen safety. Whole file outside thoseflows byte-exact. No money,authorization,privacy,immutability,version/deletion orinput assertions relaxed.",
+        "All3892 other source paths andall6127 compiled outputs exact toprior binding;production API/web/shared/worker runtime outputs reused. Final changed-file lint/format/diff pass; no product code,API contract,schema/migration orfinancial engine change requiringanotherbuild/scanner/typecheck. One bounded complete review andactual Persian mobile captures recorded. Earlier failed browser andaudit expectation receipts retained; exact audit expectation expanded toactual persisted verified timestamp,never dropped.",
+        "Local configuration/template acceptance does notcertifyexternal object-store operation,provider delivery orcomplete four-service launch rehearsal. Existing Wallet300.13KB/300KBglobal budget failure,owner decisions,earlier release dependencies andoperational/productionauthorization gates remainopen. Batch isnotamilestone release."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness"
     }
   },
   "historical_improvements": [
@@ -193145,13 +194141,12 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-service-configuration-readiness",
+    "id": "release-0.3-financial-operations-promotion",
     "release": "0.3.0",
-    "goal": "Inspect and reconcile existing mandatory green-electricity rules,activation safety and contract template management against current source and approved configuration/catalogue representations. Build only demonstrated gaps;retain owner-dependent quantity/price/consent questions and earlier release,quality andoperational gates.",
+    "goal": "Inspect existing reconciliation exceptions andgift-code administration against current financial ledgers,matching-line category eligibility,limits,redemption/cancellation policy,current authority andoperator recovery. Reconcile old future-finance limitations with existing engines andapproved promotion representations. Build only demonstrated gaps;keep prior owner,release,quality andoperational gates open.",
     "task_keys": [
-      "02-auth-users-admin.md#T-09.10.02",
-      "02-auth-users-admin.md#T-09.10.03",
-      "02-auth-users-admin.md#T-09.12.04"
+      "02-auth-users-admin.md#T-09.09.01",
+      "02-auth-users-admin.md#T-09.12.03"
     ]
   },
   "launch_forecast": {
