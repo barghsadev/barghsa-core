@@ -251,6 +251,47 @@ it('includes setup and correction decisions without returning identity values or
     );
   }
 });
+
+it('includes invitations to verified secondary contacts and drops them after removal', async () => {
+  const user = randomUUID(),
+    profile = randomUUID(),
+    destination = `${randomUUID()}@example.test`,
+    invite = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,email,password_hash) VALUES ($1,$2,$3,'fixture-only')",
+    [user, `${randomUUID()}@example.test`, destination]
+  );
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,$2,'INDIVIDUAL','ACTIVE')",
+    [profile, user]
+  );
+  await http.pool.query(
+    "INSERT INTO profile_invitations(id,profile_id,username,role,invited_by,status) VALUES ($1,$2,$3,'Legal','records-owner','Pending')",
+    [invite, company, destination]
+  );
+  const items = async () => {
+    const response = await read(profile, 'agents');
+    expect(response.status).toBe(200);
+    return ((await response.json()) as CrmRecordPage<CrmAgentRecord>).items;
+  };
+  expect(await items()).toEqual([]);
+  await http.pool.query(
+    "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ($1,$2,'email',NOW())",
+    [destination, user]
+  );
+  expect(await items()).toEqual([
+    expect.objectContaining({
+      kind: 'invitation',
+      profileId: company,
+      username: destination,
+      role: 'Legal',
+    }),
+  ]);
+  expect(await (await read(individual, 'agents')).text()).not.toContain(destination);
+  await http.pool.query('UPDATE users SET email=NULL WHERE user_id=$1', [user]);
+  expect(await items()).toEqual([]);
+});
+
 it('requires current CRM read access and binds cursors to their profile and record kind', async () => {
   for (const kind of ['agents', 'verification']) {
     expect((await read(company, kind, undefined, customerCookie)).status).toBe(403);

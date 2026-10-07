@@ -63,7 +63,8 @@ for (const [locale, darkMode] of [
     );
     let verified = false,
       uploads = 0,
-      acknowledgements = 0;
+      acknowledgements = 0,
+      verifications = 0;
     const bodies: unknown[] = [];
     await page.route('**/api/crm/verification-cases?*', (route) =>
       route.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } })
@@ -99,6 +100,8 @@ for (const [locale, darkMode] of [
       });
     });
     await page.route('**/api/auth/step-up', (route) => {
+      expect(route.request().postDataJSON()).toEqual({ password: 'Test-password-123!' });
+      verifications++;
       verified = true;
       return route.fulfill({ json: { verified: true } });
     });
@@ -232,13 +235,16 @@ for (const [locale, darkMode] of [
     }
     await expect(page.locator('#correction-value')).toHaveValue('Corrected');
     await expect(page.locator('#correction-reason')).toHaveValue('Document checked');
-    await dialog
-      .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
-      .fill('Test-password-123!');
+    expect(verified).toBe(true);
+    expect(verifications).toBe(1);
+    await expect(
+      dialog.getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+    ).toHaveCount(0);
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(dialog).toHaveCount(0);
+    expect(verifications).toBe(1);
     expect(uploads).toBe(1);
     await expect(page.locator('#correction-value')).toHaveValue('');
     await expect(page.locator('#correction-field')).toBeFocused();

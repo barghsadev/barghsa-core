@@ -99,14 +99,16 @@ export async function readAgentRecords(
               i.created_at, i.expires_at
        FROM profile_invitations i JOIN profiles p ON p.id=i.profile_id
        LEFT JOIN legal_profiles l ON l.id=p.id
-       WHERE ($3='LEGAL' AND i.profile_id=$1::uuid) OR ($3='INDIVIDUAL' AND i.username=$4)
+       WHERE ($3='LEGAL' AND i.profile_id=$1::uuid) OR ($3='INDIVIDUAL' AND EXISTS (
+         SELECT 1 FROM account_login_identifiers recipient
+         WHERE recipient.user_id=$2 AND recipient.destination=i.username))
      )
      SELECT id,kind,profile_id AS "profileId",profile_title AS "profileTitle",username,role,status,
             to_char(created_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "createdAt",
             to_char(expires_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "expiresAt"
-     FROM records WHERE ($5::timestamptz IS NULL OR (created_at,id)<($5::timestamptz,$6::text))
+     FROM records WHERE ($4::timestamptz IS NULL OR (created_at,id)<($4::timestamptz,$5::text))
      ORDER BY created_at DESC,id DESC LIMIT 21`,
-    [scope.id, scope.userId, scope.profileType, scope.username, createdAt, id]
+    [scope.id, scope.userId, scope.profileType, createdAt, id]
   );
   return page(result.rows, scope.id, 'agents');
 }

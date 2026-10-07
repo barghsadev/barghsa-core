@@ -37,6 +37,58 @@ async function account(username = `${randomUUID()}@example.test`) {
   };
 }
 type Account = Awaited<ReturnType<typeof account>>;
+it.each(
+  ['accept', 'decline'].flatMap((decision) =>
+    ['email', 'mobile'].map((kind) => ({ decision, kind }))
+  )
+)(
+  'notifies verified secondary $kind and permits $decision without exposing registration',
+  async ({ decision, kind }) => {
+    const owner = await account(),
+      recipient = await account(),
+      stranger = await account(),
+      profile = await legal(owner);
+    const destination =
+      kind === 'mobile'
+        ? `+989${randomInt(100_000_000, 999_999_999)}`
+        : `${randomUUID()}@example.test`;
+    await http.pool.query(
+      `UPDATE users SET ${kind === 'mobile' ? 'mobile' : 'email'}=$2 WHERE user_id=$1`,
+      [recipient.id, destination]
+    );
+    await http.pool.query(
+      'INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ($1,$2,$3,NOW())',
+      [destination, recipient.id, kind]
+    );
+    const response = await invite(profile.id, owner, destination);
+    expect(response.status, http.logs()).toBe(201);
+    const body = (await response.json()) as { id: string };
+    expect(Object.keys(body)).toEqual(['id']);
+    expect((await effects(profile.id, recipient)).notices).toHaveLength(1);
+    expect(await pending(recipient)).toEqual([
+      expect.objectContaining({ id: body.id, profileId: profile.id, role: 'Finance' }),
+    ]);
+    expect(await pending(stranger)).toEqual([]);
+    const changed = await fetch(`${http.base}/api/invitations/${body.id}/${decision}`, {
+      method: 'POST',
+      headers: recipient.headers,
+      body: JSON.stringify({ expectedProfileId: profile.id, expectedRole: 'Finance' }),
+    });
+    expect(changed.status, http.logs()).toBe(200);
+    expect(
+      (await http.pool.query('SELECT status FROM profile_invitations WHERE id=$1', [body.id]))
+        .rows[0].status
+    ).toBe(decision === 'accept' ? 'Accepted' : 'Declined');
+    const members = (
+      await http.pool.query('SELECT user_id,role FROM profile_agents WHERE profile_id=$1', [
+        profile.id,
+      ])
+    ).rows;
+    expect(members).toEqual(
+      decision === 'accept' ? [{ user_id: recipient.id, role: 'Finance' }] : []
+    );
+  }
+);
 async function legal(owner: Account) {
   const id = (
     await http.pool.query(
@@ -499,5 +551,65 @@ it.each(['Owner', 'Manager'])(
     );
     expect(response.status, http.logs()).toBe(400);
     expect(await effects(profile.id, actor)).toEqual({ invitations: [], audit: [], notices: [] });
+  }
+);
+
+it.each(['email', 'mobile'] as const)(
+  'excludes unverified and removed secondary %s from invitation authority',
+  async (kind) => {
+    const owner = await account(),
+      recipient = await account(),
+      profile = await legal(owner);
+    const destination =
+      kind === 'mobile'
+        ? `+989${randomInt(100_000_000, 999_999_999)}`
+        : `${randomUUID()}@example.test`;
+    await http.pool.query(
+      `UPDATE users SET ${kind === 'mobile' ? 'mobile' : 'email'}=$2 WHERE user_id=$1`,
+      [recipient.id, destination]
+    );
+    const response = await invite(profile.id, owner, destination);
+    expect(response.status, http.logs()).toBe(201);
+    const { id } = (await response.json()) as { id: string };
+    expect((await effects(profile.id, recipient)).notices).toEqual([]);
+    expect(await pending(recipient)).toEqual([]);
+    for (const phase of ['unverified', 'removed']) {
+      if (phase === 'removed') {
+        await http.pool.query(
+          'INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ($1,$2,$3,NOW())',
+          [destination, recipient.id, kind]
+        );
+        expect(await pending(recipient)).toEqual([expect.objectContaining({ id })]);
+        await http.pool.query(
+          `UPDATE users SET ${kind === 'mobile' ? 'mobile' : 'email'}=NULL WHERE user_id=$1`,
+          [recipient.id]
+        );
+        expect(await pending(recipient)).toEqual([]);
+      }
+      const before = await effects(profile.id, recipient);
+      for (const decision of ['accept', 'decline']) {
+        const result = await fetch(`${http.base}/api/invitations/${id}/${decision}`, {
+          method: 'POST',
+          headers: recipient.headers,
+          body: JSON.stringify({ expectedProfileId: profile.id, expectedRole: 'Finance' }),
+        });
+        expect(result.status, http.logs()).toBe(404);
+      }
+      expect(await effects(profile.id, recipient)).toEqual(before);
+      expect(
+        (
+          await http.pool.query('SELECT user_id FROM profile_agents WHERE profile_id=$1', [
+            profile.id,
+          ])
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await http.pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [
+            recipient.session,
+          ])
+        ).rows
+      ).toEqual([{ revoked_at: null }]);
+    }
   }
 );

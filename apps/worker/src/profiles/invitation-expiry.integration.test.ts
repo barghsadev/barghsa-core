@@ -1,15 +1,19 @@
 import { randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
-import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
+import { beforeAll, afterAll, beforeEach, afterEach, it, expect } from 'vitest';
 import { runMigrations } from '../../../../packages/db/src/migrate';
 import { expireInvitations } from './invitation-expiry.js';
 
 let pool: Pool, management: Pool;
-const database = `test_invitation_expiry_${randomUUID().replaceAll('-', '')}`;
+let database: string;
 const actor = 'invitation-worker';
 let profile: string;
 beforeAll(async () => {
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
+});
+beforeEach(async () => {
+  // Audit history is immutable; each scenario owns a fresh migrated database.
+  database = `test_invitation_expiry_${randomUUID().replaceAll('-', '')}`;
   await management.query(`CREATE DATABASE "${database}"`);
   const url = new URL(process.env.TEST_DATABASE_URL!);
   url.pathname = `/${database}`;
@@ -27,15 +31,12 @@ beforeAll(async () => {
     )
   ).rows[0].id;
 }, 40000);
-afterAll(async () => {
+afterEach(async () => {
   await pool?.end();
   await management.query(`DROP DATABASE "${database}"`);
-  await management.end();
 });
-beforeEach(async () => {
-  await pool.query('DELETE FROM audit_log');
-  await pool.query('DELETE FROM profile_invitations');
-  await pool.query('UPDATE users SET is_admin=true,disabled_at=NULL WHERE user_id=$1', [actor]);
+afterAll(async () => {
+  await management.end();
 });
 async function seed(status = 'Pending', seconds: number | null = -1) {
   return (

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T01:25:25.867696+00:00",
+  "updated": "2026-10-07T01:45:23.891773+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -18339,14 +18339,16 @@
           "historically_skipped": false
         },
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
           "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "289544b2890ea94d506f63cb2eb38437882bf813c231a95af020e714936ec939"
+              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -18393,13 +18395,15 @@
             "Fixed profile naming in sidebar/default selection: consume canonical API displayName (joined legal_name) before legacy title/name fields. Four new FA/EN cases pass on both engines, including null legal identity fields and legacy individual fallback. The focused Chromium red test first demonstrated the missing legal name.",
             "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
-            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate."
+            "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
+            "Renewed only changed invitation/CRM bindings at identity-and-membership batch. Prior unrelated criteria/evidence retained. Current invitation acceptance/ownership suites and11 default/context callers pass; CRM six retained records cases plus new verified-secondary projection/removal/isolation case pass. Unverified contacts remain excluded; existing cursor/profile behavior unchanged. /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
             "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
             "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
-          ]
+          ],
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d"
         }
       }
     },
@@ -19308,14 +19312,16 @@
           "historically_skipped": false
         },
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
           "reviewed_sha": "b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8",
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "289544b2890ea94d506f63cb2eb38437882bf813c231a95af020e714936ec939"
+              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -19367,13 +19373,15 @@
             "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
             "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
-            "At account-preferences-acceptance, renewed apps/web/src/routes/_app/settings/profile.tsx: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance."
+            "At account-preferences-acceptance, renewed apps/web/src/routes/_app/settings/profile.tsx: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance.",
+            "Renewed only changed invitation/CRM bindings at identity-and-membership batch. Prior unrelated criteria/evidence retained. Current invitation acceptance/ownership suites and11 default/context callers pass; CRM six retained records cases plus new verified-secondary projection/removal/isolation case pass. Unverified contacts remain excluded; existing cursor/profile behavior unchanged. /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
             "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
             "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
-          ]
+          ],
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d"
         }
       }
     },
@@ -23300,11 +23308,12 @@
           "apps/api/src/crm/crm-profile-legal.ts"
         ],
         "batches": [
-          "release-0.3-crm-acceptance"
+          "release-0.3-crm-acceptance",
+          "release-0.3-identity-and-membership"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
-          "reviewed_base_commit": "1a4c5b3ddf0c2f762e577bde38edea211090ab6a",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
           "source_evidence": [
             {
               "path": "apps/api/openapi.json",
@@ -23324,11 +23333,11 @@
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
-              "sha256": "224423828f6a11096bc195be7c27e82a8fb745d6f204e2b860936a5d7cf25c20"
+              "sha256": "ffb8f42397aba633800e89cb3890114c4caf052df86bb92e9326bebc6059ef06"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records.ts",
-              "sha256": "c19ac007d0810d776a37ab9e821e0d382f648fa30babb90fa2b79f9c437bfeae"
+              "sha256": "970674888375b543f2803aa1fcd6d19369b17c60339086d9620cc081361b7c5d"
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -23417,7 +23426,8 @@
             "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
             "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
             "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
-            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
+            "Renewed only changed invitation/CRM bindings at identity-and-membership batch. Prior unrelated criteria/evidence retained. Current invitation acceptance/ownership suites and11 default/context callers pass; CRM six retained records cases plus new verified-secondary projection/removal/isolation case pass. Unverified contacts remain excluded; existing cursor/profile behavior unchanged. /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -24177,12 +24187,10 @@
         "story": "02-auth-users-admin.md#spec-7a52c8080dac"
       },
       "requirement": "**T-05.02.05 — Identity correction through verification case**\n\n- Description: Staff cannot directly edit verified identity fields. Instead, they create a verification case (profile correction request) which creates an audit trail. Changes are applied after case resolution.\n- Technical notes: Verification case is a mini-workflow: Corrector creates case with new values and evidence → Reviewer approves/rejects → On approval, identity field updated with before/after audit. Permissions: `crm:edit-identity`. Cases have states: Open, Under Review, Approved, Rejected.\n- UI/UX: \"Request correction\" button on locked fields → form with new value + upload evidence → submission creates case. Staff with review permission see case queue.\n- Dependencies: T-05.02.02\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -24282,8 +24290,98 @@
           "packages/i18n/src/crm.ts",
           "apps/web/src/pages/AdminLayout.tsx"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
+        "current_acceptance": {
+          "kind": "current-identity-staff-and-legal-membership-boundary-verification",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+              "sha256": "eb71feca45aaba5b28bd3f82cebdead5f7deea2783ac9bba9363ad63ce243ed1"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case.controller.ts",
+              "sha256": "b10886d1f6c5129f3a0b048f808cf297aa85344c1889b088a92ac24ced43647b"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case.service.ts",
+              "sha256": "4ee30cf428deca2e7eb83129fd6c1ad476ad3df7e4a00ebc209ad614916ee9f5"
+            },
+            {
+              "path": "apps/api/src/crm/verification-evidence.service.ts",
+              "sha256": "00986bd462dcafd242daec1502f7af1aef6d0247f655f90ba16e5c61cc592719"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/crm-corrections.spec.ts",
+              "sha256": "d404fb436a6a30502c8a8f94808d459a06fe316f81ae4cbb31d57c1d69d13a35"
+            },
+            {
+              "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+              "sha256": "350096a636ed5961699a2ed7dabaa923e7d88a61a7bd349a023c8e1a42af4afd"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/pages/AdminLayout.tsx",
+              "sha256": "823a8c516368b70184f8c9b7f99172b8c7e75bc72ec10552b72665a3527df6b8"
+            },
+            {
+              "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+              "sha256": "65b995147e32cb0cafe884d908d0b4f6c216c7dcb27c8448a7ec2707abce382d"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "4079d7b6fe9b38cdd47cdc59c1221cdc7da8ed197a59c6318859c04f7839b554"
+            },
+            {
+              "path": "apps/web/src/routes/admin/crm/corrections.tsx",
+              "sha256": "9c06e7dc494aba5d80cff651d3dbf1506c9f641fb116973ec1140def97200352"
+            },
+            {
+              "path": "kanban/epics/02-auth-users-admin.md",
+              "sha256": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55"
+            },
+            {
+              "path": "packages/i18n/src/crm.ts",
+              "sha256": "abc80967824d5d71badd3af5510896b89d1e5ad2a87480609dd9103d847f704f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Verified identity is read-only in the profile editor. Explicit correction authority creates an evidence-bound case for an exact profile/field/current/requested value and reason; sealed verified uploads and scanning/ownership gates remain. Reviewer uses current independent review authority and explicit decision/reason. Supported open/review/approved/rejected transitions apply identity changes only after approved resolution, with before/after actor/evidence audit in the same transaction.",
+            "Actual HTTP/unit checks retain current session/CSRF/recent proof, independent reviewer, stale-value/concurrent review, lock-time expiry/revocation and audit rollback. Correction-only and reviewer UI cases cover upload/reason/target preservation, wrong acknowledgement, denied/read-only capability, retry, queue and exact success. A still-valid proof is retained after a non-auth acknowledgement failure; explicit auth expiry still requires renewed proof.",
+            "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
+            "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
+          ]
+        }
       }
     },
     {
@@ -24519,12 +24617,10 @@
         "story": "02-auth-users-admin.md#spec-c37ac78f8d57"
       },
       "requirement": "**T-05.03.01 — Create staff user**\n\n- Description: Authorized staff/admin can create a new staff user. No profile creation needed — staff get an individual profile assigned, created as verified. Address not required. Use time-limited activation link or one-time temporary password.\n- Technical notes: POST `/api/admin/users/create-staff` with `{ username, firstName, lastName, roleIds[], activationMethod: 'link' | 'tempPassword' }`. If tempPassword: generated, must change at first login, never shown again. Activation link: emailed, time-limited (24h). Permissions: `admin:users:create`. No address fields. Profile auto-created as verified, individual type. Password follows same strength policy. Audit: staff_user_created.\n- UI/UX: Form with username, name fields, role multi-select, activation method radio. On submit: if tempPassword, show it once (\"Save this password – it will never be shown again\"). If activation link: \"Activation link sent to [email].\"\n- Dependencies: T-02.02.04 (step-up), authorization framework\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -24654,9 +24750,126 @@
           "apps/api/src/session/session-step-up.ts"
         ],
         "batches": [
-          "2026-10-05-staff-directory-tables"
+          "2026-10-05-staff-directory-tables",
+          "release-0.3-identity-and-membership"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-identity-staff-and-legal-membership-boundary-verification",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.test.ts",
+              "sha256": "70b9a2fae193e91be98a1d657fa39f776ec602620ded02df7d8e7576cd9971bc"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
+              "sha256": "128d10566ce07ef2bdb3138928a2523cdd2a5937e7a958b1a929c88fd02ed435"
+            },
+            {
+              "path": "apps/api/src/admin/staff-http.integration.test.ts",
+              "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+              "sha256": "65a89679fc88d1970de93885262e5f7a10978e7b958965e0f93b4169ecf1b631"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "f5b8bcab67098782112d349445448eb07346fdbfdb32eee5d22b9ef906f2cdbe"
+            },
+            {
+              "path": "apps/api/src/auth/dto/register.dto.ts",
+              "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+            },
+            {
+              "path": "apps/api/src/auth/dto/reset-password.dto.ts",
+              "sha256": "49bdc9d40ad0378ab428e9c352d1b577c8182d47332ccda637f3f6ea549f93a6"
+            },
+            {
+              "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
+              "sha256": "ff26770e6ccdb918ede163a3edb3f039d434779dc55982a6180ff724c3e73138"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/staff-creation.spec.ts",
+              "sha256": "b2add40cb1f3198a4de76ac75ca8749cfb3620fe1a7b410efea546c80dfafbcb"
+            },
+            {
+              "path": "apps/web/e2e/staff-users.spec.ts",
+              "sha256": "1f630a1f878fcfb613ca85f385bfbfb93d41bb137fbab742dc300f76e169ae3c"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+            },
+            {
+              "path": "packages/db/src/schema/staff-roles.ts",
+              "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+            },
+            {
+              "path": "packages/shared/src/admin/staff-permissions.ts",
+              "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Current create-staff API/form requires admin:users:create and recent step-up, name, canonical email/mobile identifier, role allowlist and activation method. Transaction creates one verified individual profile without address and assigned roles, with current creator proof and atomic audit/outbox. Namespace collisions, invalid roles/targets, lock-time expiry and rollback remain protected.",
+            "Temporary password uses existing CSPRNG and strong argon2 storage, one-time display and forced first password change. Link token is hashed, expires after24h and is sent through encrypted outbox. Actual activation HTTP cases cover invalid/expired/replayed links and current account/session authority. Form capture, cancellation, proof renewals, wrong receipts, FA/EN, keyboard/mobile and secret storage exclusion pass. Live email delivery remains a separate operational gate.",
+            "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
+            "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
+          ]
+        }
       }
     },
     {
@@ -24670,12 +24883,10 @@
         "story": "02-auth-users-admin.md#spec-c37ac78f8d57"
       },
       "requirement": "**T-05.03.02 — Staff role assignment**\n\n- Description: Staff users can hold multiple roles. Roles determine permissions across CRM, finance, legal, operations, etc.\n- Technical notes: Roles: Customer Support, CRM and Verification, Finance, Legal and Contracts, Operations, Admin. Permissions are deny-by-default, additive by role. PUT `/api/admin/users/:userId/roles` replaces role set (idempotent). Audit: role_change with before/after, actor, reason.\n- UI/UX: Multi-select dropdown with role descriptions. Current roles shown as badges. Change requires step-up auth.\n- Dependencies: T-05.03.01, T-09.05.01 (role management)\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -24776,8 +24987,102 @@
           "apps/web/e2e/staff-users.spec.ts",
           "apps/api/src/session/session-step-up.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
+        "current_acceptance": {
+          "kind": "current-identity-staff-and-legal-membership-boundary-verification",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.test.ts",
+              "sha256": "70b9a2fae193e91be98a1d657fa39f776ec602620ded02df7d8e7576cd9971bc"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/staff-http.integration.test.ts",
+              "sha256": "2d3d4ebd18fc96b64eda5a022a7a4e9191b50a919dfb5866919ef38518f6ad5e"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+              "sha256": "65a89679fc88d1970de93885262e5f7a10978e7b958965e0f93b4169ecf1b631"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/staff-creation.spec.ts",
+              "sha256": "b2add40cb1f3198a4de76ac75ca8749cfb3620fe1a7b410efea546c80dfafbcb"
+            },
+            {
+              "path": "apps/web/e2e/staff-users.spec.ts",
+              "sha256": "1f630a1f878fcfb613ca85f385bfbfb93d41bb137fbab742dc300f76e169ae3c"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+            },
+            {
+              "path": "packages/db/src/schema/staff-roles.ts",
+              "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+            },
+            {
+              "path": "packages/shared/src/admin/staff-permissions.ts",
+              "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Current staff role API replaces the exact allowlisted additive role set idempotently, retains deny-by-default permission resolution and records before/after, actor and required reason. Current staff edit authority, OTP step-up, sorted account locks and target rechecks apply before and after writes. Role changes revoke existing sessions/refresh grants atomically; intentional self-revocation is handled with final transaction proof.",
+            "Existing strict handlers and their compiled dependencies are unchanged from passing staff27 cases. Creation/role UI cases verify badges/descriptions, explicit selection/reason/confirmation, exact captured target, unauthorized controls and returned role/session acknowledgement. Broader role-definition administration remains independently tracked.",
+            "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
+            "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
+          ]
+        }
       }
     },
     {
@@ -24791,12 +25096,10 @@
         "story": "02-auth-users-admin.md#spec-e6a0917d1043"
       },
       "requirement": "**T-05.04.01 — Agent list for legal entity**\n\n- Description: User with active legal profile (owner or manager role) can view list of agents — invited or already joined. Shows: name, role, invitation status, joined date. Can withdraw pending invite.\n- Technical notes: GET `/api/profiles/:profileId/agents` returns agents with user info (if registered) and invite status. Permission: owner or manager of the legal profile. API does NOT reveal whether invited user is already registered (privacy). Withdraw: DELETE `/api/profiles/:profileId/invitations/:inviteId`.\n- UI/UX: Table with columns: Agent name/username, Role badge, Status (Pending/Active), Joined date, Actions (Remove/Withdraw). Invite button. Empty state: \"No agents yet. Invite your team.\"\n- Dependencies: T-03.03.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -24873,8 +25176,110 @@
           "apps/api/src/profiles/agents.controller.ts",
           "apps/api/src/session/session-step-up.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
+        "current_acceptance": {
+          "kind": "current-identity-staff-and-legal-membership-boundary-verification",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+              "sha256": "ffb8f42397aba633800e89cb3890114c4caf052df86bb92e9326bebc6059ef06"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-records.ts",
+              "sha256": "970674888375b543f2803aa1fcd6d19369b17c60339086d9620cc081361b7c5d"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+              "sha256": "db9e3bd29e53bade66d439c483ad5becf4564f66dbc5b13c2654d7e2903442cf"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.controller.ts",
+              "sha256": "939cb7fd13be0d0675a4f48a69a032a05ee9b2d1604e9fa0cf977d1769823e54"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.test.ts",
+              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/team.spec.ts",
+              "sha256": "b1cfc24aeea8113bb904f0389322d082a8013c6b907ed4e1f5add3c034000694"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/InvitationCards.tsx",
+              "sha256": "08156b18cd809bc5f6ea5807861a31e1cc4aad4d68c71a02588b11319af210ef"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-action.ts",
+              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-api.ts",
+              "sha256": "5eaa5871b1fe418ca7b350a65875147fcf4441bae87ac145a89a7bdba36af5dc"
+            },
+            {
+              "path": "apps/web/src/pages/TeamPage.tsx",
+              "sha256": "df04506ced5c695404fe46fb97052b526665d01a5e5802412300f549bb6bd2a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0111_account_login_identifiers.sql",
+              "sha256": "b0810cdf834318f0b0acc92f2f17cbf506060b12e992c37ec144f891154e89bf"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/i18n/src/team.ts",
+              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Private legal agent list requires current canonical Owner or Manager. Joined rows use current individual names/sign-in dates without duplicate memberships; invitation rows avoid registered-user joins and reveal no recipient registration status. Pending expiry, withdrawal and role-removal protections remain. Finance/Legal/strangers are denied.",
+            "FA/EN team table shows masked identifiers, role/status and invited/joined/last sign-in dates with detail, removal/withdrawal and empty/error/retry controls. Owner protection, step-up, exact target, current authority, captured roles, focus, mobile overflow and light/dark accessibility checks pass.",
+            "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
+            "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
+          ]
+        }
       }
     },
     {
@@ -24888,12 +25293,10 @@
         "story": "02-auth-users-admin.md#spec-e6a0917d1043"
       },
       "requirement": "**T-05.04.02 — Agent invitation flow**\n\n- Description: Owner/manager invites by email or mobile number. Must select role: Manager, Finance, Legal. If user is registered, send notification. If not registered, they see the invite when they register with that username.\n- Technical notes: POST `/api/profiles/:profileId/invitations` with `{ username, role }`. Constraints: legal profile must have exactly one owner at all times. Owner cannot be removed without ownership transfer. Rate limited: 10 invitations per hour per profile. Audit: invitation_created. When invited user registers, check pending invitations and link automatically. Invitation states: Pending, Accepted, Withdrawn, Declined, Expired (default 7 days).\n- UI/UX: Modal: username field (email/mobile), role dropdown. Preview: \"Invite [username] as [role] to [legal entity name].\" Confirmation. Success: \"Invitation sent. User will be notified when available.\"\n- Dependencies: T-05.04.01\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -25017,8 +25420,142 @@
           "apps/api/src/session/session-step-up.ts",
           "apps/api/src/auth/auth.service.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
+        "current_acceptance": {
+          "kind": "current-identity-staff-and-legal-membership-boundary-verification",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+              "sha256": "ffb8f42397aba633800e89cb3890114c4caf052df86bb92e9326bebc6059ef06"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-records.ts",
+              "sha256": "970674888375b543f2803aa1fcd6d19369b17c60339086d9620cc081361b7c5d"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+              "sha256": "db9e3bd29e53bade66d439c483ad5becf4564f66dbc5b13c2654d7e2903442cf"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-notifications.ts",
+              "sha256": "b7805d87778fa5339025599bbaafbf8e333ddd721d3b75ba7938199e5876782f"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.controller.ts",
+              "sha256": "50c6f942b0677ec6b276d66e158b4bb204a00a6abb3a8f3af8664bcb143f116d"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/team.spec.ts",
+              "sha256": "b1cfc24aeea8113bb904f0389322d082a8013c6b907ed4e1f5add3c034000694"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/InvitationCards.tsx",
+              "sha256": "08156b18cd809bc5f6ea5807861a31e1cc4aad4d68c71a02588b11319af210ef"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-action.ts",
+              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-api.ts",
+              "sha256": "5eaa5871b1fe418ca7b350a65875147fcf4441bae87ac145a89a7bdba36af5dc"
+            },
+            {
+              "path": "apps/web/src/pages/TeamPage.tsx",
+              "sha256": "df04506ced5c695404fe46fb97052b526665d01a5e5802412300f549bb6bd2a5"
+            },
+            {
+              "path": "apps/worker/src/main-process.integration.test.ts",
+              "sha256": "5d3ea85c9ab1a75d60ee8188c22c7b6521431637130ad749185ab6690ba8798c"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "apps/worker/src/profiles/invitation-expiry.integration.test.ts",
+              "sha256": "a5f6600f0ecbf8d1b09c9df351aeed07044092658fa08ce88d3bf128a56fcff6"
+            },
+            {
+              "path": "apps/worker/src/profiles/invitation-expiry.ts",
+              "sha256": "54ac4f4101bbfcba8d1a46cf2c2bc839c45e878aa2ac946f888de1f5bed37cbd"
+            },
+            {
+              "path": "packages/db/drizzle/production/0111_account_login_identifiers.sql",
+              "sha256": "b0810cdf834318f0b0acc92f2f17cbf506060b12e992c37ec144f891154e89bf"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "64bf2bcd227b6cb9758e9fa5930bc3393235cd8f0bda22e44abd75c85cac291f"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/i18n/src/team.ts",
+              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+            },
+            {
+              "path": "packages/shared/src/admin/background-jobs.ts",
+              "sha256": "9d67db5971cff48db4dfaad2698e6889b8156e8ddde2af86011e8fb4f8b232ca"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Owner/Manager invites normalized email/mobile with Manager/Finance/Legal role and optional bounded plain-text note. Current profile/account/session locks, canonical single owner, duplicate/self/existing-member refusal,10-per-hour profile limit,7-day expiration and transactional audit/notice are preserved. Unknown destinations do not disclose registration and discover pending invitations after verified registration, without an automatic membership grant.",
+            "Fixed demonstrated secondary-contact gap by resolving the existing account_login_identifiers registry. Primary sign-in identifiers and verified secondary email/mobile can receive notices and discover invitations. Unverified legacy contacts remain excluded. Actor and recipient account locks remain sorted, then namespace ownership is rechecked under share lock; changed hints conflict safely. Opposite invitations, notice/audit failure, current authorization/deadline and private response checks pass.",
+            "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
+            "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
+          ]
+        }
       }
     },
     {
@@ -25032,12 +25569,10 @@
         "story": "02-auth-users-admin.md#spec-e6a0917d1043"
       },
       "requirement": "**T-05.04.03 — Accept/decline invitation**\n\n- Description: Invited user sees pending invitation on their dashboard (as a banner/message). Can view legal entity details and the inviter's info. Can Accept or Decline.\n- Technical notes: GET `/api/invitations/pending` returns pending invites for current user. POST `/api/invitations/:inviteId/accept` — adds user as agent with specified role. POST `/api/invitations/:inviteId/decline` — marks declined. Audit: invitation_accepted/declined.\n- UI/UX: Dashboard banner: \"[Legal Entity Name] has invited you as [Role]. [View Details] [Accept] [Decline]\". Details: entity info, inviter name, role description, date invited.\n- Dependencies: T-05.04.02, T-03.03.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -25115,8 +25650,110 @@
           "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
           "apps/web/e2e/profile-switch.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
+        "current_acceptance": {
+          "kind": "current-identity-staff-and-legal-membership-boundary-verification",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+              "sha256": "ffb8f42397aba633800e89cb3890114c4caf052df86bb92e9326bebc6059ef06"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-records.ts",
+              "sha256": "970674888375b543f2803aa1fcd6d19369b17c60339086d9620cc081361b7c5d"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+              "sha256": "db9e3bd29e53bade66d439c483ad5becf4564f66dbc5b13c2654d7e2903442cf"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+              "sha256": "6b9312f44f2988398553c27163b428ef86a0ab55fc8457b63a4ad6a7547db249"
+            },
+            {
+              "path": "apps/api/src/profiles/invitations.controller.ts",
+              "sha256": "117d5bd1e4e9aead5dad488b1ef29a4dd51478e2f3f3f05298e5f534ab0d377c"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "97d14ee5219e5b7e908257d6c9626572175ece47016c8b2cc3b4eed0125b9854"
+            },
+            {
+              "path": "apps/web/e2e/team.spec.ts",
+              "sha256": "b1cfc24aeea8113bb904f0389322d082a8013c6b907ed4e1f5add3c034000694"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/InvitationBanner.tsx",
+              "sha256": "593ba10c62960ad31d043aa16fe00915b84d4e7c2dd7c7b49e7f0f32d28e3532"
+            },
+            {
+              "path": "apps/web/src/components/InvitationCards.tsx",
+              "sha256": "08156b18cd809bc5f6ea5807861a31e1cc4aad4d68c71a02588b11319af210ef"
+            },
+            {
+              "path": "apps/web/src/components/InvitationDetails.tsx",
+              "sha256": "e92d176e0a385adb606c17dd0347d9c766e66bd5f9fec6840cef716c770fb67f"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-action.ts",
+              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-api.ts",
+              "sha256": "5eaa5871b1fe418ca7b350a65875147fcf4441bae87ac145a89a7bdba36af5dc"
+            },
+            {
+              "path": "packages/db/drizzle/production/0111_account_login_identifiers.sql",
+              "sha256": "b0810cdf834318f0b0acc92f2f17cbf506060b12e992c37ec144f891154e89bf"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Only the current owner of the verified sign-in identifier can read and decide an unexpired pending invitation. Both canonical username and verified secondary email/mobile work; unverified or removed contacts return private404 on accept/decline with no membership, audit, notification or session mutation. CRM individual projection follows the same registry and preserves unrelated-profile isolation.",
+            "Private banner/details include company identifiers, inviter name, role description and account-local dates. Decision request binds exact profile/role and validates canonical target/status receipt. Failure pauses decisions until explicit data retry; accepted/declined status is retained, profile access opens only explicitly after rotated CSRF. Current membership, proposal, expiry after lock waits, idempotency, audit rollback and credential rotation checks pass.",
+            "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
+            "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
+          ]
+        }
       }
     },
     {
@@ -25277,12 +25914,10 @@
         "story": "02-auth-users-admin.md#spec-e6a0917d1043"
       },
       "requirement": "**T-05.04.05 — Ownership transfer**\n\n- Description: Legal profile owner can transfer ownership to another agent. Requires step-up auth, acceptance by new owner, and audit trail.\n- Technical notes: POST `/api/profiles/:profileId/transfer-ownership` with `{ newOwnerUserId }`. Creates pending transfer. New owner accepts via POST `/api/profiles/:profileId/ownership-accept`. If declined or expired, transfer cancelled. During transfer, current owner retains control. Cannot transfer if new owner is not an existing agent of that profile. Audit: ownership_transfer_initiated, ownership_transfer_completed/declined.\n- UI/UX: Step-up auth prompt → Select new owner from agents list → Confirmation → \"Transfer request sent to [name]. They must accept.\" Pending banner for new owner.\n- Dependencies: T-05.04.04\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -25362,8 +25997,114 @@
           "apps/api/src/profiles/profiles.controller.ts",
           "apps/api/src/session/session-step-up.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-identity-and-membership"
+        ],
+        "current_acceptance": {
+          "kind": "current-identity-staff-and-legal-membership-boundary-verification",
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+              "sha256": "ffb8f42397aba633800e89cb3890114c4caf052df86bb92e9326bebc6059ef06"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-records.ts",
+              "sha256": "970674888375b543f2803aa1fcd6d19369b17c60339086d9620cc081361b7c5d"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+            },
+            {
+              "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+              "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+            },
+            {
+              "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+              "sha256": "58a9c92042c790bf36bcdf4b57944e35360551011e1fc2051aadb9fbaa987987"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.controller.ts",
+              "sha256": "50c6f942b0677ec6b276d66e158b4bb204a00a6abb3a8f3af8664bcb143f116d"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/team.spec.ts",
+              "sha256": "b1cfc24aeea8113bb904f0389322d082a8013c6b907ed4e1f5add3c034000694"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/InvitationCards.tsx",
+              "sha256": "08156b18cd809bc5f6ea5807861a31e1cc4aad4d68c71a02588b11319af210ef"
+            },
+            {
+              "path": "apps/web/src/components/OwnershipBanner.tsx",
+              "sha256": "ff331961bd0a0617eeea23254ed7ade394a765b96351d426f7e36d4a3888359f"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-action.ts",
+              "sha256": "cf411d58a68807ba4f8d17d911e7f91eca3bcc7ac25acbe6754a8d0ea594ff77"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-api.ts",
+              "sha256": "5eaa5871b1fe418ca7b350a65875147fcf4441bae87ac145a89a7bdba36af5dc"
+            },
+            {
+              "path": "apps/web/src/pages/TeamPage.tsx",
+              "sha256": "df04506ced5c695404fe46fb97052b526665d01a5e5802412300f549bb6bd2a5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0111_account_login_identifiers.sql",
+              "sha256": "b0810cdf834318f0b0acc92f2f17cbf506060b12e992c37ec144f891154e89bf"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/i18n/src/team.ts",
+              "sha256": "a65f38a80019cbbbefebe78726f8bb15cedd432bbab61c6804cde9d83efdfc9b"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Only canonical current owner can initiate transfer to an existing non-owner member. Current step-up/CSRF, sorted account locks, stable target and single pending transfer protect initiation. Current owner retains control until recipient explicitly accepts; decline/expiry preserve existing owner.",
+            "Acceptance replaces canonical profile owner, preserves exactly one owner and records both parties and before/after in transactional audit. Expiry after writes uses existing savepoint behavior; invalid current authority, audit failure and concurrency roll back safely. Both parties’ credentials are revoked atomically. FA/EN incoming decisions and owner proof-before-selection, expiry renewal, recipient preservation, conflict retry, cancellation and exact acknowledgement pass. Broader domain role matrix remains partial.",
+            "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+          "limitations": [
+            "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
+            "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
+          ]
+        }
       }
     },
     {
@@ -143587,6 +144328,27 @@
         "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+    },
+    "release-0.3-identity-and-membership": {
+      "title": "Accept identity correction, staff provisioning and legal membership workflows",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.05",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.05",
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-03.03.02",
+        "02-auth-users-admin.md#T-05.02.01"
+      ],
+      "summary": "Seven full criteria accepted; three earlier invitation/CRM tasks renewed only for the tested delta. Use verified sign-in registry for invitations and affected CRM projection. Repair browser contract/proof fixtures and immutable-audit worker isolation. Broader role matrix and release gates remain open.",
+      "validation": [
+        "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+        "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership"
     }
   },
   "historical_improvements": [
@@ -143626,23 +144388,21 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-identity-and-membership",
+    "id": "release-0.3-staff-administration",
     "release": "0.3.0",
-    "goal": "Continue independent preparation of identity correction, staff creation/roles and legal agents/invitation/ownership workflows. Inspect existing implementation and reuse bound shared evidence; build only exact gaps. v0.2 remains blocked on its six original decisions. No v0.3 acceptance/deployment before v0.2 acceptance.",
+    "goal": "Continue independent staff administration preparation. Inspect current role management, staff lists/audit and dashboard widgets against their criteria, reuse valid staff checks and build demonstrated gaps. Preserve profile archival and broader cross-domain role-matrix blockers. No milestone acceptance/deployment before v0.2 decisions resolve.",
     "task_keys": [
-      "02-auth-users-admin.md#T-05.02.05",
-      "02-auth-users-admin.md#T-05.03.01",
-      "02-auth-users-admin.md#T-05.03.02",
-      "02-auth-users-admin.md#T-05.04.01",
-      "02-auth-users-admin.md#T-05.04.02",
-      "02-auth-users-admin.md#T-05.04.03",
-      "02-auth-users-admin.md#T-05.04.05"
+      "02-auth-users-admin.md#T-05.05.01",
+      "02-auth-users-admin.md#T-05.05.02",
+      "02-auth-users-admin.md#T-09.05.01",
+      "02-auth-users-admin.md#T-10.01.01",
+      "02-auth-users-admin.md#T-10.01.02"
     ]
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "Four-service intake/recovery rehearsal and six CRM list/detail/edit/verification/sensitive-account tasks accepted from current source-bound checks. v0.2 still awaits six original owner decisions; independent staff/financial preparation continues. Later operational/provider evidence and production authorization remain required."
+    "method": "Four-service rehearsal, CRM six tasks and identity/staff/membership seven tasks accepted from source-bound local checks. v0.2 still awaits six original owner decisions; staff administration and financial preparation continue independently. Provider/operational evidence and production authorization remain required."
   },
   "capabilities": [
     {

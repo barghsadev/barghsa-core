@@ -247,8 +247,11 @@ export class AgentsService {
     // Lock known recipient and actor in one stable order before the notice's FK
     // touches either account. Opposite invitations cannot reverse this order.
     const hint = inviteeUsername
-      ? (await client.query('SELECT user_id FROM users WHERE username=$1', [inviteeUsername]))
-          .rows[0]
+      ? (
+          await client.query('SELECT user_id FROM account_login_identifiers WHERE destination=$1', [
+            inviteeUsername,
+          ])
+        ).rows[0]
       : undefined;
     const users = inviteeUsername
       ? (
@@ -264,20 +267,29 @@ export class AgentsService {
           )
         ).rows;
     const user = users.find((row) => row.user_id === actor.userId);
-    const recipient = inviteeUsername
-      ? users.find((row) => row.username === inviteeUsername)
-      : undefined;
     if (!user || user.disabled_at || user.activation_pending)
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
     await requireCurrentSession(client, actor);
-    if (profile.user_id === actor.userId) return recipient?.user_id as string | undefined;
-    const manager = await client.query(
-      "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
-      [profileId, actor.userId]
-    );
-    if (!manager.rows.length)
-      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-    return recipient?.user_id as string | undefined;
+    if (profile.user_id !== actor.userId) {
+      const manager = await client.query(
+        "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
+        [profileId, actor.userId]
+      );
+      if (!manager.rows.length)
+        throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    }
+    if (!inviteeUsername) return undefined;
+    // Match verified sign-in aliases without admitting unverified contact columns.
+    // Account locks precede the namespace lock, as in contact changes.
+    const identifier = (
+      await client.query(
+        'SELECT user_id FROM account_login_identifiers WHERE destination=$1 FOR SHARE',
+        [inviteeUsername]
+      )
+    ).rows[0];
+    if (identifier?.user_id !== hint?.user_id)
+      throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+    return users.find((row) => row.user_id === identifier?.user_id)?.user_id as string | undefined;
   }
 
   /**
@@ -503,7 +515,7 @@ export class AgentsService {
        JOIN profiles p ON p.id = pi.profile_id
        LEFT JOIN legal_profiles lp ON lp.id = p.id
        LEFT JOIN users u ON u.user_id = pi.invited_by
-       JOIN users recipient ON recipient.user_id=$1 AND recipient.username=pi.username
+       JOIN account_login_identifiers recipient ON recipient.user_id=$1 AND recipient.destination=pi.username
        LEFT JOIN LATERAL (
          SELECT NULLIF(btrim(concat_ws(' ', personal.first_name,personal.last_name)),'') AS name
          FROM profiles personal WHERE personal.user_id=pi.invited_by
@@ -595,7 +607,16 @@ export class AgentsService {
           [inviteId]
         )
       ).rows[0];
-      if (!invite || invite.profile_id !== profileId || invite.username !== user.username)
+      if (
+        !invite ||
+        invite.profile_id !== profileId ||
+        !(
+          await client.query(
+            'SELECT 1 FROM account_login_identifiers WHERE user_id=$1 AND destination=$2 FOR SHARE',
+            [actor.userId, invite.username]
+          )
+        ).rows.length
+      )
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
           404
@@ -773,7 +794,15 @@ export class AgentsService {
           [inviteId, profileId]
         )
       ).rows[0];
-      if (!invitation || invitation.username !== user.username)
+      if (
+        !invitation ||
+        !(
+          await client.query(
+            'SELECT 1 FROM account_login_identifiers WHERE user_id=$1 AND destination=$2 FOR SHARE',
+            [actor.userId, invitation.username]
+          )
+        ).rows.length
+      )
         throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
       if (!profile || profile.profile_type !== 'LEGAL' || profile.archived)
         throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
@@ -787,7 +816,7 @@ export class AgentsService {
         `UPDATE profile_invitations SET status='Declined',updated_at=clock_timestamp()
          WHERE id=$1 AND profile_id=$2 AND username=$3 AND status='Pending'
            AND (expires_at IS NULL OR expires_at>clock_timestamp()) RETURNING id`,
-        [inviteId, profileId, user.username]
+        [inviteId, profileId, invitation.username]
       );
       if (changed.rowCount !== 1)
         throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);

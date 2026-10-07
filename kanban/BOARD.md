@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T01:25:25.867696+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T01:45:23.891773+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 254 | Accepted with unchanged source bindings. |
-| verify | 1052 | Existing work may be complete; inspect evidence before building. |
+| done | 261 | Accepted with unchanged source bindings. |
+| verify | 1045 | Existing work may be complete; inspect evidence before building. |
 | partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,15 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue independent preparation of identity correction, staff creation/roles and legal agents/invitation/ownership workflows. Inspect existing implementation and reuse bound shared evidence; build only exact gaps. v0.2 remains blocked on its six original decisions. No v0.3 acceptance/deployment before v0.2 acceptance.
+Continue independent staff administration preparation. Inspect current role management, staff lists/audit and dashboard widgets against their criteria, reuse valid staff checks and build demonstrated gaps. Preserve profile archival and broader cross-domain role-matrix blockers. No milestone acceptance/deployment before v0.2 decisions resolve.
 
-- `02-auth-users-admin.md#T-05.02.05`: Identity correction through verification case
-- `02-auth-users-admin.md#T-05.03.01`: Create staff user
-- `02-auth-users-admin.md#T-05.03.02`: Staff role assignment
-- `02-auth-users-admin.md#T-05.04.01`: Agent list for legal entity
-- `02-auth-users-admin.md#T-05.04.02`: Agent invitation flow
-- `02-auth-users-admin.md#T-05.04.03`: Accept/decline invitation
-- `02-auth-users-admin.md#T-05.04.05`: Ownership transfer
+- `02-auth-users-admin.md#T-05.05.01`: Profiles awaiting verification widget
+- `02-auth-users-admin.md#T-05.05.02`: Agent invitation dashboard widget
+- `02-auth-users-admin.md#T-09.05.01`: Staff role management
+- `02-auth-users-admin.md#T-10.01.01`: Staff user list (admin)
+- `02-auth-users-admin.md#T-10.01.02`: Staff permission audit view
 
 ## v0.2.0: Complete customer journeys
 
@@ -315,15 +313,15 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-05.02.02` | done | Earlier acceptance_verified | Staff profile editing |
 | `02-auth-users-admin.md#T-05.02.03` | done | Earlier acceptance_verified | Verification state management |
 | `02-auth-users-admin.md#T-05.02.04` | done | Earlier acceptance_verified | Force password change and session expiry |
-| `02-auth-users-admin.md#T-05.02.05` | verify | Earlier acceptance_verified | Identity correction through verification case |
+| `02-auth-users-admin.md#T-05.02.05` | done | Earlier acceptance_verified | Identity correction through verification case |
 | `02-auth-users-admin.md#T-05.02.06` | partial | Earlier partial | Profile deletion by staff |
-| `02-auth-users-admin.md#T-05.03.01` | verify | Earlier acceptance_verified | Create staff user |
-| `02-auth-users-admin.md#T-05.03.02` | verify | Earlier acceptance_verified | Staff role assignment |
-| `02-auth-users-admin.md#T-05.04.01` | verify | Earlier acceptance_verified | Agent list for legal entity |
-| `02-auth-users-admin.md#T-05.04.02` | verify | Earlier acceptance_verified | Agent invitation flow |
-| `02-auth-users-admin.md#T-05.04.03` | verify | Earlier acceptance_verified | Accept/decline invitation |
+| `02-auth-users-admin.md#T-05.03.01` | done | Earlier acceptance_verified | Create staff user |
+| `02-auth-users-admin.md#T-05.03.02` | done | Earlier acceptance_verified | Staff role assignment |
+| `02-auth-users-admin.md#T-05.04.01` | done | Earlier acceptance_verified | Agent list for legal entity |
+| `02-auth-users-admin.md#T-05.04.02` | done | Earlier acceptance_verified | Agent invitation flow |
+| `02-auth-users-admin.md#T-05.04.03` | done | Earlier acceptance_verified | Accept/decline invitation |
 | `02-auth-users-admin.md#T-05.04.04` | partial | Earlier partial | Agent role permissions enforcement |
-| `02-auth-users-admin.md#T-05.04.05` | verify | Earlier acceptance_verified | Ownership transfer |
+| `02-auth-users-admin.md#T-05.04.05` | done | Earlier acceptance_verified | Ownership transfer |
 | `02-auth-users-admin.md#T-05.05.01` | verify | Earlier acceptance_verified | Profiles awaiting verification widget |
 | `02-auth-users-admin.md#T-05.05.02` | verify | Earlier acceptance_verified | Agent invitation dashboard widget |
 | `02-auth-users-admin.md#T-06.01.01` | partial | Earlier partial | Ticket creation |

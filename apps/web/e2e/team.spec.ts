@@ -270,7 +270,7 @@ for (const locale of ['fa', 'en'] as const) {
               json: {
                 invitations: [
                   {
-                    id: 'detail-invitation',
+                    id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
                     profileId,
                     profileName: 'Inviting company',
                     role: 'Finance',
@@ -285,16 +285,36 @@ for (const locale of ['fa', 'en'] as const) {
             }
       )
     );
-    await page.route(`**/api/invitations/detail-invitation/${decision}`, (route) => {
-      expect(route.request().method()).toBe('POST');
-      return route.fulfill(++decisions === 1 ? { status: 409, json: {} } : { json: {} });
-    });
+    await page.route(
+      `**/api/invitations/bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb/${decision}`,
+      (route) => {
+        expect(route.request().method()).toBe('POST');
+        expect(route.request().postDataJSON()).toEqual({
+          expectedProfileId: profileId,
+          expectedRole: 'Finance',
+        });
+        return route.fulfill(
+          ++decisions === 1
+            ? { status: 409, json: {} }
+            : {
+                json: {
+                  invitation: {
+                    id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+                    profileId,
+                    role: 'Finance',
+                    status: decision === 'accept' ? 'Accepted' : 'Declined',
+                  },
+                },
+              }
+        );
+      }
+    );
     await page.goto('/settings/team');
     const retry = page
       .getByRole('alert')
       .getByRole('button', { name: fa ? 'تلاش دوباره' : 'Retry' });
     await retry.click();
-    const banner = page.getByRole('alert').filter({ hasText: 'Inviting company' });
+    const banner = page.getByRole('region').filter({ hasText: 'Inviting company' });
     await expect(banner).toContainText(fa ? 'مالی' : 'Finance');
     const details = banner.locator('summary');
     await details.focus();
@@ -332,9 +352,12 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(
       page.getByRole('alert').filter({ hasText: fa ? 'خطا' : 'Error processing invitation' })
     ).toBeVisible();
+    await expect(act).toBeDisabled();
+    await banner.getByRole('button', { name: fa ? 'تلاش دوباره' : 'Retry', exact: true }).click();
     await expect(act).toBeEnabled();
     await act.click();
-    await expect(banner).toHaveCount(0);
+    await expect(act).toHaveCount(0);
+    await expect(banner.getByRole('status')).toContainText('Inviting company');
     expect(decisions).toBe(2);
   });
 
@@ -678,7 +701,8 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(page.getByText(success, { exact: true })).toHaveCount(0);
-    await password.fill('Team-password-123!');
+    expect(verifies).toBe(3);
+    await expect(password).toHaveCount(0);
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(page.getByText(success, { exact: true })).toBeVisible();
@@ -686,7 +710,7 @@ for (const locale of ['en', 'fa'] as const) {
       page.getByRole('button', { name: fa ? 'انتقال مالکیت' : 'Transfer ownership', exact: true })
     ).toBeFocused();
     expect(attempts).toEqual(Array.from({ length: 3 }, () => ({ newOwnerUserId: 'member' })));
-    expect(verifies).toBe(4);
+    expect(verifies).toBe(3);
     expect(await page.evaluate(() => JSON.stringify(sessionStorage))).not.toContain(
       'Team-password-123!'
     );
@@ -761,7 +785,7 @@ for (const locale of ['en', 'fa']) {
         json: {
           invitations: [
             {
-              id: 'invitation-date',
+              id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
               profileId,
               profileName: 'Inviting company',
               role: 'Manager',
@@ -803,7 +827,7 @@ for (const locale of ['en', 'fa']) {
     );
     await page.keyboard.press('Escape');
     await expect(dialog).not.toBeVisible();
-    const banner = page.getByRole('alert').filter({ hasText: 'Inviting company' });
+    const banner = page.getByRole('region').filter({ hasText: 'Inviting company' });
     await expect(banner).toContainText(
       await formatBrowserDate(
         page,
