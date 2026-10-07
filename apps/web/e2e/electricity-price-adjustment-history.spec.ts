@@ -94,6 +94,9 @@ for (const locale of ['en', 'fa'] as const)
         await expect(
           records.nth(1).locator(`a[href="/admin/invoices?invoiceId=${linkedCreditId}"]`)
         ).toBeVisible();
+        await expect(
+          records.nth(1).getByRole('link', { name: copy('refundCredit'), exact: true })
+        ).toHaveAttribute('href', `/admin/invoices?invoiceId=${invoiceId}`);
         for (const [index, value] of [
           [0, charge.proposedAt],
           [1, credit.finalizedAt],

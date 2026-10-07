@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 371 | Accepted with unchanged source bindings. |
+| done | 372 | Accepted with unchanged source bindings. |
 | verify | 920 | Existing work may be complete; inspect evidence before building. |
-| partial | 68 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,10 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Build demonstrated missing decrease settlement from a finalized price credit note to wallet credit or bank refund using the original paid source. Inspect existing refund ledger/dual approval/source-budget andinvoice accounting first; require durable linkage,explicit current staff authority,confirmed review,idempotency/concurrency,rollback and immutable historical allocations. Do not bypass financial policy or equate a credit note with completed cash settlement. Price-route andearlier owner/release/performance gates remain open.
+Inspect existing five-stage saving fulfillment,staff transitions and optional equipment handover,customer progress,terminal Completed/Cancelled,explanation/audit andcustomer notification. Verify current profile/authority/idempotency/concurrency/rollback and linked contract/payment boundaries; build only demonstrated gaps. Preserve earlier owner/dependency/performance gates.
 
-- `04-invoices-wallet-contracts.md#T-04.6.02.06`: Decrease → refund/credit workflow (refund or wallet credit)
-- `03-core-business.md#T-03.08.02.01`: `POST /staff/electricity/contracts/:id/adjust-price` — staff sets new price, effective date, reason. Backend:
+- `03-core-business.md#T-03.10.01.01`: Define 5 fulfillment stages:
+- `03-core-business.md#T-03.10.01.02`: Staff UI: order detail with stage advancement controls. Each stage advancement records previous/new state, actor, timestamp, explanation.
+- `03-core-business.md#T-03.10.01.03`: Customer UI: progress bar showing 5 stages, current stage highlighted, completed stages marked.
+- `03-core-business.md#T-03.10.01.04`: Equipment handover (stage 4) is optional by default. If performed, record handed-over item description, staff member, time.
+- `03-core-business.md#T-03.10.01.05`: Completed and Cancelled are terminal states. Every customer-visible status change sends notification.
 
 ## v0.2.0: Complete customer journeys
 
@@ -512,7 +515,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.6.02.03` | done | Recorded batch work | Calculate adjustment: for each future period affected, compute net increase, create adjustment invoice |
 | `04-invoices-wallet-contracts.md#T-04.6.02.04` | done | Recorded batch work | Step-up auth + audit: mandatory for this action |
 | `04-invoices-wallet-contracts.md#T-04.6.02.05` | done | Recorded batch work | Notify customer: full disclosure of old/new price, calculation, effective date before invoice is issued |
-| `04-invoices-wallet-contracts.md#T-04.6.02.06` | partial | Recorded batch work | Decrease → refund/credit workflow (refund or wallet credit) |
+| `04-invoices-wallet-contracts.md#T-04.6.02.06` | done | Recorded batch work | Decrease → refund/credit workflow (refund or wallet credit) |
 | `05-notifications-documents-ai.md#T-05.11.01` | done | Recorded batch work | Document state machine |
 
 ## v0.4.0: Documents, notifications and AI

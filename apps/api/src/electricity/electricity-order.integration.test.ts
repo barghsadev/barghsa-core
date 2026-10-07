@@ -4553,6 +4553,80 @@ it.each(['charge', 'credit'] as const)(
     expect((await increaseQuote.json()) as { quote: { adjustmentIrR: string } }).toMatchObject({
       quote: { adjustmentIrR: kind === 'charge' ? '210000' : '190000' },
     });
+    if (kind === 'credit') {
+      const immutableSource = async () =>
+        (
+          await http.pool.query(
+            `SELECT i.total_amount,i.paid_amount,i.invoice_calculation_snapshot,
+             (SELECT jsonb_agg(to_jsonb(l) ORDER BY l.id) FROM invoice_lines l WHERE l.invoice_id=i.id) AS lines
+             FROM invoices i WHERE i.id=$1`,
+            [order.invoiceId]
+          )
+        ).rows[0];
+      const beforeRefund = await immutableSource();
+      const refundPost = (path: string, body: unknown) =>
+        fetch(`${http.base}/api/admin/wallet-refunds${path}`, {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify(body),
+        });
+      const refundInput = {
+        invoiceId: order.invoiceId,
+        amount: (-BigInt(proposed.adjustmentAmountIrR)).toString(),
+        reason: `Return price credit ${finalized.adjustmentInvoiceId}`,
+      };
+      const refundReview = await refundPost('/review', refundInput);
+      expect(refundReview.status, http.logs()).toBe(200);
+      const refundBody = {
+        ...refundInput,
+        expectedReviewHash: ((await refundReview.json()) as { hash: string }).hash,
+        idempotencyKey: randomUUID(),
+      };
+      const refundResponse = await refundPost('', refundBody);
+      expect(refundResponse.status, http.logs()).toBe(201);
+      const refund = (await refundResponse.json()) as { id: string };
+      const replay = await refundPost('', refundBody);
+      expect(replay.status, http.logs()).toBe(201);
+      expect(await replay.json()).toMatchObject({ id: refund.id, amount: '50000' });
+      for (const action of ['approve', 'process', 'process']) {
+        const review = await refundPost(`/${refund.id}/${action}/review`, {});
+        expect(review.status, http.logs()).toBe(200);
+        const result = await refundPost(`/${refund.id}/${action}`, {
+          expectedReviewHash: ((await review.json()) as { hash: string }).hash,
+        });
+        expect(result.status, http.logs()).toBe(200);
+        if (action === 'process')
+          expect(await result.json()).toMatchObject({ state: 'Completed', amount: '50000' });
+      }
+      expect(await immutableSource()).toEqual(beforeRefund);
+      expect(
+        (
+          await http.pool.query('SELECT refunded_amount,state FROM invoices WHERE id=$1', [
+            order.invoiceId,
+          ])
+        ).rows
+      ).toEqual([{ refunded_amount: '50000', state: 'PartiallyRefunded' }]);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT amount FROM wallet_transactions WHERE ref_id=$1 AND type='refund'",
+            [refund.id]
+          )
+        ).rows
+      ).toEqual([{ amount: '50000' }]);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.requested' AND metadata::jsonb->>'refundId'=$1",
+            [refund.id]
+          )
+        ).rows[0].metadata
+      ).toMatchObject({
+        reason: refundInput.reason,
+        paymentSources: [expect.objectContaining({ source: 'wallet', amount: '1000000' })],
+        financialReview: { hash: refundBody.expectedReviewHash },
+      });
+    }
   },
   40000
 );

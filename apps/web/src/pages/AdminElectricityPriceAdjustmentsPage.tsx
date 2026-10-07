@@ -1044,6 +1044,16 @@ function PriceWorkspace({
                           >
                             {adjustment.adjustmentInvoiceId}
                           </LinkCell>
+                          {adjustment.status === 'finalized' &&
+                          BigInt(adjustment.adjustmentAmountIrR) < 0n ? (
+                            <div className="pt-1">
+                              <LinkCell
+                                href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.calculation.originalInvoiceId)}`}
+                              >
+                                {copy('refundCredit')}
+                              </LinkCell>
+                            </div>
+                          ) : null}
                         </div>
                       ) : (
                         <TextCell value={copy('noInvoice')} />

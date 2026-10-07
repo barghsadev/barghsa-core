@@ -196,6 +196,7 @@ export const fa: I18nDictionary = {
   'admin.electricityPrice.calculationDescription':
     'محاسبه مالی ثبت‌شده، فاکتورهای مبنا و بازه‌های تحویل واجد شرایط را بررسی کنید.',
   'admin.electricityPrice.noInvoice': 'فاکتور تعدیل صادر نشده است.',
+  'admin.electricityPrice.refundCredit': 'بازپرداخت بستانکاری از فاکتور پرداخت‌شده',
   'admin.electricityPrice.charge': 'افزایش هزینه',
   'admin.electricityPrice.credit': 'کاهش هزینه',
   'admin.electricityPrice.basisPrice': 'بهای مبنا',
@@ -1982,6 +1983,7 @@ export const en: I18nDictionary = {
   'admin.electricityPrice.calculationDescription':
     'Review the saved financial calculation, source invoices and eligible delivery periods.',
   'admin.electricityPrice.noInvoice': 'No adjustment invoice has been issued.',
+  'admin.electricityPrice.refundCredit': 'Refund credit from the paid invoice',
   'admin.electricityPrice.charge': 'Cost increase',
   'admin.electricityPrice.credit': 'Cost decrease',
   'admin.electricityPrice.basisPrice': 'Price basis',

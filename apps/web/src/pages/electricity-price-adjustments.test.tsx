@@ -287,46 +287,55 @@ it('reviews the server price before preparing the exact publish command', async 
   }
 });
 
-it('opens a finalized adjustment invoice in the staff ledger', async () => {
-  document.documentElement.lang = 'en';
-  window.history.replaceState(
-    {},
-    '',
-    '/admin/electricity-price-adjustments?contractId=11111111-1111-4111-8111-111111111111'
-  );
-  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  const finalized = {
-    ...priceAdjustmentRow('finalized', 'charge'),
-    adjustmentInvoiceId: '11111111-1111-7111-8111-111111111111',
-  };
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async () =>
-      Response.json({
-        contractId: priceContractId,
-        profileId: priceProfileId,
-        versionId: priceVersionId,
-        periodEnd: finalized.periodEnd,
-        canPropose: false,
-        canCancel: false,
-        canFinalize: false,
-        blockedByIncrease: false,
-        adjustments: [finalized],
-      })
-    )
-  );
-  const container = document.createElement('div');
-  document.body.append(container);
-  const root = createRoot(container);
-  try {
-    await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
-    expect(
-      container.querySelector(
-        'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
+it.each(['charge', 'credit'] as const)(
+  'opens a finalized %s in the ledger and hands credit refunds to the paid source',
+  async (kind) => {
+    document.documentElement.lang = 'en';
+    window.history.replaceState(
+      {},
+      '',
+      '/admin/electricity-price-adjustments?contractId=11111111-1111-4111-8111-111111111111'
+    );
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    const finalized = {
+      ...priceAdjustmentRow('finalized', kind),
+      adjustmentInvoiceId: '11111111-1111-7111-8111-111111111111',
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        Response.json({
+          contractId: priceContractId,
+          profileId: priceProfileId,
+          versionId: priceVersionId,
+          periodEnd: finalized.periodEnd,
+          canPropose: false,
+          canCancel: false,
+          canFinalize: false,
+          blockedByIncrease: false,
+          adjustments: [finalized],
+        })
       )
-    ).not.toBeNull();
-  } finally {
-    await act(async () => root.unmount());
-    container.remove();
+    );
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+      expect(
+        container.querySelector(
+          'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
+        )
+      ).not.toBeNull();
+      const sourceRefund = container.querySelector(
+        `a[href="/admin/invoices?invoiceId=${priceOriginalInvoiceId}"]`
+      );
+      if (kind === 'credit') {
+        expect(sourceRefund?.textContent).toBe('Refund credit from the paid invoice');
+      } else expect(sourceRefund).toBeNull();
+    } finally {
+      await act(async () => root.unmount());
+      container.remove();
+    }
   }
-});
+);
