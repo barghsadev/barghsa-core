@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 434 | Accepted with unchanged source bindings. |
+| done | 435 | Accepted with unchanged source bindings. |
 | verify | 867 | Existing work may be complete; inspect evidence before building. |
-| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 57 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,10 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile the implemented verification configuration with approved manual-path acceptance and unavailable API-provider behavior, then inspect notification template deployment prerequisites. Reuse current accepted operational/config/notification evidence and build only demonstrated gaps. Preserve retention, reconciliation math, dev-reload, owner/release gates and consultation work.
+Reconcile final-source contract/refund/invoice/receipt acceptance for the financial closure gate, reusing valid evidence for approval/rejection, cancellation, refund exhaustion/retry, dual approval and concurrent settlements. Run only uncovered or invalidated boundaries. Preserve live template/SMS mapping, retention, mathematical policy, prior owner/release gates and consultation work.
 
-- `02-auth-users-admin.md#T-07.01.01`: Verification mode setting
-- `02-auth-users-admin.md#T-07.01.03`: Verification notification to user
+- `release-readiness#R-02.01`: Renew fulfillment and financial closure acceptance
 
 ## v0.2.0: Complete customer journeys
 
@@ -324,7 +323,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-06.01.01` | done | Earlier partial | Ticket creation |
 | `02-auth-users-admin.md#T-06.01.02` | done | Earlier partial | Ticket list and detail view |
 | `02-auth-users-admin.md#T-06.01.03` | done | Earlier acceptance_verified | Staff ticket management |
-| `02-auth-users-admin.md#T-07.01.01` | partial | Earlier partial | Verification mode setting |
+| `02-auth-users-admin.md#T-07.01.01` | done | Earlier partial | Verification mode setting |
 | `02-auth-users-admin.md#T-07.01.03` | partial | Earlier partial | Verification notification to user |
 | `02-auth-users-admin.md#T-09.02.01` | done | Earlier acceptance_verified | Province CRUD |
 | `02-auth-users-admin.md#T-09.02.02` | done | Earlier acceptance_verified | City CRUD per province |

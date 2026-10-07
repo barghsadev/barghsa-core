@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "e1a94fae9d3a5556fcb63b8bd7c12a4224b08b14",
+  "source_commit": "df191729aa39cadb1174890a03979be14fb214f8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -16965,7 +16965,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -17003,7 +17003,8 @@
             "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
             "audit/evidence/step-reviews.json#R02-catalogue-vat: catalogue/VAT price and configuration callers now preserve transaction authority and exact audit proof.124 API and14 distinct browser cases pass. Broad caller acceptance remains partial pending final provider/storage reconciliation and future refund/contract prerequisites.",
             "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: all four storage mutation/probe routes now preserve session/CSRF/step-up authority through waits and commit, including no-op returns; audits record exact verification time. Provider helper has exact flag/time proof; current email source matches R02-email-provider-callbacks, SMS service/dictionary and added locale tests match R02-invoice-reminder-delivery, and all30 selected AI bindings match R02-ai-settings. Catalogue/VAT authority already closed in R02-catalogue-vat. Existing finance, staff, profile, ownership and session evidence retained.",
-            "Current source bindings reconciled at the completion sprint; prior hashes, applicable later reviews and tested deltas are retained in the source-refresh evidence. Acceptance status is unchanged by hash refresh."
+            "Current source bindings reconciled at the completion sprint; prior hashes, applicable later reviews and tested deltas are retained in the source-refresh evidence. Acceptance status is unchanged by hash refresh.",
+            "Scoped fixture renewal at df191729: verification-notices supplies saved locale and authenticated customer navigation. Its complete current12-case production desktop/mobile FA/EN file passes with all original assertions unchanged by AST proof. No app, permission, producer, transport or compiled-output changes. Initial10 fixture failures retained; two repeated initial notice passes excluded. Evidence: /Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance"
           ],
           "limitations": [
             "Refund/contract-cancellation/signing/legal-document and other unbuilt product consumers retain their exact V01/B01 prerequisite task keys in progress.json. No real identity provider exists; activation prerequisites remain.",
@@ -17330,7 +17331,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -17422,7 +17423,8 @@
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Credit-note refund scope correction: current refund writers reject credit-note parents and settle through the ordinary paid original. Scanner now reports illegal note-parent refunds and removes its unsupported capacity exclusion. All prior wallet HTTP tests/fixtures unchanged and all 27 current cases pass; 31 current scanner/options and one compiled recovery case pass. Other product sources retained; no disputed formula approval inferred. See release-0.3-credit-note-refund-scope receipts.",
-            "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions"
+            "Scoped source renewal at e1a94fae: existing declarations/assertions and default activity/access paths preserved by seven-file/205-statement AST proof. Current 155 distinct invoice/ledger, contract review/signing/cancellation/authority, document and actual-refund caller cases pass. Customer refunds require refunds:view; advisory cancellation commands require cancellation:request while retaining step-up, locks, transactional audit and staff decisions. Only matching predecessor bindings renewed; no unrelated whole-task replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
+            "Scoped fixture renewal at df191729: verification-notices supplies saved locale and authenticated customer navigation. Its complete current12-case production desktop/mobile FA/EN file passes with all original assertions unchanged by AST proof. No app, permission, producer, transport or compiled-output changes. Initial10 fixture failures retained; two repeated initial notice passes excluded. Evidence: /Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -28864,12 +28866,10 @@
         "story": "02-auth-users-admin.md#spec-89ab467091e4"
       },
       "requirement": "**T-07.01.01 — Verification mode setting**\n\n- Description: Admin can set profile verification mode: disabled (no verification needed), manual (staff verifies), api (automatic via official APIs).\n- Technical notes: Stored as `profileVerification` enum in admin config table: `DISABLED`, `MANUAL`, `API`. Changing mode is versioned (Draft → Active). Audit: config_change.\n- UI/UX: Settings page with radio/selector. Description for each mode. Warning: \"Changing verification mode will affect all profiles.\"\n- Dependencies: admin config framework\n- Complexity: S",
-      "status": "partial",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Reconcile the historical limitations below with the linked later batches and current code; do not rebuild the former missing module."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -28937,12 +28937,83 @@
           "apps/web/e2e/verification-mode.spec.ts",
           "apps/web/e2e/form-accessibility.spec.ts",
           "apps/web/e2e/otp-config.spec.ts",
-          "packages/i18n/src/verification-config.ts"
+          "packages/i18n/src/verification-config.ts",
+          "apps/web/e2e/verification-notices.spec.ts"
         ],
         "batches": [
-          "2026-10-04-verification-otp-forms"
+          "2026-10-04-verification-otp-forms",
+          "release-0.3-verification-configuration-acceptance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-versioned-manual-verification-mode-and-unavailable-api",
+          "base_commit": "df191729aa39cadb1174890a03979be14fb214f8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/verification-mode-config.ts",
+              "sha256": "f055b173066df86e7643d27b87bc8a7128c13f9f21c3648267c640daf97a576c"
+            },
+            {
+              "path": "apps/api/src/admin/verification-mode-http.integration.test.ts",
+              "sha256": "168d2754502d8015843f5edde82678060a7a758539e66722683f1dff5182b56a"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
+              "sha256": "c9dd9373223e9461c1a105990517da5bda3c344d1976091359cf9f28e2c98223"
+            },
+            {
+              "path": "apps/web/src/pages/verification-settings-forms.test.tsx",
+              "sha256": "436eea26a1f8e1d8328d3d55a1a0e3edab2e85e3aef31c5a167f9fe8112d58b8"
+            },
+            {
+              "path": "apps/web/e2e/verification-mode.spec.ts",
+              "sha256": "281672337c1ac4a089ec6170e85cba72bc7e0c6a386e8502a55eb9c1c91afaf6"
+            },
+            {
+              "path": "packages/i18n/src/verification-config.ts",
+              "sha256": "71b70ee40f26033ec9fecefb39d830918f35c40645a350fc4331725d4cedbfb4"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
+              "sha256": "22eb1d8e8b55ff4874e8e7ea2a885a25fdbd13956264bd9306ef66047c35b08b"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Approved manual-path override retained. DISABLED/MANUAL save Draft then exact-revision Active with config_change audit/global version. API drafting/activation returns provider-unavailable503 without writes or automatic approval. Current authority/session/CSRF, activated draft basis, concurrent/stale revisions, post-write expiry and audit rollback pass.",
+            "FA/EN settings render active saved values only after hydration, describe modes, disable unavailable API, warn activation affects all profiles, bind password confirmation to exact saved revision and recover conflicts without announcing unverified receipts. Current source forms and four actual production journeys verify persistence, Escape/captured command, owned error feedback, refresh/reset and duplicate locks.",
+            "84 distinct current targeted cases pass across recorded runs:44 API/database including controlled producer-to-worker-to-email/SMS transports;24 settings forms;4 unchanged production mode journeys and12 corrected production notice journeys in FA/EN desktop/mobile. No failed initial suite or repeated notice cases counted.",
+            "Only one E2E shell fixture changed. Web strict types and changed-file lint/format pass; API/worker/db/UI product sources and all6232 matching compiled outputs unchanged. Prior matching production build/budget/contract evidence retained without rebuilding or running unrelated suites. One bounded review found no outstanding issue."
+          ],
+          "limitations": [],
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance"
+        }
       },
       "requirement_override": "Use the approved manual verification path. API verification must safely report unavailable without a real configured provider. No automatic approval or live provider proof is implied."
     },
@@ -29051,8 +29122,7 @@
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Automatic verification results still depend on 02-auth-users-admin.md#T-07.01.02 and a real provider. No automatic approval or provider integration is claimed.",
-        "Deployment must publish both-language profile.verification_status templates and verified SMS mappings before producer rollout. Existing customized families are preserved by seeding; old status-only templates omit guidance. See docs/operations/notification-template-seeding.md. No historical resend/backfill or production send occurred."
+        "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
       ],
       "owner": null,
       "depends_on": [],
@@ -29103,7 +29173,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
@@ -29179,7 +29249,8 @@
             "Implemented behavior, focused checks and unchanged-source reuse are recorded once in the batch review.",
             "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained.",
             "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: manual verify/unverify/reverify atomically writes profile status, audit, named bilingual inbox notice and email/SMS outbox/jobs. Four producer/rollback checks and six actual producer-to-worker-to-email/SMS transport cases pass. Three outcomes in both languages include name/reason/corrective guidance, one dispatch and current channel preferences. External transport fetches are controlled local fixtures. Existing dashboard/inbox UI is unchanged and prior source-bound evidence is reused.",
-            "Current source bindings reconciled at the completion sprint; prior hashes, applicable later reviews and tested deltas are retained in the source-refresh evidence. Acceptance status is unchanged by hash refresh."
+            "Current source bindings reconciled at the completion sprint; prior hashes, applicable later reviews and tested deltas are retained in the source-refresh evidence. Acceptance status is unchanged by hash refresh.",
+            "Scoped fixture renewal at df191729: verification-notices supplies saved locale and authenticated customer navigation. Its complete current12-case production desktop/mobile FA/EN file passes with all original assertions unchanged by AST proof. No app, permission, producer, transport or compiled-output changes. Initial10 fixture failures retained; two repeated initial notice passes excluded. Evidence: /Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance"
           ],
           "limitations": [
             "Automatic verification results still depend on 02-auth-users-admin.md#T-07.01.02 and a real provider. No automatic approval or provider integration is claimed.",
@@ -29209,10 +29280,177 @@
           "apps/api/src/storage/storage-config.service.ts",
           "apps/api/src/storage/storage-record-http.integration.test.ts",
           "apps/web/e2e/admin-settings-live.spec.ts",
-          "apps/worker/src/notifications/outbox-runner.ts"
+          "apps/worker/src/notifications/outbox-runner.ts",
+          "apps/web/e2e/verification-notices.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-verification-configuration-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "verified-manual-verification-notices-with-live-template-rollout-pending",
+          "base_commit": "df191729aa39cadb1174890a03979be14fb214f8",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "a87d0335e4e89d72ea5d0d0055cb03978b956d2da027eb8ca1ed0850afb6acc3"
+            },
+            {
+              "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+              "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "acc951d1a539722938b0aa668831de404e0ee6a344a2a8d145682fa99cb21dbe"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "341ba8ca104146c22273bfe6b56a666d816eaaabf0cf6b40d8989e82c5312652"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.controller.ts",
+              "sha256": "50c6f942b0677ec6b276d66e158b4bb204a00a6abb3a8f3af8664bcb143f116d"
+            },
+            {
+              "path": "apps/web/src/components/VerificationBanner.tsx",
+              "sha256": "6b99504500a83a1502b47c7fb050d461352259053273fa8178440b6f52034862"
+            },
+            {
+              "path": "apps/web/src/components/NotificationBell.tsx",
+              "sha256": "634d3e5fc98cb646e49fadf2faf3a24cbcaf2cd96e5c62b7f440e5f136ca4ebc"
+            },
+            {
+              "path": "apps/web/src/components/NotificationRow.tsx",
+              "sha256": "4e98294f316ab72ef0c869fd3ab43fb427fc88b0de4b41d526e62db320581888"
+            },
+            {
+              "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+              "sha256": "d381d63cb0215297d8d8c08c32add64b31ed97b15c8fad42fcbf00fb8a0de15e"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "fe5069d9c6aff282d03643cc3630df1d9e9cc45d8272ef1678661a4f6bb82b92"
+            },
+            {
+              "path": "apps/web/e2e/verification-notices.spec.ts",
+              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+            },
+            {
+              "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+              "sha256": "d092853fb9692d4f926638082289384d0437c5dc7299a0cfce9f000d1256ff90"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+              "sha256": "10d2cfda19d35998c0c0ea3409d2d52057db9ce5e2414df2b3ef12a6e62a341a"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-mutation.ts",
+              "sha256": "1b85a3431f816ade97e5191d6ee30c8344d365426894ce74478f3743a7596fae"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+              "sha256": "8a8a80d7dcc1620c6924c9cc9be46c5e96205f29e09a5cd4fe2a7c0e2420eaf0"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+              "sha256": "dd14af384d932bec1a2899b69f8e1b4d4a5186789728f08aff096efe82f2a1ac"
+            },
+            {
+              "path": "apps/api/src/storage/storage-admin.controller.ts",
+              "sha256": "cee1172c3f3bc923c3b7960016fbbce1a2a0efe3afd3ae8c402ff7186a37ea75"
+            },
+            {
+              "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+              "sha256": "5bf26720b1a6c5d1ac4469df00ceaa071bb725a5a0b4e38096e9a2a30b12fcf7"
+            },
+            {
+              "path": "apps/api/src/storage/storage-config.service.ts",
+              "sha256": "a3ba48d5a9538b9d0c9da5cc4e674d1b73ed23c771f4b17fb21a87bd11ba3fd9"
+            },
+            {
+              "path": "apps/api/src/storage/storage-record-admin.service.ts",
+              "sha256": "364a8acfc2c76eb5d7333f3afccdb8243e570bbd0b94a1bb8f2bdbeca4370ce7"
+            },
+            {
+              "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+              "sha256": "6e87fbd695c2f3af40a7551e93d5d54837ccd2590aebf0bd802fae85c5a4a2c9"
+            },
+            {
+              "path": "apps/api/src/storage/storage-records.controller.ts",
+              "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "c8a47a7bf40947bfd2c809cf864b4afcc58acf9dff4a64aca73e7e873f244bf7"
+            },
+            {
+              "path": "apps/worker/src/notifications/email-transport.ts",
+              "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-transport.ts",
+              "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+            },
+            {
+              "path": "docs/operations/notification-template-seeding.md",
+              "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
+            },
+            {
+              "path": "packages/db/src/seed/notification-templates.ts",
+              "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
+            },
+            {
+              "path": "apps/api/src/admin/verification-mode-config.ts",
+              "sha256": "f055b173066df86e7643d27b87bc8a7128c13f9f21c3648267c640daf97a576c"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "148c8ef482904560d5664e83a3f0c30766b951849d1a248c2e4a67dc5cf703a1"
+            },
+            {
+              "path": "apps/web/src/lib/entry-locale.ts",
+              "sha256": "ed767c3b75b0c5d5339160bc9a4d2fa00fe7fdbf1eaae43b2c7b4f01dd14af9b"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "deploy/staging/release.sh",
+              "sha256": "5074dbe429362b53da34e7ebb94e1590cf2770dc0203c33d0d188cdfbb49cf13"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Approved manual path verified. Staff verify/unverify/reverify locks current profile/owner, requires current crm:verify and step-up, and atomically commits status, named bilingual corrective guidance, audit, private inbox and email/SMS outbox/jobs. Concurrent/no-op changes and notice/outbox/audit failures preserve exact history and rollback boundaries.",
+            "Six current actual producer-to-worker email/SMS transport cases use controlled local endpoint fixtures for all three outcomes in both languages and current delivery preferences. Current saved catalog uses messageFa/messageEn. No configured production provider, live SMS mapping or external delivery is inferred.",
+            "Current12 production notice cases prove profile name/reason/guidance, escaped content, locale/RTL, light/dark axe, banner/inbox/history links, dismissal independent of read, mark-read navigation, refresh failure removal and malformed notice privacy. Saved locale/session fixture failures corrected with all old assertions preserved.",
+            "84 distinct current targeted cases pass across recorded runs:44 API/database including controlled producer-to-worker-to-email/SMS transports;24 settings forms;4 unchanged production mode journeys and12 corrected production notice journeys in FA/EN desktop/mobile. No failed initial suite or repeated notice cases counted.",
+            "Only one E2E shell fixture changed. Web strict types and changed-file lint/format pass; API/worker/db/UI product sources and all6232 matching compiled outputs unchanged. Prior matching production build/budget/contract evidence retained without rebuilding or running unrelated suites. One bounded review found no outstanding issue."
+          ],
+          "limitations": [
+            "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
+          ],
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance"
+        }
       },
       "requirement_override": "Use the approved manual verification path. API verification must safely report unavailable without a real configured provider. No automatic approval or live provider proof is implied."
     },
@@ -32790,7 +33028,7 @@
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
-              "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+              "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -32799,7 +33037,8 @@
           ],
           "checks": [
             "Header bell loads latest10, full center paginates/filters, empty/loading/error/retry states and FA/EN mobile layout work. Business event keys map to security/payment/contract/order/system icons and labels. Older fetches cannot overwrite newer filters/read state. Failed optimistic writes restore state, and zero unread count clears the stale cursor. Current verification-notice browser cases prove linked navigation and preserved notice behavior.",
-            "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+            "audit/evidence/step-reviews.json#R02-inbox-notification-policy",
+            "Scoped fixture renewal at df191729: verification-notices supplies saved locale and authenticated customer navigation. Its complete current12-case production desktop/mobile FA/EN file passes with all original assertions unchanged by AST proof. No app, permission, producer, transport or compiled-output changes. Initial10 fixture failures retained; two repeated initial notice passes excluded. Evidence: /Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance"
           ],
           "limitations": [
             "Global R03 theme/contrast review and finalV02 regression remain separate."
@@ -197688,6 +197927,27 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
       "release": false
+    },
+    "release-0.3-verification-configuration-acceptance": {
+      "title": "Accept versioned manual verification configuration and renew notice rollout evidence",
+      "task_keys": [
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-07.01.03"
+      ],
+      "summary": "Verification mode setting accepted; manual notifications locally verified with live bilingual template/SMS mapping rollout gate retained. Correct stale locale/session browser fixture without product changes.",
+      "validation": [
+        "Approved manual-path override retained. DISABLED/MANUAL save Draft then exact-revision Active with config_change audit/global version. API drafting/activation returns provider-unavailable503 without writes or automatic approval. Current authority/session/CSRF, activated draft basis, concurrent/stale revisions, post-write expiry and audit rollback pass.",
+        "FA/EN settings render active saved values only after hydration, describe modes, disable unavailable API, warn activation affects all profiles, bind password confirmation to exact saved revision and recover conflicts without announcing unverified receipts. Current source forms and four actual production journeys verify persistence, Escape/captured command, owned error feedback, refresh/reset and duplicate locks.",
+        "84 distinct current targeted cases pass across recorded runs:44 API/database including controlled producer-to-worker-to-email/SMS transports;24 settings forms;4 unchanged production mode journeys and12 corrected production notice journeys in FA/EN desktop/mobile. No failed initial suite or repeated notice cases counted.",
+        "Only one E2E shell fixture changed. Web strict types and changed-file lint/format pass; API/worker/db/UI product sources and all6232 matching compiled outputs unchanged. Prior matching production build/budget/contract evidence retained without rebuilding or running unrelated suites. One bounded review found no outstanding issue.",
+        "Approved manual path verified. Staff verify/unverify/reverify locks current profile/owner, requires current crm:verify and step-up, and atomically commits status, named bilingual corrective guidance, audit, private inbox and email/SMS outbox/jobs. Concurrent/no-op changes and notice/outbox/audit failures preserve exact history and rollback boundaries.",
+        "Six current actual producer-to-worker email/SMS transport cases use controlled local endpoint fixtures for all three outcomes in both languages and current delivery preferences. Current saved catalog uses messageFa/messageEn. No configured production provider, live SMS mapping or external delivery is inferred.",
+        "Current12 production notice cases prove profile name/reason/guidance, escaped content, locale/RTL, light/dark axe, banner/inbox/history links, dismissal independent of read, mark-read navigation, refresh failure removal and malformed notice privacy. Saved locale/session fixture failures corrected with all old assertions preserved.",
+        "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed.",
+        "No milestone release/version change/staging enqueue/Telegram announcement or production authorization. Release queue currently has27 completed jobs and no pending deployment; latest confirmed release remains0.1.29."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/verification-configuration-acceptance",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -197727,12 +197987,11 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-verification-configuration-acceptance",
+    "id": "release-0.3-financial-closure-release-gate",
     "release": "0.3.0",
-    "goal": "Reconcile the implemented verification configuration with approved manual-path acceptance and unavailable API-provider behavior, then inspect notification template deployment prerequisites. Reuse current accepted operational/config/notification evidence and build only demonstrated gaps. Preserve retention, reconciliation math, dev-reload, owner/release gates and consultation work.",
+    "goal": "Reconcile final-source contract/refund/invoice/receipt acceptance for the financial closure gate, reusing valid evidence for approval/rejection, cancellation, refund exhaustion/retry, dual approval and concurrent settlements. Run only uncovered or invalidated boundaries. Preserve live template/SMS mapping, retention, mathematical policy, prior owner/release gates and consultation work.",
     "task_keys": [
-      "02-auth-users-admin.md#T-07.01.01",
-      "02-auth-users-admin.md#T-07.01.03"
+      "release-readiness#R-02.01"
     ]
   },
   "launch_forecast": {

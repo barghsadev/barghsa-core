@@ -1,9 +1,11 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+import { fullNavigation } from './navigation-fixture';
 
 const profileId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 async function shell(page: Page, locale: string) {
   await page.addInitScript((lang) => {
+    localStorage.setItem('barghsa.locale', lang);
     const apply = () => {
       if (document.documentElement) {
         document.documentElement.lang = lang;
@@ -14,6 +16,17 @@ async function shell(page: Page, locale: string) {
     new MutationObserver(apply).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (r) => r.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (r) =>
+    r.fulfill({
+      json: {
+        userId: 'verification-customer',
+        isStaff: false,
+        operatingContext: 'customer',
+        requiresTosAcceptance: false,
+        navigation: { ...fullNavigation('customer'), profileId },
+      },
+    })
+  );
   await page.route('**/api/profiles', (r) =>
     r.fulfill({
       json: {
