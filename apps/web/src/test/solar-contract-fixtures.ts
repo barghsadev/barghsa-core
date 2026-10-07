@@ -58,7 +58,27 @@ export function contractReview(
       text: body.text,
       changeDescription: body.changeDescription,
       commercialValue: body.commercialValue,
-      source,
+      source: {
+        ...source,
+        checksum: 'b'.repeat(64),
+        sizeBytes: 100,
+        fileName: body.source.kind === 'template' ? 'solar.txt' : 'Signed source.pdf',
+        contentType: body.source.kind === 'template' ? 'text/plain' : 'application/pdf',
+      },
+      ...(body.source.kind === 'template'
+        ? {
+            template: {
+              name: source.label,
+              text: 'Rendered template source terms.\n\n' + body.text,
+            },
+          }
+        : {}),
+      activationRequirements: {
+        signature_required: true,
+        payment_required: false,
+        service_start_required: false,
+        revision: 1,
+      },
       invoiceLines: amounts.lines,
       totals: {
         currency: 'IRR',

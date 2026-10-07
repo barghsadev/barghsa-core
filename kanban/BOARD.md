@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 402 | Accepted with unchanged source bindings. |
-| verify | 889 | Existing work may be complete; inspect evidence before building. |
-| partial | 68 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 406 | Accepted with unchanged source bindings. |
+| verify | 886 | Existing work may be complete; inspect evidence before building. |
+| partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Implement demonstrated actualtemplate/uploaded sourceuse gap inmanual solarcontract creation,thenverify itsgeneral lifecycle,customer cancellation,internal/customer/signature/payment activation gates. Inspect existing implementations andsource-bound evidence first; preserve earlier owner/release/performance blockers.
+Inspect existing savingcustomer request/staffapprove-or-reject cancellation andorder/contract/invoice/refund consistency. Verify each exactcriterion,builddemonstrated gaps andretain financialpermissions,refunddecision/approval/stepup,atomicity,immutablehistory,retries andstockrelease boundaries. Earlierowner/release/performance gates remainopen.
 
-- `03-core-business.md#T-03.13.01.02`: Staff API: `POST /staff/solar/requests/:id/create-contract` — authorized staff manually creates a linked contract:
-- `03-core-business.md#T-03.13.02.01`: Solar contracts follow the general contract lifecycle (E-04):
-- `03-core-business.md#T-03.13.02.02`: Customer cancellation follows the general rule: customers submit cancellation request, staff resolves.
-- `03-core-business.md#T-03.13.02.03`: Contract activation requires: internal approval + customer acceptance + optionally signature + optionally payment. Unmet activation requirements visible on detail page.
+- `03-core-business.md#T-03.09.05.01`: Customer cannot cancel directly. Button/link to "Request cancellation" with reason field.
+- `03-core-business.md#T-03.09.05.02`: Staff cancellation review UI: queue of cancellation requests with order details, customer reason
+- `03-core-business.md#T-03.09.05.03`: Staff API: `POST /staff/saving/orders/:id/approve-cancellation` — sets order, contract, invoice states consistently. Determines refund amount (full/partial) and destination (wallet/external).
+- `03-core-business.md#T-03.09.05.04`: Staff API: `POST /staff/saving/orders/:id/reject-cancellation` — with explanation. Contract unchanged.
+- `03-core-business.md#T-03.09.05.05`: All state transitions must be consistent across order, contract, and invoice. Records are never deleted.
 
 ## v0.2.0: Complete customer journeys
 
@@ -404,12 +405,12 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.12.03.05` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/postal/mark-not-received` — with reason. Returns to waiting. |
 | `03-core-business.md#T-03.12.03.06` | done | Recorded batch work | Postal stage distinguishes: `waiting_for_shipment` (customer hasn't sent yet) vs `shipped` (customer sent) vs `received` (staff confirmed) vs `incomplete`/`not_received` (staff issues). |
 | `03-core-business.md#T-03.13.01.01` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/final-approve` — final approval after postal receipt. No automatic side effects — just state transition to `approved`. |
-| `03-core-business.md#T-03.13.01.02` | partial | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/create-contract` — authorized staff manually creates a linked contract: |
+| `03-core-business.md#T-03.13.01.02` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/create-contract` — authorized staff manually creates a linked contract: |
 | `03-core-business.md#T-03.13.01.03` | done | Recorded batch work | Staff API: `POST /staff/solar/requests/:id/close-no-contract` — elevated permission. Requires reason. Closes request without contract. |
 | `03-core-business.md#T-03.13.01.04` | done | Recorded batch work | Final approval and contract availability + invoice issuance notify customer. All decisions and transitions auditable. |
-| `03-core-business.md#T-03.13.02.01` | verify | Recorded batch work | Solar contracts follow the general contract lifecycle (E-04): |
-| `03-core-business.md#T-03.13.02.02` | verify | Inventory needed | Customer cancellation follows the general rule: customers submit cancellation request, staff resolves. |
-| `03-core-business.md#T-03.13.02.03` | verify | Inventory needed | Contract activation requires: internal approval + customer acceptance + optionally signature + optionally payment. Unmet activation requirements visible on detail page. |
+| `03-core-business.md#T-03.13.02.01` | done | Recorded batch work | Solar contracts follow the general contract lifecycle (E-04): |
+| `03-core-business.md#T-03.13.02.02` | done | Recorded batch work | Customer cancellation follows the general rule: customers submit cancellation request, staff resolves. |
+| `03-core-business.md#T-03.13.02.03` | done | Recorded batch work | Contract activation requires: internal approval + customer acceptance + optionally signature + optionally payment. Unmet activation requirements visible on detail page. |
 | `04-invoices-wallet-contracts.md#T-04.1.01.01` | done | Earlier acceptance_verified | Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps |
 | `04-invoices-wallet-contracts.md#T-04.1.01.02` | done | Earlier acceptance_verified | Create `invoice_state` enum in DB matching all 9 states |
 | `04-invoices-wallet-contracts.md#T-04.1.01.03` | done | Earlier acceptance_verified | Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission |

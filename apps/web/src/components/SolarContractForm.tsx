@@ -696,6 +696,26 @@ export function SolarContractForm({
                             ? formatCurrencyIrr(review.data.commercialValue.amountIrr, locale)
                             : review.data.commercialValue.description,
                       },
+                      ...(review.data.activationRequirements
+                        ? [
+                            ['signature_required', 'prerequisite.signature'],
+                            ['payment_required', 'prerequisite.initialPayment'],
+                            ['service_start_required', 'prerequisite.serviceStart'],
+                          ].map(([key, label]) => ({
+                            id: key!,
+                            label: contractCopy(label!),
+                            value: contractCopy(
+                              review.data.activationRequirements![
+                                key as
+                                  | 'signature_required'
+                                  | 'payment_required'
+                                  | 'service_start_required'
+                              ]
+                                ? 'mandatoryRequirement'
+                                : 'prerequisite.not_required'
+                            ),
+                          }))
+                        : []),
                       ...review.data.invoiceLines.map((line, index) => ({
                         id: `line-${index}`,
                         label: `${line.description} · ${line.quantity} × ${formatCurrencyIrr(line.unitPrice, locale)}`,
@@ -724,7 +744,9 @@ export function SolarContractForm({
                         <p>{copy('solarReviewOutcome')}</p>
                         <details className="mt-2">
                           <summary className="cursor-pointer">{copy('solarContractText')}</summary>
-                          <p className="mt-2 whitespace-pre-wrap break-words">{review.data.text}</p>
+                          <p className="mt-2 whitespace-pre-wrap break-words">
+                            {review.data.template?.text ?? review.data.text}
+                          </p>
                         </details>
                       </>
                     }

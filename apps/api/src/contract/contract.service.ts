@@ -46,6 +46,7 @@ import type {
 } from '../solar/solar-contract.validation.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { SolarContractSourceService } from '../solar/solar-contract-source.service.js';
 const versionDto = (row: typeof contractVersions.$inferSelect) => ({
   ...row,
   createdAt: row.createdAt.toISOString(),
@@ -55,7 +56,8 @@ const versionDto = (row: typeof contractVersions.$inferSelect) => ({
 export class ContractService {
   constructor(
     private readonly manualInvoices: ManualInvoiceService,
-    private readonly dueAtCalculation: DueAtCalculationService
+    private readonly dueAtCalculation: DueAtCalculationService,
+    private readonly solarSources: SolarContractSourceService
   ) {}
   private readonly solarReviews = new ReviewSnapshotService();
 
@@ -417,26 +419,6 @@ export class ContractService {
     if (!request) throw new NotFoundException('Solar request not found');
     if (request.status !== 'approved' || request.contract_id)
       throw new ConflictException('Solar request is not awaiting a contract');
-    const source =
-      input.source.kind === 'template'
-        ? (
-            await client.query<{ label: string; version_number: number }>(
-              `SELECT t.name AS label,v.version_number FROM contract_template_versions v
-             JOIN contract_templates t ON t.id=v.template_id
-             WHERE v.id=$1 AND t.status='active' FOR SHARE OF v,t`,
-              [input.source.templateVersionId]
-            )
-          ).rows[0]
-        : (
-            await client.query<{ label: string; version_number: null }>(
-              `SELECT original_name AS label,NULL::integer AS version_number FROM documents
-             WHERE id=$1 AND profile_id=$2 AND business_record_type='solar_request'
-               AND business_record_id=$3 AND category='document'
-               AND state IN ('Available','Approved') FOR SHARE`,
-              [input.source.documentId, input.profileId, input.requestId]
-            )
-          ).rows[0];
-    if (!source) throw new ConflictException('Select an available contract source');
     let calculation: ReturnType<typeof calculateManualInvoice>;
     try {
       calculation = calculateManualInvoice(
@@ -451,13 +433,36 @@ export class ContractService {
       if (error instanceof RangeError) throw new BadRequestException(error.message);
       throw error;
     }
+    const source = await this.solarSources.resolve(client, input, calculation.totalAmount);
+    const content = {
+      title: input.title,
+      text: input.text,
+      commercialValue: input.commercialValue,
+      solarRequestId: input.requestId,
+      solarSource: source.snapshot,
+      ...(source.rendered ? { template: source.rendered } : {}),
+    };
+    if (Buffer.byteLength(JSON.stringify(content), 'utf8') > 65_536)
+      throw new ConflictException('Contract source exceeds the version content limit');
+    const activationRequirements = (
+      await client.query<{
+        signature_required: boolean;
+        payment_required: boolean;
+        service_start_required: boolean;
+        revision: number;
+      }>(
+        "SELECT signature_required,payment_required,service_start_required,revision FROM contract_activation_rules WHERE service_type='solar' FOR SHARE"
+      )
+    ).rows[0];
+    if (!activationRequirements)
+      throw new ConflictException('Solar activation rules are unavailable');
     const due = await this.dueAtCalculation.resolve(client, {
       serviceType: duePeriodTypeForManual(),
       issuedAt: new Date(),
     });
     const subtotal = calculation.lines.reduce((sum, line) => sum + line.lineTotal, 0n);
     const vat = calculation.lines.reduce((sum, line) => sum + line.vatAmount, 0n);
-    return this.solarReviews.create(
+    const review = this.solarReviews.create(
       {
         action: 'solar.contract.create',
         profileId: input.profileId,
@@ -470,7 +475,8 @@ export class ContractService {
         text: input.text,
         changeDescription: input.changeDescription,
         commercialValue: input.commercialValue,
-        source: { ...input.source, label: source.label, versionNumber: source.version_number },
+        source: source.snapshot,
+        ...(source.rendered ? { template: source.rendered } : {}),
         invoiceLines: calculation.lines.map((line) => ({
           description: line.description,
           quantity: line.quantity,
@@ -492,9 +498,11 @@ export class ContractService {
           periodId: due.periodId,
           serviceType: due.serviceType,
         },
+        activationRequirements,
         outcome: 'draft_contract_and_unpaid_invoice' as const,
       }
     );
+    return { review, source, content };
   }
 
   async assertCanEditSolarContract(
@@ -527,7 +535,7 @@ export class ContractService {
   async reviewSolar(input: SolarContractReviewInput, actor: Actor) {
     return staffContractFinancialReview(input.profileId, actor, async (client, archived) => {
       if (archived) throw new ConflictException('Profile is archived');
-      return this.solarContractReview(client, input);
+      return (await this.solarContractReview(client, input)).review;
     });
   }
 
@@ -553,7 +561,11 @@ export class ContractService {
           if (request.status !== 'approved' || request.contract_id)
             throw new ConflictException('Solar request is not awaiting a contract');
           const { expectedReviewHash, ...reviewInput } = input;
-          const financialReview = await this.solarContractReview(client, reviewInput);
+          const {
+            review: financialReview,
+            source,
+            content,
+          } = await this.solarContractReview(client, reviewInput);
           this.solarReviews.assertConfirmed(financialReview, expectedReviewHash);
           const id = uuidv7(),
             versionId = uuidv7();
@@ -568,16 +580,19 @@ export class ContractService {
             versionId,
             1,
             {
-              content: {
-                title: input.title,
-                text: input.text,
-                commercialValue: input.commercialValue,
-                solarRequestId: input.requestId,
-                solarSource: input.source,
-              },
+              content,
               changeDescription: input.changeDescription,
             },
             actor
+          );
+          await this.solarSources.attach(
+            client,
+            source,
+            id,
+            versionId,
+            input.profileId,
+            actor.userId,
+            ip
           );
           await auditContract(client, id, versionId, 'contract.created', actor, ip, {
             entity: 'contract',
@@ -625,6 +640,10 @@ export class ContractService {
             issued.due.serviceType !== financialReview.data.dueRule.serviceType
           )
             throw new ConflictException('Invoice changed since the solar contract review');
+          await this.activationContext(client, versionId, {
+            initialInvoiceId: invoice.invoiceId,
+            serviceStartsAt: null,
+          });
           await client.query(
             `UPDATE solar_construction_requests
            SET contract_id=$2,status='contract_created',updated_at=NOW() WHERE id=$1`,

@@ -287,6 +287,11 @@ for (const [locale, theme] of [
       await expect(dialog).toContainText('7 ' + copy('solarReviewDaysAfterIssue'));
       await dialog.getByText(copy('solarContractText'), { exact: true }).click();
       await expect(dialog).toContainText(terms);
+      if (kind === 'template')
+        await expect(dialog).toContainText('Rendered template source terms.');
+      await expect(dialog).toContainText(contractText('prerequisite.signature', locale));
+      await expect(dialog).toContainText(contractText('mandatoryRequirement', locale));
+
       await inspect(page, dialog, '[role="dialog"]', confirm());
       await outcomeCapture(
         page,

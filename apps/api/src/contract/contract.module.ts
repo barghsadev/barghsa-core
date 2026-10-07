@@ -31,6 +31,7 @@ import { Module } from '@nestjs/common';
 import { SessionModule } from '../session/session.module.js';
 import { ContractController } from './contract.controller.js';
 import { ContractService } from './contract.service.js';
+import { SolarContractSourceService } from '../solar/solar-contract-source.service.js';
 import { ContractPdfService } from './contract-pdf.service.js';
 import { DocumentModule } from '../documents/document.module.js';
 @Module({
@@ -54,6 +55,7 @@ import { DocumentModule } from '../documents/document.module.js';
     ContractCancellationRequestService,
     ContractCancellationService,
     ContractService,
+    SolarContractSourceService,
     ContractPdfService,
     ContractReviewService,
     ContractSignatureService,

@@ -49,7 +49,7 @@ function send(path: string, method = 'GET', body?: unknown, user = 'request-lega
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
 }
-async function fixture() {
+async function fixture(serviceType = 'electricity') {
   const owner = await login(randomUUID()),
     profile = randomUUID();
   await http.pool.query(
@@ -58,7 +58,7 @@ async function fixture() {
   );
   const response = await send('admin/contracts', 'POST', {
     profileId: profile,
-    serviceType: 'electricity',
+    serviceType,
     content: { price: '9007199254740993' },
     changeDescription: 'Initial',
     idempotencyKey: randomUUID(),
@@ -514,4 +514,35 @@ it('reports indexed refund fields while preserving immutable version and fingerp
       )
     ).rows[0].n
   ).toBe(0);
+});
+
+it('keeps a solar cancellation request advisory until staff resolves its bound intent', async () => {
+  const f = await fixture('solar');
+  await publish(f);
+  const response = await submit(f);
+  expect(response.status, await response.clone().text()).toBe(201);
+  const request = (await response.json()) as RequestDto;
+  expect(request.status).toBe('Pending');
+  expect(
+    (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [f.row.id])).rows[0].state
+  ).toBe('AwaitingCustomerAcceptance');
+  expect((await customer(f, '/cancellation-requests')).status).toBe(200);
+  const intentResponse = await prepare(f, request.id);
+  expect(intentResponse.status, await intentResponse.clone().text()).toBe(201);
+  const intent = (await intentResponse.json()) as Intent;
+  const result = await execute(f, intent.id);
+  expect(result.status, await result.clone().text()).toBe(201);
+  expect(await result.json()).toMatchObject({ state: 'Cancelled', refunds: [] });
+  expect(await (await customer(f, '/cancellation-requests')).json()).toMatchObject({
+    request: { status: 'Fulfilled', resolutionReason: 'Approved customer request' },
+    canRequest: false,
+  });
+  await expectCoreAudit(http.pool, 'contract.cancellation_request_fulfilled', request.id, {
+    entity: 'contract_cancellation_request',
+    fromState: 'Pending',
+    toState: 'Fulfilled',
+    reason: 'Approved customer request',
+    actor: 'request-legal',
+    context: 'staff',
+  });
 });

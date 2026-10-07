@@ -259,3 +259,35 @@ it('rejects malformed/duplicate private option identities', () => {
     })
   ).toBeNull();
 });
+
+it.each([
+  [
+    'checksum',
+    (r: ReturnType<typeof contractReview>) => {
+      r.data.source.checksum = 'PRIVATE';
+    },
+  ],
+  [
+    'source size',
+    (r: ReturnType<typeof contractReview>) => {
+      r.data.source.sizeBytes = 0;
+    },
+  ],
+  [
+    'rendered template',
+    (r: ReturnType<typeof contractReview>) => {
+      if (r.data.template) r.data.template.name = 'Different source';
+    },
+  ],
+  [
+    'activation revision',
+    (r: ReturnType<typeof contractReview>) => {
+      r.data.activationRequirements.revision = 0;
+    },
+  ],
+] as const)('rejects malformed source review metadata: %s', (_name, change) => {
+  const body = solarContractBody(contractDraft(), solarProfileId, solarCommandKey),
+    review = contractReview(body);
+  change(review);
+  expect(matchedSolarContractReview(review, solarRequestId, body, contractOptions)).toBeNull();
+});

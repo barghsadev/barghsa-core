@@ -67,7 +67,21 @@ export interface SolarContractReview {
     text: string;
     changeDescription: string;
     commercialValue: SolarContractBody['commercialValue'];
-    source: SolarContractBody['source'] & { label: string; versionNumber: number | null };
+    source: SolarContractBody['source'] & {
+      label: string;
+      versionNumber: number | null;
+      checksum?: string;
+      sizeBytes?: number;
+      fileName?: string;
+      contentType?: string;
+    };
+    template?: { name: string; text: string };
+    activationRequirements?: {
+      signature_required: boolean;
+      payment_required: boolean;
+      service_start_required: boolean;
+      revision: number;
+    };
     invoiceLines: Array<
       SolarContractBody['invoiceLines'][number] & { lineTotal: string; vatAmount: string }
     >;
@@ -239,10 +253,48 @@ export function matchedSolarContractReview(
       ? data.commercialValue.amountIrr !== body.commercialValue.amountIrr
       : data.commercialValue.description !== body.commercialValue.description) ||
     Object.keys(data.commercialValue).length !== 2 ||
-    Object.keys(data.source).length !== 4 ||
+    ![4, 8].includes(Object.keys(data.source).length) ||
     Object.entries(source).some(
       ([key, expected]) => data.source && (data.source as Record<string, unknown>)[key] !== expected
     )
+  )
+    return null;
+  if (
+    Object.keys(data.source).length === 8 &&
+    (typeof data.source.checksum !== 'string' ||
+      !/^[a-f0-9]{64}$/.test(data.source.checksum) ||
+      !integer(
+        data.source.sizeBytes,
+        1,
+        (body.source.kind === 'template' ? 10 : 50) * 1024 * 1024
+      ) ||
+      typeof data.source.fileName !== 'string' ||
+      !data.source.fileName.trim() ||
+      data.source.fileName.length > 255 ||
+      typeof data.source.contentType !== 'string' ||
+      !data.source.contentType.trim() ||
+      data.source.contentType.length > 255)
+  )
+    return null;
+  if (
+    data.template !== undefined &&
+    (body.source.kind !== 'template' ||
+      !record(data.template) ||
+      Object.keys(data.template).length !== 2 ||
+      data.template.name !== data.source.label ||
+      typeof data.template.text !== 'string' ||
+      !data.template.text.trim() ||
+      new TextEncoder().encode(data.template.text).length > 65_536)
+  )
+    return null;
+  if (
+    data.activationRequirements !== undefined &&
+    (!record(data.activationRequirements) ||
+      Object.keys(data.activationRequirements).length !== 4 ||
+      typeof data.activationRequirements.signature_required !== 'boolean' ||
+      typeof data.activationRequirements.payment_required !== 'boolean' ||
+      typeof data.activationRequirements.service_start_required !== 'boolean' ||
+      !integer(data.activationRequirements.revision, 1, 2_147_483_647))
   )
     return null;
   const amounts = solarContractAmounts(body.invoiceLines);

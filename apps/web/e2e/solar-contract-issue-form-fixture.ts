@@ -85,6 +85,24 @@ export function solarContractReview(id: string, body: SolarCommand) {
             ? 'Solar construction template'
             : 'signed-solar-terms.pdf',
         versionNumber: body.source.kind === 'template' ? 3 : null,
+        checksum: 'b'.repeat(64),
+        sizeBytes: 100,
+        fileName: body.source.kind === 'template' ? 'solar.txt' : 'signed-solar-terms.pdf',
+        contentType: body.source.kind === 'template' ? 'text/plain' : 'application/pdf',
+      },
+      ...(body.source.kind === 'template'
+        ? {
+            template: {
+              name: 'Solar construction template',
+              text: 'Rendered template source terms.\n\n' + body.text,
+            },
+          }
+        : {}),
+      activationRequirements: {
+        signature_required: true,
+        payment_required: false,
+        service_start_required: false,
+        revision: 1,
       },
       invoiceLines,
       totals: {

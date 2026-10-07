@@ -91,7 +91,7 @@ function fixture(action: Action) {
   h.stepUp.mockImplementation(async () => {
     sequence.push('stepUp');
   });
-  const service = new ContractService({} as never, {} as never);
+  const service = new ContractService({} as never, {} as never, {} as never);
   const get = vi
     .spyOn(service, 'get')
     .mockResolvedValue({ original: 'must not be inferred from GET' } as never);

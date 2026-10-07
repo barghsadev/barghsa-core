@@ -3,8 +3,11 @@ import {
   expectSolarPostalAudit,
   expectSolarAuditRollback,
 } from '../test/solar-audit.js';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
+import { renderContractPdf } from '../contract/contract-pdf.js';
+import type { ContractService } from '../contract/contract.service.js';
 import { createRequire } from 'node:module';
+import { fork } from 'node:child_process';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
@@ -12,12 +15,18 @@ import { startHttpFixture } from '../test/http-fixture.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
-const { S3Client, CreateBucketCommand } = requireShared('@aws-sdk/client-s3') as {
+const { S3Client, CreateBucketCommand, PutObjectCommand } = requireShared('@aws-sdk/client-s3') as {
   S3Client: new (config: Record<string, unknown>) => {
     send(command: unknown): Promise<unknown>;
     destroy(): void;
   };
   CreateBucketCommand: new (input: { Bucket: string }) => unknown;
+  PutObjectCommand: new (input: {
+    Bucket: string;
+    Key: string;
+    Body: Buffer;
+    ContentType: string;
+  }) => unknown;
 };
 const image = Buffer.from(
   '89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b49444154789c636000020000050001a5f645400000000049454e44ae426082',
@@ -37,6 +46,38 @@ function send(user: string, path: string, method = 'GET', body?: unknown) {
     headers: headers[user]!,
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
+}
+async function storeTemplate(
+  versionId: string,
+  content = 'Solar terms for {{customerName}} dated {{date}}; deposit {{amount}} IRR.'
+) {
+  const bytes = Buffer.from(content);
+  const key = `contract-templates/${versionId}.txt`;
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: 'test-evidence',
+      Key: key,
+      Body: bytes,
+      ContentType: 'text/plain',
+    })
+  );
+  await http.pool.query(
+    `INSERT INTO storage_records(storage_key,status,file_size,content_type,category,file_name,
+    signed_at,signed_by,metadata) VALUES($1,'immutable',$2,'text/plain','document','solar.txt',NOW(),'postal-reviewer',$3::jsonb)`,
+    [
+      key,
+      bytes.length,
+      JSON.stringify({
+        purpose: 'contract_template',
+        sha256: createHash('sha256').update(bytes).digest('hex'),
+      }),
+    ]
+  );
+  await http.pool.query(
+    'UPDATE contract_template_versions SET file_size=$2,content_type=$3 WHERE id=$1',
+    [versionId, bytes.length, 'text/plain']
+  );
+  return bytes;
 }
 const staleReviewHash = '0'.repeat(64);
 async function reviewFinal(
@@ -156,7 +197,7 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!, endpoint);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
-     VALUES('postal-review-staff','Postal reviewer','Test reviewer','["orders:read","orders:write","contracts:write","invoices:write","admin:catalogue:edit"]')`
+     VALUES('postal-review-staff','Postal reviewer','Test reviewer','["orders:read","orders:write","contracts:write","contracts:read","invoices:write","admin:catalogue:edit"]')`
   );
   for (const [user, staff] of [
     ['postal-buyer', false],
@@ -500,6 +541,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
      VALUES($1,$2,1,$3,'solar.txt','postal-reviewer')`,
     [versionId, templateId, `contract-templates/${versionId}.txt`]
   );
+  const templateBytes = await storeTemplate(versionId);
   const input = {
     profileId,
     idempotencyKey: randomUUID(),
@@ -875,6 +917,28 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       })
     ).status
   ).toBe(409);
+  const alteredTemplate = Buffer.from(templateBytes);
+  alteredTemplate[0] = alteredTemplate[0] === 65 ? 66 : 65;
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: 'test-evidence',
+      Key: `contract-templates/${versionId}.txt`,
+      Body: alteredTemplate,
+      ContentType: 'text/plain',
+    })
+  );
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command))
+      .status
+  ).toBe(409);
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: 'test-evidence',
+      Key: `contract-templates/${versionId}.txt`,
+      Body: templateBytes,
+      ContentType: 'text/plain',
+    })
+  );
   const contract = await send(
     'postal-reviewer',
     `admin/solar/requests/${id}/create-contract`,
@@ -888,6 +952,44 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     status: string;
   };
   expect(result.status).toBe('contract_created');
+  const sourceAttachment = (
+    await http.pool.query(
+      `SELECT d.*,v.content FROM contract_documents cd
+    JOIN documents d ON d.id=cd.document_id JOIN contract_versions v ON v.id=cd.contract_version_id
+    WHERE cd.contract_id=$1 AND cd.role='original'`,
+      [result.contractId]
+    )
+  ).rows;
+  expect(sourceAttachment).toHaveLength(1);
+  expect(sourceAttachment[0]).toMatchObject({
+    state: 'SubmittedForReview',
+    scan_state: 'Available',
+    detected_mime: 'application/pdf',
+    content: {
+      solarSource: {
+        kind: 'template',
+        templateVersionId: versionId,
+        checksum: createHash('sha256').update(templateBytes).digest('hex'),
+      },
+      template: { text: expect.stringContaining('deposit 100000 IRR.') },
+    },
+  });
+  expect(sourceAttachment[0].content.template.text).toContain(input.text);
+  expect(sourceAttachment[0].content.template.text).not.toContain('{{');
+  expect((await send('postal-buyer', `documents/${sourceAttachment[0].id}/download`)).status).toBe(
+    404
+  );
+  const sourceDownload = await send(
+    'postal-reviewer',
+    `admin/documents/${sourceAttachment[0].id}/download`
+  );
+  expect(sourceDownload.status, http.logs()).toBe(200);
+  const sourceFile = await fetch(((await sourceDownload.json()) as { url: string }).url);
+  expect(sourceFile.status).toBe(200);
+  const pdf = Buffer.from(await sourceFile.arrayBuffer());
+  expect(pdf.subarray(0, 5).toString()).toBe('%PDF-');
+  expect(createHash('sha256').update(pdf).digest('hex')).toBe(sourceAttachment[0].checksum);
+
   expect(result.invoiceIds).toHaveLength(1);
   expect(Object.keys(result).sort()).toEqual(['contractId', 'invoiceIds', 'status']);
   expect(result.contractId).toMatch(
@@ -1905,6 +2007,7 @@ it('keeps the specified staff postal and final routes bound to current shipment 
     "INSERT INTO contract_template_versions(id,template_id,version_number,storage_key,file_name,created_by) VALUES($1,$2,1,$3,'solar.txt','postal-reviewer')",
     [version, template, `contract-templates/${version}.txt`]
   );
+  await storeTemplate(version);
   const input = {
     profileId,
     idempotencyKey: randomUUID(),
@@ -1931,7 +2034,7 @@ it('keeps the specified staff postal and final routes bound to current shipment 
   expect((await send('postal-buyer', `${base}/create-contract`, 'POST', body)).status).toBe(403);
   const creation = await send('postal-reviewer', `${base}/create-contract`, 'POST', body);
   expect(creation.status, http.logs()).toBe(200);
-  const receipt = await creation.json();
+  const receipt = (await creation.json()) as { contractId: string; invoiceIds: string[] };
   expect(receipt).toMatchObject({
     status: 'contract_created',
     contractId: expect.any(String),
@@ -1970,3 +2073,352 @@ it('keeps the specified staff postal and final routes bound to current shipment 
     invoices: before.invoices + 1,
   });
 }, 90_000);
+
+it('copies an owned uploaded source immutably with audit rollback and an exact replay', async () => {
+  const target = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO solar_construction_requests
+    (id,profile_id,submitted_by,submission_key,status,building_type,grid_type,property_form,
+     structural_frame,building_completion_date,agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at)
+    SELECT uuid_generate_v7(),profile_id,submitted_by,uuid_generate_v7(),'uploading_documents',
+      building_type,grid_type,property_form,structural_frame,building_completion_date,
+      agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at
+    FROM solar_construction_requests WHERE id=$1 RETURNING id`,
+      [requestId]
+    )
+  ).rows[0]!.id;
+  const bytes = await renderContractPdf({
+    contractNumber: '123',
+    versionNumber: 1,
+    templateName: 'Uploaded solar terms',
+    text: 'Retained uploaded agreement bytes',
+    createdAt: new Date('2026-01-02T00:00:00Z'),
+  });
+  const create = await send('postal-buyer', 'documents', 'POST', {
+    profileId,
+    businessRecordType: 'solar_request',
+    businessRecordId: target,
+    category: 'document',
+    fileName: 'solar-agreement.pdf',
+    contentType: 'application/pdf',
+    fileSize: bytes.length,
+    idempotencyKey: randomUUID(),
+  });
+  expect(create.status, http.logs()).toBe(201);
+  const document = (await create.json()) as {
+    document: { id: string };
+    upload: { presignedUrl: string; headers: Record<string, string> };
+  };
+  expect(
+    (
+      await fetch(document.upload.presignedUrl, {
+        method: 'PUT',
+        headers: { ...document.upload.headers, 'Content-Type': 'application/pdf' },
+        body: bytes,
+      })
+    ).status
+  ).toBe(200);
+  const confirmed = await send(
+    'postal-buyer',
+    `documents/${document.document.id}/confirm`,
+    'POST',
+    {
+      expectedRevision: 1,
+      idempotencyKey: randomUUID(),
+    }
+  );
+  expect(confirmed.status, http.logs()).toBe(200);
+  expect(await confirmed.json()).toMatchObject({ state: 'Available' });
+  await http.pool.query("UPDATE solar_construction_requests SET status='approved' WHERE id=$1", [
+    target,
+  ]);
+  await http.pool.query(
+    "UPDATE contract_activation_rules SET payment_required=true,revision=revision+1 WHERE service_type='solar'"
+  );
+  const base = `staff/solar/requests/${target}/create-contract`;
+  const input = {
+    profileId,
+    idempotencyKey: randomUUID(),
+    title: 'Uploaded terms contract',
+    text: 'Staff supplemental terms',
+    changeDescription: 'Initial uploaded-source draft',
+    commercialValue: { kind: 'fixed', amountIrr: '100000' },
+    source: { kind: 'document', documentId: document.document.id },
+    invoiceLines: [
+      {
+        description: 'Deposit',
+        quantity: 1,
+        unitPrice: '100000',
+        vatRate: 0,
+        isTaxable: false,
+      },
+    ],
+  };
+  const preview = await send('postal-reviewer', base + '/review', 'POST', input);
+  expect(preview.status, http.logs()).toBe(200);
+  const review = (await preview.json()) as Awaited<ReturnType<ContractService['reviewSolar']>>;
+  expect(review.data.source).toMatchObject({
+    kind: 'document',
+    documentId: document.document.id,
+    checksum: createHash('sha256').update(bytes).digest('hex'),
+    sizeBytes: bytes.length,
+  });
+  expect(review.data.activationRequirements.payment_required).toBe(true);
+  const command = { ...input, expectedReviewHash: review.hash };
+  const effects = async () => ({
+    request: (
+      await http.pool.query(
+        'SELECT status,contract_id FROM solar_construction_requests WHERE id=$1',
+        [target]
+      )
+    ).rows,
+    contracts: (await http.pool.query('SELECT id FROM contracts ORDER BY id')).rows,
+    invoices: (await http.pool.query('SELECT id FROM invoices ORDER BY id')).rows,
+    documents: (await http.pool.query('SELECT id,state,checksum FROM documents ORDER BY id')).rows,
+    notices: (await http.pool.query('SELECT id FROM in_app_notifications ORDER BY id')).rows,
+    audits: (await http.pool.query('SELECT id FROM audit_log ORDER BY id')).rows,
+  });
+  const before = await effects();
+  await expectSolarAuditRollback(http.pool, 'solar.contract.created', () =>
+    send('postal-reviewer', base, 'POST', command)
+  );
+  expect(await effects()).toEqual(before);
+  const retained = (
+    await http.pool.query(
+      `SELECT status,metadata FROM storage_records
+    WHERE metadata->>'purpose'='solar_contract_source' AND metadata->'selectedSource'->>'documentId'=$1`,
+      [document.document.id]
+    )
+  ).rows;
+  expect(retained.length).toBeGreaterThan(0);
+  expect(
+    retained.every((row) => row.status === 'removed' && row.metadata.deletionRequested === true)
+  ).toBe(true);
+  const creation = await send('postal-reviewer', base, 'POST', command);
+  expect(creation.status, http.logs()).toBe(200);
+  const receipt = (await creation.json()) as { contractId: string; invoiceIds: string[] };
+  expect(
+    (
+      await http.pool.query(
+        `SELECT ar.initial_invoice_id,ar.payment_required FROM contract_activation_requirements ar
+    JOIN contracts c ON c.current_version_id=ar.version_id WHERE c.id=$1`,
+        [receipt.contractId]
+      )
+    ).rows[0]
+  ).toMatchObject({ initial_invoice_id: receipt.invoiceIds[0], payment_required: true });
+  const activation = await send(
+    'postal-reviewer',
+    `admin/contracts/${receipt.contractId}/activation`
+  );
+  expect(activation.status, http.logs()).toBe(200);
+  expect(await activation.json()).toMatchObject({
+    ready: false,
+    checks: expect.arrayContaining([
+      expect.objectContaining({ key: 'initialPayment', status: 'unmet' }),
+      expect.objectContaining({ key: 'staffApproval', status: 'unmet' }),
+    ]),
+  });
+  const copy = (
+    await http.pool.query(
+      `SELECT d.*,s.metadata FROM contract_documents cd
+    JOIN documents d ON d.id=cd.document_id JOIN storage_records s ON s.storage_key=d.storage_key
+    WHERE cd.contract_id=$1`,
+      [receipt.contractId]
+    )
+  ).rows;
+  expect(copy).toHaveLength(1);
+  expect(copy[0]).toMatchObject({
+    business_record_type: 'contract',
+    original_name: 'solar-agreement.pdf',
+    state: 'SubmittedForReview',
+    checksum: createHash('sha256').update(bytes).digest('hex'),
+    metadata: { selectedSource: { documentId: document.document.id } },
+  });
+  const downloaded = await send('postal-reviewer', `admin/documents/${copy[0].id}/download`);
+  expect(downloaded.status, http.logs()).toBe(200);
+  expect(
+    Buffer.from(
+      await (await fetch(((await downloaded.json()) as { url: string }).url)).arrayBuffer()
+    )
+  ).toEqual(bytes);
+  const after = await effects();
+  const replay = await send('postal-reviewer', base, 'POST', command);
+  expect(replay.status, http.logs()).toBe(200);
+  expect(await replay.json()).toEqual(receipt);
+  expect(await effects()).toEqual(after);
+  expect(
+    (
+      await http.pool.query('SELECT state,business_record_id FROM documents WHERE id=$1', [
+        document.document.id,
+      ])
+    ).rows[0]
+  ).toMatchObject({ state: 'Available', business_record_id: target });
+}, 90000);
+
+it('keeps generated solar originals pending with a durable job when scanning is configured', async () => {
+  const child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
+    silent: true,
+    env: {
+      ...process.env,
+      DATABASE_URL: http.pool.options.connectionString!,
+      PGDIRECT_URL: http.pool.options.connectionString!,
+      NODE_ENV: 'test',
+      APP_PUBLIC_URL: 'https://app.example.test',
+      DOCUMENT_CLAMAV_HOST: 'test-clamav.invalid',
+      AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only',
+      STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
+      AI_MODEL_ENCRYPTION_KEY: 'http-fixture-ai-key-only',
+      REDIS_URL: '',
+      REDIS_HOST: '',
+      S3_BUCKET: 'test-evidence',
+      S3_REGION: 'us-east-1',
+      S3_PRIVATE_ENDPOINT: '',
+      S3_PUBLIC_ENDPOINT: '',
+      S3_ENDPOINT: `http://${minio.getHost()}:${minio.getMappedPort(9000)}`,
+      S3_FORCE_PATH_STYLE: 'true',
+      S3_ACCESS_KEY_ID: 'test-only-key',
+      S3_SECRET_ACCESS_KEY: 'test-only-secret',
+    },
+  });
+  let output = '';
+  for (const stream of [child.stdout, child.stderr])
+    stream?.on('data', (data) => {
+      output = (output + String(data)).slice(-10000);
+    });
+  try {
+    const port = await new Promise<number>((done, reject) => {
+      const timer = setTimeout(() => reject(new Error('Scan fixture startup: ' + output)), 20000);
+      child.once('message', (message) => {
+        clearTimeout(timer);
+        done((message as { port: number }).port);
+      });
+      child.once('error', (error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+      child.once('exit', (code) => {
+        clearTimeout(timer);
+        reject(new Error('Scan fixture exited ' + code + ': ' + output));
+      });
+    });
+    const target = (
+      await http.pool.query<{ id: string }>(
+        `INSERT INTO solar_construction_requests
+      (id,profile_id,submitted_by,submission_key,status,building_type,grid_type,property_form,
+       structural_frame,building_completion_date,agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at)
+      SELECT uuid_generate_v7(),profile_id,submitted_by,uuid_generate_v7(),'approved',building_type,grid_type,
+       property_form,structural_frame,building_completion_date,agreement_accepted,agreement_version,
+       agreement_snapshot,agreement_accepted_at FROM solar_construction_requests WHERE id=$1 RETURNING id`,
+        [requestId]
+      )
+    ).rows[0]!.id;
+    const template = randomUUID(),
+      version = randomUUID();
+    await http.pool.query(
+      "INSERT INTO contract_templates(id,name,status,created_by) VALUES($1,'Scan template','active','postal-reviewer')",
+      [template]
+    );
+    await http.pool.query(
+      "INSERT INTO contract_template_versions(id,template_id,version_number,storage_key,file_name,created_by) VALUES($1,$2,1,$3,'solar.txt','postal-reviewer')",
+      [version, template, `contract-templates/${version}.txt`]
+    );
+    await storeTemplate(version);
+    const base = `http://127.0.0.1:${port}/api/staff/solar/requests/${target}/create-contract`;
+    const input = {
+      profileId,
+      idempotencyKey: randomUUID(),
+      title: 'Scanned solar original',
+      text: 'Scan-protected terms',
+      changeDescription: 'Initial scan-protected draft',
+      commercialValue: { kind: 'fixed', amountIrr: '100000' },
+      source: { kind: 'template', templateVersionId: version },
+      invoiceLines: [
+        {
+          description: 'Deposit',
+          quantity: 1,
+          unitPrice: '100000',
+          vatRate: 0,
+          isTaxable: false,
+        },
+      ],
+    };
+    const preview = await fetch(base + '/review', {
+      method: 'POST',
+      headers: headers['postal-reviewer']!,
+      body: JSON.stringify(input),
+    });
+    expect(preview.status, output).toBe(200);
+    const command = {
+      ...input,
+      expectedReviewHash: ((await preview.json()) as { hash: string }).hash,
+    };
+    const create = await fetch(base, {
+      method: 'POST',
+      headers: headers['postal-reviewer']!,
+      body: JSON.stringify(command),
+    });
+    expect(create.status, output).toBe(200);
+    const result = (await create.json()) as { contractId: string };
+    const documents = (
+      await http.pool.query(
+        `SELECT d.* FROM contract_documents cd JOIN documents d ON d.id=cd.document_id
+      WHERE cd.contract_id=$1`,
+        [result.contractId]
+      )
+    ).rows;
+    expect(documents).toHaveLength(1);
+    expect(documents[0]).toMatchObject({
+      state: 'PendingScan',
+      scan_state: 'Pending',
+      scan_skipped_reason: null,
+    });
+    expect(
+      (
+        await http.pool.query(
+          'SELECT document_id,attempts,verdict,completed_at FROM document_scan_jobs WHERE document_id=$1',
+          [documents[0].id]
+        )
+      ).rows
+    ).toEqual([{ document_id: documents[0].id, attempts: 0, verdict: null, completed_at: null }]);
+    const download = await fetch(
+      `http://127.0.0.1:${port}/api/admin/documents/${documents[0].id}/download`,
+      {
+        headers: headers['postal-reviewer']!,
+      }
+    );
+    expect(download.status, output).toBe(409);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT state FROM document_events WHERE document_id=$1 ORDER BY revision',
+          [documents[0].id]
+        )
+      ).rows.map((row) => row.state)
+    ).not.toContain('SubmittedForReview');
+    const replay = await fetch(base, {
+      method: 'POST',
+      headers: headers['postal-reviewer']!,
+      body: JSON.stringify(command),
+    });
+    expect(replay.status, output).toBe(200);
+    expect(await replay.json()).toEqual(result);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT count(*)::int AS n FROM document_scan_jobs WHERE document_id=$1',
+          [documents[0].id]
+        )
+      ).rows[0].n
+    ).toBe(1);
+  } finally {
+    if (child.exitCode === null && child.signalCode === null)
+      await new Promise<void>((done) => {
+        const timer = setTimeout(() => child.kill('SIGKILL'), 5000);
+        child.once('exit', () => {
+          clearTimeout(timer);
+          done();
+        });
+        child.send('stop');
+      });
+  }
+}, 90000);

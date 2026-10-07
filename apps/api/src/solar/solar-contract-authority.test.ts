@@ -68,7 +68,11 @@ function fixture() {
   });
   const createManualInvoice = vi.fn(),
     resolve = vi.fn();
-  const service = new ContractService({ createManualInvoice } as never, { resolve } as never);
+  const service = new ContractService(
+    { createManualInvoice } as never,
+    { resolve } as never,
+    {} as never
+  );
   return { state, order, client, service, createManualInvoice, resolve };
 }
 function noEffects(f: ReturnType<typeof fixture>) {
