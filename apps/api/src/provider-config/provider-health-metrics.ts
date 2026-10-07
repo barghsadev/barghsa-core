@@ -10,6 +10,7 @@ export interface ProviderHealthMetrics {
   p99LatencyMs: number | null;
   queueDepth: number;
   oldestQueuedAt: Date | null;
+  lastSuccessfulTestAt?: Date | null;
 }
 
 type MetricsRow = ProviderHealthMetrics & { providerId: string };
@@ -31,9 +32,19 @@ export async function readProviderHealthMetrics(
          ROUND(percentile_cont(0.99) WITHIN GROUP (ORDER BY latency_ms))::int AS "p99LatencyMs"
        FROM notification_delivery_log
        WHERE provider_id = ANY($1::uuid[])
+         AND channel = $2
          AND created_at >= NOW() - INTERVAL '1 hour'
          AND status IN ('delivered','failed','unknown')
        GROUP BY provider_id
+     ), successful_tests AS (
+       SELECT data->>'providerId' AS provider_id, MAX(created_at) AS tested_at
+       FROM audit_log
+       CROSS JOIN LATERAL (
+         SELECT CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END AS data
+       ) safe
+       WHERE event=$3 AND data->>'lastTestStatus'='passed'
+         AND data->>'providerId'=ANY($1::text[])
+       GROUP BY data->>'providerId'
      ), queue AS (
        SELECT COUNT(*)::int AS "queueDepth", MIN(created_at) AS "oldestQueuedAt"
        FROM notification_job
@@ -44,11 +55,13 @@ export async function readProviderHealthMetrics(
        COALESCE(attempts."failureCount", 0) AS "failureCount",
        attempts."averageLatencyMs", attempts."p50LatencyMs",
        attempts."p95LatencyMs", attempts."p99LatencyMs",
-       queue."queueDepth", queue."oldestQueuedAt"
+       queue."queueDepth", queue."oldestQueuedAt",
+       successful_tests.tested_at AS "lastSuccessfulTestAt"
      FROM unnest($1::uuid[]) AS providers(id)
      LEFT JOIN attempts ON attempts.provider_id = providers.id
+     LEFT JOIN successful_tests ON successful_tests.provider_id=providers.id::text
      CROSS JOIN queue`,
-    [providerIds, channel]
+    [providerIds, channel, `${channel}_provider_tested`]
   );
   return new Map(
     (result.rows as MetricsRow[]).map(({ providerId, ...metrics }) => [providerId, metrics])

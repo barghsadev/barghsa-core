@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 461 | Accepted with unchanged source bindings. |
-| verify | 837 | Existing work may be complete; inspect evidence before building. |
-| partial | 63 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 464 | Accepted with unchanged source bindings. |
+| verify | 832 | Existing work may be complete; inspect evidence before building. |
+| partial | 65 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,13 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current provider error classification, circuit breaker, health dashboard, runbooks and test fakes together. Reuse current matching adapter/authority/metrics evidence, build only demonstrated gaps, retain live-provider/ops receipt blockers and pending SMS dispositions.
+Mark controlled invalid email/SMS destination/message/template-data preflight errors permanent before I/O. Retain unknown external receipt reconciliation, typed provider health, quotas/circuits and native financial/auth delivery boundaries. Pending permanent-pause and SMS dispositions stay open.
 
 - `05-notifications-documents-ai.md#T-05.08.01`: Error classification utility
-- `05-notifications-documents-ai.md#T-05.08.02`: Circuit breaker implementation
-- `05-notifications-documents-ai.md#T-05.08.03`: Provider health dashboard
-- `05-notifications-documents-ai.md#T-05.08.04`: Provider runbook documentation
-- `05-notifications-documents-ai.md#T-05.08.05`: Provider test fakes & contract tests
 
 ## v0.2.0: Complete customer journeys
 
@@ -569,11 +565,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.07.03` | done | Recorded batch work | SMS.ir adapter |
 | `05-notifications-documents-ai.md#T-05.07.04` | partial | Recorded batch work | Credit monitoring |
 | `05-notifications-documents-ai.md#T-05.07.05` | partial | Recorded batch work | SMS.ir admin UI |
-| `05-notifications-documents-ai.md#T-05.08.01` | verify | Recorded batch work | Error classification utility |
-| `05-notifications-documents-ai.md#T-05.08.02` | verify | Recorded batch work | Circuit breaker implementation |
-| `05-notifications-documents-ai.md#T-05.08.03` | verify | Recorded batch work | Provider health dashboard |
-| `05-notifications-documents-ai.md#T-05.08.04` | verify | Recorded batch work | Provider runbook documentation |
-| `05-notifications-documents-ai.md#T-05.08.05` | verify | Recorded batch work | Provider test fakes & contract tests |
+| `05-notifications-documents-ai.md#T-05.08.01` | partial | Recorded batch work | Error classification utility |
+| `05-notifications-documents-ai.md#T-05.08.02` | partial | Recorded batch work | Circuit breaker implementation |
+| `05-notifications-documents-ai.md#T-05.08.03` | done | Recorded batch work | Provider health dashboard |
+| `05-notifications-documents-ai.md#T-05.08.04` | done | Recorded batch work | Provider runbook documentation |
+| `05-notifications-documents-ai.md#T-05.08.05` | done | Recorded batch work | Provider test fakes & contract tests |
 | `05-notifications-documents-ai.md#T-05.09.01` | verify | Inventory needed | File storage abstraction interface |
 | `05-notifications-documents-ai.md#T-05.09.02` | verify | Inventory needed | S3 adapter |
 | `05-notifications-documents-ai.md#T-05.09.03` | verify | Recorded batch work | Storage config entity & admin UI |

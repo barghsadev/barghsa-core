@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   ProviderStepUpError,
+  readHealthMetrics,
   activateProvider,
   createProvider,
   disableProvider,
@@ -148,3 +149,23 @@ it.each([401, 403])(
     await expect(activateProvider(row.id)).rejects.toMatchObject({ denied: true });
   }
 );
+
+it('validates the last successful test timestamp while accepting older health responses', () => {
+  const metrics = {
+    attemptCount: 0,
+    failureCount: 0,
+    queueDepth: 0,
+    averageLatencyMs: null,
+    p50LatencyMs: null,
+    p95LatencyMs: null,
+    p99LatencyMs: null,
+    oldestQueuedAt: null,
+  };
+  expect(readHealthMetrics(metrics)).toEqual(metrics);
+  for (const lastSuccessfulTestAt of [null, '2026-09-22T12:00:00Z'])
+    expect(readHealthMetrics({ ...metrics, lastSuccessfulTestAt })?.lastSuccessfulTestAt).toBe(
+      lastSuccessfulTestAt
+    );
+  for (const lastSuccessfulTestAt of ['invalid', {}, 123])
+    expect(() => readHealthMetrics({ ...metrics, lastSuccessfulTestAt })).toThrow();
+});

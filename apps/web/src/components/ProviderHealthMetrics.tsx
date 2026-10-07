@@ -24,6 +24,14 @@ export function ProviderHealthMetrics({
       : percent(metrics.failureCount / metrics.attemptCount, { maximumFractionDigits: 1 });
   return (
     <div className="mt-2 space-y-0.5 text-xs text-muted-foreground">
+      <p>
+        {label('admin.providers.health.lastSuccessfulTest')}:{' '}
+        {metrics.lastSuccessfulTestAt ? (
+          <DateCell value={metrics.lastSuccessfulTestAt} format={(value) => time.format(value)} />
+        ) : (
+          '—'
+        )}
+      </p>
       <p className="font-medium">{label('admin.providers.health.lastHour')}</p>
       <p>
         {label('admin.providers.health.attempts')}: {number(metrics.attemptCount)}

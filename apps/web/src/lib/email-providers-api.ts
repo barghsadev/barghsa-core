@@ -12,6 +12,7 @@ export interface ProviderHealthMetrics {
   p99LatencyMs: number | null;
   queueDepth: number;
   oldestQueuedAt: string | null;
+  lastSuccessfulTestAt?: string | null;
 }
 export interface ProviderAlertEvent {
   kind:
@@ -80,6 +81,13 @@ export function readHealthMetrics(value: unknown): ProviderHealthMetrics | undef
     metrics.oldestQueuedAt !== null &&
     (typeof metrics.oldestQueuedAt !== 'string' ||
       !Number.isFinite(Date.parse(metrics.oldestQueuedAt)))
+  )
+    throw new ProviderRequestError();
+  if (
+    metrics.lastSuccessfulTestAt !== undefined &&
+    metrics.lastSuccessfulTestAt !== null &&
+    (typeof metrics.lastSuccessfulTestAt !== 'string' ||
+      !Number.isFinite(Date.parse(metrics.lastSuccessfulTestAt)))
   )
     throw new ProviderRequestError();
   return metrics as unknown as ProviderHealthMetrics;

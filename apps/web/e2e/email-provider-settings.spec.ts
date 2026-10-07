@@ -20,6 +20,7 @@ for (const locale of ['en', 'fa'] as const) {
             breakerCooldownUntil: '2099-09-24T12:00:00Z',
             lastFailureAt: '2026-09-24T12:00:00Z',
             healthMetrics: {
+              lastSuccessfulTestAt: '2026-09-22T12:00:00Z',
               attemptCount: 4,
               failureCount: 1,
               averageLatencyMs: 120,
@@ -50,6 +51,8 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await expect(row).toContainText(text('health.paused'));
     await expect(row).toContainText(text('health.lastFailure'));
+    await expect(row).toContainText(text('health.lastSuccessfulTest'));
+    await expect(row.locator('time[datetime="2026-09-22T12:00:00.000Z"]')).toBeVisible();
     await expect(row).toContainText(text('health.failureRate'));
     await expect(row).toContainText(text('health.latencyPercentiles'));
     await expect(row).toContainText(text('health.queueDepth'));

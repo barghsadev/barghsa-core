@@ -106,7 +106,15 @@ it('reports one-hour provider attempts and channel backlog without assigning old
     queueDepth: 1,
   });
   const sms = await readProviderHealthMetrics(http.pool, [first], 'sms');
-  expect(sms.get(first)?.queueDepth).toBe(0);
+  expect(sms.get(first)).toMatchObject({
+    queueDepth: 0,
+    attemptCount: 0,
+    failureCount: 0,
+    averageLatencyMs: null,
+    p50LatencyMs: null,
+    p95LatencyMs: null,
+    p99LatencyMs: null,
+  });
   await http.pool.query(
     `INSERT INTO email_provider_configs(id,transport,label,config,created_by)
      VALUES ($1,'smtp','Metrics','{}'::jsonb,$2)`,
@@ -198,6 +206,37 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
     });
     return { test, send, snapshot, probe, dispatch, service, row, config };
   }
+  it(`${transport}: successful test history survives a later failed test and stays channel/provider scoped`, async () => {
+    const { service, row, test, send } = await fixture();
+    await http.pool.query(
+      'INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at) VALUES($1,$2,$3,$4,$5,NOW())',
+      [
+        randomUUID(),
+        actor.userId,
+        `${channel}_provider_tested`,
+        'legacy non-JSON metadata',
+        randomUUID(),
+      ]
+    );
+    expect((await service.list())[0]?.healthMetrics?.lastSuccessfulTestAt).toBeNull();
+    expect((await test()).ok).toBe(true);
+    const successful = (await service.list())[0]?.healthMetrics?.lastSuccessfulTestAt;
+    expect(successful).toBeInstanceOf(Date);
+    send.mockResolvedValueOnce({ ok: false });
+    expect((await test()).ok).toBe(false);
+    const latest = (await service.list())[0];
+    expect(latest?.lastTestStatus).toBe('failed');
+    expect(latest?.healthMetrics?.lastSuccessfulTestAt).toEqual(successful);
+    const otherChannel = channel === 'email' ? 'sms' : 'email';
+    expect(
+      (await readProviderHealthMetrics(http.pool, [row.id, randomUUID()], otherChannel)).get(row.id)
+        ?.lastSuccessfulTestAt
+    ).toBeNull();
+    expect(
+      (await readProviderHealthMetrics(http.pool, [randomUUID()], channel)).values().next().value
+        ?.lastSuccessfulTestAt
+    ).toBeNull();
+  });
   it(`${transport}: legacy passed results cannot activate; a current self-test supplies proof`, async () => {
     const { service, row, test } = await fixture();
     await http.pool.query(

@@ -61,6 +61,7 @@ for (const locale of ['en', 'fa'] as const) {
             breakerCooldownUntil: '2099-09-24T12:00:00Z',
             lastFailureAt: '2026-09-24T12:00:00Z',
             healthMetrics: {
+              lastSuccessfulTestAt: '2026-09-22T12:00:00Z',
               attemptCount: 2,
               failureCount: 1,
               averageLatencyMs: 210,
@@ -84,6 +85,10 @@ for (const locale of ['en', 'fa'] as const) {
       .filter({ hasText: 'sms-active' });
     await expect(row).toContainText(text('healthPaused'));
     await expect(row).toContainText(text('healthLastFailure'));
+    await expect(row).toContainText(
+      providerText('admin.providers.health.lastSuccessfulTest', locale)
+    );
+    await expect(row.locator('time[datetime="2026-09-22T12:00:00.000Z"]')).toBeVisible();
     await expect(row).toContainText(providerText('admin.providers.health.failureRate', locale));
     await expect(row).toContainText(providerText('admin.providers.health.queueDepth', locale));
     await expect(row).toContainText(providerText('admin.providers.health.alertHistory', locale));
