@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 415 | Accepted with unchanged source bindings. |
-| verify | 877 | Existing work may be complete; inspect evidence before building. |
+| done | 418 | Accepted with unchanged source bindings. |
+| verify | 874 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,11 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and accept existing dual-approval threshold/workflow and online wallet top-up limit against exact criteria. Verify current grants/session/step-up,versioned configuration/audits,independent approver and financial immutable source/replay,override reason/alert,and actual UI/API callers. Build only demonstrated gaps;reuse valid source-bound evidence. Earlier owner/release/budget/operational gates remain open.
+Inspect andaccept existingfour-type productcatalogue,VAT anduploadpolicies against exact admin criteria. Verify currentgrants/session/configaudit,immutable price/ratehistory,referenced-product archive/rule safety,VAT precedence/snapshots andsafe format/content/size enforcement. Buildonly demonstrated gaps;reuse accepted domain andsource-bound checks. Earlierowner/release/budget/operational gates remainopen.
 
-- `02-auth-users-admin.md#T-09.07.01`: Dual-approval threshold configuration
-- `02-auth-users-admin.md#T-09.07.02`: Dual-approval workflow
-- `02-auth-users-admin.md#T-09.10.01`: Online wallet top-up limit
+- `02-auth-users-admin.md#T-09.12.01`: Product catalogue management
+- `02-auth-users-admin.md#T-09.12.02`: VAT configuration
+- `02-auth-users-admin.md#T-09.12.05`: Upload policies configuration
 
 ## v0.2.0: Complete customer journeys
 
@@ -332,15 +332,15 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.03.01` | done | Earlier acceptance_verified | TOS editor |
 | `02-auth-users-admin.md#T-09.03.02` | done | Earlier acceptance_verified | TOS version history |
 | `02-auth-users-admin.md#T-09.05.01` | done | Earlier acceptance_verified | Staff role management |
-| `02-auth-users-admin.md#T-09.07.01` | verify | Earlier acceptance_verified | Dual-approval threshold configuration |
-| `02-auth-users-admin.md#T-09.07.02` | verify | Earlier acceptance_verified | Dual-approval workflow |
+| `02-auth-users-admin.md#T-09.07.01` | done | Earlier acceptance_verified | Dual-approval threshold configuration |
+| `02-auth-users-admin.md#T-09.07.02` | done | Earlier acceptance_verified | Dual-approval workflow |
 | `02-auth-users-admin.md#T-09.08.01` | partial | Earlier partial | Service response targets |
 | `02-auth-users-admin.md#T-09.08.02` | partial | Earlier partial | Staff teams and assignment rules |
 | `02-auth-users-admin.md#T-09.08.03` | verify | Earlier acceptance_verified | Escalation alerts |
 | `02-auth-users-admin.md#T-09.09.01` | partial | Earlier partial | Reconciliation exceptions view |
 | `02-auth-users-admin.md#T-09.09.02` | verify | Earlier acceptance_verified | Failed jobs dashboard |
 | `02-auth-users-admin.md#T-09.09.03` | verify | Earlier acceptance_verified | Dead-letter notifications |
-| `02-auth-users-admin.md#T-09.10.01` | verify | Earlier acceptance_verified | Online wallet top-up limit |
+| `02-auth-users-admin.md#T-09.10.01` | done | Earlier acceptance_verified | Online wallet top-up limit |
 | `02-auth-users-admin.md#T-09.10.02` | partial | Earlier partial | Mandatory green-electricity rules |
 | `02-auth-users-admin.md#T-09.10.03` | partial | Earlier partial | Green rule activation safety check |
 | `02-auth-users-admin.md#T-09.12.01` | verify | Earlier acceptance_verified | Product catalogue management |

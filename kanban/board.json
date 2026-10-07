@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
+  "source_commit": "fc4ef75261a9164ff3fa5a618544749f21bd8344",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -34676,12 +34676,10 @@
         "story": "02-auth-users-admin.md#spec-0dd5de369582"
       },
       "requirement": "**T-09.07.01 — Dual-approval threshold configuration**\n\n- Description: Admin configures the IRR threshold at or above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.\n- Technical notes: Value stored, requires step-up auth to change. Versioned config. Emergency override available (requires reason + elevated permission + immediate alert + audit).\n- UI/UX: Number input with large IRR display. Description of which actions are affected. \"Changes require step-up authentication.\"\n- Dependencies: admin config framework, finance module\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -34789,9 +34787,281 @@
           "apps/web/e2e/approval-queue.spec.ts"
         ],
         "batches": [
-          "2026-10-03-limit-settings-forms"
+          "2026-10-03-limit-settings-forms",
+          "release-0.3-admin-financial-controls"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-financial-controls",
+          "base_commit": "fc4ef75261a9164ff3fa5a618544749f21bd8344",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.module.ts",
+              "sha256": "1298b3824d3fe6b99625352e76b55b30be63fe2fdeb8b041e884dca9901ded7d"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/config-write-http.integration.test.ts",
+              "sha256": "b3ae03a20596c1bb521b665104117faaa51968fcb62b9d020d91634c2f7dedbb"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+              "sha256": "4c1abcc2d2ad262370786db5c51bac922c22c29e908c41d838c9c3e9612ac331"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.test.ts",
+              "sha256": "b75e33db36f631d7075a54042ed8c168b4aebf3d15a09af71ba6acbbd8154211"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-config.controller.test.ts",
+              "sha256": "d93b8d6bec2a89b7fced0b9f8db97ab6005f8fe201b03b45c31280159ecc1c2f"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-config.service.test.ts",
+              "sha256": "01baff6c5bfa5e9968354f105186764753702005475645541ee579d98df3055d"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.test.ts",
+              "sha256": "312ff678e79b16646419ae9fc14b82a42279810341bfd51545c6b63fd878aa2d"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.ts",
+              "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.test.ts",
+              "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/wallet-topup-limit-config.controller.test.ts",
+              "sha256": "44a8dbbe752e9e75537460d22901a25293c8142b4b1fcac0fd7f3f1acc011a4f"
+            },
+            {
+              "path": "apps/api/src/admin/wallet-topup-limit-config.service.test.ts",
+              "sha256": "dd513c97f676fc8633619264a0e13000cec8a309b37589988d91bfff8b56f835"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+              "sha256": "f0ba02f7b0b1962197fe269bc630024d82b3df387f1efabf407a4dd3bb1ae690"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "acc951d1a539722938b0aa668831de404e0ee6a344a2a8d145682fa99cb21dbe"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+              "sha256": "22ca40322761d6de2190332ee314b38629008dcaea3fab2233f68f4df51634f2"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.integration.test.ts",
+              "sha256": "e6f2e4e9c291452813914a6d1442fe476cddba5a585f98a390909e5d9712c009"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/approval-queue.spec.ts",
+              "sha256": "dbeed48d9ef303ee13ead30e555a7bf79f03b58a204d52d12eda68d73a567d0d"
+            },
+            {
+              "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+              "sha256": "bb5903f4e52b0e6027a510600b00a44849d60d076eb0e782c45e95ec2996641d"
+            },
+            {
+              "path": "apps/web/e2e/approval-threshold.spec.ts",
+              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+            },
+            {
+              "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+              "sha256": "b6c6cd1671729ca5c4dd43196065b0c597b4669bcba3922e83eb1000375b507e"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
+              "sha256": "958ab35910c3ecb3cff67c1ab2c30b2212e2724db2ed37f7ea94f1e996409fe5"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "apps/web/src/lib/limit-settings-form.ts",
+              "sha256": "a02fa51319d6c3e0b60a70ecd7157c70d898849c8785a3c3d8dd5a5d87129f03"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
+              "sha256": "cd3e7bb4799d59841622e312f2cc5904ca2246a26533f7ce717c0dfb6ba663b9"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "e4c552bac8c4bf75638667864b2e0b12ad2f7ee5f9f507332e78191d39c72dfe"
+            },
+            {
+              "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
+              "sha256": "faad82ceeedd6c03e1b25b9fd77141a15f0f1d475ec81009f4c55c3c6277a409"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/src/schema/approval-requests.ts",
+              "sha256": "8818d8094dbbaebf62d234a22fa2ab755ab40c7e8d3e0a5344d9ee5667705180"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "e106084087de5140d138824e189d51330e6c3e8eade12eb56d22fc629caeeaa6"
+            },
+            {
+              "path": "packages/i18n/src/wallet-limit.ts",
+              "sha256": "8f660c1389bd29eceb96e6a38257abf360f42c164600e2932eaf55310170c476"
+            },
+            {
+              "path": "packages/i18n/src/wallet-receipts.ts",
+              "sha256": "2f86ee0207cb4f0784c015303722258ff300b9bd3fb1231442ae729b6da8db4d"
+            },
+            {
+              "path": "packages/shared/src/finance/approval-request.ts",
+              "sha256": "fb28919907c56d61f0d84e967f33939bd0629b123e36a85cecd5556f257012c5"
+            },
+            {
+              "path": "packages/shared/src/finance/dual-approval-config.ts",
+              "sha256": "0dfb04655f65d8eaa5995900bd564c92750164966e7a048174db60a9af7ef3a7"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+              "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-config.ts",
+              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "343 fresh distinct passing cases:229 API (194 approval/threshold/wallet-limit unit+HTTP,17 wallet-policy,7 nonoverlapping first-write/version/threshold boundaries,11 manual adjustment approval andauthority),42 UI and72 bilingual light/dark desktop/mobile production-browser. Skipped cases excluded; no zero-test or duplicate acceptance.",
+            "Retain77 cancellation/wallet/external refund API and64 DB cases from saving-cancellation with exact financialconsumer/test/schema/fixture sources and reviewed five unrelated terms/geography deltas.484 distinct totalfresh+retained; no claim of external bank settlement.",
+            "Threshold settings retain positive inclusive >= semantics,zero-disabled new routing,saved pending/rejected decisions,versioned configuration andcomplete previous-value audit chain. Shared read/write policy lockserializes decisions andconcurrent first writes; exact currentgrant/OTP/session authority atinitial andfinal boundary.",
+            "Second review requires a distinct eligible user,pending-only decision,bounded rejection reason,exact int8 amount,signed adjustment destination/source and immutable financial binding. Corrupt policy,forged generic details,changed evidence,revoked authority andbusy reviewercannot settle money. Audit/notices/financial issuance roll back atomically; repeated settlement cannot duplicate.",
+            "Existing per-receipt emergency exception requires elevated currentpermission,nonempty bounded reason,unchanged receipt/pending binding,canonical audit andimmediateprivate bilingual in-app alert insettlement transaction. No new financial bypass; adjustments/refunds retain their approval safeguards.",
+            "Online limit default2,000,000,000IRR,approved zero kill switch,versioned config/global audit/cache,currentgrants/session/stepup andoptimistic expected-version. Absent-row first adminwrite serializes with in-flightsubmission. Newintents usecurrent ceiling; acceptedintents keeporiginal ceiling/version,replay identity andno repeated providerstart. UIshows localizedIRR/toman,future-submission warning andsafe validation/retry/denial/receipt matching.",
+            "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
+          "limitations": [
+            "Local financial/fixture acceptance does not prove real provider/external bank settlement,production operational evidence or an accepted release milestone.",
+            "Emergency exception is restricted to bank receipt confirmation; immediate alerts are in-app. No SMS/email delivery or general refund/adjustment bypass claim."
+          ]
+        }
       }
     },
     {
@@ -34805,12 +35075,10 @@
         "story": "02-auth-users-admin.md#spec-0dd5de369582"
       },
       "requirement": "**T-09.07.02 — Dual-approval workflow**\n\n- Description: When a financial action meets or exceeds the positive threshold, it enters Pending Approval state. Second authorized user (different from initiator) must approve or reject. Audit trail of both actions.\n- Technical notes: Initiation creates approval request with transaction details. Notification to approval-eligible staff. Second user reviews and approves/rejects. Cannot approve own requests. Queue view for pending approvals.\n- UI/UX: \"Pending approvals\" section in finance dashboard. Each: amount, initiator, reason, details. Approve/Reject buttons with reason (reason required for reject).\n- Dependencies: T-09.07.01\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -34900,8 +35168,281 @@
           "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
           "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-admin-financial-controls"
+        ],
+        "current_acceptance": {
+          "kind": "verified-admin-financial-controls",
+          "base_commit": "fc4ef75261a9164ff3fa5a618544749f21bd8344",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.module.ts",
+              "sha256": "1298b3824d3fe6b99625352e76b55b30be63fe2fdeb8b041e884dca9901ded7d"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/config-write-http.integration.test.ts",
+              "sha256": "b3ae03a20596c1bb521b665104117faaa51968fcb62b9d020d91634c2f7dedbb"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+              "sha256": "4c1abcc2d2ad262370786db5c51bac922c22c29e908c41d838c9c3e9612ac331"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.test.ts",
+              "sha256": "b75e33db36f631d7075a54042ed8c168b4aebf3d15a09af71ba6acbbd8154211"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-config.controller.test.ts",
+              "sha256": "d93b8d6bec2a89b7fced0b9f8db97ab6005f8fe201b03b45c31280159ecc1c2f"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-config.service.test.ts",
+              "sha256": "01baff6c5bfa5e9968354f105186764753702005475645541ee579d98df3055d"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.test.ts",
+              "sha256": "312ff678e79b16646419ae9fc14b82a42279810341bfd51545c6b63fd878aa2d"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.ts",
+              "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.test.ts",
+              "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/wallet-topup-limit-config.controller.test.ts",
+              "sha256": "44a8dbbe752e9e75537460d22901a25293c8142b4b1fcac0fd7f3f1acc011a4f"
+            },
+            {
+              "path": "apps/api/src/admin/wallet-topup-limit-config.service.test.ts",
+              "sha256": "dd513c97f676fc8633619264a0e13000cec8a309b37589988d91bfff8b56f835"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+              "sha256": "f0ba02f7b0b1962197fe269bc630024d82b3df387f1efabf407a4dd3bb1ae690"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "acc951d1a539722938b0aa668831de404e0ee6a344a2a8d145682fa99cb21dbe"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+              "sha256": "22ca40322761d6de2190332ee314b38629008dcaea3fab2233f68f4df51634f2"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.integration.test.ts",
+              "sha256": "e6f2e4e9c291452813914a6d1442fe476cddba5a585f98a390909e5d9712c009"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/approval-queue.spec.ts",
+              "sha256": "dbeed48d9ef303ee13ead30e555a7bf79f03b58a204d52d12eda68d73a567d0d"
+            },
+            {
+              "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+              "sha256": "bb5903f4e52b0e6027a510600b00a44849d60d076eb0e782c45e95ec2996641d"
+            },
+            {
+              "path": "apps/web/e2e/approval-threshold.spec.ts",
+              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+            },
+            {
+              "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+              "sha256": "b6c6cd1671729ca5c4dd43196065b0c597b4669bcba3922e83eb1000375b507e"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
+              "sha256": "958ab35910c3ecb3cff67c1ab2c30b2212e2724db2ed37f7ea94f1e996409fe5"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "apps/web/src/lib/limit-settings-form.ts",
+              "sha256": "a02fa51319d6c3e0b60a70ecd7157c70d898849c8785a3c3d8dd5a5d87129f03"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
+              "sha256": "cd3e7bb4799d59841622e312f2cc5904ca2246a26533f7ce717c0dfb6ba663b9"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "e4c552bac8c4bf75638667864b2e0b12ad2f7ee5f9f507332e78191d39c72dfe"
+            },
+            {
+              "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
+              "sha256": "faad82ceeedd6c03e1b25b9fd77141a15f0f1d475ec81009f4c55c3c6277a409"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/src/schema/approval-requests.ts",
+              "sha256": "8818d8094dbbaebf62d234a22fa2ab755ab40c7e8d3e0a5344d9ee5667705180"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "e106084087de5140d138824e189d51330e6c3e8eade12eb56d22fc629caeeaa6"
+            },
+            {
+              "path": "packages/i18n/src/wallet-limit.ts",
+              "sha256": "8f660c1389bd29eceb96e6a38257abf360f42c164600e2932eaf55310170c476"
+            },
+            {
+              "path": "packages/i18n/src/wallet-receipts.ts",
+              "sha256": "2f86ee0207cb4f0784c015303722258ff300b9bd3fb1231442ae729b6da8db4d"
+            },
+            {
+              "path": "packages/shared/src/finance/approval-request.ts",
+              "sha256": "fb28919907c56d61f0d84e967f33939bd0629b123e36a85cecd5556f257012c5"
+            },
+            {
+              "path": "packages/shared/src/finance/dual-approval-config.ts",
+              "sha256": "0dfb04655f65d8eaa5995900bd564c92750164966e7a048174db60a9af7ef3a7"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+              "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-config.ts",
+              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "343 fresh distinct passing cases:229 API (194 approval/threshold/wallet-limit unit+HTTP,17 wallet-policy,7 nonoverlapping first-write/version/threshold boundaries,11 manual adjustment approval andauthority),42 UI and72 bilingual light/dark desktop/mobile production-browser. Skipped cases excluded; no zero-test or duplicate acceptance.",
+            "Retain77 cancellation/wallet/external refund API and64 DB cases from saving-cancellation with exact financialconsumer/test/schema/fixture sources and reviewed five unrelated terms/geography deltas.484 distinct totalfresh+retained; no claim of external bank settlement.",
+            "Threshold settings retain positive inclusive >= semantics,zero-disabled new routing,saved pending/rejected decisions,versioned configuration andcomplete previous-value audit chain. Shared read/write policy lockserializes decisions andconcurrent first writes; exact currentgrant/OTP/session authority atinitial andfinal boundary.",
+            "Second review requires a distinct eligible user,pending-only decision,bounded rejection reason,exact int8 amount,signed adjustment destination/source and immutable financial binding. Corrupt policy,forged generic details,changed evidence,revoked authority andbusy reviewercannot settle money. Audit/notices/financial issuance roll back atomically; repeated settlement cannot duplicate.",
+            "Existing per-receipt emergency exception requires elevated currentpermission,nonempty bounded reason,unchanged receipt/pending binding,canonical audit andimmediateprivate bilingual in-app alert insettlement transaction. No new financial bypass; adjustments/refunds retain their approval safeguards.",
+            "Online limit default2,000,000,000IRR,approved zero kill switch,versioned config/global audit/cache,currentgrants/session/stepup andoptimistic expected-version. Absent-row first adminwrite serializes with in-flightsubmission. Newintents usecurrent ceiling; acceptedintents keeporiginal ceiling/version,replay identity andno repeated providerstart. UIshows localizedIRR/toman,future-submission warning andsafe validation/retry/denial/receipt matching.",
+            "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
+          "limitations": [
+            "Local financial/fixture acceptance does not prove real provider/external bank settlement,production operational evidence or an accepted release milestone.",
+            "Emergency exception is restricted to bank receipt confirmation; immediate alerts are in-app. No SMS/email delivery or general refund/adjustment bypass claim."
+          ]
+        }
       }
     },
     {
@@ -35390,12 +35931,10 @@
         "story": "02-auth-users-admin.md#spec-b1dfd02d68b5"
       },
       "requirement": "**T-09.10.01 — Online wallet top-up limit**\n\n- Description: Admin configures per-transaction online wallet top-up limit in IRR. Default: 2,000,000,000 IRR.\n- Technical notes: Stored as integer IRR. Validated on wallet top-up endpoint. Versioned config. Audit: change_recorded.\n- UI/UX: Number input with large number formatting. Shows current limit in toman. Warning: \"Changing this limit affects all future online top-ups.\"\n- Dependencies: admin config framework, wallet module\n- Complexity: S",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -35422,9 +35961,281 @@
           "apps/api/src/admin/admin.service.ts"
         ],
         "batches": [
-          "2026-10-03-limit-settings-forms"
+          "2026-10-03-limit-settings-forms",
+          "release-0.3-admin-financial-controls"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-financial-controls",
+          "base_commit": "fc4ef75261a9164ff3fa5a618544749f21bd8344",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "15de3bf891adeffce1fa2989daa3aff5786a70b9cfda294927837475fcf1a526"
+            },
+            {
+              "path": "apps/api/src/admin/admin.module.ts",
+              "sha256": "1298b3824d3fe6b99625352e76b55b30be63fe2fdeb8b041e884dca9901ded7d"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/config-write-http.integration.test.ts",
+              "sha256": "b3ae03a20596c1bb521b665104117faaa51968fcb62b9d020d91634c2f7dedbb"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+              "sha256": "4c1abcc2d2ad262370786db5c51bac922c22c29e908c41d838c9c3e9612ac331"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.test.ts",
+              "sha256": "b75e33db36f631d7075a54042ed8c168b4aebf3d15a09af71ba6acbbd8154211"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-config.controller.test.ts",
+              "sha256": "d93b8d6bec2a89b7fced0b9f8db97ab6005f8fe201b03b45c31280159ecc1c2f"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-config.service.test.ts",
+              "sha256": "01baff6c5bfa5e9968354f105186764753702005475645541ee579d98df3055d"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.test.ts",
+              "sha256": "312ff678e79b16646419ae9fc14b82a42279810341bfd51545c6b63fd878aa2d"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.ts",
+              "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.test.ts",
+              "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/wallet-topup-limit-config.controller.test.ts",
+              "sha256": "44a8dbbe752e9e75537460d22901a25293c8142b4b1fcac0fd7f3f1acc011a4f"
+            },
+            {
+              "path": "apps/api/src/admin/wallet-topup-limit-config.service.test.ts",
+              "sha256": "dd513c97f676fc8633619264a0e13000cec8a309b37589988d91bfff8b56f835"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "c3ce73a220c9707226465f573ae0202db6885469073765086307ed956ca1bab9"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+              "sha256": "f0ba02f7b0b1962197fe269bc630024d82b3df387f1efabf407a4dd3bb1ae690"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "acc951d1a539722938b0aa668831de404e0ee6a344a2a8d145682fa99cb21dbe"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+              "sha256": "22ca40322761d6de2190332ee314b38629008dcaea3fab2233f68f4df51634f2"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.integration.test.ts",
+              "sha256": "e6f2e4e9c291452813914a6d1442fe476cddba5a585f98a390909e5d9712c009"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/approval-queue.spec.ts",
+              "sha256": "dbeed48d9ef303ee13ead30e555a7bf79f03b58a204d52d12eda68d73a567d0d"
+            },
+            {
+              "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+              "sha256": "bb5903f4e52b0e6027a510600b00a44849d60d076eb0e782c45e95ec2996641d"
+            },
+            {
+              "path": "apps/web/e2e/approval-threshold.spec.ts",
+              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+            },
+            {
+              "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+              "sha256": "b6c6cd1671729ca5c4dd43196065b0c597b4669bcba3922e83eb1000375b507e"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
+              "sha256": "958ab35910c3ecb3cff67c1ab2c30b2212e2724db2ed37f7ea94f1e996409fe5"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "apps/web/src/lib/limit-settings-form.ts",
+              "sha256": "a02fa51319d6c3e0b60a70ecd7157c70d898849c8785a3c3d8dd5a5d87129f03"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
+              "sha256": "cd3e7bb4799d59841622e312f2cc5904ca2246a26533f7ce717c0dfb6ba663b9"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "e4c552bac8c4bf75638667864b2e0b12ad2f7ee5f9f507332e78191d39c72dfe"
+            },
+            {
+              "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
+              "sha256": "faad82ceeedd6c03e1b25b9fd77141a15f0f1d475ec81009f4c55c3c6277a409"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/src/schema/approval-requests.ts",
+              "sha256": "8818d8094dbbaebf62d234a22fa2ab755ab40c7e8d3e0a5344d9ee5667705180"
+            },
+            {
+              "path": "packages/i18n/src/admin-ui.ts",
+              "sha256": "e106084087de5140d138824e189d51330e6c3e8eade12eb56d22fc629caeeaa6"
+            },
+            {
+              "path": "packages/i18n/src/wallet-limit.ts",
+              "sha256": "8f660c1389bd29eceb96e6a38257abf360f42c164600e2932eaf55310170c476"
+            },
+            {
+              "path": "packages/i18n/src/wallet-receipts.ts",
+              "sha256": "2f86ee0207cb4f0784c015303722258ff300b9bd3fb1231442ae729b6da8db4d"
+            },
+            {
+              "path": "packages/shared/src/finance/approval-request.ts",
+              "sha256": "fb28919907c56d61f0d84e967f33939bd0629b123e36a85cecd5556f257012c5"
+            },
+            {
+              "path": "packages/shared/src/finance/dual-approval-config.ts",
+              "sha256": "0dfb04655f65d8eaa5995900bd564c92750164966e7a048174db60a9af7ef3a7"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+              "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-config.ts",
+              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "343 fresh distinct passing cases:229 API (194 approval/threshold/wallet-limit unit+HTTP,17 wallet-policy,7 nonoverlapping first-write/version/threshold boundaries,11 manual adjustment approval andauthority),42 UI and72 bilingual light/dark desktop/mobile production-browser. Skipped cases excluded; no zero-test or duplicate acceptance.",
+            "Retain77 cancellation/wallet/external refund API and64 DB cases from saving-cancellation with exact financialconsumer/test/schema/fixture sources and reviewed five unrelated terms/geography deltas.484 distinct totalfresh+retained; no claim of external bank settlement.",
+            "Threshold settings retain positive inclusive >= semantics,zero-disabled new routing,saved pending/rejected decisions,versioned configuration andcomplete previous-value audit chain. Shared read/write policy lockserializes decisions andconcurrent first writes; exact currentgrant/OTP/session authority atinitial andfinal boundary.",
+            "Second review requires a distinct eligible user,pending-only decision,bounded rejection reason,exact int8 amount,signed adjustment destination/source and immutable financial binding. Corrupt policy,forged generic details,changed evidence,revoked authority andbusy reviewercannot settle money. Audit/notices/financial issuance roll back atomically; repeated settlement cannot duplicate.",
+            "Existing per-receipt emergency exception requires elevated currentpermission,nonempty bounded reason,unchanged receipt/pending binding,canonical audit andimmediateprivate bilingual in-app alert insettlement transaction. No new financial bypass; adjustments/refunds retain their approval safeguards.",
+            "Online limit default2,000,000,000IRR,approved zero kill switch,versioned config/global audit/cache,currentgrants/session/stepup andoptimistic expected-version. Absent-row first adminwrite serializes with in-flightsubmission. Newintents usecurrent ceiling; acceptedintents keeporiginal ceiling/version,replay identity andno repeated providerstart. UIshows localizedIRR/toman,future-submission warning andsafe validation/retry/denial/receipt matching.",
+            "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
+          "limitations": [
+            "Local financial/fixture acceptance does not prove real provider/external bank settlement,production operational evidence or an accepted release milestone.",
+            "Emergency exception is restricted to bank receipt confirmation; immediate alerts are in-app. No SMS/email delivery or general refund/adjustment bypass claim."
+          ]
+        }
       }
     },
     {
@@ -188180,6 +188991,25 @@
         "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms"
+    },
+    "release-0.3-admin-financial-controls": {
+      "title": "Accept admin dual approval and online wallet limit controls",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.10.01"
+      ],
+      "summary": "Three criteria accepted bycurrent source/consumer review andtargeted checks;retainexisting controls andvalidrefund consumer evidence. Noapplication change.",
+      "validation": [
+        "343 fresh distinct passing cases:229 API (194 approval/threshold/wallet-limit unit+HTTP,17 wallet-policy,7 nonoverlapping first-write/version/threshold boundaries,11 manual adjustment approval andauthority),42 UI and72 bilingual light/dark desktop/mobile production-browser. Skipped cases excluded; no zero-test or duplicate acceptance.",
+        "Retain77 cancellation/wallet/external refund API and64 DB cases from saving-cancellation with exact financialconsumer/test/schema/fixture sources and reviewed five unrelated terms/geography deltas.484 distinct totalfresh+retained; no claim of external bank settlement.",
+        "Threshold settings retain positive inclusive >= semantics,zero-disabled new routing,saved pending/rejected decisions,versioned configuration andcomplete previous-value audit chain. Shared read/write policy lockserializes decisions andconcurrent first writes; exact currentgrant/OTP/session authority atinitial andfinal boundary.",
+        "Second review requires a distinct eligible user,pending-only decision,bounded rejection reason,exact int8 amount,signed adjustment destination/source and immutable financial binding. Corrupt policy,forged generic details,changed evidence,revoked authority andbusy reviewercannot settle money. Audit/notices/financial issuance roll back atomically; repeated settlement cannot duplicate.",
+        "Existing per-receipt emergency exception requires elevated currentpermission,nonempty bounded reason,unchanged receipt/pending binding,canonical audit andimmediateprivate bilingual in-app alert insettlement transaction. No new financial bypass; adjustments/refunds retain their approval safeguards.",
+        "Online limit default2,000,000,000IRR,approved zero kill switch,versioned config/global audit/cache,currentgrants/session/stepup andoptimistic expected-version. Absent-row first adminwrite serializes with in-flightsubmission. Newintents usecurrent ceiling; acceptedintents keeporiginal ceiling/version,replay identity andno repeated providerstart. UIshows localizedIRR/toman,future-submission warning andsafe validation/retry/denial/receipt matching.",
+        "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls"
     }
   },
   "historical_improvements": [
@@ -188219,13 +189049,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-admin-financial-controls",
+    "id": "release-0.3-admin-catalogue-vat-upload",
     "release": "0.3.0",
-    "goal": "Inspect and accept existing dual-approval threshold/workflow and online wallet top-up limit against exact criteria. Verify current grants/session/step-up,versioned configuration/audits,independent approver and financial immutable source/replay,override reason/alert,and actual UI/API callers. Build only demonstrated gaps;reuse valid source-bound evidence. Earlier owner/release/budget/operational gates remain open.",
+    "goal": "Inspect andaccept existingfour-type productcatalogue,VAT anduploadpolicies against exact admin criteria. Verify currentgrants/session/configaudit,immutable price/ratehistory,referenced-product archive/rule safety,VAT precedence/snapshots andsafe format/content/size enforcement. Buildonly demonstrated gaps;reuse accepted domain andsource-bound checks. Earlierowner/release/budget/operational gates remainopen.",
     "task_keys": [
-      "02-auth-users-admin.md#T-09.07.01",
-      "02-auth-users-admin.md#T-09.07.02",
-      "02-auth-users-admin.md#T-09.10.01"
+      "02-auth-users-admin.md#T-09.12.01",
+      "02-auth-users-admin.md#T-09.12.02",
+      "02-auth-users-admin.md#T-09.12.05"
     ]
   },
   "launch_forecast": {
