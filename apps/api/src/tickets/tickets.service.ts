@@ -1,3 +1,4 @@
+import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { ticketReply, ticketPagination, type TicketReplyOptions } from './ticket-input.js';
 import { parseTicketFormInput, optionalTicketCommandKey } from './ticket-form-input-fields.js';
 import { idempotentMutation } from '../database/idempotency.js';
@@ -867,7 +868,11 @@ export class TicketsService {
       await client.query('UPDATE user_profile_contexts SET profile_id=NULL WHERE profile_id=$1', [
         preview.profileId,
       ]);
-      await this.sessions.revokeAllUserSessions(preview.ownerUserId, undefined, client);
+      const changedSessionCount = await this.sessions.revokeAllUserSessions(
+        preview.ownerUserId,
+        undefined,
+        client
+      );
       await client.query(
         `UPDATE tickets SET status='closed',privacy_closure_completed_at=$2,
            privacy_closure_actor_id=$3,privacy_closure_anonymized=$4,
@@ -882,10 +887,11 @@ export class TicketsService {
           preview.exportTicketId,
         ]
       );
+      const auditId = randomUUID();
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,$2,'profile_closure_executed',$3::jsonb)`,
         [
-          randomUUID(),
+          auditId,
           actor.userId,
           JSON.stringify({
             ticketId,
@@ -897,6 +903,8 @@ export class TicketsService {
           }),
         ]
       );
+      if (changedSessionCount > 0)
+        await notifySessionsRevoked(client, preview.ownerUserId, auditId);
       // Recheck the clock after all writes/lock waits; an expired export must not
       // be stranded by a newly committed closure. The export request row is held.
       if (preview.exportTicketId) {

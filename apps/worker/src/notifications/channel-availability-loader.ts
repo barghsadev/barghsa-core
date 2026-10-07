@@ -159,7 +159,9 @@ export async function loadNotificationRecipient(
         SELECT 1 FROM audit_log a JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
         WHERE a.id::text=o.payload->>'auditId' AND (
           (a.event IN ('sessions_revoked','session_lifecycle_revoked') AND a.user_id=u.user_id AND (a.metadata::jsonb->>'changedSessionCount')::integer>0)
-          OR (a.event='expire_sessions' AND a.metadata::jsonb->>'targetUserId'=u.user_id)
+          OR (a.event IN ('expire_sessions','force_password_change') AND a.metadata::jsonb->>'targetUserId'=u.user_id)
+          OR (a.event='invitation_accepted' AND a.user_id=u.user_id)
+          OR (a.event='profile_closure_executed' AND a.metadata::jsonb->>'ownerUserId'=u.user_id)
         ) AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id AND n.operating_context='account' AND n.type=o.event_key
       )))`,
     [outboxId]

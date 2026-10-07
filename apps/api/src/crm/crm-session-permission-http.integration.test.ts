@@ -1,4 +1,5 @@
 import {
+  expectParentSessionNotice,
   sessionNoticeState,
   sessionDeliveryState,
   expectSessionNotice,
@@ -328,10 +329,18 @@ for (const action of ['force-password-change', 'expire-sessions'] as const) {
         }
         const notices = await http.pool.query(
           `SELECT recipient_user_id,profile_id,localized_content,link_route FROM in_app_notifications
-           WHERE recipient_user_id=ANY($1::text[])`,
-          [[target, actor]]
+           WHERE recipient_user_id=ANY($1::text[]) AND (type<>'auth.session_revoked' OR $2='expire-sessions')`,
+          [[target, actor], action]
         );
         expect(notices.rows).toHaveLength(committed ? 1 : 0);
+        expect(
+          (
+            await http.pool.query(
+              "SELECT recipient_user_id,type FROM in_app_notifications WHERE recipient_user_id=ANY($1::text[]) AND type='auth.session_revoked'",
+              [[target, actor]]
+            )
+          ).rows
+        ).toEqual(committed ? [{ recipient_user_id: target, type: 'auth.session_revoked' }] : []);
         if (committed) {
           expect(notices.rows[0]).toMatchObject({
             recipient_user_id: target,
@@ -447,3 +456,51 @@ it('CRM no-op preserves its existing information notice without inventing a cano
     ).rows
   ).toEqual([{ type: 'general', operating_context: 'account' }]);
 });
+
+it.each(sessionFailureCases)(
+  'forcing a password change rolls back the actual bulk revocation and $table on $mode',
+  async ({ table, mode }) => {
+    const f = await revocationFixture(),
+      work = () =>
+        fetch(`${http.base}/api/crm/users/${f.target}/force-password-change`, {
+          method: 'POST',
+          headers: {
+            Cookie: `barghsa_session=${f.actorSession}`,
+            'X-CSRF-Token': f.csrf,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ reason: 'Private credential review' }),
+        }),
+      before = await sessionNoticeState(http.pool, f.actorSession),
+      drop = await failSessionSink(http.pool, table, mode);
+    try {
+      expect((await work()).status).toBe(500);
+      expect(await sessionNoticeState(http.pool, f.actorSession)).toEqual(before);
+    } finally {
+      await drop();
+    }
+    expect((await work()).status).toBe(200);
+    await expectParentSessionNotice(http.pool, f.target, 'force_password_change', [
+      f.actorSession,
+      f.targetSession,
+      f.csrf,
+      f.refresh,
+      'Private credential review',
+    ]);
+    expect(
+      (await http.pool.query('SELECT must_change_password FROM users WHERE user_id=$1', [f.target]))
+        .rows[0].must_change_password
+    ).toBe(true);
+    const delivered = await sessionDeliveryState(http.pool, f.target);
+    expect((await work()).status).toBe(200);
+    expect(await sessionDeliveryState(http.pool, f.target)).toEqual(delivered);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT type FROM in_app_notifications WHERE recipient_user_id=$1 AND type='auth.password_changed'",
+          [f.target]
+        )
+      ).rows
+    ).toEqual([]);
+  }
+);

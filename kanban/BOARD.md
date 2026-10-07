@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect remaining bulk session-revocation credential/membership/closure callers and refresh-compromise native handling. Reuse audited private account delivery,actual transition counts and existing warning receipts; avoid duplicates with accepted CRM/self/logout/cap/family paths. Preserve parent financial/identity/authority/token/CSRF/context/locks/audit/deadline/rollback/replay boundaries; keep new-device/OTP,other Appendix,active templates/live provider/owner/operations/launch explicit.
+Inspect redeemRefreshToken native once-per-family refresh-reuse warning. Preserve its private bilingual content,delivery_key/read/history,revoke-first/reject/receipt behavior. Add demonstrated missing durable/email legs without historical backfill/resend or duplicate inbox. Preserve token/session/account locks,credentials and unknown provider delivery boundaries. Keep new-device/OTP,other Appendix,templates/live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

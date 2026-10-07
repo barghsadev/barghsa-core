@@ -1556,3 +1556,40 @@ it.each(['logout', 'session_cap', 'family'])(
     expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
   }
 );
+
+it.each(['force_password_change', 'invitation_accepted', 'profile_closure_executed'])(
+  'binds the %s bulk parent audit to its actual private recipient',
+  async (event) => {
+    const f = await fixture('auth.session_revoked', 'account'),
+      audit = randomUUID(),
+      metadata =
+        event === 'force_password_change'
+          ? { targetUserId: f.owner }
+          : event === 'profile_closure_executed'
+            ? { ownerUserId: f.owner }
+            : {};
+    await pool.query(
+      'INSERT INTO audit_log(id,user_id,event,metadata,correlation_id) VALUES($1,$2,$3,$4,$1)',
+      [audit, event === 'invitation_accepted' ? f.owner : f.next, event, JSON.stringify(metadata)]
+    );
+    await pool.query('UPDATE notification_outbox SET profile_id=NULL,payload=$2 WHERE id=$1', [
+      f.id,
+      { auditId: audit, link_route: '/settings/security' },
+    ]);
+    await pool.query(
+      "UPDATE in_app_notifications SET profile_id=NULL,link_route='/settings/security' WHERE delivery_key='outbox:'||$1::text",
+      [f.id]
+    );
+    await pool.query('UPDATE profiles SET user_id=$2,archived=true WHERE id=$1', [
+      f.profile,
+      f.next,
+    ]);
+    expect(await loadNotificationRecipient(pool, f.id)).toMatchObject({
+      userId: f.owner,
+      profileId: null,
+      email: `${f.owner}@example.test`,
+    });
+    await pool.query('UPDATE notification_outbox SET user_id=$2 WHERE id=$1', [f.id, f.next]);
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+  }
+);

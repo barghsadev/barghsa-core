@@ -239,3 +239,82 @@ export async function expectLifecycleNotice(
   for (const secret of secrets) expect(JSON.stringify(saved)).not.toContain(secret);
   return { outbox, inbox };
 }
+
+export async function expectParentSessionNotice(
+  pool: Pool,
+  user: string,
+  event: string,
+  secrets: string[],
+  profile?: string
+) {
+  const outboxes = (
+    await pool.query(
+      "SELECT o.* FROM notification_outbox o JOIN audit_log a ON a.id::text=o.payload->>'auditId' WHERE o.event_key='auth.session_revoked' AND o.user_id=$1 AND a.event=$2 AND ($3::text IS NULL OR a.metadata::jsonb->>'profileId'=$3)",
+      [user, event, profile ?? null]
+    )
+  ).rows;
+  expect(outboxes).toHaveLength(1);
+  const outbox = outboxes[0];
+  expect(outbox).toMatchObject({
+    profile_id: null,
+    user_id: user,
+    channels: ['in_app', 'email'],
+    max_attempts: 5,
+    idempotency_key: `auth.session_revoked:${outbox.payload.auditId}:${user}`,
+  });
+  expect(outbox.payload).toEqual({
+    auditId: outbox.payload.auditId,
+    link_route: '/settings/security',
+  });
+  const inbox = (
+    await pool.query("SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text", [
+      outbox.id,
+    ])
+  ).rows;
+  expect(inbox).toHaveLength(1);
+  expect(inbox[0]).toMatchObject({
+    profile_id: null,
+    recipient_user_id: user,
+    operating_context: 'account',
+    type: 'auth.session_revoked',
+    link_route: '/settings/security',
+  });
+  expect(inbox[0].localized_content.en.body).toContain('contact support immediately');
+  expect(inbox[0].localized_content.fa.body).toContain('فوراً با پشتیبانی');
+  const jobs = (
+    await pool.query(
+      'SELECT channel,status,priority,attempts,max_attempts,provider_ref FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+      [outbox.id]
+    )
+  ).rows;
+  expect(jobs).toEqual([
+    {
+      channel: 'email',
+      status: 'queued',
+      priority: 'urgent',
+      attempts: 0,
+      max_attempts: 5,
+      provider_ref: null,
+    },
+    {
+      channel: 'in_app',
+      status: 'done',
+      priority: 'urgent',
+      attempts: 1,
+      max_attempts: 5,
+      provider_ref: inbox[0].id,
+    },
+  ]);
+  const history = (
+    await pool.query(
+      'SELECT channel,status,attempt_number,provider_ref FROM notification_delivery_log WHERE notification_id=$1',
+      [outbox.id]
+    )
+  ).rows;
+  expect(history).toEqual([
+    { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: inbox[0].id },
+  ]);
+  for (const secret of secrets)
+    expect(JSON.stringify({ outbox, inbox, jobs, history })).not.toContain(secret);
+  return { outbox, inbox: inbox[0] };
+}

@@ -1,3 +1,4 @@
+import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { editCrmLegalInfo, readCrmLegalInfo } from './crm-profile-legal.js';
 import { editCrmAddress } from './crm-profile-address.js';
@@ -829,7 +830,11 @@ export class CrmV2Service {
         [userId]
       );
 
-      await this.sessionService.revokeAllUserSessions(userId, undefined, client);
+      const changedSessionCount = await this.sessionService.revokeAllUserSessions(
+        userId,
+        undefined,
+        client
+      );
       // Self-service staff actions intentionally revoke the locked requesting session.
       // Bind the final check to that exact revocation while retaining expiry/CSRF/step-up checks.
       const ownRevocation: Date | undefined =
@@ -857,6 +862,7 @@ export class CrmV2Service {
       );
 
       await this.notifyAccountAction(userId, 'password', client);
+      if (changedSessionCount > 0) await notifySessionsRevoked(client, userId, auditId);
       await requireSessionStepUp(client, actor, ownRevocation);
       await client.query('COMMIT');
 

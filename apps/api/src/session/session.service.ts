@@ -1130,7 +1130,7 @@ export class SessionService {
     userId: string,
     excludeSessionId?: string,
     transaction?: PoolClient
-  ): Promise<void> {
+  ): Promise<number> {
     const pool = getDbPool();
     const now = new Date();
 
@@ -1139,22 +1139,25 @@ export class SessionService {
       if (!transaction) await client.query('BEGIN');
       await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
 
+      let changedSessionCount = 0;
       // Revoke all sessions except the excluded one
       if (excludeSessionId) {
-        await client.query(
+        const revoked = await client.query(
           `UPDATE sessions
            SET revoked_at = $1, updated_at = $1
            WHERE user_id = $2 AND revoked_at IS NULL
-             AND session_id != $3`,
+             AND session_id != $3 RETURNING user_id`,
           [now, userId, excludeSessionId]
         );
+        changedSessionCount = revoked.rows.length;
       } else {
-        await client.query(
+        const revoked = await client.query(
           `UPDATE sessions
            SET revoked_at = $1, updated_at = $1
-           WHERE user_id = $2 AND revoked_at IS NULL`,
+           WHERE user_id = $2 AND revoked_at IS NULL RETURNING user_id`,
           [now, userId]
         );
+        changedSessionCount = revoked.rows.length;
       }
 
       // Consume all active refresh tokens for this user
@@ -1169,6 +1172,7 @@ export class SessionService {
       if (!transaction) await client.query('COMMIT');
 
       if (!transaction) this.logger.log(`All sessions revoked for user ${userId}`);
+      return changedSessionCount;
     } catch {
       if (!transaction) await client.query('ROLLBACK').catch(() => {});
       this.logger.error(

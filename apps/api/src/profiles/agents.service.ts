@@ -1,3 +1,4 @@
+import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -698,12 +699,17 @@ export class AgentsService {
           { statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code },
           401
         );
-      await this.sessions.revokeAllUserSessions(actor.userId, rotated.sessionId, client);
+      const changedSessionCount = await this.sessions.revokeAllUserSessions(
+        actor.userId,
+        rotated.sessionId,
+        client
+      );
+      const auditId = uuidv7();
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
          VALUES ($1,$2,'invitation_accepted',$3::jsonb,$4,clock_timestamp())`,
         [
-          uuidv7(),
+          auditId,
           actor.userId,
           JSON.stringify({
             profileId,
@@ -714,6 +720,7 @@ export class AgentsService {
           correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );
+      if (changedSessionCount > 0) await notifySessionsRevoked(client, actor.userId, auditId);
       const saved = (
         await client.query(
           `SELECT pi.profile_id,pi.role,pi.status FROM profile_invitations pi

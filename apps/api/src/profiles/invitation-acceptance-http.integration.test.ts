@@ -1,3 +1,11 @@
+import {
+  sessionNoticeState,
+  sessionDeliveryState,
+  expectParentSessionNotice,
+  sessionFailureCases,
+  failSessionSink,
+} from '../test/session-notification-proof.js';
+import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -434,3 +442,47 @@ it('acceptance rejects a divergent persisted result and rolls back the entire de
   expect(response.headers.getSetCookie()).toEqual([]);
   await unchanged();
 });
+
+it.each(sessionFailureCases)(
+  'acceptance rolls back membership,rotation,bulk revocation and $table on $mode',
+  async ({ table, mode }) => {
+    const before = await sessionNoticeState(http.pool, actor),
+      drop = await failSessionSink(http.pool, table, mode);
+    try {
+      expect((await accept()).status).toBe(500);
+      expect(await sessionNoticeState(http.pool, actor)).toEqual(before);
+    } finally {
+      await drop();
+    }
+    const response = await accept();
+    expect(response.status).toBe(200);
+    const notice = await expectParentSessionNotice(http.pool, 'invitee', 'invitation_accepted', [
+      actor,
+      other,
+      csrf,
+      inviteId,
+    ]);
+    const active = (
+      await http.pool.query(
+        "SELECT session_id FROM sessions WHERE user_id='invitee' AND revoked_at IS NULL"
+      )
+    ).rows;
+    expect(active).toHaveLength(1);
+    expect(active[0].session_id).not.toBe(actor);
+    expect(active[0].session_id).not.toBe(other);
+    await http.pool.query(
+      'UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1',
+      [notice.inbox.id]
+    );
+    const delivered = await sessionDeliveryState(http.pool, 'invitee'),
+      client = await http.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await notifySessionsRevoked(client, 'invitee', notice.outbox.payload.auditId);
+      await client.query('COMMIT');
+    } finally {
+      client.release();
+    }
+    expect(await sessionDeliveryState(http.pool, 'invitee')).toEqual(delivered);
+  }
+);

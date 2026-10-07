@@ -1,5 +1,12 @@
+import {
+  sessionNoticeState,
+  sessionDeliveryState,
+  expectParentSessionNotice,
+  sessionFailureCases,
+  failSessionSink,
+} from '../test/session-notification-proof.js';
 import { randomUUID } from 'node:crypto';
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -78,6 +85,13 @@ beforeAll(async () => {
   closureId = ((await created.json()) as { ticketId: string }).ticketId;
 }, 40000);
 
+// Each scenario has its own rate-limit budget in this disposable database.
+beforeEach(async () => {
+  await http.pool.query(
+    'DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security'
+  );
+});
+
 afterAll(async () => {
   await http?.close();
 }, 15000);
@@ -144,6 +158,21 @@ it('requires a fresh dry-run, rejects blockers, and rolls back every effect on a
     privacy_closure_completed_at: null,
     revoked_at: null,
   });
+  const staffSession = staffHeaders.Cookie!.split('=')[1]!;
+  for (const { table, mode } of sessionFailureCases) {
+    // Isolate injected failures so each request reaches the unchanged closure transaction.
+    await http.pool.query(
+      'DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security'
+    );
+    const before = await sessionNoticeState(http.pool, staffSession),
+      drop = await failSessionSink(http.pool, table, mode);
+    try {
+      expect((await execute(ready.previewVersion)).status).toBe(500);
+      expect(await sessionNoticeState(http.pool, staffSession)).toEqual(before);
+    } finally {
+      await drop();
+    }
+  }
 });
 
 it('closes once, redacts eligible profile fields, revokes sessions, and keeps support history', async () => {
@@ -155,9 +184,24 @@ it('closes once, redacts eligible profile fields, revokes sessions, and keeps su
     anonymized: true,
     exportTicketId: null,
   });
+  await expectParentSessionNotice(
+    http.pool,
+    'closure-owner',
+    'profile_closure_executed',
+    [
+      ownerSessionId,
+      staffHeaders['X-CSRF-Token']!,
+      'Private street',
+      '1234567890',
+      'private@example.test',
+    ],
+    profileId
+  );
+  const delivered = await sessionDeliveryState(http.pool, 'closure-owner');
   const replay = await execute(ready.previewVersion);
   expect(replay.status, http.logs()).toBe(200);
   expect(await replay.json()).toMatchObject({ created: false });
+  expect(await sessionDeliveryState(http.pool, 'closure-owner')).toEqual(delivered);
   const profile = (
     await http.pool.query(
       `SELECT archived,first_name,national_id,contact_email FROM profiles WHERE id=$1`,
