@@ -14,7 +14,7 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 const loadRefundSummary = () => import('./RefundFinancialReviewSummary.js');
 interface Obligation {
   id: string;
-  contractId: string;
+  contractId: string | null;
   invoiceId: string;
   amount: string;
   destination: 'wallet' | 'external_bank';
@@ -318,9 +318,11 @@ export function ContractRefundQueue() {
                   </p>
                   <StatusBadge label={word('cancellation.refund.' + row.state)} />
                 </div>
-                <p className="break-all text-xs text-muted-foreground">
-                  {word('cancellationQueueContract')}: <bdi>{row.contractId}</bdi>
-                </p>
+                {row.contractId ? (
+                  <p className="break-all text-xs text-muted-foreground">
+                    {word('cancellationQueueContract')}: <bdi>{row.contractId}</bdi>
+                  </p>
+                ) : null}
                 {row.orderId && (
                   <p className="break-all text-xs text-muted-foreground">
                     {t('electricity.order.success.order', locale)}: <bdi>{row.orderId}</bdi>

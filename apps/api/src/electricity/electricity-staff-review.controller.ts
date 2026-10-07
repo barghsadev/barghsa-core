@@ -32,6 +32,7 @@ const rawDraftTerminalInput = rawDraftReviewInput
   .extend({
     idempotencyKey: z.string().uuid(),
     expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+    approvalRequestId: z.string().uuid().optional(),
   })
   .strict();
 const baseInput = z
@@ -148,7 +149,7 @@ export class ElectricityStaffReviewController {
   @RateLimit({ namespace: 'electricity:raw-draft-end:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({
     summary:
-      'End the exact reviewed unlinked draft without creating financial or submission records',
+      'End the exact reviewed contractless draft with full wallet returns and retained invoice and submission history',
   })
   @ApiZodBody(rawDraftTerminalInput)
   rawDraftTerminate(
@@ -160,6 +161,28 @@ export class ElectricityStaffReviewController {
     return this.drafts.terminate(
       id,
       parseReasonForm(rawDraftTerminalInput, body, true),
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/draft-terminal/approval')
+  @HttpCode(201)
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'electricity:raw-draft-approval:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Prepare the exact second approval for contractless electricity draft termination',
+  })
+  @ApiZodBody(rawDraftTerminalInput.omit({ approvalRequestId: true }))
+  rawDraftApproval(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown
+  ) {
+    this.requirePermission(req, true);
+    return this.drafts.prepareApproval(
+      id,
+      parseReasonForm(rawDraftTerminalInput.omit({ approvalRequestId: true }), body, true),
       req.session,
       req.ip ?? 'unknown'
     );

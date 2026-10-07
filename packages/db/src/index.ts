@@ -653,6 +653,7 @@ export * from './schema/audit-log';
 export * from './schema/addresses';
 export * from './schema/orders';
 export * from './schema/electricity-orders';
+export * from './schema/electricity-draft-terminations';
 export * from './schema/electricity-quantity-increase-requests';
 export * from './schema/electricity-price-adjustments';
 export * from './schema/saving-plan-catalogue';

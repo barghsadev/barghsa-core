@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-06T23:31:18.422339+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T00:12:31.607891+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish electricity orphan invoices/payments/refund obligations and unversioned linked draft disposition using existing financial boundaries. Generic DRAFT/PENDING and consistent gift-ledger terminal paths are accepted. Preserve owner-only wizard and representation decisions; complete all-four-service milestone gates before release.
+Finish pending legacy orphan refund adoption/reconciliation and unversioned linked draft termination; audit any remaining demonstrated monetary association. Reviewed contractless invoice refunds, second approval and committed wallet returns are accepted. Preserve the owner-only wizard and other representation decisions; complete all-four-service gates before release.
 
 - `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
 - `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`

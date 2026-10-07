@@ -35,6 +35,15 @@ it('rolls back the complete gift migration atomically and restores the prior fun
   const before = (await client.query(query)).rows[0].definition;
   try {
     await client.query('BEGIN');
+    const giftGuard = readFileSync(
+      resolve(folder, '0255_electricity_orphan_draft_gifts.sql'),
+      'utf8'
+    );
+    const giftBegin = giftGuard.indexOf(
+      'CREATE OR REPLACE FUNCTION guard_electricity_order_settings_snapshot'
+    );
+    await client.query(giftGuard.slice(giftBegin, giftGuard.indexOf('END $$;', giftBegin) + 7));
+    const expectedGift = (await client.query(query)).rows[0].definition;
     await client.query(
       'DROP TRIGGER gifts_raw_electricity_terminal_history_guard ON gift_code_redemptions; DROP FUNCTION guard_raw_electricity_terminal_gift_history()'
     );
@@ -49,7 +58,7 @@ it('rolls back the complete gift migration atomically and restores the prior fun
     await client.query(
       readFileSync(resolve(folder, '0255_electricity_orphan_draft_gifts.sql'), 'utf8')
     );
-    expect((await client.query(query)).rows[0].definition).toBe(before);
+    expect((await client.query(query)).rows[0].definition).toBe(expectedGift);
     await client.query('ROLLBACK TO SAVEPOINT before_upgrade');
     expect((await client.query(query)).rows[0].definition).toBe(priorDefinition);
     expect(

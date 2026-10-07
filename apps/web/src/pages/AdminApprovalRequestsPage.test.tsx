@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { t } from '@barghsa/i18n/admin-ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { t as appText } from '@barghsa/i18n/app';
 import { AdminApprovalRequestsView } from './AdminApprovalRequestsPage.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 
@@ -304,3 +305,42 @@ for (const locale of ['en', 'fa'] as const)
       expect(container.querySelector('[role=dialog]')!.textContent).toContain('250000');
     }
   );
+for (const locale of ['en', 'fa'] as const)
+  for (const action of ['reject', 'cancel'] as const)
+    it(`${locale}: shows the contractless ${action} target and every wallet obligation to finance`, async () => {
+      state.locale = locale;
+      const request = {
+        ...row(),
+        actionType: 'contract_cancellation',
+        amountIrR: '350000',
+        details: {
+          entityType: 'electricity_order_termination',
+          terminalAction: action,
+          orderId: first,
+          profileId: second,
+          refundDecision: {
+            mode: 'full_wallet',
+            refunds: [
+              { invoiceId: 'invoice-one', amount: '100000', destination: 'wallet' },
+              { invoiceId: 'invoice-two', amount: '250000', destination: 'wallet' },
+            ],
+          },
+        },
+      };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => Response.json([request]))
+      );
+      await render();
+      expect(container.textContent).toContain(appText('electricity.rawDraft.' + action, locale));
+      await click(t('admin.approvals.approve', locale));
+      const dialog = container.querySelector('[role=dialog]')!;
+      expect(dialog.textContent).toContain(appText('electricity.rawDraft.walletReturn', locale));
+      expect(dialog.textContent).toContain(first);
+      expect(dialog.textContent).toContain(second);
+      expect(dialog.textContent).toContain('invoice-one');
+      expect(dialog.textContent).toContain('invoice-two');
+      expect(dialog.textContent).toContain('100000');
+      expect(dialog.textContent).toContain('250000');
+      expect(dialog.textContent).not.toContain(contractText('version', locale));
+    });

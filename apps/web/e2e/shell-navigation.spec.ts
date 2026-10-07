@@ -23,6 +23,24 @@ for (const locale of ['en', 'fa'])
           },
         })
       );
+      if (area === 'customer')
+        await page.route('**/api/profiles', (route) =>
+          route.fulfill({
+            json: {
+              activeProfileId: '85000000-0000-4000-8000-000000000001',
+              hasDefault: true,
+              profiles: [
+                {
+                  id: '85000000-0000-4000-8000-000000000001',
+                  profileType: 'INDIVIDUAL',
+                  firstName: 'Shell',
+                  lastName: 'Customer',
+                  status: 'ACTIVE',
+                },
+              ],
+            },
+          })
+        );
       await page.route('**/api/admin/failed-notifications/access', (route) =>
         route.fulfill({ json: { canView: true, canRetry: false } })
       );

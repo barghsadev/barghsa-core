@@ -8,7 +8,7 @@ export async function createElectricityRefundObligation(
   client: PoolClient,
   input: {
     orderId: string;
-    contractId: string;
+    contractId: string | null;
     invoiceId: string;
     profileId: string;
     paidAmount: string;
@@ -58,7 +58,9 @@ export async function createElectricityRefundObligation(
       refundId,
       paid.toString(),
       refunded.toString(),
-      `electricity-end:${input.orderId}`,
+      input.contractId === null
+        ? `electricity-end:${input.orderId}:${input.invoiceId}`
+        : `electricity-end:${input.orderId}`,
       input.authorizedBy,
       input.reason,
     ]

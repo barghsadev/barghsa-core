@@ -9,7 +9,7 @@ vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ format: (v: string) => v }),
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ number: String }),
+  useNumberFormatting: () => ({ number: String, money: String }),
 }));
 const orderId = '84000000-0000-4000-8000-000000000001',
   profileId = '85000000-0000-4000-8000-000000000001';
@@ -47,6 +47,101 @@ function preview(action = 'reject') {
   };
 }
 const json = (v: unknown) => new Response(JSON.stringify(v), { status: 200 });
+it('requests the captured second approval, waits, then confirms every funded invoice and the matching receipt', async () => {
+  const invoiceId = '86000000-0000-4000-8000-000000000001',
+    refundId = '87000000-0000-4000-8000-000000000001',
+    approvalId = '88000000-0000-4000-8000-000000000001';
+  let status: string | null = null;
+  const p = () => ({
+    ...preview(),
+    approval: status ? { id: approvalId, status } : null,
+    data: {
+      ...preview().data,
+      refundAmount: '100',
+      approvalRequired: true,
+      invoices: [{ id: invoiceId, refundableAmount: '100' }],
+    },
+  });
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    const path = String(input);
+    if (path.endsWith('/drafts')) return json(queue);
+    if (path.endsWith('/review')) return json(p());
+    if (path.endsWith('/approval')) {
+      status = 'pending';
+      return new Response(
+        JSON.stringify({
+          approvalRequestId: approvalId,
+          status: 'pending',
+          reviewHash: 'a'.repeat(64),
+        }),
+        { status: 201 }
+      );
+    }
+    return json({
+      orderId,
+      status: 'rejected',
+      refundId,
+      financiallyClosed: false,
+      refunds: [{ id: refundId, invoiceId, amount: '100' }],
+    });
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await open();
+  await review();
+  expect(document.body.querySelector('[role=dialog]')!.textContent).toContain(
+    'Request second approval'
+  );
+  expect(document.body.querySelector('[role=dialog]')!.textContent).toContain(invoiceId);
+  await act(async () => confirm().click());
+  expect(container.textContent).toContain('financial approval queue');
+  await act(async () =>
+    container
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  expect(document.body.querySelector('[role=dialog]')).toBeNull();
+  status = 'approved';
+  await act(async () =>
+    container
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  expect(document.body.querySelector('[role=dialog]')!.textContent).toContain('Full wallet return');
+  await act(async () => confirm().click());
+  const mutation = fetcher.mock.calls.find(([u]) => String(u).endsWith('/draft-terminal'));
+  expect(mutation).toBeDefined();
+});
+it('keeps the captured funded decision when a receipt omits the mandatory wallet obligation', async () => {
+  const invoiceId = '86000000-0000-4000-8000-000000000001';
+  const p = {
+    ...preview(),
+    data: {
+      ...preview().data,
+      refundAmount: '100',
+      approvalRequired: false,
+      invoices: [{ id: invoiceId, refundableAmount: '100' }],
+    },
+  };
+  const fetcher = vi.fn(async (input: RequestInfo | URL) =>
+    String(input).endsWith('/drafts')
+      ? json(queue)
+      : String(input).endsWith('/review')
+        ? json(p)
+        : json({
+            orderId,
+            status: 'rejected',
+            refundId: null,
+            financiallyClosed: true,
+            refunds: [],
+          })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await open();
+  await review();
+  await act(async () => confirm().click());
+  expect(document.body.querySelector('[role=dialog]')).not.toBeNull();
+  expect(fetcher.mock.calls.filter(([u]) => String(u).endsWith('/draft-terminal'))).toHaveLength(1);
+});
 for (const [status, restoreOnCancel, outcome, copy] of [
   ['consumed', true, 'release', 'The gift-code usage slot will be restored.'],
   ['consumed', false, 'retain', 'The gift-code policy retains the usage slot.'],

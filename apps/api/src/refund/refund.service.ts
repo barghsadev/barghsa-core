@@ -361,7 +361,7 @@ export class RefundService {
     const rows = (
       await getDbPool().query<{
         id: string;
-        contractId: string;
+        contractId: string | null;
         invoiceId: string;
         amount: string;
         destination: string;

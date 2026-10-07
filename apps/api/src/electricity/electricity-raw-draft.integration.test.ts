@@ -2,6 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { beforeAll, beforeEach, afterAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { expectCoreAudit } from '../test/core-audit.js';
+import { runWalletRefund } from '@barghsa/db/refund-processing';
+import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 let profile: string, otherProfile: string, product: string, gift: string;
@@ -63,8 +65,9 @@ beforeAll(async () => {
   );
 }, 40000);
 let testIp = 0;
-beforeEach(() => {
+beforeEach(async () => {
   for (const h of Object.values(headers)) h['X-Forwarded-For'] = '192.0.2.' + ++testIp;
+  await http.pool.query("DELETE FROM app_config WHERE key='finance.dual_approval_threshold'");
 });
 afterAll(async () => {
   await http?.close();
@@ -89,7 +92,7 @@ async function actualDraft(restore: boolean | null = null) {
   if (restore !== null)
     giftId = (
       await http.pool.query(
-        "INSERT INTO gift_codes(code,discount_type,discount_value,restore_on_cancel,restore_after_payment,created_by) VALUES($1,'fixed_irr',100,$2,false,'raw-reviewer') RETURNING id",
+        "INSERT INTO gift_codes(code,discount_type,discount_value,restore_on_cancel,restore_after_payment,created_by,valid_from) VALUES($1,'fixed_irr',100,$2,false,'raw-reviewer',clock_timestamp()-INTERVAL '1 minute') RETURNING id",
         [code, restore]
       )
     ).rows[0].id;
@@ -613,4 +616,453 @@ it('excludes a conflicting gift association and refuses its captured decision wi
   expect(await snapshot(id)).toEqual(before);
   await http.pool.query('UPDATE orders SET gift_code_id=$2 WHERE id=$1', [id, giftId]);
   expect((await send(id, '/draft-terminal', await review(id))).status, http.logs()).toBe(200);
+});
+
+async function orphanFunding(id: string) {
+  const ids: string[] = [];
+  for (const amount of [100000, 250000])
+    ids.push(
+      (
+        await http.pool.query(
+          "INSERT INTO invoices(profile_id,order_id,type,state,total_amount,paid_amount) VALUES($1,$2,$4,'Paid',$3,$3) RETURNING id",
+          [profile, id, amount, ids.length ? 'manual' : 'auto']
+        )
+      ).rows[0].id
+    );
+  ids.push(
+    (
+      await http.pool.query(
+        "INSERT INTO invoices(profile_id,order_id,type,state,total_amount,adjustment_for_invoice_id,adjustment_kind) VALUES($1,$2,'manual','Unpaid',5000,$3,'charge') RETURNING id",
+        [profile, id, ids[0]]
+      )
+    ).rows[0].id
+  );
+  return ids;
+}
+async function orphanFinance() {
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES('orphan-finance','orphan-finance','test',true) ON CONFLICT(user_id) DO NOTHING"
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('orphan-finance','role-finance') ON CONFLICT DO NOTHING"
+  );
+  const session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES($1,'orphan-finance',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW(),'staff')",
+    [session, csrf, randomUUID()]
+  );
+  return {
+    Cookie: 'barghsa_session=' + session,
+    'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+}
+for (const action of ['reject', 'cancel'] as const)
+  for (const approvalRequired of [false, true])
+    it(`ends funded orphan draft with ${action} and approval=${approvalRequired}, retaining invoices and fulfilling every wallet obligation once`, async () => {
+      await http.pool.query(
+        "INSERT INTO app_config(key,value) VALUES('finance.dual_approval_threshold',$1::jsonb) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value",
+        [JSON.stringify({ threshold_irr: approvalRequired ? 100 : 0 })]
+      );
+      const { id, giftId } = await actualDraft(true),
+        ids = await orphanFunding(id),
+        before = await snapshot(id);
+      const response = await send(id, '/draft-terminal/review', {
+        action,
+        reason: 'Refund actual orphan invoices',
+      });
+      expect(response.status, http.logs()).toBe(200);
+      const preview = (await response.json()) as {
+        hash: string;
+        data: {
+          refundAmount: string;
+          approvalRequired: boolean;
+          gift: { outcome: string };
+          invoices: unknown[];
+        };
+      };
+      expect(preview.data).toMatchObject({
+        refundAmount: '350000',
+        approvalRequired,
+        gift: { outcome: 'retain' },
+      });
+      expect(preview.data.invoices).toHaveLength(3);
+      let body = {
+        action,
+        reason: 'Refund actual orphan invoices',
+        expectedReviewHash: preview.hash,
+        idempotencyKey: randomUUID(),
+      } as {
+        action: 'reject' | 'cancel';
+        reason: string;
+        expectedReviewHash: string;
+        idempotencyKey: string;
+        approvalRequestId?: string;
+      };
+      if (approvalRequired) {
+        expect((await send(id, '/draft-terminal', body)).status).toBe(409);
+        expect(await snapshot(id)).toEqual(before);
+        const staged = await send(id, '/draft-terminal/approval', body);
+        expect(staged.status, http.logs()).toBe(201);
+        const prepared = (await staged.json()) as { approvalRequestId: string };
+        const finance = await orphanFinance();
+        const decision = await fetch(
+          http.base + '/api/admin/approval-requests/' + prepared.approvalRequestId + '/approve',
+          { method: 'POST', headers: finance, body: '{}' }
+        );
+        expect(decision.status, http.logs()).toBe(200);
+        body = { ...body, approvalRequestId: prepared.approvalRequestId };
+      }
+      const responses = await Promise.all([
+        send(id, '/draft-terminal', body),
+        send(id, '/draft-terminal', body),
+      ]);
+      expect(
+        responses.map((r) => r.status),
+        http.logs()
+      ).toEqual([200, 200]);
+      const receipt = (await responses[0]!.json()) as {
+        refunds: Array<{ id: string; invoiceId: string; amount: string }>;
+        financiallyClosed: boolean;
+      };
+      expect(receipt).toEqual(await responses[1]!.json());
+      expect(receipt.financiallyClosed).toBe(false);
+      expect(receipt.refunds).toHaveLength(2);
+      await expect(
+        http.pool.query("UPDATE invoices SET state='Cancelled' WHERE id=$1", [ids[0]])
+      ).rejects.toMatchObject({ code: '23514' });
+      const after = await snapshot(id);
+      expect(after.contracts).toBeNull();
+      expect(after.wizard).toEqual(before.wizard);
+      expect(after.draft).toMatchObject({
+        status: action === 'reject' ? 'rejected' : 'cancelled',
+        submitted_at: null,
+        submitted_by: null,
+        pricing_snapshot: null,
+        period_start: null,
+        period_end: null,
+      });
+      expect(
+        (await http.pool.query('SELECT status FROM gift_code_redemptions WHERE order_id=$1', [id]))
+          .rows[0].status
+      ).toBe('consumed');
+      expect(
+        (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [ids[2]])).rows[0].state
+      ).toBe('Cancelled');
+      await http.pool.query("DELETE FROM user_roles WHERE user_id='raw-reviewer'");
+      try {
+        for (const refund of receipt.refunds) {
+          expect(await runWalletRefund(http.pool, refund.id)).toBe('completed');
+          expect(await runWalletRefund(http.pool, refund.id)).toBe('deferred');
+        }
+      } finally {
+        await http.pool.query(
+          "INSERT INTO user_roles(user_id,role_id) VALUES('raw-reviewer','role-legal-contracts') ON CONFLICT DO NOTHING"
+        );
+      }
+      expect(
+        (
+          await http.pool.query(
+            "SELECT SUM(amount)::text AS amount,COUNT(*)::int AS count FROM wallet_transactions WHERE ref_id=ANY($1::text[]) AND type='refund'",
+            [receipt.refunds.map((r) => r.id)]
+          )
+        ).rows[0]
+      ).toEqual({ amount: '350000', count: 2 });
+      expect(
+        (
+          await http.pool.query('SELECT status FROM refund_obligations WHERE order_id=$1', [id])
+        ).rows.map((r) => r.status)
+      ).toEqual(['completed', 'completed']);
+      await expect(
+        http.pool.query('DELETE FROM electricity_draft_terminations WHERE order_id=$1', [id])
+      ).rejects.toMatchObject({ code: '23514' });
+      await expect(
+        http.pool.query('UPDATE invoices SET total_amount=total_amount+1 WHERE id=$1', [ids[0]])
+      ).rejects.toMatchObject({ code: '23514' });
+      await expectCoreAudit(http.pool, 'electricity.draft.terminated', id, {
+        entity: 'electricity_order',
+        fromState: 'draft',
+        toState: action === 'reject' ? 'rejected' : 'cancelled',
+        reason: body.reason,
+        actor: 'raw-reviewer',
+        context: 'staff',
+      });
+      await http.pool.query("DELETE FROM app_config WHERE key='finance.dual_approval_threshold'");
+      expect(giftId).not.toBeNull();
+    });
+it('requires a current finance reviewer and invalidates an approved orphan decision when another invoice appears', async () => {
+  await http.pool.query(
+    "INSERT INTO app_config(key,value) VALUES('finance.dual_approval_threshold','{\"threshold_irr\":100}') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value"
+  );
+  try {
+    const { id } = await actualDraft(),
+      ids = await orphanFunding(id),
+      command = await review(id);
+    const staged = await send(id, '/draft-terminal/approval', command);
+    expect(staged.status, http.logs()).toBe(201);
+    const approvalId = ((await staged.json()) as { approvalRequestId: string }).approvalRequestId,
+      finance = await orphanFinance();
+    expect(
+      (
+        await fetch(http.base + '/api/admin/approval-requests/' + approvalId + '/approve', {
+          method: 'POST',
+          headers: finance,
+          body: '{}',
+        })
+      ).status,
+      http.logs()
+    ).toBe(200);
+    const execution = { ...command, approvalRequestId: approvalId },
+      before = await snapshot(id);
+    await http.pool.query("DELETE FROM user_roles WHERE user_id='orphan-finance'");
+    expect((await send(id, '/draft-terminal', execution)).status).toBe(409);
+    expect(await snapshot(id)).toEqual(before);
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('orphan-finance','role-finance')"
+    );
+    await http.pool.query(
+      "INSERT INTO invoices(profile_id,order_id,type,state,total_amount,adjustment_for_invoice_id,adjustment_kind) VALUES($1,$2,'manual','Unpaid',1,$3,'charge')",
+      [profile, id, ids[0]]
+    );
+    const changed = await snapshot(id);
+    expect((await send(id, '/draft-terminal', execution)).status).toBe(409);
+    expect(await snapshot(id)).toEqual(changed);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT order_id FROM electricity_draft_terminations WHERE order_id=$1',
+          [id]
+        )
+      ).rows
+    ).toHaveLength(0);
+  } finally {
+    await http.pool.query("DELETE FROM app_config WHERE key='finance.dual_approval_threshold'");
+  }
+});
+it('rolls back every orphan financial record when the mandatory refund audit fails, then retries the exact decision', async () => {
+  const { id } = await actualDraft();
+  await orphanFunding(id);
+  const command = await review(id),
+    before = await snapshot(id);
+  await http.pool.query(
+    `CREATE FUNCTION fail_orphan_financial_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='refund.approved' THEN RAISE EXCEPTION 'audit unavailable'; END IF; RETURN NEW; END $$; CREATE TRIGGER fail_orphan_financial_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_orphan_financial_audit()`
+  );
+  try {
+    expect((await send(id, '/draft-terminal', command)).status).toBe(500);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_orphan_financial_audit ON audit_log; DROP FUNCTION fail_orphan_financial_audit()'
+    );
+  }
+  expect(await snapshot(id)).toEqual(before);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT order_id FROM electricity_draft_terminations WHERE order_id=$1',
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT id FROM refunds WHERE invoice_id IN (SELECT id FROM invoices WHERE order_id=$1)',
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+  expect(
+    (await http.pool.query('SELECT id FROM refund_obligations WHERE order_id=$1', [id])).rows
+  ).toHaveLength(0);
+  const response = await send(id, '/draft-terminal', command);
+  expect(response.status, http.logs()).toBe(200);
+  const receipt = (await response.json()) as { refunds: Array<{ id: string }> };
+  expect((await send(id, '/draft-terminal', command)).status).toBe(200);
+  for (const refund of receipt.refunds) {
+    await expectCoreAudit(http.pool, 'refund.requested', refund.id, {
+      entity: 'refund',
+      fromState: null,
+      toState: 'Requested',
+      reason: command.reason,
+      actor: 'raw-reviewer',
+      context: 'staff',
+    });
+    await expectCoreAudit(http.pool, 'refund.approved', refund.id, {
+      entity: 'refund',
+      fromState: 'Requested',
+      toState: 'Approved',
+      reason: command.reason,
+      actor: 'raw-reviewer',
+      context: 'staff',
+    });
+    expect(await runWalletRefund(http.pool, refund.id)).toBe('completed');
+  }
+});
+it('can close a reconciled zero invoice while refusing its unresolved Draft state', async () => {
+  const { id } = await actualDraft();
+  const invoice = (
+    await http.pool.query(
+      "INSERT INTO invoices(profile_id,order_id,type,state,total_amount) VALUES($1,$2,'manual','Draft',0) RETURNING id",
+      [profile, id]
+    )
+  ).rows[0].id;
+  expect(
+    (
+      await send(id, '/draft-terminal/review', {
+        action: 'reject',
+        reason: 'Unresolved zero invoice',
+      })
+    ).status
+  ).toBe(409);
+  await http.pool.query(
+    "UPDATE invoices SET state='Cancelled',cancelled_at=clock_timestamp() WHERE id=$1",
+    [invoice]
+  );
+  const response = await send(id, '/draft-terminal', await review(id));
+  expect(response.status, http.logs()).toBe(200);
+  expect(await response.json()).toMatchObject({
+    refundId: null,
+    refunds: [],
+    financiallyClosed: true,
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT total_amount,paid_amount,refunded_amount FROM invoices WHERE id=$1',
+        [invoice]
+      )
+    ).rows[0]
+  ).toEqual({ total_amount: '0', paid_amount: '0', refunded_amount: '0' });
+});
+it('preserves a completed legacy orphan obligation and returns only the remaining invoice balance', async () => {
+  const { id } = await actualDraft(),
+    ids = await orphanFunding(id);
+  await orphanFinance();
+  const refundId = randomUUID(),
+    invoiceId = ids[0]!;
+  await http.pool.query(
+    "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,$3,100000,'wallet',$4)",
+    [refundId, invoiceId, profile, 'legacy:' + id]
+  );
+  await http.pool.query(
+    "INSERT INTO refund_obligations(order_id,invoice_id,profile_id,refund_id,total_paid_amount,idempotency_key,authorized_by,reason) VALUES($1,$2,$3,$4,100000,$5,'orphan-finance','Retained authorized legacy refund')",
+    [id, invoiceId, profile, refundId, 'electricity-end:' + id]
+  );
+  await http.pool.query("UPDATE refunds SET state='Approved' WHERE id=$1", [refundId]);
+  await http.pool.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refundId]);
+  await http.pool.query(
+    "INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,'orphan-finance')",
+    [refundId]
+  );
+  expect(
+    (
+      await send(id, '/draft-terminal/review', {
+        action: 'reject',
+        reason: 'Outstanding legacy return',
+      })
+    ).status
+  ).toBe(409);
+  expect(await runWalletRefund(http.pool, refundId)).toBe('completed');
+  const legacy = (
+    await http.pool.query('SELECT * FROM refund_obligations WHERE refund_id=$1', [refundId])
+  ).rows[0];
+  const command = await review(id),
+    response = await send(id, '/draft-terminal', command);
+  expect(response.status, http.logs()).toBe(200);
+  const receipt = (await response.json()) as { refunds: Array<{ id: string; amount: string }> };
+  expect(receipt.refunds).toHaveLength(1);
+  expect(receipt.refunds[0]!.amount).toBe('250000');
+  expect(await runWalletRefund(http.pool, receipt.refunds[0]!.id)).toBe('completed');
+  expect(
+    (await http.pool.query('SELECT * FROM refund_obligations WHERE refund_id=$1', [refundId]))
+      .rows[0]
+  ).toEqual(legacy);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT SUM(amount)::text AS amount FROM wallet_transactions WHERE type='refund' AND ref_id=ANY($1::text[])",
+        [[refundId, receipt.refunds[0]!.id]]
+      )
+    ).rows[0].amount
+  ).toBe('350000');
+});
+it('refuses a direct orphan commit that omits one mandatory wallet obligation', async () => {
+  const { id } = await actualDraft(),
+    ids = await orphanFunding(id),
+    before = await snapshot(id);
+  const response = await send(id, '/draft-terminal/review', {
+    action: 'reject',
+    reason: 'Exact all-invoice closure',
+  });
+  expect(response.status, http.logs()).toBe(200);
+  const { approval: _approval, ...review } = (await response.json()) as {
+    approval: unknown;
+    hash: string;
+    scope: unknown;
+    data: unknown;
+    schemaVersion: number;
+  };
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      "INSERT INTO electricity_draft_terminations(order_id,profile_id,executed_by,action,reason,review_hash,financial_review) VALUES($1,$2,'raw-reviewer','reject','Exact all-invoice closure',$3,$4::jsonb)",
+      [id, profile, review.hash, JSON.stringify(review)]
+    );
+    await createElectricityRefundObligation(client, {
+      orderId: id,
+      contractId: null,
+      invoiceId: ids[0]!,
+      profileId: profile,
+      paidAmount: '100000',
+      refundedAmount: '0',
+      authorizedBy: 'raw-reviewer',
+      reason: 'Exact all-invoice closure',
+    });
+    await client.query(
+      "UPDATE invoices SET state='Cancelled',cancelled_at=clock_timestamp() WHERE id=$1",
+      [ids[2]]
+    );
+    await client.query("UPDATE orders SET status='CANCELLED' WHERE id=$1", [id]);
+    await client.query("UPDATE electricity_orders SET status='rejected' WHERE id=$1", [id]);
+    await client.query(
+      "INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,operating_context) VALUES($1,'raw-reviewer','electricity.draft.terminated',$2::jsonb,$3,'staff')",
+      [
+        randomUUID(),
+        JSON.stringify({
+          entity: 'electricity_order',
+          entityId: id,
+          orderId: id,
+          profileId: profile,
+          fromState: 'draft',
+          toState: 'rejected',
+          reason: 'Exact all-invoice closure',
+          actor: 'raw-reviewer',
+          reviewHash: review.hash,
+          financialReview: review,
+        }),
+        randomUUID(),
+      ]
+    );
+    await expect(client.query('COMMIT')).rejects.toMatchObject({
+      code: '23514',
+      message: 'Every full wallet obligation must commit atomically',
+    });
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+  expect(await snapshot(id)).toEqual(before);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT order_id FROM electricity_draft_terminations WHERE order_id=$1',
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+  expect(
+    (await http.pool.query('SELECT id FROM refunds WHERE invoice_id=ANY($1::uuid[])', [ids])).rows
+  ).toHaveLength(0);
 });

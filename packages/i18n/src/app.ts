@@ -7,11 +7,21 @@ export interface I18nDictionary {
 export const fa: I18nDictionary = {
   'electricity.rawDraft.title': 'پیش\u200cنویس\u200cهای ارسال\u200cنشده',
   'electricity.rawDraft.description':
-    'سفارش\u200cهای ارسال\u200cنشده بدون قرارداد، صورت\u200cحساب یا پرداخت نمایش داده می\u200cشوند. تصمیم دربارهٔ کد هدیه طبق سیاست آن بررسی می\u200cشود. اطلاعات فرم ذخیره\u200cشدهٔ مشتری خصوصی می\u200cماند.',
+    'سفارش\u200cهای ارسال\u200cنشده بدون قرارداد نمایش داده می\u200cشوند. صورت\u200cحساب\u200cهای موجود، بازگشت کامل وجه به کیف پول و سیاست کد هدیه در تصمیم بررسی می\u200cشوند. اطلاعات فرم ذخیره\u200cشدهٔ مشتری خصوصی می\u200cماند.',
   'electricity.rawDraft.gift': 'کد هدیه',
   'electricity.rawDraft.gift.release': 'سهم استفاده از کد هدیه بازگردانده می\u200cشود.',
   'electricity.rawDraft.gift.retain': 'طبق سیاست کد هدیه، سهم استفاده بازگردانده نمی\u200cشود.',
   'electricity.rawDraft.gift.already_released': 'سهم استفاده از کد هدیه قبلاً بازگردانده شده است.',
+  'electricity.rawDraft.walletReturn': 'بازگشت کامل به کیف پول',
+  'electricity.rawDraft.invoice': 'صورت\u200cحساب',
+  'electricity.rawDraft.approval': 'تأیید مالی',
+  'electricity.rawDraft.approvalRequired': 'تأیید یک بررسی\u200cکنندهٔ مالی دیگر لازم است.',
+  'electricity.rawDraft.approvalNotRequired': 'تأیید دوم طبق سیاست فعلی لازم نیست.',
+  'electricity.rawDraft.requestApproval': 'درخواست تأیید دوم',
+  'electricity.rawDraft.awaitingApproval':
+    'درخواست در صف تأییدهای مالی است. پس از تأیید، تصمیم را دوباره بررسی کنید.',
+  'electricity.rawDraft.approvalSummary':
+    'این درخواست برای بررسی مالی دوم ارسال می\u200cشود. پیش\u200cنویس تا اجرای تصمیم تأییدشده باز می\u200cماند.',
   'electricity.rawDraft.empty': 'پیش\u200cنویس ناقص قابل رسیدگی وجود ندارد.',
   'electricity.rawDraft.order': 'شناسه سفارش',
   'electricity.rawDraft.profile': 'شناسه پرونده',
@@ -1802,11 +1812,23 @@ export const fa: I18nDictionary = {
 export const en: I18nDictionary = {
   'electricity.rawDraft.title': 'Unsubmitted order drafts',
   'electricity.rawDraft.description':
-    'Unsubmitted orders without contracts, invoices or payments are shown. Gift-code outcomes are reviewed under their policy. Saved customer form contents remain private.',
+    'Unsubmitted orders without contracts are shown. Existing invoices, full wallet returns and gift-code policy are reviewed with the decision. Saved customer form contents remain private.',
   'electricity.rawDraft.gift': 'Gift code',
   'electricity.rawDraft.gift.release': 'The gift-code usage slot will be restored.',
   'electricity.rawDraft.gift.retain': 'The gift-code policy retains the usage slot.',
   'electricity.rawDraft.gift.already_released': 'The gift-code usage slot was already restored.',
+  'electricity.rawDraft.walletReturn': 'Full wallet return',
+  'electricity.rawDraft.invoice': 'Invoice',
+  'electricity.rawDraft.approval': 'Financial approval',
+  'electricity.rawDraft.approvalRequired':
+    'A different financial reviewer must approve this return.',
+  'electricity.rawDraft.approvalNotRequired':
+    'The current policy does not require a second approval.',
+  'electricity.rawDraft.requestApproval': 'Request second approval',
+  'electricity.rawDraft.awaitingApproval':
+    'The request is in the financial approval queue. Review the decision again after approval.',
+  'electricity.rawDraft.approvalSummary':
+    'This requests a second financial review. The draft stays open until the approved decision is executed.',
   'electricity.rawDraft.empty': 'No incomplete drafts need attention.',
   'electricity.rawDraft.order': 'Order ID',
   'electricity.rawDraft.profile': 'Profile ID',

@@ -82,14 +82,8 @@ export async function readCancellationSnapshot(
   return cancellationSnapshot(row, terminalAction);
 }
 
-export function cancellationSnapshot(
-  row: CancellationSnapshotRow,
-  terminalAction: 'cancel' | 'reject' = 'cancel'
-) {
-  const hardwareCredits = [...(row.hardware_credits ?? [])].sort((a, b) =>
-    a.id.localeCompare(b.id)
-  );
-  const invoices = [...row.invoices]
+export function invoiceRefundBalances(input: CancellationInvoice[]) {
+  return [...input]
     .sort((a, b) => a.id.localeCompare(b.id))
     .map((invoice) => {
       const pendingRefunds = [...invoice.pendingRefunds].sort((a, b) => a.id.localeCompare(b.id));
@@ -109,6 +103,16 @@ export function cancellationSnapshot(
         availableRefundAmount: (paid - returned - pending).toString(),
       };
     });
+}
+
+export function cancellationSnapshot(
+  row: CancellationSnapshotRow,
+  terminalAction: 'cancel' | 'reject' = 'cancel'
+) {
+  const hardwareCredits = [...(row.hardware_credits ?? [])].sort((a, b) =>
+    a.id.localeCompare(b.id)
+  );
+  const invoices = invoiceRefundBalances(row.invoices);
   const total = (
     key: 'paidAmount' | 'refundedAmount' | 'refundableAmount' | 'availableRefundAmount'
   ) => invoices.reduce((sum, invoice) => sum + BigInt(invoice[key]), 0n).toString();

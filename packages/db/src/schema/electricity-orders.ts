@@ -277,7 +277,12 @@ export const refundObligations = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => [
-    uniqueIndex('refund_obligations_order_unique').on(table.orderId),
+    uniqueIndex('refund_obligations_order_unique')
+      .on(table.orderId)
+      .where(sql`${table.contractId} IS NOT NULL`),
+    uniqueIndex('refund_obligations_orphan_invoice_unique')
+      .on(table.orderId, table.invoiceId)
+      .where(sql`${table.contractId} IS NULL`),
     uniqueIndex('refund_obligations_refund_unique').on(table.refundId),
     uniqueIndex('refund_obligations_idempotency_unique').on(table.idempotencyKey),
     index('refund_obligations_status_idx').on(table.status, table.createdAt),

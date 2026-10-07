@@ -55,10 +55,10 @@ export function Topbar({
       </div>
       <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-2">
         {isWide && (
-          <>
+          <div className="hidden lg:contents">
             <ThemeSwitcher />
             <LanguageSwitcher />
-          </>
+          </div>
         )}
         <ProfileMenu
           area={area}

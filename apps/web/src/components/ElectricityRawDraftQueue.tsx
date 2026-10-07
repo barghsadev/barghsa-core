@@ -4,6 +4,7 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { OperationalQueueTable } from './OperationalQueueTable.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -15,7 +16,7 @@ interface Draft {
   updatedAt: string;
 }
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-function giftOutcome(value: unknown) {
+function giftOutcome(value: unknown, paid = false) {
   if (value === undefined || value === null) return null;
   if (
     !value ||
@@ -30,16 +31,68 @@ function giftOutcome(value: unknown) {
     !['consumed', 'released'].includes(String(value.status)) ||
     !('restoreOnCancel' in value) ||
     typeof value.restoreOnCancel !== 'boolean' ||
+    (paid &&
+      (!('restoreAfterPayment' in value) || typeof value.restoreAfterPayment !== 'boolean')) ||
     !('outcome' in value) ||
     value.outcome !==
       (value.status === 'released'
         ? 'already_released'
-        : value.restoreOnCancel
+        : value.restoreOnCancel &&
+            (!paid || ('restoreAfterPayment' in value && value.restoreAfterPayment))
           ? 'release'
           : 'retain')
   )
     throw new Error('Unbound draft gift outcome');
   return { id: value.giftCodeId, outcome: String(value.outcome) };
+}
+function financialOutcome(data: object) {
+  const amount = 'refundAmount' in data ? data.refundAmount : null;
+  if (
+    typeof amount !== 'string' ||
+    !/^(0|[1-9][0-9]{0,18})$/.test(amount) ||
+    BigInt(amount) > 9223372036854775807n
+  )
+    throw new Error('Invalid draft return');
+  const raw = 'invoices' in data ? data.invoices : [];
+  if (!Array.isArray(raw)) throw new Error('Invalid draft invoices');
+  const invoices = raw.map((line: unknown) => {
+    if (
+      !line ||
+      typeof line !== 'object' ||
+      !('id' in line) ||
+      typeof line.id !== 'string' ||
+      !uuid.test(line.id) ||
+      !('refundableAmount' in line) ||
+      typeof line.refundableAmount !== 'string' ||
+      !/^(0|[1-9][0-9]{0,18})$/.test(line.refundableAmount) ||
+      BigInt(line.refundableAmount) > 9223372036854775807n
+    )
+      throw new Error('Invalid draft invoice');
+    return { id: line.id, amount: line.refundableAmount };
+  });
+  if (
+    new Set(invoices.map((i) => i.id)).size !== invoices.length ||
+    invoices.reduce((sum, i) => sum + BigInt(i.amount), 0n).toString() !== amount
+  )
+    throw new Error('Unbound draft return');
+  const required = 'approvalRequired' in data ? data.approvalRequired : false;
+  if (typeof required !== 'boolean') throw new Error('Invalid draft approval');
+  return { amount, invoices, required };
+}
+function approvalOutcome(raw: object) {
+  const value = 'approval' in raw ? raw.approval : null;
+  if (value === null || value === undefined) return null;
+  if (
+    !value ||
+    typeof value !== 'object' ||
+    !('id' in value) ||
+    typeof value.id !== 'string' ||
+    !uuid.test(value.id) ||
+    !('status' in value) ||
+    !['pending', 'approved', 'rejected', 'cancelled'].includes(String(value.status))
+  )
+    throw new Error('Unbound draft approval');
+  return { id: value.id, status: String(value.status) };
 }
 function queue(value: unknown) {
   if (
@@ -86,6 +139,7 @@ function Queue() {
   const locale = useLocale(),
     copy = (key: string) => t('electricity.rawDraft.' + key, locale);
   const time = useAccountTime(locale);
+  const numbers = useNumberFormatting(locale);
   const [open, setOpen] = useState(false),
     [rows, setRows] = useState<Draft[]>([]),
     [after, setAfter] = useState<string | null>(null),
@@ -98,7 +152,16 @@ function Queue() {
     ),
     [reason, setReason] = useState(''),
     [action, setAction] = useState<
-      (TeamAction & { draft: Draft; reason: string; gift: ReturnType<typeof giftOutcome> }) | null
+      | (TeamAction & {
+          draft: Draft;
+          reason: string;
+          gift: ReturnType<typeof giftOutcome>;
+          financial: ReturnType<typeof financialOutcome>;
+          stage: 'approval' | 'execute';
+          hash: string;
+          target: 'rejected' | 'cancelled';
+        })
+      | null
     >(null),
     [busy, setBusy] = useState(false),
     [invalid, setInvalid] = useState(false);
@@ -199,7 +262,6 @@ function Queue() {
         typeof raw.data.stateFingerprint !== 'string' ||
         !/^[a-f0-9]{64}$/.test(raw.data.stateFingerprint) ||
         !('refundAmount' in raw.data) ||
-        raw.data.refundAmount !== '0' ||
         !('createsContract' in raw.data) ||
         raw.data.createsContract !== false ||
         !('createsInvoice' in raw.data) ||
@@ -208,22 +270,43 @@ function Queue() {
         raw.data.changesSavedWizardProgress !== false
       )
         throw new Error('Unbound draft review');
-      const gift = giftOutcome('gift' in raw.data ? raw.data.gift : null);
+      const financial = financialOutcome(raw.data),
+        approval = approvalOutcome(raw),
+        stage = financial.required && approval?.status !== 'approved' ? 'approval' : 'execute';
+      if (financial.required && approval?.status === 'pending') {
+        if (live.current) setError(copy('awaitingApproval'));
+        return;
+      }
+      const gift = giftOutcome(
+        'gift' in raw.data ? raw.data.gift : null,
+        'paidOrder' in raw.data && raw.data.paidOrder === true
+      );
       if (live.current)
         setAction({
           draft: owned.row,
           reason: explanation,
           gift,
-          title: copy(owned.action),
-          description: copy('summary'),
-          path: '/api/staff/electricity/orders/' + owned.row.id + '/draft-terminal',
+          financial,
+          stage,
+          hash: raw.hash,
+          target: owned.action === 'reject' ? 'rejected' : 'cancelled',
+          title: copy(stage === 'approval' ? 'requestApproval' : owned.action),
+          description: copy(stage === 'approval' ? 'approvalSummary' : 'summary'),
+          path:
+            '/api/staff/electricity/orders/' +
+            owned.row.id +
+            '/draft-terminal' +
+            (stage === 'approval' ? '/approval' : ''),
           method: 'POST',
-          successStatus: 200,
+          successStatus: stage === 'approval' ? 201 : 200,
           body: {
             action: owned.action,
             reason: explanation,
             expectedReviewHash: raw.hash,
             idempotencyKey: crypto.randomUUID(),
+            ...(financial.required && approval?.status === 'approved'
+              ? { approvalRequestId: approval.id }
+              : {}),
           },
           conflictMessage: copy('changed'),
           forbiddenMessage: copy('denied'),
@@ -365,10 +448,95 @@ function Queue() {
                       <dd>{copy('gift.' + action.gift.outcome)}</dd>
                     </div>
                   ) : null}
+                  {action.financial.invoices.length ? (
+                    <>
+                      <div>
+                        <dt>{copy('walletReturn')}</dt>
+                        <dd>{numbers.money(action.financial.amount)}</dd>
+                      </div>
+                      {action.financial.invoices.map((line) => (
+                        <div key={line.id}>
+                          <dt>{copy('invoice')}</dt>
+                          <dd className="break-all" dir="ltr">
+                            {line.id}
+                          </dd>
+                          <dd>{numbers.money(line.amount)}</dd>
+                        </div>
+                      ))}
+                      <div>
+                        <dt>{copy('approval')}</dt>
+                        <dd>
+                          {copy(
+                            action.financial.required ? 'approvalRequired' : 'approvalNotRequired'
+                          )}
+                        </dd>
+                      </div>
+                    </>
+                  ) : null}
                 </dl>
               }
               onClose={() => setAction(null)}
-              onSuccess={async () => {
+              onSuccess={async (result) => {
+                if (!result || typeof result !== 'object') throw new Error('Unbound draft receipt');
+                if (action.stage === 'approval') {
+                  if (
+                    !('approvalRequestId' in result) ||
+                    typeof result.approvalRequestId !== 'string' ||
+                    !uuid.test(result.approvalRequestId) ||
+                    !('status' in result) ||
+                    result.status !== 'pending' ||
+                    !('reviewHash' in result) ||
+                    result.reviewHash !== action.hash
+                  )
+                    throw new Error('Unbound draft approval receipt');
+                  if (live.current) {
+                    setAction(null);
+                    setError(copy('awaitingApproval'));
+                  }
+                  return;
+                }
+                if (
+                  !('orderId' in result) ||
+                  result.orderId !== action.draft.id ||
+                  !('status' in result) ||
+                  result.status !== action.target ||
+                  !('refundId' in result)
+                )
+                  throw new Error('Unbound draft terminal receipt');
+                const expected = action.financial.invoices.filter((i) => BigInt(i.amount) > 0n);
+                if (action.financial.invoices.length) {
+                  if (
+                    !('refunds' in result) ||
+                    !Array.isArray(result.refunds) ||
+                    result.refunds.length !== expected.length ||
+                    !('financiallyClosed' in result) ||
+                    result.financiallyClosed !== (expected.length === 0)
+                  )
+                    throw new Error('Unbound draft obligations');
+                  const ids = new Set<string>();
+                  const invoices = new Map(expected.map((i) => [i.id, i.amount]));
+                  for (const row of result.refunds) {
+                    if (
+                      !row ||
+                      typeof row !== 'object' ||
+                      !('id' in row) ||
+                      typeof row.id !== 'string' ||
+                      !uuid.test(row.id) ||
+                      ids.has(row.id) ||
+                      !('invoiceId' in row) ||
+                      !('amount' in row) ||
+                      !invoices.has(String(row.invoiceId)) ||
+                      invoices.get(String(row.invoiceId)) !== row.amount
+                    )
+                      throw new Error('Unbound draft obligation');
+                    ids.add(row.id);
+                    invoices.delete(String(row.invoiceId));
+                  }
+                  if (
+                    expected.length ? !ids.has(String(result.refundId)) : result.refundId !== null
+                  )
+                    throw new Error('Unbound draft primary refund');
+                } else if (result.refundId !== null) throw new Error('Unbound draft refund');
                 if (live.current) {
                   setAction(null);
                   setSelected(null);

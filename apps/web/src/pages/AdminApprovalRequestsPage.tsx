@@ -361,10 +361,16 @@ function ApprovalWorkspace({
                 className="space-y-3 rounded-lg border bg-card text-card-foreground p-4 break-words"
               >
                 <h2 className="font-semibold">
-                  {request.actionType === 'contract_cancellation' &&
-                  request.details?.terminalAction === 'reject'
-                    ? contractText('rejectionTitle', locale)
-                    : t(`admin.approvals.${request.actionType}`, locale)}
+                  {request.details?.entityType === 'electricity_order_termination'
+                    ? t(
+                        'electricity.rawDraft.' +
+                          (request.details.terminalAction === 'reject' ? 'reject' : 'cancel'),
+                        locale
+                      )
+                    : request.actionType === 'contract_cancellation' &&
+                        request.details?.terminalAction === 'reject'
+                      ? contractText('rejectionTitle', locale)
+                      : t(`admin.approvals.${request.actionType}`, locale)}
                 </h2>
                 <dl className="grid gap-2 text-sm sm:grid-cols-2">
                   {[
@@ -506,10 +512,12 @@ function ApprovalWorkspace({
             review ? (
               <FinancialReviewSummary
                 title={
-                  review.actionType === 'contract_cancellation' &&
-                  review.details?.terminalAction === 'reject'
-                    ? contractText('rejectionFinancialReview', locale)
-                    : t(`admin.approvals.${review.actionType}`, locale)
+                  review.details?.entityType === 'electricity_order_termination'
+                    ? t('electricity.rawDraft.walletReturn', locale)
+                    : review.actionType === 'contract_cancellation' &&
+                        review.details?.terminalAction === 'reject'
+                      ? contractText('rejectionFinancialReview', locale)
+                      : t(`admin.approvals.${review.actionType}`, locale)
                 }
                 rows={[
                   {
@@ -528,21 +536,28 @@ function ApprovalWorkspace({
                     value: review.reason,
                   },
                   ...(review.actionType === 'contract_cancellation' &&
-                  review.details?.terminalAction === 'reject'
+                  (review.details?.terminalAction === 'reject' ||
+                    review.details?.entityType === 'electricity_order_termination')
                     ? [
-                        ...(['contractId', 'profileId', 'versionId'] as const).flatMap((key) =>
+                        ...(review.details?.entityType === 'electricity_order_termination'
+                          ? (['orderId', 'profileId'] as const)
+                          : (['contractId', 'profileId', 'versionId'] as const)
+                        ).flatMap((key) =>
                           typeof review.details?.[key] === 'string'
                             ? [
                                 {
                                   id: key,
-                                  label: contractText(
-                                    key === 'contractId'
-                                      ? 'contractReference'
-                                      : key === 'profileId'
-                                        ? 'profile'
-                                        : 'version',
-                                    locale
-                                  ),
+                                  label:
+                                    key === 'orderId'
+                                      ? t('electricity.rawDraft.order', locale)
+                                      : contractText(
+                                          key === 'contractId'
+                                            ? 'contractReference'
+                                            : key === 'profileId'
+                                              ? 'profile'
+                                              : 'version',
+                                          locale
+                                        ),
                                   value: review.details[key] as string,
                                 },
                               ]
