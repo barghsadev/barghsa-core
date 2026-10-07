@@ -3811,6 +3811,35 @@ it.each([false, true])(
       financialStatus: 'refunded',
       financiallyClosed: true,
     });
+    const notices = (
+      await http.pool.query(
+        'SELECT localized_content,link_route,recipient_user_id,created_at FROM in_app_notifications WHERE delivery_key=$1',
+        [`refund:${refund.refund_id}:Completed`]
+      )
+    ).rows;
+    expect(notices).toHaveLength(1);
+    const notice = notices[0];
+    expect(notice).toMatchObject({
+      recipient_user_id: 'buyer',
+      link_route: `/electricity/orders/${order.orderId}`,
+    });
+    expect(notice.localized_content.en.body).toContain('500,000 IRR');
+    expect(notice.localized_content.en.body).toContain('Delivery stopped');
+    expect(notice.localized_content.en.body).toContain(
+      "Automatic refund after reviewer's decision, posted "
+    );
+    expect(notice.localized_content.fa.body).toContain('۵۰۰٬۰۰۰ ریال');
+    expect(notice.localized_content.fa.body).toContain('Delivery stopped');
+    expect(notice.localized_content.fa.body).toContain('بازپرداخت خودکار پس از تصمیم reviewer در ');
+    expect(Number.isFinite(new Date(notice.created_at).getTime())).toBe(true);
+    expect(await runWalletRefund(http.pool, refund.refund_id)).toBe('deferred');
+    expect(
+      (
+        await http.pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
+          `refund:${refund.refund_id}:Completed`,
+        ])
+      ).rows
+    ).toHaveLength(1);
   }
 );
 

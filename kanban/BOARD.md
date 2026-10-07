@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T04:45:48.532912+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T04:55:34.615105+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 353 | Accepted with unchanged source bindings. |
-| verify | 951 | Existing work may be complete; inspect evidence before building. |
+| done | 360 | Accepted with unchanged source bindings. |
+| verify | 944 | Existing work may be complete; inspect evidence before building. |
 | partial | 55 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,15 +39,22 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current electricity rejection/cancellation refund obligations and closure,using accepted shared refund engine and source-bound evidence. Verify exact electricity criteria for amounts,payment allocations,immutable credits,retries,Finance visibility,notifications and atomic order/contract/invoice closure. Build only demonstrated gaps. Pending owner refund representation and earlier dependency/performance gates remain incomplete.
+Inspect current quantity increase configuration,customer eligibility/request,staff queue/decision,future effective period,amendment PDF/signature,incremental pricing invoice andimmutable original snapshot. Verify complete existing journey andaffected financial/current profile/concurrency/notification/rollback boundaries; build only demonstrated gaps. Earlier owner/performance/release dependencies remain unfinished.
 
-- `03-core-business.md#T-03.07.03.01`: Create `refund_obligations` table: `id`, `order_id` (FK), `contract_id` (FK nullable), `invoice_id` (FK), `profile_id` (FK), `total_paid_amount` (bigint), `completed_refund_amount` (bigint default 0), `status` (enum: `pending`, `processing`, `completed`, `failed`), `idempotency_key` (unique), `created_at`, `updated_at`
-- `03-core-business.md#T-03.07.03.02`: When an order transitions to `rejected` or `cancelled` and `total_paid_amount > completed_refund_amount`: automatically create a `refund_obligation` with status `pending`. This is automatic, not optional for staff.
-- `03-core-business.md#T-03.07.03.03`: Worker: process refund obligations — post immutable wallet credit linked to contract, invoice, and original payment allocations. Use unique idempotency key to prevent duplicate credits.
-- `03-core-business.md#T-03.07.03.04`: Refundable amount = confirmed paid amount − previously completed refunds. Must never exceed this.
-- `03-core-business.md#T-03.07.03.05`: Contract/order cannot be marked financially closed until refund obligation is Completed. Staff cannot dismiss or manually mark complete without the linked wallet credit.
-- `03-core-business.md#T-03.07.03.06`: Failed refund processing must be retried and visible in a finance work queue/alert until resolved. Staff do not manually create the required full wallet refund.
-- `03-core-business.md#T-03.07.03.07`: Refund completion notification to customer: amount, reason, actor/system, timestamps.
+- `04-invoices-wallet-contracts.md#T-04.6.01.01`: Build customer quantity increase request UI/API: validate against max increase percentage, check one-per-contract limit
+- `04-invoices-wallet-contracts.md#T-04.6.01.02`: Staff review queue: approve/reject with reason
+- `04-invoices-wallet-contracts.md#T-04.6.01.03`: On approval: create amendment document version, trigger customer signature workflow
+- `04-invoices-wallet-contracts.md#T-04.6.01.04`: After signature: calculate incremental amount (price snapshot), create adjustment invoice or refund
+- `04-invoices-wallet-contracts.md#T-04.6.01.05`: Enforce effective period: increase applies only to future periods
+- `04-invoices-wallet-contracts.md#T-04.6.01.06`: Admin config for max increase percentage per service type
+- `03-core-business.md#T-03.08.01.01`: Admin config: `customer_increase_max_percentage` in electricity settings. Default 0 = disabled.
+- `03-core-business.md#T-03.08.01.02`: Customer UI: "Request quantity increase" button on active electricity contract detail page. Visible only if they haven't already requested once.
+- `03-core-business.md#T-03.08.01.03`: `POST /electricity/contracts/:id/request-increase` — customer submits desired new quantity. Backend validates:
+- `03-core-business.md#T-03.08.01.04`: Staff UI: quantity increase work queue — pending increase requests with contract details, current vs requested quantity, percentage change
+- `03-core-business.md#T-03.08.01.05`: Staff API: `POST /staff/electricity/contracts/:id/approve-increase` — approve with optional effective date. Creates amendment document.
+- `03-core-business.md#T-03.08.01.06`: Staff API: `POST /staff/electricity/contracts/:id/reject-increase` — with reason.
+- `03-core-business.md#T-03.08.01.07`: After approval:
+- `03-core-business.md#T-03.08.01.08`: Record: old/new quantities, percentage, effective period, requester, reviewer, decision, signature, financial adjustment, timestamps. Each step notifies customer.
 
 ## v0.2.0: Complete customer journeys
 
@@ -355,13 +362,13 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.12.06` | partial | Earlier partial | Contract electricity increase limits |
 | `02-auth-users-admin.md#T-10.01.01` | done | Earlier acceptance_verified | Staff user list (admin) |
 | `02-auth-users-admin.md#T-10.01.02` | done | Earlier acceptance_verified | Staff permission audit view |
-| `03-core-business.md#T-03.07.03.01` | verify | Inventory needed | Create `refund_obligations` table: `id`, `order_id` (FK), `contract_id` (FK nullable), `invoice_id` (FK), `profile_id` (FK), `total_paid_amount` (bigint), `completed_refund_amount` (bigint default 0), `status` (enum: `pending`, `processing`, `completed`, `failed`), `idempotency_key` (unique), `created_at`, `updated_at` |
-| `03-core-business.md#T-03.07.03.02` | verify | Inventory needed | When an order transitions to `rejected` or `cancelled` and `total_paid_amount > completed_refund_amount`: automatically create a `refund_obligation` with status `pending`. This is automatic, not optional for staff. |
-| `03-core-business.md#T-03.07.03.03` | verify | Inventory needed | Worker: process refund obligations — post immutable wallet credit linked to contract, invoice, and original payment allocations. Use unique idempotency key to prevent duplicate credits. |
-| `03-core-business.md#T-03.07.03.04` | verify | Inventory needed | Refundable amount = confirmed paid amount − previously completed refunds. Must never exceed this. |
-| `03-core-business.md#T-03.07.03.05` | verify | Inventory needed | Contract/order cannot be marked financially closed until refund obligation is Completed. Staff cannot dismiss or manually mark complete without the linked wallet credit. |
-| `03-core-business.md#T-03.07.03.06` | verify | Inventory needed | Failed refund processing must be retried and visible in a finance work queue/alert until resolved. Staff do not manually create the required full wallet refund. |
-| `03-core-business.md#T-03.07.03.07` | verify | Inventory needed | Refund completion notification to customer: amount, reason, actor/system, timestamps. |
+| `03-core-business.md#T-03.07.03.01` | done | Recorded batch work | Retain `refund_obligations` for legacy/order-only termination: `id`, `order_id` (FK), `contract_id` (FK nullable), `invoice_id` (FK), `profile_id` (FK), `total_paid_amount` (bigint), `completed_refund_amount` (bigint default 0), `status` (TEXT CHECK restricted to `pending`, `processing`, `completed`, `failed`), `idempotency_key` (unique), `created_at`, `updated_at`. Current contract cancellations retain `contract_refund_obligations` linked to the shared `refunds` ledger, with state and financial totals derived from that ledger. Owner approved these representations on 2026-10-07; mandatory full refunds and immutable credit, provenance, retry and closure safeguards remain required. |
+| `03-core-business.md#T-03.07.03.02` | done | Recorded batch work | When an order transitions to `rejected` or `cancelled` and confirmed paid funds exceed completed refunds: automatically create the appropriate durable order/contract refund obligation and its `Requested` system refund, then queue it as `Processing` within the same terminal transaction. This is automatic, not optional for staff. Retain existing obligation ledgers as approved by the owner on 2026-10-07. |
+| `03-core-business.md#T-03.07.03.03` | done | Recorded batch work | Worker: process refund obligations — post immutable wallet credit linked to contract, invoice, and original payment allocations. Use unique idempotency key to prevent duplicate credits. |
+| `03-core-business.md#T-03.07.03.04` | done | Recorded batch work | Refundable amount = confirmed paid amount − previously completed refunds. Must never exceed this. |
+| `03-core-business.md#T-03.07.03.05` | done | Recorded batch work | Contract/order cannot be marked financially closed until refund obligation is Completed. Staff cannot dismiss or manually mark complete without the linked wallet credit. |
+| `03-core-business.md#T-03.07.03.06` | done | Recorded batch work | Failed refund processing must be retried and visible in a finance work queue/alert until resolved. Staff do not manually create the required full wallet refund. |
+| `03-core-business.md#T-03.07.03.07` | done | Recorded batch work | Refund completion notification to customer: amount, reason, actor/system, timestamps. |
 | `03-core-business.md#T-03.08.01.01` | verify | Recorded batch work | Admin config: `customer_increase_max_percentage` in electricity settings. Default 0 = disabled. |
 | `03-core-business.md#T-03.08.01.02` | verify | Recorded batch work | Customer UI: "Request quantity increase" button on active electricity contract detail page. Visible only if they haven't already requested once. |
 | `03-core-business.md#T-03.08.01.03` | verify | Inventory needed | `POST /electricity/contracts/:id/request-increase` — customer submits desired new quantity. Backend validates: |

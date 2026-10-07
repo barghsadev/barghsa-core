@@ -25,7 +25,7 @@ export async function notifyRefundOutcome(
     refund.state === 'Completed'
       ? (
           await client.query<{
-            order_id: string;
+            order_id: string | null;
             order_type: string;
             saving_order_id: string | null;
             reason: string;
@@ -33,7 +33,15 @@ export async function notifyRefundOutcome(
           }>(
             `SELECT o.order_id,p.order_type,s.id AS saving_order_id,o.reason,o.authorized_by
              FROM refund_obligations o JOIN orders p ON p.id=o.order_id
-             LEFT JOIN saving_orders s ON s.order_id=o.order_id WHERE o.refund_id=$1`,
+             LEFT JOIN saving_orders s ON s.order_id=o.order_id WHERE o.refund_id=$1
+             UNION ALL
+             SELECT contract.order_id,contract.service_type::text,s.id,intent.reason,cancellation.executed_by
+             FROM contract_refund_obligations obligation
+             JOIN contracts contract ON contract.id=obligation.contract_id
+             JOIN contract_cancellations cancellation ON cancellation.contract_id=contract.id
+             JOIN contract_cancellation_intents intent ON intent.id=cancellation.intent_id
+             LEFT JOIN saving_orders s ON s.order_id=contract.order_id
+             WHERE obligation.refund_id=$1 LIMIT 1`,
             [refund.id]
           )
         ).rows[0]
@@ -87,7 +95,7 @@ export async function notifyRefundOutcome(
       owner.user_id,
       refund.profile_id,
       JSON.stringify(localizedContent),
-      order?.order_type === 'electricity'
+      order?.order_type === 'electricity' && order.order_id
         ? `/electricity/orders/${order.order_id}`
         : order?.order_type === 'savings' && order.saving_order_id
           ? `/savings/orders/${order.saving_order_id}`

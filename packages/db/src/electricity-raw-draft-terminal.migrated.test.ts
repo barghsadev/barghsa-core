@@ -96,10 +96,11 @@ it('upgrades the unchanged 0252 journal prefix exactly once, preserves old rows,
         '0256_electricity_orphan_financial',
         '0257_electricity_legacy_refund_adoption',
         '0258_action_step_up_audit',
+        '0259_invoice_origin_foreign_keys',
       ],
     });
     expect(
-      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -6)
+      (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -7)
     ).toEqual(before);
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
     expect(await retained()).toEqual(oldRecord);
