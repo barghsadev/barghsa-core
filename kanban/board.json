@@ -132992,21 +132992,154 @@
         "story": "03-core-business.md#spec-9d71c7bc38e0"
       },
       "requirement": "| **T-03.10.02.01** | 📋 Customer UI: upload documents (PDF, images, video) to saving order. Multiple files allowed. Replace/delete own files before submission. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-saving-documents-comments"
+          "2026-09-23-saving-documents-comments",
+          "release-0.3-saving-documents-comments"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-saving-documents-comments-and-retention-acceptance",
+          "reviewed_base_commit": "1293227dae99b7d77b39fdf1f88ce643e26add09",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "0851edbb0c800cc3a4649647864378d2dd6c345632e0b15f3b72c95340378849"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/order-comments-authority.test.ts",
+              "sha256": "d29960fb6cbb1ffffbc6033856adfbea8c410685d9904f62da80fbb54a4c3bc9"
+            },
+            {
+              "path": "apps/api/src/orders/order-comments-input-fields.test.ts",
+              "sha256": "37e9903613e507e2c922ac1484f3e465ca84e5afadd37fd56609d2490f0f5f61"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.controller.ts",
+              "sha256": "ee24baa7781544772ea9f1cc90b1d708141fd56a7f6c36d55d5d2e7f974e411d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.service.ts",
+              "sha256": "ba2772bf3b9ee76d86508a7b38e238023e5f4751f23ffb1bb3cf4bd9a9e9817d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/order-comment-form-fixture.ts",
+              "sha256": "b9af0362d2f39efc7a8c8ee4fc32c862d6b79f483c72e605a332241f89ae7096"
+            },
+            {
+              "path": "apps/web/e2e/order-comment-forms.spec.ts",
+              "sha256": "2ebeebfaa3f51ec8c769c2d9df737f85c146c1065949c19d0bc77dab238a4c42"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "7a070a54f0a87dfdc05f5f5607d4d3d0bd83742496d2623cc916491dcb0cd91a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "602b5daac0a0adc42a62cc6436939b212bc941b273aec9ec6c4ed92c3861cf4f"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "f486a1bfc89a58b278a874029ab3a7630ffe067c32c33b67ebc88e03e06bb0d5"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "239a6dcbf39e1ea2a839ed96f9369687c5a3db23aae0258433ecb97013bd5d3e"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "b7b9eda24cf4458cfa3014fd9b25714ee69c16fc2a624950a4bac205b24da37d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "c9ae7e25ca7952ca313860b3dad7971a3fc229579ed429e69accb3aac6820ab6"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderComments.tsx",
+              "sha256": "53b32a5fe1a2c6cb1568574b8681a3b1a4da6e12d564417d7a7817337961077d"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderDocuments.tsx",
+              "sha256": "2e8cac16e91a7a3f2bbaa6391e9165d042a01d3073e3536432a31a333cccdc6f"
+            },
+            {
+              "path": "apps/web/src/components/order-comment-forms.test.tsx",
+              "sha256": "97c62dd42bc50361d50d329177b19cbe26862e03ae7e75cd996fbaf27a8dc2f1"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form-schemas.ts",
+              "sha256": "93403f0ae75b978df00f5d1187cf07179b1661bf51d1e817e5155179dfe954af"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form.test.ts",
+              "sha256": "63c44e5bb4182b36a1f2bce1525833b47dacbf7d158b40c955a022c4f249e058"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form.ts",
+              "sha256": "7ddcfe6e6eed670b20506e420436213ccb67aaa18564be4167f86de0a4dd973c"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "08a85c23dda26ce5510005a62c78e2c8278947f7c2d268e5d1960c77f8e25cf1"
+            },
+            {
+              "path": "kanban/epics/05-notifications-documents-ai.md",
+              "sha256": "d06e35f969f2550cf824a3bd799ec77f6836fa52ff98e9fbc0ac2521d46a71ab"
+            },
+            {
+              "path": "packages/db/drizzle/production/0163_saving_documents_comments.sql",
+              "sha256": "32e079c65c87c8deb66b1206ad6411c5f6af457a97ace936a737bb0e576657c8"
+            },
+            {
+              "path": "packages/db/src/documents.migrated.test.ts",
+              "sha256": "26656eb7de8af7c95817ac114e7fcf3b242a6eda5c0d2a8f180512fe3dc0062f"
+            },
+            {
+              "path": "packages/i18n/src/order-comment-forms.test.ts",
+              "sha256": "2946828e453d067da11cf31af55a237385ed251f54e918b902829bbf334d193a"
+            },
+            {
+              "path": "packages/i18n/src/order-comments.ts",
+              "sha256": "34a603728f061a7d3e133877f51055a1524e530a68729d5fe372a9e279e933f9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "146 distinct scoped passing cases:30 API (27 current comment input/authority,1 saving files,1 configured scanner,1 exact-bound retained real saving/comment journey),10 migrated document DB,98 UI and8 bilingual desktop/mobile production-browser comment cases. Failed/stopped/skipped/duplicate cases excluded.",
+            "Multiple owned PDF/video uploads,available-only replacement/deletion,retained history,submitted protection,configured clean/infected/outage/retry behavior anddurable jobs verified. No configured scanner permits recorded skip perexplicit shared document requirement; live deployment scanning remains operational gate.",
+            "Chronology/cursors,visible author role/name,immutable append,replay,one customer reply notice,current authority andscope fences verified. No product changes/rebuild. Exact source/output proof reuses current final build/types/budget; Wallet300.10/300KB stays failed."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
+          "limitations": [
+            "Configured scanner verdict seam tested withreal database/durable worker; deployed antivirus operations separate. Earlier owner/performance/dependency gates remain open."
+          ]
+        }
       }
     },
     {
@@ -133020,21 +133153,154 @@
         "story": "03-core-business.md#spec-9d71c7bc38e0"
       },
       "requirement": "| **T-03.10.02.02** | 📋 Customer-Staff comment thread per order: chronological, author visible, staff comments trigger notification. No silent overwrites. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-05-order-comment-forms"
+          "2026-10-05-order-comment-forms",
+          "release-0.3-saving-documents-comments"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-saving-documents-comments-and-retention-acceptance",
+          "reviewed_base_commit": "1293227dae99b7d77b39fdf1f88ce643e26add09",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "0851edbb0c800cc3a4649647864378d2dd6c345632e0b15f3b72c95340378849"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/order-comments-authority.test.ts",
+              "sha256": "d29960fb6cbb1ffffbc6033856adfbea8c410685d9904f62da80fbb54a4c3bc9"
+            },
+            {
+              "path": "apps/api/src/orders/order-comments-input-fields.test.ts",
+              "sha256": "37e9903613e507e2c922ac1484f3e465ca84e5afadd37fd56609d2490f0f5f61"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.controller.ts",
+              "sha256": "ee24baa7781544772ea9f1cc90b1d708141fd56a7f6c36d55d5d2e7f974e411d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.service.ts",
+              "sha256": "ba2772bf3b9ee76d86508a7b38e238023e5f4751f23ffb1bb3cf4bd9a9e9817d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/order-comment-form-fixture.ts",
+              "sha256": "b9af0362d2f39efc7a8c8ee4fc32c862d6b79f483c72e605a332241f89ae7096"
+            },
+            {
+              "path": "apps/web/e2e/order-comment-forms.spec.ts",
+              "sha256": "2ebeebfaa3f51ec8c769c2d9df737f85c146c1065949c19d0bc77dab238a4c42"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "7a070a54f0a87dfdc05f5f5607d4d3d0bd83742496d2623cc916491dcb0cd91a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "602b5daac0a0adc42a62cc6436939b212bc941b273aec9ec6c4ed92c3861cf4f"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "f486a1bfc89a58b278a874029ab3a7630ffe067c32c33b67ebc88e03e06bb0d5"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "239a6dcbf39e1ea2a839ed96f9369687c5a3db23aae0258433ecb97013bd5d3e"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "b7b9eda24cf4458cfa3014fd9b25714ee69c16fc2a624950a4bac205b24da37d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "c9ae7e25ca7952ca313860b3dad7971a3fc229579ed429e69accb3aac6820ab6"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderComments.tsx",
+              "sha256": "53b32a5fe1a2c6cb1568574b8681a3b1a4da6e12d564417d7a7817337961077d"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderDocuments.tsx",
+              "sha256": "2e8cac16e91a7a3f2bbaa6391e9165d042a01d3073e3536432a31a333cccdc6f"
+            },
+            {
+              "path": "apps/web/src/components/order-comment-forms.test.tsx",
+              "sha256": "97c62dd42bc50361d50d329177b19cbe26862e03ae7e75cd996fbaf27a8dc2f1"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form-schemas.ts",
+              "sha256": "93403f0ae75b978df00f5d1187cf07179b1661bf51d1e817e5155179dfe954af"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form.test.ts",
+              "sha256": "63c44e5bb4182b36a1f2bce1525833b47dacbf7d158b40c955a022c4f249e058"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form.ts",
+              "sha256": "7ddcfe6e6eed670b20506e420436213ccb67aaa18564be4167f86de0a4dd973c"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "08a85c23dda26ce5510005a62c78e2c8278947f7c2d268e5d1960c77f8e25cf1"
+            },
+            {
+              "path": "kanban/epics/05-notifications-documents-ai.md",
+              "sha256": "d06e35f969f2550cf824a3bd799ec77f6836fa52ff98e9fbc0ac2521d46a71ab"
+            },
+            {
+              "path": "packages/db/drizzle/production/0163_saving_documents_comments.sql",
+              "sha256": "32e079c65c87c8deb66b1206ad6411c5f6af457a97ace936a737bb0e576657c8"
+            },
+            {
+              "path": "packages/db/src/documents.migrated.test.ts",
+              "sha256": "26656eb7de8af7c95817ac114e7fcf3b242a6eda5c0d2a8f180512fe3dc0062f"
+            },
+            {
+              "path": "packages/i18n/src/order-comment-forms.test.ts",
+              "sha256": "2946828e453d067da11cf31af55a237385ed251f54e918b902829bbf334d193a"
+            },
+            {
+              "path": "packages/i18n/src/order-comments.ts",
+              "sha256": "34a603728f061a7d3e133877f51055a1524e530a68729d5fe372a9e279e933f9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "146 distinct scoped passing cases:30 API (27 current comment input/authority,1 saving files,1 configured scanner,1 exact-bound retained real saving/comment journey),10 migrated document DB,98 UI and8 bilingual desktop/mobile production-browser comment cases. Failed/stopped/skipped/duplicate cases excluded.",
+            "Multiple owned PDF/video uploads,available-only replacement/deletion,retained history,submitted protection,configured clean/infected/outage/retry behavior anddurable jobs verified. No configured scanner permits recorded skip perexplicit shared document requirement; live deployment scanning remains operational gate.",
+            "Chronology/cursors,visible author role/name,immutable append,replay,one customer reply notice,current authority andscope fences verified. No product changes/rebuild. Exact source/output proof reuses current final build/types/budget; Wallet300.10/300KB stays failed."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
+          "limitations": [
+            "Configured scanner verdict seam tested withreal database/durable worker; deployed antivirus operations separate. Earlier owner/performance/dependency gates remain open."
+          ]
+        }
       }
     },
     {
@@ -133048,19 +133314,153 @@
         "story": "03-core-business.md#spec-9d71c7bc38e0"
       },
       "requirement": "| **T-03.10.02.03** | ⚠️ Document upload follows file storage rules: validation, scan, quarantine. Files linked to order are soft-delete only. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-saving-documents-comments"
+        ],
+        "current_acceptance": {
+          "kind": "current-saving-documents-comments-and-retention-acceptance",
+          "reviewed_base_commit": "1293227dae99b7d77b39fdf1f88ce643e26add09",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "0851edbb0c800cc3a4649647864378d2dd6c345632e0b15f3b72c95340378849"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "e86df2a7ed32f8a843c7fd8d2b75c8469acd83ba50ada4933a5c635c03a5e54d"
+            },
+            {
+              "path": "apps/api/src/orders/order-comments-authority.test.ts",
+              "sha256": "d29960fb6cbb1ffffbc6033856adfbea8c410685d9904f62da80fbb54a4c3bc9"
+            },
+            {
+              "path": "apps/api/src/orders/order-comments-input-fields.test.ts",
+              "sha256": "37e9903613e507e2c922ac1484f3e465ca84e5afadd37fd56609d2490f0f5f61"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.controller.ts",
+              "sha256": "ee24baa7781544772ea9f1cc90b1d708141fd56a7f6c36d55d5d2e7f974e411d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.service.ts",
+              "sha256": "ba2772bf3b9ee76d86508a7b38e238023e5f4751f23ffb1bb3cf4bd9a9e9817d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.integration.test.ts",
+              "sha256": "48be583b2638d80c5c4afedc2bfe8acf03829640986142fc7e3a703841b066aa"
+            },
+            {
+              "path": "apps/web/e2e/order-comment-form-fixture.ts",
+              "sha256": "b9af0362d2f39efc7a8c8ee4fc32c862d6b79f483c72e605a332241f89ae7096"
+            },
+            {
+              "path": "apps/web/e2e/order-comment-forms.spec.ts",
+              "sha256": "2ebeebfaa3f51ec8c769c2d9df737f85c146c1065949c19d0bc77dab238a4c42"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "7a070a54f0a87dfdc05f5f5607d4d3d0bd83742496d2623cc916491dcb0cd91a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "602b5daac0a0adc42a62cc6436939b212bc941b273aec9ec6c4ed92c3861cf4f"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "f486a1bfc89a58b278a874029ab3a7630ffe067c32c33b67ebc88e03e06bb0d5"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "239a6dcbf39e1ea2a839ed96f9369687c5a3db23aae0258433ecb97013bd5d3e"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "b7b9eda24cf4458cfa3014fd9b25714ee69c16fc2a624950a4bac205b24da37d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "c9ae7e25ca7952ca313860b3dad7971a3fc229579ed429e69accb3aac6820ab6"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderComments.tsx",
+              "sha256": "53b32a5fe1a2c6cb1568574b8681a3b1a4da6e12d564417d7a7817337961077d"
+            },
+            {
+              "path": "apps/web/src/components/SavingOrderDocuments.tsx",
+              "sha256": "2e8cac16e91a7a3f2bbaa6391e9165d042a01d3073e3536432a31a333cccdc6f"
+            },
+            {
+              "path": "apps/web/src/components/order-comment-forms.test.tsx",
+              "sha256": "97c62dd42bc50361d50d329177b19cbe26862e03ae7e75cd996fbaf27a8dc2f1"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form-schemas.ts",
+              "sha256": "93403f0ae75b978df00f5d1187cf07179b1661bf51d1e817e5155179dfe954af"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form.test.ts",
+              "sha256": "63c44e5bb4182b36a1f2bce1525833b47dacbf7d158b40c955a022c4f249e058"
+            },
+            {
+              "path": "apps/web/src/lib/order-comment-form.ts",
+              "sha256": "7ddcfe6e6eed670b20506e420436213ccb67aaa18564be4167f86de0a4dd973c"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "08a85c23dda26ce5510005a62c78e2c8278947f7c2d268e5d1960c77f8e25cf1"
+            },
+            {
+              "path": "kanban/epics/05-notifications-documents-ai.md",
+              "sha256": "d06e35f969f2550cf824a3bd799ec77f6836fa52ff98e9fbc0ac2521d46a71ab"
+            },
+            {
+              "path": "packages/db/drizzle/production/0163_saving_documents_comments.sql",
+              "sha256": "32e079c65c87c8deb66b1206ad6411c5f6af457a97ace936a737bb0e576657c8"
+            },
+            {
+              "path": "packages/db/src/documents.migrated.test.ts",
+              "sha256": "26656eb7de8af7c95817ac114e7fcf3b242a6eda5c0d2a8f180512fe3dc0062f"
+            },
+            {
+              "path": "packages/i18n/src/order-comment-forms.test.ts",
+              "sha256": "2946828e453d067da11cf31af55a237385ed251f54e918b902829bbf334d193a"
+            },
+            {
+              "path": "packages/i18n/src/order-comments.ts",
+              "sha256": "34a603728f061a7d3e133877f51055a1524e530a68729d5fe372a9e279e933f9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "146 distinct scoped passing cases:30 API (27 current comment input/authority,1 saving files,1 configured scanner,1 exact-bound retained real saving/comment journey),10 migrated document DB,98 UI and8 bilingual desktop/mobile production-browser comment cases. Failed/stopped/skipped/duplicate cases excluded.",
+            "Multiple owned PDF/video uploads,available-only replacement/deletion,retained history,submitted protection,configured clean/infected/outage/retry behavior anddurable jobs verified. No configured scanner permits recorded skip perexplicit shared document requirement; live deployment scanning remains operational gate.",
+            "Chronology/cursors,visible author role/name,immutable append,replay,one customer reply notice,current authority andscope fences verified. No product changes/rebuild. Exact source/output proof reuses current final build/types/budget; Wallet300.10/300KB stays failed."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
+          "limitations": [
+            "Configured scanner verdict seam tested withreal database/durable worker; deployed antivirus operations separate. Earlier owner/performance/dependency gates remain open."
+          ]
+        }
       }
     },
     {
@@ -174090,6 +174490,21 @@
         "Only one test selector repaired; raw corrected draft andzero writes assertions added. Lint/format pass. All product/build/config source andcompiled outputs unchanged; final previous build/types/budget reused by exact hash proof. Existing Wallet300.10/300KB failure retained. No staging/Telegram/production milestone accepted."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment"
+    },
+    "release-0.3-saving-documents-comments": {
+      "title": "Accept saving documents and append-only order comments",
+      "task_keys": [
+        "03-core-business.md#T-03.10.02.01",
+        "03-core-business.md#T-03.10.02.02",
+        "03-core-business.md#T-03.10.02.03"
+      ],
+      "summary": "Three tasks accepted from existing implementation. No rebuild needed; actual file lifecycle andconfigured scanning separated fromlive operational acceptance.",
+      "validation": [
+        "146 distinct scoped passing cases:30 API (27 current comment input/authority,1 saving files,1 configured scanner,1 exact-bound retained real saving/comment journey),10 migrated document DB,98 UI and8 bilingual desktop/mobile production-browser comment cases. Failed/stopped/skipped/duplicate cases excluded.",
+        "Multiple owned PDF/video uploads,available-only replacement/deletion,retained history,submitted protection,configured clean/infected/outage/retry behavior anddurable jobs verified. No configured scanner permits recorded skip perexplicit shared document requirement; live deployment scanning remains operational gate.",
+        "Chronology/cursors,visible author role/name,immutable append,replay,one customer reply notice,current authority andscope fences verified. No product changes/rebuild. Exact source/output proof reuses current final build/types/budget; Wallet300.10/300KB stays failed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments"
     }
   },
   "historical_improvements": [
@@ -174129,13 +174544,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-saving-documents-comments",
+    "id": "release-0.3-saving-inventory",
     "release": "0.3.0",
-    "goal": "Inspect current saving order uploads,replacement/deletion authority,scan/quarantine/storage links andimmutable customer/staff comment thread with notifications. Verify profile isolation,state gates,file retention,current permission/replay/concurrency/rollback andactual production-browser flows; build only demonstrated gaps. Earlier owner/release/performance criteria remain open.",
+    "goal": "Inspect current optional hardware stock/reservation administration,availability messaging,submission reservation/configurable expiration,payment/staff allocation andtimeout/cancellation release. Verify stock conservation,concurrent consumers,authority/idempotency/rollback andupgrade callers; build only demonstrated gaps. Preserve earlier owner/dependency/performance gates.",
     "task_keys": [
-      "03-core-business.md#T-03.10.02.01",
-      "03-core-business.md#T-03.10.02.02",
-      "03-core-business.md#T-03.10.02.03"
+      "03-core-business.md#T-03.10.03.01",
+      "03-core-business.md#T-03.10.03.02",
+      "03-core-business.md#T-03.10.03.03"
     ]
   },
   "launch_forecast": {
