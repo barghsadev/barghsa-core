@@ -123,6 +123,8 @@ for (const scenario of scenarios) {
     list = [scenario.row];
     attempts = [];
     fetcher = vi.fn(async (path: string, init?: RequestInit) => {
+      if (path.endsWith('/template-variable-choices'))
+        return reply([{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }]);
       if (path.endsWith('/template-event-keys')) return reply(['auth.otp']);
       if (init?.method && init.method !== 'GET') {
         attempts.push(JSON.parse(String(init.body)));
@@ -270,7 +272,13 @@ it('SMS mapping errors keep variable rows and focus the mapping control', async 
   vi.stubGlobal(
     'fetch',
     vi.fn(async (path: string) =>
-      reply(path.endsWith('/template-event-keys') ? ['auth.otp'] : [sms])
+      reply(
+        path.endsWith('/template-variable-choices')
+          ? [{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }]
+          : path.endsWith('/template-event-keys')
+            ? ['auth.otp']
+            : [sms]
+      )
     )
   );
   await act(async () => root.render(<Sms />));

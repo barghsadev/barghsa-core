@@ -5,6 +5,7 @@ import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/com
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { collectVariables } from '@barghsa/shared/notifications';
 import { parseSmsirConfig } from './smsir-config.schema';
 import type { SmsirConnectionTesterService } from './smsir-connection-tester.service';
 import {
@@ -225,6 +226,36 @@ export class SmsProviderConfigService {
         WHERE is_active = true AND channel = 'sms'`
     );
     return new Set(result.rows.map((r) => (r as { event_key: string }).event_key));
+  }
+
+  async availableTemplateVariableChoices(): Promise<
+    { eventKey: string; locale: 'fa' | 'en'; variables: string[] }[]
+  > {
+    const result = await this.db.query(
+      `SELECT event_key, locale, variables FROM notification_templates
+       WHERE is_active = true AND status = 'active' AND channel = 'sms'
+         AND locale IN ('fa', 'en') ORDER BY event_key, locale`
+    );
+    return result.rows.map((row) => ({
+      eventKey: row.event_key as string,
+      locale: row.locale as 'fa' | 'en',
+      variables: [
+        ...new Set(
+          (Array.isArray(row.variables) ? row.variables : [])
+            .map((v: unknown) =>
+              typeof v === 'string'
+                ? v
+                : v && typeof v === 'object' && 'name' in v
+                  ? v.name
+                  : undefined
+            )
+            .filter(
+              (name: unknown): name is string =>
+                typeof name === 'string' && collectVariables(`{{${name}}}`).includes(name)
+            )
+        ),
+      ].sort() as string[],
+    }));
   }
 
   /* ------------------------------- Reads -------------------------------- */

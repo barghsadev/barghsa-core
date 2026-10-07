@@ -39,6 +39,8 @@ import {
 import {
   listSmsProviders,
   listSmsEventKeys,
+  listSmsTemplateVariableChoices,
+  smsVariableChoices,
   readSmsProvider,
   sameSmsConfig,
   smsRequest,
@@ -140,6 +142,7 @@ export default function AdminSmsProvidersPage() {
   const scope = useCatalogueScope(clearPrivate);
   const catalogue = useProviderCatalogue(scope, listSmsProviders);
   const eventKeys = useProviderCatalogue(scope, listSmsEventKeys);
+  const templateVariables = useProviderCatalogue(scope, listSmsTemplateVariableChoices);
   const providers = catalogue.data ?? [],
     events = eventKeys.data ?? [];
   eventNames.current = events;
@@ -196,6 +199,20 @@ export default function AdminSmsProvidersPage() {
           {text(loadFailed || scope.denied ? 'retry' : 'refresh')}
         </Button>
       </div>
+      {!scope.denied && (
+        <div>
+          {templateVariables.loading && <p role="status">{text('variablesLoading')}</p>}
+          {templateVariables.error && <p role="alert">{text('variablesFailed')}</p>}
+          <Button
+            type="button"
+            variant="outline"
+            disabled={templateVariables.loading || busy}
+            onClick={() => void templateVariables.refresh()}
+          >
+            {text('retryVariables')}
+          </Button>
+        </div>
+      )}
       {!scope.denied && (
         <div>
           {eventKeys.loading && <p role="status">{text('eventsLoading')}</p>}
@@ -770,11 +787,26 @@ export default function AdminSmsProvidersPage() {
                         />
                       </td>
                       <td className="p-2 space-y-2">
+                        <datalist id={`sms-variables-${m.id}`}>
+                          {smsVariableChoices(templateVariables.data ?? [], m.event, m.locale).map(
+                            (name) => (
+                              <option key={name} value={name} />
+                            )
+                          )}
+                        </datalist>
+                        <p
+                          id={`sms-variables-hint-${m.id}`}
+                          className="max-w-xs whitespace-normal text-xs text-muted-foreground"
+                        >
+                          {text('variablesHint')}
+                        </p>
                         {m.variables.map((v, vi) => (
                           <div key={v.id} className="flex gap-2">
                             <Input
                               aria-label={`${text('variable')} ${index + 1}.${vi + 1}`}
                               placeholder={text('variable')}
+                              list={`sms-variables-${m.id}`}
+                              aria-describedby={`sms-variables-hint-${m.id}`}
                               value={v.internal}
                               maxLength={255}
                               required

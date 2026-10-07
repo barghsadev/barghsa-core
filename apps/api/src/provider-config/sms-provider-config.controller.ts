@@ -106,6 +106,14 @@ export class SmsProviderConfigController {
     return [...(await this.service.availableTemplateEventKeys())];
   }
 
+  @Get('template-variable-choices')
+  @ApiOperation({ summary: 'List active SMS template variable names by event and locale' })
+  @ApiResponse({ status: 200, description: 'Allowlisted names only; no template bodies or data.' })
+  async templateVariableChoices(@Req() req: AuthenticatedRequest) {
+    this.assertProviderEditPermission(req);
+    return this.service.availableTemplateVariableChoices();
+  }
+
   @Post()
   @HttpCode(201)
   @UseGuards(StepUpGuard)

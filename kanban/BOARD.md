@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-08. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,9 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Add active-template variable choices to SMS mapping authoring using the existing provider permission and catalogue patterns. Preserve saved values, current event/locale allowlists, independent resource recovery, private scope and exact command/OTP/activation proof. Pending SMS storage/default/credit owner dispositions remain recorded; do not infer approval.
+Inspect current provider error classification, circuit breaker, health dashboard, runbooks and test fakes together. Reuse current matching adapter/authority/metrics evidence, build only demonstrated gaps, retain live-provider/ops receipt blockers and pending SMS dispositions.
 
-- `05-notifications-documents-ai.md#T-05.07.05`: SMS.ir admin UI
+- `05-notifications-documents-ai.md#T-05.08.01`: Error classification utility
+- `05-notifications-documents-ai.md#T-05.08.02`: Circuit breaker implementation
+- `05-notifications-documents-ai.md#T-05.08.03`: Provider health dashboard
+- `05-notifications-documents-ai.md#T-05.08.04`: Provider runbook documentation
+- `05-notifications-documents-ai.md#T-05.08.05`: Provider test fakes & contract tests
 
 ## v0.2.0: Complete customer journeys
 

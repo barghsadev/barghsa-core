@@ -1,3 +1,4 @@
+import { collectVariables } from '@barghsa/shared/notifications';
 import {
   providerRequest,
   ProviderRequestError,
@@ -149,6 +150,45 @@ export async function listSmsEventKeys(signal?: AbortSignal) {
   const events = await smsRequest('/template-event-keys', 'GET', undefined, signal);
   if (!Array.isArray(events)) throw new ProviderRequestError();
   return [...new Set(events.map(string))].sort();
+}
+export interface SmsTemplateVariableChoices {
+  eventKey: string;
+  locale: 'fa' | 'en';
+  variables: string[];
+}
+export async function listSmsTemplateVariableChoices(
+  signal?: AbortSignal
+): Promise<SmsTemplateVariableChoices[]> {
+  const rows = await smsRequest('/template-variable-choices', 'GET', undefined, signal);
+  if (!Array.isArray(rows)) throw new ProviderRequestError();
+  const identities = new Set<string>();
+  return rows.map((value) => {
+    const row = record(value),
+      eventKey = string(row.eventKey);
+    if ((row.locale !== 'fa' && row.locale !== 'en') || !Array.isArray(row.variables))
+      throw new ProviderRequestError();
+    const identity = `${eventKey}:${row.locale}`;
+    if (identities.has(identity)) throw new ProviderRequestError();
+    identities.add(identity);
+    const variables = row.variables.map((value) => {
+      const name = string(value);
+      if (!collectVariables(`{{${name}}}`).includes(name)) throw new ProviderRequestError();
+      return name;
+    });
+    return { eventKey, locale: row.locale, variables: [...new Set(variables)].sort() };
+  });
+}
+export function smsVariableChoices(
+  rows: SmsTemplateVariableChoices[],
+  eventKey: string,
+  locale: 'all' | 'fa' | 'en'
+): string[] {
+  const matching = rows.filter(
+    (row) => row.eventKey === eventKey.trim() && (locale === 'all' || row.locale === locale)
+  );
+  return (matching[0]?.variables ?? []).filter((name) =>
+    matching.every((row) => row.variables.includes(name))
+  );
 }
 export async function loadSmsProviders(signal: AbortSignal) {
   const [providers, events] = await Promise.all([

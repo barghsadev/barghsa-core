@@ -134,6 +134,14 @@ for (const locale of ['en', 'fa'] as const)
         lists = 0,
         eventReads = 0;
       await page.route('**/api/admin/email-providers', (route) => route.fulfill({ json: [] }));
+      await page.route('**/api/admin/sms-providers/template-variable-choices', (route) =>
+        route.fulfill({
+          json: [
+            { eventKey: 'auth.otp', locale: 'en', variables: ['code'] },
+            { eventKey: 'auth.otp', locale: 'fa', variables: ['code'] },
+          ],
+        })
+      );
       await page.route('**/api/admin/sms-providers/template-event-keys', (route) => {
         eventReads++;
         return route.fulfill({ status: fail ? 503 : 200, json: ['auth.otp'] });

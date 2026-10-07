@@ -66,6 +66,14 @@ for (const locale of ['en', 'fa'] as const)
         return r.fulfill({ json: email });
       });
       await page.route('**/api/admin/sms-providers', (r) => r.fulfill({ json: [sms] }));
+      await page.route('**/api/admin/sms-providers/template-variable-choices', (route) =>
+        route.fulfill({
+          json: [
+            { eventKey: 'auth.otp', locale: 'en', variables: ['code'] },
+            { eventKey: 'auth.otp', locale: 'fa', variables: ['code'] },
+          ],
+        })
+      );
       await page.route('**/api/admin/sms-providers/template-event-keys', (r) =>
         r.fulfill({ json: ['auth.otp'] })
       );

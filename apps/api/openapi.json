@@ -10886,7 +10886,9 @@
             "schema": {
               "enum": [
                 "delivered",
-                "failed"
+                "failed",
+                "sending",
+                "unknown"
               ],
               "type": "string"
             }
@@ -12509,6 +12511,26 @@
           }
         ],
         "summary": "List event keys with a live notification template for SMS mapping",
+        "tags": [
+          "Admin · SMS Provider"
+        ]
+      }
+    },
+    "/api/admin/sms-providers/template-variable-choices": {
+      "get": {
+        "operationId": "SmsProviderConfigController_templateVariableChoices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Allowlisted names only; no template bodies or data."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List active SMS template variable names by event and locale",
         "tags": [
           "Admin · SMS Provider"
         ]

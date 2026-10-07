@@ -106,6 +106,8 @@ for (const scenario of scenarios) {
           options.stepUp?.() ??
           reply({ verified: true, stepUpVerifiedAt: new Date().toISOString() })
         );
+      if (String(input).endsWith('/template-variable-choices'))
+        return reply([{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }]);
       if (String(input).endsWith('/template-event-keys'))
         return options.events?.() ?? reply(['auth.otp']);
       if (init?.method && init.method !== 'GET') return options.write?.() ?? reply({});
@@ -297,9 +299,11 @@ it('SMS event-key retry is independent and preserves mappings through withdrawal
   let failed = false,
     withdrawn = false;
   const fetcher = vi.fn(async (input: RequestInfo | URL) =>
-    String(input).endsWith('/template-event-keys')
-      ? reply(withdrawn ? ['invoice.created'] : ['auth.otp'], failed ? 503 : 200)
-      : reply([sms])
+    String(input).endsWith('/template-variable-choices')
+      ? reply([{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }])
+      : String(input).endsWith('/template-event-keys')
+        ? reply(withdrawn ? ['invoice.created'] : ['auth.otp'], failed ? 503 : 200)
+        : reply([sms])
   );
   vi.stubGlobal('fetch', fetcher);
   await act(async () => root.render(<Sms />));
@@ -316,7 +320,11 @@ it('SMS event-key retry is independent and preserves mappings through withdrawal
   expect(host.textContent).toContain('Some mapped events are no longer available');
   expect(host.querySelector<HTMLInputElement>('input[list=sms-events]')!.value).toBe('auth.otp');
   expect(
-    fetcher.mock.calls.filter(([u]) => !String(u).endsWith('/template-event-keys'))
+    fetcher.mock.calls.filter(
+      ([u]) =>
+        !String(u).endsWith('/template-event-keys') &&
+        !String(u).endsWith('/template-variable-choices')
+    )
   ).toHaveLength(1);
   await fill('input[list=sms-events]', 'invoice.created');
   expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(false);
@@ -328,13 +336,15 @@ it('SMS event permission denial hides catalogue and cancels a pending provider r
   vi.stubGlobal(
     'fetch',
     vi.fn(async (input: RequestInfo | URL) =>
-      String(input).endsWith('/template-event-keys')
-        ? reply(['auth.otp'], deny ? 403 : 200)
-        : ++reads === 1
-          ? reply([sms])
-          : new Promise<Response>((r) => {
-              resolve = r;
-            })
+      String(input).endsWith('/template-variable-choices')
+        ? reply([{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }])
+        : String(input).endsWith('/template-event-keys')
+          ? reply(['auth.otp'], deny ? 403 : 200)
+          : ++reads === 1
+            ? reply([sms])
+            : new Promise<Response>((r) => {
+                resolve = r;
+              })
     )
   );
   await act(async () => root.render(<Sms />));
@@ -350,7 +360,11 @@ it('SMS event-key failure does not hide the catalogue or prevent opening a local
   vi.stubGlobal(
     'fetch',
     vi.fn(async (input: RequestInfo | URL) =>
-      String(input).endsWith('/template-event-keys') ? reply({}, 503) : reply([sms])
+      String(input).endsWith('/template-variable-choices')
+        ? reply([{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }])
+        : String(input).endsWith('/template-event-keys')
+          ? reply({}, 503)
+          : reply([sms])
     )
   );
   await act(async () => root.render(<Sms />));
@@ -373,9 +387,11 @@ it('SMS preview keeps the selected test event during catalogue recovery', async 
   vi.stubGlobal(
     'fetch',
     vi.fn(async (input: RequestInfo | URL) =>
-      String(input).endsWith('/template-event-keys')
-        ? reply(['auth.otp', 'invoice.created'])
-        : reply([{ ...sms, maskedConfig: config }], fail ? 503 : 200)
+      String(input).endsWith('/template-variable-choices')
+        ? reply([{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }])
+        : String(input).endsWith('/template-event-keys')
+          ? reply(['auth.otp', 'invoice.created'])
+          : reply([{ ...sms, maskedConfig: config }], fail ? 503 : 200)
     )
   );
   await act(async () => root.render(<Sms />));
@@ -397,17 +413,19 @@ it('SMS masked credential rotation invalidates a saved draft without copying it 
   vi.stubGlobal(
     'fetch',
     vi.fn(async (input: RequestInfo | URL) =>
-      String(input).endsWith('/template-event-keys')
-        ? reply(['auth.otp'])
-        : reply([
-            {
-              ...sms,
-              maskedConfig: {
-                ...sms.maskedConfig,
-                api_key: changed ? '********next' : '********test',
+      String(input).endsWith('/template-variable-choices')
+        ? reply([{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }])
+        : String(input).endsWith('/template-event-keys')
+          ? reply(['auth.otp'])
+          : reply([
+              {
+                ...sms,
+                maskedConfig: {
+                  ...sms.maskedConfig,
+                  api_key: changed ? '********next' : '********test',
+                },
               },
-            },
-          ])
+            ])
     )
   );
   await act(async () => root.render(<Sms />));

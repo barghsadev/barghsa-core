@@ -206,6 +206,11 @@ const smsEn = {
   denied: 'Provider settings access was denied. Recheck access to continue.',
   stale:
     'The saved version changed. Your draft is retained; close the editor and reopen the latest version before saving.',
+  variablesLoading: 'Loading template variables…',
+  variablesFailed: 'Template variable choices could not be refreshed. Saved mappings are retained.',
+  retryVariables: 'Refresh template variables',
+  variablesHint:
+    'Suggestions follow the active template and selected language. All languages shows shared variables. Activation validates saved names.',
   eventsLoading: 'Loading event keys…',
   eventsFailed:
     'Event keys could not be loaded. Your mappings are retained. Retry before saving or testing.',
@@ -291,6 +296,11 @@ const smsFa: Record<keyof typeof smsEn, string> = {
   denied: 'دسترسی به تنظیمات ارائه‌دهنده‌ها مجاز نیست. دوباره دسترسی را بررسی کنید.',
   stale:
     'نسخه ذخیره‌شده تغییر کرده است. پیش‌نویس شما حفظ شده؛ پیش از ذخیره، ویرایش را ببندید و نسخه جدید را باز کنید.',
+  variablesLoading: 'در حال بارگذاری متغیرهای قالب…',
+  variablesFailed: 'به‌روزرسانی گزینه‌های متغیر قالب انجام نشد. نگاشت‌های ذخیره‌شده حفظ می‌شوند.',
+  retryVariables: 'به‌روزرسانی متغیرهای قالب',
+  variablesHint:
+    'پیشنهادها بر اساس قالب فعال و زبان انتخاب‌شده هستند. گزینه همه زبان‌ها متغیرهای مشترک را نمایش می‌دهد. نام‌های ذخیره‌شده هنگام فعال‌سازی بررسی می‌شوند.',
   eventsLoading: 'در حال بارگذاری کلیدهای رویداد…',
   eventsFailed:
     'کلیدهای رویداد بارگذاری نشدند. نگاشت‌های شما حفظ شده‌اند. پیش از ذخیره یا آزمایش دوباره تلاش کنید.',

@@ -35,6 +35,14 @@ async function shell(page: Page, locale: 'en' | 'fa', baseURL: string) {
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
   await page.route('**/api/admin/email-providers', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/admin/sms-providers/template-variable-choices', (route) =>
+    route.fulfill({
+      json: [
+        { eventKey: 'auth.otp', locale: 'en', variables: ['code'] },
+        { eventKey: 'auth.otp', locale: 'fa', variables: ['code'] },
+      ],
+    })
+  );
   await page.route('**/api/admin/sms-providers/template-event-keys', (route) =>
     route.fulfill({ json: ['auth.otp', 'invoice.created'] })
   );
@@ -137,7 +145,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('combobox', { name: `${text('language')} 2`, exact: true })
       .selectOption('en');
     await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
-    await page.getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
+    await page.getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(panel.getByRole('alert').filter({ hasText: text('unavailable') })).toBeVisible();
@@ -158,7 +166,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('combobox', { name: `${text('language')} 2`, exact: true })
       .selectOption('en');
     await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
-    await page.getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
+    await page.getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toBeVisible();
@@ -228,7 +236,7 @@ for (const locale of ['en', 'fa'] as const) {
       .fill('invoice.created');
     await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
     await page
-      .getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true })
+      .getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true })
       .fill('amount');
     await page
       .getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true })
@@ -248,7 +256,7 @@ for (const locale of ['en', 'fa'] as const) {
       .fill('invoice.created');
     await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
     await page
-      .getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true })
+      .getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true })
       .fill('amount');
     await page
       .getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true })
@@ -292,7 +300,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#sms-key').fill('new-test-secret');
     await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill('auth.otp');
     await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
-    await page.getByRole('textbox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
+    await page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(panel.getByRole('alert').filter({ hasText: text('unavailable') })).toBeVisible();
@@ -307,7 +315,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#sms-key').fill('new-test-secret');
     await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill('auth.otp');
     await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
-    await page.getByRole('textbox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
+    await page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(page.locator('#sms-key')).toHaveCount(0);
@@ -346,6 +354,10 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.route('**/api/admin/sms-providers/**', (route) => {
       const path = new URL(route.request().url()).pathname;
+      if (path.endsWith('template-variable-choices'))
+        return route.fulfill({
+          json: [{ eventKey: 'auth.otp', locale: 'en', variables: ['code'] }],
+        });
       if (path.endsWith('template-event-keys'))
         return route.fulfill({ json: ['auth.otp', 'invoice.created'] });
       if (path.endsWith('/test-connection')) {
@@ -479,5 +491,92 @@ for (const locale of ['en', 'fa'] as const) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
     );
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`SMS variable suggestions follow locale and recover without losing private draft (${locale})`, async ({
+    page,
+    baseURL,
+  }) => {
+    const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
+    await shell(page, locale, baseURL!);
+    let failed = false,
+      withdrawn = false,
+      denied = false,
+      reads = 0,
+      lists = 0;
+    await page.route('**/api/admin/sms-providers', (route) => {
+      lists++;
+      return route.fulfill({ json: [provider()] });
+    });
+    await page.route('**/api/admin/sms-providers/template-variable-choices', (route) => {
+      reads++;
+      return route.fulfill({
+        status: denied ? 403 : failed ? 503 : 200,
+        json: [
+          {
+            eventKey: 'auth.otp',
+            locale: 'en',
+            variables: withdrawn ? ['englishOnly'] : ['code', 'englishOnly'],
+          },
+          {
+            eventKey: 'auth.otp',
+            locale: 'fa',
+            variables: withdrawn ? ['persianOnly'] : ['code', 'persianOnly'],
+          },
+        ],
+      });
+    });
+    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    await page.getByRole('button', { name: text('edit'), exact: true }).click();
+    const variable = page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true });
+    const language = page.getByRole('combobox', { name: `${text('language')} 1`, exact: true });
+    const options = async () =>
+      page
+        .locator(`datalist[id="${await variable.getAttribute('list')}"] option`)
+        .evaluateAll((nodes) => nodes.map((node) => (node as HTMLOptionElement).value));
+    expect(await options()).toEqual(['code']);
+    await language.selectOption('en');
+    expect(await options()).toEqual(['code', 'englishOnly']);
+    await language.selectOption('fa');
+    expect(await options()).toEqual(['code', 'persianOnly']);
+    await variable.focus();
+    await expect(variable).toBeFocused();
+    await variable.fill('persianOnly');
+    await page.locator('#sms-key').fill('synthetic-private-draft');
+    failed = true;
+    await page.getByRole('button', { name: text('retryVariables'), exact: true }).click();
+    await expect(
+      page.getByRole('alert').filter({ hasText: text('variablesFailed') })
+    ).toBeVisible();
+    await expect(variable).toHaveValue('persianOnly');
+    expect(await options()).toEqual(['code', 'persianOnly']);
+    failed = false;
+    withdrawn = true;
+    await page.getByRole('button', { name: text('retryVariables'), exact: true }).click();
+    await expect(page.getByRole('alert').filter({ hasText: text('variablesFailed') })).toHaveCount(
+      0
+    );
+    await expect.poll(options).toEqual(['persianOnly']);
+    await language.selectOption('all');
+    expect(await options()).toEqual([]);
+    await expect(variable).toHaveValue('persianOnly');
+    await expect(page.locator('#sms-key')).toHaveValue('synthetic-private-draft');
+    expect(lists).toBe(1);
+    expect(reads).toBe(3);
+    await variable.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: `/Users/majid/.local/state/barghsa-manual-batches/sms-variable-dropdowns/sms-variable-${locale}.png`,
+      fullPage: true,
+    });
+    denied = true;
+    await page.getByRole('button', { name: text('retryVariables'), exact: true }).click();
+    await expect(page.locator('#sms-key')).toHaveCount(0);
+    await expect(
+      page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true })
+    ).toHaveCount(0);
+    await expect(page.locator('datalist')).toHaveCount(0);
+    await expect(page.locator('body')).not.toContainText('sms-draft');
   });
 }

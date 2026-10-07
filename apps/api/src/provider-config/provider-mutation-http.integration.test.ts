@@ -637,3 +637,49 @@ it('email edits clear optional public values while retaining encrypted credentia
 });
 
 const auditWindow = new AuditWindow(() => http.pool);
+
+it('SMS variable choices expose only active SMS allowlists by locale, without template data', async () => {
+  await http.pool.query(
+    `INSERT INTO notification_templates(id,event_key,channel,locale,body_template,variables,status,is_active,version,published_at)
+    VALUES($1,'auth.otp','sms','fa','PRIVATE {{code}}',$2,'active',true,1,NOW()),
+    ($3,'invoice.created','email','en','EMAIL PRIVATE','["emailOnly"]','active',true,1,NOW()),
+    ($4,'invoice.created','sms','en','DRAFT PRIVATE','["draftOnly"]','draft',false,1,NULL)`,
+    [
+      randomUUID(),
+      JSON.stringify([
+        { name: 'code', description: 'PRIVATE DESCRIPTION' },
+        'profile.name',
+        '__proto__.secret',
+        'code',
+      ]),
+      randomUUID(),
+      randomUUID(),
+    ]
+  );
+  const before = await snapshot('sms_provider_configs');
+  const response = await fetch(`${http.base}/api/admin/sms-providers/template-variable-choices`, {
+    headers,
+  });
+  expect(response.status).toBe(200);
+  const rows = await response.json();
+  expect(rows).toEqual([
+    { eventKey: 'auth.otp', locale: 'en', variables: ['code'] },
+    { eventKey: 'auth.otp', locale: 'fa', variables: ['code', 'profile.name'] },
+  ]);
+  expect(JSON.stringify(rows)).not.toContain('PRIVATE');
+  expect(await snapshot('sms_provider_configs')).toEqual(before);
+});
+it('SMS variable choices require a live session and current provider capability', async () => {
+  const path = `${http.base}/api/admin/sms-providers/template-variable-choices`;
+  expect((await fetch(path)).status).toBe(401);
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='provider-writer'");
+  const denied = await fetch(path, { headers });
+  expect(denied.status).toBe(403);
+  expect(await denied.text()).not.toContain('variables');
+  await http.pool.query("UPDATE staff_roles SET permissions=$1 WHERE role_id='provider-writer'", [
+    grants,
+  ]);
+  expect((await fetch(path, { headers })).status).toBe(200);
+  await http.pool.query('UPDATE sessions SET revoked_at=NOW() WHERE session_id=$1', [session]);
+  expect((await fetch(path, { headers })).status).toBe(401);
+});
