@@ -169,8 +169,10 @@ for (const locale of ['en', 'fa'] as const)
           const approveForm = page.getByTestId('electricity-increase-approve-form').first();
           const date = page.locator(`#increase-effective-${increaseRequestId}`);
           const reason = page.locator(`#increase-reason-${increaseRequestId}`);
+          const approvalReason = page.locator(`#increase-approval-reason-${increaseRequestId}`);
           await expect(approveForm).toContainText('Asia/Tehran');
           await date.fill('2026-10-10T12:00');
+          await approvalReason.fill('  Capacity reviewed  ');
           await reason.fill('  Retain the staff capacity draft  ');
           await page.setViewportSize({ width: 1280, height: 900 });
           await expect(date).toHaveValue('2026-10-10T12:00');
@@ -180,7 +182,10 @@ for (const locale of ['en', 'fa'] as const)
           await approveForm.getByRole('button', { name: copy('approve'), exact: true }).click();
           const dialog = page.getByRole('dialog');
           await expect(dialog).toBeVisible();
-          expect(previews).toEqual([{ effectiveFrom: '2026-10-10T08:30:00.000Z' }]);
+          expect(previews).toEqual([
+            { effectiveFrom: '2026-10-10T08:30:00.000Z', reason: 'Capacity reviewed' },
+          ]);
+          await expect(dialog).toContainText('Capacity reviewed');
           await expect(dialog).toContainText(await accountDate('2026-10-10T08:30:00.000Z'));
           await page.setViewportSize({ width: 390, height: 844 });
           await expect(dialog).toBeVisible();

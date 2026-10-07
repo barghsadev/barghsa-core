@@ -180,6 +180,8 @@ for (const [locale, theme] of [
     let approveForm = page.getByTestId('electricity-increase-approve-form').first();
     let rejectForm = page.getByTestId('electricity-increase-reject-form').first();
     const date = page.locator(`#increase-effective-${increaseRequestId}`);
+    const approvalReason = page.locator(`#increase-approval-reason-${increaseRequestId}`);
+    await approvalReason.fill('  Capacity reviewed  ');
     await date.fill('2026-10-13T12:00');
     const approve = approveForm.getByRole('button', { name: staffText('approve'), exact: true });
     await approve.click();
@@ -190,6 +192,7 @@ for (const [locale, theme] of [
     expect(state.decisionPreviews).toHaveLength(1);
     expect(state.decisionPreviews[0]!.body).toEqual({
       effectiveFrom: '2026-10-13T08:30:00.000Z',
+      reason: 'Capacity reviewed',
     });
     await expect(rejectForm.locator('input,textarea')).toHaveValue('');
     await expect(approveForm).not.toContainText('PRIVATE_SERVER_VALIDATION_TEXT');
@@ -233,6 +236,7 @@ for (const [locale, theme] of [
       action: 'approve',
       body: {
         effectiveFrom: capturedPreview.body.effectiveFrom,
+        reason: capturedPreview.body.reason,
         expectedReviewHash: 'a'.repeat(64),
         idempotencyKey: expect.stringMatching(/^[0-9a-f-]{36}$/),
       },

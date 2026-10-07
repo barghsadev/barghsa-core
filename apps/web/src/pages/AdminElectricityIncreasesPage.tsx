@@ -85,10 +85,12 @@ function IncreaseDecisionEditor({
   locale,
   timezone,
   draft,
+  approvalReasonDraft,
   disabled,
   busy,
   blocked,
   onDraft,
+  onApprovalReason,
   onPrepare,
 }: {
   request: IncreaseRequest;
@@ -96,10 +98,12 @@ function IncreaseDecisionEditor({
   locale: 'en' | 'fa';
   timezone: string | null;
   draft: string;
+  approvalReasonDraft?: string;
   disabled: boolean;
   busy: boolean;
   blocked: boolean;
   onDraft: (draft: string) => void;
+  onApprovalReason?: (reason: string) => void;
   onPrepare: (form: DecisionForm, fields: (fields: unknown[]) => boolean) => void;
 }) {
   const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
@@ -109,30 +113,38 @@ function IncreaseDecisionEditor({
   const dateUnavailable = decision === 'approve' && !timezone;
   const name = decision === 'approve' ? 'effectiveDate' : 'reason';
   const message = formCopy(decision === 'approve' ? 'dateInvalid' : 'reasonInvalid');
+  const reasonMessage = formCopy('reasonInvalid');
   const form: DecisionForm = useZodForm<IncreaseDecisionDraft>(
     async () => {
-      const raw = form.getValues(name);
+      const raw = JSON.stringify(form.getValues());
       const schemas = await import('../lib/electricity-increase-decision-form-schemas.js');
-      return form.getValues(name) === raw && currentTimezone.current === timezone
-        ? schemas.increaseDecisionSchema(decision, message, timezone)
+      return JSON.stringify(form.getValues()) === raw && currentTimezone.current === timezone
+        ? schemas.increaseDecisionSchema(decision, message, timezone, reasonMessage)
         : schemas.inactiveIncreaseDecisionSchema;
     },
     {
       defaultValues: {
         effectiveDate: decision === 'approve' ? draft : '',
-        reason: decision === 'reject' ? draft : '',
+        reason: decision === 'reject' ? draft : (approvalReasonDraft ?? ''),
       },
       validationUnavailableMessage: formCopy('validationUnavailable'),
     }
   );
   useEffect(() => {
-    if (form.getValues(name) !== draft)
+    if (
+      form.getValues(name) !== draft ||
+      (decision === 'approve' && form.getValues('reason') !== (approvalReasonDraft ?? ''))
+    )
       form.reset({
         effectiveDate: decision === 'approve' ? draft : '',
-        reason: decision === 'reject' ? draft : '',
+        reason: decision === 'reject' ? draft : (approvalReasonDraft ?? ''),
       });
-  }, [draft]);
-  const fieldErrors = useActionFieldErrors(form, { [name]: message }, copy('reviewError'));
+  }, [draft, approvalReasonDraft]);
+  const fieldErrors = useActionFieldErrors(
+    form,
+    { [name]: message, reason: reasonMessage },
+    copy('reviewError')
+  );
   return (
     <Form {...form}>
       <form
@@ -146,9 +158,12 @@ function IncreaseDecisionEditor({
             (fields) =>
               fields.length > 0 &&
               fields.every(
-                (field) => field === (decision === 'approve' ? 'effectiveFrom' : 'reason')
+                (field) =>
+                  field === 'reason' || (decision === 'approve' && field === 'effectiveFrom')
               ) &&
-              fieldErrors(fields.map(() => name))
+              fieldErrors(
+                fields.map((field) => (field === 'effectiveFrom' ? 'effectiveDate' : 'reason'))
+              )
           );
         }}
       >
@@ -185,6 +200,29 @@ function IncreaseDecisionEditor({
             </FormItem>
           )}
         />
+        {decision === 'approve' ? (
+          <FormField
+            control={form.control}
+            name="reason"
+            render={({ field }) => (
+              <FormItem id={`increase-approval-reason-${request.requestId}`}>
+                <FormLabel>{copy('approvalReason')}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    disabled={disabled || dateUnavailable}
+                    onChange={(event) => {
+                      field.onChange(event);
+                      onApprovalReason?.(event.target.value);
+                    }}
+                  />
+                </FormControl>
+                <FormDescription>{formCopy('approvalReasonHelp')}</FormDescription>
+                <FormMessage reserveSpace />
+              </FormItem>
+            )}
+          />
+        ) : null}
         {form.formState.errors.root?.validation ? (
           <p role="alert">{formCopy('validationUnavailable')}</p>
         ) : null}
@@ -241,6 +279,7 @@ export default function AdminElectricityIncreasesPage({
   const reviewedRequest = useRef<IncreaseRequest | null>(null);
   const [revision, setRevision] = useState(0);
   const [reason, setReason] = useState<Record<string, string>>({});
+  const [approvalReason, setApprovalReason] = useState<Record<string, string>>({});
   const [effectiveDate, setEffectiveDate] = useState<Record<string, string>>({});
   const [action, setAction] = useState<TeamAction | null>(null);
   const [decisionReview, setDecisionReview] =
@@ -290,6 +329,7 @@ export default function AdminElectricityIncreasesPage({
     } else clearReview();
     if (expectedNext.current !== scope) {
       setReason({});
+      setApprovalReason({});
       setEffectiveDate({});
     }
     expectedNext.current = null;
@@ -297,6 +337,7 @@ export default function AdminElectricityIncreasesPage({
   useEffect(() => {
     clearReview();
     setReason({});
+    setApprovalReason({});
     setEffectiveDate({});
     setRequests(null);
     setNextBefore(null);
@@ -385,6 +426,7 @@ export default function AdminElectricityIncreasesPage({
     setRequests(null);
     setNextBefore(null);
     setReason({});
+    setApprovalReason({});
     setEffectiveDate({});
     clearReview();
   }
@@ -440,6 +482,11 @@ export default function AdminElectricityIncreasesPage({
       return next;
     });
     setEffectiveDate((current) => {
+      const next = { ...current };
+      delete next[requestId];
+      return next;
+    });
+    setApprovalReason((current) => {
       const next = { ...current };
       delete next[requestId];
       return next;
@@ -534,8 +581,7 @@ export default function AdminElectricityIncreasesPage({
       !visibleRequests?.some((row) => JSON.stringify(row) === JSON.stringify(request))
     )
       return;
-    const name = decision === 'approve' ? 'effectiveDate' : 'reason';
-    const raw = form.getValues(name);
+    const raw = JSON.stringify(form.getValues());
     const generation = ++reviewRequest.current;
     reviewedRequest.current = request;
     preparing.current = true;
@@ -550,20 +596,18 @@ export default function AdminElectricityIncreasesPage({
       currentScope.current === scope;
     const fresh = () =>
       authorized() &&
-      form.getValues(name) === raw &&
+      JSON.stringify(form.getValues()) === raw &&
       (decision === 'reject' || currentTimezone.current === timezone);
     void form
       .handleSubmit(async (draft) => {
-        if (!fresh() || draft[name] !== raw) return;
+        if (!fresh() || JSON.stringify(draft) !== raw) return;
         const effectiveFrom =
-          decision === 'approve' ? increaseEffectiveFrom(raw, timezone) : undefined;
+          decision === 'approve' ? increaseEffectiveFrom(draft.effectiveDate, timezone) : undefined;
         if (effectiveFrom === null) return;
-        const previewInput =
-          decision === 'approve'
-            ? effectiveFrom
-              ? { effectiveFrom }
-              : {}
-            : { reason: raw.trim() };
+        const previewInput = {
+          reason: draft.reason.trim(),
+          ...(effectiveFrom ? { effectiveFrom } : {}),
+        };
         const path = `/api/staff/electricity/increase-requests/${encodeURIComponent(request.requestId)}/${decision}`;
         try {
           const response = await fetch(`${path}/review`, {
@@ -609,8 +653,8 @@ export default function AdminElectricityIncreasesPage({
                 idempotencyKey: crypto.randomUUID(),
                 expectedReviewHash: review.hash,
                 ...(decision === 'approve'
-                  ? { effectiveFrom: review.data.effectiveFrom }
-                  : { reason: raw.trim() }),
+                  ? { effectiveFrom: review.data.effectiveFrom, reason: review.data.reason }
+                  : { reason: review.data.reason }),
               },
               conflictMessage: copy('conflict'),
               forbiddenMessage: copy('forbidden'),
@@ -910,6 +954,13 @@ export default function AdminElectricityIncreasesPage({
                           timezone={timezone}
                           locale={locale}
                           draft={effectiveDate[request.requestId] ?? ''}
+                          approvalReasonDraft={approvalReason[request.requestId] ?? ''}
+                          onApprovalReason={(draft) =>
+                            setApprovalReason((current) => ({
+                              ...current,
+                              [request.requestId]: draft,
+                            }))
+                          }
                           disabled={frozen}
                           blocked={loading || error || reviewLoading}
                           busy={busyRow === request.requestId && busyDecision === 'approve'}
@@ -1047,7 +1098,15 @@ export default function AdminElectricityIncreasesPage({
                       value: `${numbers.irrDigits(decisionReview.data.originalInvoicePaidIrR)} IRR`,
                     },
                     ...(decisionReview.data.reason
-                      ? [{ id: 'reason', label: copy('reason'), value: decisionReview.data.reason }]
+                      ? [
+                          {
+                            id: 'reason',
+                            label: copy(
+                              decisionReview.data.action === 'approve' ? 'approvalReason' : 'reason'
+                            ),
+                            value: decisionReview.data.reason,
+                          },
+                        ]
                       : []),
                   ]}
                   total={{
@@ -1099,6 +1158,11 @@ export default function AdminElectricityIncreasesPage({
               return next;
             });
             setEffectiveDate((current) => {
+              const next = { ...current };
+              delete next[command.review.data.requestId];
+              return next;
+            });
+            setApprovalReason((current) => {
               const next = { ...current };
               delete next[command.review.data.requestId];
               return next;

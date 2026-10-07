@@ -144,7 +144,7 @@ async function click(label: string) {
   expect(button, label).toBeDefined();
   await act(async () => button!.click());
 }
-async function change(name: 'effective' | 'reason', value: string) {
+async function change(name: 'effective' | 'reason' | 'approval-reason', value: string) {
   const input = container.querySelector<HTMLInputElement>(`[id^="increase-${name}-"]`)!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
@@ -204,6 +204,7 @@ it('approves with an optional date without validating or submitting the rejectio
         : queue()
   );
   await render(fetchMock);
+  await change('approval-reason', 'Capacity reviewed');
   await click('Approve and issue amendment');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   expect(
@@ -211,7 +212,7 @@ it('approves with an optional date without validating or submitting the rejectio
       (fetchMock.mock.calls.find(([path]) => path.endsWith('/review'))![1] as RequestInit)
         .body as string
     )
-  ).toEqual({});
+  ).toEqual({ reason: 'Capacity reviewed' });
   await click('Confirm decision');
   expect(container.textContent).not.toContain('Retry captured decision');
   const action = dialogs[0]!.action!;
@@ -219,6 +220,7 @@ it('approves with an optional date without validating or submitting the rejectio
     idempotencyKey: expect.any(String),
     expectedReviewHash: 'a'.repeat(64),
     effectiveFrom: increaseDecisionFixture().request.effectiveFrom,
+    reason: 'Capacity reviewed',
   });
   expect(action.body).not.toHaveProperty('expectedVersionId');
 });
@@ -231,6 +233,7 @@ it('projects only owned preview date feedback and focuses the editable native in
   );
   await render(fetchMock);
   await change('reason', 'Keep this companion');
+  await change('approval-reason', 'Capacity reviewed');
   await click('Approve and issue amendment');
   await settled(() =>
     expect(
@@ -252,6 +255,7 @@ it('keeps protected or mixed preview fields generic', async () => {
       : queue()
   );
   await render(fetchMock);
+  await change('approval-reason', 'Capacity reviewed');
   await click('Approve and issue amendment');
   await settled(() => expect(container.textContent).toContain('review'));
   expect(
@@ -270,6 +274,7 @@ it.each([200, 400])(
     );
     await render(fetchMock);
     const date = await change('effective', '2026-10-01T12:00');
+    await change('approval-reason', 'Capacity reviewed');
     await click('Approve and issue amendment');
     await settled(() =>
       expect(fetchMock.mock.calls.filter(([path]) => path.endsWith('/review'))).toHaveLength(1)
@@ -285,7 +290,9 @@ it.each([200, 400])(
     await act(async () =>
       held.resolve(
         status === 200
-          ? Response.json(decisionReview('approve', '', '2026-10-01T08:30:00.000Z'))
+          ? Response.json(
+              decisionReview('approve', 'Capacity reviewed', '2026-10-01T08:30:00.000Z')
+            )
           : Response.json(publicError(['effectiveFrom']), { status: 400 })
       )
     );
@@ -623,7 +630,7 @@ it('blocks unavailable approval time and rejects a preview resolved for an obsol
       inputs.push(body);
       return inputs.length === 1
         ? held
-        : Response.json(decisionReview('approve', '', body.effectiveFrom));
+        : Response.json(decisionReview('approve', 'Capacity reviewed', body.effectiveFrom));
     }
     return Response.json({ requests: [request], nextBefore: null });
   });
@@ -649,17 +656,64 @@ it('blocks unavailable approval time and rejects a preview resolved for an obsol
   accountClock.status = 'ready';
   await update();
   await change('effective', '2026-10-01T12:00');
+  await change('approval-reason', 'Capacity reviewed');
   await click('Approve and issue amendment');
-  await settled(() => expect(inputs).toEqual([{ effectiveFrom: '2026-10-01T08:30:00.000Z' }]));
+  await settled(() =>
+    expect(inputs).toEqual([
+      { effectiveFrom: '2026-10-01T08:30:00.000Z', reason: 'Capacity reviewed' },
+    ])
+  );
   accountClock.timezone = 'America/New_York';
   await update();
   await act(async () =>
-    finish(Response.json(decisionReview('approve', '', inputs[0]!.effectiveFrom)))
+    finish(Response.json(decisionReview('approve', 'Capacity reviewed', inputs[0]!.effectiveFrom)))
   );
   await settled(() => expect(container.querySelector('[role="dialog"]')).toBeNull());
   expect(date.value).toBe('2026-10-01T12:00');
+  await change('approval-reason', 'Capacity reviewed');
   await click('Approve and issue amendment');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
-  expect(inputs[1]).toEqual({ effectiveFrom: '2026-10-01T16:00:00.000Z' });
+  expect(inputs[1]).toEqual({
+    effectiveFrom: '2026-10-01T16:00:00.000Z',
+    reason: 'Capacity reviewed',
+  });
   expect(date.value).toBe('2026-10-01T12:00');
+});
+
+it.each(['', '   ', 'x'.repeat(1001)])(
+  'blocks an invalid approval reason locally: %s',
+  async (value) => {
+    const fetchMock = vi.fn(async () => queue());
+    await render(fetchMock);
+    const date = await change('effective', '2026-10-01T12:00');
+    const rejection = await change('reason', 'Independent rejection draft');
+    const reason = await change('approval-reason', value);
+    await click('Approve and issue amendment');
+    await settled(() => expect(reason.getAttribute('aria-invalid')).toBe('true'));
+    await settled(() => expect(document.activeElement).toBe(reason));
+    expect(reason.getAttribute('aria-describedby')).toContain(`${reason.id}-message`);
+    expect(date.value).toBe('2026-10-01T12:00');
+    expect(rejection.value).toBe('Independent rejection draft');
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(dialogs).toHaveLength(0);
+  }
+);
+it('discards a held approval preview after its reason changes', async () => {
+  const held = deferred<Response>();
+  const { decisionReview } = increaseDecisionFixture();
+  const fetchMock = vi.fn(async (path: string, _init?: RequestInit) =>
+    path.endsWith('/review') ? held.promise : queue()
+  );
+  await render(fetchMock);
+  await change('approval-reason', 'Capacity reviewed');
+  await click('Approve and issue amendment');
+  await settled(() =>
+    expect(fetchMock.mock.calls.filter(([path]) => path.endsWith('/review'))).toHaveLength(1)
+  );
+  const reason = await change('approval-reason', 'New capacity rationale');
+  await act(async () => held.resolve(Response.json(decisionReview('approve'))));
+  await settled(() => expect(container.querySelector('[role="dialog"]')).toBeNull());
+  expect(reason.value).toBe('New capacity rationale');
+  expect(dialogs).toHaveLength(0);
+  expect(fetchMock.mock.calls.some(([path]) => path.endsWith('/approve'))).toBe(false);
 });

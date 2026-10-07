@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import { parseElectricityIncreaseStaffDecisionReview } from '@barghsa/shared/finance';
 import { increaseDecisionFixture } from '../test/electricity-increase-decision-fixtures.js';
 import {
   boundIncreaseDecisionReview,
@@ -30,13 +31,13 @@ it.each([
   expect(increaseEffectiveFrom(raw, timezone)).toBeNull();
 });
 
-it('validates only the field owned by each independent decision', () => {
+it('requires each decision reason and validates only approval dates', () => {
   expect(
     increaseDecisionSchema('approve', 'date', 'Asia/Tehran').safeParse({
       effectiveDate: '',
       reason: '',
     }).success
-  ).toBe(true);
+  ).toBe(false);
   expect(
     increaseDecisionSchema('approve', 'date', 'Asia/Tehran').safeParse({
       effectiveDate: 'invalid',
@@ -66,7 +67,9 @@ it('validates only the field owned by each independent decision', () => {
 it('binds complete staff financial reviews to the request and selected decision', () => {
   const { request, decisionReview } = increaseDecisionFixture();
   expect(
-    boundIncreaseDecisionReview(decisionReview('approve'), request, 'approve', {})
+    boundIncreaseDecisionReview(decisionReview('approve'), request, 'approve', {
+      reason: 'Capacity reviewed',
+    })
   ).not.toBeNull();
   expect(
     boundIncreaseDecisionReview(decisionReview('reject'), request, 'reject', {
@@ -88,7 +91,7 @@ it('binds complete staff financial reviews to the request and selected decision'
         { ...review, data: { ...review.data, ...data } },
         request,
         'approve',
-        {}
+        { reason: 'Capacity reviewed' }
       )
     ).toBeNull();
   }
@@ -110,7 +113,9 @@ it('confirms actual decision rows and rejects malformed or unrelated write recei
 
 it('checks immutable approval evidence and its digest independently of JSONB key order', async () => {
   const { request, decisionReview, receipt } = increaseDecisionFixture();
-  const review = boundIncreaseDecisionReview(decisionReview('approve'), request, 'approve', {})!;
+  const review = boundIncreaseDecisionReview(decisionReview('approve'), request, 'approve', {
+    reason: 'Capacity reviewed',
+  })!;
   const row = await receipt('approve');
   expect(
     await confirmedIncreaseDecision(
@@ -134,7 +139,9 @@ it('checks immutable approval evidence and its digest independently of JSONB key
 
 it('accepts a later live approval replay only with the same amendment and valid signing evidence', async () => {
   const { request, decisionReview, receipt } = increaseDecisionFixture();
-  const review = boundIncreaseDecisionReview(decisionReview('approve'), request, 'approve', {})!;
+  const review = boundIncreaseDecisionReview(decisionReview('approve'), request, 'approve', {
+    reason: 'Capacity reviewed',
+  })!;
   const row = await receipt('approve');
   const signedAt = '2026-10-01T00:00:00.000Z';
   const later = {
@@ -163,4 +170,34 @@ it('accepts a later live approval replay only with the same amendment and valid 
       review
     )
   ).toBe(false);
+});
+
+it('reads legacy approvals without allowing their blank reason to bind a new decision', async () => {
+  const { request, decisionReview, receipt } = increaseDecisionFixture();
+  const legacy = parseElectricityIncreaseStaffDecisionReview(decisionReview('approve', ''))!;
+  expect(boundIncreaseDecisionReview(legacy, request, 'approve', { reason: '' })).toBeNull();
+  expect(await confirmedIncreaseDecision(await receipt('approve', ''), legacy)).toBe(true);
+  const review = parseElectricityIncreaseStaffDecisionReview(decisionReview('approve'))!;
+  const row = await receipt('approve');
+  expect(await confirmedIncreaseDecision({ ...row, reviewReason: 'Changed reason' }, review)).toBe(
+    false
+  );
+  expect(
+    await confirmedIncreaseDecision(
+      { ...row, amendmentDocument: { ...row.amendmentDocument, approvalReason: 'Changed reason' } },
+      review
+    )
+  ).toBe(false);
+});
+
+it('parses legacy empty and new approval reasons while rejecting blank and oversized reasons', () => {
+  const { decisionReview } = increaseDecisionFixture();
+  for (const reason of ['', 'Capacity reviewed'])
+    expect(
+      parseElectricityIncreaseStaffDecisionReview(decisionReview('approve', reason))
+    ).not.toBeNull();
+  for (const reason of ['   ', 'x'.repeat(1001)])
+    expect(
+      parseElectricityIncreaseStaffDecisionReview(decisionReview('approve', reason))
+    ).toBeNull();
 });

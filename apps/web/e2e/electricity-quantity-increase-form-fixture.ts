@@ -59,7 +59,11 @@ export function increaseRequest(id = increaseRequestId) {
 }
 type IncreaseRow = ReturnType<typeof increaseRequest>;
 
-export function approvedIncrease(row = increaseRequest(), date = row.effectiveFrom) {
+export function approvedIncrease(
+  row = increaseRequest(),
+  date = row.effectiveFrom,
+  reason = 'Capacity reviewed'
+) {
   const amendment = {
     schemaVersion: 1,
     kind: 'electricity_quantity_increase',
@@ -70,6 +74,7 @@ export function approvedIncrease(row = increaseRequest(), date = row.effectiveFr
     requestedBy: row.requestedBy,
     approvedBy: increaseStaffId,
     approvedAt: reviewedAt,
+    approvalReason: reason,
     originalKwh: row.originalKwh,
     requestedKwh: row.requestedKwh,
     incrementalKwh: '2',
@@ -89,6 +94,7 @@ export function approvedIncrease(row = increaseRequest(), date = row.effectiveFr
   return {
     ...row,
     status: 'awaiting_signature',
+    reviewReason: reason,
     effectiveFrom: date,
     reviewedAt,
     reviewedBy: increaseStaffId,
@@ -185,7 +191,7 @@ export function increaseDecisionReview(
     },
     data: {
       action,
-      reason: action === 'reject' ? body.reason : '',
+      reason: body.reason,
       requestId: row.requestId,
       profileId: row.profileId,
       contractId: row.contractId,
@@ -364,7 +370,11 @@ export async function setupElectricityQuantityIncreaseForms(
         }
         const result =
           action === 'approve'
-            ? approvedIncrease(row, String(body.effectiveFrom ?? row.effectiveFrom))
+            ? approvedIncrease(
+                row,
+                String(body.effectiveFrom ?? row.effectiveFrom),
+                String(body.reason)
+              )
             : {
                 ...row,
                 status: 'rejected',

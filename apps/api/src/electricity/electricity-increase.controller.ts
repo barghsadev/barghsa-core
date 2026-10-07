@@ -133,7 +133,7 @@ export class StaffElectricityIncreaseController {
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
     return this.service.approve(
       parse(idSchema, requestId),
-      parse(approveIncreaseSchema, body, ['effectiveFrom']),
+      parse(approveIncreaseSchema, body, ['effectiveFrom', 'reason']),
       req.session,
       req.ip ?? '127.0.0.1'
     );
@@ -154,7 +154,7 @@ export class StaffElectricityIncreaseController {
     return this.service.decisionReview(
       parse(idSchema, requestId),
       'approve',
-      parse(approveIncreaseReviewSchema, body, ['effectiveFrom']),
+      parse(approveIncreaseReviewSchema, body, ['effectiveFrom', 'reason']),
       req.session
     );
   }

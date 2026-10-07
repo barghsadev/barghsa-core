@@ -27,7 +27,7 @@ export function increaseDecisionFixture() {
   };
   const decisionReview = (
     action: 'approve' | 'reject',
-    reason = 'Outside capacity plan',
+    reason = action === 'approve' ? 'Capacity reviewed' : 'Outside capacity plan',
     effective = effectiveFrom
   ) => ({
     schemaVersion: 1,
@@ -38,7 +38,7 @@ export function increaseDecisionFixture() {
     },
     data: {
       action,
-      reason: action === 'reject' ? reason : '',
+      reason,
       requestId,
       contractId,
       orderId,
@@ -70,7 +70,7 @@ export function increaseDecisionFixture() {
   });
   const receipt = async (
     action: 'approve' | 'reject',
-    reason = 'Outside capacity plan',
+    reason = action === 'approve' ? 'Capacity reviewed' : 'Outside capacity plan',
     effective = effectiveFrom
   ) => {
     const row = {
@@ -80,7 +80,7 @@ export function increaseDecisionFixture() {
       requestedBy: 'customer-1',
       reviewedBy: 'staff-1',
       reviewedAt: '2026-09-30T12:00:00.000Z',
-      reviewReason: action === 'approve' ? null : reason,
+      reviewReason: reason || null,
       amendmentDocument: null as Record<string, unknown> | null,
       amendmentSha256: null as string | null,
       signatureEvidence: null,
@@ -101,6 +101,7 @@ export function increaseDecisionFixture() {
         requestedBy: row.requestedBy,
         approvedBy: row.reviewedBy,
         approvedAt: row.reviewedAt,
+        ...(reason ? { approvalReason: reason } : {}),
         originalKwh: '10',
         requestedKwh: '12',
         incrementalKwh: '2',

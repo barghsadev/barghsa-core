@@ -3033,13 +3033,13 @@ it.each([
       const command = { idempotencyKey: randomUUID(), expectedReviewHash: 'a'.repeat(64) };
       await invalidNoWrite(
         `${staffPath}/approve/review`,
-        { effectiveFrom: 'PRIVATE' },
+        { effectiveFrom: 'PRIVATE', reason: 'Capacity reviewed' },
         ['effectiveFrom'],
         staffHeaders
       );
       await invalidNoWrite(
         `${staffPath}/approve`,
-        { ...command, effectiveFrom: 'PRIVATE' },
+        { ...command, effectiveFrom: 'PRIVATE', reason: 'Capacity reviewed' },
         ['effectiveFrom'],
         staffHeaders
       );
@@ -3080,7 +3080,7 @@ it.each([
       );
       await invalidNoWrite(
         `${staffPath}/approve`,
-        { ...command, effectiveFrom: 'PRIVATE' },
+        { ...command, effectiveFrom: 'PRIVATE', reason: 'Capacity reviewed' },
         undefined,
         staffHeaders,
         403,
@@ -3141,10 +3141,23 @@ it.each([
     }
     if (decision !== 'reject') {
       const approvePath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/approve`;
+      for (const input of [{}, { reason: ' ' }, { reason: 'x'.repeat(1001) }]) {
+        await invalidNoWrite(`${approvePath}/review`, input, ['reason'], staffHeaders);
+        await invalidNoWrite(
+          approvePath,
+          {
+            ...input,
+            idempotencyKey: randomUUID(),
+            expectedReviewHash: 'a'.repeat(64),
+          },
+          ['reason'],
+          staffHeaders
+        );
+      }
       const preview = await fetch(`${approvePath}/review`, {
         method: 'POST',
         headers: staffHeaders,
-        body: JSON.stringify({}),
+        body: JSON.stringify({ reason: '  Capacity reviewed  ' }),
       });
       expect(preview.status, http.logs()).toBe(200);
       const approvalReview = (await preview.json()) as {
@@ -3152,14 +3165,27 @@ it.each([
         data: { effectiveFrom: string; outcome: string; originalInvoiceState: string };
       };
       expect(approvalReview.data).toMatchObject({
+        reason: 'Capacity reviewed',
         outcome: 'publish_amendment_for_customer_signature',
         originalInvoiceState: 'Paid',
       });
       const approval = {
         idempotencyKey: randomUUID(),
         effectiveFrom: approvalReview.data.effectiveFrom,
+        reason: 'Capacity reviewed',
         expectedReviewHash: approvalReview.hash,
       };
+      const beforeReasonMismatch = await increaseSnapshot();
+      expect(
+        (
+          await fetch(approvePath, {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify({ ...approval, reason: 'Changed rationale' }),
+          })
+        ).status
+      ).toBe(409);
+      expect(await increaseSnapshot()).toEqual(beforeReasonMismatch);
       expect(
         (
           await fetch(approvePath, {
@@ -3204,9 +3230,11 @@ it.each([
         status: string;
       };
       expect(amendment).toMatchObject({
+        reviewReason: 'Capacity reviewed',
         status: 'awaiting_signature',
         amendmentSha256: expect.stringMatching(/^[0-9a-f]{64}$/),
         amendmentDocument: {
+          approvalReason: 'Capacity reviewed',
           originalKwh: '10',
           requestedKwh: '12',
           incrementalKwh: '2',
@@ -3229,7 +3257,7 @@ it.each([
         entity: 'electricity_quantity_increase_request',
         fromState: 'pending',
         toState: 'awaiting_signature',
-        reason: null,
+        reason: 'Capacity reviewed',
         actor: 'reviewer',
         context: 'staff',
       });
@@ -4531,7 +4559,7 @@ it.each(['charge', 'credit'] as const)(
     const increaseApprovalReviewResponse = await fetch(`${increaseApprovePath}/review`, {
       method: 'POST',
       headers: staffHeaders,
-      body: JSON.stringify({}),
+      body: JSON.stringify({ reason: 'Capacity reviewed' }),
     });
     expect(increaseApprovalReviewResponse.status, http.logs()).toBe(200);
     const increaseApprovalReview = (await increaseApprovalReviewResponse.json()) as {
@@ -4544,6 +4572,7 @@ it.each(['charge', 'credit'] as const)(
       body: JSON.stringify({
         idempotencyKey: randomUUID(),
         effectiveFrom: increaseApprovalReview.data.effectiveFrom,
+        reason: 'Capacity reviewed',
         expectedReviewHash: increaseApprovalReview.hash,
       }),
     });

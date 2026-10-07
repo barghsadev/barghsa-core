@@ -3,7 +3,33 @@ import {
   nextIncreasePricingInstant,
   quoteIncreaseAdjustment,
   validateIncreaseQuantity,
+  approveIncreaseSchema,
+  approveIncreaseReviewSchema,
 } from './electricity-increase.service.js';
+
+describe('quantity-increase approval reason', () => {
+  const command = {
+    idempotencyKey: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    expectedReviewHash: 'a'.repeat(64),
+  };
+  it('requires a reason before review and before approval', () => {
+    expect(approveIncreaseReviewSchema.safeParse({}).success).toBe(false);
+    expect(approveIncreaseSchema.safeParse(command).success).toBe(false);
+  });
+  it.each([' ', 'x'.repeat(1001)])('rejects a blank or oversized reason', (reason) => {
+    expect(approveIncreaseReviewSchema.safeParse({ reason }).success).toBe(false);
+    expect(approveIncreaseSchema.safeParse({ ...command, reason }).success).toBe(false);
+  });
+  it('preserves the trimmed reason in both commands', () => {
+    expect(approveIncreaseReviewSchema.parse({ reason: '  Capacity reviewed  ' })).toEqual({
+      reason: 'Capacity reviewed',
+    });
+    expect(approveIncreaseSchema.parse({ ...command, reason: '  Capacity reviewed  ' })).toEqual({
+      ...command,
+      reason: 'Capacity reviewed',
+    });
+  });
+});
 
 describe('electricity quantity increase limit', () => {
   it('is disabled at zero and rejects unchanged or lower quantities', () => {

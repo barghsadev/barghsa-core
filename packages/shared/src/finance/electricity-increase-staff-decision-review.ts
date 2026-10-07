@@ -6,7 +6,7 @@ const quantity = z.string().regex(/^[1-9]\d*$/);
 const dataSchema = z
   .object({
     action: z.enum(['approve', 'reject']),
-    reason: z.string(),
+    reason: z.string().max(1000),
     requestId: z.string().uuid(),
     contractId: z.string().uuid(),
     orderId: z.string().uuid(),
@@ -36,7 +36,7 @@ const dataSchema = z
     (data) =>
       BigInt(data.requestedKwh) - BigInt(data.originalKwh) === BigInt(data.incrementalKwh) &&
       (data.action === 'approve'
-        ? data.reason === '' &&
+        ? (data.reason === '' || data.reason.trim().length > 0) &&
           data.effectiveFrom !== null &&
           data.maxPercentageAtDecision !== null &&
           data.outcome === 'publish_amendment_for_customer_signature'

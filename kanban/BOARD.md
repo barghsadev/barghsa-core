@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Implement required staff quantity-increase approval reason through the existing strict schema, review snapshot, native staff decision UI and immutable amendment/audit. Reproduce missing/blank-reason acceptance first; preserve exact authority, snapshot/replay, future-period/payment, notification and rollback boundaries. Inspect existing sources before changing them. Owner route/units/consent decisions remain pending; do not infer those approvals.
+Reconcile existing staff operations and customer-support implementation across electricity,saving,solar andconsultation. Inspect current permission/team assignment,queue/detail recovery,support record links and audit history; reuse source-bound accepted evidence and verify only exact uncovered boundaries. Preserve pending owner representations,retention/reconciliation/dev-reload/provider gates and unfinished consultation work.
 
-- `04-invoices-wallet-contracts.md#T-04.6.01.02`: Staff review queue: approve/reject with reason
+- `release-readiness#R-02.02`: Verify staff operations and customer support for all services
 
 ## v0.2.0: Complete customer journeys
 

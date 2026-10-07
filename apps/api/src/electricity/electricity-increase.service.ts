@@ -49,13 +49,14 @@ export const rejectIncreaseSchema = z
   .strict();
 export const approveIncreaseSchema = z
   .object({
+    reason: z.string().trim().min(1).max(1000),
     effectiveFrom: z.string().datetime({ offset: true }).optional(),
     idempotencyKey: z.string().uuid(),
     expectedReviewHash: z.string().regex(/^[0-9a-f]{64}$/),
   })
   .strict();
 export const approveIncreaseReviewSchema = approveIncreaseSchema
-  .pick({ effectiveFrom: true })
+  .pick({ effectiveFrom: true, reason: true })
   .strict();
 export const rejectIncreaseReviewSchema = rejectIncreaseSchema.pick({ reason: true }).strict();
 export const signIncreaseSchema = z
@@ -606,7 +607,7 @@ export class ElectricityIncreaseService {
       },
       {
         action,
-        reason: action === 'reject' ? input.reason!.trim() : '',
+        reason: input.reason!.trim(),
         requestId,
         contractId: contract.id,
         orderId: contract.order_id,
@@ -715,6 +716,7 @@ export class ElectricityIncreaseService {
                 requestedBy: request.requested_by,
                 approvedBy: actor.userId,
                 approvedAt: now.toISOString(),
+                approvalReason: review.data.reason,
                 originalKwh: request.original_kwh,
                 requestedKwh: request.requested_kwh,
                 incrementalKwh: (requested - original).toString(),
@@ -737,8 +739,16 @@ export class ElectricityIncreaseService {
               await client.query(
                 `UPDATE electricity_quantity_increase_requests SET status='awaiting_signature',
               reviewed_by=$2,reviewed_at=$3,effective_from=$4,
-              amendment_document=$5::jsonb,amendment_sha256=$6 WHERE id=$1`,
-                [requestId, actor.userId, now, effectiveFrom, serialized, digest]
+                amendment_document=$5::jsonb,amendment_sha256=$6,review_reason=$7 WHERE id=$1`,
+                [
+                  requestId,
+                  actor.userId,
+                  now,
+                  effectiveFrom,
+                  serialized,
+                  digest,
+                  review.data.reason,
+                ]
               );
               await auditContract(
                 client,
@@ -752,7 +762,7 @@ export class ElectricityIncreaseService {
                   entityId: requestId,
                   fromState: request.status,
                   toState: 'awaiting_signature',
-                  reason: null,
+                  reason: review.data.reason,
                   requestId,
                   amendmentSha256: digest,
                   effectiveFrom: effectiveFrom!.toISOString(),
@@ -763,7 +773,8 @@ export class ElectricityIncreaseService {
               await notifyContractReview(
                 client,
                 owner.contract_id,
-                'electricity_increase_approved'
+                'electricity_increase_approved',
+                review.data.reason
               );
               return requestId;
             }

@@ -1275,6 +1275,13 @@
       "when": 1791362943029,
       "tag": "0261_invoice_payment_lookup",
       "breakpoints": true
+    },
+    {
+      "idx": 262,
+      "version": "7",
+      "when": 1791372377315,
+      "tag": "0262_electricity_increase_approval_reason",
+      "breakpoints": true
     }
   ]
 }

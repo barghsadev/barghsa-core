@@ -84,6 +84,8 @@ export const fa: I18nDictionary = {
   'electricity.increaseDecisionForm.reasonInvalid': 'دلیل باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
   'electricity.increaseDecisionForm.reasonHelp':
     'تاریخ تأیید و دلیل رد مستقل هستند. تأیید از دلیل رد استفاده نمی‌کند.',
+  'electricity.increaseDecisionForm.approvalReasonHelp':
+    'دلیل تأیید را وارد کنید. این دلیل در تصمیم و اصلاحیه قرارداد ثبت می‌شود و با دلیل رد مستقل است.',
   'electricity.increaseDecisionForm.validationUnavailable':
     'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',
   'electricity.increaseDecisionForm.uncertain':
@@ -1894,7 +1896,9 @@ export const en: I18nDictionary = {
     'Choose a valid date and time, or leave the date empty.',
   'electricity.increaseDecisionForm.reasonInvalid': 'Enter a reason of 1 to 1,000 characters.',
   'electricity.increaseDecisionForm.reasonHelp':
-    'Approval date and rejection reason are independent. Approval does not use the reason.',
+    'Approval date and rejection reason are independent. Approval does not use the rejection reason.',
+  'electricity.increaseDecisionForm.approvalReasonHelp':
+    'Enter the approval reason. It is saved with the decision and contract amendment, separately from the rejection reason.',
   'electricity.increaseDecisionForm.validationUnavailable': 'Validation is unavailable. Try again.',
   'electricity.increaseDecisionForm.uncertain':
     'The result could not be confirmed. Retry the captured decision before changing it.',

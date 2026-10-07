@@ -77,7 +77,8 @@ export function boundIncreaseDecisionReview(
     data.maxPercentageAtRequest === request.maxPercentage &&
     sameTime(data.requestedEffectiveFrom, request.effectiveFrom) &&
     sameTime(data.periodEnd, request.periodEnd) &&
-    data.reason === (decision === 'reject' ? input.reason : '') &&
+    data.reason === input.reason?.trim() &&
+    data.reason.length > 0 &&
     (!input.effectiveFrom || sameTime(data.effectiveFrom, input.effectiveFrom))
     ? review
     : null;
@@ -140,7 +141,7 @@ export async function confirmedIncreaseDecision(
       'effective',
       'expired',
     ].includes(String(row.status)) ||
-    row.reviewReason !== null ||
+    row.reviewReason !== (data.reason || null) ||
     typeof row.amendmentSha256 !== 'string' ||
     !/^[0-9a-f]{64}$/.test(row.amendmentSha256) ||
     !row.amendmentDocument ||
@@ -206,6 +207,7 @@ export async function confirmedIncreaseDecision(
     document.maxPercentageAtApproval !== data.maxPercentageAtDecision ||
     document.requestedBy !== row.requestedBy ||
     document.approvedBy !== row.reviewedBy ||
+    document.approvalReason !== (data.reason || undefined) ||
     !sameTime(document.approvedAt, row.reviewedAt) ||
     !sameTime(document.earliestEffectiveFrom, data.effectiveFrom!) ||
     !sameTime(document.periodEnd, data.periodEnd) ||

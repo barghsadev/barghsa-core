@@ -15,7 +15,7 @@ const actor = {
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 const request = { requestedKwh: '12', expectedVersionId: id, idempotencyKey: key };
-const approval = { effectiveFrom: '2026-11-01T10:00:00+03:30' };
+const approval = { effectiveFrom: '2026-11-01T10:00:00+03:30', reason: 'Capacity reviewed' };
 const rejection = { reason: '  Explain the decision  ' };
 const command = { idempotencyKey: key, expectedReviewHash: hash };
 type Target = 'submit' | 'approve' | 'approveReview' | 'reject' | 'rejectReview';
@@ -134,8 +134,13 @@ it('retains exact request keys/versions, offset dates and normalized maximum-len
     actor.session,
     actor.ip
   );
-  value.invoke('approveReview', {});
-  expect(value.service.decisionReview).toHaveBeenCalledWith(id, 'approve', {}, actor.session);
+  value.invoke('approveReview', { reason: 'Capacity reviewed' });
+  expect(value.service.decisionReview).toHaveBeenCalledWith(
+    id,
+    'approve',
+    { reason: 'Capacity reviewed' },
+    actor.session
+  );
   const reason = 'x'.repeat(1000);
   value.invoke('reject', { reason: `  ${reason}  `, ...command });
   expect(value.service.reject).toHaveBeenCalledWith(

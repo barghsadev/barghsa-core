@@ -308,6 +308,7 @@ export const fa: I18nDictionary = {
   'admin.electricityIncreases.state.Cancelled': 'لغوشده',
   'admin.electricityIncreases.state.other': 'نیازمند بررسی',
   'admin.electricityIncreases.reason': 'دلیل رد',
+  'admin.electricityIncreases.approvalReason': 'دلیل تأیید',
   'admin.electricityIncreases.approveDate': 'تاریخ شروع پیشنهادی (اختیاری)',
   'admin.electricityIncreases.approveDateHelp':
     'خالی بگذارید تا تاریخ دقیق در پیش‌نمایش تعیین شود. فقط تحویل آینده واجد شرایط است.',
@@ -2106,6 +2107,7 @@ export const en: I18nDictionary = {
   'admin.electricityIncreases.state.Cancelled': 'Cancelled',
   'admin.electricityIncreases.state.other': 'Needs review',
   'admin.electricityIncreases.reason': 'Reason for declining',
+  'admin.electricityIncreases.approvalReason': 'Approval reason',
   'admin.electricityIncreases.approveDate': 'Proposed start date (optional)',
   'admin.electricityIncreases.approveDateHelp':
     'Leave blank to choose an exact date in the preview. Only future delivery is eligible.',
