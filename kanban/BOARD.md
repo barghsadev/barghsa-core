@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 449 | Accepted with unchanged source bindings. |
-| verify | 853 | Existing work may be complete; inspect evidence before building. |
+| done | 453 | Accepted with unchanged source bindings. |
+| verify | 849 | Existing work may be complete; inspect evidence before building. |
 | partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,12 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and renew current event registry/classification, urgent/daytime delivery scheduling and staff window configuration together. Build only demonstrated event/zone/DST/urgent/authority/UI gaps. Preserve existing scheduled jobs and all native/financial/provider boundaries; pending OTP/awaiting-staff/systempublication and live release gates remain unfinished.
+Inspect and renew email provider lifecycle, SMTP/Resend configuration, admin authoring and encrypted/masked secrets together. Exercise controlled adapters, self-tests, authority/version/audit and unknown-delivery boundaries. Build only demonstrated gaps. External provider delivery, production secrets and operational evidence remain separate. Preserve pending owner decisions, native financial receipts and all four launch services.
 
-- `05-notifications-documents-ai.md#T-05.03.01`: Notification type registry & classification
-- `05-notifications-documents-ai.md#T-05.03.02`: Delivery window logic
-- `05-notifications-documents-ai.md#T-05.03.03`: Admin delivery-window configuration UI
-- `02-auth-users-admin.md#T-09.06.03`: Notification daytime window configuration
+- `05-notifications-documents-ai.md#T-05.06.01`: Provider config entity & lifecycle
+- `05-notifications-documents-ai.md#T-05.06.02`: SMTP configuration
+- `05-notifications-documents-ai.md#T-05.06.03`: Resend configuration
+- `05-notifications-documents-ai.md#T-05.06.04`: Provider admin UI
+- `05-notifications-documents-ai.md#T-05.06.05`: Secrets encryption & masking
+- `02-auth-users-admin.md#T-09.06.01`: Email transport configuration
 
 ## v0.2.0: Complete customer journeys
 
@@ -528,7 +530,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | verify | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | verify | Earlier acceptance_verified | SMS.ir configuration |
-| `02-auth-users-admin.md#T-09.06.03` | verify | Earlier acceptance_verified | Notification daytime window configuration |
+| `02-auth-users-admin.md#T-09.06.03` | done | Earlier acceptance_verified | Notification daytime window configuration |
 | `02-auth-users-admin.md#T-09.11.01` | verify | Earlier acceptance_verified | AI model management |
 | `02-auth-users-admin.md#T-09.11.02` | partial | Earlier partial | Knowledge base management |
 | `02-auth-users-admin.md#T-09.11.03` | verify | Earlier acceptance_verified | Policy management |
@@ -545,9 +547,9 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.02.02` | done | Earlier acceptance_verified | Notification center API |
 | `05-notifications-documents-ai.md#T-05.02.03` | done | Earlier acceptance_verified | Notification center UI |
 | `05-notifications-documents-ai.md#T-05.02.04` | done | Earlier acceptance_verified | New-notification polling / SSE |
-| `05-notifications-documents-ai.md#T-05.03.01` | verify | Earlier acceptance_verified | Notification type registry & classification |
-| `05-notifications-documents-ai.md#T-05.03.02` | verify | Earlier acceptance_verified | Delivery window logic |
-| `05-notifications-documents-ai.md#T-05.03.03` | verify | Earlier acceptance_verified | Admin delivery-window configuration UI |
+| `05-notifications-documents-ai.md#T-05.03.01` | done | Earlier acceptance_verified | Notification type registry & classification |
+| `05-notifications-documents-ai.md#T-05.03.02` | done | Earlier acceptance_verified | Delivery window logic |
+| `05-notifications-documents-ai.md#T-05.03.03` | done | Earlier acceptance_verified | Admin delivery-window configuration UI |
 | `05-notifications-documents-ai.md#T-05.04.01` | done | Earlier acceptance_verified | Template entity & CRUD API |
 | `05-notifications-documents-ai.md#T-05.04.02` | done | Earlier acceptance_verified | Variable interpolation & escaping |
 | `05-notifications-documents-ai.md#T-05.04.03` | done | Earlier acceptance_verified | Template preview |

@@ -277,6 +277,11 @@ for (const expiry of ['session', 'step-up'] as const) {
 
 it('persists minute boundaries and binds the delivery-window audit to the current session/correlation', async () => {
   const correlation = randomUUID();
+  const stepUpVerifiedAt = (
+    await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
+      headers.operator!.Cookie!.split('=')[1],
+    ])
+  ).rows[0].step_up_verified_at as Date;
   const body = { timezone: 'UTC', start_hour: 9.25, end_hour: 21.75 };
   const response = await fetch(`${http.base}/api/admin/config/delivery-window`, {
     method: 'PUT',
@@ -303,6 +308,8 @@ it('persists minute boundaries and binds the delivery-window audit to the curren
         key: daytimeWindow.key,
         newValue: body,
         sessionId: headers.operator!.Cookie!.split('=')[1],
+        stepUpVerified: true,
+        stepUpVerifiedAt: stepUpVerifiedAt.toISOString(),
       },
     },
   ]);

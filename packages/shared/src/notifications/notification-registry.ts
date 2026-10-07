@@ -216,7 +216,7 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
   'system.service_outage': {
     classification: 'immediate',
     securityPinned: false,
-    category: 'system',
+    category: 'mandatory',
   },
   'marketing.promotion': {
     classification: 'daytime',

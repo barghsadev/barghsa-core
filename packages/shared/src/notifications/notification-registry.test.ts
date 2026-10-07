@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import {
   NOTIFICATION_TYPE_REGISTRY,
   classifyNotificationType,
@@ -7,6 +9,27 @@ import {
 } from './notification-registry.js';
 
 describe('notification type registry & classification (T-05.03.01)', () => {
+  it('matches every Appendix event classification and consent category', () => {
+    const appendix = readFileSync(
+      resolve(__dirname, '../../../../kanban/epics/05-notifications-documents-ai.md'),
+      'utf8'
+    )
+      .split('## 3. Appendix: Business Notification Events')[1]!
+      .split('## 4.')[0]!;
+    const events = [...appendix.matchAll(/^\| `([^`]+)` \| ([^|]+) \| ([^|]+) \|/gm)];
+    expect(events).toHaveLength(35);
+    for (const [, event, category, classification] of events) {
+      const definition = NOTIFICATION_TYPE_REGISTRY[event!];
+      expect(definition, event).toBeDefined();
+      expect({
+        category: definition!.category,
+        classification: definition!.classification,
+      }).toEqual({
+        category: category!.trim() === '—' ? 'system' : category!.trim(),
+        classification: classification!.trim(),
+      });
+    }
+  });
   describe('classifyNotificationType', () => {
     it('classifies OTP / authentication / security events as immediate', () => {
       expect(classifyNotificationType('auth.otp_sent')).toBe('immediate');

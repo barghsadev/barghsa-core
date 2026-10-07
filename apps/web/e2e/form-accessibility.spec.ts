@@ -2,6 +2,7 @@ import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { fullNavigation } from './navigation-fixture';
 import { settingsProfileFixture, settingsProfileId } from './settings-profile-fixture';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { crmShell } from './crm-shell-fixture';
 import { dismissMessages } from './dismiss-messages';
 import { cookieResponse } from './cookie-response';
@@ -2036,7 +2037,7 @@ for (const locale of ['en', 'fa']) {
   test(`delivery window retries failed reads and confirms exact saved values (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await crmShell(page, locale);
     await page.route('**/api/admin/notifications/templates*', (route) =>
       route.fulfill({ json: [] })
     );
@@ -2084,7 +2085,10 @@ for (const locale of ['en', 'fa']) {
     await expect(save).toBeDisabled();
     await expect(panel.locator('select').first()).toBeDisabled();
     await panel
-      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+      .getByRole('button', {
+        name: notificationFormText('refresh', locale as 'en' | 'fa'),
+        exact: true,
+      })
       .click();
     await expect(panel.locator('#delivery-window-timezone')).toHaveValue('Asia/Tokyo');
     const start = panel.locator('#delivery-window-start');
@@ -2100,14 +2104,38 @@ for (const locale of ['en', 'fa']) {
     await expect(save).toBeEnabled();
     await save.click();
     await expect.poll(() => writes).toBe(2);
-    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(panel.getByRole('alert')).toHaveCount(2);
+    await expect(
+      panel.getByRole('alert').filter({
+        hasText: notificationFormText('uncertain', locale as 'en' | 'fa'),
+      })
+    ).toBeVisible();
+    await expect(
+      panel
+        .getByRole('alert')
+        .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save' })
+    ).toBeVisible();
     await expect(panel.getByRole('status')).toHaveCount(0);
+    await expect(save).toBeDisabled();
+    await panel
+      .getByRole('button', {
+        name: notificationFormText('refresh', locale as 'en' | 'fa'),
+        exact: true,
+      })
+      .click();
+    await panel
+      .getByRole('button', {
+        name: notificationFormText('reset', locale as 'en' | 'fa'),
+        exact: true,
+      })
+      .click();
+    await start.fill('08:00');
     await save.click();
     await expect(panel.getByRole('status')).toBeVisible();
     await expect(panel.getByRole('alert')).toHaveCount(0);
     await start.fill('07:00');
     await expect(panel.getByRole('status')).toHaveCount(0);
-    expect(reads).toBe(2);
+    expect(reads).toBe(3);
     expect(writes).toBe(3);
   });
 }
@@ -2116,7 +2144,7 @@ for (const locale of ['en', 'fa']) {
   test(`delivery window preserves minute values through cancelled and retried password confirmation (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await crmShell(page, locale);
     await page.route('**/api/admin/notifications/templates*', (route) =>
       route.fulfill({ json: [] })
     );
