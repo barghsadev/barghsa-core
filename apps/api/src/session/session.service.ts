@@ -1,4 +1,7 @@
-import { notifySessionsRevoked } from '../auth/session-notifications.js';
+import {
+  notifySessionsRevoked,
+  notifySessionLifecycleRevocation,
+} from '../auth/session-notifications.js';
 import { Injectable, Logger, HttpException, UnauthorizedException } from '@nestjs/common';
 import { randomBytes, createHash } from 'node:crypto';
 import type { PoolClient } from 'pg';
@@ -188,7 +191,7 @@ export class SessionService {
 
       if (currentCount >= MAX_SESSIONS_PER_USER) {
         // Also repair any pre-existing over-cap set while making room.
-        await client.query(
+        const revoked = await client.query(
           `UPDATE sessions
            SET revoked_at = $1, updated_at = $1
            WHERE session_id IN (
@@ -196,9 +199,16 @@ export class SessionService {
              WHERE user_id = $2 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()
              ORDER BY created_at ASC, session_id ASC
              LIMIT $3
-           )`,
+           ) RETURNING user_id`,
           [now, userId, currentCount - MAX_SESSIONS_PER_USER + 1]
         );
+        if (revoked.rows.length)
+          await notifySessionLifecycleRevocation(
+            client,
+            userId,
+            revoked.rows.length,
+            'session_cap'
+          );
         this.logger.warn(
           `Session limit (${MAX_SESSIONS_PER_USER}) reached for user ${userId}; ` +
             `revoked oldest active sessions to create a new one.`
@@ -234,6 +244,19 @@ export class SessionService {
         [tokenId, familyId, refreshTokenHash, userId, sessionId, now]
       );
 
+      // Mandatory delivery can wait; recheck password-only trust against the
+      // database clock before certifying the new session.
+      if (requiredTrust) {
+        const stillTrusted = await client.query(
+          `SELECT 1 FROM device_trusts WHERE user_id=$1 AND device_fingerprint=$2
+           AND expires_at>clock_timestamp() AND ip_address=$3::inet`,
+          [userId, requiredTrust.fingerprint, requiredTrust.ip]
+        );
+        if (!stillTrusted.rows.length)
+          throw new DeviceTrustRequired(
+            account.rows[0].is_admin === true || account.rows[0].is_staff === true
+          );
+      }
       if (!transactionClient) await client.query('COMMIT');
 
       if (!transactionClient) this.logger.log(`Session created for user ${userId}`);
@@ -939,7 +962,7 @@ export class SessionService {
 
       // Fetch family ID before revoking
       const sessionResult = await client.query(
-        `SELECT family_id FROM sessions WHERE session_id = $1 FOR UPDATE`,
+        `SELECT family_id,revoked_at,user_id FROM sessions WHERE session_id = $1 FOR UPDATE`,
         [sessionId]
       );
 
@@ -968,6 +991,11 @@ export class SessionService {
         );
       }
 
+      if (
+        sessionResult.rows[0].revoked_at === null &&
+        typeof sessionResult.rows[0].user_id === 'string'
+      )
+        await notifySessionLifecycleRevocation(client, sessionResult.rows[0].user_id, 1, 'logout');
       await client.query('COMMIT');
 
       this.logger.log(`Session revoked`);
@@ -1173,10 +1201,10 @@ export class SessionService {
         [familyId]
       );
 
-      await client.query(
+      const revoked = await client.query(
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
-         WHERE family_id = $2 AND revoked_at IS NULL`,
+         WHERE family_id = $2 AND revoked_at IS NULL RETURNING user_id`,
         [now, familyId]
       );
 
@@ -1187,6 +1215,10 @@ export class SessionService {
         [now, familyId]
       );
 
+      for (const userId of [...new Set(revoked.rows.map((row) => row.user_id as string))].sort()) {
+        const count = revoked.rows.filter((row) => row.user_id === userId).length;
+        await notifySessionLifecycleRevocation(client, userId, count, 'family');
+      }
       await client.query('COMMIT');
 
       this.logger.warn(`Token family revoked: ${familyId}`);

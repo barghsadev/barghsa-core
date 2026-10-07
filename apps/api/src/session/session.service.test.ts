@@ -419,10 +419,22 @@ describe('SessionService', () => {
 
   describe('revokeSession', () => {
     it('revokes a session and consumes its family tokens', async () => {
-      mockClient.query.mockImplementation(async (sql: string) => {
+      mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
         if (sql === 'COMMIT') return { rows: [] };
         if (sql.startsWith('ROLLBACK')) return { rows: [] };
-        if (sql.includes('family_id')) return { rows: [makeSessionRow()] };
+        if (sql.startsWith('SELECT family_id')) return { rows: [makeSessionRow()] };
+        if (
+          sql.includes('INSERT INTO audit_log') ||
+          sql.includes('SELECT id FROM audit_log') ||
+          sql.includes('INSERT INTO notification_outbox') ||
+          sql.includes('INSERT INTO in_app_notifications')
+        )
+          return { rowCount: 1, rows: [{ id: params![0] }] };
+        if (
+          sql.includes('INSERT INTO notification_job') ||
+          sql.includes('INSERT INTO notification_delivery_log')
+        )
+          return { rowCount: 1, rows: [] };
         // UPDATE sessions → revoke
         if (sql.includes('sessions') && sql.includes('revoked_at')) return { rows: [] };
         // UPDATE refresh_tokens → consume
@@ -435,6 +447,10 @@ describe('SessionService', () => {
       const calls = mockClient.query.mock.calls.map((c: any[]) => c[0]);
       expect(calls).toContain('BEGIN');
       expect(calls).toContain('COMMIT');
+      const audit = mockClient.query.mock.calls.find((call: unknown[]) =>
+        String(call[0]).includes('INSERT INTO audit_log')
+      );
+      expect(JSON.parse(audit![1][2])).toEqual({ reason: 'logout', changedSessionCount: 1 });
     });
 
     it('does nothing for a nonexistent session', async () => {

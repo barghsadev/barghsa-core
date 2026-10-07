@@ -1518,3 +1518,41 @@ it('rechecks session contact change after rendering before the provider call', a
     ).rows[0].delivery_payload
   ).toEqual(snapshot);
 });
+
+it.each(['logout', 'session_cap', 'family'])(
+  'resolves the %s lifecycle audit privately and rejects foreign/zero-transition recipients',
+  async (reason) => {
+    const f = await fixture('auth.session_revoked', 'account'),
+      audit = randomUUID();
+    await pool.query(
+      "INSERT INTO audit_log(id,user_id,event,metadata,correlation_id) VALUES($1,$2,'session_lifecycle_revoked',$3,$1)",
+      [audit, f.owner, JSON.stringify({ reason, changedSessionCount: 1 })]
+    );
+    await pool.query('UPDATE notification_outbox SET profile_id=NULL,payload=$2 WHERE id=$1', [
+      f.id,
+      { auditId: audit, link_route: '/settings/security' },
+    ]);
+    await pool.query(
+      "UPDATE in_app_notifications SET profile_id=NULL,link_route='/settings/security' WHERE delivery_key='outbox:'||$1::text",
+      [f.id]
+    );
+    expect(await loadNotificationRecipient(pool, f.id)).toMatchObject({
+      userId: f.owner,
+      profileId: null,
+      email: `${f.owner}@example.test`,
+    });
+    await pool.query('UPDATE notification_outbox SET user_id=$2 WHERE id=$1', [f.id, f.next]);
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+    const zero = randomUUID();
+    await pool.query(
+      "INSERT INTO audit_log(id,user_id,event,metadata,correlation_id) VALUES($1,$2,'session_lifecycle_revoked',$3,$1)",
+      [zero, f.owner, JSON.stringify({ reason, changedSessionCount: 0 })]
+    );
+    await pool.query('UPDATE notification_outbox SET user_id=$2,payload=$3 WHERE id=$1', [
+      f.id,
+      f.owner,
+      { auditId: zero, link_route: '/settings/security' },
+    ]);
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+  }
+);

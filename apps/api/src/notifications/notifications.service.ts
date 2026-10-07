@@ -401,7 +401,7 @@ export class NotificationsService {
         ? `SELECT id FROM audit_log WHERE id::text=$1 AND user_id=$2 AND event IN ('password_changed','password_reset')`
         : params.eventKey === 'auth.session_revoked'
           ? `SELECT id FROM audit_log WHERE id::text=$1 AND (
-             (event='sessions_revoked' AND user_id=$2 AND (metadata::jsonb->>'changedSessionCount')::integer>0)
+             (event IN ('sessions_revoked','session_lifecycle_revoked') AND user_id=$2 AND (metadata::jsonb->>'changedSessionCount')::integer>0)
              OR (event='expire_sessions' AND metadata::jsonb->>'targetUserId'=$2)
             )`
           : `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'

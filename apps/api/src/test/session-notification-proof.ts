@@ -155,3 +155,87 @@ export async function failSessionSink(pool: Pool, table: string, mode: 'raise' |
   return () =>
     pool.query(`DROP TRIGGER fail_session_notice ON ${table}; DROP FUNCTION fail_session_notice()`);
 }
+
+export async function expectLifecycleNotice(
+  pool: Pool,
+  user: string,
+  reason: string,
+  secrets: string[]
+) {
+  const saved = await sessionDeliveryState(pool, user);
+  expect(saved.outbox).toHaveLength(1);
+  const outbox = saved.outbox[0];
+  expect(outbox).toMatchObject({
+    profile_id: null,
+    user_id: user,
+    channels: ['in_app', 'email'],
+    max_attempts: 5,
+    idempotency_key: `auth.session_revoked:${outbox.payload.auditId}:${user}`,
+  });
+  expect(outbox.payload).toEqual({
+    auditId: outbox.payload.auditId,
+    link_route: '/settings/security',
+  });
+  const audit = (
+    await pool.query(
+      'SELECT user_id,event,metadata::jsonb AS metadata FROM audit_log WHERE id=$1',
+      [outbox.payload.auditId]
+    )
+  ).rows;
+  expect(audit).toHaveLength(1);
+  expect(audit[0]).toMatchObject({
+    user_id: user,
+    event: 'session_lifecycle_revoked',
+    metadata: { reason, changedSessionCount: 1 },
+  });
+  expect(saved.inbox).toHaveLength(1);
+  const inbox = saved.inbox[0];
+  expect(inbox).toMatchObject({
+    profile_id: null,
+    recipient_user_id: user,
+    operating_context: 'account',
+    type: 'auth.session_revoked',
+    link_route: '/settings/security',
+  });
+  expect(inbox.localized_content.en.body).toContain('contact support immediately');
+  expect(inbox.localized_content.fa.body).toContain('فوراً با پشتیبانی');
+  expect(
+    saved.jobs.map(({ channel, status, priority, attempts, max_attempts, provider_ref }) => ({
+      channel,
+      status,
+      priority,
+      attempts,
+      max_attempts,
+      provider_ref,
+    }))
+  ).toEqual([
+    {
+      channel: 'email',
+      status: 'queued',
+      priority: 'urgent',
+      attempts: 0,
+      max_attempts: 5,
+      provider_ref: null,
+    },
+    {
+      channel: 'in_app',
+      status: 'done',
+      priority: 'urgent',
+      attempts: 1,
+      max_attempts: 5,
+      provider_ref: inbox.id,
+    },
+  ]);
+  expect(
+    saved.history.map(({ channel, status, attempt_number, provider_ref }) => ({
+      channel,
+      status,
+      attempt_number,
+      provider_ref,
+    }))
+  ).toEqual([
+    { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: inbox.id },
+  ]);
+  for (const secret of secrets) expect(JSON.stringify(saved)).not.toContain(secret);
+  return { outbox, inbox };
+}

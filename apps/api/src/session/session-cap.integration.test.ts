@@ -1,7 +1,15 @@
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
-import { SessionService } from './session.service.js';
+import { notifySessionsRevoked } from '../auth/session-notifications.js';
+import {
+  sessionNoticeState,
+  sessionDeliveryState,
+  expectLifecycleNotice,
+  sessionFailureCases,
+  failSessionSink,
+} from '../test/session-notification-proof.js';
+import { SessionService, DeviceTrustRequired } from './session.service.js';
 const holder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
 vi.mock('@barghsa/db', async (original) => ({
   ...(await original<typeof import('@barghsa/db')>()),
@@ -801,4 +809,127 @@ it('does not rotate a session whose idle cutoff passes while waiting for the acc
     client.release();
     await rotation;
   }
+});
+
+async function lifecycleFixture(reason: 'logout' | 'session_cap' | 'family') {
+  if (reason === 'session_cap')
+    await db.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) SELECT uuid_generate_v7()::text,'cap-user',encode(gen_random_bytes(32),'hex'),uuid_generate_v7(),NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes' FROM generate_series(1,49)`
+    );
+  const original = await service.createSession('cap-user', false),
+    family = (
+      await db.pool.query('SELECT family_id FROM sessions WHERE session_id=$1', [
+        original.sessionId,
+      ])
+    ).rows[0].family_id as string;
+  const work = () =>
+    reason === 'session_cap'
+      ? service.createSession('cap-user', false)
+      : reason === 'family'
+        ? service.revokeFamily(family)
+        : service.revokeSession(original.sessionId);
+  return { original, family, work };
+}
+for (const reason of ['logout', 'session_cap', 'family'] as const)
+  it.each([
+    ...sessionFailureCases,
+    ...(['raise', 'suppress'] as const).map((mode) => ({ table: 'audit_log', mode })),
+  ])(
+    `${reason} rolls back $table on $mode and preserves one private lifecycle receipt`,
+    async ({ table, mode }) => {
+      const f = await lifecycleFixture(reason),
+        before = await sessionNoticeState(db.pool);
+      let drop: () => Promise<unknown>;
+      if (table === 'audit_log') {
+        await db.pool.query(
+          `CREATE FUNCTION fail_lifecycle_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='session_lifecycle_revoked' THEN ${mode === 'raise' ? "RAISE EXCEPTION 'lifecycle audit failure';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_lifecycle_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_lifecycle_audit()`
+        );
+        drop = () =>
+          db.pool.query(
+            'DROP TRIGGER fail_lifecycle_audit ON audit_log; DROP FUNCTION fail_lifecycle_audit()'
+          );
+      } else drop = await failSessionSink(db.pool, table, mode);
+      try {
+        await expect(f.work()).rejects.toMatchObject({ status: 500 });
+        expect(await sessionNoticeState(db.pool)).toEqual(before);
+      } finally {
+        await drop();
+      }
+      await f.work();
+      const notice = await expectLifecycleNotice(db.pool, 'cap-user', reason, [
+        f.original.sessionId,
+        f.original.csrfToken,
+        f.original.refreshToken,
+        f.family,
+      ]);
+      expect(await usable()).toHaveLength(reason === 'session_cap' ? 50 : 0);
+      await db.pool.query(
+        'UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1',
+        [notice.inbox.id]
+      );
+      const delivered = await sessionNoticeState(db.pool),
+        client = await db.pool.connect();
+      try {
+        await client.query('BEGIN');
+        await notifySessionsRevoked(client, 'cap-user', notice.outbox.payload.auditId);
+        await client.query('COMMIT');
+      } finally {
+        client.release();
+      }
+      expect(await sessionNoticeState(db.pool)).toEqual(delivered);
+      if (reason !== 'session_cap') {
+        const receipt = await sessionDeliveryState(db.pool, 'cap-user');
+        await f.work();
+        expect(await sessionDeliveryState(db.pool, 'cap-user')).toEqual(receipt);
+      }
+    }
+  );
+it('caller-owned session creation keeps cap eviction,audit and notifications provisional until commit', async () => {
+  await lifecycleFixture('session_cap');
+  const before = await sessionNoticeState(db.pool),
+    client = await db.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await service.createSession('cap-user', false, undefined, undefined, client);
+    expect(
+      (
+        await client.query(
+          "SELECT id FROM notification_outbox WHERE event_key='auth.session_revoked'"
+        )
+      ).rows
+    ).toHaveLength(1);
+    expect(
+      (
+        await db.pool.query(
+          "SELECT id FROM notification_outbox WHERE event_key='auth.session_revoked'"
+        )
+      ).rows
+    ).toHaveLength(0);
+    await client.query('ROLLBACK');
+  } finally {
+    client.release();
+  }
+  expect(await sessionNoticeState(db.pool)).toEqual(before);
+});
+it('rolls back capped password-only creation when mandatory delivery waits beyond device trust expiry', async () => {
+  await lifecycleFixture('session_cap');
+  const fingerprint = 'a'.repeat(64);
+  await db.pool.query(
+    "INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,ip_address,expires_at) VALUES($1,'cap-user',$2,NOW(),'127.0.0.1',clock_timestamp()+INTERVAL '1 second')",
+    [randomUUID(), fingerprint]
+  );
+  const before = await sessionNoticeState(db.pool);
+  await db.pool.query(
+    `CREATE SEQUENCE lifecycle_trust_delay; CREATE FUNCTION delay_lifecycle_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='session_lifecycle_revoked' THEN PERFORM nextval('lifecycle_trust_delay');PERFORM pg_sleep(1.2); END IF;RETURN NEW;END $$; CREATE TRIGGER delay_lifecycle_notice BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_lifecycle_notice()`
+  );
+  await expect(
+    service.createSession('cap-user', false, undefined, undefined, undefined, {
+      fingerprint,
+      ip: '127.0.0.1',
+    })
+  ).rejects.toBeInstanceOf(DeviceTrustRequired);
+  expect(
+    (await db.pool.query('SELECT is_called FROM lifecycle_trust_delay')).rows[0].is_called
+  ).toBe(true);
+  expect(await sessionNoticeState(db.pool)).toEqual(before);
 });

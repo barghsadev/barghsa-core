@@ -158,7 +158,7 @@ export async function loadNotificationRecipient(
       AND (o.event_key<>'auth.session_revoked' OR (o.profile_id IS NULL AND EXISTS (
         SELECT 1 FROM audit_log a JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
         WHERE a.id::text=o.payload->>'auditId' AND (
-          (a.event='sessions_revoked' AND a.user_id=u.user_id AND (a.metadata::jsonb->>'changedSessionCount')::integer>0)
+          (a.event IN ('sessions_revoked','session_lifecycle_revoked') AND a.user_id=u.user_id AND (a.metadata::jsonb->>'changedSessionCount')::integer>0)
           OR (a.event='expire_sessions' AND a.metadata::jsonb->>'targetUserId'=u.user_id)
         ) AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id AND n.operating_context='account' AND n.type=o.event_key
       )))`,

@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect remaining session revocation writers: logout,cap eviction,device/family/refresh compromise and credential/membership/closure consumers. Reuse current audited private account writer and receipts; implement demonstrated canonical gaps at real transition boundaries,preserve original counts/credentials/CSRF/context/locks/authority/audits/unknown delivery and distinguish natural expiry/no-op. Keep new-device/OTP,other Appendix,active templates/live provider/owner/operations/launch explicit.
+Inspect remaining bulk session-revocation credential/membership/closure callers and refresh-compromise native handling. Reuse audited private account delivery,actual transition counts and existing warning receipts; avoid duplicates with accepted CRM/self/logout/cap/family paths. Preserve parent financial/identity/authority/token/CSRF/context/locks/audit/deadline/rollback/replay boundaries; keep new-device/OTP,other Appendix,active templates/live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 
