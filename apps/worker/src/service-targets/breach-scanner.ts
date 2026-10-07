@@ -122,13 +122,13 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
   {
     serviceType: 'ticket',
     openStatuses: TICKET_OPEN_STATUSES,
-    findBreachedSql: `SELECT id, assigned_to AS recipient_user_id
+    findBreachedSql: `SELECT id, assigned_to AS recipient_user_id, updated_at::text AS source_activity_at
         FROM tickets
         WHERE status = ANY($1::text[])
           AND updated_at <= $2
         AND ($4::text IS NULL OR id::text > $4)
         ORDER BY id::text ASC
-        LIMIT $3`,
+        LIMIT $3 FOR SHARE`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
           AND item_id::uuid NOT IN (
@@ -137,19 +137,24 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
               AND updated_at <= $3
           )`,
     clearSql: `DELETE FROM service_breach_alerts WHERE service_type = $1`,
+    resetRespondedSql: `DELETE FROM service_breach_alerts l
+        USING tickets r
+        WHERE l.service_type = $1 AND r.id = l.item_id::uuid
+          AND l.source_activity_at IS NOT NULL
+          AND r.updated_at IS DISTINCT FROM l.source_activity_at`,
     // Unassigned tickets are the whole platform's responsibility.
     fallback: 'admins',
   },
   {
     serviceType: 'verification_case',
     openStatuses: CASE_OPEN_STATUSES,
-    findBreachedSql: `SELECT id, COALESCE(assigned_to,created_by) AS recipient_user_id
+    findBreachedSql: `SELECT id, COALESCE(assigned_to,created_by) AS recipient_user_id, updated_at::text AS source_activity_at
         FROM verification_cases
         WHERE status = ANY($1::text[])
           AND updated_at <= $2
         AND ($4::text IS NULL OR id::text > $4)
         ORDER BY id::text ASC
-        LIMIT $3`,
+        LIMIT $3 FOR SHARE`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
           AND item_id NOT IN (
@@ -158,6 +163,11 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
               AND updated_at <= $3
           )`,
     clearSql: `DELETE FROM service_breach_alerts WHERE service_type = $1`,
+    resetRespondedSql: `DELETE FROM service_breach_alerts l
+        USING verification_cases r
+        WHERE l.service_type = $1 AND r.id = l.item_id
+          AND l.source_activity_at IS NOT NULL
+          AND r.updated_at IS DISTINCT FROM l.source_activity_at`,
     // Unassigned cases stay with their creator until a reviewer is selected.
     fallback: 'none',
   },
@@ -199,22 +209,17 @@ export const DEFAULT_BREACH_BATCH_SIZE = 500;
  *   refreshed) and returned with `inserted = false` — already alerted, so
  *   no duplicate alert, but the ledger never advertises a stale target.
  */
-const LEDGER_UPSERT_SQL = `INSERT INTO service_breach_alerts (service_type, item_id, target_hours)
-     VALUES ($1, $2, $3)
-     ON CONFLICT (service_type, item_id)
-       DO UPDATE SET target_hours = EXCLUDED.target_hours
-       WHERE service_breach_alerts.target_hours <> EXCLUDED.target_hours
-     RETURNING id, (xmax = 0) AS inserted`;
-
-// The consultation response clock is snapshotted at full PostgreSQL precision.
-// NOW() is transaction-start time, so comparing activity with alerted_at can miss
-// a response from a transaction that began before the scanner and committed later.
-const CONSULTATION_LEDGER_UPSERT_SQL = `INSERT INTO service_breach_alerts
+// Keep the activity snapshot at full PostgreSQL precision. Transaction-start
+// NOW() cannot establish whether a response committed after an alert.
+// Legacy ticket/case episodes acquire a snapshot without issuing another alert.
+const LEDGER_UPSERT_SQL = `INSERT INTO service_breach_alerts
      (service_type, item_id, target_hours, source_activity_at)
      VALUES ($1, $2, $3, $4::timestamptz)
      ON CONFLICT (service_type, item_id)
-       DO UPDATE SET target_hours = EXCLUDED.target_hours
+       DO UPDATE SET target_hours = EXCLUDED.target_hours,
+                     source_activity_at = COALESCE(service_breach_alerts.source_activity_at, EXCLUDED.source_activity_at)
        WHERE service_breach_alerts.target_hours <> EXCLUDED.target_hours
+          OR service_breach_alerts.source_activity_at IS NULL
      RETURNING id, (xmax = 0) AS inserted`;
 
 export interface BreachScanOptions {
@@ -372,12 +377,8 @@ export async function scanServiceBreaches(
             // a fresh episode returns inserted=true; a changed target returns
             // the refreshed row with inserted=false (no re-alert).
             const ledger = await client.query<{ id: string; inserted: boolean }>(
-              domain.serviceType === 'consultation'
-                ? CONSULTATION_LEDGER_UPSERT_SQL
-                : LEDGER_UPSERT_SQL,
-              domain.serviceType === 'consultation'
-                ? [domain.serviceType, row.id, targetHours, row.source_activity_at]
-                : [domain.serviceType, row.id, targetHours]
+              LEDGER_UPSERT_SQL,
+              [domain.serviceType, row.id, targetHours, row.source_activity_at]
             );
             if (ledger.rows.length === 0 || !ledger.rows[0]!.inserted) {
               result.skippedDuplicates++;

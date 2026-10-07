@@ -467,3 +467,141 @@ it('consultation activity from a transaction started before alerting cannot reus
     writer.release();
   }
 });
+
+for (const domain of ['ticket', 'verification_case'] as const) {
+  it(`${domain} staff activity between scanner passes starts a fresh episode instead of escalating the old alert`, async () => {
+    await seed(domain, false);
+    await administrator();
+    await pool.query("INSERT INTO app_config(key,value) VALUES ('admin.escalation_policy',$1)", [
+      JSON.stringify({
+        [domain]: {
+          level2: { delayHours: 1, channels: ['in_app'] },
+          level3: { delayHours: null, channels: ['in_app'] },
+        },
+      }),
+    ]);
+    const original = await scanServiceBreaches({ pool, logger });
+    expect(original.errors).toEqual([]);
+    expect(original.alerted).toBe(5);
+    const table = domain === 'ticket' ? 'tickets' : 'verification_cases';
+    await pool.query(`UPDATE ${table} SET updated_at=NOW()`);
+    const later = () => new Date(Date.now() + 2 * 3600000);
+    const escalated = await scanServiceEscalations({ pool, logger, now: later });
+    expect(escalated.errors).toEqual([]);
+    expect(escalated.escalated[domain]).toEqual({ level2: 0, level3: 0 });
+    const fresh = await scanServiceBreaches({ pool, logger, now: later });
+    expect(fresh.errors).toEqual([]);
+    expect(fresh.pruned).toBe(5);
+    expect(fresh.alerted).toBe(5);
+    expect((await pool.query('SELECT id FROM notification_outbox')).rows).toHaveLength(10);
+    expect((await scanServiceBreaches({ pool, logger, now: later })).alerted).toBe(0);
+  });
+}
+
+for (const domain of ['ticket', 'verification_case'] as const) {
+  it(`${domain} activity from a transaction started before alerting cannot reuse or escalate the old episode`, async () => {
+    await seed(domain, false);
+    await administrator();
+    const id = ids[0]!;
+    const table = domain === 'ticket' ? 'tickets' : 'verification_cases';
+    await pool.query(`DELETE FROM ${table} WHERE id<>$1`, [id]);
+    await pool.query("INSERT INTO app_config(key,value) VALUES ('admin.escalation_policy',$1)", [
+      JSON.stringify({
+        [domain]: {
+          level2: { delayHours: 1, channels: ['in_app'] },
+          level3: { delayHours: null, channels: ['in_app'] },
+        },
+      }),
+    ]);
+    const writer = await pool.connect();
+    let releaseScan: () => void = () => {};
+    let signalEnqueued: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      releaseScan = resolve;
+    });
+    const enqueued = new Promise<void>((resolve) => {
+      signalEnqueued = resolve;
+    });
+    try {
+      await writer.query('BEGIN');
+      const pid = (await writer.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      const scan = scanServiceBreaches({
+        pool,
+        logger,
+        enqueue: async (client, input) => {
+          const result = await enqueueOutbox(client, input);
+          signalEnqueued();
+          await gate;
+          return result;
+        },
+      });
+      await Promise.race([
+        enqueued,
+        scan.then((result) => {
+          throw new Error(JSON.stringify(result));
+        }),
+      ]);
+      const response = writer.query(`UPDATE ${table} SET updated_at=NOW() WHERE id=$1`, [id]);
+      let waiting = false;
+      for (let n = 0; n < 100; n++) {
+        waiting =
+          (
+            await pool.query(
+              "SELECT wait_event_type='Lock' AS waiting FROM pg_stat_activity WHERE pid=$1",
+              [pid]
+            )
+          ).rows[0]?.waiting === true;
+        if (waiting) break;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+      expect(waiting).toBe(true);
+      releaseScan();
+      expect((await scan).alerted).toBe(1);
+      await response;
+      await writer.query('COMMIT');
+      const state = (
+        await pool.query(
+          `SELECT r.updated_at<=l.alerted_at AS response_before_alert_time,
+      r.updated_at IS DISTINCT FROM l.source_activity_at AS activity_changed
+      FROM ${table} r JOIN service_breach_alerts l ON l.item_id=r.id::text WHERE r.id=$1`,
+          [id]
+        )
+      ).rows[0];
+      expect(state).toEqual({ response_before_alert_time: true, activity_changed: true });
+      const later = () => new Date(Date.now() + 2 * 3600000);
+      const escalated = await scanServiceEscalations({ pool, logger, now: later });
+      expect(escalated.errors).toEqual([]);
+      expect(escalated.escalated[domain]).toEqual({ level2: 0, level3: 0 });
+      const fresh = await scanServiceBreaches({ pool, logger, now: later });
+      expect(fresh.errors).toEqual([]);
+      expect(fresh.pruned).toBe(1);
+      expect(fresh.alerted).toBe(1);
+      expect((await pool.query('SELECT id FROM notification_outbox')).rows).toHaveLength(2);
+    } finally {
+      releaseScan();
+      await writer.query('ROLLBACK');
+      writer.release();
+    }
+  });
+}
+
+for (const domain of ['ticket', 'verification_case'] as const) {
+  it(`${domain} legacy episodes acquire their activity snapshot without another alert`, async () => {
+    await seed(domain, false);
+    expect((await scanServiceBreaches({ pool, logger })).alerted).toBe(5);
+    await pool.query('UPDATE service_breach_alerts SET source_activity_at=NULL');
+    const repeated = await scanServiceBreaches({ pool, logger });
+    expect(repeated.errors).toEqual([]);
+    expect(repeated.alerted).toBe(0);
+    expect(repeated.skippedDuplicates).toBe(5);
+    const table = domain === 'ticket' ? 'tickets' : 'verification_cases';
+    expect(
+      (
+        await pool.query(
+          `SELECT l.id FROM service_breach_alerts l JOIN ${table} r ON l.item_id=r.id::text WHERE l.source_activity_at IS DISTINCT FROM r.updated_at`
+        )
+      ).rows
+    ).toEqual([]);
+    expect((await pool.query('SELECT id FROM notification_outbox')).rows).toHaveLength(5);
+  });
+}

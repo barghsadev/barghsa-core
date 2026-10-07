@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 423 | Accepted with unchanged source bindings. |
-| verify | 869 | Existing work may be complete; inspect evidence before building. |
-| partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 429 | Accepted with unchanged source bindings. |
+| verify | 867 | Existing work may be complete; inspect evidence before building. |
+| partial | 63 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,10 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing staff ticket management and escalation alerts, including current ticket visibility, assignment rules, status transitions, internal/public comments, response targets and worker notification boundaries. Include necessary team/target dependencies; build only demonstrated gaps. Preserve existing owner, release, quality and operational blockers.
+Inspect and reconcile existing mandatory green-electricity rules,activation safety and contract template management against current source and approved configuration/catalogue representations. Build only demonstrated gaps;retain owner-dependent quantity/price/consent questions and earlier release,quality andoperational gates.
 
-- `02-auth-users-admin.md#T-06.01.03`: Staff ticket management
-- `02-auth-users-admin.md#T-09.08.03`: Escalation alerts
+- `02-auth-users-admin.md#T-09.10.02`: Mandatory green-electricity rules
+- `02-auth-users-admin.md#T-09.10.03`: Green rule activation safety check
+- `02-auth-users-admin.md#T-09.12.04`: Contract template management
 
 ## v0.2.0: Complete customer journeys
 
@@ -321,9 +322,9 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-05.04.05` | done | Earlier acceptance_verified | Ownership transfer |
 | `02-auth-users-admin.md#T-05.05.01` | done | Earlier acceptance_verified | Profiles awaiting verification widget |
 | `02-auth-users-admin.md#T-05.05.02` | done | Earlier acceptance_verified | Agent invitation dashboard widget |
-| `02-auth-users-admin.md#T-06.01.01` | partial | Earlier partial | Ticket creation |
-| `02-auth-users-admin.md#T-06.01.02` | partial | Earlier partial | Ticket list and detail view |
-| `02-auth-users-admin.md#T-06.01.03` | verify | Earlier acceptance_verified | Staff ticket management |
+| `02-auth-users-admin.md#T-06.01.01` | done | Earlier partial | Ticket creation |
+| `02-auth-users-admin.md#T-06.01.02` | done | Earlier partial | Ticket list and detail view |
+| `02-auth-users-admin.md#T-06.01.03` | done | Earlier acceptance_verified | Staff ticket management |
 | `02-auth-users-admin.md#T-07.01.01` | partial | Earlier partial | Verification mode setting |
 | `02-auth-users-admin.md#T-07.01.03` | partial | Earlier partial | Verification notification to user |
 | `02-auth-users-admin.md#T-09.02.01` | done | Earlier acceptance_verified | Province CRUD |
@@ -333,9 +334,9 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.05.01` | done | Earlier acceptance_verified | Staff role management |
 | `02-auth-users-admin.md#T-09.07.01` | done | Earlier acceptance_verified | Dual-approval threshold configuration |
 | `02-auth-users-admin.md#T-09.07.02` | done | Earlier acceptance_verified | Dual-approval workflow |
-| `02-auth-users-admin.md#T-09.08.01` | partial | Earlier partial | Service response targets |
-| `02-auth-users-admin.md#T-09.08.02` | partial | Earlier partial | Staff teams and assignment rules |
-| `02-auth-users-admin.md#T-09.08.03` | verify | Earlier acceptance_verified | Escalation alerts |
+| `02-auth-users-admin.md#T-09.08.01` | done | Earlier partial | Service response targets |
+| `02-auth-users-admin.md#T-09.08.02` | done | Earlier partial | Staff teams and assignment rules |
+| `02-auth-users-admin.md#T-09.08.03` | done | Earlier acceptance_verified | Escalation alerts |
 | `02-auth-users-admin.md#T-09.09.01` | partial | Earlier partial | Reconciliation exceptions view |
 | `02-auth-users-admin.md#T-09.09.02` | done | Earlier acceptance_verified | Failed jobs dashboard |
 | `02-auth-users-admin.md#T-09.09.03` | done | Earlier acceptance_verified | Dead-letter notifications |

@@ -71,7 +71,8 @@ function defaultHandler(rows: Array<{ id: string; recipient_user_id: string | nu
     if (sql.includes('FROM app_config')) {
       return { rows: [{ value: { ticket: 48, verification_case: null } }] };
     }
-    if (sql.includes('FROM tickets')) return { rows };
+    if (sql.includes('FROM tickets'))
+      return { rows: rows.map((row) => ({ ...row, source_activity_at: NOW.toISOString() })) };
     if (sql.includes('FROM profiles')) {
       return { rows: [{ id: 'profile-1', user_id: 'staff-1' }] };
     }
@@ -124,7 +125,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     // Ledger upsert carries a positive target snapshot and reports the
     // episode as fresh (inserted = true via xmax).
     const ledgerCall = db.calls.find((c) => c.sql.includes('INSERT INTO service_breach_alerts'));
-    expect(ledgerCall!.params).toEqual(['ticket', 'ticket-1', 48]);
+    expect(ledgerCall!.params).toEqual(['ticket', 'ticket-1', 48, NOW.toISOString()]);
 
     // Outbox enqueue: in_app channel, episode-scoped idempotency key,
     // localized service-type labels in the payload.

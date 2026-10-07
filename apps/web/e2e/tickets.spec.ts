@@ -4,16 +4,20 @@ import { formatBrowserDate } from './browser-date';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import { documentText } from '@barghsa/i18n/documents';
 import { pdfPreviewImage, pdfPreviewFixture } from './upload-fixture';
 const profileId = '11111111-1111-4111-8111-111111111111',
   ticketId = '22222222-2222-4222-8222-222222222222';
-const key = 'uploads/document/33333333-3333-4333-8333-333333333333.pdf';
+const key = `ticket-attachments/33333333-3333-4333-8333-333333333333/${'a'.repeat(64)}`;
+const missingKey = `ticket-attachments/33333333-3333-4333-8333-333333333333/${'b'.repeat(64)}`;
 const item = {
   id: ticketId,
   subject: 'Delivery question',
   body: 'Please explain delivery',
   priority: 'normal',
+  category: 'general',
+  assignedTeamId: null,
   status: 'open',
   userId: 'customer',
   profileId,
@@ -89,11 +93,11 @@ for (const staff of [false, true])
         route.fulfill({
           json: {
             ...item,
-            attachments: ['ticket-attachments/missing', 'ticket-attachments/initial'],
+            attachments: [missingKey, key],
             attachmentDownloadUrls: ['https://storage.example.test/initial.pdf'],
             attachmentFiles: [
               {
-                key: 'ticket-attachments/initial',
+                key: key,
                 fileIndex: 1,
                 fileName: 'initial.pdf',
                 contentType: 'application/pdf',
@@ -450,7 +454,22 @@ for (const locale of ['en', 'fa'])
       submits = 0,
       uploads = 0;
     await page.route('**/api/tickets?*', (route) =>
-      route.fulfill({ json: { data: created ? [{ ...item, category }] : [], totalPages: 1 } })
+      route.fulfill({
+        json: {
+          data: created
+            ? [
+                {
+                  ...item,
+                  category,
+                  relatedEntityType: 'contract',
+                  relatedEntityId: profileId,
+                  attachments: [key],
+                },
+              ]
+            : [],
+          totalPages: 1,
+        },
+      })
     );
     await page.route('**/api/tickets/options**', (route) =>
       route.fulfill({
@@ -478,7 +497,10 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ json: { status: 'recorded' } });
     });
     await page.route('**/api/tickets', (route) => {
-      expect(route.request().postDataJSON()).toEqual({
+      const input = route.request().postDataJSON();
+      expect(input.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
+      expect(input).toEqual({
+        idempotencyKey: input.idempotencyKey,
         subject: 'Delivery question',
         body: 'Please explain delivery',
         priority: 'normal',
@@ -491,14 +513,25 @@ for (const locale of ['en', 'fa'])
       submits++;
       if (submits === 1) return route.fulfill({ status: 500, json: {} });
       created = true;
-      return route.fulfill({ status: 201, json: { ...item, category } });
+      return route.fulfill({
+        status: 201,
+        json: {
+          ...item,
+          category,
+          relatedEntityType: 'contract',
+          relatedEntityId: profileId,
+          attachments: [key],
+        },
+      });
     });
     await page.route(`**/api/tickets/${ticketId}`, (route) =>
       route.fulfill({
         json: {
           ...item,
           category,
-          attachments: ['ticket-attachments/fixed'],
+          relatedEntityType: 'contract',
+          relatedEntityId: profileId,
+          attachments: [key],
           attachmentDownloadUrls: ['https://storage.example.test/fixed'],
         },
       })
@@ -529,7 +562,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.locator('#ticket-category')).toHaveValue(category);
     await expect(page.getByRole('alert')).toBeVisible();
     await page
-      .getByRole('button', { name: locale === 'en' ? 'Submit ticket' : 'ثبت تیکت', exact: true })
+      .getByRole('button', { name: tTicketForms('retryOriginal', locale), exact: true })
       .click();
     await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeFocused();
     await expect(
@@ -695,9 +728,13 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await page.route('**/api/staff/tickets/teams', (route) =>
     route.fulfill({ json: [{ id: profileId, name: 'Support team', members: ['staff'] }] })
   );
-  let current = { ...item, status: 'open', assignedTo: null as string | null },
-    notes: { id: string; body: string; visibility: string; authorId: string; createdAt: string }[] =
-      [],
+  let current = {
+      ...item,
+      status: 'open',
+      assignedTo: null as string | null,
+      assignedTeamId: null as string | null,
+    },
+    notes: Record<string, unknown>[] = [],
     fail = true;
   await page.route('**/api/staff/tickets?*', (route) =>
     route.fulfill({
@@ -713,8 +750,14 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   );
   await page.route(`**/api/staff/tickets/${ticketId}`, (route) => route.fulfill({ json: current }));
   await page.route(`**/api/staff/tickets/${ticketId}/assign`, (route) => {
-    expect(route.request().postDataJSON()).toEqual({ assigneeId: 'staff', teamId: profileId });
-    current = { ...current, assignedTo: 'staff', status: 'in_progress' };
+    const input = route.request().postDataJSON();
+    expect(input.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
+    expect(input).toEqual({
+      assigneeId: 'staff',
+      teamId: profileId,
+      idempotencyKey: input.idempotencyKey,
+    });
+    current = { ...current, assignedTo: 'staff', assignedTeamId: profileId, status: 'in_progress' };
     return route.fulfill({ json: current });
   });
   await page.route(`**/api/staff/tickets/${ticketId}/comments`, (route) => {
@@ -731,7 +774,20 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
       fail = false;
       return route.fulfill({ status: 409, json: {} });
     }
-    notes = [{ id: 'note', ...body, authorId: 'staff', createdAt: item.updatedAt }];
+    notes = [
+      {
+        id: '66666666-6666-4666-8666-666666666666',
+        ...body,
+        ticketId,
+        authorId: 'staff',
+        authorContext: 'staff',
+        createdAt: item.updatedAt,
+        updatedAt: item.updatedAt,
+        attachmentCount: 0,
+        attachments: [],
+        author: null,
+      },
+    ];
     return route.fulfill({ status: 201, json: notes[0] });
   });
   let failedStatus = false;
@@ -754,12 +810,20 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await page.locator('#ticket-team').selectOption(profileId);
   await page.locator('#ticket-assignee').selectOption('staff');
   await page.getByRole('button', { name: 'Assign ticket', exact: true }).click();
-  await page.locator('#ticket-reply').fill('Private reasoning');
   await page.getByRole('checkbox', { name: 'Internal note, staff only' }).check();
+  await page.locator('#ticket-reply').fill('Private reasoning');
   await page.getByRole('button', { name: 'Send reply', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('ticket changed');
+  await expect(
+    page.getByRole('alert').getByText(tTicketForms('uncertain', 'en'), { exact: true })
+  ).toHaveText(tTicketForms('uncertain', 'en'));
+  await expect(page.locator('#ticket-reply')).toBeDisabled();
+  await expect(
+    page.getByRole('button', { name: tTicketForms('retryOriginal', 'en'), exact: true })
+  ).toBeEnabled();
   await expect(page.locator('#ticket-reply')).toHaveValue('Private reasoning');
-  await page.getByRole('button', { name: 'Send reply', exact: true }).click();
+  await page
+    .getByRole('button', { name: tTicketForms('retryOriginal', 'en'), exact: true })
+    .click();
   await expect(
     page.locator('[data-slot=ticket-comment]').getByText('Private reasoning', { exact: true })
   ).toBeVisible();
@@ -784,15 +848,21 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   ).toHaveClass(/bg-warning-soft/);
   await page.screenshot({ path: '/tmp/barghsa-ticket-staff-review.png', fullPage: true });
   await page.locator('#ticket-next-status').selectOption('resolved');
-  await expect(page.getByRole('button', { name: 'Save status', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Save status', exact: true }).click();
+  await expect(page.locator('#ticket-status-reason')).toHaveAttribute('aria-invalid', 'true');
+  expect(failedStatus).toBe(false);
+  expect(current.status).toBe('in_progress');
   await page.locator('#ticket-status-reason').fill('Customer confirmed the solution');
   await page.getByRole('button', { name: 'Save status', exact: true }).click();
   await expect(page.getByRole('alert')).toBeVisible();
   await expect(page.locator('#ticket-status-reason')).toHaveValue(
     'Customer confirmed the solution'
   );
-  await page.getByRole('button', { name: 'Save status', exact: true }).click();
-  await expect(page.locator('#ticket-reply')).toHaveCount(0);
+  await page
+    .getByRole('button', { name: tTicketForms('retryOriginal', 'en'), exact: true })
+    .click();
+  await expect(page.locator('#ticket-reply')).toBeHidden();
+  await expect(page.locator('#ticket-reply')).toHaveValue('');
   await page.locator('#ticket-next-status').selectOption('open');
   await page.locator('#ticket-status-reason').fill('Customer needs another review');
   await page.getByRole('button', { name: 'Save status', exact: true }).click();
@@ -993,6 +1063,7 @@ for (const staff of [false, true])
     }, testInfo) => {
       await page.setViewportSize({ width: 390, height: 844 });
       await shell(page, locale, staff);
+      const key = `ticket-reply-attachments/33333333-3333-4333-8333-333333333333/${'c'.repeat(64)}`;
       const prefix = staff ? '/api/staff/tickets' : '/api/tickets',
         copy = (key: string) => t(`tickets.${key}`, locale);
       await page.route('**/api/public/branding/config', (route) =>
@@ -1072,12 +1143,22 @@ for (const staff of [false, true])
             ...notes,
             {
               ...input,
-              id: 'durable',
+              id: '77777777-7777-4777-8777-777777777777',
+              ticketId,
+              updatedAt: item.updatedAt,
+              attachmentCount: 1,
+              author: null,
               authorId: staff ? 'staff' : 'customer',
               authorContext: staff ? 'staff' : 'customer',
               createdAt: item.updatedAt,
               attachments: [
-                { key: 'sealed', fileName: 'reply.png', contentType: 'image/png', url: publicUrl },
+                {
+                  key,
+                  fileIndex: 0,
+                  fileName: 'reply.png',
+                  contentType: 'image/png',
+                  url: publicUrl,
+                },
               ],
             },
           ];
@@ -1121,6 +1202,7 @@ for (const staff of [false, true])
       await page.getByRole('button', { name: item.subject, exact: true }).click();
       const composer = page.locator('[data-slot=ticket-reply-input]'),
         reply = page.locator('#ticket-reply');
+      if (staff) await composer.getByRole('checkbox').check();
       await reply.fill('Reply evidence');
       await reply.evaluate((node) => node.setSelectionRange(0, node.value.length));
       await composer.getByRole('button', { name: copy('bold'), exact: true }).click();
@@ -1158,7 +1240,10 @@ for (const staff of [false, true])
         mimeType: 'application/octet-stream',
         buffer: Buffer.from('bad'),
       });
-      await expect(composer.getByRole('alert')).toHaveText(copy('invalidReplyFiles'));
+      await expect(
+        composer.getByRole('alert').filter({ hasText: copy('invalidReplyFiles') })
+      ).toHaveText(copy('invalidReplyFiles'));
+      await expect(page.locator('#ticket-reply-files-message')).toBeVisible();
       await page
         .locator('#ticket-reply-files')
         .setInputFiles({ name: 'reply.png', mimeType: 'image/png', buffer: png });
@@ -1195,14 +1280,15 @@ for (const staff of [false, true])
       await composer
         .getByRole('button', { name: `${copy('removeFile')} dropped.pdf`, exact: true })
         .click();
-      if (staff) await composer.getByRole('checkbox').check();
       await composer.getByRole('button', { name: copy('send'), exact: true }).click();
       await expect(page.getByRole('alert')).toBeVisible();
       await expect(reply).not.toHaveValue('');
       await expect(
         composer.getByRole('button', { name: `${copy('removeFile')} reply.png`, exact: true })
       ).toBeVisible();
-      await composer.getByRole('button', { name: copy('send'), exact: true }).click();
+      await page
+        .getByRole('button', { name: tTicketForms('retryOriginal', locale), exact: true })
+        .click();
       await expect(reply).toHaveValue('');
       await expect(
         composer.getByRole('button', { name: `${copy('removeFile')} reply.png`, exact: true })
@@ -1320,6 +1406,37 @@ for (const staff of [false, true])
       await page.route(`**${contractBase}/${profileId}/activation*`, (route) =>
         route.fulfill({
           json: { checks: [], isCurrent: true, ready: false, evaluatedAt: item.createdAt },
+        })
+      );
+      await page.route(`**${contractBase}/${profileId}/signature?*`, (route) =>
+        route.fulfill({
+          json: {
+            contractId: profileId,
+            versionId: financeVersion.id,
+            state: 'Active',
+            isCurrent: true,
+            isAmendment: false,
+            canRequest: false,
+            canRecord: false,
+            request: null,
+            signature: null,
+          },
+        })
+      );
+      await page.route(`**${contractBase}/${profileId}/cancellation-status`, (route) =>
+        route.fulfill({
+          json: {
+            contractId: profileId,
+            state: 'Active',
+            cancelledAt: null,
+            financialStatus: 'not_cancelled',
+            financiallyClosed: false,
+            refundAmount: '0',
+            returnedAmount: '0',
+            refunds: [],
+            canCancel: false,
+            canChooseRefund: false,
+          },
         })
       );
       const invoice = {

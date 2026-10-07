@@ -114,10 +114,12 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
           AND l.escalation_level = $2
           AND t.status = ANY($5::text[])
           AND t.updated_at <= $4::timestamptz - (l.target_hours * INTERVAL '1 hour')
+          AND (t.updated_at = l.source_activity_at
+            OR (l.source_activity_at IS NULL AND t.updated_at <= l.alerted_at))
           AND l.${column} <= $3
         AND ($7::uuid IS NULL OR l.id > $7::uuid)
         ORDER BY l.id ASC
-        LIMIT $6`,
+        LIMIT $6 FOR SHARE OF t`,
   },
   {
     serviceType: 'verification_case',
@@ -131,10 +133,12 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
           AND l.escalation_level = $2
           AND vc.status = ANY($5::text[])
           AND vc.updated_at <= $4::timestamptz - (l.target_hours * INTERVAL '1 hour')
+          AND (vc.updated_at = l.source_activity_at
+            OR (l.source_activity_at IS NULL AND vc.updated_at <= l.alerted_at))
           AND l.${column} <= $3
         AND ($7::uuid IS NULL OR l.id > $7::uuid)
         ORDER BY l.id ASC
-        LIMIT $6`,
+        LIMIT $6 FOR SHARE OF vc`,
   },
   {
     serviceType: 'consultation',
