@@ -652,6 +652,9 @@ export class CustomerInvoiceDetailsService {
           [original.id, profileId, invoiceId]
         )
       ).rows[0];
+      const canViewRefunds =
+        (await client.query<{ id: string }>(activeProfileSql('refunds:view'), [userId])).rows[0]
+          ?.id === profileId;
       return {
         ...details,
         consultationId: origin?.consultation_id ?? null,
@@ -660,7 +663,7 @@ export class CustomerInvoiceDetailsService {
         electricityOrderId: origin?.electricity_order_id ?? null,
         savingOrderId: origin?.saving_order_id ?? null,
         solarRequestId: origin?.solar_request_id ?? null,
-        ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)),
+        ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId, canViewRefunds)),
       };
     });
   }

@@ -465,6 +465,65 @@ it('records real approved customer bytes once and preserves recorder, uploader a
   await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
   expect((await record(f, body)).status).toBe(404);
 });
+it('enforces additive Legal signing permission and revocation without changing accepted authorship', async () => {
+  const f = await contract(),
+    original = await documentFor(f, 'original');
+  const pending = await prepare(f, original.id),
+    signed = await documentFor(f, 'signed', false);
+  const body = recordInput(f, pending.view.request!.id, signed.id);
+  for (const role of ['Manager', 'Finance']) {
+    const user = await login();
+    await http.pool.query('INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,$2,$3)', [
+      f.profile,
+      user,
+      role,
+    ]);
+    await http.pool.query('INSERT INTO user_profile_contexts(user_id,profile_id) VALUES($1,$2)', [
+      user,
+      f.profile,
+    ]);
+    const before = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+    const view = await send(`contracts/${f.row.id}/signature`, user);
+    expect(view.status).toBe(role === 'Manager' ? 200 : 404);
+    if (view.status === 200) expect(((await view.json()) as SignatureView).canRecord).toBe(false);
+    expect((await send(`contracts/${f.row.id}/signature/record`, user, 'POST', body)).status).toBe(
+      404
+    );
+    expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(before);
+  }
+  const legal = await login();
+  for (const role of ['Finance', 'Legal'])
+    await http.pool.query('INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,$2,$3)', [
+      f.profile,
+      legal,
+      role,
+    ]);
+  await http.pool.query('INSERT INTO user_profile_contexts(user_id,profile_id) VALUES($1,$2)', [
+    legal,
+    f.profile,
+  ]);
+  const view = await send(`contracts/${f.row.id}/signature`, legal);
+  expect(view.status).toBe(200);
+  expect(((await view.json()) as SignatureView).canRecord).toBe(true);
+  const evidence = await documentFor({ ...f, user: legal }, 'signed', false);
+  const command = recordInput(f, pending.view.request!.id, evidence.id);
+  expect((await record({ ...f, user: legal }, command)).status).toBe(200);
+  expect(
+    (
+      await http.pool.query('SELECT accepted_by FROM contract_acceptances WHERE version_id=$1', [
+        f.row.currentVersionId,
+      ])
+    ).rows[0]
+  ).toEqual({ accepted_by: f.user });
+  const before = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+  await http.pool.query(
+    "DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Legal'",
+    [f.profile, legal]
+  );
+  expect((await record({ ...f, user: legal }, command)).status).toBe(404);
+  expect((await send(`contracts/${f.row.id}/signature`, legal)).status).toBe(404);
+  expect(await contractJourneyEffects(http.pool, f.row.id, f.profile)).toEqual(before);
+});
 it('records staff-handled copies without changing the customer acceptance actor', async () => {
   const f = await contract(),
     original = await documentFor(f, 'original'),

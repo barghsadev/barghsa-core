@@ -87,8 +87,11 @@ export class ContractCancellationRequestService {
       const contract = await this.requestable(client, id, profile);
       const request = await this.latest(client, id);
       const authorized =
-        (await client.query<{ id: string }>(activeProfileSql('contracts:sign'), [actor.userId]))
-          .rows[0]?.id === profile;
+        (
+          await client.query<{ id: string }>(activeProfileSql('cancellation:request'), [
+            actor.userId,
+          ])
+        ).rows[0]?.id === profile;
       return {
         request,
         canRequest:
@@ -100,9 +103,14 @@ export class ContractCancellationRequestService {
     });
   }
   async assertRequestAccess(id: string, actor: ContractActor): Promise<void> {
-    await customerContractAccess(actor, true, async (client, profile) => {
-      await this.requestable(client, id, profile);
-    });
+    await customerContractAccess(
+      actor,
+      true,
+      async (client, profile) => {
+        await this.requestable(client, id, profile);
+      },
+      { permission: 'cancellation:request' }
+    );
   }
   async submit(
     id: string,
@@ -111,55 +119,60 @@ export class ContractCancellationRequestService {
     ip: string
   ) {
     try {
-      return await customerContractAccess(actor, true, async (client, profile) => {
-        const contract = await this.requestable(client, id, profile, true);
-        const requestId = await contractIdempotency(
-          client,
-          'contract_cancellation_request',
-          { ...input, contractId: id },
-          actor,
-          async () => {
-            if (
-              contract.current_version_id !== input.expectedVersionId ||
-              !contract.current_requestable ||
-              ['Cancelled', 'Completed', 'Rejected'].includes(contract.state)
-            )
-              throw new ConflictException('The current contract cannot receive this request');
-            const requestId = uuidv7();
-            await client.query(
-              'INSERT INTO contract_cancellation_requests(id,contract_id,version_id,requested_by,reason,preferred_destination) VALUES($1,$2,$3,$4,$5,$6)',
-              [
-                requestId,
+      return await customerContractAccess(
+        actor,
+        true,
+        async (client, profile) => {
+          const contract = await this.requestable(client, id, profile, true);
+          const requestId = await contractIdempotency(
+            client,
+            'contract_cancellation_request',
+            { ...input, contractId: id },
+            actor,
+            async () => {
+              if (
+                contract.current_version_id !== input.expectedVersionId ||
+                !contract.current_requestable ||
+                ['Cancelled', 'Completed', 'Rejected'].includes(contract.state)
+              )
+                throw new ConflictException('The current contract cannot receive this request');
+              const requestId = uuidv7();
+              await client.query(
+                'INSERT INTO contract_cancellation_requests(id,contract_id,version_id,requested_by,reason,preferred_destination) VALUES($1,$2,$3,$4,$5,$6)',
+                [
+                  requestId,
+                  id,
+                  input.expectedVersionId,
+                  actor.userId,
+                  input.reason,
+                  input.preferredDestination,
+                ]
+              );
+              await auditContract(
+                client,
                 id,
                 input.expectedVersionId,
-                actor.userId,
-                input.reason,
-                input.preferredDestination,
-              ]
-            );
-            await auditContract(
-              client,
-              id,
-              input.expectedVersionId,
-              'contract.cancellation_requested',
-              actor,
-              ip,
-              {
-                entity: 'contract_cancellation_request',
-                entityId: requestId,
-                fromState: null,
-                toState: 'Pending',
-                requestId,
-                reason: input.reason,
-                preferredDestination: input.preferredDestination,
-              }
-            );
-            await notifyContractReview(client, id, 'cancellation_requested', input.reason);
-            return requestId;
-          }
-        );
-        return (await client.query(selection + ' WHERE r.id=$1', [requestId])).rows[0];
-      });
+                'contract.cancellation_requested',
+                actor,
+                ip,
+                {
+                  entity: 'contract_cancellation_request',
+                  entityId: requestId,
+                  fromState: null,
+                  toState: 'Pending',
+                  requestId,
+                  reason: input.reason,
+                  preferredDestination: input.preferredDestination,
+                }
+              );
+              await notifyContractReview(client, id, 'cancellation_requested', input.reason);
+              return requestId;
+            }
+          );
+          return (await client.query(selection + ' WHERE r.id=$1', [requestId])).rows[0];
+        },
+        { permission: 'cancellation:request' }
+      );
     } catch (error) {
       conflict(error);
     }

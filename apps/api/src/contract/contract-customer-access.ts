@@ -9,9 +9,10 @@ export async function customerContractAccess<T>(
   actor: ContractActor,
   accept: boolean,
   work: (client: PoolClient, profileId: string) => Promise<T>,
-  options: { financialReview?: boolean } = {}
+  options: { financialReview?: boolean; permission?: 'cancellation:request' } = {}
 ): Promise<T> {
-  const permission = accept || options.financialReview ? 'contracts:sign' : 'contracts:view';
+  const permission =
+    options.permission ?? (accept || options.financialReview ? 'contracts:sign' : 'contracts:view');
   const client = await getDbPool().connect();
   try {
     await client.query('BEGIN');

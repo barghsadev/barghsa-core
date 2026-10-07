@@ -42,7 +42,8 @@ export interface CustomerInvoiceActivity {
 export async function loadCustomerInvoiceActivity(
   client: Pool | PoolClient,
   invoiceId: string,
-  profileId: string
+  profileId: string,
+  includeRefunds = true
 ): Promise<CustomerInvoiceActivity> {
   const payments = await client.query<
     Omit<CustomerInvoicePayment, 'createdAt'> & { createdAt: Date }
@@ -82,14 +83,19 @@ export async function loadCustomerInvoiceActivity(
     client,
     bankReceipts.rows.map((receipt) => receipt.id)
   );
-  const refunds = await client.query<
-    Omit<CustomerInvoiceRefund, 'createdAt' | 'updatedAt'> & { createdAt: Date; updatedAt: Date }
-  >(
-    `SELECT id, amount::text, state, destination, created_at AS "createdAt", updated_at AS "updatedAt"
+  const refunds = includeRefunds
+    ? await client.query<
+        Omit<CustomerInvoiceRefund, 'createdAt' | 'updatedAt'> & {
+          createdAt: Date;
+          updatedAt: Date;
+        }
+      >(
+        `SELECT id, amount::text, state, destination, created_at AS "createdAt", updated_at AS "updatedAt"
      FROM refunds WHERE invoice_id=$1::uuid AND profile_id=$2::uuid
      ORDER BY created_at, id`,
-    [invoiceId, profileId]
-  );
+        [invoiceId, profileId]
+      )
+    : { rows: [] };
   return {
     payments: payments.rows.map((row) => ({ ...row, createdAt: row.createdAt.toISOString() })),
     bankReceipts: bankReceipts.rows.map((row) => ({

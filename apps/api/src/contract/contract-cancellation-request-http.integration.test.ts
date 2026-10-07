@@ -187,7 +187,77 @@ it('keeps drafts and other profiles private and rejects stale or malformed submi
     (await fetch(http.base + '/api/contracts/' + f.row.id + '/cancellation-requests')).status
   ).toBe(401);
 });
-it('requires current password verification and customer signing authority', async () => {
+it.each(
+  [
+    ['Manager'],
+    ['Finance'],
+    ['Legal'],
+    ['Manager', 'Legal'],
+    ['Finance', 'Legal'],
+    ['Manager', 'Finance'],
+  ].map((roles) => ({ roles }))
+)('uses cancellation request authority for additive roles $roles', async ({ roles }) => {
+  const f = await fixture();
+  await publish(f);
+  const user = await login(randomUUID());
+  for (const role of roles)
+    await http.pool.query('INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,$2,$3)', [
+      f.profile,
+      user,
+      role,
+    ]);
+  await http.pool.query('INSERT INTO user_profile_contexts(user_id,profile_id) VALUES($1,$2)', [
+    user,
+    f.profile,
+  ]);
+  const canRead = roles.includes('Manager') || roles.includes('Legal'),
+    canRequest = roles.includes('Manager');
+  const view = await customer(f, '/cancellation-requests', user);
+  expect(view.status).toBe(canRead ? 200 : 404);
+  if (canRead) expect(await view.json()).toMatchObject({ request: null, canRequest });
+  const body = requestBody(f),
+    response = await submit(f, body, user);
+  expect(response.status).toBe(canRequest ? 201 : 404);
+  expect(
+    (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [f.row.id])).rows[0]
+  ).toEqual({ state: 'AwaitingCustomerAcceptance' });
+  expect(
+    (await http.pool.query('SELECT id FROM refunds WHERE profile_id=$1', [f.profile])).rows
+  ).toEqual([]);
+  const requests = (
+    await http.pool.query('SELECT * FROM contract_cancellation_requests WHERE contract_id=$1', [
+      f.row.id,
+    ])
+  ).rows;
+  if (!canRequest) {
+    expect(requests).toEqual([]);
+    return;
+  }
+  const request = (await response.json()) as RequestDto;
+  expect(requests).toHaveLength(1);
+  expect(requests[0]).toMatchObject({ requested_by: user, status: 'Pending' });
+  await expectCoreAudit(http.pool, 'contract.cancellation_requested', request.id, {
+    entity: 'contract_cancellation_request',
+    fromState: null,
+    toState: 'Pending',
+    reason: body.reason,
+    actor: user,
+    context: 'customer',
+  });
+  await http.pool.query(
+    "DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager'",
+    [f.profile, user]
+  );
+  expect((await submit(f, body, user)).status).toBe(404);
+  expect(
+    (
+      await http.pool.query('SELECT * FROM contract_cancellation_requests WHERE contract_id=$1', [
+        f.row.id,
+      ])
+    ).rows
+  ).toEqual(requests);
+});
+it('requires current password verification and customer cancellation authority', async () => {
   const f = await fixture();
   await publish(f);
   await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE user_id=$1', [f.owner]);

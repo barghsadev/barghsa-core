@@ -636,6 +636,56 @@ it('aggregates exact payment allocations, receipt states and refunds without pri
   expect((await read(other, true, f.invoice)).status).toBe(404);
 });
 
+it.each([
+  { roles: ['Manager'], invoice: true, refunds: false },
+  { roles: ['Finance'], invoice: true, refunds: true },
+  { roles: ['Legal'], invoice: false, refunds: false },
+  { roles: ['Manager', 'Legal'], invoice: true, refunds: false },
+  { roles: ['Finance', 'Legal'], invoice: true, refunds: true },
+  { roles: ['Manager', 'Finance'], invoice: true, refunds: true },
+  { roles: ['Owner'], invoice: false, refunds: false },
+])('applies live additive refund visibility for agent roles $roles', async (access) => {
+  const f = await fixture(true),
+    refund = randomUUID(),
+    amount = '9007199254740993';
+  await http.pool.query('DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2', [
+    f.profile,
+    f.user,
+  ]);
+  for (const role of access.roles)
+    await http.pool.query('INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,$2,$3)', [
+      f.profile,
+      f.user,
+      role,
+    ]);
+  await http.pool.query('UPDATE invoices SET total_amount=$2,paid_amount=$2 WHERE id=$1', [
+    f.invoice,
+    amount,
+  ]);
+  await http.pool.query(
+    "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES($1,$2,$3,$4,'wallet',$5,$6)",
+    [refund, f.invoice, f.profile, amount, f.owner, randomUUID()]
+  );
+  const response = await read(f);
+  expect(response.status).toBe(access.invoice ? 200 : 404);
+  if (!access.invoice) return;
+  const body = (await response.json()) as CustomerInvoiceDetailsDto;
+  expect(body.refunds).toEqual(
+    access.refunds
+      ? [expect.objectContaining({ id: refund, amount, state: 'Requested', destination: 'wallet' })]
+      : []
+  );
+  if (!access.refunds) expect(JSON.stringify(body)).not.toContain(refund);
+  await http.pool.query(
+    "DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Finance'",
+    [f.profile, f.user]
+  );
+  const withdrawn = await read(f);
+  expect(withdrawn.status).toBe(access.roles.includes('Manager') ? 200 : 404);
+  if (withdrawn.status === 200)
+    expect(((await withdrawn.json()) as CustomerInvoiceDetailsDto).refunds).toEqual([]);
+});
+
 it('returns empty activity and includes unconfirmed receipts only in the receipt list', async () => {
   const f = await fixture();
   expect(await (await read(f)).json()).toMatchObject({

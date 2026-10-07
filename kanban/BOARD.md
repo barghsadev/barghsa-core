@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 433 | Accepted with unchanged source bindings. |
+| done | 434 | Accepted with unchanged source bindings. |
 | verify | 867 | Existing work may be complete; inspect evidence before building. |
-| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile implemented contract signing, legal documents and refund consumers with the existing additive agent permission matrix. Inspect current engines and acceptance before building gaps. Preserve retention, reconciliation mathematical policy, retained dev-reload diagnosis, owner/release gates and consultation work.
+Reconcile the implemented verification configuration with approved manual-path acceptance and unavailable API-provider behavior, then inspect notification template deployment prerequisites. Reuse current accepted operational/config/notification evidence and build only demonstrated gaps. Preserve retention, reconciliation math, dev-reload, owner/release gates and consultation work.
 
-- `02-auth-users-admin.md#T-05.04.04`: Agent role permissions enforcement
+- `02-auth-users-admin.md#T-07.01.01`: Verification mode setting
+- `02-auth-users-admin.md#T-07.01.03`: Verification notification to user
 
 ## v0.2.0: Complete customer journeys
 
@@ -316,7 +317,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-05.04.01` | done | Earlier acceptance_verified | Agent list for legal entity |
 | `02-auth-users-admin.md#T-05.04.02` | done | Earlier acceptance_verified | Agent invitation flow |
 | `02-auth-users-admin.md#T-05.04.03` | done | Earlier acceptance_verified | Accept/decline invitation |
-| `02-auth-users-admin.md#T-05.04.04` | partial | Earlier partial | Agent role permissions enforcement |
+| `02-auth-users-admin.md#T-05.04.04` | done | Earlier partial | Agent role permissions enforcement |
 | `02-auth-users-admin.md#T-05.04.05` | done | Earlier acceptance_verified | Ownership transfer |
 | `02-auth-users-admin.md#T-05.05.01` | done | Earlier acceptance_verified | Profiles awaiting verification widget |
 | `02-auth-users-admin.md#T-05.05.02` | done | Earlier acceptance_verified | Agent invitation dashboard widget |
