@@ -1282,6 +1282,13 @@
       "when": 1791372377315,
       "tag": "0262_electricity_increase_approval_reason",
       "breakpoints": true
+    },
+    {
+      "idx": 263,
+      "version": "7",
+      "when": 1791376443770,
+      "tag": "0263_contract_lifecycle_notifications",
+      "breakpoints": true
     }
   ]
 }

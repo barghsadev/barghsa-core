@@ -25,7 +25,10 @@ export async function expectContractCustomerDelivery(
     profile_id: contract.profile_id,
     user_id: contract.user_id,
     channels: ['in_app', 'email'],
-    payload: { contractNumber: contract.contract_number, link_route: `/contracts/${id}` },
+    payload: {
+      contractNumber: contract.contract_number,
+      link_route: event === 'contract.created' ? '/contracts' : `/contracts/${id}`,
+    },
   });
   const inbox = (
     await pool.query(

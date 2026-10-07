@@ -838,12 +838,26 @@ it('requests changes with a durable reason, revises, and publishes without expos
     )
   ).rows[0].metadata;
   expect(audit.reason).toBe('Correct the price');
-  const notices = (
+  const allNotices = (
     await http.pool.query(
-      'SELECT localized_content FROM in_app_notifications WHERE recipient_user_id=$1',
+      'SELECT type,params,profile_id,operating_context,link_route,localized_content FROM in_app_notifications WHERE recipient_user_id=$1',
       [f.owner]
     )
   ).rows;
+  const notices = allNotices.filter((notice) => notice.type !== 'contract.created');
+  const createdNotices = allNotices.filter((notice) => notice.type === 'contract.created');
+  expect(createdNotices).toHaveLength(1);
+  const contractNumber = (
+    await http.pool.query('SELECT contract_number::text FROM contracts WHERE id=$1', [row.id])
+  ).rows[0].contract_number;
+  expect(createdNotices[0]).toMatchObject({
+    profile_id: f.profile,
+    operating_context: 'customer',
+    link_route: '/contracts',
+    params: { contractId: row.id, contractNumber },
+  });
+  expect(createdNotices[0].localized_content.fa.body).toContain(contractNumber);
+  expect(createdNotices[0].localized_content.en.body).toContain(contractNumber);
   expect(notices.some((n) => n.localized_content.en.body.includes('Correct the price'))).toBe(true);
   expect(notices.some((n) => n.localized_content.fa.body.includes('نسخه جدید'))).toBe(true);
   expect(
@@ -1128,6 +1142,9 @@ it.each(['audit', 'notice', 'outbox', 'job', 'history'])(
       history: 'notification_delivery_log',
     }[failure]!;
     const saved = await contractJourneyEffects(http.pool, f.row.id, f.profile);
+    const savedOutbox = (
+      await http.pool.query('SELECT * FROM notification_outbox WHERE profile_id=$1', [f.profile])
+    ).rows;
     await http.pool.query(
       "CREATE FUNCTION fail_contract_review() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'review evidence unavailable'; END $$"
     );
@@ -1154,7 +1171,7 @@ it.each(['audit', 'notice', 'outbox', 'job', 'history'])(
     expect(
       (await http.pool.query('SELECT * FROM notification_outbox WHERE profile_id=$1', [f.profile]))
         .rows
-    ).toEqual([]);
+    ).toEqual(savedOutbox);
     expect((await action(f.row.id, 'publish', body)).status).toBe(200);
     await expectContractCustomerDelivery(
       http.pool,

@@ -1,3 +1,4 @@
+import { expectContractCustomerDelivery } from '../test/contract-notification-proof.js';
 import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
@@ -436,6 +437,7 @@ it('creates and reads exact full snapshots and immutable version metadata', asyn
       )
     ).rows.map((r) => r.event)
   ).toEqual(['contract.created', 'contract.version_created']);
+  await expectContractCustomerDelivery(http.pool, row.id, row.currentVersionId, 'contract.created');
 });
 it('drafts one idempotent amendment without replacing the active accepted version', async () => {
   const body = { ...(await input()), serviceType: 'savings' };

@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Complete remaining contract lifecycle event producers before moving to other Appendix business notifications. Inspect existing create/activation/terminal cancellation engines and retained financial/audit/idempotency boundaries first. Enqueue canonical contract.created, contract.active and contract.cancelled customer events atomically, preserve current profile recipients, immediate private in-app delivery, exact version occurrence identity and refund/closure safety; verify affected native journeys. Keep all unrelated owner/provider/operations gates and production authorization separate.
+Complete demonstrated native order notification producer gaps in dependency order. Inspect existing submission,review/status andpre-publication cancellation engines for all four services before edits. Enqueue order.submitted/order.status_changed andrequired cancellation-request events with exact variables/current recipients,immediate private in-app andsame-transaction email intent. Preserve existing contract Rejected versus Cancelled meanings,financial/audit/idempotency boundaries andall original assertions. Keep active in-app template integration andother Appendix/provider/owner/operational criteria explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

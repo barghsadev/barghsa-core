@@ -1323,6 +1323,12 @@ it('rolls back transition effects and receipt when notification fails, then retr
     ])
   ).rows[0].current_version_id;
   const before = await correctionSnapshot(order.orderId, order.contractId);
+  const initialNotices = (
+    await http.pool.query(
+      "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
+    )
+  ).rows[0].count;
+  expect(initialNotices).toBe(1);
   const command = { expectedVersionId: versionId, idempotencyKey: randomUUID() };
   await http.pool.query(
     `CREATE FUNCTION fail_transition_notice() RETURNS trigger LANGUAGE plpgsql AS $$
@@ -1370,7 +1376,8 @@ it('rolls back transition effects and receipt when notification fails, then retr
       "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
     )
   ).rows[0].count;
-  expect(notices).toBe(1);
+  expect(notices - initialNotices).toBe(1);
+  expect(notices).toBe(2);
   expect((await staffPost(order.orderId, 'approve', command)).status).toBe(200);
   expect(
     (
@@ -2610,6 +2617,57 @@ it('lists only the customer profile orders and cancels an unpublished order once
   });
 
   expect((await cancel()).status).toBe(200);
+  const delivery = (
+    await http.pool.query('SELECT * FROM notification_outbox WHERE idempotency_key=$1', [
+      `contract.created:${order.contractId}:${detail.versionId}:buyer`,
+    ])
+  ).rows;
+  expect(delivery).toHaveLength(1);
+  expect(
+    (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [order.contractId])).rows[0]
+      .state
+  ).toBe('Rejected');
+  expect(
+    (
+      await http.pool.query('SELECT * FROM notification_outbox WHERE idempotency_key=$1', [
+        `contract.cancelled:${order.contractId}:${detail.versionId}:buyer`,
+      ])
+    ).rows
+  ).toEqual([]);
+  expect(delivery[0]).toMatchObject({
+    user_id: 'buyer',
+    profile_id: input.profileId,
+    event_key: 'contract.created',
+    channels: ['in_app', 'email'],
+    payload: { contractId: order.contractId, link_route: '/contracts' },
+  });
+  const notice = (
+    await http.pool.query(
+      "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+      [delivery[0].id]
+    )
+  ).rows;
+  expect(notice).toMatchObject([
+    {
+      recipient_user_id: 'buyer',
+      profile_id: input.profileId,
+      operating_context: 'customer',
+      type: 'contract.created',
+      link_route: '/contracts',
+    },
+  ]);
+  expect(
+    (await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })).status
+  ).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS count FROM notification_outbox WHERE idempotency_key=$1',
+        [delivery[0].idempotency_key]
+      )
+    ).rows[0].count
+  ).toBe(1);
+
   const decisionAudit = (
     await http.pool.query<{ metadata: { reviewHash: string } }>(
       `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.order_cancelled'

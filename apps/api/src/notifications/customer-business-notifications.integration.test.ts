@@ -244,30 +244,37 @@ it.each(['payload', 'recipient', 'profile'] as const)(
   }
 );
 
-it('rolls back a silently suppressed mandatory inbox write and permits the same occurrence after recovery', async () => {
-  const input = params();
-  await db.pool.query(
-    'CREATE FUNCTION suppress_business_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RETURN NULL; END $$; CREATE TRIGGER suppress_business_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION suppress_business_notice()'
-  );
-  try {
-    await expect(
-      transaction((client) => service.createCustomerBusinessEvent(input, client))
-    ).rejects.toThrow('Mandatory inbox delivery was not stored');
-    expect(await snapshot(input.occurrenceKey)).toEqual({
-      outbox: [],
-      inbox: [],
-      jobs: [],
-      logs: [],
-    });
-  } finally {
+it.each([
+  ['in_app_notifications', 'Mandatory inbox delivery was not stored'],
+  ['notification_job', 'Business delivery jobs were not stored'],
+  ['notification_delivery_log', 'Business inbox delivery history was not stored'],
+] as const)(
+  'rolls back a silently suppressed %s write and permits the same occurrence after recovery',
+  async (table, message) => {
+    const input = params();
     await db.pool.query(
-      'DROP TRIGGER suppress_business_notice ON in_app_notifications; DROP FUNCTION suppress_business_notice()'
+      `CREATE FUNCTION suppress_business_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RETURN NULL; END $$; CREATE TRIGGER suppress_business_notice BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION suppress_business_notice()`
     );
+    try {
+      await expect(
+        transaction((client) => service.createCustomerBusinessEvent(input, client))
+      ).rejects.toThrow(message);
+      expect(await snapshot(input.occurrenceKey)).toEqual({
+        outbox: [],
+        inbox: [],
+        jobs: [],
+        logs: [],
+      });
+    } finally {
+      await db.pool.query(
+        `DROP TRIGGER suppress_business_notice ON ${table}; DROP FUNCTION suppress_business_notice()`
+      );
+    }
+    await transaction((client) => service.createCustomerBusinessEvent(input, client));
+    const recovered = await snapshot(input.occurrenceKey);
+    expect(recovered.outbox).toHaveLength(1);
+    expect(recovered.inbox).toHaveLength(1);
+    expect(recovered.jobs).toHaveLength(2);
+    expect(recovered.logs).toHaveLength(1);
   }
-  await transaction((client) => service.createCustomerBusinessEvent(input, client));
-  const recovered = await snapshot(input.occurrenceKey);
-  expect(recovered.outbox).toHaveLength(1);
-  expect(recovered.inbox).toHaveLength(1);
-  expect(recovered.jobs).toHaveLength(2);
-  expect(recovered.logs).toHaveLength(1);
-});
+);

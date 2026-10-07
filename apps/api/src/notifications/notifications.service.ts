@@ -10,9 +10,12 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
 import type { PoolClient } from 'pg';
 
 export type ContractCustomerEvent =
+  | 'contract.created'
   | 'contract.awaiting_acceptance'
   | 'contract.accepted'
   | 'contract.signed'
+  | 'contract.active'
+  | 'contract.cancelled'
   | 'contract.changes_requested';
 
 export interface CreateNotificationParams {
@@ -166,16 +169,18 @@ export class NotificationsService {
     const priority =
       classifyNotificationType(params.eventKey) === 'immediate' ? 'urgent' : 'normal';
     // In-app delivery is immediate and already persisted; only email awaits the worker/window.
-    await transaction.query(
+    const jobs = await transaction.query(
       `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
        VALUES($1,'in_app','done',$2,5,1,$3,$4),($1,'email','queued',$2,5,0,NULL,NULL)`,
       [outboxId, priority, notice.id, payload]
     );
-    await transaction.query(
+    if (jobs.rowCount !== 2) throw new Error('Business delivery jobs were not stored');
+    const history = await transaction.query(
       `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
        VALUES($1,'in_app','delivered',1,$2)`,
       [outboxId, notice.id]
     );
+    if (history.rowCount !== 1) throw new Error('Business inbox delivery history was not stored');
   }
 
   /** Queue external verification channels in the caller's status-change transaction. */
