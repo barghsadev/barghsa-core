@@ -118,6 +118,56 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(`**/api/contracts/${first}/versions`, (route) =>
       route.fulfill({ json: { versions: [version], nextBefore: null } })
     );
+    await page.route(`**/api/contracts/${first}/signature?*`, (route) =>
+      route.fulfill({
+        json: {
+          contractId: first,
+          versionId: first,
+          state: 'Active',
+          isCurrent: true,
+          isAmendment: false,
+          canRequest: false,
+          canRecord: false,
+          request: null,
+          signature: null,
+        },
+      })
+    );
+    await page.route(`**/api/contracts/${first}/activation?*`, (route) =>
+      route.fulfill({
+        json: {
+          contractId: first,
+          versionId: first,
+          state: 'Active',
+          isCurrent: true,
+          ready: false,
+          ruleRevision: 1,
+          initialInvoiceId: first,
+          serviceStartsAt: '2026-10-01T00:00:00Z',
+          serviceEndsAt: '2026-11-01T00:00:00Z',
+          evaluatedAt: '2026-10-01T00:00:00Z',
+          checks: ['staffApproval', 'customerAcceptance', 'signature', 'initialPayment']
+            .map((key) => ({ key, required: true, status: 'met' }))
+            .concat([{ key: 'serviceStart', required: false, status: 'not_required' }]),
+        },
+      })
+    );
+    await page.route(`**/api/contracts/${first}/cancellation-status`, (route) =>
+      route.fulfill({
+        json: {
+          contractId: first,
+          state: 'Active',
+          cancelledAt: null,
+          financialStatus: 'not_cancelled',
+          financiallyClosed: false,
+          refundAmount: '0',
+          returnedAmount: '0',
+          canCancel: false,
+          canChooseRefund: false,
+          refunds: [],
+        },
+      })
+    );
     await page.route('**/api/documents?*', (route) =>
       route.fulfill({ json: { documents: [], nextBefore: null } })
     );
@@ -226,7 +276,11 @@ for (const locale of ['en', 'fa'] as const) {
     const detail = page.getByRole('region', { name: contractText('terms', locale), exact: true });
     await expect(detail.getByText('Retained contract terms', { exact: true })).toBeVisible();
     const loadedDetailReads = detailReads;
-    await tableButton.click();
+    await page
+      .getByRole('region', { name: contractText('title', locale), exact: true })
+      .locator(':scope > [data-slot="list-toolbar"]')
+      .getByRole('button', { name: t('historyView.table', locale), exact: true })
+      .click();
     await expect(detail.getByText('Retained contract terms', { exact: true })).toBeVisible();
     expect(detailReads).toBe(loadedDetailReads);
     expect(contractRequests.length).toBe(loadedContracts);

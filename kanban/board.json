@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T02:47:41.343253+00:00",
+  "updated": "2026-10-07T03:07:02.529721+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -52144,12 +52144,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-ee973c37d798"
       },
       "requirement": "| T-04.3.01.01 | Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52188,8 +52186,261 @@
           "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
           "packages/db/src/schema/bank-receipts.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-bank-receipts-financial-history"
+        ],
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/drizzle/0078_create_bank_receipts.sql",
+              "sha256": "d674c22ca6d7166fefc5be65b885f572228eef69163726d62509a9de78dbe44d"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current schema/migrations preserve UUIDv7/base columns,positive int8/date/reference/attachment/note,4 canonical states,confirmation actor/time iff Confirmed and reason iff Rejected. Required same-profile invoice RESTRICT FK,unique attachment,indexes,shared claims and status actor snapshots verified with49 schema/migration cases including legacy upgrade preservation.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52203,12 +52454,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-ee973c37d798"
       },
       "requirement": "| T-04.3.01.02 | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52300,9 +52549,294 @@
           "packages/shared/src/finance/invoice-bank-receipt-upload.ts"
         ],
         "batches": [
-          "2026-09-30-invoice-receipt-submission-review"
+          "2026-09-30-invoice-receipt-submission-review",
+          "release-0.3-bank-receipts-financial-history"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+              "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+            },
+            {
+              "path": "apps/api/src/finance/financial-submission-actor.ts",
+              "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-actor.ts",
+              "sha256": "619524a50c605981d2316b437a3c1dac9dc808bf6f53ed6c46c9240143fe9165"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+              "sha256": "2401f88002bde001a366c719f30140f6e48d8e4a7b0bfe55dd113e8267779153"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+              "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+              "sha256": "6204d1d8fed35d68f0ef924fcc4f996d015663769f98e499bd6226724b2bd3a0"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
+              "sha256": "c0f896bc1b5d8f2af6aef52b6ca3d41bbbb137f05cf88fedd593b3553f67b916"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current upload validates exact positive amount,file type/size/date/reference/note and current profile/account/session/storage actor provenance under transaction locks. Attachment is sealed/copied and claimed across financial flows; mandatory audit/actor/status and final session checks commit with Submitted receipt. Exact repeated fields/attachment return existing receipt; mismatch conflicts. No money moves. Browser retains file/exact amount through malformed response,lost acknowledgement,verification and recovery; profile changes withdraw stale submissions.",
+            "Historical removed useReceiptAttachmentUpload hook is not current evidence. Current InvoiceBankReceiptUploadForm imports useReceiptForm and uploadInvoiceReceiptAttachment from invoice-bank-receipt-upload; their source and current form/lib/browser cases are bound here. Historical records remain unchanged.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52316,12 +52850,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-ee973c37d798"
       },
       "requirement": "| T-04.3.01.03 | Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52412,8 +52944,297 @@
           "apps/api/src/wallet/wallet.service.ts",
           "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-bank-receipts-financial-history"
+        ],
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+              "sha256": "dd1b01fc220f2e64efc943615c892684dd5b8e958a99c2fc15e23f44c147426c"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+              "sha256": "b7b8e45ae0016345f0189c77b808329d2091b40dd0cc8922253b6781243e746a"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+              "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-overpayment.ts",
+              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current confirmation validates locked receipt/profile/invoice and captured review,with current permission/step-up and final authority checks. Profile->wallet->invoice lock order preserved. Invoice allocation=min(receipt,remaining); only excess becomes separate wallet credit. Allocation,paidAmount/state,receipt confirmation actor/history/audit commit atomically. Confirmed replay loads stored allocation without new money. Wrong scope,corrupt config,closed invoice,mismatch,audit/final authority failures and cross-flow claims fail closed/rollback in actual PG cases.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52427,12 +53248,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-ee973c37d798"
       },
       "requirement": "| T-04.3.01.04 | Staff rejection API: mark receipt Rejected, store reason, notify customer | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52543,8 +53362,317 @@
           "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
           "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-bank-receipts-financial-history"
+        ],
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+              "sha256": "dd1b01fc220f2e64efc943615c892684dd5b8e958a99c2fc15e23f44c147426c"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+            },
+            {
+              "path": "docs/operations/notification-delivery-recovery.md",
+              "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+              "sha256": "b7b8e45ae0016345f0189c77b808329d2091b40dd0cc8922253b6781243e746a"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+              "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-overpayment.ts",
+              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+            },
+            {
+              "path": "packages/shared/src/finance/online-topup-expiry.ts",
+              "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Rejection requires reason/current receipt authority/proof; Rejected reason/actor/status,audit,pending approval resolution and deduplicated customer outbox commit atomically without balance changes. Same reason replay stable; Confirmed conflicts. Eight actual local worker cases lease producer payloads and render FA/EN receipt/rejection/expiry templates into private in-app/test-email delivery receipts; live SMTP/provider operations remain separate.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52558,12 +53686,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-ee973c37d798"
       },
       "requirement": "| T-04.3.01.05 | Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52647,8 +53773,297 @@
           "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
           "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-bank-receipts-financial-history"
+        ],
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+              "sha256": "dd1b01fc220f2e64efc943615c892684dd5b8e958a99c2fc15e23f44c147426c"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+              "sha256": "b7b8e45ae0016345f0189c77b808329d2091b40dd0cc8922253b6781243e746a"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+              "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-overpayment.ts",
+              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Amount>=locked configured threshold requires distinct currently authorized reviewer and initiator,exact review and step-up. First decision parks UnderReview without settlement; second executes one allocation/credit. Revoked/same reviewer,changed threshold/state/review,corrupt config and concurrent decisions fail safely. Separate authorized emergency override requires reason/proof/audit; browser retains receipt/reason/focus through verification.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52662,21 +54077,267 @@
         "story": "04-invoices-wallet-contracts.md#spec-ee973c37d798"
       },
       "requirement": "| T-04.3.01.06 | Overpayment wallet credit: separate `WalletService.credit()` with its own idempotency key | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-20-wallet-history"
+          "2026-09-20-wallet-history",
+          "release-0.3-bank-receipts-financial-history"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Confirmation invokes separate WalletService.credit only for exact excess,with its own receipt-specific idempotency key and stored allocation snapshot. Shared calculator/actual PG cases cover int8,zero/excess/full/partial,repeat,collision/concurrency/cross-flow and caller rollback. Invoice never over-settles; credit/settlement/audit/final-proof failures roll back all new effects.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52690,21 +54351,267 @@
         "story": "04-invoices-wallet-contracts.md#spec-ee973c37d798"
       },
       "requirement": "| T-04.3.01.07 | Update invoice state tracking: as bank receipts accumulate, invoice state flows Unpaid → Partially funded → Paid | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-20-wallet-history"
+          "2026-09-20-wallet-history",
+          "release-0.3-bank-receipts-financial-history"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Actual PG cases cover accumulated Submitted/UnderReview receipts and eligible Unpaid/Overdue/PartiallyFunded invoices. Settlement moves through PaymentUnderReview to PartiallyFunded/Paid from persisted exact allocations,with mandatory audit/payment timestamp and no over-settlement. Replays do not accumulate twice; partial/full/excess and rollback paths pass.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52718,12 +54625,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-29bef40d1dd7"
       },
       "requirement": "| T-04.3.02.01 | Invoice detail API: aggregate invoice, lines, payments, bank receipts, refunds, adjustments | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52731,9 +54636,257 @@
         "changed_paths": [],
         "batches": [
           "2026-09-20-invoice-activity",
-          "2026-09-20-invoice-history-coverage"
+          "2026-09-20-invoice-history-coverage",
+          "release-0.3-bank-receipts-financial-history"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Customer detail holds active-account/session/profile membership authority in its read transaction with final checks. Complete bounded validated invoice family aggregates lines,payments,wallet transactions,receipts/immutable actor statuses,refunds,adjustment/parent references and origin links; invalid/truncated/inaccessible family fails closed.16 source-bound actual PG customer-read HTTP cases verify authority/final revocation. Terminal UI retains accepted history,private document/contract/origin links and global Help & support. No unbounded-history claim.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52747,12 +54900,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-29bef40d1dd7"
       },
       "requirement": "| T-04.3.02.02 | Wallet transaction list API: cursor-based pagination, filters (type, state, date range), sort | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52761,9 +54912,257 @@
         "batches": [
           "2026-09-20-wallet-history",
           "2026-09-24-wallet-history-handoffs",
-          "2026-10-01-customer-wallet-history-query"
+          "2026-10-01-customer-wallet-history-query",
+          "release-0.3-bank-receipts-financial-history"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Wallet history uses active-profile SQL predicate,canonical type/state/date/exact amount/literal escaped search filters,asc/desc sort and limit<=100. Cursor preserves PG microseconds/id and binds filter/profile scope using SHA256; malformed/wrong scope/time/id fails closed.15 actual PG customer-access cases plus current parser/service cases cover exact int8,page boundaries,filters/search/sort/isolation. No HMAC or cursor secrecy claim.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52777,12 +55176,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-29bef40d1dd7"
       },
       "requirement": "| T-04.3.02.03 | React components: InvoiceDetail, WalletTransactionList, BankReceiptList with full states | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52799,9 +55196,257 @@
           "2026-10-01-wallet-receipt-evidence",
           "2026-10-01-wallet-receipt-timeline",
           "2026-10-06-customer-bank-receipt-history-scope",
-          "2026-10-06-customer-invoice-history-scope"
+          "2026-10-06-customer-invoice-history-scope",
+          "release-0.3-bank-receipts-financial-history"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "InvoiceDetailsPage/InvoiceActivity,InvoiceBankReceiptHistory,WalletTransactionList/Records render accepted lines,money,state,payment/receipt/refund/adjustment links,reasons/private attachment preview and actor timelines. Loading/error/empty/terminal/profile/account cases clear stale data and ignore late responses. Table/card controls retain pages/exact money without refetch; contract detail retains terms/actions while views change. Both locales/engines preserve keyboard overflow,focus and Axe checks. Documents/support remain available.149 UI and46 distinct browser cases pass.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -52815,12 +55460,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-29bef40d1dd7"
       },
       "requirement": "| T-04.3.02.04 | Localized state labels and descriptive text for every state | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52829,9 +55472,257 @@
         "batches": [
           "2026-09-20-wallet-history",
           "2026-10-01-customer-wallet-views",
-          "2026-10-06-customer-bank-receipt-history-scope"
+          "2026-10-06-customer-bank-receipt-history-scope",
+          "release-0.3-bank-receipts-financial-history"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-bank-receipt-and-profile-financial-history-verification",
+          "reviewed_base_commit": "b07af54b3c3c924d6b5d99fce4e02444b98610f0",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+              "sha256": "849beb398e14f7afa33d15f38206846cce84a9fbc7cfb333378bdecaa9311481"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "474517e09bff30ff66c2334e8929dcf25a63b28df671b6349f325010ebf3d554"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "7b95a8d64228ac0c826badb2480d380a095339732475d636197420b3fa8b4db9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+              "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "41e3a5cdc347c51b3b70cc17275651aaa8ca3f00ae289d5f462111fb93a37dd7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+            },
+            {
+              "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
+              "sha256": "49ed7a3c1a6506f13f1b82f6e192525c0398996f76902989887f419a7f96aee6"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
+              "sha256": "9d4d947efaba37a03edb2e47388537798ea1993f9e495977ade035a1dbeaf23a"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptHistory.tsx",
+              "sha256": "b2e883bea68dc78522d4a3c6f9fd05a4ed0a5bddb8e390cc8dce073f349f2579"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+              "sha256": "4ca39a5c60cea126fbbe9245469cee19d0e473a3764cb7692cac50a18baea254"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.test.tsx",
+              "sha256": "e0a7139b87ae75801c0596f60e81af68d48db30ebf29153c06d665f3c6767f82"
+            },
+            {
+              "path": "apps/web/src/components/ReceiptStatusTimeline.tsx",
+              "sha256": "3cf93b8b9cfbad59eb379efa416aa892d812c88ea160730898da46ffad5abfd0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+              "sha256": "83855ca85fb1839da4a68d41645b994e9a616aeda81f91e4f09ac697ecf81359"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionList.tsx",
+              "sha256": "fa08a0413fd8bc7f3c743cf5e4dcd0bd56664fc61accf4735a128e00c2d6287c"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+              "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+            },
+            {
+              "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+              "sha256": "876458cf05c9c819a8ddb458fcb1fabd96fac18f8364b5a6c2829f1395893285"
+            },
+            {
+              "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
+              "sha256": "8836671775e76a76443436cbe5bcdf384790207889d460103433cbd82f4b3e25"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "3bed961bc97f7046d94c5becbb82d2e0ac87d75d8910ae3abb00cb6d5a2b5e46"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.test.ts",
+              "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+            },
+            {
+              "path": "apps/web/src/lib/wallet-history-query.ts",
+              "sha256": "209b37fec64f224b88d5781d8dcd95c9a84549662e145ee3b6a4c0e895de3a39"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceActivity.tsx",
+              "sha256": "02411aebe3dc86ea957acde07794784e634bb5daa2cc5ec8e060c5a091753a8a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
+              "sha256": "1036412de11cf08de32b7e1410137f99c44a96b3bae06595f90b336c7925461d"
+            },
+            {
+              "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
+              "sha256": "0c83a144e4229b18633a97ef641f100ee921b14fc0d6377726ccc59fddd5adcb"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipt-status-events.test.ts",
+              "sha256": "27dd637f3b88719d4f51f565fce56b9ff67086d830e5ca70b87323bba588d88e"
+            },
+            {
+              "path": "packages/db/src/migrate.bank-receipts.test.ts",
+              "sha256": "5d2805436212a58e660bd628eb3780c894baba93c6ea205073c4cf40c8328f00"
+            },
+            {
+              "path": "packages/db/src/migrate.invoice-receipt-bank-name.test.ts",
+              "sha256": "517acd36d090ddb55251e0c9ba5899c4f528687bbb072017b9dcec85a3214266"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
+              "sha256": "c7e41205598a48f1724227519d4a359c8539b21a95d83edec5071580388303af"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+              "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipt-status-events.ts",
+              "sha256": "439fe555483025808ec219222d08891bdb9327c3cb4d7f88db043855c8a85cd0"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.test.ts",
+              "sha256": "dcf1b1f1423c5bfea8e829378a8406185cd8b7c1032fbf2232a847fba08aa2a1"
+            },
+            {
+              "path": "packages/db/src/schema/bank-receipts.ts",
+              "sha256": "cb7ffaac266da7ec374e131843bd4ecd8f06d692f1a9f4f4c714c051f79b92ec"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "35098c7896a947980a8fcdc63874d8c2b598d96d649673afbb83501047951f9a"
+            },
+            {
+              "path": "packages/shared/src/finance/bank-receipt-review.test.ts",
+              "sha256": "10e9134c6208b0896c6c1a7dc5a267a40f7a471fa24acee9ceec33434b79b4f3"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
+              "sha256": "5de45ac4c36437518846a01514ed9f458d83f980ab1a01fd13d14ef66c037e52"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-upload.test.ts",
+              "sha256": "10a5fbd922e837d652acf144a1d232d6c28d8f9e0a152ca14c80f1a38facfe08"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current FA/EN dictionaries/formatters cover4 receipt states,invoice lifecycle and wallet canonical types/states plus unknown historical fallback. Actor/reason/backfilled-time labels,signed exact bigint amounts,dates/references persist in table/cards. Current UI/history tests and both-locale browser receipts verify understandable supported financial labels/descriptions.",
+            "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+            "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+          "limitations": [
+            "Actual local PostgreSQL/compiled HTTP/browser/leased notification fixtures; external SMTP/provider/deployment remain separate gates.",
+            "Earlier milestone/owner dispositions and Wallet performance budget incomplete; production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -154129,6 +157020,28 @@
         "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals"
+    },
+    "release-0.3-bank-receipts-financial-history": {
+      "title": "Accept atomic invoice receipts and profile financial history",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04"
+      ],
+      "summary": "Eleven effective tasks accepted after actual migration/PG/HTTP/worker/UI/browser verification. Production unchanged; complete missing contract read fixtures and scope Table locator while preserving assertions. Earlier release/operational gates remain unfinished.",
+      "validation": [
+        "526 distinct feature cases pass:162 API,49 DB,112 shared,149 UI,8 worker,46 browser.77 named source-bound passing cases reused;22 unaffected history retained,4 final cases replace failures and20 invoice upload pass. Failure/list/overlap excluded. All5505 compiled outputs and3886 non-board source hashes verified; production unchanged. Bounded final diff reviewed once; lint/format pass. /Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
+        "Only three missing current contract-read fixtures and one scoped contract Table locator changed. Exact reversal recovers HEAD and preserves every original assertion. Failed intermediate runs/diagnoses retained. Earlier owner dispositions,signed chargeback policy,generic invoice naming and existing Wallet300.08KB/300KB gate remain incomplete. Local test-email receipts do not certify live providers; no milestone/staging/production acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history"
     }
   },
   "historical_improvements": [
@@ -154168,21 +157081,22 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-bank-receipts-financial-history",
+    "id": "release-0.3-refunds-financial-closure",
     "release": "0.3.0",
-    "goal": "Inspect current invoice receipts,immutable attachment/amount/actor provenance,confirmation/rejection/threshold dual approval,excess wallet credit and complete customer financial history. Reuse valid source-bound wallet,correction/read and notification evidence; build only demonstrated gaps and verify actual affected callers. Preserve exact money,profile/current authority,review/idempotency,audit and rollback. Callback policy,Wallet budget and earlier release dependencies remain unfinished; no milestone acceptance/deployment before gates.",
+    "goal": "Inspect existing refund requests,profile/current authorization,customer destination choice,distinct Finance approval,atomic wallet credit or external payout evidence,idempotency and final financial closure. Find source before building gaps; reuse source-bound receipt/wallet/correction/notification evidence and verify affected callers. Preserve exact money,audit,concurrency/rollback and unfinished owner/dependency/performance gates; no milestone deployment until accepted.",
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.3.01.01",
-      "04-invoices-wallet-contracts.md#T-04.3.01.02",
-      "04-invoices-wallet-contracts.md#T-04.3.01.03",
-      "04-invoices-wallet-contracts.md#T-04.3.01.04",
-      "04-invoices-wallet-contracts.md#T-04.3.01.05",
-      "04-invoices-wallet-contracts.md#T-04.3.01.06",
-      "04-invoices-wallet-contracts.md#T-04.3.01.07",
-      "04-invoices-wallet-contracts.md#T-04.3.02.01",
-      "04-invoices-wallet-contracts.md#T-04.3.02.02",
-      "04-invoices-wallet-contracts.md#T-04.3.02.03",
-      "04-invoices-wallet-contracts.md#T-04.3.02.04"
+      "04-invoices-wallet-contracts.md#T-04.4.01.01",
+      "04-invoices-wallet-contracts.md#T-04.4.01.02",
+      "04-invoices-wallet-contracts.md#T-04.4.01.03",
+      "04-invoices-wallet-contracts.md#T-04.4.01.04",
+      "04-invoices-wallet-contracts.md#T-04.4.01.05",
+      "04-invoices-wallet-contracts.md#T-04.4.01.06",
+      "04-invoices-wallet-contracts.md#T-04.4.01.07",
+      "04-invoices-wallet-contracts.md#T-04.4.02.01",
+      "04-invoices-wallet-contracts.md#T-04.4.02.02",
+      "04-invoices-wallet-contracts.md#T-04.4.02.03",
+      "04-invoices-wallet-contracts.md#T-04.4.02.04",
+      "04-invoices-wallet-contracts.md#T-04.4.02.05"
     ]
   },
   "launch_forecast": {

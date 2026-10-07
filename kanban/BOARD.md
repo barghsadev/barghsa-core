@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T02:47:41.343253+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T03:07:02.529721+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 313 | Accepted with unchanged source bindings. |
-| verify | 994 | Existing work may be complete; inspect evidence before building. |
+| done | 324 | Accepted with unchanged source bindings. |
+| verify | 983 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,19 +39,20 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current invoice receipts,immutable attachment/amount/actor provenance,confirmation/rejection/threshold dual approval,excess wallet credit and complete customer financial history. Reuse valid source-bound wallet,correction/read and notification evidence; build only demonstrated gaps and verify actual affected callers. Preserve exact money,profile/current authority,review/idempotency,audit and rollback. Callback policy,Wallet budget and earlier release dependencies remain unfinished; no milestone acceptance/deployment before gates.
+Inspect existing refund requests,profile/current authorization,customer destination choice,distinct Finance approval,atomic wallet credit or external payout evidence,idempotency and final financial closure. Find source before building gaps; reuse source-bound receipt/wallet/correction/notification evidence and verify affected callers. Preserve exact money,audit,concurrency/rollback and unfinished owner/dependency/performance gates; no milestone deployment until accepted.
 
-- `04-invoices-wallet-contracts.md#T-04.3.01.01`: Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps
-- `04-invoices-wallet-contracts.md#T-04.3.01.02`: Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state
-- `04-invoices-wallet-contracts.md#T-04.3.01.03`: Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed
-- `04-invoices-wallet-contracts.md#T-04.3.01.04`: Staff rejection API: mark receipt Rejected, store reason, notify customer
-- `04-invoices-wallet-contracts.md#T-04.3.01.05`: Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation
-- `04-invoices-wallet-contracts.md#T-04.3.01.06`: Overpayment wallet credit: separate `WalletService.credit()` with its own idempotency key
-- `04-invoices-wallet-contracts.md#T-04.3.01.07`: Update invoice state tracking: as bank receipts accumulate, invoice state flows Unpaid → Partially funded → Paid
-- `04-invoices-wallet-contracts.md#T-04.3.02.01`: Invoice detail API: aggregate invoice, lines, payments, bank receipts, refunds, adjustments
-- `04-invoices-wallet-contracts.md#T-04.3.02.02`: Wallet transaction list API: cursor-based pagination, filters (type, state, date range), sort
-- `04-invoices-wallet-contracts.md#T-04.3.02.03`: React components: InvoiceDetail, WalletTransactionList, BankReceiptList with full states
-- `04-invoices-wallet-contracts.md#T-04.3.02.04`: Localized state labels and descriptive text for every state
+- `04-invoices-wallet-contracts.md#T-04.4.01.01`: Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet
+- `04-invoices-wallet-contracts.md#T-04.4.01.02`: Implement `RefundStateMachine` with all 9 transitions, guards, and audit events
+- `04-invoices-wallet-contracts.md#T-04.4.01.03`: DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))`
+- `04-invoices-wallet-contracts.md#T-04.4.01.04`: Wallet refund: `WalletService.credit()` with idempotency key tied to refund ID
+- `04-invoices-wallet-contracts.md#T-04.4.01.05`: External refund: workflow for staff to record bank reference; second reconciliation confirmation step
+- `04-invoices-wallet-contracts.md#T-04.4.01.06`: Dual-approval integration: if refund amount ≥ threshold, require second finance staff before Approved
+- `04-invoices-wallet-contracts.md#T-04.4.01.07`: Retry worker: pick up Failed refunds with bounded backoff; alert if max attempts exceeded
+- `04-invoices-wallet-contracts.md#T-04.4.02.01`: Build `AutomaticRefundObligation` trigger: on contract → Rejected/Cancelled, if paid amount > 0, create refund with state Requested, destination = wallet
+- `04-invoices-wallet-contracts.md#T-04.4.02.02`: Worker: pick up auto-refund obligations, execute `WalletService.credit()`, mark refund Completed
+- `04-invoices-wallet-contracts.md#T-04.4.02.03`: Block contract/order financial closure until linked refund obligations are Completed
+- `04-invoices-wallet-contracts.md#T-04.4.02.04`: Finance queue: show failed auto-refund obligations with Retry action
+- `04-invoices-wallet-contracts.md#T-04.4.02.05`: Notify customer on completion and on failure (with support path)
 
 ## v0.2.0: Complete customer journeys
 
@@ -468,17 +469,17 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.2.04.01` | done | Earlier acceptance_verified | Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance |
 | `04-invoices-wallet-contracts.md#T-04.2.04.02` | partial | Earlier partial | Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up |
 | `04-invoices-wallet-contracts.md#T-04.2.04.03` | done | Earlier acceptance_verified | Finance alert: push notification + dashboard warning for unresolved chargeback |
-| `04-invoices-wallet-contracts.md#T-04.3.01.01` | verify | Earlier acceptance_verified | Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps |
-| `04-invoices-wallet-contracts.md#T-04.3.01.02` | verify | Earlier acceptance_verified | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state |
-| `04-invoices-wallet-contracts.md#T-04.3.01.03` | verify | Earlier acceptance_verified | Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed |
-| `04-invoices-wallet-contracts.md#T-04.3.01.04` | verify | Earlier acceptance_verified | Staff rejection API: mark receipt Rejected, store reason, notify customer |
-| `04-invoices-wallet-contracts.md#T-04.3.01.05` | verify | Earlier acceptance_verified | Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation |
-| `04-invoices-wallet-contracts.md#T-04.3.01.06` | verify | Recorded batch work | Overpayment wallet credit: separate `WalletService.credit()` with its own idempotency key |
-| `04-invoices-wallet-contracts.md#T-04.3.01.07` | verify | Recorded batch work | Update invoice state tracking: as bank receipts accumulate, invoice state flows Unpaid → Partially funded → Paid |
-| `04-invoices-wallet-contracts.md#T-04.3.02.01` | verify | Recorded batch work | Invoice detail API: aggregate invoice, lines, payments, bank receipts, refunds, adjustments |
-| `04-invoices-wallet-contracts.md#T-04.3.02.02` | verify | Recorded batch work | Wallet transaction list API: cursor-based pagination, filters (type, state, date range), sort |
-| `04-invoices-wallet-contracts.md#T-04.3.02.03` | verify | Recorded batch work | React components: InvoiceDetail, WalletTransactionList, BankReceiptList with full states |
-| `04-invoices-wallet-contracts.md#T-04.3.02.04` | verify | Recorded batch work | Localized state labels and descriptive text for every state |
+| `04-invoices-wallet-contracts.md#T-04.3.01.01` | done | Earlier acceptance_verified | Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps |
+| `04-invoices-wallet-contracts.md#T-04.3.01.02` | done | Earlier acceptance_verified | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state |
+| `04-invoices-wallet-contracts.md#T-04.3.01.03` | done | Earlier acceptance_verified | Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed |
+| `04-invoices-wallet-contracts.md#T-04.3.01.04` | done | Earlier acceptance_verified | Staff rejection API: mark receipt Rejected, store reason, notify customer |
+| `04-invoices-wallet-contracts.md#T-04.3.01.05` | done | Earlier acceptance_verified | Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation |
+| `04-invoices-wallet-contracts.md#T-04.3.01.06` | done | Recorded batch work | Overpayment wallet credit: separate `WalletService.credit()` with its own idempotency key |
+| `04-invoices-wallet-contracts.md#T-04.3.01.07` | done | Recorded batch work | Update invoice state tracking: as bank receipts accumulate, invoice state flows Unpaid → Partially funded → Paid |
+| `04-invoices-wallet-contracts.md#T-04.3.02.01` | done | Recorded batch work | Invoice detail API: aggregate invoice, lines, payments, bank receipts, refunds, adjustments |
+| `04-invoices-wallet-contracts.md#T-04.3.02.02` | done | Recorded batch work | Wallet transaction list API: cursor-based pagination, filters (type, state, date range), sort |
+| `04-invoices-wallet-contracts.md#T-04.3.02.03` | done | Recorded batch work | React components: InvoiceDetail, WalletTransactionList, BankReceiptList with full states |
+| `04-invoices-wallet-contracts.md#T-04.3.02.04` | done | Recorded batch work | Localized state labels and descriptive text for every state |
 | `04-invoices-wallet-contracts.md#T-04.4.01.01` | verify | Recorded batch work | Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet |
 | `04-invoices-wallet-contracts.md#T-04.4.01.02` | verify | Recorded batch work | Implement `RefundStateMachine` with all 9 transitions, guards, and audit events |
 | `04-invoices-wallet-contracts.md#T-04.4.01.03` | verify | Recorded batch work | DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))` |
