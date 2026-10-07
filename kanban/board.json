@@ -265,6 +265,15 @@
         "03-core-business.md#T-03.08.01.07",
         "03-core-business.md#T-03.08.01.08"
       ]
+    },
+    "price_adjustment_routes": {
+      "status": "pending",
+      "requested_at": "2026-10-07",
+      "scope": "Retain tested publish-at-contract/price-adjustments andseparate price-adjustments/:id/finalize routes vs named /staff/electricity/contracts/:id/adjust-price. Disclosure,authority,step-up andfinancial safeguards mandatory.",
+      "affected_task_keys": [
+        "03-core-business.md#T-03.08.02.01"
+      ],
+      "asked_once": "Current goal chat via request_user_input_async; do not repeat."
     }
   },
   "specification_sources": {
@@ -66184,7 +66193,7 @@
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Await consent decision. Verify negative/decrease adjustment credit in the following staff price batch; current increase API rejects decreases/nonpositive invoices."
+        "Await consent decision. Staff price credit-note creation is verified, but required wallet/bank settlement remains unfinished in the price-credit settlement batch; increase API rejects decreases/nonpositive invoices."
       ],
       "owner": null,
       "depends_on": [],
@@ -66853,21 +66862,182 @@
         "story": "04-invoices-wallet-contracts.md#spec-9b5a87f789cd"
       },
       "requirement": "| T-04.6.02.01 | Build staff price adjustment UI: input percentage, effective date, reason, contractual basis | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-23-electricity-price-adjustments"
+          "2026-09-23-electricity-price-adjustments",
+          "release-0.3-electricity-price-adjustments"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -66881,19 +67051,181 @@
         "story": "04-invoices-wallet-contracts.md#spec-9b5a87f789cd"
       },
       "requirement": "| T-04.6.02.02 | Validate: effective date not in past; never changes past/paid periods | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-electricity-price-adjustments"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -66907,19 +67239,181 @@
         "story": "04-invoices-wallet-contracts.md#spec-9b5a87f789cd"
       },
       "requirement": "| T-04.6.02.03 | Calculate adjustment: for each future period affected, compute net increase, create adjustment invoice | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-electricity-price-adjustments"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -66933,19 +67427,181 @@
         "story": "04-invoices-wallet-contracts.md#spec-9b5a87f789cd"
       },
       "requirement": "| T-04.6.02.04 | Step-up auth + audit: mandatory for this action | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-electricity-price-adjustments"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -66959,19 +67615,181 @@
         "story": "04-invoices-wallet-contracts.md#spec-9b5a87f789cd"
       },
       "requirement": "| T-04.6.02.05 | Notify customer: full disclosure of old/new price, calculation, effective date before invoice is issued | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-electricity-price-adjustments"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -66985,19 +67803,183 @@
         "story": "04-invoices-wallet-contracts.md#spec-9b5a87f789cd"
       },
       "requirement": "| T-04.6.02.06 | Decrease → refund/credit workflow (refund or wallet credit) | M |\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Implement a reviewed wallet-credit or bank-refund settlement linked to the decrease credit note and original paid source. Current credit-note creation is verified, but RefundService rejects refunding a credit invoice. Preserve financial permission/step-up/dual approval,source budgets,profile ownership,idempotency,replay,rollback andimmutable original lines."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-electricity-price-adjustments"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -124413,7 +125395,7 @@
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Await consent decision; negative/decrease credit needs following price batch verification. Reasoned staff exception to mandatory full-payment activation is not implemented and remains unfinished."
+        "Await consent decision; negative/decrease credit-note creation is verified, but wallet/bank settlement remains unfinished in the price-credit settlement batch. Reasoned staff exception to mandatory full-payment activation is not implemented and remains unfinished."
       ],
       "owner": null,
       "depends_on": [],
@@ -124862,11 +125844,11 @@
         "story": "03-core-business.md#spec-5ca2051d5bf8"
       },
       "requirement": "| **T-03.08.02.01** | 🔧 `POST /staff/electricity/contracts/:id/adjust-price` — staff sets new price, effective date, reason. Backend:\n  - Validates effective date applies to eligible future periods only\n  - Never rewrites past or paid invoice lines\n  - Calculates net increase over affected future quantities\n  - Creates linked adjustment invoice (increase) or refund/credit (decrease) | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.3.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Await existing price_adjustment_routes owner decision for two-stage routes. Complete the required decrease settlement path; current linked charge and credit-note calculations are verified."
       ],
       "owner": null,
       "depends_on": [],
@@ -124876,9 +125858,172 @@
         "batches": [
           "2026-09-23-electricity-price-adjustments",
           "2026-10-05-electricity-price-adjustment-forms",
-          "2026-10-06-electricity-price-history"
+          "2026-10-06-electricity-price-history",
+          "release-0.3-electricity-price-adjustments"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -124892,19 +126037,181 @@
         "story": "03-core-business.md#spec-5ca2051d5bf8"
       },
       "requirement": "| **T-03.08.02.02** | ⚠️ Customer acceptance is not required, but contractual basis, reason, calculation, old/new price, and effective date must be visible to customer before the adjustment is finalized. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-electricity-price-adjustments"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -124918,19 +126225,181 @@
         "story": "03-core-business.md#spec-5ca2051d5bf8"
       },
       "requirement": "| **T-03.08.02.03** | 🔐 Requires explicit permission, step-up authentication, auditing, and mandatory customer notification. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-electricity-price-adjustments"
+        ],
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -124944,21 +126413,182 @@
         "story": "03-core-business.md#spec-5ca2051d5bf8"
       },
       "requirement": "| **T-03.08.02.04** | ⚠️ Initially no configurable percentage cap on staff price adjustments. Non-payment follows normal invoice Overdue workflow — does not silently change historical service. | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-05-electricity-price-adjustment-forms"
+          "2026-10-05-electricity-price-adjustment-forms",
+          "release-0.3-electricity-price-adjustments"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-staff-electricity-price-scoped-verification",
+          "reviewed_base_commit": "b5f4df3103dfefb6b027954ed0215fe9b58fcca1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-review-notifications.ts",
+              "sha256": "eac70b29267fd34a56351b5a6d5cfdf14213e3e6d81a8b45413f9d63dda0c2c7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "b375c191be728cc3f56284b7d1a5a517d2a9d391160e0f2b60b99d3defdaa7fa"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.ts",
+              "sha256": "ed9f2e78a54df1a9c0f1f497a6665efe4cdd83ec80dbe38c06e778ec1c19a80d"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+              "sha256": "59e9edeb3e386f8e83dbe818fc1117a9300b738a1b40ca515348098a9efe6512"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+              "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+              "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+            },
+            {
+              "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
+              "sha256": "96417f015131402b877db090e472d01b0e23afed50bb449bfcf8eb7ed77b1762"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "e4e3378d67bc9a5345e78a6cd4e69a8306ca432ee80ec570e8a48b37ab2b48be"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+              "sha256": "62e46c2e4b7112d3221750df01d830caaa7b19e21f81f4ad4b6bb31bfcc4e392"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
+              "sha256": "eecec5cf3612e0b52314e885cc76a049f4689b27e8e194b647f040b8a0e81134"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-adjustment-row.ts",
+              "sha256": "06226a2c4a71f5ae0cf557b4a0d5745fb861d72680e965d6f3093d78f1a7a77a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+              "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.test.ts",
+              "sha256": "84248eb0f5919b1136ad353ef2ef3bf9e5c3622ea7ba90b1f62a60444fc9b851"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-price-form.ts",
+              "sha256": "7e9e898f71975393b802b2922d3ea3a019ff3ee1b8f28024f6e5cfe1861955ed"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-adjustments.test.tsx",
+              "sha256": "bb0e8e3ccf57c8c4189ee433d7cd914e56a36c8b3048482aab5c6bbc7796bf51"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-forms.test.tsx",
+              "sha256": "756797bf3321f2dd4f1c85b13a236d45b84e60d7833aaacdf45f1147f3f5e65a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-price-history.test.tsx",
+              "sha256": "146bdf5f9b3683d4d3252ac23ee1356e84f2ae122a71d9d15d7e368c3661647a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+              "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-adjustment-fixtures.ts",
+              "sha256": "2c7429a1dd07e63a71106b8acf0190fe9112b6cba75df85bc4992de819df0242"
+            },
+            {
+              "path": "apps/web/src/test/electricity-price-staff-fixtures.ts",
+              "sha256": "9f1e6d6df6dce6087198e74ce9bd9979090a6e67ed0ec9881c13deeeb87037c5"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+              "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+              "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+            },
+            {
+              "path": "apps/worker/src/invoices/overdue-scanner.ts",
+              "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+            },
+            {
+              "path": "packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql",
+              "sha256": "a47b09cf5d3eb7bc38c27438a5c6803af03fdded37e16dfeca5992922d0b873c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
+              "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
+            },
+            {
+              "path": "packages/db/src/schema/electricity-price-adjustments.ts",
+              "sha256": "a1eb92b471889f3bc553b326b506a5784532cf73abd456d625f632551954bcea"
+            },
+            {
+              "path": "packages/i18n/src/electricity-price-forms.test.ts",
+              "sha256": "5e82ae017ba68c44b19c192a661d87bcde4a243726bdc1eee0df007fc561aca0"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.test.ts",
+              "sha256": "7d82ee7547a3e10d3dc809e0b2e63d505fe9dc966c254c5f6cd6cc95c9ae4a55"
+            },
+            {
+              "path": "packages/shared/src/finance/overdue.ts",
+              "sha256": "e24cc831b6291c3c67abfa267704ff648ed13b87706e346a0696b1868c5e2a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+            "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+            "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments",
+          "limitations": [
+            "Decrease settlement and named-route disposition remain unfinished. No whole-milestone/staging/Telegram/production acceptance."
+          ]
+        }
       }
     },
     {
@@ -171256,6 +172886,28 @@
         "One-per-contract/concurrent/idempotent authority, future-only dates, immutable original snapshots, price quote/signature evidence, linked positive invoice, fully-paid/date-gated exact-once activation, expiry finance queue and audit/notices verified. No claim of generated PDF or optional payment exception."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-quantity-increase"
+    },
+    "release-0.3-electricity-price-adjustments": {
+      "title": "Verify staff electricity price disclosure and adjustments",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.6.02.01",
+        "04-invoices-wallet-contracts.md#T-04.6.02.02",
+        "04-invoices-wallet-contracts.md#T-04.6.02.03",
+        "04-invoices-wallet-contracts.md#T-04.6.02.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.05",
+        "04-invoices-wallet-contracts.md#T-04.6.02.06",
+        "03-core-business.md#T-03.08.02.01",
+        "03-core-business.md#T-03.08.02.02",
+        "03-core-business.md#T-03.08.02.03",
+        "03-core-business.md#T-03.08.02.04"
+      ],
+      "summary": "Eight tasks accepted from existing implementation; decrease settlement androute disposition preserve two partial tasks. No code changes needed for accepted criteria.",
+      "validation": [
+        "105 distinct scoped passing cases:28 API calculation/input,59 UI,16 bilingual desktop/mobile production-build browser,2 complete PostgreSQL/compiled HTTP charge-credit cases retained by exact3889source/6119output proof. Failed/stopped/skipped andseven unrelated quantity HTTP cases excluded.",
+        "No production/test/config change; reuse final current build/types/budget evidence. Price admin route482.24KB/500KB passes. Existing Wallet300.10KB/300KB fails and remains a launch blocker.",
+        "Full old/new future disclosure,reason,basis,step-up/current authority,immutable snapshots,linked adjustments,confirmed hashes/replay andexact price audit verified. Existing normal Overdue caller acceptance source-bound andretained; no new claim of wallet/bank settlement for price credit."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-adjustments"
     }
   },
   "historical_improvements": [
@@ -171295,20 +172947,12 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-electricity-price-adjustments",
+    "id": "release-0.3-electricity-price-credit-settlement",
     "release": "0.3.0",
-    "goal": "Inspect existing staff price proposal/approval/dual-control and future allocation adjustment. Verify complete charge and negative credit/refund paths, immutable past/Paid/Cancelled allocations, explicit adjustment mode, audit/notification/rollback/idempotency and quantity-increase affected callers. Build only demonstrated gaps; earlier owner/release/performance criteria remain open.",
+    "goal": "Build demonstrated missing decrease settlement from a finalized price credit note to wallet credit or bank refund using the original paid source. Inspect existing refund ledger/dual approval/source-budget andinvoice accounting first; require durable linkage,explicit current staff authority,confirmed review,idempotency/concurrency,rollback and immutable historical allocations. Do not bypass financial policy or equate a credit note with completed cash settlement. Price-route andearlier owner/release/performance gates remain open.",
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.6.02.01",
-      "04-invoices-wallet-contracts.md#T-04.6.02.02",
-      "04-invoices-wallet-contracts.md#T-04.6.02.03",
-      "04-invoices-wallet-contracts.md#T-04.6.02.04",
-      "04-invoices-wallet-contracts.md#T-04.6.02.05",
       "04-invoices-wallet-contracts.md#T-04.6.02.06",
-      "03-core-business.md#T-03.08.02.01",
-      "03-core-business.md#T-03.08.02.02",
-      "03-core-business.md#T-03.08.02.03",
-      "03-core-business.md#T-03.08.02.04"
+      "03-core-business.md#T-03.08.02.01"
     ]
   },
   "launch_forecast": {

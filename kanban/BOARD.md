@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 363 | Accepted with unchanged source bindings. |
-| verify | 930 | Existing work may be complete; inspect evidence before building. |
-| partial | 66 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 371 | Accepted with unchanged source bindings. |
+| verify | 920 | Existing work may be complete; inspect evidence before building. |
+| partial | 68 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,18 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing staff price proposal/approval/dual-control and future allocation adjustment. Verify complete charge and negative credit/refund paths, immutable past/Paid/Cancelled allocations, explicit adjustment mode, audit/notification/rollback/idempotency and quantity-increase affected callers. Build only demonstrated gaps; earlier owner/release/performance criteria remain open.
+Build demonstrated missing decrease settlement from a finalized price credit note to wallet credit or bank refund using the original paid source. Inspect existing refund ledger/dual approval/source-budget andinvoice accounting first; require durable linkage,explicit current staff authority,confirmed review,idempotency/concurrency,rollback and immutable historical allocations. Do not bypass financial policy or equate a credit note with completed cash settlement. Price-route andearlier owner/release/performance gates remain open.
 
-- `04-invoices-wallet-contracts.md#T-04.6.02.01`: Build staff price adjustment UI: input percentage, effective date, reason, contractual basis
-- `04-invoices-wallet-contracts.md#T-04.6.02.02`: Validate: effective date not in past; never changes past/paid periods
-- `04-invoices-wallet-contracts.md#T-04.6.02.03`: Calculate adjustment: for each future period affected, compute net increase, create adjustment invoice
-- `04-invoices-wallet-contracts.md#T-04.6.02.04`: Step-up auth + audit: mandatory for this action
-- `04-invoices-wallet-contracts.md#T-04.6.02.05`: Notify customer: full disclosure of old/new price, calculation, effective date before invoice is issued
 - `04-invoices-wallet-contracts.md#T-04.6.02.06`: Decrease → refund/credit workflow (refund or wallet credit)
 - `03-core-business.md#T-03.08.02.01`: `POST /staff/electricity/contracts/:id/adjust-price` — staff sets new price, effective date, reason. Backend:
-- `03-core-business.md#T-03.08.02.02`: Customer acceptance is not required, but contractual basis, reason, calculation, old/new price, and effective date must be visible to customer before the adjustment is finalized.
-- `03-core-business.md#T-03.08.02.03`: Requires explicit permission, step-up authentication, auditing, and mandatory customer notification.
-- `03-core-business.md#T-03.08.02.04`: Initially no configurable percentage cap on staff price adjustments. Non-payment follows normal invoice Overdue workflow — does not silently change historical service.
 
 ## v0.2.0: Complete customer journeys
 
@@ -373,10 +365,10 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.08.01.06` | partial | Recorded batch work | Staff API: `POST /staff/electricity/contracts/:id/reject-increase` — with reason. |
 | `03-core-business.md#T-03.08.01.07` | partial | Recorded batch work | After approval: |
 | `03-core-business.md#T-03.08.01.08` | partial | Recorded batch work | Record: old/new quantities, percentage, effective period, requester, reviewer, decision, signature, financial adjustment, timestamps. Each step notifies customer. |
-| `03-core-business.md#T-03.08.02.01` | verify | Recorded batch work | `POST /staff/electricity/contracts/:id/adjust-price` — staff sets new price, effective date, reason. Backend: |
-| `03-core-business.md#T-03.08.02.02` | verify | Inventory needed | Customer acceptance is not required, but contractual basis, reason, calculation, old/new price, and effective date must be visible to customer before the adjustment is finalized. |
-| `03-core-business.md#T-03.08.02.03` | verify | Inventory needed | Requires explicit permission, step-up authentication, auditing, and mandatory customer notification. |
-| `03-core-business.md#T-03.08.02.04` | verify | Recorded batch work | Initially no configurable percentage cap on staff price adjustments. Non-payment follows normal invoice Overdue workflow — does not silently change historical service. |
+| `03-core-business.md#T-03.08.02.01` | partial | Recorded batch work | `POST /staff/electricity/contracts/:id/adjust-price` — staff sets new price, effective date, reason. Backend: |
+| `03-core-business.md#T-03.08.02.02` | done | Recorded batch work | Customer acceptance is not required, but contractual basis, reason, calculation, old/new price, and effective date must be visible to customer before the adjustment is finalized. |
+| `03-core-business.md#T-03.08.02.03` | done | Recorded batch work | Requires explicit permission, step-up authentication, auditing, and mandatory customer notification. |
+| `03-core-business.md#T-03.08.02.04` | done | Recorded batch work | Initially no configurable percentage cap on staff price adjustments. Non-payment follows normal invoice Overdue workflow — does not silently change historical service. |
 | `03-core-business.md#T-03.09.05.01` | verify | Recorded batch work | Customer cannot cancel directly. Button/link to "Request cancellation" with reason field. |
 | `03-core-business.md#T-03.09.05.02` | verify | Inventory needed | Staff cancellation review UI: queue of cancellation requests with order details, customer reason |
 | `03-core-business.md#T-03.09.05.03` | verify | Inventory needed | Staff API: `POST /staff/saving/orders/:id/approve-cancellation` — sets order, contract, invoice states consistently. Determines refund amount (full/partial) and destination (wallet/external). |
@@ -515,12 +507,12 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.6.01.04` | partial | Recorded batch work | After signature: calculate incremental amount (price snapshot), create adjustment invoice or refund |
 | `04-invoices-wallet-contracts.md#T-04.6.01.05` | done | Recorded batch work | Enforce effective period: increase applies only to future periods |
 | `04-invoices-wallet-contracts.md#T-04.6.01.06` | partial | Recorded batch work | Admin config for max increase percentage per service type |
-| `04-invoices-wallet-contracts.md#T-04.6.02.01` | verify | Recorded batch work | Build staff price adjustment UI: input percentage, effective date, reason, contractual basis |
-| `04-invoices-wallet-contracts.md#T-04.6.02.02` | verify | Inventory needed | Validate: effective date not in past; never changes past/paid periods |
-| `04-invoices-wallet-contracts.md#T-04.6.02.03` | verify | Inventory needed | Calculate adjustment: for each future period affected, compute net increase, create adjustment invoice |
-| `04-invoices-wallet-contracts.md#T-04.6.02.04` | verify | Inventory needed | Step-up auth + audit: mandatory for this action |
-| `04-invoices-wallet-contracts.md#T-04.6.02.05` | verify | Inventory needed | Notify customer: full disclosure of old/new price, calculation, effective date before invoice is issued |
-| `04-invoices-wallet-contracts.md#T-04.6.02.06` | verify | Inventory needed | Decrease → refund/credit workflow (refund or wallet credit) |
+| `04-invoices-wallet-contracts.md#T-04.6.02.01` | done | Recorded batch work | Build staff price adjustment UI: input percentage, effective date, reason, contractual basis |
+| `04-invoices-wallet-contracts.md#T-04.6.02.02` | done | Recorded batch work | Validate: effective date not in past; never changes past/paid periods |
+| `04-invoices-wallet-contracts.md#T-04.6.02.03` | done | Recorded batch work | Calculate adjustment: for each future period affected, compute net increase, create adjustment invoice |
+| `04-invoices-wallet-contracts.md#T-04.6.02.04` | done | Recorded batch work | Step-up auth + audit: mandatory for this action |
+| `04-invoices-wallet-contracts.md#T-04.6.02.05` | done | Recorded batch work | Notify customer: full disclosure of old/new price, calculation, effective date before invoice is issued |
+| `04-invoices-wallet-contracts.md#T-04.6.02.06` | partial | Recorded batch work | Decrease → refund/credit workflow (refund or wallet credit) |
 | `05-notifications-documents-ai.md#T-05.11.01` | done | Recorded batch work | Document state machine |
 
 ## v0.4.0: Documents, notifications and AI
