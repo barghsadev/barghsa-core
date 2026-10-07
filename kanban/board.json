@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+  "source_commit": "d2b156e34cadd39e1e154c5eb9952adc897066e0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -264865,10 +264865,17 @@
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers",
       "release": false,
       "push": {
-        "status": "failed",
+        "status": "verified",
         "commit": "3f93a2109759cb212d2b43e47dcb02ae33e17188",
-        "observed_remote_main": "c787e119d9a19b448f276e109f45043f07e363d9",
-        "reason": "GitHub Internal Server Error on two SSH and one HTTPS push; no force push. Preserve reviewed local commit and reconcile exact remote after service recovery.",
+        "verified_remote_main": "d2b156e34cadd39e1e154c5eb9952adc897066e0",
+        "included_via_fast_forward": true,
+        "previous_failure": {
+          "status": "failed",
+          "commit": "3f93a2109759cb212d2b43e47dcb02ae33e17188",
+          "observed_remote_main": "c787e119d9a19b448f276e109f45043f07e363d9",
+          "reason": "GitHub Internal Server Error on two SSH and one HTTPS push; no force push. Preserve reviewed local commit and reconcile exact remote after service recovery.",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers/push-receipt.json"
+        },
         "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers/push-receipt.json"
       }
     },
@@ -264888,10 +264895,17 @@
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers",
       "release": false,
       "push": {
-        "status": "failed",
+        "status": "verified",
         "commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
-        "observed_remote_main": "c787e119d9a19b448f276e109f45043f07e363d9",
-        "reason": "GitHub Internal Server Error on reviewed normal main push. Preserve local commits; no force push. Reconcile exact remote after recovery.",
+        "verified_remote_main": "d2b156e34cadd39e1e154c5eb9952adc897066e0",
+        "included_via_fast_forward": true,
+        "previous_failure": {
+          "status": "failed",
+          "commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+          "observed_remote_main": "c787e119d9a19b448f276e109f45043f07e363d9",
+          "reason": "GitHub Internal Server Error on reviewed normal main push. Preserve local commits; no force push. Reconcile exact remote after recovery.",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers/push-receipt.json"
+        },
         "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers/push-receipt.json"
       }
     },
@@ -264911,7 +264925,15 @@
         "Task/release remain partial: document/profile/auth/payment/wallet/system and other producer audits, active in-app templates, providers/unknown receipts, owner/operations/launch acceptance unfinished. No version/release/staging/Telegram/production deployment. Reviewed earlier commits remain local because GitHub refused normal main pushes; actual remote/receipts are separate and must be reconciled."
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
-      "release": false
+      "release": false,
+      "push": {
+        "status": "verified",
+        "commit": "d2b156e34cadd39e1e154c5eb9952adc897066e0",
+        "verified_remote_main": "d2b156e34cadd39e1e154c5eb9952adc897066e0",
+        "included_via_fast_forward": true,
+        "previous_failure": null,
+        "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers/push-receipt.json"
+      }
     }
   },
   "historical_improvements": [
