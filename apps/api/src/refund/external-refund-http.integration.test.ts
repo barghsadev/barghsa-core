@@ -593,3 +593,96 @@ it('returns only public bank-reference metadata before a failed external decisio
   const mixed = await post(path, { ...body, expectedReviewHash: 'bad' });
   expect(await mixed.json()).toMatchObject({ error: { code: 'VALIDATION:PARSE:ZOD_ERROR' } });
 });
+
+async function refundRowsSnapshot() {
+  const tables = (
+    await http.pool.query(
+      "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename"
+    )
+  ).rows;
+  const result: Record<string, unknown> = {};
+  for (const { tablename } of tables) {
+    if (tablename === 'sessions') continue; // HTTP activity updates idle deadlines independently of the refund transaction.
+    result[tablename] = (
+      await http.pool.query(
+        `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${tablename}" t`
+      )
+    ).rows[0].rows;
+  }
+  return result;
+}
+it.each(
+  [
+    ['in_app_notifications', "NEW.delivery_key LIKE 'refund:%:Completed'"],
+    ['notification_outbox', "NEW.event_key='payment.refund_completed'"],
+    ['notification_job', "NEW.channel='in_app'"],
+    ['notification_job', "NEW.channel='email'"],
+    ['notification_delivery_log', "NEW.channel='in_app'"],
+  ].flatMap(([table, guard]) => ['raise', 'silent'].map((mode) => ({ table, guard, mode })))
+)(
+  'rolls external reconciliation back after $mode in $table ($guard), then delivers one original receipt',
+  async ({ table, guard, mode }) => {
+    const f = await invoice(),
+      refund = await request(requestBody(f.id)),
+      bankReference = randomUUID();
+    expect((await decide(refund.id, 'approve')).status).toBe(200);
+    expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(200);
+    const before = await refundRowsSnapshot();
+    await http.pool.query(
+      `CREATE FUNCTION fail_external_delivery() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${guard} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'delivery unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_external_delivery BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_external_delivery()`
+    );
+    try {
+      expect(
+        (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
+      ).toBe(500);
+      expect(await refundRowsSnapshot()).toEqual(before);
+    } finally {
+      await http.pool.query(
+        `DROP TRIGGER fail_external_delivery ON ${table}; DROP FUNCTION fail_external_delivery()`
+      );
+    }
+    expect(
+      (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
+    ).toBe(200);
+    const inbox = (
+      await http.pool.query('SELECT * FROM in_app_notifications WHERE delivery_key=$1', [
+        `refund:${refund.id}:Completed`,
+      ])
+    ).rows[0];
+    const outbox = (
+      await http.pool.query(
+        "SELECT * FROM notification_outbox WHERE event_key='payment.refund_completed' AND payload->>'refundId'=$1",
+        [refund.id]
+      )
+    ).rows;
+    expect(outbox).toHaveLength(1);
+    expect(outbox[0]).toMatchObject({
+      user_id: f.owner,
+      profile_id: f.profile,
+      channels: ['in_app', 'email'],
+      payload: { inboxId: inbox.id, amount: '100', destination: 'external_bank' },
+    });
+    expect(JSON.stringify(outbox[0].payload)).not.toContain(bankReference);
+    expect(JSON.stringify(outbox[0].payload)).not.toContain('Customer requested');
+    expect(
+      (
+        await http.pool.query(
+          'SELECT channel,status,provider_ref FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+          [outbox[0].id]
+        )
+      ).rows
+    ).toEqual([
+      { channel: 'email', status: 'queued', provider_ref: null },
+      { channel: 'in_app', status: 'done', provider_ref: inbox.id },
+    ]);
+    await http.pool.query(
+      'UPDATE in_app_notifications SET is_read=true,read_at=now() WHERE id=$1',
+      [inbox.id]
+    );
+    const retained = await refundRowsSnapshot();
+    expect(
+      (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
+    ).toBe(200);
+    expect(await refundRowsSnapshot()).toEqual(retained);
+  }
+);

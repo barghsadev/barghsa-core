@@ -478,3 +478,191 @@ it('rolls back a ledger write when the database refuses a balance mutation', asy
   ).toEqual([]);
   await db.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [row.profile_id]);
 });
+
+async function completedManifest(row: RefundProcessingRow) {
+  const inbox = (
+    await db.pool.query('SELECT * FROM in_app_notifications WHERE delivery_key=$1', [
+      `refund:${row.id}:Completed`,
+    ])
+  ).rows[0];
+  expect(inbox).toMatchObject({
+    recipient_user_id: finance,
+    profile_id: row.profile_id,
+    type: 'general',
+  });
+  const outbox = (
+    await db.pool.query(
+      "SELECT * FROM notification_outbox WHERE event_key='payment.refund_completed' AND payload->>'refundId'=$1",
+      [row.id]
+    )
+  ).rows;
+  expect(outbox).toHaveLength(1);
+  expect(outbox[0]).toMatchObject({
+    user_id: finance,
+    profile_id: row.profile_id,
+    channels: ['in_app', 'email'],
+    status: 'queued',
+    payload: {
+      inboxId: inbox.id,
+      refundId: row.id,
+      invoiceId: row.invoice_id,
+      amount: row.amount,
+      destination: row.destination,
+      link_route: `/invoices/${row.invoice_id}`,
+    },
+  });
+  expect(JSON.stringify(outbox[0].payload)).not.toContain('authorized_by');
+  expect(
+    (
+      await db.pool.query(
+        'SELECT channel,status,priority,attempts,provider_ref FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+        [outbox[0].id]
+      )
+    ).rows
+  ).toEqual([
+    { channel: 'email', status: 'queued', priority: 'urgent', attempts: 0, provider_ref: null },
+    { channel: 'in_app', status: 'done', priority: 'urgent', attempts: 1, provider_ref: inbox.id },
+  ]);
+  expect(
+    (
+      await db.pool.query(
+        'SELECT channel,status,attempt_number,provider_ref FROM notification_delivery_log WHERE notification_id=$1',
+        [outbox[0].id]
+      )
+    ).rows
+  ).toEqual([
+    { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: inbox.id },
+  ]);
+  return { inbox, outbox: outbox[0] };
+}
+
+it('attaches one canonical urgent completion delivery to the original exact bigint receipt and preserves read history on replay', async () => {
+  const row = await refund('9007199254740993', '9007199254740993');
+  expect(await runWalletRefund(db.pool, row.id)).toBe('completed');
+  const first = await completedManifest(row);
+  await db.pool.query('UPDATE in_app_notifications SET is_read=true,read_at=now() WHERE id=$1', [
+    first.inbox.id,
+  ]);
+  const before = (
+    await db.pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [first.inbox.id])
+  ).rows;
+  await transaction((c) =>
+    notifyRefundOutcome(c, { ...row, destination: 'wallet', state: 'Completed' })
+  );
+  expect(
+    (await db.pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [first.inbox.id])).rows
+  ).toEqual(before);
+  expect((await completedManifest(row)).outbox).toEqual(first.outbox);
+  expect(await runWalletRefund(db.pool, row.id)).toBe('deferred');
+});
+
+it('does not resend an existing historical receipt, attach a rejection or attach a failed warning', async () => {
+  const row = await refund();
+  await db.pool.query(
+    "INSERT INTO in_app_notifications(recipient_user_id,profile_id,operating_context,type,title_i18n_key,body_i18n_key,delivery_key,localized_content,is_read,read_at) VALUES($1,$2,'customer','general','notifications.legacy.title','notifications.legacy.body',$3,$4,true,now())",
+    [
+      finance,
+      row.profile_id,
+      `refund:${row.id}:Completed`,
+      { fa: { title: 'سابق', body: 'سابق' }, en: { title: 'Historical', body: 'Historical' } },
+    ]
+  );
+  const before = (
+    await db.pool.query('SELECT * FROM in_app_notifications WHERE profile_id=$1', [row.profile_id])
+  ).rows;
+  await transaction(async (c) => {
+    await notifyRefundOutcome(c, { ...row, destination: 'wallet', state: 'Completed' });
+    await notifyRefundOutcome(c, { ...row, destination: 'wallet', state: 'Rejected' });
+    await notifyRefundOutcome(c, { ...row, destination: 'wallet', state: 'Failed' });
+    expect(
+      (await c.query('SELECT * FROM notification_outbox WHERE profile_id=$1', [row.profile_id]))
+        .rows
+    ).toEqual([]);
+  });
+  expect(
+    (
+      await db.pool.query('SELECT * FROM in_app_notifications WHERE profile_id=$1', [
+        row.profile_id,
+      ])
+    ).rows
+  ).toEqual(before);
+});
+
+const completionSinks = [
+  ['in_app_notifications', "NEW.delivery_key LIKE 'refund:%:Completed'"],
+  ['notification_outbox', "NEW.event_key='payment.refund_completed'"],
+  ['notification_job', "NEW.channel='in_app'"],
+  ['notification_job', "NEW.channel='email'"],
+  ['notification_delivery_log', "NEW.channel='in_app'"],
+] as const;
+it.each(
+  completionSinks.flatMap(([table, guard]) =>
+    ['raise', 'silent'].map((mode) => ({ table, guard, mode }))
+  )
+)(
+  'rolls back completion money and all new delivery legs after $mode in $table ($guard), then recovers once',
+  async ({ table, guard, mode }) => {
+    const row = await refund();
+    await db.pool.query(
+      `CREATE FUNCTION fail_completion_delivery() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${guard} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'completion delivery unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_completion_delivery BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_completion_delivery()`
+    );
+    try {
+      expect(await runWalletRefund(db.pool, row.id)).toBe('failed');
+      expect(
+        (
+          await db.pool.query('SELECT state,refunded_amount FROM invoices WHERE id=$1', [
+            row.invoice_id,
+          ])
+        ).rows
+      ).toEqual([{ state: 'Paid', refunded_amount: '0' }]);
+      expect(
+        (await db.pool.query('SELECT * FROM wallet_transactions WHERE ref_id=$1', [row.id])).rows
+      ).toEqual([]);
+      expect(
+        (await db.pool.query('SELECT * FROM wallets WHERE profile_id=$1', [row.profile_id])).rows
+      ).toEqual([]);
+      expect((await db.pool.query('SELECT state FROM refunds WHERE id=$1', [row.id])).rows).toEqual(
+        [{ state: 'Failed' }]
+      );
+      expect(await job(row.id)).toMatchObject({
+        attempts: 1,
+        last_error_code: 'posting_failed',
+        completed_at: null,
+        exhausted_at: null,
+      });
+      expect(
+        (
+          await db.pool.query('SELECT * FROM in_app_notifications WHERE delivery_key=$1', [
+            `refund:${row.id}:Completed`,
+          ])
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await db.pool.query('SELECT * FROM notification_outbox WHERE profile_id=$1', [
+            row.profile_id,
+          ])
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await db.pool.query(
+            "SELECT * FROM audit_log WHERE event='refund.completed' AND metadata::jsonb->>'refundId'=$1",
+            [row.id]
+          )
+        ).rows
+      ).toEqual([]);
+    } finally {
+      await db.pool.query(
+        `DROP TRIGGER fail_completion_delivery ON ${table}; DROP FUNCTION fail_completion_delivery()`
+      );
+    }
+    await due(row.id);
+    expect(await runWalletRefund(db.pool, row.id)).toBe('completed');
+    await completedManifest(row);
+    expect(await runWalletRefund(db.pool, row.id)).toBe('deferred');
+    expect(
+      (await db.pool.query('SELECT amount FROM wallet_transactions WHERE ref_id=$1', [row.id])).rows
+    ).toEqual([{ amount: '40' }]);
+  }
+);

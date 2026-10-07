@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "fc3efd5ec035ded5652122cf8cd4c9535275ee13",
+  "source_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -23913,7 +23913,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "2adc700f574d47fd0700bb5449dd4ca13cacca176bb7dbb1f3d8ea1442d62ac1"
+              "sha256": "2f1473557ee7bea411042711fe04ba1c9a3042faadb1fa190782a3c59f4fa027"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -23953,7 +23953,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "cd21e92b32c9ecd434ab03cc08996dd37403852fae84f2a48d2a1091ccb164e5"
+              "sha256": "8072ab6b6a3c09014489e35e553cb852778c3b55ae88ba04b01f5934449bc947"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -24045,7 +24045,8 @@
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
             "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
             "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -24336,6 +24337,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -42970,7 +42987,7 @@
       "launch_required": true,
       "remaining": [
         "Inspect any remaining unaccepted generic/system order status paths. Native electricity review/revision/raw/protected legacy and SQL activation/completion/formal contract-cancellation now have scoped canonical owner delivery; accepted four-service submissions,customer cancellation,consultation/solar/saving/request families remain retained. Preserve true transitions versus internal/same-state information,Rejected versus formal Cancelled,and all financial/review/authority/session/audit/idempotency/ledger boundaries.",
-        "Inspect remaining unaccepted Appendix producers,including auth.otp_sent,refund outcomes,wallet credit/low balance,system/awaiting-staff and other native/generic/internal/review writers. Future positive fully settled Paid and actual finite past-due/outstanding Overdue invoice transitions now have atomic canonical private inbox/jobs/history/email via migration0267,current invoice/profile/owner/deadline worker binding and original delivery lock through provider work. Existing scheduled reminder/offset/stop-state/receipt behavior and all money/actor/source/critical assertions retained. Online/bank-receipt topup outcomes retained. OTP representation clarification remains pending:appendix code-bearing in-app/email/SMS versus existing encrypted auth_delivery_outbox,bound destination and registration before account;proposed code-free account inbox not yet accepted/built. Other accepted event families retained. Preserve financial/privacy/ownership/credentials/provider retry/rollback/storage boundaries;do not infer exhaustive coverage.",
+        "Inspect remaining unaccepted Appendix producers including auth.otp_sent,internal payment.refund_failed,wallet credit/low balance,system/awaiting-staff and other native/generic/internal/review writers. Newly committed refund Completed native receipts now have canonical durable private immediate inbox/job/history/email attachment with current actual refund/owner/header/receipt binding;original Failed/Rejected customer notices and exhausted finance alert retained,canonical internal failure delivery not yet accepted. Old receipts are never backfilled/resend;original money/dual obligations/provenance/retry/closure/authority/locks/assertions remain intact. Invoice Paid/Overdue and online/bank topup plus earlier accepted families retained. OTP representation clarification pending:encrypted auth_delivery_outbox,bound destination,registration before account and proposed code-free account inbox remain unreconciled;do not copy codes or silently approve. Other Appendix/native templates/live launch remains explicit;no exhaustive producer acceptance.",
         "Verify and complete configured active in-app template rendering for native synchronous business notices with template tasks; current direct/native lifecycle writers preserve localized default content but do not establish custom active-template behavior. Preserve mandatory immediate delivery and immutable past read/content/history. Live template imports,provider callbacks/idempotency,alerts and production operations remain separate gates."
       ],
       "owner": null,
@@ -43057,7 +43074,8 @@
           "release-0.4-login-device-notification-producer",
           "release-0.4-bank-receipt-notification-producers",
           "release-0.4-online-topup-notification-producers",
-          "release-0.4-invoice-outcome-notification-producers"
+          "release-0.4-invoice-outcome-notification-producers",
+          "release-0.4-refund-outcome-notification-producers"
         ],
         "current_acceptance": {
           "kind": "partial-native-business-producer-acceptance",
@@ -43353,7 +43371,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "2adc700f574d47fd0700bb5449dd4ca13cacca176bb7dbb1f3d8ea1442d62ac1"
+              "sha256": "2f1473557ee7bea411042711fe04ba1c9a3042faadb1fa190782a3c59f4fa027"
             },
             {
               "path": "apps/api/src/orders/order-actor-lock.integration.test.ts",
@@ -43361,7 +43379,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "cd21e92b32c9ecd434ab03cc08996dd37403852fae84f2a48d2a1091ccb164e5"
+              "sha256": "8072ab6b6a3c09014489e35e553cb852778c3b55ae88ba04b01f5934449bc947"
             },
             {
               "path": "apps/api/src/test/order-status-notification-proof.ts",
@@ -43718,6 +43736,18 @@
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
               "sha256": "cc77233e3f31350b8a218060061e66aa4ff15f379ca2cd488b7e3a88d63eb00b"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
+            },
+            {
+              "path": "packages/db/src/refund-notifications.ts",
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
+            },
+            {
+              "path": "packages/db/src/refund-processing.migrated.test.ts",
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             }
           ],
           "checks": [
@@ -43945,10 +43975,17 @@
             "Sixteen raised/silent SQL notification-sink failure cases prove full original invoice/payment/reminder public-row rollback and recovery without timeout/floor/assertion changes. Upgrade verifies every old row/function/OID/journal prefix unchanged,no backfill/replay replacement and trigger-only transactional removal/restoration. Bigint9007199254740993,positive Paid receipt,partial payment600 remaining,finite/past deadlines,zero-value exclusion,mandatory profile FK/NOT NULL,current future owner and past read/history replay proven; original reminder stop-state cancellation retained.",
             "New worker invoice-header tests bind current private invoice/profile and deny foreign/archived/inbox/deadline/paid/cancelled demands. Two active-template controlled emails deliver once with immutable provider receipts. Controlled concurrent payment waits behind original invoice SHARE lock during overdue provider work,then is suppressed after payment. All original200 recipient-profile and85 preferences assertions retained exactly. New paid receipts are separately asserted done-inapp/queued-email and scheduled later only in reminder-only test fixtures; no receipt assertion relaxed or business queue falsely marked delivered.",
             "Diagnoses preserved:synthetic internal invoice omitted profile triggered random-default FK;explicit NULL confirmed original mandatory NOT NULL. Final test now proves database rejection instead of unsupported construction,with active trigger precondition. Filtered rerun includes upgrade prerequisite; final whole file passes. Eight-scenario grouped sink test exceeded five-second budget under parallel load and overlapped cleanup;split into16 cases with unchanged default timeout/rollback assertions. New enum fixture cast corrected inconsistent SQL parameter types. New Paid queue caused three reminder-only poll counts;independently asserted and parked in fixture. Format repaired after edits. Final DB/worker builds/types,related tests,changed-file lint/format and two-production-worker-file/five-rule Semgrep zero findings pass. SQL certified with real PG,not JavaScript SAST.",
-            "One coherent scoped review/proof preserves whole original loader/policy AST after isolated invoice eligibility/overdue dispatch,including unchanged scheduled reminder selectors/offset/dirty/toggle/locks/window/receipt/finally. Seven sources/migration/tests,ten baseline compiled changes plus new DB test outputs only;all other tracked/config/dependency/source/production outputs exact. Prior web build and87 original budgets source/output bound;no repeated UI/browser/coverage claim. Refund outcomes,wallet credit/low balance,system/awaiting-staff/other Appendix,active native templates and live provider/storage/scanner/owner/operations/launch partial. OTP secure-delivery clarification pending,not silently accepted/built. No version/release/staging/Telegram/production;owner decisions and unfinished consultation patch retained."
+            "One coherent scoped review/proof preserves whole original loader/policy AST after isolated invoice eligibility/overdue dispatch,including unchanged scheduled reminder selectors/offset/dirty/toggle/locks/window/receipt/finally. Seven sources/migration/tests,ten baseline compiled changes plus new DB test outputs only;all other tracked/config/dependency/source/production outputs exact. Prior web build and87 original budgets source/output bound;no repeated UI/browser/coverage claim. Refund outcomes,wallet credit/low balance,system/awaiting-staff/other Appendix,active native templates and live provider/storage/scanner/owner/operations/launch partial. OTP secure-delivery clarification pending,not silently accepted/built. No version/release/staging/Telegram/production;owner decisions and unfinished consultation patch retained.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound.",
+            "Completed refund delivery attaches only to a newly inserted original private native receipt. Shared notifyRefundOutcome keeps original UUID,refund:<id>:Completed key,general/customer header,fa/en bigint content,authorized cancellation detail/order route and read history. Adds payment.refund_completed outbox,urgent done in-app job with original provider_ref,queued urgent email and delivered inbox history in caller transaction with strict storage results. Existing historical/read receipts have no backfill or resend;Failed/Rejected native customer warnings and exhausted finance alert unchanged.",
+            "External payload is restricted to inboxId/refundId/invoiceId/decimal amount/destination and private invoice route. Private cancellation reasons,decision actor/time,bank references,provider secrets and original localized internal detail are excluded. Worker requires actual completed refund with exact private profile/invoice/amount/destination,current owner/nonarchived profile,original customer/general refund-key inbox and persisted native job/history. Original verified-contact/preference/suppression/disabled/activation/receipt-first transport and retry boundaries retained.",
+            "319 distinct current passing cases:70 DB refund/transaction/schema/contract-cancellation cases,78 actual API external/wallet refund and contract-cancellation cases,and171 final worker recipient/runner/in-app/loader cases. Initial worker3-file run failed13 new fixtures;not green. Two attempted initial nonexistent filenames are not claimed;two unaffected passing initial files are excluded from distinct total. Final4 existing worker files pass. No zero-test/skipped/repeated count accepted.",
+            "Twenty raised/silent sink faults across original inbox,outbox,in-app/email jobs and history. Ten native wallet attempts rollback completion credits,balances,invoices,audit and new delivery in original savepoint,retain proper Failed reservation/attempt/retry/customer notice and recover once. Ten external reconciliation faults prove all public-table rows except independent HTTP session idle updates unchanged,then recover and replay original read/history exactly. Bigint9007199254740993 retained. Historical completion,rejection/failure nonattachment and original processor replay proven.",
+            "Final coherent scoped review/proof retains69 original DB,106 API and221 worker assertions and whole previous test prefixes. Entire native refund notification AST exact outside INSERT RETURNING and completion attachment. Whole loader AST exact outside completion guard. Original financial/caller SQL,immutable credits,dual obligations,provenance,threshold/permission/step-up/CSRF/closure/locks/concurrency/attempt limits/audit/deadline logic,migrations and all other sources byte exact. Five source/test paths andten compiled output changes only. DB/worker builds andDB/API/worker types,changed lint/format,2-production-file5-rule Semgrep zero findings pass. API runtime is unchanged;current test source consumed directly byVitest,no stale emitted test acceptance. Final formatting-only DB test change retains AST;finalbuild refreshed outputs. Web/shared/i18n output and87 original budgets remain source-bound;no new UI/browser/coverage/liveprovider claim.",
+            "Diagnoses preserved externally:initial DB build rejected4 new calls with broad destination:string;new test calls explicitly use wallet without changing original types/helper. Initial worker fixture violated original completed-external bank reference/Confirmed constraint;newfixture now supplies evidence,constraint unchanged. Copied duplicate invoice cases andtwo redundant owner cases removed before final scope,never counted. Initial lint unusedevent findings came from redundant copies,final lint passes. No assertion,floor,budget,timeout or production safeguard weakened. Internal refund failure canonical delivery,other Appendix/wallet/OTP owner disposition/native templates/live provider/storage/scanner/policy/operations/launch remain unfinished. No release/version/staging/Telegram/production;approved owner dispositions and unfinished consultation patch retained."
           ],
           "limitations": [],
-          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
           "scope_qualification": "Local real worker/HTTP/PostgreSQL plus fixture production-browser evidence. Live provider delivery,operational alerts andowner design dispositions remain separate.",
           "accepted_producer_events": [
             "contract.awaiting_acceptance",
@@ -44546,6 +44583,26 @@
             "packages/db/drizzle/production/0267_invoice_outcome_notifications.sql#notify_invoice_outcome_customer",
             "apps/worker/src/notifications/channel-availability-loader.ts#loadNotificationRecipient",
             "apps/worker/src/invoices/reminder-delivery-policy.ts#withReminderDeliveryPolicy"
+          ],
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
+          },
+          "accepted_completed_refund_paths": [
+            "packages/db/src/refund-notifications.ts#notifyRefundOutcome",
+            "apps/worker/src/notifications/channel-availability-loader.ts#loadNotificationRecipient"
           ]
         }
       }
@@ -47605,7 +47662,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "2adc700f574d47fd0700bb5449dd4ca13cacca176bb7dbb1f3d8ea1442d62ac1"
+              "sha256": "2f1473557ee7bea411042711fe04ba1c9a3042faadb1fa190782a3c59f4fa027"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -47633,7 +47690,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "cd21e92b32c9ecd434ab03cc08996dd37403852fae84f2a48d2a1091ccb164e5"
+              "sha256": "8072ab6b6a3c09014489e35e553cb852778c3b55ae88ba04b01f5934449bc947"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -47718,7 +47775,8 @@
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
             "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
             "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "order_submission_scoped_renewal": {
             "base_commit": "566f886b1b56e91bad7d8f5c4861296b3c5c8e74",
@@ -48004,6 +48062,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -86286,7 +86360,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -86398,11 +86472,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -86554,7 +86628,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -86706,6 +86781,22 @@
               "format",
               "sast"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -86778,7 +86869,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -86890,11 +86981,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -87046,7 +87137,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -87197,6 +87289,22 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -87744,7 +87852,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -87856,11 +87964,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -88012,7 +88120,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -88164,6 +88273,22 @@
               "format",
               "sast"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -88237,7 +88362,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -88349,11 +88474,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -88505,7 +88630,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -88657,6 +88783,22 @@
               "format",
               "sast"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -88727,7 +88869,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -88839,11 +88981,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -88995,7 +89137,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -89147,6 +89290,22 @@
               "format",
               "sast"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -89217,7 +89376,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -89329,11 +89488,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -89485,7 +89644,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -89636,6 +89796,22 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -89942,7 +90118,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -90054,11 +90230,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -90210,7 +90386,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -90362,6 +90539,22 @@
               "format",
               "sast"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -90431,7 +90624,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -90543,11 +90736,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -90699,7 +90892,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -90851,6 +91045,22 @@
               "format",
               "sast"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -90920,7 +91130,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -91032,11 +91242,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -91188,7 +91398,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
           "limitations": [
@@ -91339,6 +91550,22 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -107316,7 +107543,7 @@
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -107398,7 +107625,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-price-credit-settlement",
           "limitations": [
@@ -107497,6 +107725,22 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -188063,11 +188307,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -188233,7 +188477,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
           "limitations": [
@@ -188421,6 +188666,22 @@
               "wallet-callers",
               "worker-fixtures-final"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -188577,11 +188838,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -188747,7 +189008,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
           "limitations": [
@@ -188935,6 +189197,22 @@
               "wallet-callers",
               "worker-fixtures-final"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -189091,11 +189369,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -189261,7 +189539,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
           "limitations": [
@@ -189449,6 +189728,22 @@
               "wallet-callers",
               "worker-fixtures-final"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -189605,11 +189900,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -189775,7 +190070,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
           "limitations": [
@@ -189963,6 +190259,22 @@
               "wallet-callers",
               "worker-fixtures-final"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -190119,11 +190431,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -190289,7 +190601,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
           "limitations": [
@@ -190477,6 +190790,22 @@
               "wallet-callers",
               "worker-fixtures-final"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -190633,11 +190962,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -190803,7 +191132,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
           "limitations": [
@@ -190991,6 +191321,22 @@
               "wallet-callers",
               "worker-fixtures-final"
             ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
+            ]
           }
         }
       }
@@ -191147,11 +191493,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -191317,7 +191663,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
           "limitations": [
@@ -191504,6 +191851,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -207906,7 +208269,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -208130,11 +208493,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -208295,7 +208658,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -208465,6 +208829,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -208564,7 +208944,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -208788,11 +209168,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -208953,7 +209333,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -209123,6 +209504,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -209222,7 +209619,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -209446,11 +209843,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -209611,7 +210008,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -209781,6 +210179,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -209880,7 +210294,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -210104,11 +210518,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -210269,7 +210683,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -210439,6 +210854,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -210539,7 +210970,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -210763,11 +211194,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -210928,7 +211359,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -211098,6 +211530,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         }
@@ -267390,7 +267838,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -267494,11 +267942,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -268527,7 +268975,8 @@
             "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
             "Scoped bank-receipt wallet notice renewal: /Users/majid/.local/state/barghsa-manual-batches/bank-receipt-notification-producers.291 distinct current passing cases. Whole original receipt money/ledger/invoice/overpayment/approval/actor/session/audit/clock class exact outside private notice helper; original outbox INSERT and parameters exact. Missing sinks/private conflicts fail closed; current private owner,bilingual immediate inbox/history,email queues,financial rollback/recovery/read replay proven. All old assertions and unchanged web/87 budgets retained. Other payment/Appendix/OTP disposition/templates/live launch excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -268944,6 +269393,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         },
@@ -270530,7 +270995,7 @@
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
-              "sha256": "ab205a7c1d213a136ad61ca1fd1c839a0b18de9c50ab972d7f9e8ed3cfd3930b"
+              "sha256": "1cf04a6b8c3d5074ec7f00ebf3984dd0b740cd6ddcbcd31eeca7aaafded05ba8"
             },
             {
               "path": "apps/api/src/refund/external-refund.controller.ts",
@@ -270698,11 +271163,11 @@
             },
             {
               "path": "packages/db/src/refund-notifications.ts",
-              "sha256": "b827df312fcff2e2c92321c8c0856c8eade2b041ebd9c449704de2a3e532a041"
+              "sha256": "0e7eb7151417b9b8588fc82a574c279695f9eb75d1cf52076f1ebdb8de89e165"
             },
             {
               "path": "packages/db/src/refund-processing.migrated.test.ts",
-              "sha256": "bd375e071da4a894d2e6091810d9e6514a55d193f0798045505bfb0e951459d2"
+              "sha256": "291091b59490e6c9da10a496eb3afba9b56e9fcc3401f071382d737d247f04dd"
             },
             {
               "path": "packages/db/src/refund-processing.ts",
@@ -271791,7 +272256,8 @@
             "Scoped refresh-compromise delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refresh-compromise-notification-producers.320 distinct current passing cases. Original complete refresh/session/credential/locks/family mutations and native warning identity/content/rejection retained; exact source AST and assertions proof. New-warning mandatory manifest,email/current private receipt proof; historical/replayed warnings unchanged,no backfill/resend. Unchanged web and87 budgets source/output bound. Other auth/Appendix/templates/live launch excluded.",
             "Scoped unrecognized-device login delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/login-device-notification-producer.249 distinct current passing cases. Whole original AuthService credential/OTP/session/trust/clock/authority/namespace effects and every other member exact after readonly prior-device lookup and conditional post-authentication private notice. Required sink/audit rollback,concurrency/recognized no-op/replay/expiry,private recipient/provider receipts proven; old writers/helpers/dictionary values unchanged. Web rebuild and87 original budgets pass. OTP disposition/other Appendix/templates/live launch excluded.",
             "Scoped online topup migration/delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/online-topup-notification-producers.259 distinct current passing cases. Original whole journal prefix and every production API/worker/db/shared source/JavaScript unchanged; one future-outcome trigger only. Full old public rows/functions retained on upgrade/replay. Mandatory sink rollback,current private owner/bigint/idempotency/read-state delivery and exactly retained processing callback retry claim accepted. All prior assertions/web/87 budgets retained; invoice/refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
-            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded."
+            "Scoped invoice Paid/Overdue delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers.543 distinct current passing cases. All prior API/db/shared financial/provider sources and JavaScript exact; old journal prefix/public rows/functions retained. Future guarded Paid/Overdue canonical private delivery and current invoice/owner/deadline/remaining/provider-lock acceptance;whole old scheduled reminder policy AST exact after scoped dispatch. Critical assertions,Money/refund/actor/clock/locks/scheduled receipts retained. All failures diagnosed/repaired/rerun without timeout or assertion weakening;unchanged UI/87 budgets source/output bound. Refund/wallet/OTP disposition/other Appendix/templates/live launch excluded.",
+            "Scoped completed-refund native receipt delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers.319 distinct passing cases;original financial/caller/SQL sources byte exact,original native receipt and prior loader AST exact after completion-only attachment/guard. All previous assertions and test prefixes retained. Twenty raised/silent rollback/recovery checks preserve original financial savepoint/full external transaction boundaries. Historical/read/no-resend,private payload and current actual refund/owner/history binding tested. Internal failed/rejected event classification and other unfinished Appendix/live launch excluded. See scope-proof.json and finalcheck receipts;original UI/87 budgets source/output bound."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -272269,6 +272735,22 @@
               "api-related",
               "wallet-callers",
               "worker-fixtures-final"
+            ]
+          },
+          "completed_refund_notice_scoped_renewal": {
+            "base_commit": "8a5300c10a7bf58a83a796e6509abe6568eaf835",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "db-build-format-final",
+              "worker-build-final",
+              "types",
+              "final-lint",
+              "final-format",
+              "sast",
+              "db-related",
+              "api-related",
+              "worker-final"
             ]
           }
         },
@@ -284176,6 +284658,23 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/invoice-outcome-notification-producers",
       "release": false
+    },
+    "release-0.4-refund-outcome-notification-producers": {
+      "title": "Private completed-refund durable delivery",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02"
+      ],
+      "summary": "New Completed refund receipts retain original private native inbox/read/content/key while atomically attaching canonical done inbox/history and urgent email. Actual refund/current owner/receipt guards preserve privacy;original financial/retry/closure/authority engine unchanged. Failed/Rejected customer warnings retained;internal failure and other Appendix/live launch partial.",
+      "validation": [
+        "Completed refund delivery attaches only to a newly inserted original private native receipt. Shared notifyRefundOutcome keeps original UUID,refund:<id>:Completed key,general/customer header,fa/en bigint content,authorized cancellation detail/order route and read history. Adds payment.refund_completed outbox,urgent done in-app job with original provider_ref,queued urgent email and delivered inbox history in caller transaction with strict storage results. Existing historical/read receipts have no backfill or resend;Failed/Rejected native customer warnings and exhausted finance alert unchanged.",
+        "External payload is restricted to inboxId/refundId/invoiceId/decimal amount/destination and private invoice route. Private cancellation reasons,decision actor/time,bank references,provider secrets and original localized internal detail are excluded. Worker requires actual completed refund with exact private profile/invoice/amount/destination,current owner/nonarchived profile,original customer/general refund-key inbox and persisted native job/history. Original verified-contact/preference/suppression/disabled/activation/receipt-first transport and retry boundaries retained.",
+        "319 distinct current passing cases:70 DB refund/transaction/schema/contract-cancellation cases,78 actual API external/wallet refund and contract-cancellation cases,and171 final worker recipient/runner/in-app/loader cases. Initial worker3-file run failed13 new fixtures;not green. Two attempted initial nonexistent filenames are not claimed;two unaffected passing initial files are excluded from distinct total. Final4 existing worker files pass. No zero-test/skipped/repeated count accepted.",
+        "Twenty raised/silent sink faults across original inbox,outbox,in-app/email jobs and history. Ten native wallet attempts rollback completion credits,balances,invoices,audit and new delivery in original savepoint,retain proper Failed reservation/attempt/retry/customer notice and recover once. Ten external reconciliation faults prove all public-table rows except independent HTTP session idle updates unchanged,then recover and replay original read/history exactly. Bigint9007199254740993 retained. Historical completion,rejection/failure nonattachment and original processor replay proven.",
+        "Final coherent scoped review/proof retains69 original DB,106 API and221 worker assertions and whole previous test prefixes. Entire native refund notification AST exact outside INSERT RETURNING and completion attachment. Whole loader AST exact outside completion guard. Original financial/caller SQL,immutable credits,dual obligations,provenance,threshold/permission/step-up/CSRF/closure/locks/concurrency/attempt limits/audit/deadline logic,migrations and all other sources byte exact. Five source/test paths andten compiled output changes only. DB/worker builds andDB/API/worker types,changed lint/format,2-production-file5-rule Semgrep zero findings pass. API runtime is unchanged;current test source consumed directly byVitest,no stale emitted test acceptance. Final formatting-only DB test change retains AST;finalbuild refreshed outputs. Web/shared/i18n output and87 original budgets remain source-bound;no new UI/browser/coverage/liveprovider claim.",
+        "Diagnoses preserved externally:initial DB build rejected4 new calls with broad destination:string;new test calls explicitly use wallet without changing original types/helper. Initial worker fixture violated original completed-external bank reference/Confirmed constraint;newfixture now supplies evidence,constraint unchanged. Copied duplicate invoice cases andtwo redundant owner cases removed before final scope,never counted. Initial lint unusedevent findings came from redundant copies,final lint passes. No assertion,floor,budget,timeout or production safeguard weakened. Internal refund failure canonical delivery,other Appendix/wallet/OTP owner disposition/native templates/live provider/storage/scanner/policy/operations/launch remain unfinished. No release/version/staging/Telegram/production;approved owner dispositions and unfinished consultation patch retained."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/refund-outcome-notification-producers",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -284215,9 +284714,9 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-refund-outcome-notification-producers",
+    "id": "release-0.4-internal-refund-failure-notification-producers",
     "release": "0.4.0",
-    "goal": "Inspect existing notifyRefundOutcome shared native Completed/Rejected/Failed private warnings and worker/API callers before rebuilding. Reuse original immutable credits,dual obligations/payment provenance,original customer/staff context,order/invoice links,read/history keys and financial/retry/closure/authorization/audit boundaries. Complete only demonstrated canonical durable/private immediate delivery gaps;do not resend historical receipts or expose unpublished cancellation/finance/private reasons. Reconcile pending OTP owner reply if available;keep wallet credit/low-balance/system/awaiting-staff/other Appendix/native templates/live provider/owner/operations/launch explicit.",
+    "goal": "Inspect existing alertExhausted finance/admin native refund alerts,current finance authority,original retry limits and private Failed customer notice before rebuilding. Determine canonical payment.refund_failed internal immediate delivery gap and preserve original retry/immutable money/dual obligations/history/no-resend/private recipient rules. Keep Rejected customer disposition and pending secure OTP owner question separate;continue only demonstrated Appendix gaps. Native templates/live provider/policy/storage/operations/all-four launch remain unfinished.",
     "task_keys": [
       "05-notifications-documents-ai.md#T-05.01.02"
     ]

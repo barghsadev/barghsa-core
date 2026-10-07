@@ -86,10 +86,10 @@ export async function notifyRefundOutcome(
     },
   };
   const id = uuidv7();
-  await client.query(
+  const inserted = await client.query<{ id: string }>(
     `INSERT INTO in_app_notifications(id,recipient_user_id,profile_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,delivery_key)
      VALUES ($1,$2,$3,'customer','general','notifications.legacy.title','notifications.legacy.body',$4::jsonb,$5,$6)
-     ON CONFLICT (delivery_key) DO NOTHING`,
+     ON CONFLICT (delivery_key) DO NOTHING RETURNING id`,
     [
       id,
       owner.user_id,
@@ -103,4 +103,55 @@ export async function notifyRefundOutcome(
       `refund:${refund.id}:${refund.state}`,
     ]
   );
+  // Attach delivery only to a new completion. Historical inbox receipts remain immutable.
+  if (refund.state === 'Completed' && inserted.rows.length === 1) {
+    if (inserted.rows[0]!.id !== id) throw new Error('Refund inbox receipt was not stored');
+    const outboxId = uuidv7();
+    const payload = {
+      inboxId: id,
+      refundId: refund.id,
+      invoiceId: refund.invoice_id,
+      amount: refund.amount,
+      destination: refund.destination,
+      link_route: `/invoices/${refund.invoice_id}`,
+    };
+    const outbox = await client.query(
+      `INSERT INTO notification_outbox(id,user_id,profile_id,event_key,payload,channels,status,idempotency_key,max_attempts)
+       VALUES($1,$2,$3,'payment.refund_completed',$4,ARRAY['in_app','email'],'queued',$5,5) RETURNING id`,
+      [
+        outboxId,
+        owner.user_id,
+        refund.profile_id,
+        payload,
+        `payment.refund_completed:${id}:${owner.user_id}`,
+      ]
+    );
+    if (outbox.rows.length !== 1 || outbox.rows[0].id !== outboxId)
+      throw new Error('Refund completion outbox was not stored');
+    const inboxJob = await client.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done','urgent',5,1,$2,$3)`,
+      [outboxId, id, payload]
+    );
+    if (inboxJob.rowCount !== 1) throw new Error('Refund inbox job was not stored');
+    const emailJob = await client.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts)
+       VALUES($1,'email','queued','urgent',5,0)`,
+      [outboxId]
+    );
+    if (emailJob.rowCount !== 1) throw new Error('Refund email job was not stored');
+    const history = await client.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [outboxId, id]
+    );
+    if (history.rowCount !== 1) throw new Error('Refund inbox history was not stored');
+  } else if (refund.state === 'Completed') {
+    const retained = await client.query(
+      `SELECT id FROM in_app_notifications WHERE delivery_key=$1 AND profile_id=$2
+         AND operating_context='customer' AND type='general'`,
+      [`refund:${refund.id}:Completed`, refund.profile_id]
+    );
+    if (retained.rows.length !== 1) throw new Error('Refund inbox receipt was not stored');
+  }
 }

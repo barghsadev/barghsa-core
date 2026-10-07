@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing notifyRefundOutcome shared native Completed/Rejected/Failed private warnings and worker/API callers before rebuilding. Reuse original immutable credits,dual obligations/payment provenance,original customer/staff context,order/invoice links,read/history keys and financial/retry/closure/authorization/audit boundaries. Complete only demonstrated canonical durable/private immediate delivery gaps;do not resend historical receipts or expose unpublished cancellation/finance/private reasons. Reconcile pending OTP owner reply if available;keep wallet credit/low-balance/system/awaiting-staff/other Appendix/native templates/live provider/owner/operations/launch explicit.
+Inspect existing alertExhausted finance/admin native refund alerts,current finance authority,original retry limits and private Failed customer notice before rebuilding. Determine canonical payment.refund_failed internal immediate delivery gap and preserve original retry/immutable money/dual obligations/history/no-resend/private recipient rules. Keep Rejected customer disposition and pending secure OTP owner question separate;continue only demonstrated Appendix gaps. Native templates/live provider/policy/storage/operations/all-four launch remain unfinished.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

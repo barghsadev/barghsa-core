@@ -1,4 +1,5 @@
 import { withReminderDeliveryPolicy } from '../invoices/reminder-delivery-policy.js';
+import { notifyRefundOutcome } from '@barghsa/db/refund-processing';
 import type { OutboxRow } from './outbox-reader.js';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
@@ -2264,3 +2265,176 @@ it('holds an overdue invoice through provider work so concurrent payment cannot 
     await paid;
   }
 });
+
+async function refundCompletionFixture() {
+  const owner = randomUUID(),
+    next = randomUUID(),
+    profile = randomUUID(),
+    invoice = randomUUID();
+  for (const user of [owner, next])
+    await pool.query(
+      "INSERT INTO users(user_id,username,password_hash,notification_preferences) VALUES($1,$2,'fixture','IN_APP,EMAIL,SMS')",
+      [user, `${user}@example.test`]
+    );
+  await pool.query('INSERT INTO profiles(id,user_id) VALUES($1,$2)', [profile, owner]);
+  await pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount) VALUES($1,$2,'Paid',100,100)",
+    [invoice, profile]
+  );
+  const row = (
+    await pool.query(
+      "INSERT INTO refunds(invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES($1,$2,40,'external_bank',$3,$4) RETURNING *",
+      [invoice, profile, owner, randomUUID()]
+    )
+  ).rows[0];
+  await pool.query("UPDATE refunds SET state='Processing' WHERE id=$1", [row.id]);
+  await pool.query(
+    "UPDATE refunds SET state='Completed',bank_reference=$2,reconciliation_status='Confirmed' WHERE id=$1",
+    [row.id, randomUUID()]
+  );
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await notifyRefundOutcome(client, { ...row, state: 'Completed' });
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+  const outbox = (
+    await pool.query(
+      "SELECT id,payload FROM notification_outbox WHERE event_key='payment.refund_completed' AND payload->>'refundId'=$1",
+      [row.id]
+    )
+  ).rows[0];
+  return { owner, next, profile, invoice, refund: row.id, id: outbox.id, payload: outbox.payload };
+}
+it.each([
+  'owner',
+  'archived',
+  'refund',
+  'invoice',
+  'amount',
+  'destination',
+  'inbox',
+  'context',
+  'receipt',
+  'history',
+] as const)('denies native refund completion email after %s changes', async (change) => {
+  const f = await refundCompletionFixture(),
+    before = await loadNotificationRecipient(pool, f.id);
+  expect(before).toMatchObject({ userId: f.owner, profileId: f.profile });
+  if (change === 'owner')
+    await pool.query('UPDATE profiles SET user_id=$2 WHERE id=$1', [f.profile, f.next]);
+  else if (change === 'archived')
+    await pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
+  else if (['refund', 'invoice', 'amount', 'destination'].includes(change)) {
+    const field = {
+      refund: 'refundId',
+      invoice: 'invoiceId',
+      amount: 'amount',
+      destination: 'destination',
+    }[change as 'refund' | 'invoice' | 'amount' | 'destination'];
+    await pool.query(
+      'UPDATE notification_outbox SET payload=jsonb_set(payload,ARRAY[$2::text],to_jsonb($3::text)) WHERE id=$1',
+      [f.id, field, change === 'amount' ? '41' : change === 'destination' ? 'wallet' : randomUUID()]
+    );
+  } else if (change === 'inbox')
+    await pool.query('DELETE FROM in_app_notifications WHERE id=$1', [f.payload.inboxId]);
+  else if (change === 'context')
+    await pool.query("UPDATE in_app_notifications SET operating_context='account' WHERE id=$1", [
+      f.payload.inboxId,
+    ]);
+  else if (change === 'receipt')
+    await pool.query(
+      "UPDATE notification_job SET provider_ref=$2 WHERE outbox_id=$1 AND channel='in_app'",
+      [f.id, randomUUID()]
+    );
+  else
+    await pool.query(
+      "DELETE FROM notification_delivery_log WHERE notification_id=$1 AND channel='in_app'",
+      [f.id]
+    );
+  expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+  await expect(
+    assertNotificationRecipientAvailable(pool, f.id, 'payment.refund_completed', 'email', before!)
+  ).rejects.toThrow('recipient changed');
+});
+it.each(['payment.refund_completed'])(
+  'delivers a private %s email once with its active template and durable receipt',
+  async (event) => {
+    const f = await refundCompletionFixture();
+    await pool.query("UPDATE users SET locale='en' WHERE user_id=$1", [f.owner]);
+    await pool.query("UPDATE email_provider_configs SET status='disabled' WHERE status='active'");
+    await pool.query(
+      `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+ VALUES('resend','Controlled session test','active',$1,$2,'passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
+      [JSON.stringify({ api_key: 'local-test-only', from_email: 'sender@example.test' }), f.owner]
+    );
+    await pool.query(
+      `INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
+ VALUES($1,'email','en','Refund completed','<p>{{amount}} IRR refund {{refundId}}</p>','["amount","refundId"]','active',true,$2) ON CONFLICT DO NOTHING`,
+      [event, f.owner]
+    );
+    const request = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ id: 'session-email-receipt' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+    const transport = new EmailNotificationTransport(pool, request);
+    const payload = {
+      outboxId: f.id,
+      profileId: f.profile,
+      recipientId: f.owner,
+      channel: 'email' as const,
+      eventKey: event,
+      payload: f.payload,
+      idempotencyKey: `session-provider:${f.id}`,
+    };
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'session-email-receipt',
+    });
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'session-email-receipt',
+    });
+    expect(request).toHaveBeenCalledTimes(1);
+    const sent = JSON.parse(String(request.mock.calls[0]![1]!.body));
+    expect(sent).toMatchObject({
+      to: [`${f.owner}@example.test`],
+      subject: 'Refund completed',
+      html: expect.stringContaining(`<p>40 IRR refund ${f.refund}</p>`),
+    });
+    expect(JSON.stringify(sent)).not.toContain('Private finance decision');
+    expect(
+      (
+        await pool.query(
+          'SELECT status,provider_ref FROM notification_send_receipts WHERE outbox_id=$1',
+          [f.id]
+        )
+      ).rows
+    ).toEqual([{ status: 'accepted', provider_ref: 'session-email-receipt' }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT delivery_payload FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+          [f.id]
+        )
+      ).rows[0].delivery_payload
+    ).toMatchObject({
+      profileId: f.profile,
+      userId: f.owner,
+      templateVersion: 1,
+      destination: `${f.owner}@example.test`,
+      idempotencyKey: payload.idempotencyKey,
+    });
+    await expect(
+      transport.send({ ...payload, profileId: null, eventKey: 'wallet.topup_completed' })
+    ).rejects.toThrow('durable queued recipient');
+    expect(request).toHaveBeenCalledTimes(1);
+  }
+);

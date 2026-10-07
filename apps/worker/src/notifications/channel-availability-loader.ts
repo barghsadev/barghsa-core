@@ -159,6 +159,19 @@ export async function loadNotificationRecipient(
           AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
           AND n.operating_context='customer' AND n.type=o.event_key
       )))
+      AND (o.event_key<>'payment.refund_completed' OR (p.user_id=u.user_id AND NOT p.archived AND EXISTS (
+        SELECT 1 FROM refunds r JOIN in_app_notifications n ON n.id::text=o.payload->>'inboxId'
+        WHERE r.id::text=o.payload->>'refundId' AND r.invoice_id::text=o.payload->>'invoiceId'
+          AND r.profile_id=o.profile_id AND r.state='Completed'
+          AND r.amount::text=o.payload->>'amount' AND r.destination::text=o.payload->>'destination'
+          AND n.profile_id=o.profile_id AND n.recipient_user_id=u.user_id
+          AND n.operating_context='customer' AND n.type='general'
+          AND n.delivery_key='refund:'||r.id::text||':Completed'
+          AND EXISTS(SELECT 1 FROM notification_job j WHERE j.outbox_id=o.id AND j.channel='in_app'
+            AND j.status='done' AND j.provider_ref=n.id::text)
+          AND EXISTS(SELECT 1 FROM notification_delivery_log h WHERE h.notification_id=o.id
+            AND h.channel='in_app' AND h.status='delivered' AND h.attempt_number=1 AND h.provider_ref=n.id::text)
+      )))
       AND (o.event_key<>'auth.password_changed' OR (o.profile_id IS NULL AND EXISTS (
         SELECT 1 FROM audit_log a JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
         WHERE a.id::text=o.payload->>'auditId' AND a.user_id=u.user_id AND a.event IN ('password_changed','password_reset')
