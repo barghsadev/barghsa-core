@@ -554,3 +554,73 @@ for (const locale of ['fa', 'en'] as const) {
     });
   }
 }
+
+it('rolls back every verification sink including silent inbox,outbox and each external channel suppression', async () => {
+  const id = await profile('PENDING_VERIFICATION');
+  const tables = (
+    await db.pool.query(
+      "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename"
+    )
+  ).rows;
+  const snapshot = async () =>
+    Object.fromEntries(
+      await Promise.all(
+        tables.map(async ({ tablename }) => [
+          tablename,
+          (
+            await db.pool.query(
+              `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${tablename}" t`
+            )
+          ).rows[0].rows,
+        ])
+      )
+    );
+  for (const [table, predicate] of [
+    ['in_app_notifications', `NEW.profile_id='${id}' AND NEW.type='profile_verified'`],
+    [
+      'notification_outbox',
+      `NEW.profile_id='${id}' AND NEW.event_key='profile.verification_status'`,
+    ],
+    ...['email', 'sms'].map((channel) => [
+      'notification_job',
+      `NEW.channel='${channel}' AND EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.outbox_id AND o.profile_id='${id}' AND o.event_key='profile.verification_status')`,
+    ]),
+  ])
+    for (const mode of ['raise', 'suppress']) {
+      const before = await snapshot();
+      await db.pool.query(
+        `CREATE FUNCTION fail_verification_sink() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'verification sink failure';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_verification_sink BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_verification_sink()`
+      );
+      try {
+        await expect(
+          service.verifyProfile(id, { action: 'verify' }, staffActor, '')
+        ).rejects.toThrow(
+          mode === 'raise' ? 'verification sink failure' : 'Mandatory verification'
+        );
+        expect(await snapshot()).toEqual(before);
+      } finally {
+        await db.pool.query(
+          `DROP TRIGGER fail_verification_sink ON ${table}; DROP FUNCTION fail_verification_sink()`
+        );
+      }
+    }
+  await service.verifyProfile(id, { action: 'verify' }, staffActor, '');
+  const before = await snapshot();
+  await service.verifyProfile(id, { action: 'verify' }, staffActor, '');
+  expect(await snapshot()).toEqual(before);
+  await service.verifyProfile(
+    id,
+    { action: 'unverify', reason: 'A second real transition' },
+    staffActor,
+    ''
+  );
+  await service.verifyProfile(id, { action: 'verify' }, staffActor, '');
+  expect(
+    (
+      await db.pool.query(
+        "SELECT id FROM notification_outbox WHERE profile_id=$1 AND event_key='profile.verification_status'",
+        [id]
+      )
+    ).rows
+  ).toHaveLength(3);
+});

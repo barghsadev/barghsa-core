@@ -19,6 +19,7 @@ import {
 } from '../session/session.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { notifyAgentRoleChange } from './role-notifications.js';
 import { notifyAgentInvitation } from './invitation-notifications.js';
 import { listAgentActivity } from './agent-activity.js';
 
@@ -1383,9 +1384,9 @@ export class AgentsService {
         ON CONFLICT (profile_id,user_id,role) DO NOTHING`,
         [profileId, targetUserId, roles, joinedAt, createdAt, invitedAt]
       );
-      await client.query(
+      const audit = await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,$2,$3::jsonb,$4,clock_timestamp())`,
+        VALUES (uuid_generate_v7(),$1,$2,$3::jsonb,$4,clock_timestamp()) RETURNING id`,
         [
           actor.userId,
           roles.length ? 'agent_roles_changed' : 'agent_removed',
@@ -1400,6 +1401,13 @@ export class AgentsService {
           correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );
+      if (audit.rows.length !== 1) throw new Error('Role change audit was not stored');
+      await notifyAgentRoleChange(client, {
+        recipientUserId: targetUserId,
+        profileId,
+        roles,
+        auditId: audit.rows[0].id,
+      });
       const sessionRevoked = actor.userId === targetUserId;
       await requireSessionStepUp(client, actor, sessionRevoked ? revokedAt : undefined);
       await client.query('COMMIT');

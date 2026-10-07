@@ -30,7 +30,11 @@ export class EmailNotificationTransport implements INotificationTransport {
       (!payload.profileId &&
         !(
           payload.profileId === null &&
-          ['ticket.new_reply', 'profile.invitation_received'].includes(payload.eventKey)
+          [
+            'ticket.new_reply',
+            'profile.invitation_received',
+            'profile.agent_role_changed',
+          ].includes(payload.eventKey)
         ))
     )
       throw new Error('Email requires a durable queued recipient');

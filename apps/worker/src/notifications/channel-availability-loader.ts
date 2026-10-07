@@ -112,7 +112,7 @@ export async function loadNotificationRecipient(
         'contract.created','contract.awaiting_acceptance','contract.accepted',
         'contract.signed','contract.active','contract.cancelled','contract.changes_requested',
         'order.submitted','order.status_changed','order.cancellation_requested',
-        'document.review_completed'
+        'document.review_completed','profile.verification_status'
       ) OR (p.user_id=u.user_id AND NOT p.archived) OR EXISTS (
         SELECT 1 FROM in_app_notifications n
         WHERE n.delivery_key='outbox:'||o.id::text AND n.profile_id=o.profile_id
@@ -139,6 +139,14 @@ export async function loadNotificationRecipient(
         WHERE i.id::text=o.payload->>'invitationId' AND a.user_id=u.user_id
           AND i.status='Pending' AND (i.expires_at IS NULL OR i.expires_at>clock_timestamp())
           AND NOT entity.archived AND entity.profile_type='LEGAL' AND i.role IN ('Manager','Finance','Legal')
+          AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
+          AND n.operating_context='customer' AND n.type=o.event_key
+      )))
+      AND (o.event_key<>'profile.agent_role_changed' OR (o.profile_id IS NULL AND EXISTS (
+        SELECT 1 FROM audit_log a JOIN profiles entity ON entity.id::text=a.metadata::jsonb->>'profileId'
+        JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE a.id::text=o.payload->>'auditId' AND a.event IN ('agent_roles_changed','agent_removed')
+          AND a.metadata::jsonb->>'targetUserId'=u.user_id AND NOT entity.archived AND entity.profile_type='LEGAL'
           AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
           AND n.operating_context='customer' AND n.type=o.event_key
       )))`,

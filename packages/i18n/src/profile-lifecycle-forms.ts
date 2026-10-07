@@ -1,5 +1,11 @@
 import type { Locale } from './auth.js';
 const en = {
+  roleChangedTitle: 'Your team roles changed',
+  roleChangedBody: 'Your roles at "{name}" changed to: {roles}.',
+  roleRemoved: 'No team roles; access removed',
+  roleManager: 'Manager',
+  roleFinance: 'Finance',
+  roleLegal: 'Legal',
   confirmationRequired: 'Confirm that you reviewed the consequences and retained records',
   passwordRequired: 'Enter your current password',
   passwordRejected: 'The current password was not accepted',
@@ -11,6 +17,12 @@ const en = {
   refresh: 'Refresh requests',
 };
 const fa: Record<keyof typeof en, string> = {
+  roleChangedTitle: 'نقش‌های شما در تیم تغییر کرد',
+  roleChangedBody: 'نقش‌های شما در «{name}» به این موارد تغییر کرد: {roles}.',
+  roleRemoved: 'بدون نقش در تیم؛ دسترسی حذف شد',
+  roleManager: 'مدیر',
+  roleFinance: 'مالی',
+  roleLegal: 'حقوقی',
   confirmationRequired: 'بررسی پیامدها و سوابق نگهداری‌شده را تأیید کنید',
   passwordRequired: 'رمز عبور فعلی خود را وارد کنید',
   passwordRejected: 'رمز عبور فعلی پذیرفته نشد',

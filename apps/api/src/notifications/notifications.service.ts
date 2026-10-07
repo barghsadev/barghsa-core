@@ -95,7 +95,8 @@ export class NotificationsService {
         | CustomerBusinessEvent
         | TicketBusinessEvent
         | PrivateDocumentEvent
-        | 'profile.invitation_received';
+        | 'profile.invitation_received'
+        | 'profile.agent_role_changed';
     }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
@@ -335,6 +336,95 @@ export class NotificationsService {
     return true;
   }
 
+  async createProfileRoleEvent(
+    params: CreateNotificationParams & {
+      eventKey: 'profile.agent_role_changed';
+      occurrenceKey: string;
+      payload: { auditId: string; entityName: string; newRole: string };
+    },
+    transaction: PoolClient
+  ): Promise<boolean> {
+    if (
+      params.operatingContext !== 'customer' ||
+      params.profileId ||
+      !params.occurrenceKey.trim() ||
+      !params.userId.trim()
+    )
+      throw new Error('Role change delivery requires the original private recipient');
+    const payload = {
+      ...params.payload,
+      ...(params.link ? { link_route: notificationLink(params.link) } : {}),
+    };
+    const channels = ['in_app', 'email'];
+    const outboxId = uuidv7();
+    const inserted = await transaction.query(
+      `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$3,$4,$5,'queued',$6,5,$7) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
+      [
+        outboxId,
+        params.userId,
+        params.eventKey,
+        payload,
+        channels,
+        params.occurrenceKey,
+        correlationIdStorage.getStore() ?? null,
+      ]
+    );
+    if (!inserted.rows[0]) {
+      const existing = await transaction.query(
+        `SELECT ob.id FROM notification_outbox ob JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+         WHERE ob.idempotency_key=$1 AND ob.profile_id IS NULL AND ob.user_id=$2 AND ob.event_key=$3 AND ob.payload=$4::jsonb
+          AND ob.channels=$5::text[] AND n.profile_id IS NULL AND n.recipient_user_id=ob.user_id
+          AND n.operating_context=$6 AND n.type=ob.event_key
+          AND EXISTS(SELECT 1 FROM notification_job WHERE outbox_id=ob.id AND channel='in_app')
+          AND EXISTS(SELECT 1 FROM notification_job WHERE outbox_id=ob.id AND channel='email')
+          AND EXISTS(SELECT 1 FROM notification_delivery_log WHERE notification_id=ob.id AND channel='in_app'
+            AND status='delivered' AND attempt_number=1 AND provider_ref=n.id::text)`,
+        [
+          params.occurrenceKey,
+          params.userId,
+          params.eventKey,
+          payload,
+          channels,
+          params.operatingContext,
+        ]
+      );
+      if (!existing.rows[0])
+        throw new Error('Role change notification occurrence conflicts with saved delivery');
+      return false;
+    }
+    const recipient = await transaction.query(
+      `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'
+       WHERE a.id::text=$1 AND a.event IN ('agent_roles_changed','agent_removed')
+         AND a.metadata::jsonb->>'targetUserId'=$2 AND NOT p.archived AND p.profile_type='LEGAL'`,
+      [params.payload.auditId, params.userId]
+    );
+    if (recipient.rows.length !== 1) throw new Error('Private role-change recipient changed');
+    const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
+    const inboxJob = await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done','normal',5,1,$2,$3)`,
+      [outboxId, notice.id, payload]
+    );
+    if (inboxJob.rowCount !== 1) throw new Error('Role change inbox job was not stored');
+    {
+      const emailJob = await transaction.query(
+        `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts)
+         VALUES($1,'email','queued','normal',5,0)`,
+        [outboxId]
+      );
+      if (emailJob.rowCount !== 1) throw new Error('Role change email job was not stored');
+    }
+    const history = await transaction.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [outboxId, notice.id]
+    );
+    if (history.rowCount !== 1)
+      throw new Error('Role change inbox delivery history was not stored');
+    return true;
+  }
+
   async createTicketBusinessEvent(
     params: CreateNotificationParams & {
       eventKey: TicketBusinessEvent;
@@ -489,12 +579,19 @@ export class NotificationsService {
     transaction: { query(sql: string, params?: unknown[]): Promise<unknown> }
   ): Promise<NotificationResult> {
     const notice = await this.create({ ...params, operatingContext: 'customer' }, transaction);
+    const inbox = await transaction.query(
+      `SELECT id FROM in_app_notifications WHERE id=$1 AND recipient_user_id=$2 AND profile_id=$3
+       AND operating_context='customer' AND type=$4 AND delivery_key='direct:'||$1::text`,
+      [notice.id, params.userId, params.profileId, params.type]
+    );
+    if (!(inbox as { rows: { id: string }[] }).rows.some((row) => row.id === notice.id))
+      throw new Error('Mandatory verification inbox was not stored');
     const outboxId = uuidv7();
     const eventKey = 'profile.verification_status';
     // The inbox entry already exists; external workers enforce current recipients/preferences.
-    await transaction.query(
+    const outbox = await transaction.query(
       `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
-       VALUES($1,$2,$3,$4,$5,ARRAY['email','sms'],'queued',$6,5,$7)`,
+       VALUES($1,$2,$3,$4,$5,ARRAY['email','sms'],'queued',$6,5,$7) RETURNING id`,
       [
         outboxId,
         params.profileId,
@@ -510,12 +607,16 @@ export class NotificationsService {
         correlationIdStorage.getStore() ?? null,
       ]
     );
+    if (!(outbox as { rows: { id: string }[] }).rows.some((row) => row.id === outboxId))
+      throw new Error('Mandatory verification outbox was not stored');
     const priority = classifyNotificationType(eventKey) === 'immediate' ? 'urgent' : 'normal';
-    await transaction.query(
+    const jobs = await transaction.query(
       `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts)
        VALUES($1,'email','queued',$2,5),($1,'sms','queued',$2,5)`,
       [outboxId, priority]
     );
+    if ((jobs as { rowCount: number }).rowCount !== 2)
+      throw new Error('Mandatory verification channel jobs were not stored');
     return notice;
   }
 

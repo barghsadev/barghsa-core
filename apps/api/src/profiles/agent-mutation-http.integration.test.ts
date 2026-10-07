@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { notifyAgentRoleChange } from './role-notifications.js';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -297,3 +298,191 @@ it('step-up still precedes role validation and exposes no field metadata', async
   expect(result).not.toHaveProperty('error.fields');
   expect(await snapshot(c)).toEqual(before);
 });
+
+async function allRoleNoticeState() {
+  const tables = (
+    await http.pool.query(
+      "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN ('sessions','rate_limit_counters','rate_limit_windows') ORDER BY tablename"
+    )
+  ).rows;
+  return Object.fromEntries(
+    await Promise.all(
+      tables.map(async ({ tablename }) => [
+        tablename,
+        (
+          await http.pool.query(
+            `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${tablename}" t`
+          )
+        ).rows[0].rows,
+      ])
+    )
+  );
+}
+it.each(['roles', 'remove'] as const)(
+  'delivers canonical %s privately with original revocation and immutable audit replay',
+  async (operation) => {
+    const c = await setup(),
+      roles = operation === 'roles' ? ['Finance', 'Legal'] : [];
+    await http.pool.query('UPDATE profiles SET title=$2 WHERE id=$1', [
+      c.profileId,
+      'Company $& {roles}',
+    ]);
+    expect((await mutate(c, operation, roles)).status).toBe(200);
+    const audit = (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event IN ('agent_roles_changed','agent_removed') AND metadata::jsonb->>'profileId'=$1",
+        [c.profileId]
+      )
+    ).rows;
+    expect(audit).toHaveLength(1);
+    const rows = (
+      await http.pool.query(
+        "SELECT * FROM notification_outbox WHERE event_key='profile.agent_role_changed' AND payload->>'auditId'=$1",
+        [audit[0].id]
+      )
+    ).rows;
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      profile_id: null,
+      user_id: c.target,
+      channels: ['in_app', 'email'],
+      max_attempts: 5,
+      idempotency_key: `profile.agent_role_changed:${audit[0].id}:${c.target}`,
+      payload: {
+        auditId: audit[0].id,
+        entityName: 'Company $& {roles}',
+        newRole: roles.join(', ') || '—',
+        link_route: '/dashboard',
+      },
+    });
+    const inbox = (
+      await http.pool.query(
+        "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+        [rows[0].id]
+      )
+    ).rows;
+    expect(inbox).toHaveLength(1);
+    expect(inbox[0]).toMatchObject({
+      profile_id: null,
+      recipient_user_id: c.target,
+      operating_context: 'customer',
+      type: 'profile.agent_role_changed',
+      link_route: '/dashboard',
+    });
+    expect(inbox[0].localized_content.en.body).toContain('Company $& {roles}');
+    expect(inbox[0].localized_content.fa.body).toContain('Company $& {roles}');
+    expect(inbox[0].localized_content.en.body).toContain(
+      operation === 'roles' ? 'Finance, Legal' : 'access removed'
+    );
+    expect(inbox[0].localized_content.fa.body).toContain(
+      operation === 'roles' ? 'مالی, حقوقی' : 'دسترسی حذف شد'
+    );
+    expect(
+      (
+        await http.pool.query(
+          'SELECT channel,status,priority,attempts,max_attempts,provider_ref FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+          [rows[0].id]
+        )
+      ).rows
+    ).toEqual([
+      {
+        channel: 'email',
+        status: 'queued',
+        priority: 'normal',
+        attempts: 0,
+        max_attempts: 5,
+        provider_ref: null,
+      },
+      {
+        channel: 'in_app',
+        status: 'done',
+        priority: 'normal',
+        attempts: 1,
+        max_attempts: 5,
+        provider_ref: inbox[0].id,
+      },
+    ]);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT channel,status,attempt_number,provider_ref FROM notification_delivery_log WHERE notification_id=$1',
+          [rows[0].id]
+        )
+      ).rows
+    ).toEqual([
+      { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: inbox[0].id },
+    ]);
+    const domain = await snapshot(c);
+    expect(domain.members.map((r) => r.role)).toEqual(roles);
+    expect(domain.sessions.every((r) => r.revoked_at instanceof Date)).toBe(true);
+    expect(domain.refresh.every((r) => r.consumed_at instanceof Date)).toBe(true);
+    await http.pool.query(
+      'UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1',
+      [inbox[0].id]
+    );
+    const before = await allRoleNoticeState(),
+      client = await http.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await notifyAgentRoleChange(client, {
+        recipientUserId: c.target,
+        profileId: c.profileId,
+        roles,
+        auditId: audit[0].id,
+      });
+      await client.query('COMMIT');
+    } finally {
+      client.release();
+    }
+    expect(await allRoleNoticeState()).toEqual(before);
+    expect(await snapshot(c)).toEqual(domain);
+    expect((await mutate(c, operation, [...roles].reverse())).status).toBe(
+      operation === 'roles' ? 200 : 404
+    );
+    expect(await allRoleNoticeState()).toEqual(before);
+    expect(await snapshot(c)).toEqual(domain);
+  }
+);
+it.each(['roles', 'remove'] as const)(
+  'rolls back %s membership,credentials,audit and mandatory notices at every failed sink',
+  async (operation) => {
+    const c = await setup();
+    for (const [table, predicate] of [
+      ['notification_outbox', "NEW.event_key='profile.agent_role_changed'"],
+      ['in_app_notifications', "NEW.type='profile.agent_role_changed'"],
+      [
+        'notification_job',
+        "EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.outbox_id AND o.event_key='profile.agent_role_changed')",
+      ],
+      [
+        'notification_delivery_log',
+        "EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.notification_id AND o.event_key='profile.agent_role_changed')",
+      ],
+    ])
+      for (const mode of ['raise', 'suppress']) {
+        const before = await allRoleNoticeState(),
+          domain = await snapshot(c);
+        await http.pool.query(
+          `CREATE FUNCTION fail_role_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'role notice failure';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_role_notice BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_role_notice()`
+        );
+        try {
+          expect((await mutate(c, operation)).status).toBe(500);
+          expect(await allRoleNoticeState()).toEqual(before);
+          expect(await snapshot(c)).toEqual(domain);
+        } finally {
+          await http.pool.query(
+            `DROP TRIGGER fail_role_notice ON ${table}; DROP FUNCTION fail_role_notice()`
+          );
+        }
+      }
+    expect((await mutate(c, operation)).status).toBe(200);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT * FROM notification_outbox WHERE event_key='profile.agent_role_changed' AND user_id=$1",
+          [c.target]
+        )
+      ).rows
+    ).toHaveLength(1);
+  }
+);

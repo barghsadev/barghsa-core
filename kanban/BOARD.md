@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and complete missing agent_role_changed producer and demonstrated verification_status sink/idempotency gaps. Reuse existing profile/invitation/notification engines; preserve role replacement/removal/session revocation,current recipient privacy,verification/step-up/audit/transitions and unknown receipts. Keep active custom templates and live provider/owner/operations/launch gates explicit.
+Inspect existing auth.otp_sent,password_changed,session_revoked,new_device_login native/security writers and Appendix requirements. Reuse current security delivery and durable receipts; implement only demonstrated missing private canonical boundaries while preserving OTP/password/session/device security,secrets,identity,rate limits,atomic audit/replay and unknown delivery. Keep active templates/live provider/owner/operations/launch gates explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 
