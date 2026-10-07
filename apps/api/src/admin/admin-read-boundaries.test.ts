@@ -38,7 +38,7 @@ describe('privileged delivery log reads', () => {
     const { controller, logs } = fixture();
     const req = request(['admin:jobs:view']);
     await expect(controller.listDeliveryLogs(req)).resolves.toEqual({ logs: [], total: 0 });
-    expect(logs).toHaveBeenCalledWith({});
+    expect(logs).toHaveBeenCalledWith({}, expect.objectContaining({ userId: 'reader' }));
     req.session.permissions = [];
     await expect(controller.listDeliveryLogs(req)).rejects.toMatchObject({ status: 403 });
     expect(logs).toHaveBeenCalledOnce();
@@ -53,13 +53,16 @@ describe('privileged delivery log reads', () => {
       '20',
       '40'
     );
-    expect(logs).toHaveBeenCalledWith({
-      notificationId: 'notification-1',
-      channel: 'email',
-      status: 'failed',
-      limit: 20,
-      offset: 40,
-    });
+    expect(logs).toHaveBeenCalledWith(
+      {
+        notificationId: 'notification-1',
+        channel: 'email',
+        status: 'failed',
+        limit: 20,
+        offset: 40,
+      },
+      expect.objectContaining({ userId: 'reader' })
+    );
   });
   it('does not pass nonnumeric pagination into database queries', async () => {
     const { controller, logs } = fixture();
@@ -71,7 +74,7 @@ describe('privileged delivery log reads', () => {
       'not-a-number',
       'NaN'
     );
-    expect(logs).toHaveBeenCalledWith({});
+    expect(logs).toHaveBeenCalledWith({}, expect.objectContaining({ userId: 'reader' }));
   });
 });
 describe('staff and template list filters', () => {

@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 436 | Accepted with unchanged source bindings. |
-| verify | 867 | Existing work may be complete; inspect evidence before building. |
-| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 439 | Accepted with unchanged source bindings. |
+| verify | 863 | Existing work may be complete; inspect evidence before building. |
+| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Prepare the next dependency-ordered notification milestone while earlier owner/operational criteria remain pending. Inspect existing notification module, outbox writes, worker leases/retry scheduling and delivery logs before rebuilding anything. Reconcile current task evidence, renew matching behavior together and implement only demonstrated gaps. Preserve unknown-delivery holds, no-blind-resend policy, profile authority, transaction/audit boundaries and external provider launch gates.
+Complete demonstrated durable business-event producer gaps. Inspect canonical event/channel requirements and existing contract/order/ticket/document producers before edits. Retain immediate mandatory private in-app notices while enqueueing correctly typed external jobs atomically with the native event; preserve immutable read history,current recipients,transaction rollback andstable occurrence idempotency. Start with actual contract customer events andprove affected callers. No automatic resend of unknown delivery; earlier owner/provider/operations gates remain pending.
 
-- `05-notifications-documents-ai.md#T-05.01.01`: Notification module scaffold
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
-- `05-notifications-documents-ai.md#T-05.01.03`: Job queue with retry schedule
-- `05-notifications-documents-ai.md#T-05.01.05`: Status tracking & delivery logs
 
 ## v0.2.0: Complete customer journeys
 
@@ -534,11 +531,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.11.03` | verify | Earlier acceptance_verified | Policy management |
 | `02-auth-users-admin.md#T-09.11.04` | partial | Earlier partial | AI agent management |
 | `02-auth-users-admin.md#T-09.11.05` | partial | Earlier partial | Agent slot assignment |
-| `05-notifications-documents-ai.md#T-05.01.01` | verify | Earlier acceptance_verified | Notification module scaffold |
-| `05-notifications-documents-ai.md#T-05.01.02` | verify | Earlier acceptance_verified | Durable outbox table & write pipeline |
-| `05-notifications-documents-ai.md#T-05.01.03` | verify | Earlier acceptance_verified | Job queue with retry schedule |
+| `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
+| `05-notifications-documents-ai.md#T-05.01.02` | partial | Earlier acceptance_verified | Durable outbox table & write pipeline |
+| `05-notifications-documents-ai.md#T-05.01.03` | done | Earlier acceptance_verified | Job queue with retry schedule |
 | `05-notifications-documents-ai.md#T-05.01.04` | partial | Earlier partial | Idempotency for delivery |
-| `05-notifications-documents-ai.md#T-05.01.05` | verify | Earlier acceptance_verified | Status tracking & delivery logs |
+| `05-notifications-documents-ai.md#T-05.01.05` | done | Earlier acceptance_verified | Status tracking & delivery logs |
 | `05-notifications-documents-ai.md#T-05.01.06` | partial | Earlier partial | Dead-letter queue & admin UI |
 | `05-notifications-documents-ai.md#T-05.01.07` | done | Earlier acceptance_verified | Metrics & observability |
 | `05-notifications-documents-ai.md#T-05.02.01` | verify | Earlier acceptance_verified | Notification entity & in-app transport |

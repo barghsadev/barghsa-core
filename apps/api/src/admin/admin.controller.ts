@@ -1977,7 +1977,11 @@ export class AdminController {
   @ApiOperation({ summary: 'List notification delivery logs (admin)' })
   @ApiQuery({ name: 'notificationId', required: false, type: String })
   @ApiQuery({ name: 'channel', required: false, enum: ['in_app', 'email', 'sms'] })
-  @ApiQuery({ name: 'status', required: false, enum: ['delivered', 'failed'] })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: ['delivered', 'failed', 'sending', 'unknown'],
+  })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'offset', required: false, type: Number })
   @ApiResponse({
@@ -2017,7 +2021,7 @@ export class AdminController {
     // service defaults instead of producing a NaN SQL binding (500 today).
     if (Number.isFinite(parsedLimit)) options.limit = parsedLimit;
     if (Number.isFinite(parsedOffset)) options.offset = parsedOffset;
-    return this.notificationsService.findDeliveryLogs(options);
+    return this.notificationsService.findDeliveryLogs(options, req.session);
   }
 
   // ───────────────────────────────────────────────────────────────────────

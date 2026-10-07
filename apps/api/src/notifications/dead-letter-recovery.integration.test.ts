@@ -85,6 +85,68 @@ async function seed() {
   return { outbox, job, dead };
 }
 
+it.each(['revocation', 'expiry'] as const)(
+  'withdraws delivery history after a blocked read encounters %s',
+  async (change) => {
+    const row = await seed();
+    await db.pool.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES ($1,'email','delivered',1,'private-receipt')`,
+      [row.outbox]
+    );
+    const url = `${fixture.base}/api/admin/notifications/delivery-logs?notificationId=${row.outbox}`;
+    expect((await fetch(url, { headers })).status).toBe(200);
+    const blocker = await db.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      if (change === 'revocation')
+        await blocker.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
+      await blocker.query('LOCK TABLE notification_delivery_log IN ACCESS EXCLUSIVE MODE');
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+      if (change === 'expiry')
+        await db.pool.query(
+          "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '1 second' WHERE session_id=$1",
+          [actor.sessionId]
+        );
+      pending = fetch(url, { headers });
+      await expect
+        .poll(
+          async () =>
+            (
+              await db.pool.query(
+                'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))) AS blocked',
+                [pid]
+              )
+            ).rows[0].blocked
+        )
+        .toBe(true);
+      if (change === 'expiry')
+        await expect
+          .poll(
+            async () =>
+              (
+                await db.pool.query(
+                  'SELECT expires_at<clock_timestamp() AS expired FROM sessions WHERE session_id=$1',
+                  [actor.sessionId]
+                )
+              ).rows[0].expired
+          )
+          .toBe(true);
+      await blocker.query('COMMIT');
+      const response = await pending;
+      expect(response.status, await response.clone().text()).toBe(
+        change === 'revocation' ? 403 : 401
+      );
+      expect(JSON.stringify(await response.json())).not.toContain('private-receipt');
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+    }
+  }
+);
+
 it('reads exact masked saved status outside the open queue without step-up or state changes', async () => {
   const row = await seed();
   await db.pool.query(`UPDATE notification_outbox SET payload=$2 WHERE id=$1`, [

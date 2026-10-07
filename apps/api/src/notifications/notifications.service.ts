@@ -4,7 +4,9 @@ import { NotificationCenterService, notificationScope } from './notification-cen
 import { Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
-import type { OperatingContext } from '../session/session.service.js';
+import type { OperatingContext, ValidatedSession } from '../session/session.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 
 export interface CreateNotificationParams {
   userId: string;
@@ -232,35 +234,42 @@ export class NotificationsService {
    *
    * @param options - Optional filters and pagination.
    */
-  async findDeliveryLogs(options: {
-    notificationId?: string;
-    channel?: 'in_app' | 'email' | 'sms';
-    status?: 'delivered' | 'failed' | 'sending' | 'unknown';
-    limit?: number;
-    offset?: number;
-  }): Promise<DeliveryLogRow[]> {
-    const pool = getDbPool();
-    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
-    const offset = Math.max(options.offset ?? 0, 0);
+  async findDeliveryLogs(
+    options: {
+      notificationId?: string;
+      channel?: 'in_app' | 'email' | 'sms';
+      status?: 'delivered' | 'failed' | 'sending' | 'unknown';
+      limit?: number;
+      offset?: number;
+    },
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<DeliveryLogRow[]> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:view');
+      await requireCurrentSession(client, actor);
+      const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
+      const offset = Math.max(options.offset ?? 0, 0);
 
-    const conditions: string[] = [];
-    const params: unknown[] = [];
-    // Counter-based placeholder builder. Each filter appends its value and a
-    // fresh `$N` placeholder, so conditions never share or misnumber indexes.
-    const push = (column: string, value: string) => {
-      params.push(value);
-      conditions.push(`${column} = $${params.length}`);
-    };
+      const conditions: string[] = [];
+      const params: unknown[] = [];
+      // Counter-based placeholder builder. Each filter appends its value and a
+      // fresh `$N` placeholder, so conditions never share or misnumber indexes.
+      const push = (column: string, value: string) => {
+        params.push(value);
+        conditions.push(`${column} = $${params.length}`);
+      };
 
-    if (options.notificationId) push('notification_id', options.notificationId);
-    if (options.channel) push('channel', options.channel);
-    if (options.status) push('status', options.status);
+      if (options.notificationId) push('notification_id', options.notificationId);
+      if (options.channel) push('channel', options.channel);
+      if (options.status) push('status', options.status);
 
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
-    // Alias snake_case DB columns to camelCase so runtime rows match the
-    // declared DeliveryLogRow shape (the `pg` driver does not auto-convert).
-    const rowsResult = await pool.query<DeliveryLogRow>(
-      `SELECT id,
+      const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+      // Alias snake_case DB columns to camelCase so runtime rows match the
+      // declared DeliveryLogRow shape (the `pg` driver does not auto-convert).
+      const rowsResult = await client.query<DeliveryLogRow>(
+        `SELECT id,
               notification_id AS "notificationId",
               channel,
               status,
@@ -293,8 +302,16 @@ export class NotificationsService {
        ${where}
        ORDER BY created_at DESC, id DESC
        LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
-      [...params, limit, offset]
-    );
-    return rowsResult.rows;
+        [...params, limit, offset]
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return rowsResult.rows;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 }
