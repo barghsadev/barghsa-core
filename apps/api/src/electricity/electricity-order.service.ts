@@ -1,5 +1,8 @@
 import { activityNames } from '../common/activity-identity.js';
-import { notifyOrderSubmitted } from '../notifications/order-notifications.js';
+import {
+  notifyOrderSubmitted,
+  notifyOrderCancelled,
+} from '../notifications/order-notifications.js';
 import { createHash } from 'node:crypto';
 import {
   literalSearchPattern,
@@ -743,6 +746,7 @@ export class ElectricityOrderService {
           );
           if (BigInt(row.paid_amount) === 0n && row.gift_code_id)
             await this.giftCodes.releaseByOrder(orderId, client, { actorUserId: actor.userId, ip });
+          await notifyOrderCancelled(client, 'electricity', orderId, input.idempotencyKey);
           await client.query(
             `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
              VALUES(uuid_generate_v7(),$1,'electricity.order_cancelled',$2::jsonb,uuid_generate_v7(),$3)`,

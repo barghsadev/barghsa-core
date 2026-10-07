@@ -111,7 +111,7 @@ export async function loadNotificationRecipient(
       AND (o.event_key NOT IN (
         'contract.created','contract.awaiting_acceptance','contract.accepted',
         'contract.signed','contract.active','contract.cancelled','contract.changes_requested',
-        'order.submitted'
+        'order.submitted','order.status_changed'
       ) OR (p.user_id=u.user_id AND NOT p.archived) OR EXISTS (
         SELECT 1 FROM in_app_notifications n
         WHERE n.delivery_key='outbox:'||o.id::text AND n.profile_id=o.profile_id

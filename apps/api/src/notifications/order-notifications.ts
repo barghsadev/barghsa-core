@@ -44,3 +44,45 @@ export async function notifyOrderSubmitted(
   );
   return row.user_id;
 }
+
+/** The native cancellation engine owns the state/refund decision and its stable command key. */
+export async function notifyOrderCancelled(
+  client: PoolClient,
+  service: keyof typeof orders,
+  id: string,
+  commandKey: string
+): Promise<void> {
+  const definition = orders[service];
+  const row = (
+    await client.query<{ profile_id: string; user_id: string }>(
+      `SELECT o.profile_id,p.user_id FROM ${definition.table} o JOIN profiles p ON p.id=o.profile_id
+       WHERE o.id=$1 AND o.status='cancelled' AND NOT p.archived`,
+      [id]
+    )
+  ).rows[0];
+  if (!row || !commandKey.trim()) throw new Error('Cancelled order notification unavailable');
+  await new NotificationsService().createCustomerBusinessEvent(
+    {
+      userId: row.user_id,
+      profileId: row.profile_id,
+      operatingContext: 'customer',
+      type: 'general',
+      eventKey: 'order.status_changed',
+      occurrenceKey: `order.status_changed:${service}:${id}:cancel:${commandKey}:${row.user_id}`,
+      payload: { orderNumber: id, newStatus: 'لغو شده / Cancelled', status: 'cancelled' },
+      title: 'Order cancelled',
+      localizedContent: {
+        fa: {
+          title: 'سفارش لغو شد',
+          body: 'سفارش شما لغو شد. وضعیت بازپرداخت جداگانه پیگیری می‌شود.',
+        },
+        en: {
+          title: 'Order cancelled',
+          body: 'Your order has been cancelled. Refund progress is tracked separately.',
+        },
+      },
+      link: `${definition.route}/${id}`,
+    },
+    client
+  );
+}

@@ -14,6 +14,11 @@ import {
   expectOrderSubmitted,
   expectSubmissionNotificationRollback,
 } from '../test/order-submission-notifications.js';
+import {
+  expectCancelledOrderNotification,
+  expectOrderStatusRollback,
+  orderDeliverySnapshot,
+} from '../test/order-status-notification-proof.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
@@ -2620,7 +2625,20 @@ it('lists only the customer profile orders and cancels an unpublished order once
     context: 'customer',
   });
 
+  const statusDelivery = await expectCancelledOrderNotification(
+    http.pool,
+    order.orderId,
+    String(input.profileId),
+    request.idempotencyKey
+  );
+  await http.pool.query('UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1', [
+    statusDelivery.inboxId,
+  ]);
+  const savedStatusDelivery = await orderDeliverySnapshot(http.pool, statusDelivery.outboxId);
   expect((await cancel()).status).toBe(200);
+  expect(await orderDeliverySnapshot(http.pool, statusDelivery.outboxId)).toEqual(
+    savedStatusDelivery
+  );
   const delivery = (
     await http.pool.query('SELECT * FROM notification_outbox WHERE idempotency_key=$1', [
       `contract.created:${order.contractId}:${detail.versionId}:buyer`,
@@ -2757,15 +2775,28 @@ it('keeps a paid cancellation open through failed retries until finance restores
     refundAmount: '500000',
     outcome: 'refund_obligation',
   });
-  const cancelled = await post(`orders/${order.orderId}/cancel`, {
+  const paidCommand = {
     idempotencyKey: randomUUID(),
     expectedVersionId: versionId,
     expectedReviewHash: cancellationSnapshot.hash,
     reason: 'Delivery is no longer needed',
-  });
+  };
+  const cancelPaid = () => post(`orders/${order.orderId}/cancel`, paidCommand);
+  const cancelled = await cancelPaid();
   expect(cancelled.status, http.logs()).toBe(200);
   const refundId = ((await cancelled.json()) as { refundId: string }).refundId;
   expect(refundId).toBeTruthy();
+  const statusDelivery = await expectCancelledOrderNotification(
+    http.pool,
+    order.orderId,
+    String(input.profileId),
+    paidCommand.idempotencyKey
+  );
+  const savedStatusDelivery = await orderDeliverySnapshot(http.pool, statusDelivery.outboxId);
+  expect((await cancelPaid()).status).toBe(200);
+  expect(await orderDeliverySnapshot(http.pool, statusDelivery.outboxId)).toEqual(
+    savedStatusDelivery
+  );
   await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [input.profileId]);
   for (let attempt = 0; attempt < 5; attempt++) {
     const outcome = await runWalletRefund(http.pool, refundId);
@@ -2831,6 +2862,69 @@ it('keeps a paid cancellation open through failed retries until finance restores
     ).rows[0].posted_balance
   ).toBe('500000');
 });
+
+it.each([false, true])(
+  'rolls back every cancellation notification sink and recovers one native command (paid=%s)',
+  async (paid) => {
+    const order = await submittedOrder();
+    if (paid) {
+      await http.pool.query(
+        "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
+        [order.invoiceId]
+      );
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='buyer'"
+      );
+    }
+    const versionId = (
+      await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+        order.contractId,
+      ])
+    ).rows[0].current_version_id;
+    const reason = 'Delivery is no longer needed';
+    const review = await cancellationReview(order.orderId, reason);
+    const command = {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: versionId,
+      expectedReviewHash: review.hash,
+      reason,
+    };
+    const cancel = () => post(`orders/${order.orderId}/cancel`, command);
+    await expectOrderStatusRollback(http.pool, cancel);
+    const response = await cancel();
+    expect(response.status, http.logs()).toBe(200);
+    const result = (await response.json()) as { refundId: string | null; status: string };
+    expect(result).toMatchObject({
+      status: 'cancelled',
+      refundId: paid ? expect.any(String) : null,
+    });
+    const delivery = await expectCancelledOrderNotification(
+      http.pool,
+      order.orderId,
+      String(input.profileId),
+      command.idempotencyKey
+    );
+    const beforeReplay = await orderDeliverySnapshot(http.pool, delivery.outboxId);
+    expect((await cancel()).status, http.logs()).toBe(200);
+    expect(await orderDeliverySnapshot(http.pool, delivery.outboxId)).toEqual(beforeReplay);
+    expect(
+      (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [order.contractId])).rows[0]
+        .state
+    ).toBe('Rejected');
+    expect(
+      (await http.pool.query('SELECT paid_amount FROM invoices WHERE id=$1', [order.invoiceId]))
+        .rows[0].paid_amount
+    ).toBe(paid ? '500000' : '0');
+    expect(
+      (
+        await http.pool.query(
+          'SELECT count(*)::int AS count FROM refund_obligations WHERE order_id=$1',
+          [order.orderId]
+        )
+      ).rows[0].count
+    ).toBe(paid ? 1 : 0);
+  }
+);
 
 it('funds the linked invoice and activates only after customer acceptance', async () => {
   const order = await submittedOrder();

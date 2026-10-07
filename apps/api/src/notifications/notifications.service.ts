@@ -18,7 +18,8 @@ export type ContractCustomerEvent =
   | 'contract.cancelled'
   | 'contract.changes_requested';
 
-export type CustomerBusinessEvent = ContractCustomerEvent | 'order.submitted';
+export type CustomerBusinessEvent =
+  ContractCustomerEvent | 'order.submitted' | 'order.status_changed';
 
 export interface CreateNotificationParams {
   userId: string;
