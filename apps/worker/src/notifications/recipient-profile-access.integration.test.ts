@@ -1827,3 +1827,227 @@ it('rechecks refresh warning contact change after rendering before the provider 
     ).rows[0].delivery_payload
   ).toEqual(snapshot);
 });
+
+async function newDeviceFixture(valid = true) {
+  const f = await fixture('auth.new_device_login', 'account'),
+    audit = randomUUID();
+  await pool.query(
+    "INSERT INTO audit_log(id,user_id,event,metadata,correlation_id) VALUES($1,$2,'new_device_login',$3,$1)",
+    [audit, f.owner, JSON.stringify({ unrecognizedDevice: valid })]
+  );
+  await pool.query('UPDATE notification_outbox SET profile_id=NULL,payload=$2 WHERE id=$1', [
+    f.id,
+    { auditId: audit, link_route: '/settings/security' },
+  ]);
+  await pool.query(
+    "UPDATE in_app_notifications SET profile_id=NULL,link_route='/settings/security' WHERE delivery_key='outbox:'||$1::text",
+    [f.id]
+  );
+  return { ...f, audit };
+}
+it('keeps new device warnings bound to the original account across profile changes', async () => {
+  const f = await newDeviceFixture();
+  await pool.query('UPDATE profiles SET user_id=$2,archived=true WHERE id=$1', [f.profile, f.next]);
+  expect(await loadNotificationRecipient(pool, f.id)).toMatchObject({
+    userId: f.owner,
+    profileId: null,
+  });
+  await pool.query('UPDATE notification_outbox SET user_id=$2 WHERE id=$1', [f.id, f.next]);
+  expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+});
+it('rejects a recognized device audit as a new device security notice', async () => {
+  const f = await newDeviceFixture(false);
+  expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+});
+it.each(['disabled', 'activation', 'inbox', 'contact'] as const)(
+  'checks new device login privacy after %s changes',
+  async (change) => {
+    const f = await newDeviceFixture(),
+      before = await loadNotificationRecipient(pool, f.id);
+    expect(before).toMatchObject({ userId: f.owner, profileId: null });
+    if (change === 'disabled')
+      await pool.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [f.owner]);
+    else if (change === 'activation')
+      await pool.query('UPDATE users SET activation_token=$2 WHERE user_id=$1', [
+        f.owner,
+        randomUUID(),
+      ]);
+    else if (change === 'inbox')
+      await pool.query("DELETE FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text", [
+        f.id,
+      ]);
+    else
+      await pool.query('UPDATE users SET username=$2 WHERE user_id=$1', [
+        f.owner,
+        `${randomUUID()}@example.test`,
+      ]);
+    await expect(
+      assertNotificationRecipientAvailable(pool, f.id, 'auth.new_device_login', 'email', before!)
+    ).rejects.toThrow('recipient changed');
+  }
+);
+it.each(['customer'] as const)(
+  'delivers a account-private new device login email (%s) once with its active template and durable provider receipt',
+  async () => {
+    const f = await newDeviceFixture();
+    await pool.query("UPDATE users SET locale='en' WHERE user_id=$1", [f.owner]);
+    await pool.query("UPDATE email_provider_configs SET status='disabled' WHERE status='active'");
+    await pool.query(
+      `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+ VALUES('resend','Controlled session test','active',$1,$2,'passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
+      [JSON.stringify({ api_key: 'local-test-only', from_email: 'sender@example.test' }), f.owner]
+    );
+    await pool.query(
+      `INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
+ VALUES('auth.new_device_login','email','en','New device sign-in','<p>Review your sign-in</p>','[]','active',true,$1) ON CONFLICT DO NOTHING`,
+      [f.owner]
+    );
+    const request = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ id: 'session-email-receipt' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+    const transport = new EmailNotificationTransport(pool, request);
+    const payload = {
+      outboxId: f.id,
+      profileId: null,
+      recipientId: f.owner,
+      channel: 'email' as const,
+      eventKey: 'auth.new_device_login',
+      payload: { auditId: f.audit },
+      idempotencyKey: `session-provider:${f.id}`,
+    };
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'session-email-receipt',
+    });
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'session-email-receipt',
+    });
+    expect(request).toHaveBeenCalledTimes(1);
+    const sent = JSON.parse(String(request.mock.calls[0]![1]!.body));
+    expect(sent).toMatchObject({
+      to: [`${f.owner}@example.test`],
+      subject: 'New device sign-in',
+      html: expect.stringContaining('<p>Review your sign-in</p>'),
+    });
+    expect(JSON.stringify(sent)).not.toContain('Private conversation');
+    expect(
+      (
+        await pool.query(
+          'SELECT status,provider_ref FROM notification_send_receipts WHERE outbox_id=$1',
+          [f.id]
+        )
+      ).rows
+    ).toEqual([{ status: 'accepted', provider_ref: 'session-email-receipt' }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT delivery_payload FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+          [f.id]
+        )
+      ).rows[0].delivery_payload
+    ).toMatchObject({
+      profileId: null,
+      userId: f.owner,
+      templateVersion: 1,
+      destination: `${f.owner}@example.test`,
+      idempotencyKey: payload.idempotencyKey,
+    });
+    await expect(
+      transport.send({ ...payload, eventKey: 'wallet.topup_completed' })
+    ).rejects.toThrow('durable queued recipient');
+    expect(request).toHaveBeenCalledTimes(1);
+  }
+);
+it.each(['accepted', 'unknown'] as const)(
+  'preserves a new device login %s provider receipt after activation',
+  async (status) => {
+    const f = await newDeviceFixture(),
+      execute = durableDelivery(pool, f.id, 'email', 'role-receipt-key'),
+      provider = { id: randomUUID(), transport: 'smtp' as const };
+    if (status === 'accepted')
+      expect(await execute(provider, async () => 'role-receipt')).toBe('role-receipt');
+    else
+      await expect(
+        execute(provider, async () => {
+          throw new Error('timeout');
+        })
+      ).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+    const before = (
+      await pool.query('SELECT * FROM notification_send_receipts WHERE outbox_id=$1', [f.id])
+    ).rows;
+    await pool.query('UPDATE users SET activation_token=$2 WHERE user_id=$1', [
+      f.owner,
+      randomUUID(),
+    ]);
+    const request = vi.fn<typeof fetch>(),
+      result = new EmailNotificationTransport(pool, request).send({
+        outboxId: f.id,
+        profileId: null,
+        recipientId: f.owner,
+        channel: 'email',
+        eventKey: 'auth.new_device_login',
+        payload: {},
+        idempotencyKey: 'role-receipt-key',
+      });
+    if (status === 'accepted')
+      await expect(result).resolves.toEqual({ status: 'delivered', providerRef: 'role-receipt' });
+    else await expect(result).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+    expect(request).not.toHaveBeenCalled();
+    expect(
+      (await pool.query('SELECT * FROM notification_send_receipts WHERE outbox_id=$1', [f.id])).rows
+    ).toEqual(before);
+  }
+);
+it('rechecks new device login contact change after rendering before the provider call', async () => {
+  const f = await newDeviceFixture(),
+    snapshot = {
+      version: 1,
+      userId: f.owner,
+      profileId: null,
+      idempotencyKey: 'invite-key',
+      destination: `${f.owner}@example.test`,
+      subject: 'Invitation',
+      html: '<p>Invite</p>',
+      providerId: randomUUID(),
+    };
+  await pool.query(
+    "UPDATE notification_job SET delivery_payload=$2 WHERE outbox_id=$1 AND channel='email'",
+    [f.id, snapshot]
+  );
+  const deliveryPool = {
+    async query(sql: string, params?: unknown[]) {
+      const result = await pool.query(sql, params);
+      if (sql.startsWith('SELECT delivery_payload'))
+        await pool.query('UPDATE users SET username=$2 WHERE user_id=$1', [
+          f.owner,
+          `${randomUUID()}@example.test`,
+        ]);
+      return result;
+    },
+  };
+  const request = vi.fn<typeof fetch>();
+  await expect(
+    new EmailNotificationTransport(deliveryPool, request).send({
+      outboxId: f.id,
+      profileId: null,
+      recipientId: f.owner,
+      channel: 'email',
+      eventKey: 'auth.new_device_login',
+      payload: {},
+      idempotencyKey: 'invite-key',
+    })
+  ).rejects.toThrow('recipient changed');
+  expect(request).not.toHaveBeenCalled();
+  expect(
+    (
+      await pool.query(
+        "SELECT delivery_payload FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+        [f.id]
+      )
+    ).rows[0].delivery_payload
+  ).toEqual(snapshot);
+});

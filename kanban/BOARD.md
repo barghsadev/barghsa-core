@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing auth.new_device_login and auth.otp_sent consumers/producer flows before rebuilding. Reuse native identities,private inbox and configured delivery. Preserve credential/OTP secrecy,registered versus activation/unregistered accounts,challenge purpose/CSRF/expiry/delivery receipts,current contacts,device/session trust,login-required-password and unknown provider delivery/retry boundaries. Complete only demonstrated canonical outbox/inbox gaps with affected caller tests. Keep other Appendix,active templates/live provider/owner/operations/launch explicit.
+Reconcile owner reply for OTP secure encrypted auth-delivery design if available; do not copy codes to generic inbox or silently waive appendix. Inspect existing payment/refund/wallet notification writers while OTP clarification is pending. Reuse native ledger/receipt/idempotency and original customer/staff ownership/authorization/money/rollback/retry boundaries; build only demonstrated canonical delivery gaps with affected callers. Keep active templates,live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

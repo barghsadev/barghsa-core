@@ -109,3 +109,43 @@ export async function queueRefreshReuseWarning(
   );
   if (history.rowCount !== 1) throw new Error('Refresh reuse inbox history was not stored');
 }
+
+/** An authenticated login from a device absent from this account's session history. */
+export async function notifyNewDeviceLogin(client: PoolClient, userId: string): Promise<void> {
+  const auditId = uuidv7();
+  const audit = await client.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+     VALUES($1,$2,'new_device_login',$3,$4,clock_timestamp()) RETURNING id`,
+    [
+      auditId,
+      userId,
+      JSON.stringify({ unrecognizedDevice: true }),
+      correlationIdStorage.getStore() ?? uuidv7(),
+    ]
+  );
+  if (audit.rows.length !== 1 || audit.rows[0].id !== auditId)
+    throw new Error('New device login audit was not stored');
+  const localizedContent = Object.fromEntries(
+    (['fa', 'en'] as const).map((locale) => [
+      locale,
+      {
+        title: securitySettingsText('newDeviceTitle', locale),
+        body: securitySettingsText('newDeviceBody', locale),
+      },
+    ])
+  ) as Record<'fa' | 'en', { title: string; body: string }>;
+  await new NotificationsService().createAccountBusinessEvent(
+    {
+      userId,
+      operatingContext: 'account',
+      type: 'general',
+      ...localizedContent.fa,
+      localizedContent,
+      link: '/settings/security',
+      eventKey: 'auth.new_device_login',
+      occurrenceKey: `auth.new_device_login:${auditId}:${userId}`,
+      payload: { auditId },
+    },
+    client
+  );
+}

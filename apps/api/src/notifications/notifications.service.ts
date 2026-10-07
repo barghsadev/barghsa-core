@@ -98,7 +98,8 @@ export class NotificationsService {
         | 'profile.invitation_received'
         | 'profile.agent_role_changed'
         | 'auth.password_changed'
-        | 'auth.session_revoked';
+        | 'auth.session_revoked'
+        | 'auth.new_device_login';
     }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
@@ -340,7 +341,11 @@ export class NotificationsService {
 
   async createAccountBusinessEvent(
     params: CreateNotificationParams & {
-      eventKey: 'profile.agent_role_changed' | 'auth.password_changed' | 'auth.session_revoked';
+      eventKey:
+        | 'profile.agent_role_changed'
+        | 'auth.password_changed'
+        | 'auth.session_revoked'
+        | 'auth.new_device_login';
       occurrenceKey: string;
       payload: Record<string, string>;
     },
@@ -399,14 +404,16 @@ export class NotificationsService {
     const recipient = await transaction.query(
       params.eventKey === 'auth.password_changed'
         ? `SELECT id FROM audit_log WHERE id::text=$1 AND user_id=$2 AND event IN ('password_changed','password_reset')`
-        : params.eventKey === 'auth.session_revoked'
-          ? `SELECT id FROM audit_log WHERE id::text=$1 AND (
+        : params.eventKey === 'auth.new_device_login'
+          ? `SELECT id FROM audit_log WHERE id::text=$1 AND user_id=$2 AND event='new_device_login' AND metadata::jsonb->>'unrecognizedDevice'='true'`
+          : params.eventKey === 'auth.session_revoked'
+            ? `SELECT id FROM audit_log WHERE id::text=$1 AND (
              (event IN ('sessions_revoked','session_lifecycle_revoked') AND user_id=$2 AND (metadata::jsonb->>'changedSessionCount')::integer>0)
              OR (event IN ('expire_sessions','force_password_change') AND metadata::jsonb->>'targetUserId'=$2)
              OR (event='invitation_accepted' AND user_id=$2)
              OR (event='profile_closure_executed' AND metadata::jsonb->>'ownerUserId'=$2)
             )`
-          : `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'
+            : `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'
        WHERE a.id::text=$1 AND a.event IN ('agent_roles_changed','agent_removed')
          AND a.metadata::jsonb->>'targetUserId'=$2 AND NOT p.archived AND p.profile_type='LEGAL'`,
       [params.payload.auditId, params.userId]

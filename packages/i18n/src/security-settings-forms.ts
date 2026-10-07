@@ -1,5 +1,8 @@
 import type { Locale } from './index.js';
 const en = {
+  newDeviceTitle: 'Sign-in from an unrecognized device',
+  newDeviceBody:
+    'A sign-in from an unrecognized device completed on your account. Review your sessions. If this was not you, contact support immediately.',
   sessionRevokedTitle: 'Sessions on your account were revoked',
   sessionRevokedBody:
     'One or more sessions on your account were revoked. If you did not request this, contact support immediately.',
@@ -23,6 +26,9 @@ const en = {
   loading: 'Loading…',
 } as const;
 const fa: Record<keyof typeof en, string> = {
+  newDeviceTitle: 'ورود از دستگاه ناشناس',
+  newDeviceBody:
+    'ورود از دستگاه ناشناس به حساب شما انجام شد. نشست‌های خود را بررسی کنید. اگر این ورود کار شما نبوده، فوراً با پشتیبانی تماس بگیرید.',
   sessionRevokedTitle: 'نشست‌های حساب شما باطل شد',
   sessionRevokedBody:
     'یک یا چند نشست حساب شما باطل شد. اگر این کار را شما درخواست نکرده‌اید، فوراً با پشتیبانی تماس بگیرید.',

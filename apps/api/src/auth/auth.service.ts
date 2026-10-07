@@ -1,3 +1,4 @@
+import { notifyNewDeviceLogin } from './session-notifications.js';
 import { notifyPasswordChanged } from './password-notifications.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
@@ -828,6 +829,19 @@ export class AuthService {
         authVersion,
         client
       );
+
+      // The account lock held by createSession serializes concurrent first logins.
+      // Missing device information remains unrecognized; it never authorizes trust.
+      const recognizedDevice = deviceFingerprint
+        ? (
+            await client.query(
+              `SELECT 1 FROM sessions WHERE user_id=$1 AND device_info->>'fingerprint'=$2
+             AND session_id<>$3 LIMIT 1`,
+              [userId, deviceFingerprint, session.sessionId]
+            )
+          ).rows.length > 0
+        : false;
+      if (!recognizedDevice) await notifyNewDeviceLogin(client, userId);
 
       await client.query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId]);
 

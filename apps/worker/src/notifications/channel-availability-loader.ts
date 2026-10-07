@@ -155,6 +155,12 @@ export async function loadNotificationRecipient(
         WHERE a.id::text=o.payload->>'auditId' AND a.user_id=u.user_id AND a.event IN ('password_changed','password_reset')
           AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id AND n.operating_context='account' AND n.type=o.event_key
       )))
+      AND (o.event_key<>'auth.new_device_login' OR (o.profile_id IS NULL AND EXISTS (
+        SELECT 1 FROM audit_log a JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE a.id::text=o.payload->>'auditId' AND a.user_id=u.user_id AND a.event='new_device_login'
+          AND a.metadata::jsonb->>'unrecognizedDevice'='true'
+          AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id AND n.operating_context='account' AND n.type=o.event_key
+      )))
       AND (o.event_key<>'auth.refresh_token_reused' OR (o.profile_id IS NULL AND EXISTS (
         SELECT 1 FROM in_app_notifications n WHERE n.id::text=o.payload->>'inboxId'
           AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
