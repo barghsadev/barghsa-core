@@ -65,9 +65,12 @@ for (const locale of ['en', 'fa'])
     await page.locator('#crm-type').selectOption('LEGAL');
     await expect(page.getByRole('rowheader', { name: user.username })).toBeVisible();
     expect(requests.at(-1)!.searchParams.has('cursor')).toBe(false);
-    await page
-      .getByRole('checkbox', { name: locale === 'fa' ? 'فقط کارکنان' : 'Staff only' })
-      .check();
+    const staffOnly = page.getByRole('checkbox', {
+      name: locale === 'fa' ? 'فقط کارکنان' : 'Staff only',
+    });
+    // URL navigation commits asynchronously; assert the settled controlled value.
+    await staffOnly.click();
+    await expect(staffOnly).toBeChecked();
     await expect.poll(() => requests.at(-1)!.searchParams.get('staffOnly')).toBe('true');
     await page.clock.install();
     await page.clock.pauseAt(new Date());
@@ -87,6 +90,7 @@ for (const locale of ['en', 'fa'])
     await expect.poll(() => requests.at(-1)!.searchParams.has('search')).toBe(false);
     expect(requests.at(-1)!.searchParams.get('type')).toBe('LEGAL');
     expect(requests.at(-1)!.searchParams.get('staffOnly')).toBe('true');
+    await expect(staffOnly).toBeChecked();
     await page
       .getByRole('button', { name: locale === 'fa' ? 'حقوقی ×' : 'Legal ×', exact: true })
       .click();

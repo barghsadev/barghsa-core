@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T01:15:59.649677+00:00",
+  "updated": "2026-10-07T01:25:25.867696+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -2670,7 +2670,7 @@
       "version": "0.3.0",
       "title": "Staff operations and financial closure",
       "goal": "Staff can fulfill, revise, reject, cancel, refund and close work for all four services, with correct contracts, invoices, receipts and ledger history.",
-      "status": "planned",
+      "status": "in_progress",
       "depends_on": [
         "0.2.0"
       ],
@@ -22783,12 +22783,10 @@
         "story": "02-auth-users-admin.md#spec-3c4f6ecddc8a"
       },
       "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -22884,8 +22882,104 @@
           "apps/web/src/routeTree.gen.ts",
           "packages/i18n/src/crm.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-crm-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-crm-criterion-and-boundary-verification",
+          "reviewed_base_commit": "1a4c5b3ddf0c2f762e577bde38edea211090ab6a",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+            },
+            {
+              "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+              "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
+            },
+            {
+              "path": "apps/api/src/crm/crm-list-search.integration.test.ts",
+              "sha256": "4bc86b70a04a0a63d40f58c31ecb8fbe323bc49c091edb6a61ff6a7f3163fcde"
+            },
+            {
+              "path": "apps/api/src/crm/crm-list-sort.integration.test.ts",
+              "sha256": "a6c5af0cdc1e0e36a47409cb0521f8cb95d77a0487b9f9843ebc99795d59dd1b"
+            },
+            {
+              "path": "apps/api/src/crm/crm.controller.ts",
+              "sha256": "8c5458ed839ec829e80ed6a12ede6e8fb7cb6e3b27267f65318c5006feaf1393"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.test.ts",
+              "sha256": "16810a4ca9afb429a2c19e2ae6f16d62ea6fb82d869c18bb72e87b543770869f"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.ts",
+              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+            },
+            {
+              "path": "apps/web/e2e/crm-list.spec.ts",
+              "sha256": "7dbba1de2c2d5053213564440cb9a980d8e1a42801ee3758fabcc901ae452f5c"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/lib/admin-list-query.ts",
+              "sha256": "fb467383174b119045f177d589b967680d95f4280727ce8a74978c1242831f2c"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileList.tsx",
+              "sha256": "db1ff0f67d9a7bfbc8580059a837f9d62f78c98044b9a13124b18f1e325fcc12"
+            },
+            {
+              "path": "apps/web/src/routeTree.gen.ts",
+              "sha256": "debdde7186a74be96555e0e6423f7b9c13360347ac1424f57fefbfcd33792b24"
+            },
+            {
+              "path": "apps/web/src/routes/app/crm/index.tsx",
+              "sha256": "5c99f835cc17a6bede03318a397456d49fb1e5ec580a04c7f46feae33f568780"
+            },
+            {
+              "path": "packages/i18n/src/crm.ts",
+              "sha256": "abc80967824d5d71badd3af5510896b89d1e5ad2a87480609dd9103d847f704f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Current /app/crm alias preserves verification query and redirects to the staff list. Current crm:read and staff operating context gate every list request; real unauthenticated/customer/current-grant/revocation cases pass.",
+            "Six columns render username, localized legal/individual icons, registration, last login, verification summary and full profile count. Native sortable headers cover username/registration/login/count; fixed SQL maps, null-last ordering, user-ID ties and microsecond cursor values preserve pages. Expand/collapse-all links retain each profile. Current table/header/keyboard/overflow/contrast and paging cases pass in both languages, light/dark, desktop/mobile.",
+            "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
+            "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
+            "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
+            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
+          "limitations": [
+            "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
+            "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -22899,12 +22993,10 @@
         "story": "02-auth-users-admin.md#spec-3c4f6ecddc8a"
       },
       "requirement": "**T-05.01.02 — CRM filters and search**\n\n- Description: Filters: profile type (individual/legal), verification status (all/verified/unverified/pending/disabled), date range (registration date), staff-only filter. Search across username, legal name, individual name.\n- Technical notes: Backend uses PostgreSQL full-text/trigram search for name fields. Filter query params: `?type=LEGAL&verification=VERIFIED&search=...&sort=createdAt&order=desc&cursor=...`.\n- UI/UX: Horizontal filter bar with dropdowns. Date range picker (Jalali in Persian mode). Search with debounce. Active filters shown as removable tags. Clear all filters button.\n- Dependencies: T-05.01.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -22975,8 +23067,88 @@
           "apps/web/e2e/crm-list.spec.ts",
           "packages/i18n/src/crm.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-crm-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-crm-criterion-and-boundary-verification",
+          "reviewed_base_commit": "1a4c5b3ddf0c2f762e577bde38edea211090ab6a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+              "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
+            },
+            {
+              "path": "apps/api/src/crm/crm-list-search.integration.test.ts",
+              "sha256": "4bc86b70a04a0a63d40f58c31ecb8fbe323bc49c091edb6a61ff6a7f3163fcde"
+            },
+            {
+              "path": "apps/api/src/crm/crm-list-sort.integration.test.ts",
+              "sha256": "a6c5af0cdc1e0e36a47409cb0521f8cb95d77a0487b9f9843ebc99795d59dd1b"
+            },
+            {
+              "path": "apps/api/src/crm/crm.controller.ts",
+              "sha256": "8c5458ed839ec829e80ed6a12ede6e8fb7cb6e3b27267f65318c5006feaf1393"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.ts",
+              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+            },
+            {
+              "path": "apps/web/e2e/crm-list.spec.ts",
+              "sha256": "7dbba1de2c2d5053213564440cb9a980d8e1a42801ee3758fabcc901ae452f5c"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/lib/admin-list-query.ts",
+              "sha256": "fb467383174b119045f177d589b967680d95f4280727ce8a74978c1242831f2c"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileList.tsx",
+              "sha256": "db1ff0f67d9a7bfbc8580059a837f9d62f78c98044b9a13124b18f1e325fcc12"
+            },
+            {
+              "path": "packages/i18n/src/crm.ts",
+              "sha256": "abc80967824d5d71badd3af5510896b89d1e5ad2a87480609dd9103d847f704f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Current route/query owns type, all/verified/unverified/pending/disabled profile filters, staff-only, registration bounds and search. Staff population includes current explicit flags, admins and assigned roles. Combined predicates preserve whole profile summaries. Name-token and escaped literal wildcard cases pass against actual PostgreSQL; no speculative large-scale index performance claim.",
+            "Jalali picker/day bounds use account timezone and Gregorian API instants, including leap day and inclusive microseconds.300ms search debounce, removable tags, clear-all and cursor invalidation are asserted. Staff checkbox now waits for the asynchronously committed URL-controlled value; it must remain checked after search/tag changes. Every original API/cursor/debounce assertion remains.",
+            "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
+            "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
+            "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
+            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
+          "limitations": [
+            "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
+            "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -22990,12 +23162,10 @@
         "story": "02-auth-users-admin.md#spec-7a52c8080dac"
       },
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -23129,8 +23299,132 @@
           "apps/api/src/storage/verified-attachments.service.ts",
           "apps/api/src/crm/crm-profile-legal.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-crm-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-crm-criterion-and-boundary-verification",
+          "reviewed_base_commit": "1a4c5b3ddf0c2f762e577bde38edea211090ab6a",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+            },
+            {
+              "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
+              "sha256": "4b749c877ef9c4375968f63f005894b51ac4111bb623059bb78b9fa9e88921de"
+            },
+            {
+              "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+              "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-legal.ts",
+              "sha256": "4653b5e17032fbc6e593bb5f47207510e980df36e2b800af66c010b6fc04c258"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+              "sha256": "224423828f6a11096bc195be7c27e82a8fb745d6f204e2b860936a5d7cf25c20"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-records.ts",
+              "sha256": "c19ac007d0810d776a37ab9e821e0d382f648fa30babb90fa2b79f9c437bfeae"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "148c8ef482904560d5664e83a3f0c30766b951849d1a248c2e4a67dc5cf703a1"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.test.ts",
+              "sha256": "bc74b516214cfb425fed1e155c07cf024c482e489a2f223859dee2ee9b744315"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "a87d0335e4e89d72ea5d0d0055cb03978b956d2da027eb8ca1ed0850afb6acc3"
+            },
+            {
+              "path": "apps/api/src/crm/crm.module.ts",
+              "sha256": "eb66475e1ba2e2c7f24ea6191f3c6ea5a480602334882b657cf6ecbc988fa06c"
+            },
+            {
+              "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+              "sha256": "3de1bde893692d4edef8dcb273ab6968be79f08d326c4ecbc570de38167ad776"
+            },
+            {
+              "path": "apps/api/src/storage/verified-attachments.service.ts",
+              "sha256": "15db51886faebc8e9dd6ec43d061ca65c403195ae236ad0c602627d44ecb1446"
+            },
+            {
+              "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+              "sha256": "350096a636ed5961699a2ed7dabaa923e7d88a61a7bd349a023c8e1a42af4afd"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+              "sha256": "c1e15fbac8b1f4b8caed1d19ca4723b7435af36c00d757cd5b20c2ba232955ac"
+            },
+            {
+              "path": "apps/web/src/components/CrmProfileRecords.tsx",
+              "sha256": "e2510e997261bb5a26ce21e02f77abbfea499305fe71c38cb9e0a7867272fa5b"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/lib/admin-list-query.ts",
+              "sha256": "fb467383174b119045f177d589b967680d95f4280727ce8a74978c1242831f2c"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "4079d7b6fe9b38cdd47cdc59c1221cdc7da8ed197a59c6318859c04f7839b554"
+            },
+            {
+              "path": "apps/web/src/routeTree.gen.ts",
+              "sha256": "debdde7186a74be96555e0e6423f7b9c13360347ac1424f57fefbfcd33792b24"
+            },
+            {
+              "path": "apps/web/src/routes/app/crm/profiles.$profileId.tsx",
+              "sha256": "8389aa97454aa02e55127c28b5d3646fb3d6a257edb4a4d28a9999fe640ef3bb"
+            },
+            {
+              "path": "packages/i18n/src/crm.ts",
+              "sha256": "abc80967824d5d71badd3af5510896b89d1e5ad2a87480609dd9103d847f704f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Required /app/crm/profiles/:profileId alias reaches the current staff detail, including retained archived profiles. Current viewer capabilities derive from requesting staff permission, not the selected customer admin flag. API reads profile/user, last login/password history, localized legal/address geography, active-session count and safe session references/device fields, sibling profiles, agent relationships and verification history.",
+            "Seven tabs include all six specified views and the additional other-profiles view. Summary cards, main address, legal/individual details, session metadata and record paging/keyboard/retry pass in both languages and desktop/mobile with light/dark contrast and contained layouts. Record cursors bind profile/kind and retain timestamp ties; other-profile/private identity evidence and usable bearer cookies are excluded. Identity correction and protected document download decisions remain governed by their separate permissions/workflows.",
+            "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
+            "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
+            "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
+            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
+          "limitations": [
+            "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
+            "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -23144,12 +23438,10 @@
         "story": "02-auth-users-admin.md#spec-7a52c8080dac"
       },
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -23297,8 +23589,157 @@
           "apps/web/e2e/crm-legal-edit.spec.ts",
           "apps/api/src/session/session-step-up.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-crm-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-crm-criterion-and-boundary-verification",
+          "reviewed_base_commit": "1a4c5b3ddf0c2f762e577bde38edea211090ab6a",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
+              "sha256": "df85ead5a7701d7cc5fdc063a877752d4f725a6758bb8f79d040aeaf8fba0411"
+            },
+            {
+              "path": "apps/api/src/crm/crm-contact-http.integration.test.ts",
+              "sha256": "ac5aa2d866db05e62898ebe00b8174dd99e2f27b7fed2a9aa764cf233756a160"
+            },
+            {
+              "path": "apps/api/src/crm/crm-legal-edit-http.integration.test.ts",
+              "sha256": "2c46a8f501cde91bb81658ec5597185cb3fd18b92eff43ced1db3bb9b1c4910a"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-address.ts",
+              "sha256": "400401f147460031e4eb57fa85631065e52e5b85ad1d064119ceedfc7ec72483"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-legal.ts",
+              "sha256": "4653b5e17032fbc6e593bb5f47207510e980df36e2b800af66c010b6fc04c258"
+            },
+            {
+              "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+              "sha256": "308eb139107358e718684321a710735c92f851cedc9c098bcef61f9e64a9c577"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "148c8ef482904560d5664e83a3f0c30766b951849d1a248c2e4a67dc5cf703a1"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.test.ts",
+              "sha256": "bc74b516214cfb425fed1e155c07cf024c482e489a2f223859dee2ee9b744315"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "a87d0335e4e89d72ea5d0d0055cb03978b956d2da027eb8ca1ed0850afb6acc3"
+            },
+            {
+              "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+              "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "acc951d1a539722938b0aa668831de404e0ee6a344a2a8d145682fa99cb21dbe"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/web/e2e/crm-address-edit.spec.ts",
+              "sha256": "81b9a180843fd5081599c2c150d620a80418aa510ef1a87870b0c16b12b7d903"
+            },
+            {
+              "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+              "sha256": "350096a636ed5961699a2ed7dabaa923e7d88a61a7bd349a023c8e1a42af4afd"
+            },
+            {
+              "path": "apps/web/e2e/crm-legal-edit.spec.ts",
+              "sha256": "fa7e9ffa6d169bcb88531a4993af4466188ffe6fbc533cdd3b5156b6f0b15385"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/CrmAddressEditor.test.tsx",
+              "sha256": "2bfefabb0ef97d3cfcde14347cdf64c05317b97486776ec7bd8093c475720a8b"
+            },
+            {
+              "path": "apps/web/src/components/CrmAddressEditor.tsx",
+              "sha256": "f9b769db2ca9258fb3164ca6967ec5a571470dbcf7b9ed314ab3b6f387692ae7"
+            },
+            {
+              "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
+              "sha256": "95905658716ee8117706f97110ddbc50f83ee69ac338392d7332a446b22e6b57"
+            },
+            {
+              "path": "apps/web/src/components/CrmLegalEditor.tsx",
+              "sha256": "75ed3bbbfa17d49b0b021e8bae76ac5009b17bc3608bf60f34450905ad634662"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/lib/admin-list-query.ts",
+              "sha256": "fb467383174b119045f177d589b967680d95f4280727ce8a74978c1242831f2c"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "4079d7b6fe9b38cdd47cdc59c1221cdc7da8ed197a59c6318859c04f7839b554"
+            },
+            {
+              "path": "kanban/epics/02-auth-users-admin.md",
+              "sha256": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55"
+            },
+            {
+              "path": "packages/i18n/src/crm.ts",
+              "sha256": "abc80967824d5d71badd3af5510896b89d1e5ad2a87480609dd9103d847f704f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Current strict controller accepts only editable title/profile email/mobile/address/legal changes. Primary individual and legal identity fields remain locked and link to the correction workflow when authorized. Sign-in email/mobile/username remain read-only; profile contacts do not change credentials.",
+            "Profile lock, current crm:edit/session/CSRF/recent step-up, six-digit microsecond revision, geography/company references and final proof preserve edit authority. Contacts/address/legal before/after audits share the transaction. Wrong profile, removed/stale/archived rows, protected/invalid fields, lock-time permission changes, concurrent revisions and audit rollback pass actual HTTP/PostgreSQL tests.",
+            "Inline Save/Cancel forms require explicit confirmed snapshots, validate fields and retain drafts during unavailable options, server errors, conflict, invalid receipt and retry. Both languages/desktop/mobile pass; acknowledged profile/revision/address/legal values must match the captured changes before clearing state.",
+            "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
+            "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
+            "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
+            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
+          "limitations": [
+            "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
+            "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -23312,12 +23753,10 @@
         "story": "02-auth-users-admin.md#spec-7a52c8080dac"
       },
       "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -23406,8 +23845,100 @@
           "apps/api/src/notifications/notifications.service.ts",
           "apps/api/src/session/session-step-up.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-crm-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-crm-criterion-and-boundary-verification",
+          "reviewed_base_commit": "1a4c5b3ddf0c2f762e577bde38edea211090ab6a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+              "sha256": "308eb139107358e718684321a710735c92f851cedc9c098bcef61f9e64a9c577"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "148c8ef482904560d5664e83a3f0c30766b951849d1a248c2e4a67dc5cf703a1"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "a87d0335e4e89d72ea5d0d0055cb03978b956d2da027eb8ca1ed0850afb6acc3"
+            },
+            {
+              "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+              "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "acc951d1a539722938b0aa668831de404e0ee6a344a2a8d145682fa99cb21dbe"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+              "sha256": "350096a636ed5961699a2ed7dabaa923e7d88a61a7bd349a023c8e1a42af4afd"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/lib/admin-list-query.ts",
+              "sha256": "fb467383174b119045f177d589b967680d95f4280727ce8a74978c1242831f2c"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "4079d7b6fe9b38cdd47cdc59c1221cdc7da8ed197a59c6318859c04f7839b554"
+            },
+            {
+              "path": "packages/i18n/src/crm.ts",
+              "sha256": "abc80967824d5d71badd3af5510896b89d1e5ad2a87480609dd9103d847f704f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Verify accepts DRAFT/ACTIVE/PENDING_VERIFICATION; unverify/reverify accept VERIFIED and require a nonblank reason. Unsupported actions/source states, absent/archived profiles and denied current permission remain protected. UI shows only available transitions, current status, reason and confirmation; invalid/mismatched acknowledgements cannot announce success.",
+            "Current profile/owner lock and final crm:verify/session/CSRF/recent step-up checks surround state/audit/notice transaction. Metadata records before/after, actor, reason and owner. Concurrent same-state review writes one notice; owner changes after lock acquisition target the correct recipient. In-app and local test email/SMS outbox/delivery preserve preferences and atomic rollback. No live external-provider delivery certification.",
+            "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
+            "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
+            "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
+            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
+          "limitations": [
+            "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
+            "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -23421,12 +23952,10 @@
         "story": "02-auth-users-admin.md#spec-7a52c8080dac"
       },
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -23529,8 +24058,112 @@
           "apps/api/src/session/session.service.ts",
           "apps/api/src/session/session-step-up.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-crm-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "current-crm-criterion-and-boundary-verification",
+          "reviewed_base_commit": "1a4c5b3ddf0c2f762e577bde38edea211090ab6a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "36dcae2f8c6f693e1b66347d15e211193b8720dc301f9482120cdc0053822bb2"
+            },
+            {
+              "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+              "sha256": "4c2a11811f174a66be642f8e5c92e49ce4ad7d38a04494835a52041cf7e1faa6"
+            },
+            {
+              "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+              "sha256": "308eb139107358e718684321a710735c92f851cedc9c098bcef61f9e64a9c577"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "148c8ef482904560d5664e83a3f0c30766b951849d1a248c2e4a67dc5cf703a1"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "a87d0335e4e89d72ea5d0d0055cb03978b956d2da027eb8ca1ed0850afb6acc3"
+            },
+            {
+              "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+              "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "acc951d1a539722938b0aa668831de404e0ee6a344a2a8d145682fa99cb21dbe"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "fcd4ecb530a72a8b3c2238b9ceb442974c087d575cee544817f07c6b6cc101e1"
+            },
+            {
+              "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+              "sha256": "350096a636ed5961699a2ed7dabaa923e7d88a61a7bd349a023c8e1a42af4afd"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/hooks/useListQuery.ts",
+              "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+            },
+            {
+              "path": "apps/web/src/lib/admin-list-query.ts",
+              "sha256": "fb467383174b119045f177d589b967680d95f4280727ce8a74978c1242831f2c"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "4079d7b6fe9b38cdd47cdc59c1221cdc7da8ed197a59c6318859c04f7839b554"
+            },
+            {
+              "path": "packages/i18n/src/crm.ts",
+              "sha256": "abc80967824d5d71badd3af5510896b89d1e5ad2a87480609dd9103d847f704f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Separate reason-required force-password and expire-session controls capture the selected customer and require confirmation/step-up. Actual endpoints retain current admin:users:edit authority and target locks, revoke session/refresh authorization and audit actor/reason. Target disappearance, role/session/CSRF/step-up/final-deadline changes, intentional self-revocation and notice/audit failures preserve all-or-nothing writes.",
+            "Force-password sets must_change_password; actual subsequent login creates only a short-lived password-change token and no normal session.15 current HTTP cases preserve strong password/history policy, token replacement, invalid authorization, audit rollback, one concurrent completion, old-credential revocation and expiry while waiting for account/session. Private account notices and both action UIs pass retry/reason/target-acknowledgement cases in both languages/desktop/mobile.",
+            "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
+            "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
+            "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
+            "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
+          "limitations": [
+            "Current local production-browser fixtures and actual HTTP/PostgreSQL acceptance. No live external identity/email/SMS provider, production-scale performance or release deployment certification.",
+            "Only this task’s effective criteria are accepted. Six original v0.2 owner decisions, identity-correction resolution and broader staff/financial/operational tasks remain independently tracked."
+          ]
+        }
       }
     },
     {
@@ -142935,6 +143568,25 @@
         "External evidence: /Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal"
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal"
+    },
+    "release-0.3-crm-acceptance": {
+      "title": "Renew CRM lists, profile detail and authorized staff actions",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.01.02",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04"
+      ],
+      "summary": "Existing CRM implementation satisfies all six current criteria. Fix only the checkbox test timing around asynchronous URL navigation, retaining all prior assertions and adding retained-state checks. No production rebuild or speculative replacement.",
+      "validation": [
+        "161 focused API/unit/HTTP/PostgreSQL cases pass:146 CRM list/search/sort/records/contact/address/legal/verification/session-permission cases and15 actual forced-password lifecycle cases.54 source UI cases pass in existing recovery/address/legal editor files. No zero-case or stopped-suite success claimed.",
+        "124 distinct production-browser cases pass:68 main list/detail/permission/action/calendar/history/recovery cases plus56 sorting/required-route/address/legal edit cases. The initial68-case run remains failed with65 passing cases.62 unchanged passing cases are reused;6 final filter/full-tabs cases replace all4 changed filter cases and2 selected full-tabs cases. This yields68 distinct, not71.56 supplement cases are disjoint. No whole green124-case invocation claimed.",
+        "339 distinct passing cases total. Current Persian dark mobile overview and English desktop session captures inspected. Complete one-test-file change reviewed once. Original test source is byte-identical after reversing the checkbox block/two added state assertions; every old filter/debounce/cursor assertion remains. No production behavior or timeout/permission/financial assertion changed.",
+        "All production source/dependency/configuration and5497 compiled outputs match verified1a4c5b. Matching production build/type evidence is reused. Only one browser test changes. Changed test lint/format and final source/assertion proof pass. Graph coverage checked; partial test-type import read directly. Source and receipts: /Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance"
     }
   },
   "historical_improvements": [
@@ -142974,22 +143626,23 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-crm-inspection",
+    "id": "release-0.3-identity-and-membership",
     "release": "0.3.0",
-    "goal": "Keep v0.2 publication blocked on its six explicitly pending original decisions. Continue independent preparation for the next dependent milestone: inspect existing CRM users list/filter/detail and sensitive session actions; renew only their own criteria and build demonstrated gaps. Do not accept or deploy v0.3 before v0.2 acceptance.",
+    "goal": "Continue independent preparation of identity correction, staff creation/roles and legal agents/invitation/ownership workflows. Inspect existing implementation and reuse bound shared evidence; build only exact gaps. v0.2 remains blocked on its six original decisions. No v0.3 acceptance/deployment before v0.2 acceptance.",
     "task_keys": [
-      "02-auth-users-admin.md#T-05.01.01",
-      "02-auth-users-admin.md#T-05.01.02",
-      "02-auth-users-admin.md#T-05.02.01",
-      "02-auth-users-admin.md#T-05.02.02",
-      "02-auth-users-admin.md#T-05.02.03",
-      "02-auth-users-admin.md#T-05.02.04"
+      "02-auth-users-admin.md#T-05.02.05",
+      "02-auth-users-admin.md#T-05.03.01",
+      "02-auth-users-admin.md#T-05.03.02",
+      "02-auth-users-admin.md#T-05.04.01",
+      "02-auth-users-admin.md#T-05.04.02",
+      "02-auth-users-admin.md#T-05.04.03",
+      "02-auth-users-admin.md#T-05.04.05"
     ]
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
     "next_update_after": "release-readiness#R-01.01",
-    "method": "233 original v0.2 tasks accepted and full four-service bilingual desktop/mobile intake/recovery rehearsal complete. Six original owner decisions still block the first milestone; independent CRM/financial preparation may continue. Later operational/live-provider evidence and production authorization prevent a defensible launch date."
+    "method": "Four-service intake/recovery rehearsal and six CRM list/detail/edit/verification/sensitive-account tasks accepted from current source-bound checks. v0.2 still awaits six original owner decisions; independent staff/financial preparation continues. Later operational/provider evidence and production authorization remain required."
   },
   "capabilities": [
     {

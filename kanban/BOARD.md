@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T01:15:59.649677+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T01:25:25.867696+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 248 | Accepted with unchanged source bindings. |
-| verify | 1058 | Existing work may be complete; inspect evidence before building. |
+| done | 254 | Accepted with unchanged source bindings. |
+| verify | 1052 | Existing work may be complete; inspect evidence before building. |
 | partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,14 +39,15 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Keep v0.2 publication blocked on its six explicitly pending original decisions. Continue independent preparation for the next dependent milestone: inspect existing CRM users list/filter/detail and sensitive session actions; renew only their own criteria and build demonstrated gaps. Do not accept or deploy v0.3 before v0.2 acceptance.
+Continue independent preparation of identity correction, staff creation/roles and legal agents/invitation/ownership workflows. Inspect existing implementation and reuse bound shared evidence; build only exact gaps. v0.2 remains blocked on its six original decisions. No v0.3 acceptance/deployment before v0.2 acceptance.
 
-- `02-auth-users-admin.md#T-05.01.01`: CRM users list page
-- `02-auth-users-admin.md#T-05.01.02`: CRM filters and search
-- `02-auth-users-admin.md#T-05.02.01`: Full profile view for CRM staff
-- `02-auth-users-admin.md#T-05.02.02`: Staff profile editing
-- `02-auth-users-admin.md#T-05.02.03`: Verification state management
-- `02-auth-users-admin.md#T-05.02.04`: Force password change and session expiry
+- `02-auth-users-admin.md#T-05.02.05`: Identity correction through verification case
+- `02-auth-users-admin.md#T-05.03.01`: Create staff user
+- `02-auth-users-admin.md#T-05.03.02`: Staff role assignment
+- `02-auth-users-admin.md#T-05.04.01`: Agent list for legal entity
+- `02-auth-users-admin.md#T-05.04.02`: Agent invitation flow
+- `02-auth-users-admin.md#T-05.04.03`: Accept/decline invitation
+- `02-auth-users-admin.md#T-05.04.05`: Ownership transfer
 
 ## v0.2.0: Complete customer journeys
 
@@ -308,12 +309,12 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | --- | --- | --- | --- |
 | `release-readiness#R-02.01` | todo | Inventory needed | Renew fulfillment and financial closure acceptance |
 | `release-readiness#R-02.02` | todo | Inventory needed | Verify staff operations and customer support for all services |
-| `02-auth-users-admin.md#T-05.01.01` | verify | Earlier acceptance_verified | CRM users list page |
-| `02-auth-users-admin.md#T-05.01.02` | verify | Earlier acceptance_verified | CRM filters and search |
-| `02-auth-users-admin.md#T-05.02.01` | verify | Earlier acceptance_verified | Full profile view for CRM staff |
-| `02-auth-users-admin.md#T-05.02.02` | verify | Earlier acceptance_verified | Staff profile editing |
-| `02-auth-users-admin.md#T-05.02.03` | verify | Earlier acceptance_verified | Verification state management |
-| `02-auth-users-admin.md#T-05.02.04` | verify | Earlier acceptance_verified | Force password change and session expiry |
+| `02-auth-users-admin.md#T-05.01.01` | done | Earlier acceptance_verified | CRM users list page |
+| `02-auth-users-admin.md#T-05.01.02` | done | Earlier acceptance_verified | CRM filters and search |
+| `02-auth-users-admin.md#T-05.02.01` | done | Earlier acceptance_verified | Full profile view for CRM staff |
+| `02-auth-users-admin.md#T-05.02.02` | done | Earlier acceptance_verified | Staff profile editing |
+| `02-auth-users-admin.md#T-05.02.03` | done | Earlier acceptance_verified | Verification state management |
+| `02-auth-users-admin.md#T-05.02.04` | done | Earlier acceptance_verified | Force password change and session expiry |
 | `02-auth-users-admin.md#T-05.02.05` | verify | Earlier acceptance_verified | Identity correction through verification case |
 | `02-auth-users-admin.md#T-05.02.06` | partial | Earlier partial | Profile deletion by staff |
 | `02-auth-users-admin.md#T-05.03.01` | verify | Earlier acceptance_verified | Create staff user |
