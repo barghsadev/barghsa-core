@@ -67,6 +67,11 @@ import {
   reconcileWalletBalances,
 } from './wallet/reconciliation-scanner.js';
 import {
+  DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS,
+  INVOICE_RECONCILIATION_JOB_TYPE,
+  reconcileInvoicePayments,
+} from './invoices/reconciliation-scanner.js';
+import {
   DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS,
   ONLINE_TOPUP_EXPIRY_JOB_TYPE,
   expireStaleOnlineTopUps,
@@ -807,6 +812,54 @@ async function main(): Promise<void> {
 
   process.on('SIGTERM', () => clearInterval(walletReconciler));
   process.on('SIGINT', () => clearInterval(walletReconciler));
+
+  // Invoice funding is reconciled separately so failures retain their own retry history.
+  const invoiceReconcileRaw = Number(
+    process.env['INVOICE_RECONCILIATION_SCAN_MS'] ??
+      String(DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS)
+  );
+  const invoiceReconcileInterval =
+    Number.isSafeInteger(invoiceReconcileRaw) && invoiceReconcileRaw >= 1000
+      ? invoiceReconcileRaw
+      : DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS;
+  if (invoiceReconcileInterval !== invoiceReconcileRaw)
+    logger.warn(
+      `Invalid INVOICE_RECONCILIATION_SCAN_MS '${process.env['INVOICE_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS}ms`
+    );
+  let invoiceReconcileInFlight = false;
+  const invoiceReconciler = pollers.every(async () => {
+    if (draining || invoiceReconcileInFlight) return;
+    invoiceReconcileInFlight = true;
+    try {
+      const result = await reconcileInvoicePayments();
+      if (result.reported || result.errors.length)
+        logger.info(
+          `Invoice reconciliation: reported=${result.reported} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
+        );
+      if (result.errors.length)
+        await recordJobFailure({
+          jobType: INVOICE_RECONCILIATION_JOB_TYPE,
+          error: result.errors.join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length, reported: result.reported },
+        });
+      else await recordJobSuccess(INVOICE_RECONCILIATION_JOB_TYPE);
+    } catch (error) {
+      logger.error(
+        `Invoice reconciliation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+      await recordJobFailure({
+        jobType: INVOICE_RECONCILIATION_JOB_TYPE,
+        error: error instanceof Error ? error.message : 'Invoice reconciliation failed',
+        errorCategory: 'transient',
+      });
+    } finally {
+      invoiceReconcileInFlight = false;
+    }
+  }, invoiceReconcileInterval);
+  invoiceReconciler.unref();
+  process.on('SIGTERM', () => clearInterval(invoiceReconciler));
+  process.on('SIGINT', () => clearInterval(invoiceReconciler));
 
   // ── Online top-up Pending TTL expiry (S-04.2.02, T-04.2.02.07) ──────
   // Minute cron: online Pending top-ups older than the TTL are

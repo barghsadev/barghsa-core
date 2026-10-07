@@ -58,6 +58,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'invoice_reminder_scheduler', label: 'Invoice reminder scheduler' },
   { key: 'invoice_reminder_sender', label: 'Invoice reminder sender' },
   { key: 'wallet_reconciliation_scan', label: 'Wallet ledger reconciliation' },
+  { key: 'invoice_reconciliation_scan', label: 'Invoice funding reconciliation' },
   { key: 'online_topup_expiry_scan', label: 'Online top-up Pending TTL expiry' },
   { key: 'invitation_expiry_scan', label: 'Team invitation expiry' },
   { key: 'saving_inventory_expiry', label: 'Saving hardware reservation expiry' },

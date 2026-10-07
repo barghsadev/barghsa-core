@@ -12,6 +12,7 @@ const intervals = [
   'INVOICE_REMINDER_SCHEDULE_MS',
   'INVOICE_REMINDER_SEND_MS',
   'WALLET_RECONCILIATION_SCAN_MS',
+  'INVOICE_RECONCILIATION_SCAN_MS',
   'ONLINE_TOPUP_EXPIRY_SCAN_MS',
   'INVITATION_EXPIRY_SCAN_MS',
 ];
@@ -177,6 +178,7 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
       'invoice_reminder_scheduler',
       'invoice_reminder_sender',
       'wallet_reconciliation_scan',
+      'invoice_reconciliation_scan',
       'online_topup_expiry_scan',
       'invitation_expiry_scan',
     ];
@@ -217,6 +219,85 @@ it('compiled worker falls back from invalid intervals and drains on SIGINT', asy
     await worker.close();
   }
 }, 20000);
+
+it('compiled worker schedules invoice reconciliation, isolates failure and clears the job after recovery', async () => {
+  const worker = await startWorker();
+  try {
+    const profile = randomUUID(),
+      invoice = randomUUID();
+    await worker.pool.query("INSERT INTO profiles(id,user_id) VALUES($1,'worker-process-actor')", [
+      profile,
+    ]);
+    await worker.pool
+      .query(`CREATE FUNCTION fail_invoice_reconciliation() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.details->>'source'='invoice_payments' THEN RAISE EXCEPTION 'fixture invoice report failed'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER fail_invoice_reconciliation BEFORE INSERT ON reconciliation_exceptions FOR EACH ROW EXECUTE FUNCTION fail_invoice_reconciliation()`);
+    await worker.pool.query(
+      "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount) VALUES($1,$2,'Unpaid',100,10)",
+      [invoice, profile]
+    );
+    const before = (await worker.pool.query('SELECT * FROM invoices WHERE id=$1', [invoice])).rows;
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT status FROM background_jobs WHERE job_type='invoice_reconciliation_scan'"
+            )
+          ).rows[0]?.status,
+        { timeout: 6000 }
+      )
+      .toBe('failed');
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT id FROM reconciliation_exceptions WHERE details->>'invoiceId'=$1",
+          [invoice]
+        )
+      ).rows
+    ).toEqual([]);
+    expect((await worker.pool.query('SELECT * FROM invoices WHERE id=$1', [invoice])).rows).toEqual(
+      before
+    );
+    await worker.pool.query(
+      'DROP TRIGGER fail_invoice_reconciliation ON reconciliation_exceptions; DROP FUNCTION fail_invoice_reconciliation()'
+    );
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT details FROM reconciliation_exceptions WHERE details->>'invoiceId'=$1",
+              [invoice]
+            )
+          ).rows,
+        { timeout: 6000 }
+      )
+      .toEqual([
+        expect.objectContaining({
+          details: expect.objectContaining({ paidAmount: '10', recordedFunding: '0', delta: '10' }),
+        }),
+      ]);
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT status FROM background_jobs WHERE job_type='invoice_reconciliation_scan'"
+            )
+          ).rows[0]?.status,
+        { timeout: 6000 }
+      )
+      .toBe('resolved');
+    expect((await worker.pool.query('SELECT * FROM invoices WHERE id=$1', [invoice])).rows).toEqual(
+      before
+    );
+    expect(await worker.stop()).toEqual({ code: 0, signal: null });
+    expect(worker.logs()).not.toMatch(/Fatal worker|Uncaught exception|failed to record/);
+  } finally {
+    await worker.close();
+  }
+}, 25000);
 
 it('compiled worker keeps liveness but rejects readiness and metrics during database outage', async () => {
   const worker = await startWorker();

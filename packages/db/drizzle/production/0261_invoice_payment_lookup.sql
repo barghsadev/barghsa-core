@@ -1,0 +1,1 @@
+CREATE INDEX "idx_wallet_tx_invoice_payment_ref" ON "wallet_transactions" USING btree (lower("ref_id"),"wallet_id") WHERE "wallet_transactions"."type" = 'payment' AND "wallet_transactions"."state" = 'Completed';

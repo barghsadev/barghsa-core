@@ -235,6 +235,9 @@ export const walletTransactions = pgTable(
     walletIdIdx: index('idx_wallet_tx_wallet_id').on(table.walletId),
     stateIdx: index('idx_wallet_tx_state').on(table.state),
     typeIdx: index('idx_wallet_tx_type').on(table.type),
+    invoicePaymentLookupIdx: index('idx_wallet_tx_invoice_payment_ref')
+      .on(sql`lower(${table.refId})`, table.walletId)
+      .where(sql`${table.type} = 'payment' AND ${table.state} = 'Completed'`),
     /** Enforce idempotency: duplicate key detection. */
     idempotencyUniqueIdx: uniqueIndex('idx_wallet_tx_idempotency').on(table.idempotencyKey),
     /**

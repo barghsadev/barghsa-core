@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish concrete reconciliation/quality criteria: inspect current invoice, receipt, refund and provider provenance before adding bounded locked reconciliation producers; fix the Wallet payload under the unchanged 300 KB gate and diagnose the retained filter-animation trace. Preserve accepted gift behavior, earlier owner/dependency/operational gates and the unfinished consultation patch.
+Finish remaining financial reconciliation and quality criteria: inspect provider/refund sources before implementing locked bounded reports; preserve the pending cumulative refund accounting decision and credit-note entitlement basis. Fix Wallet under the unchanged 300 KB budget and diagnose the retained filter-animation trace. Keep prior owner, release, operational and consultation work intact.
 
 - `02-auth-users-admin.md#T-09.09.01`: Reconciliation exceptions view
 
