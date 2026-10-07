@@ -170,7 +170,9 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
     const metrics = await fetch(worker.base + '/metrics');
     expect(metrics.status).toBe(200);
     expect(metrics.headers.get('content-type')).toContain('text/plain');
-    expect(await metrics.text()).toContain('# HELP');
+    const metricText = await metrics.text();
+    expect(metricText).toContain('# HELP');
+    expect(metricText).toContain('# TYPE provider_sms_credit_low gauge');
     expect((await fetch(worker.base + '/missing')).status).toBe(404);
     const jobs = [
       'ai_model_test',

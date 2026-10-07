@@ -63,6 +63,13 @@ export const providerEmailHealth = new Gauge({
   registers: [registry],
 });
 
+export const providerSmsCreditLow = new Gauge({
+  name: 'provider_sms_credit_low',
+  help: 'Active verified SMS provider credit state: 1=below configured threshold, 0=not low',
+  labelNames: ['provider_id'] as const,
+  registers: [registry],
+});
+
 /**
  * Record one delivery attempt in the attempts counter. Called by the outbox
  * runner after each channel attempt resolves (success or failure). Pure
@@ -117,6 +124,15 @@ export async function collectNotificationGauges(
   providerEmailHealth.reset();
   for (const row of healthRes.rows as Array<{ id: string; health: number }>) {
     providerEmailHealth.set({ provider_id: row.id }, Number(row.health));
+  }
+
+  const creditRes = await pool.query(
+    `SELECT id, CASE WHEN low_credit_alert_active THEN 1 ELSE 0 END AS low_credit
+       FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'`
+  );
+  providerSmsCreditLow.reset();
+  for (const row of creditRes.rows as Array<{ id: string; low_credit: number }>) {
+    providerSmsCreditLow.set({ provider_id: row.id }, Number(row.low_credit));
   }
 }
 

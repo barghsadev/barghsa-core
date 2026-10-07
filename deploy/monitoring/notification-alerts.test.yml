@@ -278,5 +278,76 @@
             { 'eval_time': '3m', 'alertname': 'AiModelCircuitOpen', 'exp_alerts': [] },
           ],
       },
+      {
+        'name': 'SMS low credit is P2, deduplicates replicas and resolves after recovery',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'provider_sms_credit_low{job="worker",environment="prod",provider_id="sms-a",instance="a",pod="a"}',
+              'values': '0 1 1 0 0',
+            },
+            {
+              'series': 'provider_sms_credit_low{job="worker",environment="prod",provider_id="sms-a",instance="b",pod="b"}',
+              'values': '0 1 0 0 0',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'SmsProviderLowCredit', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'SmsProviderLowCredit',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'prod',
+                        'provider_id': 'sms-a',
+                        'severity': 'warning',
+                        'priority': 'P2',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'SMS provider credit is low',
+                        'description': 'Provider sms-a is below its configured credit threshold. Review the observed balance and replenish credit in /admin/sms-providers.',
+                      },
+                  },
+                ],
+            },
+            {
+              'eval_time': '2m',
+              'alertname': 'SmsProviderLowCredit',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'prod',
+                        'provider_id': 'sms-a',
+                        'severity': 'warning',
+                        'priority': 'P2',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'SMS provider credit is low',
+                        'description': 'Provider sms-a is below its configured credit threshold. Review the observed balance and replenish credit in /admin/sms-providers.',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '3m', 'alertname': 'SmsProviderLowCredit', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'Absent SMS credit observations do not invent an alert',
+        'interval': '1m',
+        'input_series': [],
+        'alert_rule_test':
+          [{ 'eval_time': '30m', 'alertname': 'SmsProviderLowCredit', 'exp_alerts': [] }],
+      },
     ],
 }

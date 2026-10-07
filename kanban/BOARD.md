@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 459 | Accepted with unchanged source bindings. |
-| verify | 843 | Existing work may be complete; inspect evidence before building. |
-| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 461 | Accepted with unchanged source bindings. |
+| verify | 837 | Existing work may be complete; inspect evidence before building. |
+| partial | 63 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,14 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and renew SMS.ir configuration, locale-aware mappings, adapter, credit monitoring and staff UI together. Reuse matching provider authority/encryption/OTP and forms evidence; build only demonstrated gaps. Keep external SMS delivery, production mapping/credit/alert receipts and all release gates separate. Preserve verified recipients, throughput, unknown-delivery holds and pending owner decisions.
+Add active-template variable choices to SMS mapping authoring using the existing provider permission and catalogue patterns. Preserve saved values, current event/locale allowlists, independent resource recovery, private scope and exact command/OTP/activation proof. Pending SMS storage/default/credit owner dispositions remain recorded; do not infer approval.
 
-- `05-notifications-documents-ai.md#T-05.07.01`: SMS.ir config entity
-- `05-notifications-documents-ai.md#T-05.07.02`: Template mapping
-- `05-notifications-documents-ai.md#T-05.07.03`: SMS.ir adapter
-- `05-notifications-documents-ai.md#T-05.07.04`: Credit monitoring
 - `05-notifications-documents-ai.md#T-05.07.05`: SMS.ir admin UI
-- `02-auth-users-admin.md#T-09.06.02`: SMS.ir configuration
 
 ## v0.2.0: Complete customer journeys
 
@@ -529,7 +524,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `release-readiness#R-03.02` | todo | Inventory needed | Verify live staging provider and storage boundaries |
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
-| `02-auth-users-admin.md#T-09.06.02` | verify | Earlier acceptance_verified | SMS.ir configuration |
+| `02-auth-users-admin.md#T-09.06.02` | done | Earlier acceptance_verified | SMS.ir configuration |
 | `02-auth-users-admin.md#T-09.06.03` | done | Earlier acceptance_verified | Notification daytime window configuration |
 | `02-auth-users-admin.md#T-09.11.01` | verify | Earlier acceptance_verified | AI model management |
 | `02-auth-users-admin.md#T-09.11.02` | partial | Earlier partial | Knowledge base management |
@@ -565,11 +560,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.06.05` | done | Earlier acceptance_verified | Secrets encryption & masking |
 | `05-notifications-documents-ai.md#T-05.06.06` | partial | Earlier partial | Circuit breaker for email |
 | `05-notifications-documents-ai.md#T-05.06.07` | verify | Earlier acceptance_verified | Email delivery callback handling |
-| `05-notifications-documents-ai.md#T-05.07.01` | verify | Inventory needed | SMS.ir config entity |
-| `05-notifications-documents-ai.md#T-05.07.02` | verify | Inventory needed | Template mapping |
-| `05-notifications-documents-ai.md#T-05.07.03` | verify | Inventory needed | SMS.ir adapter |
-| `05-notifications-documents-ai.md#T-05.07.04` | verify | Recorded batch work | Credit monitoring |
-| `05-notifications-documents-ai.md#T-05.07.05` | verify | Inventory needed | SMS.ir admin UI |
+| `05-notifications-documents-ai.md#T-05.07.01` | partial | Recorded batch work | SMS.ir config entity |
+| `05-notifications-documents-ai.md#T-05.07.02` | partial | Recorded batch work | Template mapping |
+| `05-notifications-documents-ai.md#T-05.07.03` | done | Recorded batch work | SMS.ir adapter |
+| `05-notifications-documents-ai.md#T-05.07.04` | partial | Recorded batch work | Credit monitoring |
+| `05-notifications-documents-ai.md#T-05.07.05` | partial | Recorded batch work | SMS.ir admin UI |
 | `05-notifications-documents-ai.md#T-05.08.01` | verify | Recorded batch work | Error classification utility |
 | `05-notifications-documents-ai.md#T-05.08.02` | verify | Recorded batch work | Circuit breaker implementation |
 | `05-notifications-documents-ai.md#T-05.08.03` | verify | Recorded batch work | Provider health dashboard |

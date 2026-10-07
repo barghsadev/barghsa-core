@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { createIsolatedTestDb, dropTestSchema, type IsolatedTestDb } from '@barghsa/db/test';
 import { checkSmsCredit } from './sms-credit-monitor.js';
+import { collectNotificationGauges, exportWorkerMetrics } from './worker-metrics.js';
 
 let ctx: IsolatedTestDb;
 const providerId = '5dd3409d-1a90-4a31-b5ad-8a90d423723e';
@@ -26,6 +27,9 @@ beforeAll(async () => {
   );
   for (const statement of sql.split('--> statement-breakpoint'))
     await ctx.pool.query(statement.trim());
+  await ctx.pool.query(`CREATE TABLE notification_outbox (created_at timestamptz, status text);
+    CREATE TABLE notification_dead_letter (status text);
+    CREATE TABLE email_provider_configs (id uuid, degraded boolean)`);
 }, 40_000);
 
 afterAll(async () => {
@@ -99,4 +103,39 @@ it('keeps the last known balance and retries after a provider failure', async ()
   expect(result.rows[0].credit_check_lease_token).toBeNull();
   expect(result.rows[0].credit_next_check_at.getTime()).toBeGreaterThan(Date.now() + 14 * 60_000);
   expect(await checkSmsCredit(ctx.pool, request)).toBe('idle');
+});
+
+it('exports low credit only for the current verified active provider and clears stale series', async () => {
+  expect(await checkSmsCredit(ctx.pool, creditResponse(50))).toBe('checked');
+  await collectNotificationGauges(ctx.pool);
+  expect(await exportWorkerMetrics()).toContain(
+    `provider_sms_credit_low{provider_id="${providerId}"} 1`
+  );
+  expect(await exportWorkerMetrics()).not.toContain('fixture-key');
+
+  for (const [status, proof] of [
+    ['draft', 'passed'],
+    ['superseded', 'passed'],
+    ['disabled', 'passed'],
+    ['active', 'pending'],
+  ]) {
+    await ctx.pool.query('UPDATE sms_provider_configs SET status=$1,last_test_status=$2', [
+      status,
+      proof,
+    ]);
+    await collectNotificationGauges(ctx.pool);
+    expect(await exportWorkerMetrics()).not.toMatch(/provider_sms_credit_low\{provider_id=/);
+  }
+
+  await ctx.pool.query(
+    "UPDATE sms_provider_configs SET status='active',last_test_status='passed',credit_next_check_at=NOW()"
+  );
+  expect(await checkSmsCredit(ctx.pool, creditResponse(150))).toBe('checked');
+  await collectNotificationGauges(ctx.pool);
+  expect(await exportWorkerMetrics()).toContain(
+    `provider_sms_credit_low{provider_id="${providerId}"} 0`
+  );
+  await ctx.pool.query('DELETE FROM sms_provider_configs');
+  await collectNotificationGauges(ctx.pool);
+  expect(await exportWorkerMetrics()).not.toMatch(/provider_sms_credit_low\{provider_id=/);
 });
