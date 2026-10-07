@@ -1,3 +1,4 @@
+import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -25,7 +26,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -51,9 +52,6 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: malformed ? [{ ...row, id: 'wrong' }] : rows });
     });
     await page.goto('/admin/failed-notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
     await page.locator('summary').filter({ hasText: copy.title }).click();
     const panel = page.getByRole('region', { name: copy.title });
     await expect(panel.getByRole('alert')).toBeVisible();
@@ -80,7 +78,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`correction completion retains notes through step-up and rejects a wrong acknowledgment (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -113,12 +111,22 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ json: acknowledgment });
       }
     );
-    await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { verified: true } }));
+    let stepUps = 0;
+    await page.route('**/api/auth/step-up', (route) => {
+      stepUps++;
+      expect(route.request().postDataJSON()).toEqual({ password: 'fixture-password' });
+      expect(route.request().headers()['x-csrf-token']).toBe('fixture-csrf');
+      return route.fulfill({ json: { verified: true } });
+    });
+    await page.route('**/api/admin/notifications/templates', (route) =>
+      route.fulfill({ json: [] })
+    );
     await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-      document.cookie = 'barghsa_csrf=fixture-csrf; Path=/';
-    }, locale);
+    await page
+      .context()
+      .addCookies([
+        { url: new URL(page.url()).origin, name: 'barghsa_csrf', value: 'fixture-csrf' },
+      ]);
     await page.locator('summary').filter({ hasText: copy.title }).click();
     const panel = page.getByRole('region', { name: copy.title });
     await panel.getByRole('button', { name: copy.resolve, exact: true }).click();
@@ -136,8 +144,8 @@ for (const locale of ['en', 'fa'] as const) {
         .getByRole('region', { name: copy.title, includeHidden: true })
         .getByRole('listitem', { includeHidden: true })
     ).toHaveCount(1);
-    // Step-up clears its password after each submission, including an unconfirmed result.
-    await dialog.locator('input[type="password"]').fill('fixture-password');
+    // The verified session remains usable, while the submitted password is removed.
+    await expect(dialog.locator('input[type="password"]')).toHaveCount(0);
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('listitem')).toHaveCount(0);
@@ -147,5 +155,6 @@ for (const locale of ['en', 'fa'] as const) {
     await panel.getByLabel(copy.completed).check();
     await expect(panel.getByText(note, { exact: true })).toBeVisible();
     expect(calls).toBe(3);
+    expect(stepUps).toBe(1);
   });
 }

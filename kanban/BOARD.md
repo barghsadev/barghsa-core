@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 465 | Accepted with unchanged source bindings. |
-| verify | 832 | Existing work may be complete; inspect evidence before building. |
+| done | 466 | Accepted with unchanged source bindings. |
+| verify | 831 | Existing work may be complete; inspect evidence before building. |
 | partial | 64 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current email provider callback verification, receipt correlation, idempotency, suppression and failure boundaries. Reuse matching authority/provider evidence, build only demonstrated gaps, keep live provider receipts and callback/CSP owner policy gates open.
+Inspect current profile notification consent UI, scoped read/mutation/recovery and active-channel availability. Reuse registry/channel policy proofs; verify actual FA/EN customer journey, build only demonstrated gaps and retain launch/owner gates.
 
-- `05-notifications-documents-ai.md#T-05.06.07`: Email delivery callback handling
+- `05-notifications-documents-ai.md#T-05.05.03`: Consent UI in profile settings
 
 ## v0.2.0: Complete customer journeys
 
@@ -559,7 +559,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.06.04` | done | Earlier acceptance_verified | Provider admin UI |
 | `05-notifications-documents-ai.md#T-05.06.05` | done | Earlier acceptance_verified | Secrets encryption & masking |
 | `05-notifications-documents-ai.md#T-05.06.06` | partial | Earlier partial | Circuit breaker for email |
-| `05-notifications-documents-ai.md#T-05.06.07` | verify | Earlier acceptance_verified | Email delivery callback handling |
+| `05-notifications-documents-ai.md#T-05.06.07` | done | Earlier acceptance_verified | Email delivery callback handling |
 | `05-notifications-documents-ai.md#T-05.07.01` | partial | Recorded batch work | SMS.ir config entity |
 | `05-notifications-documents-ai.md#T-05.07.02` | partial | Recorded batch work | Template mapping |
 | `05-notifications-documents-ai.md#T-05.07.03` | done | Recorded batch work | SMS.ir adapter |
