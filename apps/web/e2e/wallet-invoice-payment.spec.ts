@@ -271,6 +271,8 @@ for (const locale of ['fa', 'en'] as const)
         return route.fulfill({ json: { verified: true } });
       });
       await page.goto(`/invoices/${invoiceId}`);
+      await expect(page.locator('html')).toHaveAttribute('lang', locale);
+      await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       await page
         .context()
         .addCookies([

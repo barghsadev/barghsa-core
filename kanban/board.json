@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T02:33:55.787294+00:00",
+  "updated": "2026-10-07T02:47:41.343253+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -50934,12 +50934,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d6a19219b3fc"
       },
       "requirement": "| T-04.2.03.01 | Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -51056,9 +51054,133 @@
         ],
         "batches": [
           "2026-09-24-invoice-return-after-top-up",
-          "2026-09-24-invoice-wallet-shortfall-handoff"
+          "2026-09-24-invoice-wallet-shortfall-handoff",
+          "release-0.3-wallet-payments-reversals"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
+          "reviewed_base_commit": "c6fc5ee7320a224d627e779d25d039c51b852370",
+          "source_evidence": [
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "e9338dfd6b8a33f28702b45dcfed5a8135ebf2da5cb68e90c2b8154459a221f8"
+            },
+            {
+              "path": "apps/api/src/finance/financial-submission-actor.ts",
+              "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+              "sha256": "e541d12f2dce38aa194c697c4b7690a8e348650b46de2669245c0d971d569d93"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.module.ts",
+              "sha256": "a5dd8e5792983a3d3f0e0acd7a6618d6f1ae0ae3249e7cd30475347b6c98854f"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+              "sha256": "5fd14372d10d40c5a44ca89b0987aec5ea591873f0bcdae43cd109881c0fb65a"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
+            },
+            {
+              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+              "sha256": "bb908e0e1d7a28efe69ce16b2fbd50a98a7d1e4d11243e12bdb0309a47610355"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "d2dbbf81d5b39a7f997d808e6db982b55f1a790acdb31a8635383642e718cfae"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "apps/web/vite.config.ts",
+              "sha256": "7a15874f33e5958c98647e947745b37ce0d7b4793003ff6865b0f3134e75d413"
+            },
+            {
+              "path": "packages/db/src/schema/idempotency-keys.ts",
+              "sha256": "dc4a2bcdf02e92603cad7498abd35acffaa4cb2409dd2fe3bda75ba62217ff01"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+              "sha256": "d407e6b2bb9d32181f16ec50d42520b0f86528ba12fced95ab8c9bc680d8a124"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "a441bad377bc7f01b025ab6172c851e984dc5e328d46cacd52dc0b5e76153dae"
+            },
+            {
+              "path": "packages/i18n/src/wallet-invoice-payment.ts",
+              "sha256": "a01d60530b9eb91b1c391b7e8d4d5795135252b47baeef4c36fcddde6e85bbf9"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+              "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current payment service canonicalizes invoice/profile UUIDs,requires a key and pays exactly the remaining eligible invoice balance with one full debit. Current customer wrapper holds active-profile/account/session authority and recent proof before/after the borrowed transaction; revoked membership,wrong profile/operating context,CSRF and late expiry fail closed. Captured expected amount and review hash match current locked invoice/balance/contracts before a new debit. Available balance below remaining cannot enable/pay; no partial wallet debit introduced.",
+            "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+            "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+          "limitations": [
+            "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
+            "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
+          ]
+        }
       }
     },
     {
@@ -51072,12 +51194,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d6a19219b3fc"
       },
       "requirement": "| T-04.2.03.02 | Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -51141,8 +51261,101 @@
           "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
           "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-payments-reversals"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
+          "reviewed_base_commit": "c6fc5ee7320a224d627e779d25d039c51b852370",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/financial-submission-actor.ts",
+              "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+              "sha256": "5fd14372d10d40c5a44ca89b0987aec5ea591873f0bcdae43cd109881c0fb65a"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "packages/db/src/schema/idempotency-keys.ts",
+              "sha256": "dc4a2bcdf02e92603cad7498abd35acffaa4cb2409dd2fe3bda75ba62217ff01"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+              "sha256": "d407e6b2bb9d32181f16ec50d42520b0f86528ba12fced95ab8c9bc680d8a124"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+              "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current profile->wallet->invoice locks and wallet version predicates serialize finance. Exact negative Completed debit,invoice paidAmount->total,Paid state/timestamp,mandatory money/state audit and cached acknowledgement commit within one caller transaction. Failures in audit,cache,invoice transition or final session/proof checks roll back all effects. Current actual PG/HTTP cases pass,including int8 precision,remaining balance,credit/terminal/future exclusions and permission/expiry while writing.",
+            "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+            "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+          "limitations": [
+            "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
+            "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
+          ]
+        }
       }
     },
     {
@@ -51156,12 +51369,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d6a19219b3fc"
       },
       "requirement": "| T-04.2.03.03 | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -51227,8 +51438,109 @@
           "apps/api/src/wallet/wallet.service.ts",
           "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-payments-reversals"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
+          "reviewed_base_commit": "c6fc5ee7320a224d627e779d25d039c51b852370",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.integration.test.ts",
+              "sha256": "ed9ec6b98ed5651cd5fe2718e0c8b78fd7ff79b4b35b2a97c2a7c2c3ad92e605"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.test.ts",
+              "sha256": "0cc320eaddc8731850409d3c4f121bc2468404264a24da994f8c3effb0d10662"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+              "sha256": "5fd14372d10d40c5a44ca89b0987aec5ea591873f0bcdae43cd109881c0fb65a"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "packages/db/drizzle/0073_create_idempotency_keys.sql",
+              "sha256": "8fc896d59c81d151d1c899ee8bfef60f55766e226a66380be545467c647abf20"
+            },
+            {
+              "path": "packages/db/src/schema/idempotency-keys.ts",
+              "sha256": "dc4a2bcdf02e92603cad7498abd35acffaa4cb2409dd2fe3bda75ba62217ff01"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+              "sha256": "d407e6b2bb9d32181f16ec50d42520b0f86528ba12fced95ab8c9bc680d8a124"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+              "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Unique(idempotencyKey,entityType) claim/cache and the ledger key prevent a second payment. Current exact cache parser matches invoice,profile,key,amount and captured stored review; mismatches/corrupt acknowledgements/in-flight claims conflict. Only expired NULL-response claims can be reclaimed; cached success never expires into a new debit. Missing cache persistence aborts the transaction. Ledger recovery returns the original debit or settles once under current state/amount guards; no original history is rewritten.",
+            "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+            "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+          "limitations": [
+            "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
+            "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
+          ]
+        }
       }
     },
     {
@@ -51242,12 +51554,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d6a19219b3fc"
       },
       "requirement": "| T-04.2.03.04 | Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions | L |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -51302,8 +51612,97 @@
           "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
           "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-payments-reversals"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
+          "reviewed_base_commit": "c6fc5ee7320a224d627e779d25d039c51b852370",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+              "sha256": "32114d67fd7c64aabdb205a3ae1d09fb8255174802223739ad87aa52e1968f48"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+              "sha256": "5fd14372d10d40c5a44ca89b0987aec5ea591873f0bcdae43cd109881c0fb65a"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "packages/db/src/schema/idempotency-keys.ts",
+              "sha256": "dc4a2bcdf02e92603cad7498abd35acffaa4cb2409dd2fe3bda75ba62217ff01"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+              "sha256": "d407e6b2bb9d32181f16ec50d42520b0f86528ba12fced95ab8c9bc680d8a124"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+              "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current PG concurrency cases exercise competing same/different keys,one full debit/Paid result,exact cached duplicate,insufficient funds,reservations,version failures and collisions. Actual customer HTTP cases prove active profile/current membership/session/CSRF/recent proof and late-expiry rollback of debit,invoice,audit/cache. Browser flows preserve captured exact confirmation through verification,ambiguous retry,changed amount/contract conditions,foreign/incomplete review and timezone recovery.",
+            "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+            "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+          "limitations": [
+            "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
+            "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
+          ]
+        }
       }
     },
     {
@@ -51317,12 +51716,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-2059f26bb20a"
       },
       "requirement": "| T-04.2.04.01 | Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -51365,8 +51762,89 @@
         "changed_paths": [
           "apps/api/src/wallet/wallet.service.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-payments-reversals"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
+          "reviewed_base_commit": "c6fc5ee7320a224d627e779d25d039c51b852370",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reverse.integration.test.ts",
+              "sha256": "88e11be3b150c4addef6f91f2abd270f94ca945a0c4b4df5c21a5a0646f088d6"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+              "sha256": "5fd14372d10d40c5a44ca89b0987aec5ea591873f0bcdae43cd109881c0fb65a"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "packages/db/drizzle/0077_wallet_tx_reversal_original_check.sql",
+              "sha256": "2cd9237a798e37a1b05e1c16e661ab6e523a96f42af9723edf816af31f8dc1ba"
+            },
+            {
+              "path": "packages/db/src/schema/idempotency-keys.ts",
+              "sha256": "dc4a2bcdf02e92603cad7498abd35acffaa4cb2409dd2fe3bda75ba62217ff01"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+              "sha256": "d407e6b2bb9d32181f16ec50d42520b0f86528ba12fced95ab8c9bc680d8a124"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reversal.test.ts",
+              "sha256": "4442fdf214314e87fe4892d232e955ae6e570366b36de3844ea9d9742f0f0edd"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reversal.ts",
+              "sha256": "06f138304ced158ded6b6beea0171dd5b1dc5cf9891dac327c48112b07b13306"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current reversal validates UUID/reason/key,reversible original type/state and exact replay identity. It locks profile/original/wallet,checks active writable profile,available/posting/version floors and inserts one opposite signed linked reversal plus balance delta atomically. Original ledger amount/state/metadata remain immutable; unique original pointer and key/FK constraints prevent a second compensation. Canonical UUID spellings,repeat/collision/concurrency/caller-owned rollback and insufficient/archived cases pass actual PG checks.",
+            "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+            "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+          "limitations": [
+            "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
+            "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
+          ]
+        }
       }
     },
     {
@@ -51432,8 +51910,18 @@
           "historically_skipped": false
         },
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-payments-reversals"
+        ],
+        "current_acceptance": null,
+        "implementation_checkpoint": {
+          "base_commit": "c6fc5ee7320a224d627e779d25d039c51b852370",
+          "checks": [
+            "Current raw-body HMAC/replay/event/merchant/amount/locator verification,collision checks and crash retry inspected and tested. Traceable top-ups receive one linked reversal in the same transaction as event finalization; insufficient/archived cases remain unresolved without violating available balance. Unknown-wallet events retain unmatched exception records and Finance warnings without inventing a wallet or silently changing history. The already-asked signed machine-webhook CSRF disposition remains pending; task stays partial."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+          "acceptance": "implemented money/reconciliation boundaries verified; full task remains owner-pending"
+        }
       }
     },
     {
@@ -51447,12 +51935,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-2059f26bb20a"
       },
       "requirement": "| T-04.2.04.03 | Finance alert: push notification + dashboard warning for unresolved chargeback | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -51538,8 +52024,113 @@
           "apps/web/e2e/chargeback-dashboard.spec.ts",
           "apps/web/e2e/crm-dashboard.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-payments-reversals"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
+          "reviewed_base_commit": "c6fc5ee7320a224d627e779d25d039c51b852370",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/chargeback-alert.controller.ts",
+              "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+            },
+            {
+              "path": "apps/api/src/notifications/notification-center.service.ts",
+              "sha256": "a20034600fadaaa337193c75b63cf9eeabdbb790ea654d0b3bbfc10eb735909d"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+              "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+              "sha256": "5fd14372d10d40c5a44ca89b0987aec5ea591873f0bcdae43cd109881c0fb65a"
+            },
+            {
+              "path": "apps/web/e2e/crm-dashboard.spec.ts",
+              "sha256": "98ea7057c4e16b00bfd9d51f02334398232626607191535dfb45f4d549b908ed"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.tsx",
+              "sha256": "5924aea47c88060882c276f3a0f29d5b9db3c808de7f3574a247fe25d73f8499"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "apps/worker/src/notifications/in-app-transport.ts",
+              "sha256": "04cb783f855ca2899f509d79966717bc99c9f2aac0b6888acb1a120c3032d513"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+            },
+            {
+              "path": "packages/db/src/schema/idempotency-keys.ts",
+              "sha256": "dc4a2bcdf02e92603cad7498abd35acffaa4cb2409dd2fe3bda75ba62217ff01"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+              "sha256": "d407e6b2bb9d32181f16ec50d42520b0f86528ba12fced95ab8c9bc680d8a124"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/seed/notification-templates.ts",
+              "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-chargeback-alert.ts",
+              "sha256": "097c62cd1af496d062552a095a41ead559e2b7beaa3a932694789253b7b9279f"
+            },
+            {
+              "path": "packages/shared/src/notifications/inbox-content.ts",
+              "sha256": "872793652a8330792dd1715517e62195691feeba8f254fc8b3a71a94e74e24d1"
+            },
+            {
+              "path": "packages/shared/src/notifications/notification-registry.ts",
+              "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current detector retains mapped/unmatched/unresolved status and retries Finance alert enqueue idempotently. At alert creation,only current active Finance-permission staff/admin account recipients are selected; urgent in-app/email jobs deduplicate per event/recipient and preserve older deliveries while repairing missing jobs. Real PG tests run leasing and in-app transport into private profileless staff inboxes with FA/EN content and /admin links; other accounts/profile selections do not expose or hide those account alerts. Current warning endpoint permits non-admin Finance and rejects current permission revocation/expired session. Dashboard retains unresolved rows through unavailable/malformed refreshes,clears on access denial and preserves assertive warning/zero Axe contrast violations across both locales/themes/engines. External email and broader notification policies remain separate operational gates.",
+            "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+            "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+          "limitations": [
+            "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
+            "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
+          ]
+        }
       }
     },
     {
@@ -143223,7 +143814,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "36f2821b18bd74ba9a815a3036bdda29bbebeb57ec1f3e4e8e73c6be145586b3"
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -143303,7 +143894,8 @@
             "R01.04 completes bilingual desktop/mobile production-browser and real HTTP/PostgreSQL intake/recovery rehearsal with79 distinct accepted cases. Step-up, terminal finance reconciliation, wallet history and preserved consultation history were accepted by their own criteria in earlier bound batches.",
             "Remaining original criteria are explicit owner policy/representation decisions: CSRF callback/CSP exception policy; lost-contact recovery approval/evidence/retention and subsequent credential execution; electricity mode/snapshot/bill-route names on two tasks; private saved wizard discard interpretation; saving agreement FK representation. No pending decision is waived or marked done.",
             "This task accepts inspection and exact task dispositions. It does not accept the six partial tasks or v0.2 milestone. Concrete pending criteria and bound case accounting: /Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal/accepted-outcomes.json",
-            "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core"
+            "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
+            "Scoped additive test renewal only: two loaded document locale/theme assertions recover the previous browser file byte-for-byte when removed. Every original fixture/money/profile/verification/retry/access/Axe assertion and all production/compiled outputs unchanged.16 final matrix and12 retained unaffected cases pass. Other original multi-service acceptance and limitations remain; no broad rerehearsal claimed. /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
           "limitations": [
@@ -143316,7 +143908,8 @@
           "release-0.2-closure-completion",
           "release-0.2-electricity-terminal-invariant-review",
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-wallet-payments-reversals"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -143976,7 +144569,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "36f2821b18bd74ba9a815a3036bdda29bbebeb57ec1f3e4e8e73c6be145586b3"
+              "sha256": "90809d6458c097199e39d1aecf8da794fd6e6a7efc2a21b91983888dbba256dd"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -144051,7 +144644,8 @@
             "All185 original main browser assertions retained;98 route fixtures and31 direct business assertions are AST-identical. Other solar test callbacks are unchanged. Dictionary/date/number/fixture-title selectors now follow both locales; exact monetary and receipt values remain independent. Saving API source is byte-identical after removing one fixture provisioning block; every previous assertion retained.",
             "Production sources, dependencies/configuration and5497 compiled files match verified60c67bc. Only five test files change. Matching builds reused without output mutation. API/web typechecks, changed lint/format, final assertion proof and full source/output binding pass. Complete bounded diff reviewed once; no weakened timeout, budget, permission or financial assertion.",
             "External evidence: /Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
-            "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core"
+            "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
+            "Scoped additive test renewal only: two loaded document locale/theme assertions recover the previous browser file byte-for-byte when removed. Every original fixture/money/profile/verification/retry/access/Axe assertion and all production/compiled outputs unchanged.16 final matrix and12 retained unaffected cases pass. Other original multi-service acceptance and limitations remain; no broad rerehearsal claimed. /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
           "limitations": [
@@ -144061,7 +144655,8 @@
         },
         "batches": [
           "release-0.2-four-service-rehearsal",
-          "release-0.3-invoice-core"
+          "release-0.3-invoice-core",
+          "release-0.3-wallet-payments-reversals"
         ]
       }
     },
@@ -153514,6 +154109,26 @@
         "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups"
+    },
+    "release-0.3-wallet-payments-reversals": {
+      "title": "Accept existing atomic wallet funding,compensating reversals and Finance alerts",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.02"
+      ],
+      "summary": "Six effective financial tasks accepted and two earlier browser bindings renewed narrowly. Actual PG/HTTP/in-app and captured customer/Finance flows verified; only locale/theme test assertions added. Signed callback policy and existing performance/dependency gates remain incomplete.",
+      "validation": [
+        "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
+        "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals"
     }
   },
   "historical_improvements": [
@@ -153553,17 +154168,21 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-wallet-payments-reversals",
+    "id": "release-0.3-bank-receipts-financial-history",
     "release": "0.3.0",
-    "goal": "Inspect existing invoice wallet funding,replay/concurrency and compensating reversal/chargeback boundaries before rebuilding. Reuse valid unchanged-source wallet/top-up evidence; verify actual payment callers and Finance alerts. Preserve profile/current authority,int8 money,immutable original ledger,derived available floor and exact idempotency/recovery. Signed callback disposition and Wallet300.08KB/300KB performance gate remain unfinished; no milestone acceptance before release dependencies.",
+    "goal": "Inspect current invoice receipts,immutable attachment/amount/actor provenance,confirmation/rejection/threshold dual approval,excess wallet credit and complete customer financial history. Reuse valid source-bound wallet,correction/read and notification evidence; build only demonstrated gaps and verify actual affected callers. Preserve exact money,profile/current authority,review/idempotency,audit and rollback. Callback policy,Wallet budget and earlier release dependencies remain unfinished; no milestone acceptance/deployment before gates.",
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.03.01",
-      "04-invoices-wallet-contracts.md#T-04.2.03.02",
-      "04-invoices-wallet-contracts.md#T-04.2.03.03",
-      "04-invoices-wallet-contracts.md#T-04.2.03.04",
-      "04-invoices-wallet-contracts.md#T-04.2.04.01",
-      "04-invoices-wallet-contracts.md#T-04.2.04.02",
-      "04-invoices-wallet-contracts.md#T-04.2.04.03"
+      "04-invoices-wallet-contracts.md#T-04.3.01.01",
+      "04-invoices-wallet-contracts.md#T-04.3.01.02",
+      "04-invoices-wallet-contracts.md#T-04.3.01.03",
+      "04-invoices-wallet-contracts.md#T-04.3.01.04",
+      "04-invoices-wallet-contracts.md#T-04.3.01.05",
+      "04-invoices-wallet-contracts.md#T-04.3.01.06",
+      "04-invoices-wallet-contracts.md#T-04.3.01.07",
+      "04-invoices-wallet-contracts.md#T-04.3.02.01",
+      "04-invoices-wallet-contracts.md#T-04.3.02.02",
+      "04-invoices-wallet-contracts.md#T-04.3.02.03",
+      "04-invoices-wallet-contracts.md#T-04.3.02.04"
     ]
   },
   "launch_forecast": {

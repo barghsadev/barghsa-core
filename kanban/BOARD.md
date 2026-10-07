@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T02:33:55.787294+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T02:47:41.343253+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 307 | Accepted with unchanged source bindings. |
-| verify | 1000 | Existing work may be complete; inspect evidence before building. |
+| done | 313 | Accepted with unchanged source bindings. |
+| verify | 994 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,15 +39,19 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing invoice wallet funding,replay/concurrency and compensating reversal/chargeback boundaries before rebuilding. Reuse valid unchanged-source wallet/top-up evidence; verify actual payment callers and Finance alerts. Preserve profile/current authority,int8 money,immutable original ledger,derived available floor and exact idempotency/recovery. Signed callback disposition and Wallet300.08KB/300KB performance gate remain unfinished; no milestone acceptance before release dependencies.
+Inspect current invoice receipts,immutable attachment/amount/actor provenance,confirmation/rejection/threshold dual approval,excess wallet credit and complete customer financial history. Reuse valid source-bound wallet,correction/read and notification evidence; build only demonstrated gaps and verify actual affected callers. Preserve exact money,profile/current authority,review/idempotency,audit and rollback. Callback policy,Wallet budget and earlier release dependencies remain unfinished; no milestone acceptance/deployment before gates.
 
-- `04-invoices-wallet-contracts.md#T-04.2.03.01`: Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method
-- `04-invoices-wallet-contracts.md#T-04.2.03.02`: Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit
-- `04-invoices-wallet-contracts.md#T-04.2.03.03`: Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry
-- `04-invoices-wallet-contracts.md#T-04.2.03.04`: Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions
-- `04-invoices-wallet-contracts.md#T-04.2.04.01`: Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance
-- `04-invoices-wallet-contracts.md#T-04.2.04.02`: Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up
-- `04-invoices-wallet-contracts.md#T-04.2.04.03`: Finance alert: push notification + dashboard warning for unresolved chargeback
+- `04-invoices-wallet-contracts.md#T-04.3.01.01`: Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps
+- `04-invoices-wallet-contracts.md#T-04.3.01.02`: Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state
+- `04-invoices-wallet-contracts.md#T-04.3.01.03`: Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed
+- `04-invoices-wallet-contracts.md#T-04.3.01.04`: Staff rejection API: mark receipt Rejected, store reason, notify customer
+- `04-invoices-wallet-contracts.md#T-04.3.01.05`: Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation
+- `04-invoices-wallet-contracts.md#T-04.3.01.06`: Overpayment wallet credit: separate `WalletService.credit()` with its own idempotency key
+- `04-invoices-wallet-contracts.md#T-04.3.01.07`: Update invoice state tracking: as bank receipts accumulate, invoice state flows Unpaid → Partially funded → Paid
+- `04-invoices-wallet-contracts.md#T-04.3.02.01`: Invoice detail API: aggregate invoice, lines, payments, bank receipts, refunds, adjustments
+- `04-invoices-wallet-contracts.md#T-04.3.02.02`: Wallet transaction list API: cursor-based pagination, filters (type, state, date range), sort
+- `04-invoices-wallet-contracts.md#T-04.3.02.03`: React components: InvoiceDetail, WalletTransactionList, BankReceiptList with full states
+- `04-invoices-wallet-contracts.md#T-04.3.02.04`: Localized state labels and descriptive text for every state
 
 ## v0.2.0: Complete customer journeys
 
@@ -457,13 +461,13 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.2.02.05` | done | Earlier acceptance_verified | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet |
 | `04-invoices-wallet-contracts.md#T-04.2.02.06` | done | Earlier acceptance_verified | Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission |
 | `04-invoices-wallet-contracts.md#T-04.2.02.07` | done | Earlier acceptance_verified | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL |
-| `04-invoices-wallet-contracts.md#T-04.2.03.01` | verify | Earlier acceptance_verified | Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method |
-| `04-invoices-wallet-contracts.md#T-04.2.03.02` | verify | Earlier acceptance_verified | Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit |
-| `04-invoices-wallet-contracts.md#T-04.2.03.03` | verify | Earlier acceptance_verified | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry |
-| `04-invoices-wallet-contracts.md#T-04.2.03.04` | verify | Earlier acceptance_verified | Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions |
-| `04-invoices-wallet-contracts.md#T-04.2.04.01` | verify | Earlier acceptance_verified | Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance |
+| `04-invoices-wallet-contracts.md#T-04.2.03.01` | done | Earlier acceptance_verified | Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method |
+| `04-invoices-wallet-contracts.md#T-04.2.03.02` | done | Earlier acceptance_verified | Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit |
+| `04-invoices-wallet-contracts.md#T-04.2.03.03` | done | Earlier acceptance_verified | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry |
+| `04-invoices-wallet-contracts.md#T-04.2.03.04` | done | Earlier acceptance_verified | Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions |
+| `04-invoices-wallet-contracts.md#T-04.2.04.01` | done | Earlier acceptance_verified | Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance |
 | `04-invoices-wallet-contracts.md#T-04.2.04.02` | partial | Earlier partial | Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up |
-| `04-invoices-wallet-contracts.md#T-04.2.04.03` | verify | Earlier acceptance_verified | Finance alert: push notification + dashboard warning for unresolved chargeback |
+| `04-invoices-wallet-contracts.md#T-04.2.04.03` | done | Earlier acceptance_verified | Finance alert: push notification + dashboard warning for unresolved chargeback |
 | `04-invoices-wallet-contracts.md#T-04.3.01.01` | verify | Earlier acceptance_verified | Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps |
 | `04-invoices-wallet-contracts.md#T-04.3.01.02` | verify | Earlier acceptance_verified | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state |
 | `04-invoices-wallet-contracts.md#T-04.3.01.03` | verify | Earlier acceptance_verified | Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed |

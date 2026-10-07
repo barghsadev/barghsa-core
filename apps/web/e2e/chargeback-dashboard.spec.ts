@@ -75,6 +75,8 @@ for (const locale of ['fa', 'en'])
       const clockStart = new Date('2026-09-09T08:00:00Z');
       await page.clock.install({ time: clockStart });
       await page.goto('/admin');
+      await expect(page.locator('html')).toHaveAttribute('lang', locale);
+      await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       const banner = page.getByRole('alert', {
         name: locale === 'fa' ? 'هشدار شارژبک‌های حل‌نشده' : 'Unresolved chargeback warning',
       });
