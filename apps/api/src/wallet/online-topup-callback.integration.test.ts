@@ -1,3 +1,9 @@
+import { sessionNoticeState } from '../test/session-notification-proof.js';
+import {
+  failWalletNotice,
+  expectWalletNotice,
+  walletNoticeState,
+} from '../test/wallet-notification-proof.js';
 /**
  * Real-PostgreSQL integration tests for the authenticated provider
  * callback handler (T-04.2.02.02).
@@ -687,4 +693,84 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     );
     expect(intent.rows[0]?.state).toBe('Released');
   });
+  it.each(['paid', 'failed'] as const)(
+    'retains the native retry claim and all ledger rows when %s notice persistence fails,then recovers once',
+    async (status) => {
+      for (const table of [
+        'notification_outbox',
+        'in_app_notifications',
+        'notification_job',
+        'notification_delivery_log',
+      ])
+        for (const mode of ['raise', 'suppress'] as const) {
+          const eventId = randomUUID(),
+            id = (
+              await ctx.pool.query(
+                "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id,metadata) VALUES($1,'topup',$2,'Pending',$3,$4,$5) RETURNING id",
+                [
+                  PROFILE_A,
+                  AMOUNT.toString(),
+                  randomUUID(),
+                  AUTHORITY,
+                  { channel: 'online', gateway: { authority: AUTHORITY } },
+                ]
+              )
+            ).rows[0].id as string;
+          const body = {
+            merchantOrderId: id,
+            merchantId: MERCHANT,
+            authority: AUTHORITY,
+            amountIrR: AMOUNT.toString(),
+            status,
+          };
+          const work = () => service.handle(signed(body, eventId));
+          const before = await sessionNoticeState(ctx.pool),
+            drop = await failWalletNotice(ctx.pool, table, mode);
+          try {
+            await expect(work()).rejects.toThrow();
+            const after = await sessionNoticeState(ctx.pool);
+            const claim = after.wallet_topup_callback_events.filter(
+              (r: Record<string, unknown>) => r.event_id === eventId
+            );
+            expect(claim).toHaveLength(1);
+            expect(claim[0]).toMatchObject({
+              event_id: eventId,
+              pending_transaction_id: id,
+              wallet_id: PROFILE_A,
+              status: 'processing',
+              raw: body,
+            });
+            after.wallet_topup_callback_events = after.wallet_topup_callback_events.filter(
+              (r: Record<string, unknown>) => r.event_id !== eventId
+            );
+            expect(after).toEqual(before);
+          } finally {
+            await drop();
+          }
+          const result = await work();
+          expect(result.credited).toBe(status === 'paid');
+          const outcome =
+            status === 'paid' ? 'payment.wallet_topup_completed' : 'payment.wallet_topup_failed';
+          const key = `${outcome}:online:${status === 'paid' ? result.creditTransactionId : id}:wallet-test-owner`;
+          const saved = await expectWalletNotice(
+            ctx.pool,
+            key,
+            'wallet-test-owner',
+            PROFILE_A,
+            outcome,
+            AMOUNT.toString()
+          );
+          for (const secret of [SECRET, AUTHORITY, eventId])
+            expect(JSON.stringify(saved)).not.toContain(secret);
+          await ctx.pool.query(
+            'UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1',
+            [saved.inbox[0].id]
+          );
+          const delivered = await walletNoticeState(ctx.pool, key);
+          await work();
+          expect(await walletNoticeState(ctx.pool, key)).toEqual(delivered);
+        }
+    },
+    30000
+  );
 });

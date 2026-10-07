@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing online wallet topup successful credit and failed intent transitions/native warnings before rebuilding. Complete demonstrated canonical private durable delivery gaps in original ledger/state transaction while preserving gateway verification,signature/replay,event claim/crash resume/unpaid reopen/intent release,owned/caller-owned transactions,profile/account locks,amount/idempotency/audit and late-paid reconciliation. Avoid duplicate bank-receipt or generic wallet-credit notices. Reconcile pending OTP owner reply if available; keep invoice/refund/wallet low-balance/other Appendix/templates/live provider/owner/operations/launch explicit.
+Inspect existing invoice-paid/overdue native writers and effective state/paid amount guards. Complete only demonstrated private canonical durable delivery gaps,using original payments/ledger/customer/staff recipients and occurrence identity. Preserve immutable credits/payment provenance,invoice overpayment/remaining/paid_at/cancellation/refund/invalidation,actor/profile/permission/clock/lock,idempotency and rollback/retry boundaries. Reconcile pending OTP owner reply if available; keep refund/wallet/low-balance/other Appendix/native templates/live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 
