@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing verification_status,invitation_received and agent_role_changed profile producers and Appendix requirements. Implement only demonstrated missing durable notification boundaries. Preserve current profile ownership/private recipient grants,invitation/token/verification/state transitions,audits,stable occurrence/rollback/replay and original money/authorization; keep other producers,active custom templates and live provider/owner/operations/launch gates explicit.
+Inspect and complete missing agent_role_changed producer and demonstrated verification_status sink/idempotency gaps. Reuse existing profile/invitation/notification engines; preserve role replacement/removal/session revocation,current recipient privacy,verification/step-up/audit/transitions and unknown receipts. Keep active custom templates and live provider/owner/operations/launch gates explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

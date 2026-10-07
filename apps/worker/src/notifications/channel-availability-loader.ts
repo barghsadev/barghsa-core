@@ -131,7 +131,17 @@ export async function loadNotificationRecipient(
                   (t.assigned_to=u.user_id AND (CASE WHEN r.permissions IS JSON ARRAY
                     THEN r.permissions::jsonb ELSE '[]'::jsonb END) ? 'tickets:assigned'))
             ))))
-      ))`,
+      ))
+      AND (o.event_key<>'profile.invitation_received' OR (o.profile_id IS NULL AND EXISTS (
+        SELECT 1 FROM profile_invitations i JOIN profiles entity ON entity.id=i.profile_id
+        JOIN account_login_identifiers a ON a.destination=i.username
+        JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE i.id::text=o.payload->>'invitationId' AND a.user_id=u.user_id
+          AND i.status='Pending' AND (i.expires_at IS NULL OR i.expires_at>clock_timestamp())
+          AND NOT entity.archived AND entity.profile_type='LEGAL' AND i.role IN ('Manager','Finance','Legal')
+          AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
+          AND n.operating_context='customer' AND n.type=o.event_key
+      )))`,
     [outboxId]
   );
   const row = result.rows[0];

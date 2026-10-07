@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "9d858accc4d7d83ab9c6bbcdb8021b9f7252e3bc",
+  "source_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17151,7 +17151,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -17355,7 +17355,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
+              "sha256": "d7c92a2369daeb651d3f5a55dd4d79edb72abdfdd8b974c3902325a24b765887"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -17531,7 +17531,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -17732,6 +17733,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -18888,7 +18906,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -18936,14 +18954,32 @@
             "Repaired verification-banner fixture to supply an authenticated customer/profile and persisted app locale. Earlier blanket401 caused login redirect; DOM-only English forcing left app locale Persian. Original RTL/LTR, unavailable-provider, support link, dismissal and mounted-language assertions remain. No production authentication/verification behavior was relaxed.",
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
             "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
-            "Renewed only changed invitation/CRM bindings at identity-and-membership batch. Prior unrelated criteria/evidence retained. Current invitation acceptance/ownership suites and11 default/context callers pass; CRM six retained records cases plus new verified-secondary projection/removal/isolation case pass. Unverified contacts remain excluded; existing cursor/profile behavior unchanged. /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership"
+            "Renewed only changed invitation/CRM bindings at identity-and-membership batch. Prior unrelated criteria/evidence retained. Current invitation acceptance/ownership suites and11 default/context callers pass; CRM six retained records cases plus new verified-secondary projection/removal/isolation case pass. Unverified contacts remain excluded; existing cursor/profile behavior unchanged. /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
             "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
             "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
           ],
-          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d"
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
+          }
         }
       }
     },
@@ -20022,7 +20058,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -20075,14 +20111,32 @@
             "Web production build, scoped web types/lint/format and85 unchanged bundle budgets pass. Strict SAST scans1804files with0findings/0errors and all5rule fixtures pass through the existing pinned scanner runtime; initial missing-PATH invocation is not a passing scan. API/schema/dependencies are unchanged; matching compiled API evidence reused.",
             "Final48 source/config/test bindings and980 compiled web/i18n bindings are saved in source-manifest.json and verified after checks. No staging/Telegram/version change from this acceptance batch; milestone deployment and production launch operational gates remain separate.",
             "At account-preferences-acceptance, renewed apps/web/src/routes/_app/settings/profile.tsx: AST comparison retains57 unrelated top-level browser statements and28 unchanged settings-model declarations/functions; profileRow only adds optional displayName type validation. Address/receipt/financial helper bodies and unrelated fixture cases are unchanged. Current19 settings/model tests,50 scoped browser cases (including new default-name checks) and final build/types/budgets pass. Earlier task-specific source-bound checks are reused, not claimed rerun. See external unchanged-sections.json and current source-manifest.json at /Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance.",
-            "Renewed only changed invitation/CRM bindings at identity-and-membership batch. Prior unrelated criteria/evidence retained. Current invitation acceptance/ownership suites and11 default/context callers pass; CRM six retained records cases plus new verified-secondary projection/removal/isolation case pass. Unverified contacts remain excluded; existing cursor/profile behavior unchanged. /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership"
+            "Renewed only changed invitation/CRM bindings at identity-and-membership batch. Prior unrelated criteria/evidence retained. Current invitation acceptance/ownership suites and11 default/context callers pass; CRM six retained records cases plus new verified-secondary projection/removal/isolation case pass. Unverified contacts remain excluded; existing cursor/profile behavior unchanged. /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
             "Local implementation/HTTP/browser acceptance; live deployment, production city provisioning and whole-launch gates remain separate.",
             "Approved manual verification is used. Automatic identity-provider integration is not asserted or newly authorized."
           ],
-          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d"
+          "reviewed_base_commit": "cc00710c5eaf8e4638bd33e391ab0d2b808a6c1d",
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
+          }
         }
       }
     },
@@ -20466,7 +20520,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "4509893151cc549a6696e7ecae74b4a88c67db2c469f5e80fa6aa84efd879e59"
+              "sha256": "96bbc2c8450da9b83599a28d6024209aa326e78b181a843b01ab006ebff2f8e3"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -20482,7 +20536,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
+              "sha256": "d7c92a2369daeb651d3f5a55dd4d79edb72abdfdd8b974c3902325a24b765887"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
@@ -20506,7 +20560,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "d995c2e03406362c21968d1053800954b5a1d64e2856db7ecbf33aa477e474ca"
+              "sha256": "0c82a9869d18b8f508f15855ffdeb0be54ee071921391cab39a228f2e7958369"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -20540,7 +20594,8 @@
             "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
             "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -20630,6 +20685,23 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -25486,7 +25558,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -25662,7 +25734,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -25846,6 +25919,23 @@
               "shared-writers",
               "solar-decisions-final"
             ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
           }
         }
       }
@@ -25982,7 +26072,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -26124,7 +26214,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -26292,6 +26383,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -26451,7 +26559,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -26597,7 +26705,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -26765,6 +26874,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -28101,7 +28227,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -28169,13 +28295,31 @@
             "FA/EN team table shows masked identifiers, role/status and invited/joined/last sign-in dates with detail, removal/withdrawal and empty/error/retry controls. Owner protection, step-up, exact target, current authority, captured roles, focus, mobile overflow and light/dark accessibility checks pass.",
             "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
             "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan.",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
             "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
             "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
-          ]
+          ],
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
+          }
         }
       }
     },
@@ -28352,11 +28496,11 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
-              "sha256": "b7805d87778fa5339025599bbaafbf8e333ddd721d3b75ba7938199e5876782f"
+              "sha256": "71468f52245ccad6a362fe858920518cca6d4566bcb1de57714ab033653fe723"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -28456,7 +28600,8 @@
             "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
             "Provider reporting source renewal: prior worker statements and dictionary/job entries unchanged; contract adds one job enum only. Existing callback settlement/auth methods retained and affected callback/HTTP/monitoring cases pass. New provider criterion remains separate from whole-task acceptance; see release-0.3-provider-reconciliation source proofs and receipts.",
             "Refund report source renewal: previous worker statements, labels and job types retained; contract adds one monitored job enum only. Existing money writers and other tracked product sources unchanged. Renewed scope does not certify the disputed refund formula or credit-note entitlement capacity. See release-0.3-refund-reconciliation proofs and actual receipts.",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
@@ -28481,6 +28626,23 @@
               "Allother bound source exact. LegacyAPI operations/schemas exact; moduleaddsone guardedadapter. Allold migrationjournalentries andschema contentexact; newSQLonlyderivedrecordedCancelledSavingfinancialstatus. Allold savingjourney/assertions retained andfresh8 saving+77 sharedHTTP+64 DB+60 UI+36browser cases pass. No broader task acceptance inferred."
             ],
             "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation"
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
           }
         }
       }
@@ -28598,7 +28760,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -28674,13 +28836,31 @@
             "Private banner/details include company identifiers, inviter name, role description and account-local dates. Decision request binds exact profile/role and validates canonical target/status receipt. Failure pauses decisions until explicit data retry; accepted/declined status is retained, profile access opens only explicitly after rotated CSRF. Current membership, proposal, expiry after lock waits, idempotency, audit rollback and credential rotation checks pass.",
             "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
             "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan.",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
             "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
             "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
-          ]
+          ],
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
+          }
         }
       }
     },
@@ -28838,7 +29018,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -29129,7 +29309,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
             "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
@@ -29355,6 +29536,23 @@
               "shared-writers",
               "solar-decisions-final"
             ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
           }
         }
       }
@@ -29470,7 +29668,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -29554,13 +29752,31 @@
             "Acceptance replaces canonical profile owner, preserves exactly one owner and records both parties and before/after in transactional audit. Expiry after writes uses existing savepoint behavior; invalid current authority, audit failure and concurrency roll back safely. Both parties’ credentials are revoked atomically. FA/EN incoming decisions and owner proof-before-selection, expiry renewal, recipient preservation, conflict retry, cancellation and exact acknowledgement pass. Broader domain role matrix remains partial.",
             "456 distinct passing cases:315 API,8 worker,29 reused source UI and104 production-browser. API315 comprises187 current invitation/ownership/CRM/unit cases,90 unchanged identity/activation cases,27 source-bound staff cases and11 context callers. Browser104 comprises84 unchanged passes,4 ownership replacements,8 invitation/date replacements and8 correction-only cases. No entire failed/stopped run is claimed passing. Exact receipts and assertion/source proof: /Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
             "Complete bounded diff reviewed once. API build/types, worker types, changed lint/format and strict production SAST pass. Web/worker/shared/database artifacts unchanged; rebuilt production API outputs differ only in agents and CRM records, with4 separate compiled test artifacts unconsumed by production fixtures. All3882 tracked non-board source and5497 output bindings saved. Public API and migrations unchanged. Direct seven-file SAST findings are four synthetic test password literals; retained separately, not claimed a passing scan.",
-            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason"
+            "Source renewal at bd9f2051: only matching predecessor bindings updated for required increase approval reason and its related consumers.120 distinct scoped passes,87 unchanged budget limits, reviewed assertion/dictionary/OpenAPI/journal preservation proof. No unrelated whole-suite replay claimed. Evidence: /Users/majid/.local/state/barghsa-manual-batches/increase-approval-reason",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
             "Local actual HTTP/PostgreSQL, worker and production-browser fixture acceptance. Live external email/SMS, deployment and organizational policy gates remain separate.",
             "Whole role matrix, profile archival, staff role-definition administration and pending owner decisions are independently tracked; this batch does not certify them."
-          ]
+          ],
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
+          }
         }
       }
     },
@@ -32157,7 +32373,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
@@ -32241,7 +32457,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
+              "sha256": "d7c92a2369daeb651d3f5a55dd4d79edb72abdfdd8b974c3902325a24b765887"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -32386,7 +32602,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "limitations": [
             "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
@@ -32553,6 +32770,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -35522,7 +35756,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -35719,7 +35953,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -35904,6 +36139,23 @@
               "shared-writers",
               "solar-decisions-final"
             ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
           }
         }
       }
@@ -35924,7 +36176,7 @@
       "launch_required": true,
       "remaining": [
         "Inspect any remaining unaccepted generic/system order status paths. Native electricity review/revision/raw/protected legacy and SQL activation/completion/formal contract-cancellation now have scoped canonical owner delivery; accepted four-service submissions,customer cancellation,consultation/solar/saving/request families remain retained. Preserve true transitions versus internal/same-state information,Rejected versus formal Cancelled,and all financial/review/authority/session/audit/idempotency/ledger boundaries.",
-        "Inspect remaining unaccepted Appendix producers,including profile invitations/roles,authentication,payments/wallet/system events,and other native/generic contract/order or internal/review writers. Successful sealed user/generated document uploads,manual quarantine,shared customer-readable approvals/rejections and scanner scan_failed/quarantined now have scoped private durable delivery/current recipient/rollback/retry/replay acceptance. Preserve unpublished/signed/storage/quarantine/ticket and original lifecycle boundaries; do not infer exhaustive producer coverage. Prove exact variables,current private recipients,mandatory channels and unknown receipts.",
+        "Inspect remaining unaccepted Appendix producers,including profile agent_role_changed,verification_status sink/idempotency and template gates,authentication,payments/wallet/system events,and other native/generic/internal/review writers. Registered profile invitations now have scoped atomic private immediate in-app/email queue,current pending identity and receipt acceptance,alongside accepted document upload/manual/review/scanner and native contract/order/ticket families. Preserve original unregistered invitation privacy,unpublished/signed/storage/quarantine/ticket/lifecycle boundaries; do not infer exhaustive coverage. Prove exact variables,current private recipients,mandatory channels and unknown receipts.",
         "Verify and complete configured active in-app template rendering for native synchronous business notices with template tasks; current direct/native lifecycle writers preserve localized default content but do not establish custom active-template behavior. Preserve mandatory immediate delivery and immutable past read/content/history. Live template imports,provider callbacks/idempotency,alerts and production operations remain separate gates."
       ],
       "owner": null,
@@ -36000,7 +36252,8 @@
           "release-0.4-ticket-notification-producers",
           "release-0.4-document-review-notification-producers",
           "release-0.4-document-scanner-notification-producers",
-          "release-0.4-document-upload-notification-producers"
+          "release-0.4-document-upload-notification-producers",
+          "release-0.4-profile-invitation-notification-producer"
         ],
         "current_acceptance": {
           "kind": "partial-native-business-producer-acceptance",
@@ -36040,7 +36293,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -36296,7 +36549,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "4509893151cc549a6696e7ecae74b4a88c67db2c469f5e80fa6aa84efd879e59"
+              "sha256": "96bbc2c8450da9b83599a28d6024209aa326e78b181a843b01ab006ebff2f8e3"
             },
             {
               "path": "apps/api/src/orders/order-actor-lock.integration.test.ts",
@@ -36304,7 +36557,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "d995c2e03406362c21968d1053800954b5a1d64e2856db7ecbf33aa477e474ca"
+              "sha256": "0c82a9869d18b8f508f15855ffdeb0be54ee071921391cab39a228f2e7958369"
             },
             {
               "path": "apps/api/src/test/order-status-notification-proof.ts",
@@ -36476,7 +36729,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
+              "sha256": "d7c92a2369daeb651d3f5a55dd4d79edb72abdfdd8b974c3902325a24b765887"
             },
             {
               "path": "apps/api/src/test/document-review-notification-proof.ts",
@@ -36529,6 +36782,18 @@
             {
               "path": "packages/i18n/src/documents.ts",
               "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+              "sha256": "1506c2dd81da89cc8744f8c6a9423437fdac8db06da96a616e6613da6e34d7e2"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-notifications.ts",
+              "sha256": "71468f52245ccad6a362fe858920518cca6d4566bcb1de57714ab033653fe723"
             }
           ],
           "checks": [
@@ -36671,10 +36936,17 @@
             "101 distinct current passing cases: 78 passing cases from the related six-file run plus its one corrected solar decision case passing in the final targeted rerun, and 22 private customer writer/unified inbox cases. The initial related run is retained as 78 pass/one failure, not a passing suite. Its only failure counted both required upload and review notices; the final test requires exactly one review notice and separately exactly both event types. Probe repeats and skips are excluded. Eighteen injected failures (eight upload, eight manual quarantine, two generated PDF outbox) preserve transaction rollback, pending first-phase state, independent storage-copy cleanup intentions, retry and immutable replay. Current role loss blocks new staff receipts; historical delivery remains immutable.",
             "One coherent final review/source proof retains the whole original notification runtime, review notifier, upload/PDF/source native producers and old dictionaries after removing only isolated writer/helpers/hooks/type and four new bilingual keys. Original 335 document,30 electricity,291 solar postal and91 solar document assertions preserved, with only the exact review-family predicate normalized before separately asserting both required notices. Original storage/copy/cleanup/two-phase/idempotency/contract/order/financial/authority/publication/signature behavior preserved. No migration, budget, coverage floor, critical assertion, worker, provider or scheduler changed.",
             "Final i18n/API builds and API typecheck, changed-file lint/format, five-production-file/five-rule Semgrep with zero findings pass. Shared dictionary change justified web build and all87 unchanged route/interaction gzip budgets pass (Wallet299.28KB against300KB). No new browser or live provider/scanner/storage/operations acceptance is claimed. Unchanged compiled worker/runtime and unaffected source evidence remain source-bound; no older cases are added to the101 current count.",
-            "Task and release remain partial: remaining Appendix producers, profile invitations/roles, authentication/payment/wallet/system events, other unaccepted native/internal/review paths, active custom templates and live provider/storage/scanner/owner/operations/launch gates remain unfinished. No version, release, staging, Telegram or production deployment."
+            "Task and release remain partial: remaining Appendix producers, profile invitations/roles, authentication/payment/wallet/system events, other unaccepted native/internal/review paths, active custom templates and live provider/storage/scanner/owner/operations/launch gates remain unfinished. No version, release, staging, Telegram or production deployment.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded.",
+            "Registered invitees now receive canonical profile.invitation_received privately at account scope,with no profile membership grant. Original bilingual invitation name/role/content and actual dashboard decision route preserved. Outbox binds invitationId/entityName/inviteLink and exact recipient through invitation/user occurrence key; mandatory immediate in-app delivered job/history and queued immediate email job share invitation/audit transaction. Every sink is guarded against raised or silently suppressed writes. Duplicate delivery preserves original read/content/jobs/history even after withdrawal.",
+            "Worker permits profile-less invitation email only through the narrow canonical family gate. Current pending/unexpired legal-profile invitation,current account identifier,unarchived entity and matching private customer inbox are required. Disabled/activation and verified contacts,preferences,suppression,active templates/provider snapshots,current recipient recheck remain enforced. Accepted/unknown provider receipts precede new eligibility as before; no blind resend/retargeting.",
+            "255 distinct current passing cases: API invitation mutation/decision/acceptance/agent/unified inbox114 plus private customer writer11; worker130 distinct from129 successful cases in the initial six-file run and its one corrected identifier case in a final targeted rerun. The initial worker run remains129 pass/one fixture failure; direct identifier transfer violated the database invariant,and the final test changes usernames through the supported account namespace update. No passing case rerun merely to obtain a green aggregate. The API selector included a nonexistent old file name; five existing files actually ran114 cases,then the real customer-business-notifications file ran11. Skips/repeats excluded. Eight raised/silent sink failures preserve all public rows except existing HTTP session/rate effects; success/replay,namespace reassignment,expiry/withdrawal/acceptance/decline/archive/disabled/missing inbox,snapshot-time withdrawal and controlled provider once-only receipts verified.",
+            "One final coherent review/source proof preserves whole original notification runtime after only isolated invitation writer/type literal; whole AgentsService AST after only added invitationId argument; original helper bilingual content/private routing; whole worker loader/email AST after only narrow invitation predicates. Original60 invitation and48 worker assertions preserved. Only seven scoped sources and16 corresponding compiled outputs changed; all other tracked/test/config/dependency/compiled outputs match prior source binding. No namespace/authority/lock/input/rate/audit/decision/membership/ownership/role/session/money/schema/provider/scheduler/coverage/budget/assertion weakened. Earlier unaffected checks remain qualified source-bound evidence,not added to255.",
+            "Final API/worker builds and typechecks,seven-file lint/format and five-production-file/five-rule Semgrep zero findings pass. No web/shared runtime changed; previous web build/all87 unchanged budgets remain source/output bound. No new browser/live external provider/customer message or deployment is claimed.",
+            "Task/release partial: agent_role_changed producer remains missing; verification_status already exists with email/SMS but its remaining sink/idempotency/active template gates must be inspected. Unregistered invitation behavior/privacy stays unchanged and is not a new external delivery claim. Other Appendix/native/template/live provider/storage/scanner/owner/operations/launch gates remain unfinished. No version/release/staging/Telegram/production deployment."
           ],
           "limitations": [],
-          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
           "scope_qualification": "Local real worker/HTTP/PostgreSQL plus fixture production-browser evidence. Live provider delivery,operational alerts andowner design dispositions remain separate.",
           "accepted_producer_events": [
             "contract.awaiting_acceptance",
@@ -36980,6 +37252,30 @@
             "apps/api/src/documents/document-notifications.ts#notifyDocumentUpload",
             "apps/api/src/documents/document-notifications.ts#notifyManualQuarantine",
             "apps/api/src/notifications/notifications.service.ts#createPrivateDocumentEvent"
+          ],
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
+            ]
+          },
+          "accepted_profile_invitation_paths": [
+            "apps/api/src/profiles/agents.service.ts#createInvitation",
+            "apps/api/src/profiles/invitation-notifications.ts#notifyAgentInvitation",
+            "apps/api/src/notifications/notifications.service.ts#createInvitationEvent",
+            "apps/worker/src/notifications/channel-availability-loader.ts#loadNotificationRecipient",
+            "apps/worker/src/notifications/email-transport.ts#send"
           ]
         }
       }
@@ -37079,7 +37375,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -37276,7 +37572,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -37460,6 +37757,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -37695,7 +38009,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -37884,7 +38198,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "limitations": [
             "Migration0128 preserves earlier processing rows and snapshots retained receipts. It cannot reconstruct already missing historical attempts; legacy rows must not be summed as physical sends. Drain old workers before rollout."
@@ -38070,6 +38385,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -39581,7 +39913,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "4509893151cc549a6696e7ecae74b4a88c67db2c469f5e80fa6aa84efd879e59"
+              "sha256": "96bbc2c8450da9b83599a28d6024209aa326e78b181a843b01ab006ebff2f8e3"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -39593,7 +39925,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
+              "sha256": "d7c92a2369daeb651d3f5a55dd4d79edb72abdfdd8b974c3902325a24b765887"
             },
             {
               "path": "apps/worker/src/notifications/sms-transport.ts",
@@ -39609,7 +39941,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "d995c2e03406362c21968d1053800954b5a1d64e2856db7ecbf33aa477e474ca"
+              "sha256": "0c82a9869d18b8f508f15855ffdeb0be54ee071921391cab39a228f2e7958369"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -39636,7 +39968,8 @@
             "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
             "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "order_submission_scoped_renewal": {
             "base_commit": "566f886b1b56e91bad7d8f5c4861296b3c5c8e74",
@@ -39721,6 +40054,23 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -42465,7 +42815,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -42731,7 +43081,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -42917,6 +43268,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -43140,7 +43508,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -43406,7 +43774,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -43592,6 +43961,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -46785,7 +47171,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "d8cc7627da3341db6191b18b4bd25a704a4beba0af39b4b064802d3b409e4c4c"
+              "sha256": "68422b079092967acd3b65b4ba2fba00463e7d0dd5f6b58b3a12ca6f7db76f9b"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -47051,7 +47437,8 @@
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -47237,6 +47624,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         }
@@ -253987,7 +254391,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "8c477f75f1bcfcc6776c58a0d1422bfaef5aa0e821311e7c81aff3230a6df8d4"
+              "sha256": "beec552b3b1a624dbad76dcb40296a6fa6c205c66b567ef5d706d610f3188cfa"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -256270,7 +256674,8 @@
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
             "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped document upload/manual quarantine renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers. 101 current distinct passing cases; original domain/finance/privacy/storage/signature/notification behavior and assertions retained after isolated producer hooks and private writer. Current recipient checks, strict sinks, rollback/retry/replay accepted. All87 budgets pass. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped private invitation delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer.255 distinct current cases; original native role/session/namespace/domain/finance/worker delivery effects and assertions retained after isolated invitation writer/predicates. Other producer/template/live gates excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -256551,6 +256956,23 @@
               "bundle",
               "shared-writers",
               "solar-decisions-final"
+            ]
+          },
+          "profile_invitation_scoped_renewal": {
+            "base_commit": "1c14c4f1c367d1c12277dcaee39591db605c7389",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+            "proof": "scope-proof.json",
+            "checks": [
+              "api-build",
+              "worker-build-final",
+              "api-types",
+              "worker-types-final",
+              "lint-final",
+              "format-final",
+              "sast",
+              "api-related",
+              "shared-writer",
+              "worker-identifier-final"
             ]
           }
         },
@@ -268263,6 +268685,23 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-notification-producers",
       "release": false
+    },
+    "release-0.4-profile-invitation-notification-producer": {
+      "title": "Durable private registered profile invitations",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02"
+      ],
+      "summary": "Registered invitees receive canonical private immediate inbox/email queues atomically with invitations; worker checks current pending identity and preserves durable provider receipts. Original namespace/session/domain privacy preserved. Other profiles/producers/templates/live launch gates partial.",
+      "validation": [
+        "Registered invitees now receive canonical profile.invitation_received privately at account scope,with no profile membership grant. Original bilingual invitation name/role/content and actual dashboard decision route preserved. Outbox binds invitationId/entityName/inviteLink and exact recipient through invitation/user occurrence key; mandatory immediate in-app delivered job/history and queued immediate email job share invitation/audit transaction. Every sink is guarded against raised or silently suppressed writes. Duplicate delivery preserves original read/content/jobs/history even after withdrawal.",
+        "Worker permits profile-less invitation email only through the narrow canonical family gate. Current pending/unexpired legal-profile invitation,current account identifier,unarchived entity and matching private customer inbox are required. Disabled/activation and verified contacts,preferences,suppression,active templates/provider snapshots,current recipient recheck remain enforced. Accepted/unknown provider receipts precede new eligibility as before; no blind resend/retargeting.",
+        "255 distinct current passing cases: API invitation mutation/decision/acceptance/agent/unified inbox114 plus private customer writer11; worker130 distinct from129 successful cases in the initial six-file run and its one corrected identifier case in a final targeted rerun. The initial worker run remains129 pass/one fixture failure; direct identifier transfer violated the database invariant,and the final test changes usernames through the supported account namespace update. No passing case rerun merely to obtain a green aggregate. The API selector included a nonexistent old file name; five existing files actually ran114 cases,then the real customer-business-notifications file ran11. Skips/repeats excluded. Eight raised/silent sink failures preserve all public rows except existing HTTP session/rate effects; success/replay,namespace reassignment,expiry/withdrawal/acceptance/decline/archive/disabled/missing inbox,snapshot-time withdrawal and controlled provider once-only receipts verified.",
+        "One final coherent review/source proof preserves whole original notification runtime after only isolated invitation writer/type literal; whole AgentsService AST after only added invitationId argument; original helper bilingual content/private routing; whole worker loader/email AST after only narrow invitation predicates. Original60 invitation and48 worker assertions preserved. Only seven scoped sources and16 corresponding compiled outputs changed; all other tracked/test/config/dependency/compiled outputs match prior source binding. No namespace/authority/lock/input/rate/audit/decision/membership/ownership/role/session/money/schema/provider/scheduler/coverage/budget/assertion weakened. Earlier unaffected checks remain qualified source-bound evidence,not added to255.",
+        "Final API/worker builds and typechecks,seven-file lint/format and five-production-file/five-rule Semgrep zero findings pass. No web/shared runtime changed; previous web build/all87 unchanged budgets remain source/output bound. No new browser/live external provider/customer message or deployment is claimed.",
+        "Task/release partial: agent_role_changed producer remains missing; verification_status already exists with email/SMS but its remaining sink/idempotency/active template gates must be inspected. Unregistered invitation behavior/privacy stays unchanged and is not a new external delivery claim. Other Appendix/native/template/live provider/storage/scanner/owner/operations/launch gates remain unfinished. No version/release/staging/Telegram/production deployment."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/profile-invitation-notification-producer",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -268302,9 +268741,9 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-profile-notification-producers",
+    "id": "release-0.4-profile-role-verification-notification-producers",
     "release": "0.4.0",
-    "goal": "Inspect existing verification_status,invitation_received and agent_role_changed profile producers and Appendix requirements. Implement only demonstrated missing durable notification boundaries. Preserve current profile ownership/private recipient grants,invitation/token/verification/state transitions,audits,stable occurrence/rollback/replay and original money/authorization; keep other producers,active custom templates and live provider/owner/operations/launch gates explicit.",
+    "goal": "Inspect and complete missing agent_role_changed producer and demonstrated verification_status sink/idempotency gaps. Reuse existing profile/invitation/notification engines; preserve role replacement/removal/session revocation,current recipient privacy,verification/step-up/audit/transitions and unknown receipts. Keep active custom templates and live provider/owner/operations/launch gates explicit.",
     "task_keys": [
       "05-notifications-documents-ai.md#T-05.01.02"
     ]

@@ -91,7 +91,11 @@ export class NotificationsService {
     transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
     delivery?: {
       outboxId: string;
-      eventKey: CustomerBusinessEvent | TicketBusinessEvent | PrivateDocumentEvent;
+      eventKey:
+        | CustomerBusinessEvent
+        | TicketBusinessEvent
+        | PrivateDocumentEvent
+        | 'profile.invitation_received';
     }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
@@ -238,6 +242,96 @@ export class NotificationsService {
     );
     if (history.rowCount !== 1)
       throw new Error('Mandatory private document delivery history was not stored');
+    return true;
+  }
+
+  async createInvitationEvent(
+    params: CreateNotificationParams & {
+      eventKey: 'profile.invitation_received';
+      occurrenceKey: string;
+      payload: { invitationId: string; entityName: string; inviteLink: string };
+    },
+    transaction: PoolClient
+  ): Promise<boolean> {
+    if (
+      params.operatingContext !== 'customer' ||
+      params.profileId ||
+      !params.occurrenceKey.trim() ||
+      !params.userId.trim()
+    )
+      throw new Error('Invitation delivery requires the original private recipient');
+    const payload = {
+      ...params.payload,
+      ...(params.link ? { link_route: notificationLink(params.link) } : {}),
+    };
+    const channels = ['in_app', 'email'];
+    const outboxId = uuidv7();
+    const inserted = await transaction.query(
+      `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$3,$4,$5,'queued',$6,5,$7) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
+      [
+        outboxId,
+        params.userId,
+        params.eventKey,
+        payload,
+        channels,
+        params.occurrenceKey,
+        correlationIdStorage.getStore() ?? null,
+      ]
+    );
+    if (!inserted.rows[0]) {
+      const existing = await transaction.query(
+        `SELECT ob.id FROM notification_outbox ob JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+         WHERE ob.idempotency_key=$1 AND ob.profile_id IS NULL AND ob.user_id=$2 AND ob.event_key=$3 AND ob.payload=$4::jsonb
+          AND ob.channels=$5::text[] AND n.profile_id IS NULL AND n.recipient_user_id=ob.user_id
+          AND n.operating_context=$6 AND n.type=ob.event_key
+          AND EXISTS(SELECT 1 FROM notification_job WHERE outbox_id=ob.id AND channel='in_app')
+          AND EXISTS(SELECT 1 FROM notification_job WHERE outbox_id=ob.id AND channel='email')
+          AND EXISTS(SELECT 1 FROM notification_delivery_log WHERE notification_id=ob.id AND channel='in_app'
+            AND status='delivered' AND attempt_number=1 AND provider_ref=n.id::text)`,
+        [
+          params.occurrenceKey,
+          params.userId,
+          params.eventKey,
+          payload,
+          channels,
+          params.operatingContext,
+        ]
+      );
+      if (!existing.rows[0])
+        throw new Error('Invitation notification occurrence conflicts with saved delivery');
+      return false;
+    }
+    const recipient = await transaction.query(
+      `SELECT i.id FROM profile_invitations i JOIN profiles p ON p.id=i.profile_id
+       JOIN account_login_identifiers a ON a.destination=i.username
+       WHERE i.id::text=$1 AND a.user_id=$2 AND i.status='Pending'
+         AND (i.expires_at IS NULL OR i.expires_at>clock_timestamp())
+         AND NOT p.archived AND p.profile_type='LEGAL' AND i.role IN ('Manager','Finance','Legal')`,
+      [params.payload.invitationId, params.userId]
+    );
+    if (recipient.rows.length !== 1) throw new Error('Private invitation recipient changed');
+    const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
+    const inboxJob = await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done','urgent',5,1,$2,$3)`,
+      [outboxId, notice.id, payload]
+    );
+    if (inboxJob.rowCount !== 1) throw new Error('Invitation inbox job was not stored');
+    {
+      const emailJob = await transaction.query(
+        `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts)
+         VALUES($1,'email','queued','urgent',5,0)`,
+        [outboxId]
+      );
+      if (emailJob.rowCount !== 1) throw new Error('Invitation email job was not stored');
+    }
+    const history = await transaction.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [outboxId, notice.id]
+    );
+    if (history.rowCount !== 1) throw new Error('Invitation inbox delivery history was not stored');
     return true;
   }
 

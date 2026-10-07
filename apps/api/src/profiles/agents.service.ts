@@ -464,7 +464,7 @@ export class AgentsService {
       );
 
       if (recipientUserId)
-        await notifyAgentInvitation(client, { recipientUserId, profileId, role });
+        await notifyAgentInvitation(client, { recipientUserId, profileId, role, invitationId });
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
     } catch (error) {

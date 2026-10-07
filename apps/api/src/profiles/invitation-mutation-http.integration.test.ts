@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { notifyAgentInvitation } from './invitation-notifications.js';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -468,4 +469,185 @@ it('permission denial does not disclose destination validation fields', async ()
   expect(response.status).toBe(403);
   expect(await response.json()).not.toHaveProperty('error.fields');
   expect(await state(c)).toEqual(before);
+});
+
+async function noticeState() {
+  const tables = (
+    await http.pool.query(
+      "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN ('sessions','rate_limit_counters','rate_limit_windows') ORDER BY tablename"
+    )
+  ).rows;
+  return Object.fromEntries(
+    await Promise.all(
+      tables.map(async ({ tablename }) => [
+        tablename,
+        (
+          await http.pool.query(
+            `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${tablename}" t`
+          )
+        ).rows[0].rows,
+      ])
+    )
+  );
+}
+async function registeredInvitee() {
+  const user = randomUUID(),
+    username = `${user}@example.test`;
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES($1,$2,'fixture')",
+    [user, username]
+  );
+  return { user, username };
+}
+it('seals one private canonical invitation with both channels and immutable replay without granting profile access', async () => {
+  const c = await setup('Owner'),
+    recipient = await registeredInvitee();
+  const response = await request(c, 'create', {
+    body: { username: recipient.username, role: 'Finance' },
+  });
+  expect(response.status, (await response.text()) + http.logs()).toBe(201);
+  const invitation = (
+    await http.pool.query('SELECT * FROM profile_invitations WHERE profile_id=$1 AND username=$2', [
+      c.profileId,
+      recipient.username,
+    ])
+  ).rows[0];
+  const rows = (
+    await http.pool.query(
+      "SELECT * FROM notification_outbox WHERE event_key='profile.invitation_received' AND user_id=$1",
+      [recipient.user]
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  expect(rows[0]).toMatchObject({
+    profile_id: null,
+    user_id: recipient.user,
+    channels: ['in_app', 'email'],
+    max_attempts: 5,
+    idempotency_key: `profile.invitation_received:${invitation.id}:${recipient.user}`,
+    payload: {
+      invitationId: invitation.id,
+      entityName: 'A legal profile',
+      inviteLink: '/dashboard',
+      link_route: '/dashboard',
+    },
+  });
+  const inbox = (
+    await http.pool.query(
+      "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+      [rows[0].id]
+    )
+  ).rows;
+  expect(inbox).toHaveLength(1);
+  expect(inbox[0]).toMatchObject({
+    profile_id: null,
+    recipient_user_id: recipient.user,
+    operating_context: 'customer',
+    type: 'profile.invitation_received',
+    link_route: '/dashboard',
+    localized_content: { fa: { title: 'دعوت به تیم' }, en: { title: 'Team invitation' } },
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT channel,status,priority,attempts,max_attempts,provider_ref FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+        [rows[0].id]
+      )
+    ).rows
+  ).toEqual([
+    {
+      channel: 'email',
+      status: 'queued',
+      priority: 'urgent',
+      attempts: 0,
+      max_attempts: 5,
+      provider_ref: null,
+    },
+    {
+      channel: 'in_app',
+      status: 'done',
+      priority: 'urgent',
+      attempts: 1,
+      max_attempts: 5,
+      provider_ref: inbox[0].id,
+    },
+  ]);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT channel,status,attempt_number,provider_ref FROM notification_delivery_log WHERE notification_id=$1',
+        [rows[0].id]
+      )
+    ).rows
+  ).toEqual([
+    { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: inbox[0].id },
+  ]);
+  expect(
+    (await http.pool.query('SELECT * FROM profile_agents WHERE user_id=$1', [recipient.user])).rows
+  ).toEqual([]);
+  await http.pool.query('UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1', [
+    inbox[0].id,
+  ]);
+  await http.pool.query("UPDATE profile_invitations SET status='Withdrawn' WHERE id=$1", [
+    invitation.id,
+  ]);
+  const before = await noticeState(),
+    client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await notifyAgentInvitation(client, {
+      recipientUserId: recipient.user,
+      profileId: c.profileId,
+      role: 'Finance',
+      invitationId: invitation.id,
+    });
+    await client.query('COMMIT');
+  } finally {
+    client.release();
+  }
+  expect(await noticeState()).toEqual(before);
+});
+it('rolls back invitation, audit and every notice sink on raised or silently suppressed mandatory delivery', async () => {
+  const c = await setup('Owner'),
+    recipient = await registeredInvitee();
+  for (const [table, predicate] of [
+    ['notification_outbox', "NEW.event_key='profile.invitation_received'"],
+    ['in_app_notifications', "NEW.type='profile.invitation_received'"],
+    [
+      'notification_job',
+      "EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.outbox_id AND o.event_key='profile.invitation_received')",
+    ],
+    [
+      'notification_delivery_log',
+      "EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.notification_id AND o.event_key='profile.invitation_received')",
+    ],
+  ])
+    for (const mode of ['raise', 'suppress']) {
+      const before = await noticeState();
+      await http.pool.query(
+        `CREATE FUNCTION fail_invitation_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'invitation notice failure';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_invitation_notice BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_invitation_notice()`
+      );
+      try {
+        expect(
+          (await request(c, 'create', { body: { username: recipient.username, role: 'Legal' } }))
+            .status
+        ).toBe(500);
+        expect(await noticeState()).toEqual(before);
+      } finally {
+        await http.pool.query(
+          `DROP TRIGGER fail_invitation_notice ON ${table}; DROP FUNCTION fail_invitation_notice()`
+        );
+      }
+    }
+  expect(
+    (await request(c, 'create', { body: { username: recipient.username, role: 'Legal' } })).status
+  ).toBe(201);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT * FROM notification_outbox WHERE user_id=$1 AND event_key='profile.invitation_received'",
+        [recipient.user]
+      )
+    ).rows
+  ).toHaveLength(1);
 });

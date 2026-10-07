@@ -1,10 +1,11 @@
+import type { PoolClient } from 'pg';
 import { NotificationsService } from '../notifications/notifications.service.js';
 
 /** The invitation and its registered recipient's notice share the caller's transaction. */
 export async function notifyAgentInvitation(
-  client: { query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> },
-  input: { recipientUserId: string; profileId: string; role: string },
-  notifications: Pick<NotificationsService, 'create'> = new NotificationsService()
+  client: PoolClient,
+  input: { recipientUserId: string; profileId: string; role: string; invitationId: string },
+  notifications: Pick<NotificationsService, 'createInvitationEvent'> = new NotificationsService()
 ): Promise<void> {
   const row = (
     await client.query(
@@ -25,9 +26,16 @@ export async function notifyAgentInvitation(
     },
   };
   // User-scoped: an invitee cannot select the inviting profile before acceptance.
-  await notifications.create(
+  await notifications.createInvitationEvent(
     {
       userId: input.recipientUserId,
+      eventKey: 'profile.invitation_received',
+      occurrenceKey: `profile.invitation_received:${input.invitationId}:${input.recipientUserId}`,
+      payload: {
+        invitationId: input.invitationId,
+        entityName: name || 'A legal profile',
+        inviteLink: '/dashboard',
+      },
       operatingContext: 'customer',
       type: 'general',
       ...localizedContent.fa,
