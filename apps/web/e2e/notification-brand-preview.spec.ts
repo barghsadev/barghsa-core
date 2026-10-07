@@ -1,4 +1,6 @@
 import { test, expect } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
+import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 
 for (const locale of ['en', 'fa'] as const)
   for (const darkMode of [false, true]) {
@@ -8,11 +10,15 @@ for (const locale of ['en', 'fa'] as const)
         requests.push(route.request().url());
         return route.fulfill({ body: 'blocked probe' });
       });
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await crmShell(page, locale);
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
             appTitle: 'Branded <energy>',
+            appTitleFa: 'Branded <energy>',
+            supportEmail: 'staff@example.test',
+            supportPhone: '02126658042',
+            supportMobile: '09002550292',
             slogan: 'Safe & clear',
             primaryColor: '#123456',
             secondaryColor: '#345678',
@@ -30,6 +36,7 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({
           json: [
             {
+              ...notificationTemplate(),
               id: 'preview-brand',
               eventKey: 'fixture.brand',
               channel: 'email',
@@ -46,9 +53,6 @@ for (const locale of ['en', 'fa'] as const)
         })
       );
       await page.goto('/admin/notifications');
-      await page.evaluate((lang) => {
-        document.documentElement.lang = lang;
-      }, locale);
       const historyFrame = page.frameLocator('iframe').first();
       await expect(historyFrame.getByText('Branded <energy>', { exact: true })).toBeVisible();
       await expect(historyFrame.getByRole('heading', { name: 'Welcome user.name' })).toBeVisible();
@@ -102,11 +106,12 @@ for (const locale of ['en', 'fa'] as const)
 
 for (const channel of ['sms', 'in_app']) {
   test(`${channel} preview stays plain text`, async ({ page }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await crmShell(page);
     await page.route('**/api/admin/notifications/templates', (route) =>
       route.fulfill({
         json: [
           {
+            ...notificationTemplate(),
             id: 'plain-preview',
             eventKey: 'fixture.plain',
             channel,

@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 439 | Accepted with unchanged source bindings. |
-| verify | 863 | Existing work may be complete; inspect evidence before building. |
+| done | 445 | Accepted with unchanged source bindings. |
+| verify | 857 | Existing work may be complete; inspect evidence before building. |
 | partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,14 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing notification template editor/entity/CRUD/preview/testsend/seeding implementation andrenewrelatedeffectiveacceptance togetheragainstcurrent sources. Reusevalid engine/native/42seed/fa-en/migration evidence;buildonlydemonstratedlifecycle/variable/authority/renderer/import gaps. Preserveactiveversion immutability/escaping/verifieddestination/currentadmin/session/privatecontext/atomicrecords andacceptednative receipts. Generic/legacy writers,secureOTP/awaiting-staff ownerdispositions/systempublication/liveprovider/storage/scanner/policy/operations/fourservicelaunch unfinished.
+Inspect and renew current private customer/staff inbox transport, center API, bell/full-page UI and polling acceptance together. Reuse valid native receipt proofs; build only demonstrated ownership, pagination/read, accessibility or live-update gaps. Preserve immutable history and producer/provider boundaries; release gates and pending owner decisions remain unfinished.
 
-- `02-auth-users-admin.md#T-09.04.01`: Notification template editor
-- `05-notifications-documents-ai.md#T-05.04.01`: Template entity & CRUD API
-- `05-notifications-documents-ai.md#T-05.04.02`: Variable interpolation & escaping
-- `05-notifications-documents-ai.md#T-05.04.03`: Template preview
-- `05-notifications-documents-ai.md#T-05.04.04`: Test-send
-- `05-notifications-documents-ai.md#T-05.04.05`: Template seeding
+- `05-notifications-documents-ai.md#T-05.02.01`: Notification entity & in-app transport
+- `05-notifications-documents-ai.md#T-05.02.02`: Notification center API
+- `05-notifications-documents-ai.md#T-05.02.03`: Notification center UI
+- `05-notifications-documents-ai.md#T-05.02.04`: New-notification polling / SSE
 
 ## v0.2.0: Complete customer journeys
 
@@ -527,7 +525,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | --- | --- | --- | --- |
 | `release-readiness#R-03.01` | todo | Inventory needed | Renew document, notification and AI acceptance |
 | `release-readiness#R-03.02` | todo | Inventory needed | Verify live staging provider and storage boundaries |
-| `02-auth-users-admin.md#T-09.04.01` | verify | Earlier acceptance_verified | Notification template editor |
+| `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | verify | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | verify | Earlier acceptance_verified | SMS.ir configuration |
 | `02-auth-users-admin.md#T-09.06.03` | verify | Earlier acceptance_verified | Notification daytime window configuration |
@@ -550,11 +548,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.03.01` | verify | Earlier acceptance_verified | Notification type registry & classification |
 | `05-notifications-documents-ai.md#T-05.03.02` | verify | Earlier acceptance_verified | Delivery window logic |
 | `05-notifications-documents-ai.md#T-05.03.03` | verify | Earlier acceptance_verified | Admin delivery-window configuration UI |
-| `05-notifications-documents-ai.md#T-05.04.01` | verify | Earlier acceptance_verified | Template entity & CRUD API |
-| `05-notifications-documents-ai.md#T-05.04.02` | verify | Earlier acceptance_verified | Variable interpolation & escaping |
-| `05-notifications-documents-ai.md#T-05.04.03` | verify | Earlier acceptance_verified | Template preview |
-| `05-notifications-documents-ai.md#T-05.04.04` | verify | Earlier acceptance_verified | Test-send |
-| `05-notifications-documents-ai.md#T-05.04.05` | verify | Earlier acceptance_verified | Template seeding |
+| `05-notifications-documents-ai.md#T-05.04.01` | done | Earlier acceptance_verified | Template entity & CRUD API |
+| `05-notifications-documents-ai.md#T-05.04.02` | done | Earlier acceptance_verified | Variable interpolation & escaping |
+| `05-notifications-documents-ai.md#T-05.04.03` | done | Earlier acceptance_verified | Template preview |
+| `05-notifications-documents-ai.md#T-05.04.04` | done | Earlier acceptance_verified | Test-send |
+| `05-notifications-documents-ai.md#T-05.04.05` | done | Earlier acceptance_verified | Template seeding |
 | `05-notifications-documents-ai.md#T-05.05.01` | done | Earlier acceptance_verified | Notification category model |
 | `05-notifications-documents-ai.md#T-05.05.02` | done | Earlier acceptance_verified | Channel availability rules |
 | `05-notifications-documents-ai.md#T-05.05.03` | verify | Earlier acceptance_verified | Consent UI in profile settings |
