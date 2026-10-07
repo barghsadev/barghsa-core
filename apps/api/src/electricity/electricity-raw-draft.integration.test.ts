@@ -1,3 +1,8 @@
+import { expectProtectedLegacyCancellation } from '../test/electricity-status-notification-proof.js';
+import {
+  expectElectricityStatusDeliveries,
+  expectElectricityStatusRollback,
+} from '../test/electricity-status-notification-proof.js';
 import { randomUUID } from 'node:crypto';
 import { beforeAll, beforeEach, afterAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -337,8 +342,19 @@ it('rolls back both rows and command/audit evidence when mandatory audit persist
       'DROP TRIGGER reject_raw_draft_audit ON audit_log;DROP FUNCTION reject_raw_draft_audit()'
     );
   }
+  await expectElectricityStatusRollback(http.pool, id, 'rejected', () =>
+    send(id, '/draft-terminal', command)
+  );
   expect((await send(id, '/draft-terminal', command)).status, http.logs()).toBe(200);
   expect((await snapshot(id)).audits).toHaveLength(1);
+  await expectElectricityStatusDeliveries(
+    http.pool,
+    id,
+    'raw-buyer',
+    ['rejected'],
+    undefined,
+    null
+  );
 });
 it('requires a reason and rejects protected/unknown fields before any writes', async () => {
   const id = await seed(),
@@ -875,10 +891,25 @@ it('rolls back every orphan financial record when the mandatory refund audit fai
   expect(
     (await http.pool.query('SELECT id FROM refund_obligations WHERE order_id=$1', [id])).rows
   ).toHaveLength(0);
+  await expectElectricityStatusRollback(
+    http.pool,
+    id,
+    'rejected',
+    () => send(id, '/draft-terminal', command),
+    true
+  );
   const response = await send(id, '/draft-terminal', command);
   expect(response.status, http.logs()).toBe(200);
   const receipt = (await response.json()) as { refunds: Array<{ id: string }> };
   expect((await send(id, '/draft-terminal', command)).status).toBe(200);
+  await expectElectricityStatusDeliveries(
+    http.pool,
+    id,
+    'raw-buyer',
+    ['rejected'],
+    undefined,
+    null
+  );
   for (const refund of receipt.refunds) {
     await expectCoreAudit(http.pool, 'refund.requested', refund.id, {
       entity: 'refund',
@@ -1379,4 +1410,19 @@ it('reconciles a prior partial refund through the existing finance workflow befo
     stepUpVerified: true,
     stepUpVerifiedAt: verified.toISOString(),
   });
+});
+
+it('rejects legacy cancellation of funded orphan drafts while retaining their required reviewed termination', async () => {
+  const { id } = await actualDraft();
+  await orphanFunding(id);
+  await expectProtectedLegacyCancellation(http.pool, () =>
+    fetch(`${http.base}/api/orders/${id}/cancel`, {
+      method: 'POST',
+      headers: headers['raw-buyer']!,
+    })
+  );
+  expect(
+    (await http.pool.query('SELECT status FROM electricity_orders WHERE id=$1', [id])).rows[0]
+      .status
+  ).toBe('draft');
 });

@@ -1,3 +1,4 @@
+import { notifyElectricityStatus } from './electricity-status-notifications.js';
 import { activityNames } from '../common/activity-identity.js';
 import {
   notifyOrderSubmitted,
@@ -914,6 +915,7 @@ export class ElectricityOrderService {
               ip,
             ]
           );
+          await notifyElectricityStatus(client, orderId, row.status, 'awaiting_staff_review');
           return {
             orderId,
             contractId: row.contract_id,
@@ -1275,6 +1277,7 @@ export class ElectricityOrderService {
               ip,
             ]
           );
+          await notifyElectricityStatus(client, orderId, row.status, 'awaiting_staff_review');
           return {
             orderId,
             contractId: row.contract_id,

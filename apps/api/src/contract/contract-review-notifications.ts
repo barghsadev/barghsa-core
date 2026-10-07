@@ -1,3 +1,4 @@
+import { notifyElectricityStatus } from '../electricity/electricity-status-notifications.js';
 import { notifyCancellationRequest } from './contract-cancellation-request-notifications.js';
 import { contractText } from '@barghsa/i18n/contracts';
 import type { PoolClient } from 'pg';
@@ -83,7 +84,8 @@ export async function notifyContractReview(
   event: keyof typeof messages,
   reason?: string,
   versionId?: string,
-  requestId?: string
+  requestId?: string,
+  electricityRejection?: { orderId: string; from: string }
 ) {
   const profile = (
     await client.query<{
@@ -165,7 +167,17 @@ export async function notifyContractReview(
       },
     } as const;
     const notifications = new NotificationsService();
-    if (operatingContext === 'customer' && event === 'cancellation_requested') {
+    if (operatingContext === 'customer' && event === 'rejected' && electricityRejection) {
+      await notifyElectricityStatus(
+        client,
+        electricityRejection.orderId,
+        electricityRejection.from,
+        'rejected',
+        params,
+        undefined,
+        electricityRejection.from === 'draft' ? null : undefined
+      );
+    } else if (operatingContext === 'customer' && event === 'cancellation_requested') {
       if (!requestId) throw new Error('Cancellation notice requires the saved request');
       await notifyCancellationRequest(client, id, requestId, params);
     } else if (operatingContext === 'customer' && eventKey)

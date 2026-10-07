@@ -53,6 +53,8 @@ beforeEach(() => {
     if (text.includes('WHERE system_key = ANY')) return { rows: greenRows };
     if (text.includes('INSERT INTO electricity_orders')) return { rows: [] };
     if (text.includes('UPDATE electricity_orders')) return { rows: [] };
+    if (text.includes('AS legacy_cancellation_blocked'))
+      return { rows: [{ legacy_cancellation_blocked: false }] };
     if (text.includes('FROM provinces p JOIN cities c')) return { rows: [{ id: 'city-1' }] };
     const next = responses.shift() ?? { rows: [], rowCount: 0 };
     return next;

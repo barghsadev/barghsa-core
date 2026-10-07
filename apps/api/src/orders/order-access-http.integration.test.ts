@@ -1,3 +1,9 @@
+import { expectProtectedLegacyCancellation } from '../test/electricity-status-notification-proof.js';
+import {
+  expectElectricityStatusDeliveries,
+  electricityDeliverySnapshot,
+  expectElectricityStatusRollback,
+} from '../test/electricity-status-notification-proof.js';
 import { beforeEach, afterEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -273,8 +279,14 @@ it('allows the owner and Manager while excluding financial, legal and stale Owne
     [profileId]
   );
   expect((await request('finance', 'GET', `/${id}`)).status).toBe(200);
+  await expectElectricityStatusRollback(http.pool, id, 'cancelled', () =>
+    request('owner', 'POST', `/${id}/cancel`)
+  );
   expect((await request('owner', 'POST', `/${id}/cancel`)).status).toBe(200);
+  await expectElectricityStatusDeliveries(http.pool, id, 'owner', ['cancelled'], undefined, null);
+  const delivery = await electricityDeliverySnapshot(http.pool, id);
   expect((await request('manager', 'POST', `/${id}/cancel`)).status).toBe(200);
+  expect(await electricityDeliverySnapshot(http.pool, id)).toEqual(delivery);
   expect(
     (
       await http.pool.query(
@@ -297,6 +309,14 @@ it('moves order access with current ownership, preserving the original actor on 
   expect(
     (await http.pool.query('SELECT user_id,status FROM orders WHERE id=$1', [id])).rows[0]
   ).toEqual({ user_id: 'owner', status: 'CANCELLED' });
+  await expectElectricityStatusDeliveries(
+    http.pool,
+    id,
+    'successor',
+    ['cancelled'],
+    undefined,
+    null
+  );
 });
 for (const action of ['create', 'cancel']) {
   it(`rechecks Manager membership when ${action} waits behind role removal`, async () => {
@@ -577,4 +597,53 @@ it('serializes cross-profile gift limits, rolls back the losing order and restor
     (await http.pool.query('SELECT status,restored_at FROM gift_code_redemptions')).rows
   ).toEqual(restored);
   expect((await request('owner', 'POST', '', { ...body, giftCode: 'ONE-SLOT' })).status).toBe(201);
+});
+
+it('refuses an associated invoice committed while legacy cancellation waits on its parent', async () => {
+  const id = await create(),
+    client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM orders WHERE id=$1 FOR KEY SHARE', [id]);
+    await client.query(
+      "INSERT INTO invoices(profile_id,order_id,type,state,total_amount) VALUES($1,$2,'auto','Unpaid',100)",
+      [profileId, id]
+    );
+    pending = request('owner', 'POST', `/${id}/cancel`);
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT * FROM orders WHERE id=%FOR UPDATE%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(409);
+    expect(
+      (await http.pool.query('SELECT status FROM orders WHERE id=$1', [id])).rows[0].status
+    ).toBe('DRAFT');
+    expect(
+      (await http.pool.query('SELECT state FROM invoices WHERE order_id=$1', [id])).rows[0].state
+    ).toBe('Unpaid');
+    expect(
+      (
+        await http.pool.query(
+          "SELECT * FROM audit_log WHERE event='order_cancelled' AND metadata::jsonb->>'orderId'=$1",
+          [id]
+        )
+      ).rows
+    ).toEqual([]);
+    await expectProtectedLegacyCancellation(http.pool, () =>
+      request('owner', 'POST', `/${id}/cancel`)
+    );
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+  }
 });

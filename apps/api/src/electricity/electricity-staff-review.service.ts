@@ -14,7 +14,7 @@ import {
   contractIdempotency,
   auditContract,
 } from '../contract/contract-transactions.js';
-import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifyElectricityStatus } from './electricity-status-notifications.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { GiftCodeService } from '../admin/gift-code.service.js';
 import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
@@ -681,23 +681,18 @@ export class ElectricityStaffReviewService {
     reason: string
   ) {
     const message = customerMessages[action];
-    await new NotificationsService().create(
-      {
-        userId: row.customer_id,
-        profileId: row.profile_id,
-        operatingContext: 'customer',
-        type: 'general',
-        title: message.en,
-        link: `/electricity/orders/${row.id}`,
-        localizedContent: {
-          fa: { title: 'سفارش برق', body: message.fa + (reason ? ` دلیل: ${reason}` : '') },
-          en: {
-            title: 'Electricity order',
-            body: message.en + (reason ? ` Reason: ${reason}` : ''),
-          },
-        },
+    const to =
+      action === 'approve'
+        ? 'approved'
+        : action === 'request-changes'
+          ? 'changes_requested'
+          : 'rejected';
+    await notifyElectricityStatus(client, row.id, row.commercial_status, to, {
+      title: message.en,
+      localizedContent: {
+        fa: { title: 'سفارش برق', body: message.fa + (reason ? ` دلیل: ${reason}` : '') },
+        en: { title: 'Electricity order', body: message.en + (reason ? ` Reason: ${reason}` : '') },
       },
-      client
-    );
+    });
   }
 }

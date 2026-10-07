@@ -1,3 +1,9 @@
+import { expectProtectedLegacyCancellation } from '../test/electricity-status-notification-proof.js';
+import {
+  expectElectricityStatusDeliveries,
+  expectElectricityStatusRollback,
+  electricityDeliverySnapshot,
+} from '../test/electricity-status-notification-proof.js';
 import { expectCancellationRequestDelivery } from '../test/cancellation-request-notification-proof.js';
 import {
   seedElectricityTerminalSignature,
@@ -311,6 +317,10 @@ it('projects correction form feedback without mutations and preserves exact staf
   expect(await correctionSnapshot(order.orderId, order.contractId)).toEqual(final);
   expect(final.versions).toHaveLength(2);
   expect(final.invoices).toEqual(changed.invoices);
+  await expectElectricityStatusDeliveries(http.pool, order.orderId, 'buyer', [
+    'changes_requested',
+    'awaiting_staff_review',
+  ]);
   const staffDetail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
     headers: staffHeaders,
   });
@@ -753,11 +763,19 @@ it('keeps electricity order conversations public or staff-only and reachable aft
     (
       await http.pool.query(
         `SELECT COUNT(*)::int AS total FROM in_app_notifications
-     WHERE recipient_user_id='buyer' AND link_route=$1`,
+     WHERE recipient_user_id='buyer' AND link_route=$1 AND type='general'`,
         [`/electricity/orders/${order.orderId}`]
       )
     ).rows[0].total
   ).toBe(1);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT type FROM in_app_notifications WHERE recipient_user_id='buyer' AND link_route=$1 ORDER BY type",
+        [`/electricity/orders/${order.orderId}`]
+      )
+    ).rows
+  ).toEqual([{ type: 'general' }, { type: 'order.submitted' }]);
 
   const detail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
     headers: staffHeaders,
@@ -1370,6 +1388,9 @@ it('rolls back transition effects and receipt when notification fails, then retr
       'DROP TRIGGER fail_transition_notice ON in_app_notifications; DROP FUNCTION fail_transition_notice()'
     );
   }
+  await expectElectricityStatusRollback(http.pool, order.orderId, 'approved', () =>
+    staffPost(order.orderId, 'approve', command)
+  );
   const response = await staffPost(order.orderId, 'approve', command);
   expect(response.status, http.logs()).toBe(200);
   expect(await response.json()).toMatchObject({ orderId: order.orderId, status: 'approved' });
@@ -1388,7 +1409,10 @@ it('rolls back transition effects and receipt when notification fails, then retr
   ).rows[0].count;
   expect(notices - initialNotices).toBe(1);
   expect(notices).toBe(3);
+  await expectElectricityStatusDeliveries(http.pool, order.orderId, 'buyer', ['approved']);
+  const statusDelivery = await electricityDeliverySnapshot(http.pool, order.orderId);
   expect((await staffPost(order.orderId, 'approve', command)).status).toBe(200);
+  expect(await electricityDeliverySnapshot(http.pool, order.orderId)).toEqual(statusDelivery);
   expect(
     (
       await http.pool.query(
@@ -1756,6 +1780,10 @@ it('revises an unpaid order with a new quote, invoice and immutable line history
   expect(result).toMatchObject({ status: 'awaiting_staff_review' });
   expect(result.versionId).not.toBe(before.versionId);
   expect(result.invoiceId).not.toBe(order.invoiceId);
+  await expectElectricityStatusDeliveries(http.pool, order.orderId, 'buyer', [
+    'changes_requested',
+    'awaiting_staff_review',
+  ]);
   expect(await (await resubmit()).json()).toEqual(result);
   await expectCoreAudit(http.pool, 'electricity.order_resubmitted', order.orderId, {
     entity: 'electricity_order',
@@ -5703,4 +5731,15 @@ it('reviewed rejection rolls back terminal rows, execution evidence, refund jobs
   expect((await rejectionSend(order.contractId, '/execute', execution)).status, http.logs()).toBe(
     201
   );
+});
+
+it('rejects legacy cancellation of a native submitted order without bypassing its review or financial engine', async () => {
+  const order = await submittedOrder();
+  await expectProtectedLegacyCancellation(http.pool, () =>
+    fetch(`${http.base}/api/orders/${order.orderId}/cancel`, { method: 'POST', headers })
+  );
+  expect(
+    (await http.pool.query('SELECT status FROM electricity_orders WHERE id=$1', [order.orderId]))
+      .rows[0].status
+  ).toBe('awaiting_staff_review');
 });

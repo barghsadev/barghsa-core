@@ -478,7 +478,15 @@ export class ContractCancellationService {
                 financialFingerprint: intent.financial_fingerprint,
               }
             );
-            await notifyContractReview(client, id, 'rejected', intent.reason);
+            await notifyContractReview(
+              client,
+              id,
+              'rejected',
+              intent.reason,
+              undefined,
+              undefined,
+              { orderId: e.orderId, from: e.commercialStatus }
+            );
           }
           if (intent.customer_request_id) {
             await auditContract(

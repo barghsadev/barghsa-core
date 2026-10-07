@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect remaining electricity review/revision/system status writers and existing notices before changes. Complete required order.status_changed with exact variables,private current owner,immediate inbox and atomic email. Preserve price/quantity/snapshots/refunds/gifts/audits/review/authority/session/idempotency/replay,Cancelled versus Rejected and same-state information. Retain accepted submission/customer cancellation/contract/saving/solar/consultation/request families; keep other Appendix/template/provider/owner/operations criteria explicit.
+Inspect and complete SQL electricity activation/completion/formal contract-cancellation status notifications while preserving existing lifecycle/financial/quantity/price/gift/audit/idempotency/history/upgrade/replay machinery. Reuse accepted native API/status/request/submission/contract producers; separately audit native contract review/publication producers outside the generic adapter. Keep other Appendix/templates/providers/owner/operations/launch criteria explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

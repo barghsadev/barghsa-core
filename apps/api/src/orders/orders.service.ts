@@ -1,3 +1,4 @@
+import { notifyElectricityStatus } from '../electricity/electricity-status-notifications.js';
 import type { PoolClient } from 'pg';
 import { requireAddressGeography } from '../profiles/address-geography.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
@@ -578,16 +579,45 @@ export class OrdersService {
       }
       if (current.status !== 'DRAFT' && current.status !== 'PENDING')
         throw new HttpException({ statusCode: 409, error: 'ORDER_NOT_CANCELLABLE' }, 409);
+      // Only unlinked drafts without financial activity use the legacy cancellation path.
+      // Read associations after locking their parent, so committed concurrent links are visible.
+      const protectedScope = (
+        await client.query<{ legacy_cancellation_blocked: boolean }>(
+          `SELECT EXISTS(SELECT 1 FROM contracts WHERE order_id=$1)
+          OR EXISTS(SELECT 1 FROM electricity_contracts WHERE order_id=$1)
+          OR EXISTS(SELECT 1 FROM saving_orders WHERE order_id=$1)
+          OR EXISTS(SELECT 1 FROM invoices WHERE order_id=$1)
+          OR EXISTS(SELECT 1 FROM refund_obligations WHERE order_id=$1)
+          OR EXISTS(SELECT 1 FROM electricity_order_submissions WHERE order_id=$1)
+          OR EXISTS(SELECT 1 FROM wallet_transactions WHERE type='payment' AND lower(ref_id)=$1::text)
+          OR EXISTS(SELECT 1 FROM electricity_orders WHERE id=$1 AND
+            (profile_id IS DISTINCT FROM $2::uuid OR status<>'draft' OR submitted_at IS NOT NULL OR submitted_by IS NOT NULL))
+          AS legacy_cancellation_blocked`,
+          [orderId, current.profileId]
+        )
+      ).rows[0];
+      if (protectedScope?.legacy_cancellation_blocked !== false)
+        throw new HttpException({ statusCode: 409, error: 'ORDER_NOT_CANCELLABLE' }, 409);
       const updated = await client.query(
         "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1 RETURNING *",
         [orderId]
       );
       const order = mapRow(updated.rows[0] as Record<string, unknown>);
       if (order.orderType === 'electricity') {
-        await client.query(
+        const native = await client.query(
           "UPDATE electricity_orders SET status='cancelled', updated_at=NOW() WHERE id=$1 AND status='draft'",
           [order.id]
         );
+        if (native.rowCount === 1)
+          await notifyElectricityStatus(
+            client,
+            order.id,
+            'draft',
+            'cancelled',
+            undefined,
+            undefined,
+            null
+          );
       }
       // Restore the gift-code slot (default pre-payment policy) — same
       // transaction: the release commits/rolls back with the cancel.

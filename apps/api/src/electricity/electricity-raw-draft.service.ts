@@ -1,3 +1,4 @@
+import { notifyElectricityStatus } from './electricity-status-notifications.js';
 import { createHash } from 'node:crypto';
 import {
   ConflictException,
@@ -597,6 +598,15 @@ export class ElectricityRawDraftService {
                   correlationIdStorage.getStore() ?? uuidv7(),
                   ip,
                 ]
+              );
+              await notifyElectricityStatus(
+                client,
+                id,
+                'draft',
+                status,
+                undefined,
+                input.reason,
+                null
               );
               return {
                 orderId: id,
