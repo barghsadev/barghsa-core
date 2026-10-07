@@ -97,7 +97,8 @@ export class NotificationsService {
         | PrivateDocumentEvent
         | 'profile.invitation_received'
         | 'profile.agent_role_changed'
-        | 'auth.password_changed';
+        | 'auth.password_changed'
+        | 'auth.session_revoked';
     }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
@@ -339,7 +340,7 @@ export class NotificationsService {
 
   async createAccountBusinessEvent(
     params: CreateNotificationParams & {
-      eventKey: 'profile.agent_role_changed' | 'auth.password_changed';
+      eventKey: 'profile.agent_role_changed' | 'auth.password_changed' | 'auth.session_revoked';
       occurrenceKey: string;
       payload: Record<string, string>;
     },
@@ -347,7 +348,7 @@ export class NotificationsService {
   ): Promise<boolean> {
     if (
       params.operatingContext !==
-        (params.eventKey === 'auth.password_changed' ? 'account' : 'customer') ||
+        (params.eventKey === 'profile.agent_role_changed' ? 'customer' : 'account') ||
       params.profileId ||
       !params.occurrenceKey.trim() ||
       !params.userId.trim()
@@ -398,7 +399,12 @@ export class NotificationsService {
     const recipient = await transaction.query(
       params.eventKey === 'auth.password_changed'
         ? `SELECT id FROM audit_log WHERE id::text=$1 AND user_id=$2 AND event IN ('password_changed','password_reset')`
-        : `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'
+        : params.eventKey === 'auth.session_revoked'
+          ? `SELECT id FROM audit_log WHERE id::text=$1 AND (
+             (event='sessions_revoked' AND user_id=$2 AND (metadata::jsonb->>'changedSessionCount')::integer>0)
+             OR (event='expire_sessions' AND metadata::jsonb->>'targetUserId'=$2)
+            )`
+          : `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'
        WHERE a.id::text=$1 AND a.event IN ('agent_roles_changed','agent_removed')
          AND a.metadata::jsonb->>'targetUserId'=$2 AND NOT p.archived AND p.profile_type='LEGAL'`,
       [params.payload.auditId, params.userId]

@@ -1,3 +1,11 @@
+import { notifySessionsRevoked } from '../auth/session-notifications.js';
+import {
+  sessionNoticeState,
+  sessionDeliveryState,
+  expectSessionNotice,
+  sessionFailureCases,
+  failSessionSink,
+} from '../test/session-notification-proof.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { hash } from 'argon2';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
@@ -292,3 +300,62 @@ for (const mode of ['one', 'all'] as const) {
     ).toBe(0);
   });
 }
+
+for (const scope of ['one', 'all'] as const)
+  it.each(sessionFailureCases)(
+    `${scope} revocation rolls back $table on $mode and seals one private confirmation`,
+    async ({ table, mode }) => {
+      const before = await sessionNoticeState(db.pool),
+        drop = await failSessionSink(db.pool, table, mode),
+        work = () =>
+          scope === 'one'
+            ? controller.revokeSession(other.sessionId, request)
+            : controller.revokeAllSessions({ password }, request);
+      try {
+        await expect(work()).rejects.toMatchObject({ status: 500 });
+        expect(await sessionNoticeState(db.pool)).toEqual(before);
+      } finally {
+        await drop();
+      }
+      await work();
+      const notice = await expectSessionNotice(db.pool, 'self-revoke', [
+        password,
+        actor.sessionId,
+        actor.csrfToken,
+        actor.refreshToken,
+        other.sessionId,
+        other.refreshToken,
+      ]);
+      await db.pool.query(
+        'UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1',
+        [notice.inbox.id]
+      );
+      const delivered = await sessionNoticeState(db.pool),
+        client = await db.pool.connect();
+      try {
+        await client.query('BEGIN');
+        await notifySessionsRevoked(client, 'self-revoke', notice.outbox.payload.auditId);
+        await client.query('COMMIT');
+      } finally {
+        client.release();
+      }
+      expect(await sessionNoticeState(db.pool)).toEqual(delivered);
+      const receipt = await sessionDeliveryState(db.pool, 'self-revoke');
+      await work();
+      expect(await sessionDeliveryState(db.pool, 'self-revoke')).toEqual(receipt);
+    }
+  );
+it('self sign-out records its own private confirmation while preserving no-op/concurrent counts', async () => {
+  await controller.revokeSession(actor.sessionId, request);
+  await expectSessionNotice(db.pool, 'self-revoke', [
+    password,
+    actor.sessionId,
+    actor.csrfToken,
+    actor.refreshToken,
+  ]);
+  expect(
+    (await db.pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [actor.sessionId]))
+      .rows[0].revoked_at
+  ).not.toBeNull();
+  await unchangedTarget();
+});

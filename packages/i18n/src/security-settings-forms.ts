@@ -1,5 +1,8 @@
 import type { Locale } from './index.js';
 const en = {
+  sessionRevokedTitle: 'Sessions on your account were revoked',
+  sessionRevokedBody:
+    'One or more sessions on your account were revoked. If you did not request this, contact support immediately.',
   passwordChangedTitle: 'Your password changed',
   passwordChangedBody:
     'Your account password changed successfully. If you did not make this change, contact support immediately.',
@@ -20,6 +23,9 @@ const en = {
   loading: 'Loading…',
 } as const;
 const fa: Record<keyof typeof en, string> = {
+  sessionRevokedTitle: 'نشست‌های حساب شما باطل شد',
+  sessionRevokedBody:
+    'یک یا چند نشست حساب شما باطل شد. اگر این کار را شما درخواست نکرده‌اید، فوراً با پشتیبانی تماس بگیرید.',
   passwordChangedTitle: 'رمز عبور شما تغییر کرد',
   passwordChangedBody:
     'رمز عبور حساب شما با موفقیت تغییر کرد. اگر این تغییر را شما انجام نداده‌اید، فوراً با پشتیبانی تماس بگیرید.',

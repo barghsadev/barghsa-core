@@ -1,3 +1,4 @@
+import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { Injectable, Logger, HttpException, UnauthorizedException } from '@nestjs/common';
 import { randomBytes, createHash } from 'node:crypto';
 import type { PoolClient } from 'pg';
@@ -1052,11 +1053,12 @@ export class SessionService {
         [actor.userId, actor.sessionId, targetId]
       );
       const revokedCount = revoked.rows.filter((row) => row.active).length;
+      const auditId = uuidv7();
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
          VALUES ($1,$2,'sessions_revoked',$3,$4,$5,clock_timestamp())`,
         [
-          uuidv7(),
+          auditId,
           actor.userId,
           JSON.stringify({
             scope: requiresStepUp ? 'one' : 'others',
@@ -1071,6 +1073,7 @@ export class SessionService {
           ip,
         ]
       );
+      if (revoked.rows.length) await notifySessionsRevoked(client, actor.userId, auditId);
       // The account/session rows stay locked. Only their original deadlines can change authority now.
       // Use the snapshot so deliberately revoking this very session remains supported.
       await checkDeadlines();

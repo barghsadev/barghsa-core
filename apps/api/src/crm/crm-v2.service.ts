@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import type { CreateNotificationParams } from '../notifications/notifications.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { SessionService, type ValidatedSession } from '../session/session.service.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
@@ -741,7 +742,8 @@ export class CrmV2Service {
   private async notifyAccountAction(
     userId: string,
     action: 'password' | 'sessions',
-    client: PoolClient
+    client: PoolClient,
+    auditId?: string
   ): Promise<void> {
     const content =
       action === 'password'
@@ -765,18 +767,26 @@ export class CrmV2Service {
               body: 'A staff member signed out your active sessions. Sign in again to continue.',
             },
           };
-    await this.notificationsService.create(
-      {
-        userId,
-        operatingContext: 'account',
-        type: 'general',
-        title: content.fa.title,
-        body: content.fa.body,
-        localizedContent: content,
-        link: '/settings/security',
-      },
-      client
-    );
+    const params: CreateNotificationParams = {
+      userId,
+      operatingContext: 'account',
+      type: 'general',
+      title: content.fa.title,
+      body: content.fa.body,
+      localizedContent: content,
+      link: '/settings/security',
+    };
+    if (action === 'sessions' && auditId) {
+      await this.notificationsService.createAccountBusinessEvent(
+        {
+          ...params,
+          eventKey: 'auth.session_revoked',
+          occurrenceKey: `auth.session_revoked:${auditId}:${userId}`,
+          payload: { auditId },
+        },
+        client
+      );
+    } else await this.notificationsService.create(params, client);
   }
 
   /**
@@ -898,6 +908,14 @@ export class CrmV2Service {
         return null;
       }
 
+      // requireStaffMutationPermission already holds the target account lock;
+      // session creators/revokers use that same lock before changing these rows.
+      const changedSessions = (
+        await client.query(
+          'SELECT EXISTS(SELECT 1 FROM sessions WHERE user_id=$1 AND revoked_at IS NULL) AS changed',
+          [userId]
+        )
+      ).rows[0].changed;
       await this.sessionService.revokeAllUserSessions(userId, undefined, client);
       // Self-service staff actions intentionally revoke the locked requesting session.
       // Bind the final check to that exact revocation while retaining expiry/CSRF/step-up checks.
@@ -925,7 +943,12 @@ export class CrmV2Service {
         ]
       );
 
-      await this.notifyAccountAction(userId, 'sessions', client);
+      await this.notifyAccountAction(
+        userId,
+        'sessions',
+        client,
+        changedSessions ? auditId : undefined
+      );
       await requireSessionStepUp(client, actor, ownRevocation);
       await client.query('COMMIT');
 

@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect auth.session_revoked native explicit/security revocation writers in SessionService,CRM and affected credential/device/refresh paths. Reuse current private account writer and immutable audits/receipts; build only demonstrated canonical gaps. Preserve real transition versus no-op/logout/expiry semantics,credential/context/token/CSRF/session authority,counts,atomic rollback/deadlines and unknown provider outcomes. Keep new-device/OTP,other Appendix,active templates/live provider/owner/operations/launch gates explicit.
+Inspect remaining session revocation writers: logout,cap eviction,device/family/refresh compromise and credential/membership/closure consumers. Reuse current audited private account writer and receipts; implement demonstrated canonical gaps at real transition boundaries,preserve original counts/credentials/CSRF/context/locks/authority/audits/unknown delivery and distinguish natural expiry/no-op. Keep new-device/OTP,other Appendix,active templates/live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

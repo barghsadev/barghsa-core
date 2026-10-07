@@ -1,3 +1,10 @@
+import {
+  sessionNoticeState,
+  sessionDeliveryState,
+  expectSessionNotice,
+  sessionFailureCases,
+  failSessionSink,
+} from '../test/session-notification-proof.js';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -346,3 +353,97 @@ for (const action of ['force-password-change', 'expire-sessions'] as const) {
     });
   }
 }
+
+async function revocationFixture(self = false) {
+  const actor = `session-admin-${randomUUID()}`,
+    target = self ? actor : `session-target-${randomUUID()}`,
+    actorSession = randomUUID(),
+    targetSession = randomUUID(),
+    csrf = randomUUID(),
+    refresh = randomUUID();
+  for (const user of new Set([actor, target]))
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES($1,$1||'@example.test','fixture-only',$2)",
+      [user, user === actor]
+    );
+  for (const [id, user] of [
+    [actorSession, actor],
+    [targetSession, target],
+  ])
+    await http.pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,$2,$3,$1,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+      [id, user, csrf]
+    );
+  await http.pool.query(
+    'INSERT INTO refresh_tokens(id,family_id,token_hash,user_id,session_id) VALUES($1,$2,$3,$4,$2)',
+    [randomUUID(), targetSession, createHash('sha256').update(refresh).digest('hex'), target]
+  );
+  const work = () =>
+    fetch(`${http.base}/api/crm/users/${target}/expire-sessions`, {
+      method: 'POST',
+      headers: {
+        Cookie: `barghsa_session=${actorSession}`,
+        'X-CSRF-Token': csrf,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ reason: 'Private staff case detail' }),
+    });
+  return { actor, target, actorSession, targetSession, csrf, refresh, work };
+}
+it.each(sessionFailureCases)(
+  'CRM revocation rolls back $table on $mode and retains the original private staff notice',
+  async ({ table, mode }) => {
+    const f = await revocationFixture(),
+      before = await sessionNoticeState(http.pool, f.actorSession),
+      drop = await failSessionSink(http.pool, table, mode);
+    try {
+      expect((await f.work()).status).toBe(500);
+      expect(await sessionNoticeState(http.pool, f.actorSession)).toEqual(before);
+    } finally {
+      await drop();
+    }
+    expect((await f.work()).status).toBe(200);
+    await expectSessionNotice(
+      http.pool,
+      f.target,
+      [f.actorSession, f.targetSession, f.csrf, f.refresh, 'Private staff case detail'],
+      true
+    );
+    const delivered = await sessionDeliveryState(http.pool, f.target);
+    expect((await f.work()).status).toBe(200);
+    expect(await sessionDeliveryState(http.pool, f.target)).toEqual(delivered);
+  }
+);
+it('CRM self sign-out delivers canonically after revoking the locked acting session', async () => {
+  const f = await revocationFixture(true);
+  expect((await f.work()).status).toBe(200);
+  await expectSessionNotice(
+    http.pool,
+    f.target,
+    [f.actorSession, f.targetSession, f.csrf, f.refresh],
+    true
+  );
+  expect(
+    (await http.pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [f.actorSession]))
+      .rows[0].revoked_at
+  ).not.toBeNull();
+});
+it('CRM no-op preserves its existing information notice without inventing a canonical revocation', async () => {
+  const f = await revocationFixture();
+  await http.pool.query('UPDATE sessions SET revoked_at=NOW() WHERE user_id=$1', [f.target]);
+  expect((await f.work()).status).toBe(200);
+  expect(await sessionDeliveryState(http.pool, f.target)).toEqual({
+    outbox: [],
+    inbox: [],
+    jobs: [],
+    history: [],
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT type,operating_context FROM in_app_notifications WHERE recipient_user_id=$1',
+        [f.target]
+      )
+    ).rows
+  ).toEqual([{ type: 'general', operating_context: 'account' }]);
+});
