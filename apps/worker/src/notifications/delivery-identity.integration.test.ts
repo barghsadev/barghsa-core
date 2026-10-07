@@ -1232,7 +1232,13 @@ it('saves active bilingual inbox templates and keeps original content/read state
     ('wallet.topup_completed','in_app','en','Wallet credited','Amount {{amount}} IRR','["amount"]','active',true,'delivery-owner')`);
   const event = row(randomUUID()),
     transport = new InAppNotificationTransport(pool);
+  await pool.query(
+    `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,idempotency_key)
+     VALUES ($1::uuid,$2,'delivery-owner',$3,$4,ARRAY['in_app'],$1::text)`,
+    [event.id, event.profileId, event.eventKey, JSON.stringify(event.payload)]
+  );
   const first = await dispatchOutbox({ ...event, channels: ['in_app'] }, { in_app: transport });
+  expect(first[0]!.result.status).toBe('delivered');
   const id = first[0]!.result.providerRef;
   expect(
     (
@@ -1266,10 +1272,15 @@ it('saves active bilingual inbox templates and keeps original content/read state
   expect(
     (await pool.query('SELECT is_read,read_at FROM in_app_notifications WHERE id=$1', [id])).rows[0]
   ).toEqual({ is_read: true, read_at: new Date('2026-01-01T00:00:00Z') });
+  const fresh = row(randomUUID());
+  await pool.query(
+    `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,idempotency_key)
+     VALUES ($1::uuid,$2,'delivery-owner',$3,$4,ARRAY['in_app'],$1::text)`,
+    [fresh.id, fresh.profileId, fresh.eventKey, JSON.stringify(fresh.payload)]
+  );
   expect(
-    (
-      await dispatchOutbox({ ...row(randomUUID()), channels: ['in_app'] }, { in_app: transport })
-    )[0]!.result.status
+    (await dispatchOutbox({ ...fresh, channels: ['in_app'] }, { in_app: transport }))[0]!.result
+      .status
   ).toBe('failed');
   expect(
     (await pool.query('SELECT recipient_user_id FROM in_app_notifications WHERE id=$1', [inbox]))

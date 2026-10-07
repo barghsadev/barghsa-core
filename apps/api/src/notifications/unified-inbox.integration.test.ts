@@ -1,7 +1,9 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { performance } from 'node:perf_hooks';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { encodeCursor, NotificationCenterService } from './notification-center.service.js';
+import type { NotificationCenterPage } from './notification-center.service.js';
 import { NotificationsService } from './notifications.service.js';
 const db = vi.hoisted(() => ({ pool: null as unknown as import('pg').Pool }));
 vi.mock('@barghsa/db', async (original) => ({
@@ -59,6 +61,49 @@ afterAll(async () => {
 async function request(user: string, path: string, method = 'GET') {
   return fetch(`${fixture.base}/api/${path}`, { method, headers: headers[user]! });
 }
+
+it('loads a private 50-notification page with HTTP p95 below 200ms', async () => {
+  const user = 'inbox-performance';
+  const session = randomUUID();
+  await db.pool.query('INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,$3)', [
+    user,
+    `${user}@example.test`,
+    'test-only',
+  ]);
+  await db.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+    [session, user, randomUUID(), randomUUID()]
+  );
+  headers[user] = { Cookie: `barghsa_session=${session}` };
+  const inserted = await db.pool.query(
+    `INSERT INTO in_app_notifications
+       (recipient_user_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content)
+     SELECT $1,'customer','general','title','body',
+       jsonb_build_object('en',jsonb_build_object('title','Page performance','body',repeat('x',1024)))
+     FROM generate_series(1,50) RETURNING id`,
+    [user]
+  );
+  const ids = inserted.rows.map((row: { id: string }) => row.id).sort();
+  const durations: number[] = [];
+  for (let attempt = 0; attempt < 30; attempt++) {
+    const started = performance.now();
+    const response = await request(user, 'v1/notifications?limit=50');
+    const page = (await response.json()) as NotificationCenterPage;
+    durations.push(performance.now() - started);
+    expect(response.status).toBe(200);
+    expect(page.data.map((row: { id: string }) => row.id).sort()).toEqual(ids);
+    expect(page.next_cursor).toBeNull();
+    expect(page.unread_count).toBe(50);
+  }
+  durations.sort((a, b) => a - b);
+  const p95Ms = durations[Math.ceil(durations.length * 0.95) - 1]!;
+  process.stdout.write(
+    `notification-page-http ${JSON.stringify({ samples: 30, rows: 50, p95Ms })}\n`
+  );
+  expect(p95Ms).toBeLessThan(200);
+});
+
 it('shows account notices without a profile and keeps read actions private on both APIs', async () => {
   const notice = await service.create({
     userId: 'inbox-alone',

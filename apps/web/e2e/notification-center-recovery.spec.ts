@@ -70,6 +70,8 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/notifications');
     await expect.poll(() => Boolean(held)).toBe(true);
+    await expect(page.getByRole('main').locator('[data-slot="skeleton"]')).toHaveCount(5);
+    if (locale === 'fa') await page.screenshot({ path: '/tmp/notification-center-loading-fa.png' });
     await page.getByRole('tab', { name: t('notifications.unread', locale), exact: true }).click();
     await expect(page.getByRole('button', { name: /Unread notice/ })).toBeVisible();
     const completed = page.waitForResponse(
@@ -170,7 +172,7 @@ for (const locale of ['en', 'fa'] as const) {
       count = 0;
       return route.fulfill({ json: { marked: 2, unread_count: 0 } });
     });
-    await page.goto('/dashboard');
+    await page.goto('/notifications');
     const bell = page.getByTestId('notification-bell');
     await bell.click();
     const panel = page.getByTestId('notification-panel');

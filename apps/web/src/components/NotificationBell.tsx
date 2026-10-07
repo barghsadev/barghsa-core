@@ -3,7 +3,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon } from 'lucide-react';
-import { Popover, PopoverTrigger, PopoverContent, PopoverTitle } from '@barghsa/ui';
+import {
+  LoadingSkeleton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverTitle,
+} from '@barghsa/ui';
 import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useUnreadCount } from '../hooks/useUnreadCount.js';
@@ -212,9 +218,9 @@ export function NotificationBell({
         <hr className="my-1 border-border" />
 
         {loading && (
-          <p role="status" className="p-3 text-sm">
-            {t('notifications.loading', locale)}
-          </p>
+          <div className="p-3">
+            <LoadingSkeleton label={t('notifications.loading', locale)} variant="table" />
+          </div>
         )}
         {error && (
           <div className="p-3 text-sm text-destructive" role="alert">

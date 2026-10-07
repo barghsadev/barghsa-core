@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
-import { Button, ListPage } from '@barghsa/ui';
+import { Button, ListPage, LoadingSkeleton } from '@barghsa/ui';
 import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import {
@@ -270,7 +270,9 @@ export function NotificationCenterPage({
           error={!!error || denied}
           empty={items.length === 0}
           retainContent={acceptedKey === key && items.length > 0}
-          loadingView={<p role="status">{t('notifications.loading', locale)}</p>}
+          loadingView={
+            <LoadingSkeleton label={t('notifications.loading', locale)} variant="table" />
+          }
           errorView={
             <div role="alert" className="space-y-2 rounded-lg border border-destructive/30 p-4">
               <p>

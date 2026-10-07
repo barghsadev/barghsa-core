@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 445 | Accepted with unchanged source bindings. |
-| verify | 857 | Existing work may be complete; inspect evidence before building. |
+| done | 449 | Accepted with unchanged source bindings. |
+| verify | 853 | Existing work may be complete; inspect evidence before building. |
 | partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,12 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and renew current private customer/staff inbox transport, center API, bell/full-page UI and polling acceptance together. Reuse valid native receipt proofs; build only demonstrated ownership, pagination/read, accessibility or live-update gaps. Preserve immutable history and producer/provider boundaries; release gates and pending owner decisions remain unfinished.
+Inspect and renew current event registry/classification, urgent/daytime delivery scheduling and staff window configuration together. Build only demonstrated event/zone/DST/urgent/authority/UI gaps. Preserve existing scheduled jobs and all native/financial/provider boundaries; pending OTP/awaiting-staff/systempublication and live release gates remain unfinished.
 
-- `05-notifications-documents-ai.md#T-05.02.01`: Notification entity & in-app transport
-- `05-notifications-documents-ai.md#T-05.02.02`: Notification center API
-- `05-notifications-documents-ai.md#T-05.02.03`: Notification center UI
-- `05-notifications-documents-ai.md#T-05.02.04`: New-notification polling / SSE
+- `05-notifications-documents-ai.md#T-05.03.01`: Notification type registry & classification
+- `05-notifications-documents-ai.md#T-05.03.02`: Delivery window logic
+- `05-notifications-documents-ai.md#T-05.03.03`: Admin delivery-window configuration UI
+- `02-auth-users-admin.md#T-09.06.03`: Notification daytime window configuration
 
 ## v0.2.0: Complete customer journeys
 
@@ -541,10 +541,10 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.01.05` | done | Earlier acceptance_verified | Status tracking & delivery logs |
 | `05-notifications-documents-ai.md#T-05.01.06` | partial | Earlier partial | Dead-letter queue & admin UI |
 | `05-notifications-documents-ai.md#T-05.01.07` | done | Earlier acceptance_verified | Metrics & observability |
-| `05-notifications-documents-ai.md#T-05.02.01` | verify | Earlier acceptance_verified | Notification entity & in-app transport |
-| `05-notifications-documents-ai.md#T-05.02.02` | verify | Earlier acceptance_verified | Notification center API |
-| `05-notifications-documents-ai.md#T-05.02.03` | verify | Earlier acceptance_verified | Notification center UI |
-| `05-notifications-documents-ai.md#T-05.02.04` | verify | Earlier acceptance_verified | New-notification polling / SSE |
+| `05-notifications-documents-ai.md#T-05.02.01` | done | Earlier acceptance_verified | Notification entity & in-app transport |
+| `05-notifications-documents-ai.md#T-05.02.02` | done | Earlier acceptance_verified | Notification center API |
+| `05-notifications-documents-ai.md#T-05.02.03` | done | Earlier acceptance_verified | Notification center UI |
+| `05-notifications-documents-ai.md#T-05.02.04` | done | Earlier acceptance_verified | New-notification polling / SSE |
 | `05-notifications-documents-ai.md#T-05.03.01` | verify | Earlier acceptance_verified | Notification type registry & classification |
 | `05-notifications-documents-ai.md#T-05.03.02` | verify | Earlier acceptance_verified | Delivery window logic |
 | `05-notifications-documents-ai.md#T-05.03.03` | verify | Earlier acceptance_verified | Admin delivery-window configuration UI |
