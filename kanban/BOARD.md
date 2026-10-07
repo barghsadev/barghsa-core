@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and complete SQL electricity activation/completion/formal contract-cancellation status notifications while preserving existing lifecycle/financial/quantity/price/gift/audit/idempotency/history/upgrade/replay machinery. Reuse accepted native API/status/request/submission/contract producers; separately audit native contract review/publication producers outside the generic adapter. Keep other Appendix/templates/providers/owner/operations/launch criteria explicit.
+Inspect native electricity/saving contract review and publication producers outside the accepted generic adapter; implement only missing Appendix events inside native transactions. Preserve final actual state, domain money/review/version/authority/audit/idempotency and existing order status receipts. Keep other Appendix/templates/providers/owner/operations/launch criteria explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

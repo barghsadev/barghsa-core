@@ -1296,6 +1296,13 @@
       "when": 1791388146999,
       "tag": "0264_saving_cancellation_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 265,
+      "version": "7",
+      "when": 1791391678861,
+      "tag": "0265_electricity_lifecycle_notifications",
+      "breakpoints": true
     }
   ]
 }

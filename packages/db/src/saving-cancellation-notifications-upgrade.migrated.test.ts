@@ -8,6 +8,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
 const production = resolve('drizzle/production');
 const previous = mkdtempSync(join(tmpdir(), 'saving-cancellation-notification-upgrade-'));
+const scoped = mkdtempSync(join(tmpdir(), 'saving-notification-scope-'));
 const name = `test_saving_notice_upgrade_${randomUUID().replaceAll('-', '')}`;
 let management: Pool, pool: Pool, connection: { pgdirectUrl: string };
 beforeAll(async () => {
@@ -20,6 +21,14 @@ beforeAll(async () => {
   writeFileSync(join(previous, 'meta/_journal.json'), JSON.stringify(prior));
   for (const entry of prior.entries)
     copyFileSync(join(production, entry.tag + '.sql'), join(previous, entry.tag + '.sql'));
+  const own = {
+    ...journal,
+    entries: journal.entries.filter((entry: { idx: number }) => entry.idx <= 264),
+  };
+  mkdirSync(join(scoped, 'meta'));
+  writeFileSync(join(scoped, 'meta/_journal.json'), JSON.stringify(own));
+  for (const entry of own.entries)
+    copyFileSync(join(production, entry.tag + '.sql'), join(scoped, entry.tag + '.sql'));
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
   await management.query(`CREATE DATABASE "${name}"`);
   const url = new URL(process.env.TEST_DATABASE_URL!);
@@ -35,6 +44,7 @@ afterAll(async () => {
   } finally {
     await management?.end();
     rmSync(previous, { recursive: true, force: true });
+    rmSync(scoped, { recursive: true, force: true });
   }
 });
 async function seed(tracked = true) {
@@ -146,14 +156,17 @@ it('preserves every old saving, inventory, financial, delivery and public busine
   await cancelEmptyContract(pool, cancelled.contract, cancelled.actor);
   const before = await snapshot(),
     oldFunctions = await functions();
-  expect(await runMigrations({ connection })).toEqual({
+  expect(await runMigrations({ connection, migrationsFolder: scoped })).toEqual({
     ok: true,
     applied: ['0264_saving_cancellation_notifications'],
   });
   expect(await snapshot()).toEqual(before);
   const current = await functions();
   for (const old of oldFunctions) expect(current.find((row) => row.oid === old.oid)).toEqual(old);
-  expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+  expect(await runMigrations({ connection, migrationsFolder: scoped })).toEqual({
+    ok: true,
+    applied: [],
+  });
   expect(await snapshot()).toEqual(before);
   const fresh = await seed();
   await cancelEmptyContract(pool, fresh.contract, fresh.actor);

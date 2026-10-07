@@ -4007,15 +4007,38 @@ it.each([false, true])(
     );
     expect(prepared.status, http.logs()).toBe(201);
     const intent = (await prepared.json()) as { id: string };
-    const executed = await fetch(
-      `${http.base}/api/admin/contracts/${order.contractId}/cancellations/execute`,
-      {
+    const approvedNotices = await expectElectricityStatusDeliveries(
+      http.pool,
+      order.orderId,
+      'buyer',
+      ['approved']
+    );
+    const commandKey = randomUUID();
+    const execute = () =>
+      fetch(`${http.base}/api/admin/contracts/${order.contractId}/cancellations/execute`, {
         method: 'POST',
         headers: staffHeaders,
-        body: JSON.stringify({ intentId: intent.id, idempotencyKey: randomUUID() }),
-      }
-    );
+        body: JSON.stringify({ intentId: intent.id, idempotencyKey: commandKey }),
+      });
+    await expectElectricityStatusRollback(http.pool, order.orderId, 'cancelled', execute, true, {
+      raise: 500,
+      suppress: 409,
+    });
+    const executed = await execute();
     expect(executed.status, http.logs()).toBe(201);
+    await expectElectricityStatusDeliveries(
+      http.pool,
+      order.orderId,
+      'buyer',
+      ['approved', 'cancelled'],
+      [
+        approvedNotices[0].idempotency_key,
+        `order.status_changed:electricity:${order.orderId}:contract_cancelled:${versionId}:buyer`,
+      ]
+    );
+    const deliveries = await electricityDeliverySnapshot(http.pool, order.orderId);
+    expect((await execute()).status, http.logs()).toBe(201);
+    expect(await electricityDeliverySnapshot(http.pool, order.orderId)).toEqual(deliveries);
     const redemption = (
       await http.pool.query<{ status: string; restored_at: Date | null }>(
         'SELECT status,restored_at FROM gift_code_redemptions WHERE order_id=$1',
