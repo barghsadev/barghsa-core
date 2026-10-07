@@ -50,7 +50,7 @@ function params(eventKey: ContractCustomerEvent = 'contract.awaiting_acceptance'
     payload: { contractNumber: '9007199254740993' },
   };
 }
-async function transaction(work: (client: PoolClient) => Promise<void>) {
+async function transaction<T>(work: (client: PoolClient) => Promise<T>) {
   const client = await db.pool.connect();
   try {
     await client.query('BEGIN');
@@ -179,11 +179,11 @@ it('serializes duplicate occurrences and retains the exact original read state a
   const input = params(),
     first = await db.pool.connect(),
     second = await db.pool.connect();
-  let pending: Promise<void> | undefined;
+  let pending: Promise<boolean> | undefined;
   try {
     await first.query('BEGIN');
     await second.query('BEGIN');
-    await service.createCustomerBusinessEvent(input, first);
+    expect(await service.createCustomerBusinessEvent(input, first)).toBe(true);
     await first.query(
       'UPDATE in_app_notifications SET is_read=true,read_at=clock_timestamp() WHERE profile_id=$1',
       [profile]
@@ -202,7 +202,7 @@ it('serializes duplicate occurrences and retains the exact original read state a
       )
       .toBe(true);
     await first.query('COMMIT');
-    await pending;
+    expect(await pending).toBe(false);
     const saved = await snapshot(input.occurrenceKey);
     await second.query('COMMIT');
     expect(await snapshot(input.occurrenceKey)).toEqual(saved);

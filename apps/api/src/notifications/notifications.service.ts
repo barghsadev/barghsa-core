@@ -134,7 +134,7 @@ export class NotificationsService {
       payload: Record<string, string>;
     },
     transaction: PoolClient
-  ): Promise<void> {
+  ): Promise<boolean> {
     if (params.operatingContext !== 'customer' || !params.occurrenceKey.trim())
       throw new Error('Customer business delivery requires a private scope and occurrence key');
     const payload = {
@@ -166,7 +166,7 @@ export class NotificationsService {
       );
       if (!existing.rows[0])
         throw new Error('Business notification occurrence conflicts with saved delivery');
-      return;
+      return false;
     }
     const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
     const priority =
@@ -184,6 +184,7 @@ export class NotificationsService {
       [outboxId, notice.id]
     );
     if (history.rowCount !== 1) throw new Error('Business inbox delivery history was not stored');
+    return true;
   }
 
   /** Queue external verification channels in the caller's status-change transaction. */

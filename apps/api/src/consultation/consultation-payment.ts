@@ -1,6 +1,6 @@
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
-import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifyConsultationStatus } from './consultation-status-notifications.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 
 /** Called while the invoice and its transaction are locked; a paid invoice settles an accepted offer. */
@@ -59,28 +59,18 @@ export async function settlePaidConsultation(
       uuidv7(),
     ]
   );
-  for (const userId of new Set([row.profile_user_id, row.submitted_by])) {
-    await new NotificationsService().create(
-      {
-        userId,
-        profileId: row.profile_id,
-        operatingContext: 'customer',
-        type: 'general',
-        title: 'Consultation offer accepted',
-        localizedContent: {
-          fa: {
-            title: 'پیشنهاد مشاوره پذیرفته شد',
-            body: `وضعیت درخواست مشاوره: ${tConsultation('status_offer_accepted', 'fa')}`,
-          },
-          en: {
-            title: 'Consultation offer accepted',
-            body: `Consultation request status: ${tConsultation('status_offer_accepted', 'en')}`,
-          },
-        },
-        link: `/consultations/${row.id}`,
+  await notifyConsultationStatus(client, row, 'offer_accepted', {
+    title: 'Consultation offer accepted',
+    localizedContent: {
+      fa: {
+        title: 'پیشنهاد مشاوره پذیرفته شد',
+        body: `وضعیت درخواست مشاوره: ${tConsultation('status_offer_accepted', 'fa')}`,
       },
-      client
-    );
-  }
+      en: {
+        title: 'Consultation offer accepted',
+        body: `Consultation request status: ${tConsultation('status_offer_accepted', 'en')}`,
+      },
+    },
+  });
   return true;
 }

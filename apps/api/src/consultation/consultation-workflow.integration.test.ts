@@ -1,4 +1,8 @@
 import { expectCoreAudit } from '../test/core-audit.js';
+import {
+  expectConsultationStatusDeliveries,
+  expectConsultationStatusRollback,
+} from '../test/consultation-status-notification-proof.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -129,6 +133,9 @@ it('moves a consultation through staff assignment, customer information, and a r
       })
     ).status
   ).toBe(400);
+  await expectConsultationStatusRollback(http.pool, requestId, 'under_review', () =>
+    post(`${root}/assign`, 'reviewer', { assignTo: 'self' })
+  );
   const assigned = await post(`${root}/assign`, 'reviewer', { assignTo: 'self' });
   expect(assigned.status, http.logs()).toBe(200);
   expect(await assigned.json()).toMatchObject({ status: 'under_review', staffOwnerId: 'reviewer' });
@@ -1041,10 +1048,30 @@ it('notifies every fee-replacement history transition and does not repeat notifi
     ).rows;
   const before = await notifications();
   expect(before).toHaveLength(history.length);
+  const deliveries = await expectConsultationStatusDeliveries(http.pool, requestId, 'customer', [
+    'under_review',
+    'offer_pending',
+    'under_review',
+    'offer_pending',
+  ]);
+  const queuedBefore = (
+    await http.pool.query(
+      'SELECT * FROM notification_job WHERE outbox_id=ANY($1::uuid[]) ORDER BY outbox_id,channel',
+      [deliveries.map((r) => r.id)]
+    )
+  ).rows;
   const replay = await post(`${root}/fee`, 'reviewer', savedCommand);
   expect(replay.status, http.logs()).toBe(200);
   expect(await replay.json()).toEqual(secondReceipt);
   expect(await notifications()).toEqual(before);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT * FROM notification_job WHERE outbox_id=ANY($1::uuid[]) ORDER BY outbox_id,channel',
+        [deliveries.map((r) => r.id)]
+      )
+    ).rows
+  ).toEqual(queuedBefore);
 });
 
 it('keeps specified staff aliases on the existing permission, review, replay and invoice boundaries', async () => {

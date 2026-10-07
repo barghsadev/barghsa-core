@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect native status/cancellation-request writers for all four services. Complete canonical order.status_changed/order.cancellation_requested with exact variables,current private recipients,immediate in-app and same-transaction email intent. Preserve native pre-publication Rejected versus formal Cancelled,financial/audit/authorization/idempotency and replay boundaries. Native submitted events are scoped accepted; do not rebuild them. Keep other Appendix/template/provider/owner/operations gates explicit.
+Inspect native solar status writers and their existing private notices before edits. Convert real status transitions to canonical order.status_changed with exact variables/current owner,immediate private inbox and same-transaction email,without duplicate notices or mislabeling same-state document/progress information. Preserve review/authorization/session/audit/concurrency/replay and financial boundaries. Keep remaining electricity/saving/cancellation-request/Appendix/template/provider/owner/operations criteria explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

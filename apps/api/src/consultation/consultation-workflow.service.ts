@@ -22,6 +22,7 @@ import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock
 import type { InvoiceState } from '../invoice/invoice-state.model.js';
 import { settlePaidConsultation } from './consultation-payment.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifyConsultationStatus } from './consultation-status-notifications.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { canTransitionConsultation, type ConsultationStatus } from './consultation-state.js';
 import { runBusinessTransition } from '../common/business-transition.js';
@@ -1909,29 +1910,19 @@ export class ConsultationWorkflowService {
   }
 
   private async notify(client: PoolClient, request: RequestRow, status: ConsultationStatus) {
-    for (const userId of new Set([request.profile_user_id, request.submitted_by])) {
-      await new NotificationsService().create(
-        {
-          userId,
-          profileId: request.profile_id,
-          operatingContext: 'customer',
-          type: 'general',
-          title: 'Consultation status changed',
-          localizedContent: {
-            fa: {
-              title: 'وضعیت مشاوره تغییر کرد',
-              body: `وضعیت درخواست مشاوره: ${tConsultation(`status_${status}`, 'fa')}`,
-            },
-            en: {
-              title: 'Consultation status changed',
-              body: `Consultation request status: ${tConsultation(`status_${status}`, 'en')}`,
-            },
-          },
-          link: `/consultations/${request.id}`,
+    await notifyConsultationStatus(client, request, status, {
+      title: 'Consultation status changed',
+      localizedContent: {
+        fa: {
+          title: 'وضعیت مشاوره تغییر کرد',
+          body: `وضعیت درخواست مشاوره: ${tConsultation(`status_${status}`, 'fa')}`,
         },
-        client
-      );
-    }
+        en: {
+          title: 'Consultation status changed',
+          body: `Consultation request status: ${tConsultation(`status_${status}`, 'en')}`,
+        },
+      },
+    });
   }
 
   private async audit(

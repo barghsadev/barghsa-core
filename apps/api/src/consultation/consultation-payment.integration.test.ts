@@ -1,4 +1,8 @@
 import { expectCoreAudit } from '../test/core-audit.js';
+import {
+  expectConsultationStatusDeliveries,
+  expectConsultationStatusRollback,
+} from '../test/consultation-status-notification-proof.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -297,8 +301,16 @@ it('settles a reviewed offer with a real wallet payment, then allows staff compl
       expectedReviewHash: context.review.hash,
     })
   );
+  const paymentKey = randomUUID();
+  await expectConsultationStatusRollback(http.pool, requestId, 'offer_accepted', () =>
+    post(`/api/invoices/${invoiceId}/wallet-payment`, 'consultation-payer', {
+      idempotencyKey: paymentKey,
+      expectedRemainingAmount: context.remainingAmount,
+      expectedReviewHash: context.review.hash,
+    })
+  );
   const payment = await post(`/api/invoices/${invoiceId}/wallet-payment`, 'consultation-payer', {
-    idempotencyKey: randomUUID(),
+    idempotencyKey: paymentKey,
     expectedRemainingAmount: context.remainingAmount,
     expectedReviewHash: context.review.hash,
   });
@@ -333,6 +345,12 @@ it('settles a reviewed offer with a real wallet payment, then allows staff compl
     reason: 'Feasibility report delivered',
   });
   expect(completed.status, http.logs()).toBe(200);
+  await expectConsultationStatusDeliveries(http.pool, requestId, 'consultation-payer', [
+    'under_review',
+    'offer_pending',
+    'offer_accepted',
+    'completed',
+  ]);
   expect(await completed.json()).toMatchObject({ status: 'completed' });
 });
 
