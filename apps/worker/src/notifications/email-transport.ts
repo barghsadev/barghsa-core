@@ -36,6 +36,7 @@ export class EmailNotificationTransport implements INotificationTransport {
             'profile.agent_role_changed',
             'auth.password_changed',
             'auth.session_revoked',
+            'auth.refresh_token_reused',
           ].includes(payload.eventKey)
         ))
     )

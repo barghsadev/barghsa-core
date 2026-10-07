@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect redeemRefreshToken native once-per-family refresh-reuse warning. Preserve its private bilingual content,delivery_key/read/history,revoke-first/reject/receipt behavior. Add demonstrated missing durable/email legs without historical backfill/resend or duplicate inbox. Preserve token/session/account locks,credentials and unknown provider delivery boundaries. Keep new-device/OTP,other Appendix,templates/live provider/owner/operations/launch explicit.
+Inspect existing auth.new_device_login and auth.otp_sent consumers/producer flows before rebuilding. Reuse native identities,private inbox and configured delivery. Preserve credential/OTP secrecy,registered versus activation/unregistered accounts,challenge purpose/CSRF/expiry/delivery receipts,current contacts,device/session trust,login-required-password and unknown provider delivery/retry boundaries. Complete only demonstrated canonical outbox/inbox gaps with affected caller tests. Keep other Appendix,active templates/live provider/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

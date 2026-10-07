@@ -333,7 +333,17 @@ describe('SessionService', () => {
     it('revokes entire family when a consumed token is reused (theft detection)', async () => {
       const consumedToken = makeTokenRow({ consumed_at: new Date() });
 
-      mockClient.query.mockImplementation(async (sql: string) => {
+      mockClient.query.mockImplementation(async (sql: string, params: unknown[]) => {
+        if (
+          sql.includes('INSERT INTO in_app_notifications') ||
+          sql.includes('INSERT INTO notification_outbox')
+        )
+          return { rows: [{ id: params[0] }], rowCount: 1 };
+        if (
+          sql.includes('INSERT INTO notification_job') ||
+          sql.includes('INSERT INTO notification_delivery_log')
+        )
+          return { rows: [], rowCount: 1 };
         if (sql === 'COMMIT') return { rows: [] };
         if (sql.startsWith('ROLLBACK')) return { rows: [] };
         if (sql.includes('token_hash')) return { rows: [consumedToken] };

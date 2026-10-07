@@ -4,6 +4,9 @@ import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-
 import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import {
   sessionNoticeState,
+  failRefreshReuseSink,
+  refreshReuseState,
+  expectRefreshReuseWarning,
   sessionDeliveryState,
   expectLifecycleNotice,
   sessionFailureCases,
@@ -437,9 +440,20 @@ it('records one private security alert when concurrent refresh reuse revokes a t
   const serialized = JSON.stringify(notices[0]);
   for (const credential of [original.refreshToken, next.refreshToken, original.csrfToken])
     expect(serialized).not.toContain(credential);
+  await expectRefreshReuseWarning(db.pool, 'cap-user', [
+    original.refreshToken,
+    next.refreshToken,
+    original.csrfToken,
+    notices[0].delivery_key.slice('session-reuse:'.length),
+  ]);
+  await db.pool.query('UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1', [
+    notices[0].id,
+  ]);
+  const saved = await refreshReuseState(db.pool);
   await expect(service.redeemRefreshToken(next.refreshToken)).rejects.toMatchObject({
     status: 401,
   });
+  expect(await refreshReuseState(db.pool)).toEqual(saved);
   expect((await db.pool.query('SELECT id FROM in_app_notifications')).rows).toHaveLength(1);
 });
 
@@ -932,4 +946,62 @@ it('rolls back capped password-only creation when mandatory delivery waits beyon
     (await db.pool.query('SELECT is_called FROM lifecycle_trust_delay')).rows[0].is_called
   ).toBe(true);
   expect(await sessionNoticeState(db.pool)).toEqual(before);
+});
+
+it.each(sessionFailureCases)(
+  'refresh compromise rolls back every effect when $table fails by $mode',
+  async ({ table, mode }) => {
+    const original = await service.createSession('cap-user', false);
+    const next = await service.redeemRefreshToken(original.refreshToken);
+    const before = await sessionNoticeState(db.pool),
+      drop = await failRefreshReuseSink(db.pool, table, mode);
+    try {
+      await expect(service.redeemRefreshToken(original.refreshToken)).rejects.toMatchObject({
+        status: 500,
+      });
+      expect(await sessionNoticeState(db.pool)).toEqual(before);
+    } finally {
+      await drop();
+    }
+    await expect(service.redeemRefreshToken(original.refreshToken)).rejects.toMatchObject({
+      status: 401,
+    });
+    expect(await service.validateSession(original.sessionId)).toBeNull();
+    expect(
+      (
+        await db.pool.query('SELECT consumed_at FROM refresh_tokens WHERE session_id=$1', [
+          original.sessionId,
+        ])
+      ).rows.every((r) => r.consumed_at)
+    ).toBe(true);
+    const saved = await expectRefreshReuseWarning(db.pool, 'cap-user', [
+      original.refreshToken,
+      next.refreshToken,
+      original.csrfToken,
+    ]);
+    await expect(service.redeemRefreshToken(next.refreshToken)).rejects.toMatchObject({
+      status: 401,
+    });
+    expect(await refreshReuseState(db.pool)).toEqual(saved);
+  }
+);
+it('preserves a historical refresh warning without backfill or replay delivery', async () => {
+  const original = await service.createSession('cap-user', false),
+    next = await service.redeemRefreshToken(original.refreshToken);
+  await expect(service.redeemRefreshToken(original.refreshToken)).rejects.toMatchObject({
+    status: 401,
+  });
+  await db.pool.query(
+    "DELETE FROM notification_delivery_log WHERE notification_id IN(SELECT id FROM notification_outbox WHERE event_key='auth.refresh_token_reused'); DELETE FROM notification_job WHERE outbox_id IN(SELECT id FROM notification_outbox WHERE event_key='auth.refresh_token_reused'); DELETE FROM notification_outbox WHERE event_key='auth.refresh_token_reused'"
+  );
+  await db.pool.query(
+    "UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE type='auth.refresh_token_reused'"
+  );
+  const before = await refreshReuseState(db.pool);
+  expect(before.outbox).toEqual([]);
+  expect(before.inbox).toHaveLength(1);
+  await expect(service.redeemRefreshToken(next.refreshToken)).rejects.toMatchObject({
+    status: 401,
+  });
+  expect(await refreshReuseState(db.pool)).toEqual(before);
 });

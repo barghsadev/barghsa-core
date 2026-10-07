@@ -63,3 +63,49 @@ export async function notifySessionLifecycleRevocation(
     throw new Error('Session lifecycle audit was not stored');
   await notifySessionsRevoked(client, userId, auditId);
 }
+
+/** Attach durable delivery to the new native warning without replacing its inbox identity. */
+export async function queueRefreshReuseWarning(
+  client: PoolClient,
+  userId: string,
+  inboxId: string
+): Promise<void> {
+  const outboxId = uuidv7();
+  const payload = { inboxId, link_route: '/settings/security' };
+  const inserted = await client.query(
+    `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+     SELECT $1,$2,'auth.refresh_token_reused',$3,ARRAY['in_app','email'],'queued',$4,5,$5
+     FROM in_app_notifications n WHERE n.id=$6 AND n.recipient_user_id=$2
+       AND n.profile_id IS NULL AND n.operating_context='account' AND n.type='auth.refresh_token_reused'
+       AND n.link_route='/settings/security' AND n.delivery_key LIKE 'session-reuse:%'
+     RETURNING id`,
+    [
+      outboxId,
+      userId,
+      payload,
+      `auth.refresh_token_reused:${inboxId}:${userId}`,
+      correlationIdStorage.getStore() ?? null,
+      inboxId,
+    ]
+  );
+  if (inserted.rows.length !== 1 || inserted.rows[0].id !== outboxId)
+    throw new Error('Refresh reuse warning outbox was not stored');
+  const inboxJob = await client.query(
+    `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+     VALUES($1,'in_app','done','urgent',5,1,$2,$3)`,
+    [outboxId, inboxId, payload]
+  );
+  if (inboxJob.rowCount !== 1) throw new Error('Refresh reuse inbox job was not stored');
+  const emailJob = await client.query(
+    `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts)
+     VALUES($1,'email','queued','urgent',5,0)`,
+    [outboxId]
+  );
+  if (emailJob.rowCount !== 1) throw new Error('Refresh reuse email job was not stored');
+  const history = await client.query(
+    `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+     VALUES($1,'in_app','delivered',1,$2)`,
+    [outboxId, inboxId]
+  );
+  if (history.rowCount !== 1) throw new Error('Refresh reuse inbox history was not stored');
+}

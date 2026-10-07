@@ -318,3 +318,124 @@ export async function expectParentSessionNotice(
     expect(JSON.stringify({ outbox, inbox, jobs, history })).not.toContain(secret);
   return { outbox, inbox: inbox[0] };
 }
+
+export async function failRefreshReuseSink(pool: Pool, table: string, mode: 'raise' | 'suppress') {
+  const predicate =
+    table === 'notification_outbox'
+      ? "NEW.event_key='auth.refresh_token_reused'"
+      : table === 'in_app_notifications'
+        ? "NEW.type='auth.refresh_token_reused'"
+        : `EXISTS(SELECT 1 FROM notification_outbox o WHERE o.id=NEW.${table === 'notification_job' ? 'outbox_id' : 'notification_id'} AND o.event_key='auth.refresh_token_reused')`;
+  await pool.query(
+    `CREATE FUNCTION fail_session_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'session notice failure';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_session_notice BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_session_notice()`
+  );
+  return () =>
+    pool.query(`DROP TRIGGER fail_session_notice ON ${table}; DROP FUNCTION fail_session_notice()`);
+}
+
+export async function refreshReuseState(pool: Pool) {
+  const outbox = (
+    await pool.query(
+      "SELECT * FROM notification_outbox WHERE event_key='auth.refresh_token_reused' ORDER BY id"
+    )
+  ).rows;
+  return {
+    outbox,
+    inbox: (
+      await pool.query(
+        "SELECT * FROM in_app_notifications WHERE type='auth.refresh_token_reused' ORDER BY id"
+      )
+    ).rows,
+    jobs: (
+      await pool.query(
+        "SELECT j.* FROM notification_job j JOIN notification_outbox o ON o.id=j.outbox_id WHERE o.event_key='auth.refresh_token_reused' ORDER BY j.outbox_id,j.channel"
+      )
+    ).rows,
+    history: (
+      await pool.query(
+        "SELECT h.* FROM notification_delivery_log h JOIN notification_outbox o ON o.id=h.notification_id WHERE o.event_key='auth.refresh_token_reused' ORDER BY h.id"
+      )
+    ).rows,
+  };
+}
+export async function expectRefreshReuseWarning(pool: Pool, userId: string, secrets: string[]) {
+  const saved = await refreshReuseState(pool);
+  expect(saved.inbox).toHaveLength(1);
+  expect(saved.outbox).toHaveLength(1);
+  const n = saved.inbox[0],
+    o = saved.outbox[0];
+  expect(o).toMatchObject({
+    profile_id: null,
+    user_id: userId,
+    channels: ['in_app', 'email'],
+    max_attempts: 5,
+    idempotency_key: `auth.refresh_token_reused:${n.id}:${userId}`,
+  });
+  expect(o.payload).toEqual({ inboxId: n.id, link_route: '/settings/security' });
+  expect(n).toMatchObject({
+    profile_id: null,
+    recipient_user_id: userId,
+    operating_context: 'account',
+    type: 'auth.refresh_token_reused',
+    link_route: '/settings/security',
+  });
+  expect(n.delivery_key).toMatch(/^session-reuse:/);
+  expect(n.localized_content.en.body).toContain('Review your other sessions');
+  expect(n.localized_content.fa.body).toContain('نشست');
+  expect(
+    saved.jobs.map(
+      ({ outbox_id, channel, status, priority, attempts, max_attempts, provider_ref }) => ({
+        outbox_id,
+        channel,
+        status,
+        priority,
+        attempts,
+        max_attempts,
+        provider_ref,
+      })
+    )
+  ).toEqual([
+    {
+      outbox_id: o.id,
+      channel: 'email',
+      status: 'queued',
+      priority: 'urgent',
+      attempts: 0,
+      max_attempts: 5,
+      provider_ref: null,
+    },
+    {
+      outbox_id: o.id,
+      channel: 'in_app',
+      status: 'done',
+      priority: 'urgent',
+      attempts: 1,
+      max_attempts: 5,
+      provider_ref: n.id,
+    },
+  ]);
+  expect(
+    saved.history.map(({ notification_id, channel, status, attempt_number, provider_ref }) => ({
+      notification_id,
+      channel,
+      status,
+      attempt_number,
+      provider_ref,
+    }))
+  ).toEqual([
+    {
+      notification_id: o.id,
+      channel: 'in_app',
+      status: 'delivered',
+      attempt_number: 1,
+      provider_ref: n.id,
+    },
+  ]);
+  const external = JSON.stringify({
+    outbox: saved.outbox,
+    jobs: saved.jobs,
+    history: saved.history,
+  });
+  for (const secret of secrets) expect(external).not.toContain(secret);
+  return saved;
+}

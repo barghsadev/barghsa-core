@@ -1,5 +1,6 @@
 import {
   notifySessionsRevoked,
+  queueRefreshReuseWarning,
   notifySessionLifecycleRevocation,
 } from '../auth/session-notifications.js';
 import { Injectable, Logger, HttpException, UnauthorizedException } from '@nestjs/common';
@@ -711,11 +712,11 @@ export class SessionService {
         // Commit a private account notice with the revocation. A family can be
         // replayed through several consumed tokens; it must produce one alert.
         const event = 'auth.refresh_token_reused';
-        await client.query(
+        const warning = await client.query(
           `INSERT INTO in_app_notifications
            (id,recipient_user_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,delivery_key)
            VALUES ($1,$2,'account',$3,'notifications.legacy.title','notifications.legacy.body',$4::jsonb,$5,$6)
-           ON CONFLICT (delivery_key) DO NOTHING`,
+           ON CONFLICT (delivery_key) DO NOTHING RETURNING id`,
           [
             uuidv7(),
             tokenRow.user_id,
@@ -725,6 +726,18 @@ export class SessionService {
             `session-reuse:${tokenRow.family_id}`,
           ]
         );
+
+        if (warning.rows.length === 1) {
+          await queueRefreshReuseWarning(client, tokenRow.user_id, warning.rows[0].id);
+        } else {
+          // Existing warnings keep their read/history state and are never backfilled or resent.
+          const existing = await client.query(
+            `SELECT id FROM in_app_notifications WHERE delivery_key=$1 AND recipient_user_id=$2
+             AND profile_id IS NULL AND operating_context='account' AND type=$3`,
+            [`session-reuse:${tokenRow.family_id}`, tokenRow.user_id, event]
+          );
+          if (existing.rows.length !== 1) throw new Error('Refresh reuse warning was not stored');
+        }
 
         await client.query('COMMIT');
 
