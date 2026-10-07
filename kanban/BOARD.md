@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T04:55:34.615105+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 411 | Accepted with unchanged source bindings. |
-| verify | 881 | Existing work may be complete; inspect evidence before building. |
+| done | 415 | Accepted with unchanged source bindings. |
+| verify | 877 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,12 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect andaccept existing adminprovince/city CRUD andterms editor/version history againsteach exactcriterion,includingcurrent grants,active/correlated data,search/locales,versioned config/audits,rich text/preview/diff,major/minor reacceptance,history andsession-retry boundaries. Buildonlydemonstrated gaps;reuse source-bound evidence. Earlierowner/release/performance/operational gates remainopen.
+Inspect and accept existing dual-approval threshold/workflow and online wallet top-up limit against exact criteria. Verify current grants/session/step-up,versioned configuration/audits,independent approver and financial immutable source/replay,override reason/alert,and actual UI/API callers. Build only demonstrated gaps;reuse valid source-bound evidence. Earlier owner/release/budget/operational gates remain open.
 
-- `02-auth-users-admin.md#T-09.02.01`: Province CRUD
-- `02-auth-users-admin.md#T-09.02.02`: City CRUD per province
-- `02-auth-users-admin.md#T-09.03.01`: TOS editor
-- `02-auth-users-admin.md#T-09.03.02`: TOS version history
+- `02-auth-users-admin.md#T-09.07.01`: Dual-approval threshold configuration
+- `02-auth-users-admin.md#T-09.07.02`: Dual-approval workflow
+- `02-auth-users-admin.md#T-09.10.01`: Online wallet top-up limit
 
 ## v0.2.0: Complete customer journeys
 
@@ -328,10 +327,10 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-06.01.03` | verify | Earlier acceptance_verified | Staff ticket management |
 | `02-auth-users-admin.md#T-07.01.01` | partial | Earlier partial | Verification mode setting |
 | `02-auth-users-admin.md#T-07.01.03` | partial | Earlier partial | Verification notification to user |
-| `02-auth-users-admin.md#T-09.02.01` | verify | Earlier acceptance_verified | Province CRUD |
-| `02-auth-users-admin.md#T-09.02.02` | verify | Earlier acceptance_verified | City CRUD per province |
-| `02-auth-users-admin.md#T-09.03.01` | verify | Earlier acceptance_verified | TOS editor |
-| `02-auth-users-admin.md#T-09.03.02` | verify | Earlier acceptance_verified | TOS version history |
+| `02-auth-users-admin.md#T-09.02.01` | done | Earlier acceptance_verified | Province CRUD |
+| `02-auth-users-admin.md#T-09.02.02` | done | Earlier acceptance_verified | City CRUD per province |
+| `02-auth-users-admin.md#T-09.03.01` | done | Earlier acceptance_verified | TOS editor |
+| `02-auth-users-admin.md#T-09.03.02` | done | Earlier acceptance_verified | TOS version history |
 | `02-auth-users-admin.md#T-09.05.01` | done | Earlier acceptance_verified | Staff role management |
 | `02-auth-users-admin.md#T-09.07.01` | verify | Earlier acceptance_verified | Dual-approval threshold configuration |
 | `02-auth-users-admin.md#T-09.07.02` | verify | Earlier acceptance_verified | Dual-approval workflow |

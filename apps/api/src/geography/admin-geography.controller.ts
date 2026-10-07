@@ -40,11 +40,13 @@ function rejectInvalidGeography(issues: readonly { path: PropertyKey[] }[]): nev
 export const CreateProvinceSchema = z.object({
   nameFa: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameFaRe, { message: 'VALIDATION:INVALID_PERSIAN_NAME' }),
   nameEn: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' }),
@@ -53,12 +55,14 @@ export const CreateProvinceSchema = z.object({
 export const UpdateProvinceSchema = z.object({
   nameFa: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameFaRe, { message: 'VALIDATION:INVALID_PERSIAN_NAME' })
     .optional(),
   nameEn: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' })
@@ -76,11 +80,13 @@ export type UpdateProvinceDto = z.infer<typeof UpdateProvinceSchema>;
 export const CreateCitySchema = z.object({
   nameFa: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameFaRe, { message: 'VALIDATION:INVALID_PERSIAN_NAME' }),
   nameEn: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' }),
@@ -89,12 +95,14 @@ export const CreateCitySchema = z.object({
 export const UpdateCitySchema = z.object({
   nameFa: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameFaRe, { message: 'VALIDATION:INVALID_PERSIAN_NAME' })
     .optional(),
   nameEn: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' })

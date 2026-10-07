@@ -1232,7 +1232,7 @@ export class AdminController {
 
     return this.tosService.createVersion(
       parsed.data,
-      req.session.userId,
+      req.session,
       req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     );
   }
@@ -1320,7 +1320,7 @@ export class AdminController {
     return this.tosService.updateVersion(
       id,
       updateFields as UpdateTosVersionFields,
-      req.session.userId,
+      req.session,
       req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     );
   }
@@ -1386,7 +1386,7 @@ export class AdminController {
     return this.tosService.publishVersion(
       id,
       parsed.data,
-      req.session.userId,
+      req.session,
       req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     );
   }
@@ -1424,7 +1424,7 @@ export class AdminController {
       );
     await this.tosService.deleteVersion(
       id,
-      req.session.userId,
+      req.session,
       req.ip ?? req.socket?.remoteAddress ?? 'unknown',
       expectedRevision
     );

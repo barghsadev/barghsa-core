@@ -278,10 +278,10 @@ export class TosService {
    */
   async createVersion(
     input: CreateTosVersionInput,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip = 'unknown'
   ): Promise<TosVersionDetail> {
-    return this.adminTransaction(actorUserId, async (client) => {
+    return this.adminTransaction(actor, async (client) => {
       const existing = await client.query(
         "SELECT id FROM tos_versions WHERE status='draft' LIMIT 1"
       );
@@ -290,10 +290,10 @@ export class TosService {
       const result = await client.query<TosVersionDetail>(
         `INSERT INTO tos_versions(id,version_id,content_fa,content_en,status,created_by)
          VALUES ($1,$2,$3,$4,'draft',$5) RETURNING ${ADMIN_VERSION_COLUMNS}`,
-        [uuidv7(), input.versionId, input.contentFa, input.contentEn, actorUserId]
+        [uuidv7(), input.versionId, input.contentFa, input.contentEn, actor.userId]
       );
       const version = result.rows[0]!;
-      await this.auditAdminWrite(client, actorUserId, ip, 'create', version);
+      await this.auditAdminWrite(client, actor.userId, ip, 'create', version);
       return withRevision(version);
     });
   }
@@ -301,10 +301,10 @@ export class TosService {
   async updateVersion(
     id: string,
     input: UpdateTosVersionFields,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip = 'unknown'
   ): Promise<TosVersionDetail> {
-    return this.adminTransaction(actorUserId, async (client) => {
+    return this.adminTransaction(actor, async (client) => {
       const current = await this.lockDraft(client, id, 'TOS_VERSION_NOT_DRAFT');
       if (withRevision(current).revision !== input.expectedRevision)
         throw new HttpException({ statusCode: 409, error: 'TOS_DRAFT_CHANGED' }, 409);
@@ -315,12 +315,12 @@ export class TosService {
           input.versionId ?? current.versionId,
           input.contentFa ?? current.contentFa,
           input.contentEn ?? current.contentEn,
-          actorUserId,
+          actor.userId,
           id,
         ]
       );
       const version = result.rows[0]!;
-      await this.auditAdminWrite(client, actorUserId, ip, 'edit', version);
+      await this.auditAdminWrite(client, actor.userId, ip, 'edit', version);
       return withRevision(version);
     });
   }
@@ -328,10 +328,10 @@ export class TosService {
   async publishVersion(
     id: string,
     input: PublishTosVersionInput,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip = 'unknown'
   ): Promise<TosVersionDetail> {
-    return this.adminTransaction(actorUserId, async (client) => {
+    return this.adminTransaction(actor, async (client) => {
       const draft = await this.lockDraft(client, id, 'TOS_VERSION_ALREADY_PUBLISHED');
       if (withRevision(draft).revision !== input.expectedRevision)
         throw new HttpException({ statusCode: 409, error: 'TOS_PREVIEW_CHANGED' }, 409);
@@ -340,26 +340,26 @@ export class TosService {
         `UPDATE tos_versions SET status='published',change_type=$1,is_active=$2,
          published_at=clock_timestamp(),created_by=$3,updated_at=clock_timestamp() WHERE id=$4
          RETURNING ${ADMIN_VERSION_COLUMNS}`,
-        [input.changeType, true, actorUserId, id]
+        [input.changeType, true, actor.userId, id]
       );
       const version = result.rows[0]!;
-      await this.auditAdminWrite(client, actorUserId, ip, 'publish', version);
+      await this.auditAdminWrite(client, actor.userId, ip, 'publish', version);
       return withRevision(version);
     });
   }
 
   async deleteVersion(
     id: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string,
     expectedRevision: string
   ): Promise<void> {
-    await this.adminTransaction(actorUserId, async (client) => {
+    await this.adminTransaction(actor, async (client) => {
       const version = await this.lockDraft(client, id, 'TOS_VERSION_PUBLISHED');
       if (withRevision(version).revision !== expectedRevision)
         throw new HttpException({ statusCode: 409, error: 'TOS_DRAFT_CHANGED' }, 409);
       await client.query("DELETE FROM tos_versions WHERE id=$1 AND status='draft'", [id]);
-      await this.auditAdminWrite(client, actorUserId, ip, 'discard', version);
+      await this.auditAdminWrite(client, actor.userId, ip, 'discard', version);
     });
   }
 
@@ -404,16 +404,18 @@ export class TosService {
   }
 
   private async adminTransaction<T>(
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     run: (client: PoolClient) => Promise<T>
   ): Promise<T> {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:tos:edit');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:tos:edit');
+      await requireCurrentSession(client, actor);
       // The single-draft and active-version decisions are shared across all editors.
       await client.query("SELECT pg_advisory_xact_lock(hashtextextended('barghsa:tos:admin',0))");
       const result = await run(client);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return result;
     } catch (error) {

@@ -130,3 +130,86 @@ it('acknowledges the complete successful import in the selected province', async
     ).rows
   ).toEqual(cities.map((city) => ({ name_fa: city.nameFa, name_en: city.nameEn })));
 });
+
+for (const kind of ['province', 'city'] as const) {
+  for (const field of ['nameFa', 'nameEn'] as const) {
+    it(`rejects blank ${kind} ${field} on creation, edit and import without writes`, async () => {
+      const current = await actor();
+      const cityName = `Test City ${field}`;
+      const city =
+        kind === 'city'
+          ? ((
+              await http.pool.query(
+                "INSERT INTO cities(province_id,name_fa,name_en) VALUES ($1,'شهر آزمون',$2) RETURNING id",
+                [province, cityName]
+              )
+            ).rows[0].id as string)
+          : undefined;
+      const base = kind === 'province' ? '' : `/${province}/cities`;
+      const target = kind === 'province' ? `/${province}` : `${base}/${city}`;
+      const before = await counts(current.userId);
+      const config = (await http.pool.query('SELECT * FROM config_version ORDER BY id')).rows;
+      const existing = (await http.pool.query('SELECT * FROM provinces WHERE id=$1', [province]))
+        .rows;
+      for (const [path, method, body, feedback] of [
+        [base, 'POST', { nameFa: 'استان آزمون', nameEn: 'Test Province', [field]: '   ' }, field],
+        [target, 'PATCH', { [field]: '   ' }, field],
+        ...(kind === 'city'
+          ? [
+              [
+                `${base}/import`,
+                'POST',
+                { cities: [{ nameFa: 'شهر', nameEn: 'City', [field]: '   ' }] },
+                'cities',
+              ],
+            ]
+          : []),
+      ] as [string, string, unknown, string][]) {
+        const response = await fetch(`${http.base}/api/admin/geography/provinces${path}`, {
+          method,
+          headers: current.headers,
+          body: JSON.stringify(body),
+        });
+        expect(response.status).toBe(400);
+        expect(((await response.json()) as ErrorResponse).error.fields).toEqual([feedback]);
+        expect(await counts(current.userId)).toEqual(before);
+        expect((await http.pool.query('SELECT * FROM config_version ORDER BY id')).rows).toEqual(
+          config
+        );
+        expect(
+          (await http.pool.query('SELECT * FROM provinces WHERE id=$1', [province])).rows
+        ).toEqual(existing);
+        if (city)
+          expect(
+            (await http.pool.query('SELECT name_fa,name_en FROM cities WHERE id=$1', [city])).rows
+          ).toEqual([{ name_fa: 'شهر آزمون', name_en: cityName }]);
+      }
+    });
+  }
+}
+
+it('normalizes bilingual geography names consistently on create, edit and import', async () => {
+  const current = await actor();
+  const response = await post('', current.headers, {
+    nameFa: '  استان پاک  ',
+    nameEn: '  Trimmed Province  ',
+  });
+  expect(response.status).toBe(201);
+  const saved = (await response.json()) as { id: string };
+  expect(saved).toMatchObject({ nameFa: 'استان پاک', nameEn: 'Trimmed Province' });
+  const edited = await fetch(`${http.base}/api/admin/geography/provinces/${saved.id}`, {
+    method: 'PATCH',
+    headers: current.headers,
+    body: JSON.stringify({ nameFa: '  استان تازه  ', nameEn: '  Renamed Province  ' }),
+  });
+  expect(edited.status).toBe(200);
+  expect(await edited.json()).toMatchObject({ nameFa: 'استان تازه', nameEn: 'Renamed Province' });
+  const imported = await post(`/${saved.id}/cities/import`, current.headers, {
+    cities: [{ nameFa: '  شهر پاک  ', nameEn: '  Trimmed City  ' }],
+  });
+  expect(imported.status).toBe(201);
+  expect(await imported.json()).toMatchObject({
+    imported: 1,
+    cities: [{ nameFa: 'شهر پاک', nameEn: 'Trimmed City' }],
+  });
+});

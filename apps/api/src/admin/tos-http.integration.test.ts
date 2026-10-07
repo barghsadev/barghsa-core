@@ -538,3 +538,105 @@ it('checks permission before reporting terms field names and preserves a saved d
 });
 
 const auditWindow = new AuditWindow(() => http.pool);
+
+for (const action of ['create', 'edit', 'publish', 'discard'] as const) {
+  for (const change of ['revoked', 'expired', 'csrf'] as const) {
+    it(`rolls back terms ${action} when session ${change} changes before commit`, async () => {
+      const current = action === 'create' ? undefined : await create();
+      const before = (await http.pool.query('SELECT * FROM tos_versions ORDER BY id')).rows;
+      const audits = (
+        await auditWindow.query("SELECT * FROM audit_log WHERE event='tos_updated' ORDER BY id")
+      ).rows;
+      const mutation =
+        change === 'revoked'
+          ? 'revoked_at=clock_timestamp()'
+          : change === 'expired'
+            ? "expires_at=clock_timestamp()-INTERVAL '1 second'"
+            : "csrf_token='changed-proof'";
+      await http.pool
+        .query(`CREATE FUNCTION change_tos_session() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN UPDATE sessions SET ${mutation} WHERE user_id='editor'; RETURN NEW; END $$;
+        CREATE TRIGGER change_tos_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='tos_updated') EXECUTE FUNCTION change_tos_session()`);
+      try {
+        const response =
+          action === 'create'
+            ? await request('', 'POST', draft)
+            : action === 'edit'
+              ? await request(`/${current!.id}`, 'PUT', { contentEn: 'Must roll back' })
+              : action === 'publish'
+                ? await request(`/${current!.id}/publish`, 'POST', { changeType: 'major' })
+                : await request(`/${current!.id}`, 'DELETE');
+        expect(response.status).toBe(change === 'csrf' ? 403 : 401);
+        expect((await http.pool.query('SELECT * FROM tos_versions ORDER BY id')).rows).toEqual(
+          before
+        );
+        expect(
+          (await auditWindow.query("SELECT * FROM audit_log WHERE event='tos_updated' ORDER BY id"))
+            .rows
+        ).toEqual(audits);
+        expect(
+          (
+            await http.pool.query(
+              "SELECT revoked_at,csrf_token,expires_at>clock_timestamp() AS active FROM sessions WHERE user_id='editor'"
+            )
+          ).rows
+        ).toEqual([
+          { revoked_at: null, csrf_token: headers.editor!['x-csrf-token'], active: true },
+        ]);
+      } finally {
+        await http.pool.query(
+          'DROP TRIGGER change_tos_session ON audit_log; DROP FUNCTION change_tos_session()'
+        );
+        await http.pool.query(
+          "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day' WHERE user_id='editor'",
+          [headers.editor!['x-csrf-token']]
+        );
+      }
+    });
+  }
+}
+
+for (const change of ['revoked', 'expired', 'csrf'] as const) {
+  it(`rejects terms creation when session ${change} changes while waiting for the actor`, async () => {
+    const client = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='editor' FOR UPDATE");
+      const blocker = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      pending = request('', 'POST', draft);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                'SELECT count(*) FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))',
+                [blocker]
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      const mutation =
+        change === 'revoked'
+          ? 'revoked_at=clock_timestamp()'
+          : change === 'expired'
+            ? "expires_at=clock_timestamp()-INTERVAL '1 second'"
+            : "csrf_token='changed-proof'";
+      await client.query(`UPDATE sessions SET ${mutation} WHERE user_id='editor'`);
+      await client.query('COMMIT');
+      expect((await pending).status).toBe(change === 'csrf' ? 403 : 401);
+      expect((await http.pool.query('SELECT * FROM tos_versions')).rows).toHaveLength(0);
+      expect(
+        (await auditWindow.query("SELECT * FROM audit_log WHERE event='tos_updated'")).rows
+      ).toHaveLength(0);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day' WHERE user_id='editor'",
+        [headers.editor!['x-csrf-token']]
+      );
+    }
+  });
+}
