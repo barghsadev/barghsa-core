@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "3f93a2109759cb212d2b43e47dcb02ae33e17188",
+  "source_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17151,7 +17151,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -17355,7 +17355,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -17484,6 +17484,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -17516,7 +17520,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -17663,6 +17668,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -20397,7 +20422,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "adcfa3441fa1fbfa39f353605f8b326056b1f5c4a795b944a80147d3be2a22eb"
+              "sha256": "2c8cce2d5b1e2a0bf9fdc49c8864bfda342482a328de8eb8811a21c2c5835b71"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -20413,7 +20438,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
@@ -20437,7 +20462,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "7aa1a42cfc992f02bd78488b78f6022de36bdf12f46900211f8f76b592bd77c6"
+              "sha256": "a67454ca3a737988a0a2c57bebab61f63003bf5edaa007c229bbdc26285d4059"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -20446,6 +20471,10 @@
             {
               "path": "apps/api/src/test/cancellation-request-notification-proof.ts",
               "sha256": "0d691769ee0a3d53eb5e65c00d10a4b6d22eecfd34f8a2940dd769835ec0a73c"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -20461,7 +20490,8 @@
             "Latest web production build/types, changed-file lint/format, all85 unchanged bundle budgets and strict SAST1804files/0findings/0errors/5rule fixtures pass. API/schema/dependencies unchanged. Final source/test/config hashes and980 compiled outputs are bound in source-manifest.json; earlier failed/incomplete commands are diagnostic evidence only.",
             "Scoped native submission/recipient renewal: /Users/majid/.local/state/barghsa-manual-batches/order-notification-producers. Final 212 distinct cases pass; six native classes/1356 original assertions and unrelated worker declarations are preserved with exactly reviewed submission hooks,one actor lock change and two strengthened notification baselines. Existing unrelated acceptance is retained by source/AST-bound evidence and targeted affected callers,not re-certified from a historical mention. Full criteria and earlier owner/operations gates remain unchanged.",
             "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
-            "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained."
+            "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -20516,6 +20546,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -25348,7 +25398,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -25485,6 +25535,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -25509,7 +25563,8 @@
             "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -25638,6 +25693,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -25775,7 +25850,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -25884,6 +25959,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -25902,7 +25981,8 @@
             "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -26016,6 +26096,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -26175,7 +26275,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -26288,6 +26388,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -26306,7 +26410,8 @@
             "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -26420,6 +26525,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -29759,7 +29884,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "ff1a1399c671d413ebf45dc38817e013f35fdd2f79dd06d90253738f4c76ca21"
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -29775,7 +29900,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -30028,6 +30153,10 @@
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
               "sha256": "c1f1b82ae3be4c37928c3633033e2ec6e4fb7ba03b4bbcdc89edfbd50a09e205"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -30040,7 +30169,8 @@
             "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
             "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance"
+            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -30052,6 +30182,26 @@
             "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -30338,7 +30488,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "ff1a1399c671d413ebf45dc38817e013f35fdd2f79dd06d90253738f4c76ca21"
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -30354,7 +30504,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -30607,6 +30757,10 @@
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
               "sha256": "c1f1b82ae3be4c37928c3633033e2ec6e4fb7ba03b4bbcdc89edfbd50a09e205"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -30619,7 +30773,8 @@
             "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
             "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance"
+            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -30631,6 +30786,26 @@
             "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -30917,7 +31092,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "ff1a1399c671d413ebf45dc38817e013f35fdd2f79dd06d90253738f4c76ca21"
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -30933,7 +31108,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -31186,6 +31361,10 @@
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
               "sha256": "c1f1b82ae3be4c37928c3633033e2ec6e4fb7ba03b4bbcdc89edfbd50a09e205"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -31198,7 +31377,8 @@
             "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
             "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance"
+            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -31210,6 +31390,26 @@
             "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -31669,7 +31869,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
@@ -31753,7 +31953,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -31866,6 +32066,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -31883,7 +32087,8 @@
             "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [
             "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
@@ -31996,6 +32201,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -34965,7 +35190,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -35130,6 +35355,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -35147,7 +35376,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -35278,6 +35508,26 @@
               "format",
               "sast"
             ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
+            ]
           }
         }
       }
@@ -35298,7 +35548,7 @@
       "launch_required": true,
       "remaining": [
         "Inspect any remaining unaccepted generic/system order status paths. Native electricity review/revision/raw/protected legacy and SQL activation/completion/formal contract-cancellation now have scoped canonical owner delivery; accepted four-service submissions,customer cancellation,consultation/solar/saving/request families remain retained. Preserve true transitions versus internal/same-state information,Rejected versus formal Cancelled,and all financial/review/authority/session/audit/idempotency/ledger boundaries.",
-        "Inspect remaining unaccepted Appendix producers,including ticket reply/assignment,document review/upload/scan/quarantine,profile invitations/roles,authentication,payments/wallet and system events,plus other native/generic contract/order paths. Native electricity/saving approval and electricity staff requested changes now have scoped canonical contract delivery alongside retained order receipts. Do not emit saving intermediate revision states or infer all producer coverage. Prove exact variables,current private recipients,mandatory channels,rollback/replay and unknown-delivery holds before whole-task acceptance.",
+        "Inspect remaining unaccepted Appendix producers,including document review/upload/scan/quarantine,profile invitations/roles,authentication,payments/wallet and system events,plus other native/generic contract/order paths. Native electricity/saving approval/requested changes and private ticket reply/assignment/auto-assignment now have scoped canonical delivery. Do not infer all producer coverage; retain original ticket recipients/internal privacy and saving intermediate revision suppression. Prove exact variables,current private recipients,mandatory channels,rollback/replay and unknown-delivery holds before whole-task acceptance.",
         "Verify and complete configured active in-app template rendering for native synchronous business notices with template tasks; current direct/native lifecycle writers preserve localized default content but do not establish custom active-template behavior. Preserve mandatory immediate delivery and immutable past read/content/history. Live template imports,provider callbacks/idempotency,alerts and production operations remain separate gates."
       ],
       "owner": null,
@@ -35370,7 +35620,8 @@
           "release-0.4-saving-cancellation-status-notification-producer",
           "release-0.4-electricity-status-notification-producers",
           "release-0.4-electricity-lifecycle-status-notification-producers",
-          "release-0.4-native-contract-review-notification-producers"
+          "release-0.4-native-contract-review-notification-producers",
+          "release-0.4-ticket-notification-producers"
         ],
         "current_acceptance": {
           "kind": "partial-native-business-producer-acceptance",
@@ -35410,7 +35661,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -35666,7 +35917,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "adcfa3441fa1fbfa39f353605f8b326056b1f5c4a795b944a80147d3be2a22eb"
+              "sha256": "2c8cce2d5b1e2a0bf9fdc49c8864bfda342482a328de8eb8811a21c2c5835b71"
             },
             {
               "path": "apps/api/src/orders/order-actor-lock.integration.test.ts",
@@ -35674,7 +35925,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "7aa1a42cfc992f02bd78488b78f6022de36bdf12f46900211f8f76b592bd77c6"
+              "sha256": "a67454ca3a737988a0a2c57bebab61f63003bf5edaa007c229bbdc26285d4059"
             },
             {
               "path": "apps/api/src/test/order-status-notification-proof.ts",
@@ -35831,6 +36082,22 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
+            },
+            {
+              "path": "apps/worker/src/notifications/email-transport.ts",
+              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
             }
           ],
           "checks": [
@@ -35945,10 +36212,18 @@
             "142 distinct current scoped cases: native electricity 100, saving nine and generic contract review 33. Sixteen raised/silent electricity publication/request-change failures across four required sinks plus two saving publication outbox failures preserve every public business row except HTTP session/rate counters, recover and replay exact command. Existing stock reservations, fulfillment, invoice totals, paid refund/gifts, quantity/price, authority/current sessions/step-up, accepted history and ledger assertions pass.",
             "One final scoped review/source proof preserves all native financial/review/version/authority/session/audit/idempotency effects: 40 class members exact after only replacing the two delivery callbacks, including 38 unrelated members. Original 755 electricity, 570 saving and five proof assertions retained; two electricity inbox totals add the newly required specifically verified contract publication notice (one order plus one contract). Shared writer, generic production notifier, old migrations/schema, dependency/web/worker/OpenAPI contents remain exact; only expected API compiled sources differ.",
             "API build/types, five-file lint/format and two-production-file/five-rule Semgrep zero findings pass. Consumer tests use matching prebuilt output once. Prior electricity SQL lifecycle, unchanged private writer and worker receipts remain source/runtime bound; no duplicate count or unrelated suite rerun.",
-            "Task/release remain partial. Other native/generic producer and Appendix audits, active in-app templates, providers/unknown receipts, owner/operations/launch acceptance remain unfinished. No release/version, staging enqueue, Telegram or production deployment. Previous batch is committed locally but GitHub push returned Internal Server Error through SSH twice and HTTPS once; exact remote remains prior accepted commit, retained external push receipts require reconciliation."
+            "Task/release remain partial. Other native/generic producer and Appendix audits, active in-app templates, providers/unknown receipts, owner/operations/launch acceptance remain unfinished. No release/version, staging enqueue, Telegram or production deployment. Previous batch is committed locally but GitHub push returned Internal Server Error through SSH twice and HTTPS once; exact remote remains prior accepted commit, retained external push receipts require reconciliation.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Ticket public replies replace their original private notices with canonical ticket.new_reply, immediate bilingual inbox and queued email in the native comment transaction. Stored comment UUID plus recipient gives stable occurrence; actors remain excluded, internal notes remain in the existing private generic path, and conversation/attachment text never enters payload or external content. Manual assignment captures its original audit UUID for ticket.assigned, in-app only; creation auto-assignment uses ticket identity and original target. Original customer assignment/status generic notices retained without extra email.",
+            "Private recipient selection, localized default content and original customer/admin ticket links stay exact, including profile-less tickets and existing assigned/full staff grants. The worker requires matching private inbox plus saved ticket owner or current staff ticket read/assigned scope, never retargeting old outbox rows. Text permissions are safely decoded only as valid JSON arrays; malformed/scalar role data denies delivery. The last pre-provider recheck catches reassignment, and snapshots stay immutable.",
+            "Profile-less email support is narrowly limited to canonical ticket.new_reply with actual null profile and durable outbox. All original email receipt/snapshot/render/provider/recheck/send logic after that guard remains exact. Customer and assigned staff emails use active templates and controlled provider receipts once; accepted and unknown receipts recover/hold before current access gating after staff scope loss. Other profile-less event guards remain required. These are controlled providers, not production live receipts.",
+            "249 distinct scoped cases: ticket/caller files 112 (111 complete pass plus one new collision case, final four affected cases rerun without duplicate counts), unchanged original private writer/inbox 22, worker 115. Final private-recipient file 34 plus source/runtime-bound complete delivery-identity file 20 and other unchanged worker files 61 retained from the six-file run; that mixed run is not called a complete pass. Sixteen raised/silent native reply/assignment sink failures preserve every public business row except HTTP session/rate counters, recover and replay. Auto-assignment, actual saved comment/audit keys, read/content receipt preservation and scope collision rejection pass.",
+            "One final coherent review/source proof: original nine shared notification members and 34 unrelated ticket members exact. Comment/assignment transactional SQL/effects retained after only occurrence argument and captured original audit UUID. All original 413 ticket and 18 worker-recipient assertions unchanged. Original worker recipient query is an exact prefix plus ticket-specific guard; every earlier migration/schema/web/shared/public/OpenAPI/financial source remains exact. No assertion, coverage floor, budget, limiter or operational boundary weakened.",
+            "Final API/worker builds, API types, changed-file lint/format and four-production-file/five-rule Semgrep zero findings pass. Build/check receipts retain timings and diagnoses: fixture required profile/description and provider disabled state, text permission SQL parsing, strict profile-less transport gap, fixture quoting/format corrected. Failed diagnostic checks and skipped cases excluded. Final affected checks passed before scoped acceptance; compiled output and retained source bindings verified.",
+            "Task/release remain partial: document/profile/auth/payment/wallet/system and other producer audits, active in-app templates, providers/unknown receipts, owner/operations/launch acceptance unfinished. No version/release/staging/Telegram/production deployment. Reviewed earlier commits remain local because GitHub refused normal main pushes; actual remote/receipts are separate and must be reconciled."
           ],
           "limitations": [],
-          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
           "scope_qualification": "Local real worker/HTTP/PostgreSQL plus fixture production-browser evidence. Live provider delivery,operational alerts andowner design dispositions remain separate.",
           "accepted_producer_events": [
             "contract.awaiting_acceptance",
@@ -36153,6 +36428,31 @@
           "accepted_contract_review_producer_paths": [
             "apps/api/src/electricity/electricity-staff-review.service.ts#ElectricityStaffReviewService.decide",
             "apps/api/src/saving/saving-fulfillment.service.ts#SavingFulfillmentService.decide"
+          ],
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
+            ]
+          },
+          "accepted_ticket_producer_paths": [
+            "apps/api/src/tickets/tickets.service.ts#TicketsService.notifyTicket",
+            "apps/api/src/tickets/tickets.service.ts#TicketsService.insertComment",
+            "apps/api/src/tickets/tickets.service.ts#TicketsService.staffAssignTicket"
           ]
         }
       }
@@ -36252,7 +36552,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -36417,6 +36717,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -36434,7 +36738,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
@@ -36564,6 +36869,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -36799,7 +37124,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -36956,6 +37281,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -36973,7 +37302,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [
             "Migration0128 preserves earlier processing rows and snapshots retained receipts. It cannot reconstruct already missing historical attempts; legacy rows must not be summed as physical sends. Drain old workers before rollout."
@@ -37105,6 +37435,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -38616,7 +38966,7 @@
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
-              "sha256": "adcfa3441fa1fbfa39f353605f8b326056b1f5c4a795b944a80147d3be2a22eb"
+              "sha256": "2c8cce2d5b1e2a0bf9fdc49c8864bfda342482a328de8eb8811a21c2c5835b71"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.test.ts",
@@ -38628,7 +38978,7 @@
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
-              "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+              "sha256": "3b5713c3e5d5406a1a0c165bae8c6e4541445c3c0efbd73b194855ce05c7f2bb"
             },
             {
               "path": "apps/worker/src/notifications/sms-transport.ts",
@@ -38644,7 +38994,7 @@
             },
             {
               "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
-              "sha256": "7aa1a42cfc992f02bd78488b78f6022de36bdf12f46900211f8f76b592bd77c6"
+              "sha256": "a67454ca3a737988a0a2c57bebab61f63003bf5edaa007c229bbdc26285d4059"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -38653,6 +39003,10 @@
             {
               "path": "apps/api/src/test/cancellation-request-notification-proof.ts",
               "sha256": "0d691769ee0a3d53eb5e65c00d10a4b6d22eecfd34f8a2940dd769835ec0a73c"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -38661,7 +39015,8 @@
             "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
             "Scoped native submission/recipient renewal: /Users/majid/.local/state/barghsa-manual-batches/order-notification-producers. Final 212 distinct cases pass; six native classes/1356 original assertions and unrelated worker declarations are preserved with exactly reviewed submission hooks,one actor lock change and two strengthened notification baselines. Existing unrelated acceptance is retained by source/AST-bound evidence and targeted affected callers,not re-certified from a historical mention. Full criteria and earlier owner/operations gates remain unchanged.",
             "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
-            "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained."
+            "Scoped cancellation-request renewal: /Users/majid/.local/state/barghsa-manual-batches/cancellation-request-notification-producers. 162 distinct current/source-bound cases; native class core, unrelated review branches, shared writer class and every original assertion exact. Only the new canonical advisory owner notice and send-time recipient family are added. Request/inventory/financial/authority/session/audit/idempotency and other task/release/owner/provider/operations dispositions retained.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "order_submission_scoped_renewal": {
             "base_commit": "566f886b1b56e91bad7d8f5c4861296b3c5c8e74",
@@ -38711,6 +39066,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -41455,7 +41830,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -41680,6 +42055,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -41706,7 +42085,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -41838,6 +42218,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -42061,7 +42461,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -42286,6 +42686,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -42312,7 +42716,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -42444,6 +42849,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -42669,7 +43094,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "ff1a1399c671d413ebf45dc38817e013f35fdd2f79dd06d90253738f4c76ca21"
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -42685,7 +43110,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -42938,6 +43363,10 @@
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
               "sha256": "c1f1b82ae3be4c37928c3633033e2ec6e4fb7ba03b4bbcdc89edfbd50a09e205"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -42950,7 +43379,8 @@
             "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
             "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance"
+            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -42962,6 +43392,26 @@
             "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -43180,7 +43630,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "ff1a1399c671d413ebf45dc38817e013f35fdd2f79dd06d90253738f4c76ca21"
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -43196,7 +43646,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -43449,6 +43899,10 @@
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
               "sha256": "c1f1b82ae3be4c37928c3633033e2ec6e4fb7ba03b4bbcdc89edfbd50a09e205"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -43461,7 +43915,8 @@
             "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
             "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance"
+            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -43473,6 +43928,26 @@
             "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -43697,7 +44172,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "ff1a1399c671d413ebf45dc38817e013f35fdd2f79dd06d90253738f4c76ca21"
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -43713,7 +44188,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -43966,6 +44441,10 @@
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
               "sha256": "c1f1b82ae3be4c37928c3633033e2ec6e4fb7ba03b4bbcdc89edfbd50a09e205"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -43978,7 +44457,8 @@
             "Legacy browserfixtures corrected tocurrent requiredcategory/team fields,purpose-bound sealed keys,exact request/actor/ticket/file/financial private-read receipts andcaptured unknown-outcome retry.149 prior assertions remain in order;three obsolete representations replacedwith stronger effectivebehavior checks:exactuncertainty message/current lockedcapturedretry,empty-reason validation withzero writes,andempty hidden resolvedcomposer. Eight additional assertions verifynewcommand IDs/field errors/ownership outcomes. Onlytarget localeinitializer changesinlarge adminlivefile;wholepriorfile recovers exactly. Failed/stopped receipts andboundedreview/proofs retained.",
             "Scoped service-configuration renewal: original template HTTP file is byte-exact prefix with one additional reference/FK/audit case. Large live E2E changes only two green/template flows: explicit incompatible100% rejection,compatible99.9% strict success,actualPUT acknowledgement andexact history selectors. All unrelated flows remainbyte-exact;eight real current journeys pass. Prior unrelated acceptance andlimitations retained. /Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "Narrow source renewal in release-0.3-financial-operations-promotion: additive protected ledger/OpenAPI/route registration; unchanged prior API objects, other live callbacks and 1632 dictionary values per locale; all old cancellation test expressions retained and 28 current cases passed; original customer endpoint/preferences/money/privacy behavior verified by 51 UI and four browser cases. Renewal proof and actual receipts are external; no unrelated whole-task acceptance inferred.",
-            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance"
+            "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -43990,6 +44470,26 @@
             "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -45562,7 +46062,7 @@
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
-              "sha256": "c6e291f0e389e5914bf4a9e5071c272886d0bfc2081b1fc466ff77d880068ecd"
+              "sha256": "80e520425be057ab2e0f5424c2c519919284ebb3668bcb18cdfa06f676433587"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -45787,6 +46287,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -45813,7 +46317,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls",
           "limitations": [
@@ -45945,6 +46450,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -94200,7 +94725,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -94357,6 +94882,10 @@
             {
               "path": "apps/api/src/test/order-status-notification-proof.ts",
               "sha256": "65a8bcc6b7d9beb786f85317aac2c198346ef8ab1355db7c0dc13ae01fd4a4b1"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -94400,7 +94929,8 @@
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
             "Scoped native submission/recipient renewal: /Users/majid/.local/state/barghsa-manual-batches/order-notification-producers. Final 212 distinct cases pass; six native classes/1356 original assertions and unrelated worker declarations are preserved with exactly reviewed submission hooks,one actor lock change and two strengthened notification baselines. Existing unrelated acceptance is retained by source/AST-bound evidence and targeted affected callers,not re-certified from a historical mention. Full criteria and earlier owner/operations gates remain unchanged.",
-            "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged."
+            "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -94476,6 +95006,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -94582,7 +95132,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -94739,6 +95289,10 @@
             {
               "path": "apps/api/src/test/order-status-notification-proof.ts",
               "sha256": "65a8bcc6b7d9beb786f85317aac2c198346ef8ab1355db7c0dc13ae01fd4a4b1"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -94782,7 +95336,8 @@
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
             "Scoped native submission/recipient renewal: /Users/majid/.local/state/barghsa-manual-batches/order-notification-producers. Final 212 distinct cases pass; six native classes/1356 original assertions and unrelated worker declarations are preserved with exactly reviewed submission hooks,one actor lock change and two strengthened notification baselines. Existing unrelated acceptance is retained by source/AST-bound evidence and targeted affected callers,not re-certified from a historical mention. Full criteria and earlier owner/operations gates remain unchanged.",
-            "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged."
+            "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -94858,6 +95413,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -94980,7 +95555,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -95153,6 +95728,10 @@
             {
               "path": "apps/api/src/test/solar-status-notification-proof.ts",
               "sha256": "cbd6344ad4194a26b73d28d0fce3963ba1bae41b8679f459cd8b185db007c87b"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -95208,7 +95787,8 @@
             "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
             "Scoped native submission/recipient renewal: /Users/majid/.local/state/barghsa-manual-batches/order-notification-producers. Final 212 distinct cases pass; six native classes/1356 original assertions and unrelated worker declarations are preserved with exactly reviewed submission hooks,one actor lock change and two strengthened notification baselines. Existing unrelated acceptance is retained by source/AST-bound evidence and targeted affected callers,not re-certified from a historical mention. Full criteria and earlier owner/operations gates remain unchanged.",
             "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
-            "Scoped solar status renewal: /Users/majid/.local/state/barghsa-manual-batches/solar-status-notification-producers. Final 20 new and 128 unchanged source/compiled-bound cases; 42 unrelated members and 366 original assertions preserved. Six existing messages remain exact and one missing status notice is added. Financial/state/review/authorization/session/audit/idempotency/storage bodies are unchanged. Native rollback explicitly verifies removed provisional storage cleanup reservations,not physical deletion. Other task/release/owner/provider/operations criteria retain their unfinished dispositions."
+            "Scoped solar status renewal: /Users/majid/.local/state/barghsa-manual-batches/solar-status-notification-producers. Final 20 new and 128 unchanged source/compiled-bound cases; 42 unrelated members and 366 original assertions preserved. Six existing messages remain exact and one missing status notice is added. Financial/state/review/authorization/session/audit/idempotency/storage bodies are unchanged. Native rollback explicitly verifies removed provisional storage cleanup reservations,not physical deletion. Other task/release/owner/provider/operations criteria retain their unfinished dispositions.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
           "limitations": [
@@ -95362,6 +95942,26 @@
               "lint-final",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -95547,7 +96147,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -95908,6 +96508,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -96015,7 +96619,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -96386,6 +96991,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -96571,7 +97196,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -96932,6 +97557,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -97039,7 +97668,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -97411,6 +98041,26 @@
               "format",
               "sast"
             ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
+            ]
           }
         }
       }
@@ -97515,7 +98165,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -97672,6 +98322,10 @@
             {
               "path": "apps/api/src/test/order-status-notification-proof.ts",
               "sha256": "65a8bcc6b7d9beb786f85317aac2c198346ef8ab1355db7c0dc13ae01fd4a4b1"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -97715,7 +98369,8 @@
             "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
             "Scoped history-read renewal: 95 current HTTP/controller cases pass, including concurrent read-grant revocation and expiry, original dead-letter recovery, and verified email callback/provenance history. All 73 unrelated controller/service members and 80 original integration assertions are AST-preserved; history filters, SQL, receipt matching, projection and stable paging remain unchanged. API build/types, four-file lint/format and two-file/five-rule Semgrep with zero findings pass. Evidence: /Users/majid/.local/state/barghsa-manual-batches/notification-foundation-acceptance",
             "Scoped native submission/recipient renewal: /Users/majid/.local/state/barghsa-manual-batches/order-notification-producers. Final 212 distinct cases pass; six native classes/1356 original assertions and unrelated worker declarations are preserved with exactly reviewed submission hooks,one actor lock change and two strengthened notification baselines. Existing unrelated acceptance is retained by source/AST-bound evidence and targeted affected callers,not re-certified from a historical mention. Full criteria and earlier owner/operations gates remain unchanged.",
-            "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged."
+            "Scoped native electricity cancellation status renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-cancellation-notification-producer. All 674 original assertions/native class bodies preserved except one notification call; previous submission helper/writer class remain exact. Final 96 new plus 36 unchanged source-bound cases certify scoped producer/recipient/rollback/replay safeguards. Other accepted criteria retain earlier evidence; unfinished release/owner/provider/operations gates remain unchanged.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -97791,6 +98446,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         }
@@ -249769,7 +250444,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "ff1a1399c671d413ebf45dc38817e013f35fdd2f79dd06d90253738f4c76ca21"
+              "sha256": "78f96014f13da7188dd43c2df3c1e361e8a740c581eb8f5ef2e46c143d513afc"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -249785,7 +250460,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7c4bf3c8546ab76ae063db10eeb380cd0581e3ec317410c55b48573081f0587a"
+              "sha256": "be2118f4495e4ca25c4375a25a0a25350165d10f8c1542862a1c78952cfe2687"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -252346,6 +253021,10 @@
             {
               "path": "packages/db/src/electricity-lifecycle-notifications-upgrade.migrated.test.ts",
               "sha256": "14b48a471d4bd54d416a29686867b9bcb45b2fe5b8b62b56e23be04f7fba2cef"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
             }
           ],
           "checks": [
@@ -252368,7 +253047,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
-            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded."
+            "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
+            "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -252572,6 +253252,26 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "ticket_notification_scoped_renewal": {
+            "base_commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "ticket-callers",
+              "shared-private-writer",
+              "ticket-final-probes",
+              "worker-private-ready",
+              "api-build-ready",
+              "worker-ready",
+              "types-ready",
+              "lint-ready",
+              "format-ready",
+              "worker-lint-ready",
+              "worker-format-ready",
+              "sast",
+              "email-sast"
             ]
           }
         },
@@ -264186,6 +264886,31 @@
         "Task/release remain partial. Other native/generic producer and Appendix audits, active in-app templates, providers/unknown receipts, owner/operations/launch acceptance remain unfinished. No release/version, staging enqueue, Telegram or production deployment. Previous batch is committed locally but GitHub push returned Internal Server Error through SSH twice and HTTPS once; exact remote remains prior accepted commit, retained external push receipts require reconciliation."
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers",
+      "release": false,
+      "push": {
+        "status": "failed",
+        "commit": "0aca44c362aba4fa4ad6a31cfbec04d816b408db",
+        "observed_remote_main": "c787e119d9a19b448f276e109f45043f07e363d9",
+        "reason": "GitHub Internal Server Error on reviewed normal main push. Preserve local commits; no force push. Reconcile exact remote after recovery.",
+        "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers/push-receipt.json"
+      }
+    },
+    "release-0.4-ticket-notification-producers": {
+      "title": "Private ticket reply and assignment delivery",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02"
+      ],
+      "summary": "Canonical ticket reply and manual/auto assignment accepted with atomic private channels, original recipients/content, current worker access, narrowly scoped profile-less email and controlled provider/receipt proof. Original transactional effects/assertions preserved; other Appendix/template/provider/launch partial.",
+      "validation": [
+        "Ticket public replies replace their original private notices with canonical ticket.new_reply, immediate bilingual inbox and queued email in the native comment transaction. Stored comment UUID plus recipient gives stable occurrence; actors remain excluded, internal notes remain in the existing private generic path, and conversation/attachment text never enters payload or external content. Manual assignment captures its original audit UUID for ticket.assigned, in-app only; creation auto-assignment uses ticket identity and original target. Original customer assignment/status generic notices retained without extra email.",
+        "Private recipient selection, localized default content and original customer/admin ticket links stay exact, including profile-less tickets and existing assigned/full staff grants. The worker requires matching private inbox plus saved ticket owner or current staff ticket read/assigned scope, never retargeting old outbox rows. Text permissions are safely decoded only as valid JSON arrays; malformed/scalar role data denies delivery. The last pre-provider recheck catches reassignment, and snapshots stay immutable.",
+        "Profile-less email support is narrowly limited to canonical ticket.new_reply with actual null profile and durable outbox. All original email receipt/snapshot/render/provider/recheck/send logic after that guard remains exact. Customer and assigned staff emails use active templates and controlled provider receipts once; accepted and unknown receipts recover/hold before current access gating after staff scope loss. Other profile-less event guards remain required. These are controlled providers, not production live receipts.",
+        "249 distinct scoped cases: ticket/caller files 112 (111 complete pass plus one new collision case, final four affected cases rerun without duplicate counts), unchanged original private writer/inbox 22, worker 115. Final private-recipient file 34 plus source/runtime-bound complete delivery-identity file 20 and other unchanged worker files 61 retained from the six-file run; that mixed run is not called a complete pass. Sixteen raised/silent native reply/assignment sink failures preserve every public business row except HTTP session/rate counters, recover and replay. Auto-assignment, actual saved comment/audit keys, read/content receipt preservation and scope collision rejection pass.",
+        "One final coherent review/source proof: original nine shared notification members and 34 unrelated ticket members exact. Comment/assignment transactional SQL/effects retained after only occurrence argument and captured original audit UUID. All original 413 ticket and 18 worker-recipient assertions unchanged. Original worker recipient query is an exact prefix plus ticket-specific guard; every earlier migration/schema/web/shared/public/OpenAPI/financial source remains exact. No assertion, coverage floor, budget, limiter or operational boundary weakened.",
+        "Final API/worker builds, API types, changed-file lint/format and four-production-file/five-rule Semgrep zero findings pass. Build/check receipts retain timings and diagnoses: fixture required profile/description and provider disabled state, text permission SQL parsing, strict profile-less transport gap, fixture quoting/format corrected. Failed diagnostic checks and skipped cases excluded. Final affected checks passed before scoped acceptance; compiled output and retained source bindings verified.",
+        "Task/release remain partial: document/profile/auth/payment/wallet/system and other producer audits, active in-app templates, providers/unknown receipts, owner/operations/launch acceptance unfinished. No version/release/staging/Telegram/production deployment. Reviewed earlier commits remain local because GitHub refused normal main pushes; actual remote/receipts are separate and must be reconciled."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers",
       "release": false
     }
   },
@@ -264226,9 +264951,9 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-ticket-notification-producers",
+    "id": "release-0.4-document-notification-producers",
     "release": "0.4.0",
-    "goal": "Inspect ticket.new_reply and ticket.assigned existing native writers,recipient scope and channel pipeline; implement only demonstrated Appendix gaps in their transactions. Preserve conversation/internal-note privacy,author exclusion,staff authorization/assigned scope,profile-less ticket behavior,actual command/comment keys/audit/rollback/replay. Keep other Appendix/templates/providers/owner/operations/launch criteria explicit.",
+    "goal": "Inspect existing document.uploaded/review_completed/scan_failed/quarantined producers and recipient pipelines,including worker scans; implement only demonstrated Appendix gaps atomically. Preserve storage/scan/quarantine/preview/access,immutable signed evidence/history,profile isolation,staff/private scope,current eligibility,idempotency and rollback/retry. Keep live storage/scanner/template/provider and owner/operations/launch criteria explicit.",
     "task_keys": [
       "05-notifications-documents-ai.md#T-05.01.02"
     ]

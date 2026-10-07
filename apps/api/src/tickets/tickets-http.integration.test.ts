@@ -1,3 +1,9 @@
+import { NotificationsService } from '../notifications/notifications.service.js';
+import {
+  expectTicketDelivery,
+  expectTicketNoticeRollback,
+  ticketDeliverySnapshot,
+} from '../test/ticket-notification-proof.js';
 import type { TicketCommentRow } from './tickets.service.js';
 import { createServer, type Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
@@ -2309,6 +2315,9 @@ it('deduplicates original ticket creation and auto-assignment without replaying 
     };
     expect(first.status).toBe('in_progress');
     expect(first.assignedTo).toBe('assigned');
+    await expectTicketDelivery(http.pool, first.id, 'ticket.assigned', 'created', [
+      { user: 'assigned', context: 'staff' },
+    ]);
     expect(first.attachments).toEqual([]);
     expect(first).not.toHaveProperty('idempotencyKey');
     const effects = await durableTicketEffects(first.id);
@@ -2734,4 +2743,130 @@ it('projects only owned ticket form leaves after current authority and leaves pr
   expect(protectedInput.status).toBe(400);
   expect(((await protectedInput.json()) as TicketFormErrorResponse).error.fields).toBeUndefined();
   expect(await durableTicketEffects(id)).toEqual(effects);
+});
+
+it('persists private canonical reply delivery with both channels, atomic rollback and exact comment replay', async () => {
+  const id = await ticket();
+  await assign(id, 'assigned');
+  const command = {
+    body: 'Private solution must stay in conversation',
+    visibility: 'public',
+    submissionId: randomUUID(),
+  };
+  const work = () => postReply(id, 'staff', command);
+  await expectTicketNoticeRollback(http.pool, id, 'ticket.new_reply', work);
+  const response = await work();
+  expect(response.status, http.logs()).toBe(201);
+  const reply = (await response.json()) as TicketCommentRow;
+  await expectTicketDelivery(http.pool, id, 'ticket.new_reply', reply.id, [
+    { user: 'customer', context: 'customer' },
+    { user: 'assigned', context: 'staff' },
+  ]);
+  const before = await ticketDeliverySnapshot(http.pool, id);
+  expect(JSON.stringify(before)).not.toContain(command.body);
+  expect((await work()).status).toBe(201);
+  expect(await ticketDeliverySnapshot(http.pool, id)).toEqual(before);
+  expect((await comment(id, 'Hidden internal note', 'internal')).status).toBe(201);
+  expect(await ticketDeliverySnapshot(http.pool, id)).toEqual(before);
+  const customerReply = await postReply(id, 'customer', {
+    body: 'Customer reply is also private',
+    visibility: 'public',
+    submissionId: randomUUID(),
+  });
+  expect(customerReply.status, http.logs()).toBe(201);
+  const customerComment = (await customerReply.json()) as TicketCommentRow;
+  const row = (
+    await http.pool.query('SELECT * FROM notification_outbox WHERE idempotency_key=$1', [
+      `ticket.new_reply:${id}:${customerComment.id}:assigned`,
+    ])
+  ).rows;
+  expect(row).toHaveLength(1);
+  expect(row[0].channels).toEqual(['in_app', 'email']);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT user_id FROM notification_outbox WHERE idempotency_key LIKE $1',
+        [`ticket.new_reply:${id}:${customerComment.id}:%`]
+      )
+    ).rows
+  ).toEqual([{ user_id: 'assigned' }]);
+});
+it('persists the assigned-only canonical inbox with audit identity and recovers/replays atomic assignment', async () => {
+  const id = await ticket(),
+    body = { assigneeId: 'assigned', idempotencyKey: randomUUID() };
+  const work = () => durableTicketCommand(`/api/staff/tickets/${id}/assign`, 'PUT', body);
+  await expectTicketNoticeRollback(http.pool, id, 'ticket.assigned', work);
+  expect((await work()).status, http.logs()).toBe(200);
+  const audit = (
+    await http.pool.query(
+      "SELECT id FROM audit_log WHERE event='ticket_assigned' AND metadata::jsonb->>'ticketId'=$1",
+      [id]
+    )
+  ).rows;
+  expect(audit).toHaveLength(1);
+  await expectTicketDelivery(http.pool, id, 'ticket.assigned', audit[0].id, [
+    { user: 'assigned', context: 'staff' },
+  ]);
+  const before = await ticketDeliverySnapshot(http.pool, id);
+  expect((await work()).status).toBe(200);
+  expect(await ticketDeliverySnapshot(http.pool, id)).toEqual(before);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT type FROM in_app_notifications WHERE recipient_user_id='customer' AND link_route=$1",
+        [`/tickets?ticketId=${id}`]
+      )
+    ).rows
+  ).toEqual([{ type: 'general' }]);
+});
+
+it('preserves read/content/receipts on a matching private ticket occurrence and rejects scope collisions', async () => {
+  const id = await ticket();
+  await assign(id, 'assigned');
+  const response = await postReply(id, 'staff', {
+    body: 'Private answer',
+    visibility: 'public',
+    submissionId: randomUUID(),
+  });
+  expect(response.status).toBe(201);
+  const row = (
+    await http.pool.query(
+      "SELECT * FROM notification_outbox WHERE event_key='ticket.new_reply' AND payload->>'ticketNumber'=$1 AND user_id='customer'",
+      [id]
+    )
+  ).rows[0];
+  await http.pool.query(
+    "UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE delivery_key='outbox:'||$1::text",
+    [row.id]
+  );
+  const before = await ticketDeliverySnapshot(http.pool, id);
+  const params = {
+    userId: 'customer',
+    operatingContext: 'customer' as const,
+    type: 'general' as const,
+    title: 'Replacement is forbidden',
+    link: `/tickets?ticketId=${id}`,
+    eventKey: 'ticket.new_reply' as const,
+    occurrenceKey: row.idempotency_key,
+    payload: { ticketNumber: id },
+  };
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    expect(await new NotificationsService().createTicketBusinessEvent(params, client)).toBe(false);
+    await client.query('COMMIT');
+    expect(await ticketDeliverySnapshot(http.pool, id)).toEqual(before);
+    await client.query('BEGIN');
+    await expect(
+      new NotificationsService().createTicketBusinessEvent(
+        { ...params, userId: 'staff', operatingContext: 'staff' },
+        client
+      )
+    ).rejects.toThrow('conflicts with saved delivery');
+    await client.query('ROLLBACK');
+    expect(await ticketDeliverySnapshot(http.pool, id)).toEqual(before);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
 });

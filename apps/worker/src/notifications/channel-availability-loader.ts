@@ -117,6 +117,19 @@ export async function loadNotificationRecipient(
         WHERE n.delivery_key='outbox:'||o.id::text AND n.profile_id=o.profile_id
           AND n.recipient_user_id=u.user_id AND n.operating_context='staff'
           AND n.type=o.event_key
+      ))
+      AND (o.event_key NOT IN ('ticket.new_reply','ticket.assigned') OR EXISTS (
+        SELECT 1 FROM tickets t JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE t.id::text=o.payload->>'ticketNumber' AND n.profile_id IS NULL AND o.profile_id IS NULL
+          AND n.recipient_user_id=u.user_id AND n.type=o.event_key
+          AND ((n.operating_context='customer' AND t.user_id=u.user_id AND o.event_key='ticket.new_reply')
+            OR (n.operating_context='staff' AND (u.is_admin OR EXISTS (
+              SELECT 1 FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id
+                AND ((CASE WHEN r.permissions IS JSON ARRAY THEN r.permissions::jsonb ELSE '[]'::jsonb END)
+                  ?| ARRAY['*','tickets:*','tickets:read'] OR
+                  (t.assigned_to=u.user_id AND (CASE WHEN r.permissions IS JSON ARRAY
+                    THEN r.permissions::jsonb ELSE '[]'::jsonb END) ? 'tickets:assigned'))
+            ))))
       ))`,
     [outboxId]
   );

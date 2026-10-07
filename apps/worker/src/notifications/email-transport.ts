@@ -25,7 +25,11 @@ export class EmailNotificationTransport implements INotificationTransport {
   ) {}
 
   async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
-    if (!payload.outboxId || !payload.profileId)
+    if (
+      !payload.outboxId ||
+      (!payload.profileId &&
+        !(payload.profileId === null && payload.eventKey === 'ticket.new_reply'))
+    )
       throw new Error('Email requires a durable queued recipient');
     const receipt = await readDeliveryReceipt(this.pool, payload.outboxId, 'email');
     if (receipt) return receipt;

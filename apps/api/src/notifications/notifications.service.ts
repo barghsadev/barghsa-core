@@ -24,6 +24,8 @@ export type CustomerBusinessEvent =
   | 'order.status_changed'
   | 'order.cancellation_requested';
 
+export type TicketBusinessEvent = 'ticket.new_reply' | 'ticket.assigned';
+
 export interface CreateNotificationParams {
   userId: string;
   profileId?: string;
@@ -84,7 +86,7 @@ export class NotificationsService {
   async create(
     params: CreateNotificationParams,
     transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
-    delivery?: { outboxId: string; eventKey: CustomerBusinessEvent }
+    delivery?: { outboxId: string; eventKey: CustomerBusinessEvent | TicketBusinessEvent }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
     const id = uuidv7();
@@ -129,6 +131,88 @@ export class NotificationsService {
   }
 
   /** The caller owns the native business transaction and its stable occurrence identity. */
+  async createTicketBusinessEvent(
+    params: CreateNotificationParams & {
+      eventKey: TicketBusinessEvent;
+      occurrenceKey: string;
+      payload: { ticketNumber: string };
+    },
+    transaction: PoolClient
+  ): Promise<boolean> {
+    if (
+      !['customer', 'staff'].includes(params.operatingContext) ||
+      params.profileId ||
+      !params.occurrenceKey.trim() ||
+      !params.userId.trim() ||
+      (params.eventKey === 'ticket.assigned' && params.operatingContext !== 'staff')
+    )
+      throw new Error('Ticket business delivery requires the original private recipient');
+    const payload = {
+      ...params.payload,
+      ...(params.link ? { link_route: notificationLink(params.link) } : {}),
+    };
+    const channels = params.eventKey === 'ticket.assigned' ? ['in_app'] : ['in_app', 'email'];
+    const outboxId = uuidv7();
+    const inserted = await transaction.query(
+      `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$3,$4,$5,'queued',$6,5,$7) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
+      [
+        outboxId,
+        params.userId,
+        params.eventKey,
+        payload,
+        channels,
+        params.occurrenceKey,
+        correlationIdStorage.getStore() ?? null,
+      ]
+    );
+    if (!inserted.rows[0]) {
+      const existing = await transaction.query(
+        `SELECT ob.id FROM notification_outbox ob JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+         WHERE ob.idempotency_key=$1 AND ob.profile_id IS NULL AND ob.user_id=$2 AND ob.event_key=$3 AND ob.payload=$4::jsonb
+          AND ob.channels=$5::text[] AND n.profile_id IS NULL AND n.recipient_user_id=ob.user_id
+          AND n.operating_context=$6 AND n.type=ob.event_key
+          AND EXISTS(SELECT 1 FROM notification_job WHERE outbox_id=ob.id AND channel='in_app')
+          AND ($3='ticket.assigned' OR EXISTS(SELECT 1 FROM notification_job WHERE outbox_id=ob.id AND channel='email'))
+          AND EXISTS(SELECT 1 FROM notification_delivery_log WHERE notification_id=ob.id AND channel='in_app'
+            AND status='delivered' AND attempt_number=1 AND provider_ref=n.id::text)`,
+        [
+          params.occurrenceKey,
+          params.userId,
+          params.eventKey,
+          payload,
+          channels,
+          params.operatingContext,
+        ]
+      );
+      if (!existing.rows[0])
+        throw new Error('Ticket notification occurrence conflicts with saved delivery');
+      return false;
+    }
+    const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
+    const inboxJob = await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done','normal',5,1,$2,$3)`,
+      [outboxId, notice.id, payload]
+    );
+    if (inboxJob.rowCount !== 1) throw new Error('Ticket inbox job was not stored');
+    if (params.eventKey === 'ticket.new_reply') {
+      const emailJob = await transaction.query(
+        `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts)
+         VALUES($1,'email','queued','normal',5,0)`,
+        [outboxId]
+      );
+      if (emailJob.rowCount !== 1) throw new Error('Ticket email job was not stored');
+    }
+    const history = await transaction.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [outboxId, notice.id]
+    );
+    if (history.rowCount !== 1) throw new Error('Ticket inbox delivery history was not stored');
+    return true;
+  }
+
   async createCustomerBusinessEvent(
     params: CreateNotificationParams & {
       profileId: string;

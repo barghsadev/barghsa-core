@@ -237,7 +237,8 @@ export class TicketsService {
     client: PoolClient,
     ticket: TicketRow,
     actorId: string,
-    event: 'created' | 'status' | 'reply' | 'internal' | 'assigned'
+    event: 'created' | 'status' | 'reply' | 'internal' | 'assigned',
+    occurrenceId?: string
   ) {
     const recipients: Array<{ userId: string; staff: boolean }> = [];
     if (event !== 'internal' && ticket.userId !== actorId)
@@ -291,18 +292,34 @@ export class TicketsService {
           },
         ])
       ) as Record<'fa' | 'en', { title: string; body: string }>;
-      await this.notifications.create(
-        {
-          userId,
-          operatingContext: staff ? 'staff' : 'customer',
-          type: 'general',
-          title: localizedContent.en.title,
-          body: localizedContent.en.body,
-          localizedContent,
-          link: `${staff ? '/admin' : ''}/tickets?ticketId=${ticket.id}`,
-        },
-        client
-      );
+      const params = {
+        userId,
+        operatingContext: staff ? 'staff' : 'customer',
+        type: 'general',
+        title: localizedContent.en.title,
+        body: localizedContent.en.body,
+        localizedContent,
+        link: `${staff ? '/admin' : ''}/tickets?ticketId=${ticket.id}`,
+      } as const;
+      const eventKey =
+        event === 'reply'
+          ? 'ticket.new_reply'
+          : staff && (event === 'assigned' || (event === 'created' && ticket.assignedTo === userId))
+            ? 'ticket.assigned'
+            : null;
+      if (eventKey) {
+        const occurrence = event === 'created' ? 'created' : occurrenceId;
+        if (!occurrence) throw new Error('Ticket notice requires the saved occurrence');
+        await this.notifications.createTicketBusinessEvent(
+          {
+            ...params,
+            eventKey,
+            payload: { ticketNumber: ticket.id },
+            occurrenceKey: `${eventKey}:${ticket.id}:${occurrence}:${userId}`,
+          },
+          client
+        );
+      } else await this.notifications.create(params, client);
     }
   }
 
@@ -1796,7 +1813,8 @@ export class TicketsService {
         client,
         mapRow({ ...ticket, status }),
         actorId,
-        visibility === 'internal' ? 'internal' : 'reply'
+        visibility === 'internal' ? 'internal' : 'reply',
+        result.rows[0].id
       );
       if (actor) await requireCurrentSession(client, actor);
       const records = await this.commentRecords(result.rows, client);
@@ -2034,11 +2052,12 @@ export class TicketsService {
           [assigneeUserId, ticketId, assignedTo ?? null, teamId ?? null]
         );
         if (!result.rows[0]) throw new HttpException('Ticket not found', 404);
+        const assignmentId = randomUUID();
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata)
           VALUES ($1,$2,'ticket_assigned',$3::jsonb)`,
           [
-            randomUUID(),
+            assignmentId,
             actorId,
             JSON.stringify({
               ticketId,
@@ -2048,7 +2067,7 @@ export class TicketsService {
             }),
           ]
         );
-        await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'assigned');
+        await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'assigned', assignmentId);
         if (actor) await requireCurrentSession(client, actor);
         return mapRow(result.rows[0]);
       };
