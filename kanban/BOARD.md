@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 453 | Accepted with unchanged source bindings. |
-| verify | 849 | Existing work may be complete; inspect evidence before building. |
+| done | 459 | Accepted with unchanged source bindings. |
+| verify | 843 | Existing work may be complete; inspect evidence before building. |
 | partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,14 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and renew email provider lifecycle, SMTP/Resend configuration, admin authoring and encrypted/masked secrets together. Exercise controlled adapters, self-tests, authority/version/audit and unknown-delivery boundaries. Build only demonstrated gaps. External provider delivery, production secrets and operational evidence remain separate. Preserve pending owner decisions, native financial receipts and all four launch services.
+Inspect and renew SMS.ir configuration, locale-aware mappings, adapter, credit monitoring and staff UI together. Reuse matching provider authority/encryption/OTP and forms evidence; build only demonstrated gaps. Keep external SMS delivery, production mapping/credit/alert receipts and all release gates separate. Preserve verified recipients, throughput, unknown-delivery holds and pending owner decisions.
 
-- `05-notifications-documents-ai.md#T-05.06.01`: Provider config entity & lifecycle
-- `05-notifications-documents-ai.md#T-05.06.02`: SMTP configuration
-- `05-notifications-documents-ai.md#T-05.06.03`: Resend configuration
-- `05-notifications-documents-ai.md#T-05.06.04`: Provider admin UI
-- `05-notifications-documents-ai.md#T-05.06.05`: Secrets encryption & masking
-- `02-auth-users-admin.md#T-09.06.01`: Email transport configuration
+- `05-notifications-documents-ai.md#T-05.07.01`: SMS.ir config entity
+- `05-notifications-documents-ai.md#T-05.07.02`: Template mapping
+- `05-notifications-documents-ai.md#T-05.07.03`: SMS.ir adapter
+- `05-notifications-documents-ai.md#T-05.07.04`: Credit monitoring
+- `05-notifications-documents-ai.md#T-05.07.05`: SMS.ir admin UI
+- `02-auth-users-admin.md#T-09.06.02`: SMS.ir configuration
 
 ## v0.2.0: Complete customer journeys
 
@@ -528,7 +528,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `release-readiness#R-03.01` | todo | Inventory needed | Renew document, notification and AI acceptance |
 | `release-readiness#R-03.02` | todo | Inventory needed | Verify live staging provider and storage boundaries |
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
-| `02-auth-users-admin.md#T-09.06.01` | verify | Earlier acceptance_verified | Email transport configuration |
+| `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | verify | Earlier acceptance_verified | SMS.ir configuration |
 | `02-auth-users-admin.md#T-09.06.03` | done | Earlier acceptance_verified | Notification daytime window configuration |
 | `02-auth-users-admin.md#T-09.11.01` | verify | Earlier acceptance_verified | AI model management |
@@ -558,11 +558,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.05.01` | done | Earlier acceptance_verified | Notification category model |
 | `05-notifications-documents-ai.md#T-05.05.02` | done | Earlier acceptance_verified | Channel availability rules |
 | `05-notifications-documents-ai.md#T-05.05.03` | verify | Earlier acceptance_verified | Consent UI in profile settings |
-| `05-notifications-documents-ai.md#T-05.06.01` | verify | Earlier acceptance_verified | Provider config entity & lifecycle |
-| `05-notifications-documents-ai.md#T-05.06.02` | verify | Earlier acceptance_verified | SMTP configuration |
-| `05-notifications-documents-ai.md#T-05.06.03` | verify | Earlier acceptance_verified | Resend configuration |
-| `05-notifications-documents-ai.md#T-05.06.04` | verify | Earlier acceptance_verified | Provider admin UI |
-| `05-notifications-documents-ai.md#T-05.06.05` | verify | Earlier acceptance_verified | Secrets encryption & masking |
+| `05-notifications-documents-ai.md#T-05.06.01` | done | Earlier acceptance_verified | Provider config entity & lifecycle |
+| `05-notifications-documents-ai.md#T-05.06.02` | done | Earlier acceptance_verified | SMTP configuration |
+| `05-notifications-documents-ai.md#T-05.06.03` | done | Earlier acceptance_verified | Resend configuration |
+| `05-notifications-documents-ai.md#T-05.06.04` | done | Earlier acceptance_verified | Provider admin UI |
+| `05-notifications-documents-ai.md#T-05.06.05` | done | Earlier acceptance_verified | Secrets encryption & masking |
 | `05-notifications-documents-ai.md#T-05.06.06` | partial | Earlier partial | Circuit breaker for email |
 | `05-notifications-documents-ai.md#T-05.06.07` | verify | Earlier acceptance_verified | Email delivery callback handling |
 | `05-notifications-documents-ai.md#T-05.07.01` | verify | Inventory needed | SMS.ir config entity |
