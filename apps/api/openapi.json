@@ -30818,6 +30818,62 @@
         ]
       }
     },
+    "/api/staff/saving/orders/{id}/approve-cancellation": {
+      "post": {
+        "description": "Prepare the bound customer request through the shared contract cancellation review first. Refund amounts and destinations, current fingerprint, financial permission and any second approval remain enforced by that decision.",
+        "operationId": "SavingCancellationController_approve",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "intentId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "intentId",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Execute a saving customer cancellation using its prepared, approved financial decision",
+        "tags": [
+          "Staff · Saving cancellations"
+        ]
+      }
+    },
     "/api/staff/saving/orders/{id}/cancel-hardware-upgrade": {
       "post": {
         "operationId": "SavingFulfillmentController_cancelHardwareUpgrade",
@@ -31068,6 +31124,67 @@
         "summary": "Reject a saving request with reason and refund handling",
         "tags": [
           "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{id}/reject-cancellation": {
+      "post": {
+        "operationId": "SavingCancellationController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "requestId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "requestId",
+                  "reason",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject the selected saving customer cancellation request with an explanation; retain service and invoices",
+        "tags": [
+          "Staff · Saving cancellations"
         ]
       }
     },

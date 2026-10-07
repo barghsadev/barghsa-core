@@ -28,6 +28,7 @@ import {
 } from './contract-review.controller.js';
 import { ContractReviewService } from './contract-review.service.js';
 import { Module } from '@nestjs/common';
+import { SavingCancellationController } from '../saving/saving-cancellation.controller.js';
 import { SessionModule } from '../session/session.module.js';
 import { ContractController } from './contract.controller.js';
 import { ContractService } from './contract.service.js';
@@ -37,6 +38,7 @@ import { DocumentModule } from '../documents/document.module.js';
 @Module({
   imports: [SessionModule, InvoiceModule, AdminModule, DocumentModule],
   controllers: [
+    SavingCancellationController,
     CustomerCancellationRequestController,
     StaffCancellationRequestController,
     StaffContractCancellationStatusController,

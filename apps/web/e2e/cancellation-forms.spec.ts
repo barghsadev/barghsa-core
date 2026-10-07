@@ -94,7 +94,7 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
     route.fulfill({
       json: {
         id,
-        profileId: 'profile',
+        profileId: '33333333-3333-4333-8333-333333333333',
         serviceType,
         state: cancelled ? 'Cancelled' : 'Active',
         ...(staff
@@ -102,6 +102,14 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
           : { version, canAccept: false }),
       },
     })
+  );
+  await page.route(`**${base}/${id}/signature?*`, (route) =>
+    route.fulfill({
+      json: { request: null, signature: null, canRequest: false, canRecord: false },
+    })
+  );
+  await page.route(staff ? '**/api/admin/documents?*' : '**/api/documents?*', (route) =>
+    route.fulfill({ json: { documents: [], nextBefore: null } })
   );
   await page.route(`**${base}/${id}/versions`, (route) =>
     route.fulfill({ json: { versions: [version], nextBefore: null } })

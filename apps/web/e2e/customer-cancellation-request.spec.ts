@@ -60,6 +60,15 @@ for (const locale of ['en', 'fa'] as const)
       });
       for (const staff of [false, true]) {
         const base = staff ? '/api/admin/contracts' : '/api/contracts';
+        await page.route(`**${base}/${id}/signature?*`, (route) =>
+          route.fulfill({
+            json: { request: null, signature: null, canRequest: false, canRecord: false },
+          })
+        );
+        await page.route(staff ? '**/api/admin/documents?*' : '**/api/documents?*', (route) =>
+          route.fulfill({ json: { documents: [], nextBefore: null } })
+        );
+
         await page.route(`**${base}?*`, (route) =>
           route.fulfill({
             json: {

@@ -1261,6 +1261,13 @@
       "when": 1791337911529,
       "tag": "0259_invoice_origin_foreign_keys",
       "breakpoints": true
+    },
+    {
+      "idx": 260,
+      "version": "7",
+      "when": 1791354370239,
+      "tag": "0260_saving_cancellation_financial_closure",
+      "breakpoints": true
     }
   ]
 }

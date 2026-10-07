@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 406 | Accepted with unchanged source bindings. |
-| verify | 886 | Existing work may be complete; inspect evidence before building. |
+| done | 411 | Accepted with unchanged source bindings. |
+| verify | 881 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,13 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing savingcustomer request/staffapprove-or-reject cancellation andorder/contract/invoice/refund consistency. Verify each exactcriterion,builddemonstrated gaps andretain financialpermissions,refunddecision/approval/stepup,atomicity,immutablehistory,retries andstockrelease boundaries. Earlierowner/release/performance gates remainopen.
+Inspect andaccept existing adminprovince/city CRUD andterms editor/version history againsteach exactcriterion,includingcurrent grants,active/correlated data,search/locales,versioned config/audits,rich text/preview/diff,major/minor reacceptance,history andsession-retry boundaries. Buildonlydemonstrated gaps;reuse source-bound evidence. Earlierowner/release/performance/operational gates remainopen.
 
-- `03-core-business.md#T-03.09.05.01`: Customer cannot cancel directly. Button/link to "Request cancellation" with reason field.
-- `03-core-business.md#T-03.09.05.02`: Staff cancellation review UI: queue of cancellation requests with order details, customer reason
-- `03-core-business.md#T-03.09.05.03`: Staff API: `POST /staff/saving/orders/:id/approve-cancellation` — sets order, contract, invoice states consistently. Determines refund amount (full/partial) and destination (wallet/external).
-- `03-core-business.md#T-03.09.05.04`: Staff API: `POST /staff/saving/orders/:id/reject-cancellation` — with explanation. Contract unchanged.
-- `03-core-business.md#T-03.09.05.05`: All state transitions must be consistent across order, contract, and invoice. Records are never deleted.
+- `02-auth-users-admin.md#T-09.02.01`: Province CRUD
+- `02-auth-users-admin.md#T-09.02.02`: City CRUD per province
+- `02-auth-users-admin.md#T-09.03.01`: TOS editor
+- `02-auth-users-admin.md#T-09.03.02`: TOS version history
 
 ## v0.2.0: Complete customer journeys
 
@@ -372,11 +371,11 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.08.02.02` | done | Recorded batch work | Customer acceptance is not required, but contractual basis, reason, calculation, old/new price, and effective date must be visible to customer before the adjustment is finalized. |
 | `03-core-business.md#T-03.08.02.03` | done | Recorded batch work | Requires explicit permission, step-up authentication, auditing, and mandatory customer notification. |
 | `03-core-business.md#T-03.08.02.04` | done | Recorded batch work | Initially no configurable percentage cap on staff price adjustments. Non-payment follows normal invoice Overdue workflow — does not silently change historical service. |
-| `03-core-business.md#T-03.09.05.01` | verify | Recorded batch work | Customer cannot cancel directly. Button/link to "Request cancellation" with reason field. |
-| `03-core-business.md#T-03.09.05.02` | verify | Inventory needed | Staff cancellation review UI: queue of cancellation requests with order details, customer reason |
-| `03-core-business.md#T-03.09.05.03` | verify | Inventory needed | Staff API: `POST /staff/saving/orders/:id/approve-cancellation` — sets order, contract, invoice states consistently. Determines refund amount (full/partial) and destination (wallet/external). |
-| `03-core-business.md#T-03.09.05.04` | verify | Inventory needed | Staff API: `POST /staff/saving/orders/:id/reject-cancellation` — with explanation. Contract unchanged. |
-| `03-core-business.md#T-03.09.05.05` | verify | Recorded batch work | All state transitions must be consistent across order, contract, and invoice. Records are never deleted. |
+| `03-core-business.md#T-03.09.05.01` | done | Recorded batch work | Customer cannot cancel directly. Button/link to "Request cancellation" with reason field. |
+| `03-core-business.md#T-03.09.05.02` | done | Recorded batch work | Staff cancellation review UI: queue of cancellation requests with order details, customer reason |
+| `03-core-business.md#T-03.09.05.03` | done | Recorded batch work | Staff API: `POST /staff/saving/orders/:id/approve-cancellation` — sets order, contract, invoice states consistently. Determines refund amount (full/partial) and destination (wallet/external). |
+| `03-core-business.md#T-03.09.05.04` | done | Recorded batch work | Staff API: `POST /staff/saving/orders/:id/reject-cancellation` — with explanation. Contract unchanged. |
+| `03-core-business.md#T-03.09.05.05` | done | Recorded batch work | All state transitions must be consistent across order, contract, and invoice. Records are never deleted. |
 | `03-core-business.md#T-03.10.01.01` | done | Recorded batch work | Define 5 fulfillment stages: |
 | `03-core-business.md#T-03.10.01.02` | done | Recorded batch work | Staff UI: order detail with stage advancement controls. Each stage advancement records previous/new state, actor, timestamp, explanation. |
 | `03-core-business.md#T-03.10.01.03` | done | Recorded batch work | Customer UI: progress bar showing 5 stages, current stage highlighted, completed stages marked. |

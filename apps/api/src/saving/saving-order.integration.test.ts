@@ -1,6 +1,8 @@
 import { expectCoreAudit } from '../test/core-audit.js';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { expireSavingInventory } from '@barghsa/db/saving-inventory';
@@ -4470,3 +4472,328 @@ it('limits gift-code guesses across saving and electricity quotes without blocki
   const ordinary = await request('/api/saving/orders/quote', 'POST', input);
   expect(ordinary.status, http.logs()).toBe(201);
 }, 60000);
+
+it('binds specified saving cancellation routes to customer requests, approved decisions and completed partial returns', async () => {
+  const reserved = (
+    await http.pool.query<{ reserved_count: number }>(
+      'SELECT reserved_count FROM products WHERE id=$1',
+      [input.hardwareProductId]
+    )
+  ).rows[0]!.reserved_count;
+  const stock = await request(
+    `/api/admin/catalogue/hardware/${input.hardwareProductId}/inventory`,
+    'PUT',
+    { stockTracking: true, stockCount: reserved + 1, reservationMinutes: 30 },
+    staffHeaders
+  );
+  expect(stock.status, http.logs()).toBe(200);
+  const agreement = (
+    await http.pool.query<{ id: string }>(
+      "SELECT id FROM saving_plan_agreement_versions WHERE plan_id=$1 AND status='active'",
+      [input.savingPlanId]
+    )
+  ).rows[0]!.id;
+  const body = { ...input, agreementVersionId: agreement, billIdentifier: '1234567890992' };
+  const quoteResponse = await request('/api/saving/orders/quote', 'POST', body);
+  expect(quoteResponse.status, http.logs()).toBe(201);
+  const quote = (await quoteResponse.json()) as { reviewDigest: string; totalIrR: string };
+  const submitted = await request('/api/saving/orders', 'POST', {
+    ...body,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: quote.reviewDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(submitted.status, await submitted.clone().text()).toBe(201);
+  const order = (await submitted.json()) as {
+    savingOrderId: string;
+    contractId: string;
+    invoiceId: string;
+    orderId: string;
+  };
+  const detail = (await (
+    await request(`/api/saving/orders/${order.savingOrderId}`, 'GET')
+  ).json()) as { contract_version_id: string };
+  const base = `/api/staff/saving/orders/${order.savingOrderId}`;
+  const requestPath = `/api/contracts/${order.contractId}/cancellation-requests`;
+  const submitRequest = async () => {
+    const response = await request(requestPath, 'POST', {
+      expectedVersionId: detail.contract_version_id,
+      reason: 'Please cancel the device installation',
+      preferredDestination: 'wallet',
+      idempotencyKey: randomUUID(),
+    });
+    expect(response.status, http.logs()).toBe(201);
+    return (await response.json()) as { id: string };
+  };
+  const first = await submitRequest();
+  const rejection = {
+    requestId: first.id,
+    reason: 'Confirm the installation address first',
+    idempotencyKey: randomUUID(),
+  };
+  const beforeReject = await savingOperationsSnapshot(order.savingOrderId);
+  expect((await request(base + '/reject-cancellation', 'POST', rejection)).status).toBe(403);
+  expect(
+    (
+      await request(
+        base + '/reject-cancellation',
+        'POST',
+        { ...rejection, requestId: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(404);
+  expect(await savingOperationsSnapshot(order.savingOrderId)).toEqual(beforeReject);
+  const rejected = await request(base + '/reject-cancellation', 'POST', rejection, staffHeaders);
+  expect(rejected.status, http.logs()).toBe(201);
+  expect(await rejected.json()).toMatchObject({ status: 'Rejected' });
+  expect(
+    (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [order.contractId])).rows[0]
+      .state
+  ).toBe('AwaitingStaffReview');
+  const afterRejected = await savingOperationsSnapshot(order.savingOrderId);
+  expect(
+    (await request(base + '/reject-cancellation', 'POST', rejection, staffHeaders)).status
+  ).toBe(201);
+  expect(await savingOperationsSnapshot(order.savingOrderId)).toEqual(afterRejected);
+  await http.pool.query(
+    `INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES($1,1000000,0)
+    ON CONFLICT(profile_id) DO UPDATE SET posted_balance=wallets.posted_balance+1000000`,
+    [input.profileId]
+  );
+  const paymentPath = `/api/invoices/${order.invoiceId}/wallet-payment`;
+  const paymentReview = (await (await request(paymentPath, 'GET')).json()) as {
+    review: { hash: string };
+  };
+  expect(
+    (
+      await request(paymentPath, 'POST', {
+        idempotencyKey: randomUUID(),
+        expectedRemainingAmount: quote.totalIrR,
+        expectedReviewHash: paymentReview.review.hash,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const second = await submitRequest();
+  const previewResponse = await request(
+    `/api/admin/contracts/${order.contractId}/cancellation-preview`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(previewResponse.status, http.logs()).toBe(200);
+  const preview = (await previewResponse.json()) as { fingerprint: string };
+  const amount = (BigInt(quote.totalIrR) / 2n).toString();
+  await http.pool
+    .query(`INSERT INTO app_config(key,value) VALUES('finance.dual_approval_threshold','{"threshold_irr":1}')
+    ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`);
+  const prepared = await request(
+    `/api/admin/contracts/${order.contractId}/cancellations`,
+    'POST',
+    {
+      expectedVersionId: detail.contract_version_id,
+      expectedFingerprint: preview.fingerprint,
+      reason: 'Return half of the paid price; retain the agreed installation fee',
+      customerRequestId: second.id,
+      refundDecision: {
+        mode: 'custom',
+        refunds: [{ invoiceId: order.invoiceId, amount, destination: 'wallet' }],
+      },
+      idempotencyKey: randomUUID(),
+    },
+    staffHeaders
+  );
+  expect(prepared.status, http.logs()).toBe(201);
+  const intent = (await prepared.json()) as {
+    id: string;
+    approvalRequestId: string;
+    status: string;
+  };
+  expect(intent.status).toBe('awaiting_approval');
+  const command = { intentId: intent.id, idempotencyKey: randomUUID() };
+  const beforeApproval = await savingSystemSnapshot(order.savingOrderId);
+  expect((await request(base + '/approve-cancellation', 'POST', command)).status).toBe(403);
+  expect(
+    (
+      await request(
+        base + '/approve-cancellation',
+        'POST',
+        { ...command, intentId: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(404);
+  expect(
+    (await request(base + '/approve-cancellation', 'POST', command, staffHeaders)).status
+  ).toBe(409);
+  expect(await savingSystemSnapshot(order.savingOrderId)).toEqual(beforeApproval);
+  const reviewer = randomUUID(),
+    session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES($1,$1,'test-only',true)",
+    [reviewer]
+  );
+  await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES($1,'role-finance')", [
+    reviewer,
+  ]);
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+    VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    [session, reviewer, csrf, randomUUID()]
+  );
+  const reviewerHeaders = {
+    Cookie: `barghsa_session=${session}`,
+    'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+  expect(
+    (
+      await request(
+        `/api/admin/approval-requests/${intent.approvalRequestId}/approve`,
+        'POST',
+        {},
+        reviewerHeaders
+      )
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const executed = await request(base + '/approve-cancellation', 'POST', command, staffHeaders);
+  expect(executed.status, http.logs()).toBe(201);
+  const receipt = (await executed.json()) as { refunds: Array<{ id: string; amount: string }> };
+  expect(receipt.refunds).toMatchObject([{ amount }]);
+  const after = await savingSystemSnapshot(order.savingOrderId);
+  expect(
+    (await request(base + '/approve-cancellation', 'POST', command, staffHeaders)).status
+  ).toBe(201);
+  expect(await savingSystemSnapshot(order.savingOrderId)).toEqual(after);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT s.status,s.financial_status,c.state AS contract_state,o.status AS order_status
+    FROM saving_orders s JOIN contracts c ON c.order_id=s.order_id JOIN orders o ON o.id=s.order_id WHERE s.id=$1`,
+        [order.savingOrderId]
+      )
+    ).rows[0]
+  ).toMatchObject({
+    status: 'cancelled',
+    financial_status: 'refund_pending',
+    contract_state: 'Cancelled',
+    order_status: 'CANCELLED',
+  });
+  expect(await runWalletRefund(http.pool, receipt.refunds[0]!.id)).toBe('completed');
+  const closure = await request(
+    `/api/admin/contracts/${order.contractId}/cancellation-status`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(closure.status, http.logs()).toBe(200);
+  expect(await closure.json()).toMatchObject({
+    financiallyClosed: true,
+    financialStatus: 'closed',
+    returnedAmount: amount,
+  });
+  expect(
+    (
+      await http.pool.query('SELECT state,paid_amount,refunded_amount FROM invoices WHERE id=$1', [
+        order.invoiceId,
+      ])
+    ).rows[0]
+  ).toMatchObject({
+    state: 'PartiallyRefunded',
+    paid_amount: quote.totalIrR,
+    refunded_amount: amount,
+  });
+  expect(
+    (
+      await http.pool.query('SELECT financial_status FROM saving_orders WHERE id=$1', [
+        order.savingOrderId,
+      ])
+    ).rows[0].financial_status
+  ).toBe('refunded');
+  const financialHistory = async () => {
+    const result = [];
+    for (const [table, key] of [
+      ['wallets', 'profile_id'],
+      ['wallet_transactions', 'id'],
+      ['invoices', 'id'],
+      ['refunds', 'id'],
+      ['refund_transactions', 'id'],
+      ['contract_cancellations', 'contract_id'],
+      ['contract_cancellation_intents', 'id'],
+      ['contract_refund_obligations', 'refund_id'],
+      ['audit_log', 'id'],
+    ] as const)
+      result.push(
+        (await http.pool.query(`SELECT to_jsonb(row) AS value FROM ${table} row ORDER BY ${key}`))
+          .rows
+      );
+    return result;
+  };
+  const historyBefore = await financialHistory();
+  // Reproduce the stale derived flag left by the pre-upgrade partial-return mapping.
+  await http.pool.query("UPDATE saving_orders SET financial_status='refund_pending' WHERE id=$1", [
+    order.savingOrderId,
+  ]);
+  const migration = readFileSync(
+    resolve(
+      __dirname,
+      '../../../../packages/db/drizzle/production/0260_saving_cancellation_financial_closure.sql'
+    ),
+    'utf8'
+  );
+  const backfill = migration.split('--> statement-breakpoint').at(-1)!;
+  await http.pool.query(backfill);
+  expect(
+    (
+      await http.pool.query('SELECT financial_status FROM saving_orders WHERE id=$1', [
+        order.savingOrderId,
+      ])
+    ).rows[0].financial_status
+  ).toBe('refunded');
+  expect(await financialHistory()).toEqual(historyBefore);
+  await http.pool.query(backfill);
+  expect(await financialHistory()).toEqual(historyBefore);
+  const prior = readFileSync(
+    resolve(__dirname, '../../../../packages/db/drizzle/production/0161_saving_orders.sql'),
+    'utf8'
+  );
+  const start = prior.indexOf('CREATE FUNCTION sync_saving_order_financial_status');
+  const restore = prior
+    .slice(start, prior.indexOf('--> statement-breakpoint', start))
+    .replace('CREATE FUNCTION', 'CREATE OR REPLACE FUNCTION');
+  const rollbackClient = await http.pool.connect();
+  try {
+    await rollbackClient.query('BEGIN');
+    await rollbackClient.query(`DROP TRIGGER saving_cancellation_financial_sync ON contract_cancellations;
+      DROP TRIGGER saving_cancellation_obligation_sync ON contract_refund_obligations;
+      DROP TRIGGER saving_cancellation_refund_sync ON refunds;
+      DROP TRIGGER saving_cancellation_transaction_sync ON refund_transactions;`);
+    await rollbackClient.query(restore);
+    await rollbackClient.query(
+      'DROP FUNCTION sync_saving_cancellation_return();DROP FUNCTION refresh_saving_cancellation_financial_status(uuid)'
+    );
+    expect(
+      (
+        await rollbackClient.query(
+          "SELECT to_regprocedure('refresh_saving_cancellation_financial_status(uuid)') AS fn"
+        )
+      ).rows[0].fn
+    ).toBeNull();
+  } finally {
+    await rollbackClient.query('ROLLBACK');
+    rollbackClient.release();
+  }
+  expect(
+    (
+      await http.pool.query(
+        "SELECT to_regprocedure('refresh_saving_cancellation_financial_status(uuid)') AS fn"
+      )
+    ).rows[0].fn
+  ).not.toBeNull();
+  expect(await financialHistory()).toEqual(historyBefore);
+}, 90000);
