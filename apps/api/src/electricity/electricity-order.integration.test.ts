@@ -1,3 +1,4 @@
+import { expectCancellationRequestDelivery } from '../test/cancellation-request-notification-proof.js';
 import {
   seedElectricityTerminalSignature,
   electricityTerminalEvidence,
@@ -1550,6 +1551,34 @@ it('queues the exact order for staff and approves it once with customer notifica
     )
   ).rows[0].count;
   expect(notices).toBeGreaterThan(0);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  const cancellationRequest = await fetch(
+    `${http.base}/api/contracts/${order.contractId}/cancellation-requests`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        expectedVersionId: detail.versionId,
+        idempotencyKey: randomUUID(),
+        reason: 'Please review this electricity cancellation request',
+        preferredDestination: 'wallet',
+      }),
+    }
+  );
+  expect(cancellationRequest.status, http.logs()).toBe(201);
+  const cancellationId = ((await cancellationRequest.json()) as { id: string }).id;
+  await expectCancellationRequestDelivery(
+    http.pool,
+    order.contractId,
+    cancellationId,
+    'buyer',
+    order.orderId,
+    `/electricity/orders/${order.orderId}`
+  );
+  expect(
+    (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [order.contractId])).rows[0]
+      .state
+  ).toBe('AwaitingCustomerAcceptance');
 });
 
 it('requires a reason and leaves an unpaid rejected order financially closed', async () => {

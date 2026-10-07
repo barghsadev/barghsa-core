@@ -7,6 +7,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
 const production = resolve('drizzle/production');
 const previous = mkdtempSync(join(tmpdir(), 'saving-system-audit-upgrade-'));
+const scoped = mkdtempSync(join(tmpdir(), 'saving-system-audit-scope-'));
 const name = 'test_saving_system_audit_' + randomUUID().replaceAll('-', '');
 let pool: Pool, management: Pool, connection: { pgdirectUrl: string };
 let legacy: Awaited<ReturnType<typeof seed>>, history: Awaited<ReturnType<typeof snapshot>>;
@@ -21,6 +22,15 @@ beforeAll(async () => {
   writeFileSync(join(previous, 'meta/_journal.json'), JSON.stringify(prior));
   for (const e of prior.entries)
     copyFileSync(join(production, e.tag + '.sql'), join(previous, e.tag + '.sql'));
+  // This fixture proves 0252 against 0251, independently of later migrations.
+  const own = {
+    ...journal,
+    entries: journal.entries.filter((entry: { idx: number }) => entry.idx <= 252),
+  };
+  mkdirSync(join(scoped, 'meta'));
+  writeFileSync(join(scoped, 'meta/_journal.json'), JSON.stringify(own));
+  for (const entry of own.entries)
+    copyFileSync(join(production, entry.tag + '.sql'), join(scoped, entry.tag + '.sql'));
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
   await management.query(`CREATE DATABASE "${name}"`);
   const url = new URL(process.env.TEST_DATABASE_URL!);
@@ -30,7 +40,7 @@ beforeAll(async () => {
   pool = new Pool({ connectionString: url.toString() });
   legacy = await seed();
   history = await snapshot(legacy);
-  migration = await runMigrations({ connection });
+  migration = await runMigrations({ connection, migrationsFolder: scoped });
 }, 30000);
 afterAll(async () => {
   await pool?.end();
@@ -39,6 +49,7 @@ afterAll(async () => {
   } finally {
     await management?.end();
     rmSync(previous, { recursive: true, force: true });
+    rmSync(scoped, { recursive: true, force: true });
   }
 }, 30000);
 async function seed(tracked = true) {
@@ -167,7 +178,10 @@ it('upgrades251 without rewriting historical rows or stock and replays safely', 
   expect(await snapshot(legacy)).toEqual(history);
   expect(history.audits).toHaveLength(1);
   expect(history.audits[0].parsed).not.toHaveProperty('entity');
-  expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+  expect(await runMigrations({ connection, migrationsFolder: scoped })).toEqual({
+    ok: true,
+    applied: [],
+  });
   expect(await snapshot(legacy)).toEqual(history);
 });
 it('reserves, allocates and releases once with exact states and unchanged stock semantics', async () => {

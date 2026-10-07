@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and complete saving SQL contract-cancellation propagation status notifications. Preserve native full-refund/partial-return/inventory/contract/audit/authorization/session/idempotency/replay boundaries and existing accepted contract cancellation notice. Prove native electricity/solar request reference mappings through existing flows, then inspect remaining electricity/generic/system status writers. Reuse accepted producers and preserve other Appendix/template/owner/provider/operations criteria.
+Inspect remaining electricity review/revision/system status writers and existing notices before changes. Complete required order.status_changed with exact variables,private current owner,immediate inbox and atomic email. Preserve price/quantity/snapshots/refunds/gifts/audits/review/authority/session/idempotency/replay,Cancelled versus Rejected and same-state information. Retain accepted submission/customer cancellation/contract/saving/solar/consultation/request families; keep other Appendix/template/provider/owner/operations criteria explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

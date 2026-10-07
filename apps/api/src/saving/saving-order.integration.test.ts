@@ -3492,10 +3492,25 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(preparedCancellation.status, http.logs()).toBe(201);
   const cancellationIntentId = ((await preparedCancellation.json()) as { id: string }).id;
+  const cancellationCommand = { intentId: cancellationIntentId, idempotencyKey: randomUUID() };
+  await expectSavingStatusRollback(
+    http.pool,
+    cancellationOrder.savingOrderId,
+    'cancelled',
+    () =>
+      request(
+        `/api/admin/contracts/${cancellationOrder.contractId}/cancellations/execute`,
+        'POST',
+        cancellationCommand,
+        staffHeaders
+      ),
+    false,
+    { raise: 500, suppress: 409 }
+  );
   const executedCancellation = await request(
     `/api/admin/contracts/${cancellationOrder.contractId}/cancellations/execute`,
     'POST',
-    { intentId: cancellationIntentId, idempotencyKey: randomUUID() },
+    cancellationCommand,
     staffHeaders
   );
   expect(executedCancellation.status, http.logs()).toBe(201);
@@ -3503,6 +3518,31 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     refunds: Array<{ id: string; amount: string }>;
   };
   expect(cancellationResult.refunds).toMatchObject([{ amount: cancellationQuote.totalIrR }]);
+  await expectSavingStatusDeliveries(
+    http.pool,
+    cancellationOrder.savingOrderId,
+    'saving-order-buyer',
+    ['cancelled'],
+    [
+      `order.status_changed:saving:${cancellationOrder.savingOrderId}:contract_cancel:${cancellationVersion}:saving-order-buyer`,
+    ]
+  );
+  const cancelledDelivery = await savingDeliverySnapshot(
+    http.pool,
+    cancellationOrder.savingOrderId
+  );
+  const cancellationReplay = await request(
+    `/api/admin/contracts/${cancellationOrder.contractId}/cancellations/execute`,
+    'POST',
+    cancellationCommand,
+    staffHeaders
+  );
+  expect(cancellationReplay.status, http.logs()).toBe(201);
+  expect(await cancellationReplay.json()).toEqual(cancellationResult);
+  expect(await savingDeliverySnapshot(http.pool, cancellationOrder.savingOrderId)).toEqual(
+    cancelledDelivery
+  );
+
   expect(
     (
       await http.pool.query(
@@ -3523,6 +3563,9 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     request: { status: 'Fulfilled' },
   });
   expect(await runWalletRefund(http.pool, cancellationResult.refunds[0]!.id)).toBe('completed');
+  expect(await savingDeliverySnapshot(http.pool, cancellationOrder.savingOrderId)).toEqual(
+    cancelledDelivery
+  );
   expect(
     (
       await http.pool.query('SELECT financial_status FROM saving_orders WHERE id=$1', [

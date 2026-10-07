@@ -1,3 +1,4 @@
+import { expectCancellationRequestDelivery } from '../test/cancellation-request-notification-proof.js';
 import {
   expectSolarAudit,
   expectSolarPostalAudit,
@@ -1189,6 +1190,31 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   const foreignActorReplay = await send(otherStaff, contractBase, 'POST', command);
   expect(foreignActorReplay.status, http.logs()).toBe(409);
   expect(await solarContractEffects()).toEqual(afterPublishedContract);
+  const cancellationRequest = await send(
+    'postal-buyer',
+    `contracts/${result.contractId}/cancellation-requests`,
+    'POST',
+    {
+      expectedVersionId: contractVersionId,
+      idempotencyKey: randomUUID(),
+      reason: 'Please review cancellation of this solar request',
+      preferredDestination: 'wallet',
+    }
+  );
+  expect(cancellationRequest.status, http.logs()).toBe(201);
+  const cancellationId = ((await cancellationRequest.json()) as { id: string }).id;
+  await expectCancellationRequestDelivery(
+    http.pool,
+    result.contractId,
+    cancellationId,
+    'postal-buyer',
+    id,
+    `/solar/requests/${id}`
+  );
+  expect(
+    (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [result.contractId])).rows[0]
+      .state
+  ).toBe('AwaitingCustomerAcceptance');
 }, 90_000);
 
 afterAll(async () => {

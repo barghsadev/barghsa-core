@@ -5,7 +5,8 @@ export async function expectSavingStatusDeliveries(
   pool: Pool,
   id: string,
   owner: string,
-  statuses: string[]
+  statuses: string[],
+  occurrenceKeys?: string[]
 ) {
   const rows = (
     await pool.query(
@@ -14,14 +15,17 @@ export async function expectSavingStatusDeliveries(
     )
   ).rows;
   expect(rows.map((r) => r.payload.status)).toEqual(statuses);
-  for (const row of rows) {
+  if (occurrenceKeys) expect(occurrenceKeys).toHaveLength(rows.length);
+  for (const [index, row] of rows.entries()) {
     const prefix = `order.status_changed:saving:${id}:`,
       suffix = `:${owner}`;
     expect(row.idempotency_key.startsWith(prefix)).toBe(true);
     expect(row.idempotency_key.endsWith(suffix)).toBe(true);
-    expect(row.idempotency_key.slice(prefix.length, -suffix.length)).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
-    );
+    if (occurrenceKeys) expect(row.idempotency_key).toBe(occurrenceKeys[index]);
+    else
+      expect(row.idempotency_key.slice(prefix.length, -suffix.length)).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+      );
     expect(row).toMatchObject({
       user_id: owner,
       channels: ['in_app', 'email'],
@@ -106,7 +110,8 @@ export async function expectSavingStatusRollback(
   id: string,
   status: string,
   work: () => Promise<Response>,
-  outboxOnly = false
+  outboxOnly = false,
+  failureStatuses: Record<'raise' | 'suppress', number> = { raise: 500, suppress: 500 }
 ) {
   const tables = (
     await pool.query(
@@ -149,13 +154,13 @@ export async function expectSavingStatusRollback(
         ]
       : []),
   ])
-    for (const mode of ['raise', 'suppress']) {
+    for (const mode of ['raise', 'suppress'] as const) {
       const before = await snapshot();
       await pool.query(
         `CREATE FUNCTION fail_saving_status_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'saving status notice unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_saving_status_notice BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_saving_status_notice()`
       );
       try {
-        expect((await work()).status).toBe(500);
+        expect((await work()).status).toBe(failureStatuses[mode]);
         const after = await snapshot();
         expect(after).toEqual(before);
       } finally {

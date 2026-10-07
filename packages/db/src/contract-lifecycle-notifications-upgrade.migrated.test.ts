@@ -7,6 +7,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
 const production = resolve('drizzle/production');
 const previous = mkdtempSync(join(tmpdir(), 'contract-lifecycle-notification-upgrade-'));
+const scoped = mkdtempSync(join(tmpdir(), 'contract-lifecycle-notification-scope-'));
 const name = `test_lifecycle_upgrade_${randomUUID().replaceAll('-', '')}`;
 let management: Pool, pool: Pool, connection: { pgdirectUrl: string };
 beforeAll(async () => {
@@ -19,6 +20,15 @@ beforeAll(async () => {
   writeFileSync(join(previous, 'meta/_journal.json'), JSON.stringify(prior));
   for (const entry of prior.entries)
     copyFileSync(join(production, entry.tag + '.sql'), join(previous, entry.tag + '.sql'));
+  // Keep the original 0263 upgrade/replay assertions specific to their migration.
+  const own = {
+    ...journal,
+    entries: journal.entries.filter((entry: { idx: number }) => entry.idx <= 263),
+  };
+  mkdirSync(join(scoped, 'meta'));
+  writeFileSync(join(scoped, 'meta/_journal.json'), JSON.stringify(own));
+  for (const entry of own.entries)
+    copyFileSync(join(production, entry.tag + '.sql'), join(scoped, entry.tag + '.sql'));
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
   await management.query(`CREATE DATABASE "${name}"`);
   const url = new URL(process.env.TEST_DATABASE_URL!);
@@ -34,6 +44,7 @@ afterAll(async () => {
   } finally {
     await management?.end();
     rmSync(previous, { recursive: true, force: true });
+    rmSync(scoped, { recursive: true, force: true });
   }
 });
 async function create() {
@@ -108,7 +119,7 @@ it('preserves every old contract, activation, audit and delivery row and every e
   ]);
   const saved = await snapshot(),
     definitions = await functions();
-  expect(await runMigrations({ connection })).toEqual({
+  expect(await runMigrations({ connection, migrationsFolder: scoped })).toEqual({
     ok: true,
     applied: ['0263_contract_lifecycle_notifications'],
   });
@@ -116,7 +127,10 @@ it('preserves every old contract, activation, audit and delivery row and every e
   const current = await functions();
   for (const definition of definitions)
     expect(current.find((row) => row.oid === definition.oid)).toEqual(definition);
-  expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+  expect(await runMigrations({ connection, migrationsFolder: scoped })).toEqual({
+    ok: true,
+    applied: [],
+  });
   expect(await snapshot()).toEqual(saved);
   const fresh = await create();
   expect(

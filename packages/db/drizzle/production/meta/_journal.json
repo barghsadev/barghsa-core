@@ -1289,6 +1289,13 @@
       "when": 1791376443770,
       "tag": "0263_contract_lifecycle_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 264,
+      "version": "7",
+      "when": 1791388146999,
+      "tag": "0264_saving_cancellation_notifications",
+      "breakpoints": true
     }
   ]
 }
