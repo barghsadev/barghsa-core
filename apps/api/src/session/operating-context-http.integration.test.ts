@@ -206,3 +206,68 @@ it('cannot switch an ordinary customer into staff authority', async () => {
     ).rows[0]
   ).toMatchObject({ operating_context: 'customer', revoked_at: null });
 });
+
+for (const context of ['staff', 'customer'] as const) {
+  for (const setting of ['timezone', 'theme'] as const) {
+    it(`shares the self-owned ${setting} preference in ${context} context without other-account authority`, async () => {
+      const owner = randomUUID(),
+        other = randomUUID(),
+        session = randomUUID(),
+        csrf = randomUUID();
+      await fixture.pool.query(
+        "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$1||'@example.test','test-only',true),($2,$2||'@example.test','test-only',false)",
+        [owner, other]
+      );
+      await fixture.pool.query(
+        "INSERT INTO sessions(session_id,user_id,csrf_token,operating_context,expires_at,idle_deadline) VALUES ($1,$2,$3,$4,clock_timestamp()+INTERVAL '1 day',clock_timestamp()+INTERVAL '30 minutes')",
+        [session, owner, csrf, context]
+      );
+      const path = `${fixture.base}/api/user/settings/${setting}`;
+      const headers = {
+        ...auth(session, csrf),
+        'X-CSRF-Token': csrf,
+        'Content-Type': 'application/json',
+      };
+      const value = setting === 'timezone' ? { timezone: 'UTC' } : { mode: 'dark' };
+      expect((await fetch(path, { headers })).status).toBe(200);
+      expect(
+        (
+          await fetch(path, {
+            method: 'PUT',
+            headers: auth(session, csrf),
+            body: JSON.stringify(value),
+          })
+        ).status
+      ).toBe(403);
+      expect(
+        (
+          await fetch(path, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify({ ...value, userId: other }),
+          })
+        ).status
+      ).toBe(400);
+      const response = await fetch(path, { method: 'PUT', headers, body: JSON.stringify(value) });
+      expect(response.status).toBe(200);
+      expect(await (await fetch(path, { headers })).json()).toEqual(value);
+      expect(
+        (
+          await fixture.pool.query('SELECT timezone,theme_mode FROM users WHERE user_id=$1', [
+            other,
+          ])
+        ).rows
+      ).toEqual([{ timezone: 'Asia/Tehran', theme_mode: null }]);
+      if (context === 'staff') {
+        for (const customerPath of [
+          '/api/profiles',
+          '/api/user/settings/notifications',
+          '/api/user/analytics/consent',
+        ])
+          expect((await fetch(`${fixture.base}${customerPath}`, { headers })).status).toBe(403);
+      } else {
+        expect((await fetch(`${fixture.base}/api/admin/staff`, { headers })).status).toBe(403);
+      }
+    });
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "fc4ef75261a9164ff3fa5a618544749f21bd8344",
+  "source_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17037,7 +17037,8 @@
           "release-0.3-invoice-core",
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
-          "release-0.3-electricity-price-credit-settlement"
+          "release-0.3-electricity-price-credit-settlement",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -17297,7 +17298,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -17393,7 +17394,8 @@
             "441 distinct passing cases total; repeats and skips excluded. API/DB types, API production build, changed lint/format and SAST pass. Auth predicates, historical SQL/journal, schema/snapshot and web/worker/shared outputs remain source-bound. Full proof: /Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
             "Scoped refund notice test renewal only: one existing wallet refund/backoff case now requires exactly1 Failed and1 Completed notice and excludes private provider text. Every original current Finance/session/CSRF/step-up,recent-proof/final-expiry,approval/idempotency,one-credit/exact-money/rollback assertion remains. All other test cases and step-up implementation/compiled API source unchanged.97 unaffected cases retained plus2 corrected notice cases pass against final emitted shared DB,along with48 captured verification browser cases. This renews only changed test binding; other original acceptance/limitations remain. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
-            "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations"
+            "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -17408,15 +17410,12 @@
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
           },
           "scoped_renewal": {
-            "batch": "release-0.3-saving-cancellation",
-            "reviewed_base_commit": "a3656122114ba249a0f0c97bedb13e34c700f062",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "packages/db/drizzle/production/meta/_journal.json"
-            ],
-            "checks": [
-              "Allother bound source exact. LegacyAPI operations/schemas exact; moduleaddsone guardedadapter. Allold migrationjournalentries andschema contentexact; newSQLonlyderivedrecordedCancelledSavingfinancialstatus. Allold savingjourney/assertions retained andfresh8 saving+77 sharedHTTP+64 DB+60 UI+36browser cases pass. No broader task acceptance inferred."
-            ],
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation"
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
           }
         }
       }
@@ -21884,7 +21883,8 @@
         ],
         "batches": [
           "release-0.3-solar-document-review",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -21948,7 +21948,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22081,7 +22081,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22187,12 +22188,11 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/tos-http.integration.test.ts",
-              "apps/api/src/tos/tos.service.ts"
+              "apps/web/e2e/admin-settings-live.spec.ts"
             ]
           }
         }
@@ -22278,7 +22278,8 @@
         ],
         "batches": [
           "release-0.3-solar-document-review",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -22342,7 +22343,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22475,7 +22476,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22581,12 +22583,11 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/tos-http.integration.test.ts",
-              "apps/api/src/tos/tos.service.ts"
+              "apps/web/e2e/admin-settings-live.spec.ts"
             ]
           }
         }
@@ -22680,7 +22681,8 @@
         ],
         "batches": [
           "release-0.3-solar-document-review",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -22744,7 +22746,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22877,7 +22879,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22983,12 +22986,11 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/tos-http.integration.test.ts",
-              "apps/api/src/tos/tos.service.ts"
+              "apps/web/e2e/admin-settings-live.spec.ts"
             ]
           }
         }
@@ -28579,7 +28581,8 @@
           "2026-09-20-geography-browser-stability",
           "2026-10-05-geography-native-forms",
           "2026-10-05-geography-tables",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -28695,7 +28698,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -28810,13 +28813,22 @@
             "328 distinct passing cases:167 API (153 final geography/terms/registration/commercial cases and14 selected migrated geography authority/reference/import cases),85 UI,72 bilingual desktop/mobile fixture browser and4 real migrated-API terms publication browser cases. Earlier 133-case run is duplicate compatibility evidence; red failures and skipped cases excluded.",
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
-            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained."
+            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
             "Local acceptance does not certify staging deployment, external financial settlement,production operational evidence or launch gates. Production still requires explicit owner authorization.",
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -28929,7 +28941,8 @@
         ],
         "batches": [
           "2026-10-05-geography-native-forms",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -29045,7 +29058,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -29160,13 +29173,22 @@
             "328 distinct passing cases:167 API (153 final geography/terms/registration/commercial cases and14 selected migrated geography authority/reference/import cases),85 UI,72 bilingual desktop/mobile fixture browser and4 real migrated-API terms publication browser cases. Earlier 133-case run is duplicate compatibility evidence; red failures and skipped cases excluded.",
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
-            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained."
+            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
             "Local acceptance does not certify staging deployment, external financial settlement,production operational evidence or launch gates. Production still requires explicit owner authorization.",
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -29278,7 +29300,8 @@
         ],
         "batches": [
           "2026-10-04-content-forms",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -29394,7 +29417,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -29509,13 +29532,22 @@
             "328 distinct passing cases:167 API (153 final geography/terms/registration/commercial cases and14 selected migrated geography authority/reference/import cases),85 UI,72 bilingual desktop/mobile fixture browser and4 real migrated-API terms publication browser cases. Earlier 133-case run is duplicate compatibility evidence; red failures and skipped cases excluded.",
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
-            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained."
+            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
             "Local acceptance does not certify staging deployment, external financial settlement,production operational evidence or launch gates. Production still requires explicit owner authorization.",
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -29626,7 +29658,8 @@
         ],
         "batches": [
           "2026-10-05-admin-policy-tables",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -29742,7 +29775,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "8f13c264c3a858284a302776b7c5a33c440a361e1d7711e2aeedb58ce213fa9d"
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -29857,13 +29890,22 @@
             "328 distinct passing cases:167 API (153 final geography/terms/registration/commercial cases and14 selected migrated geography authority/reference/import cases),85 UI,72 bilingual desktop/mobile fixture browser and4 real migrated-API terms publication browser cases. Earlier 133-case run is duplicate compatibility evidence; red failures and skipped cases excluded.",
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
-            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained."
+            "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
             "Local acceptance does not certify staging deployment, external financial settlement,production operational evidence or launch gates. Production still requires explicit owner authorization.",
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -37439,12 +37481,10 @@
         "story": "02-auth-users-admin.md#spec-c21690a72109"
       },
       "requirement": "**T-09.12.01 — Product catalogue management**\n\n- Description: Admin manages all product catalogues: consultation, electricity, hardware, saving plans. Each has CRUD with specific fields.\n- Technical notes: Permissions: `admin:catalogue:edit`. Individual CRUD sections per product type. Versioned price changes with effective dates. Products referenced by orders cannot be hard-deleted (archive).\n- UI/UX: Tabbed layout: Consultation, Electricity, Hardware, Saving Plans. Each with list/add/edit. Price history view. Active/inactive toggle. Deactivate warning if referenced by active rules.\n- Dependencies: admin config framework, products module\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -37573,9 +37613,348 @@
         ],
         "batches": [
           "2026-10-03-catalogue-forms",
-          "2026-10-03-saving-catalogue-forms"
+          "2026-10-03-saving-catalogue-forms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
+          "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+          "source_evidence": [
+            {
+              "path": "apps/api/scripts/admin-ui-fixture.ts",
+              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.test.ts",
+              "sha256": "5894c6f306660f002649549e95bf5f4a237c483b7b5525131cc6c7620a9a6638"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.ts",
+              "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.test.ts",
+              "sha256": "50a30e56df116728fec45eab02388239fe49d708c904176e33876e9f377f36a9"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.ts",
+              "sha256": "d58d3d1a09a1dfd5b2a265b86184070304f9dc96cc907142f858ed0f44437378"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config-http.integration.test.ts",
+              "sha256": "a87233c1797ac5399db228cf8881541227df482435ce198d0f7aab464fb280dc"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.controller.test.ts",
+              "sha256": "a62ef62d3d838a3bc56f7b4956974aa9038543051ea3027cf7a143f70e193d70"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.controller.ts",
+              "sha256": "b4a2e354eca051ec2975cfa6042d540e243b7968fbb28e3565225d77dc4c89e8"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.service.test.ts",
+              "sha256": "abc776f7d6bdca80e25646873bd614ccffc37db0bdee47458427e99f0415eefd"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.service.ts",
+              "sha256": "3e3bfe82dc60cbd83ff9f82b330940a8c1cf8ff20d65457f28f5a1c6fb3bcef3"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+              "sha256": "74d00489ed954606d57d49f32c7665b45516e7bdf462c24e586b0edc9e8b02fb"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+              "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+              "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+              "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.integration.test.ts",
+              "sha256": "e0a8b296c9e0e80d6875bee7ae02d98a1c9eaef6fc058f17d23063b352339ef7"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.service.ts",
+              "sha256": "2535ab1ed97d1980b98814f54420c443577b9a20da534710abd2daf9df41b44e"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.test.ts",
+              "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+            },
+            {
+              "path": "apps/api/src/public/branding-http.integration.test.ts",
+              "sha256": "c4f62657ec1ac166fc102986ffea87262e3729bfe270a0d15b4179ae561c4bca"
+            },
+            {
+              "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
+              "sha256": "5888a69052b3ff154b4f7e9892407b2a0a63eeeb632a02027abc792e2a620c71"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+            },
+            {
+              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
+            },
+            {
+              "path": "apps/api/src/session/operating-context.ts",
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.test.ts",
+              "sha256": "2563f4a361b3b57e3e907debc2772005b9ce19ded342960dbe09e0d02ab362ee"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.test.ts",
+              "sha256": "53c17e030b620dc38fc2cd67af7fbc240fd13905619c9b0e30b3091225f26d51"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.ts",
+              "sha256": "b73e7c2e3c6fbab3ee6cd8cef1b499e9bc8658b24823b030cd251a91b99fe521"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.test.ts",
+              "sha256": "5b958573f28ac64b0d61990103e85ce7e29a652d12a85028b1b1702bc1659343"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.ts",
+              "sha256": "addcd46a97e3c1e16fb33764fba7d33ef4365e0dad9e21863da905b674e0aba4"
+            },
+            {
+              "path": "apps/api/src/upload/document-parser.cjs",
+              "sha256": "c32bb44d54090d3ee7f4947f4a86dd22286095645f4b11da8e068c9c6f93e43c"
+            },
+            {
+              "path": "apps/api/src/upload/file-policy.test.ts",
+              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "06c0985be504019735f627c8e32096a123d056c2c00ad76fdb4984b9509b4e16"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.ts",
+              "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+            },
+            {
+              "path": "apps/api/src/upload/upload.config.ts",
+              "sha256": "f5fdd73ae14ae87c859a9c192e0d89281df6b29e2607d36fd3cb825b27b1251f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "8148fdf77c21ea21b8a89f057239fbfe1c3d125a8480db7d2bb1fa32aa34cade"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "bee114695b555e72880f2b56d72ea6b3bdfde2e8bc399ee1b7e4c5e332812220"
+            },
+            {
+              "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+              "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+            },
+            {
+              "path": "apps/api/src/user-settings/theme-http.integration.test.ts",
+              "sha256": "5f166595f99185dd6756431b9df153c0ac0fbd21277b5cf5c6c86e6ef1d2a20c"
+            },
+            {
+              "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+              "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+            },
+            {
+              "path": "apps/api/src/user-settings/user-settings.controller.ts",
+              "sha256": "ae50b0b03f65adcfa2cfdd9ce74c63144d0043767573be09c0ab27f7d1404e06"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+            },
+            {
+              "path": "apps/web/e2e/catalogue.spec.ts",
+              "sha256": "65d4f3f237bcb93b6e0e42b00b5eb00dcb250ed751be892b94a7d36a6a0fa58f"
+            },
+            {
+              "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
+              "sha256": "453c9aff3e82ab1683309ec5e4d48a962ba494b525eeeddad53fb3ff95fe43c6"
+            },
+            {
+              "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
+              "sha256": "d9c4002b6a96f7815de2166eee15f3e68a5752aab2affa0bc59636e43ea54154"
+            },
+            {
+              "path": "apps/web/e2e/vat-recovery.spec.ts",
+              "sha256": "109683dd920939632ddd4833dcee8e334ed11831f5ba78af0918251d5f217559"
+            },
+            {
+              "path": "apps/web/e2e/vat.spec.ts",
+              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/ProductCatalogueFilters.tsx",
+              "sha256": "d52f2a76e8161e372777a8a52b22d44db6a7cfd88340f13df7d8a57e29a489c4"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/hooks/useTimezone.ts",
+              "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form.test.ts",
+              "sha256": "8f4379f4a24f149c250ab6df4776f61b8bb4deb1b8e2bab9c41eb8317e4e19cd"
+            },
+            {
+              "path": "apps/web/src/lib/vat-form.test.ts",
+              "sha256": "052f2b4c000502ae1e66b55ba99b6441b30c49b5837b7c7fb1d7e5d0f9c3e8c2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+              "sha256": "b0508f19bc81d5fa3834eca2919c3faf94a3043ec88d58b8686e1f581a8be2b6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+              "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVatPage.tsx",
+              "sha256": "d825ece0b840e222cbf6f261eb021d6e5092c4021c3f03ab1176262d3b0cdcef"
+            },
+            {
+              "path": "apps/web/src/pages/catalogue-forms.test.tsx",
+              "sha256": "470532c84e6c841557c58ec13b2b11de43b06e92de7d7948215972b4383054fc"
+            },
+            {
+              "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
+              "sha256": "b6acf421e2e62775f0f457230588bad916d13e8e8d60ab863209b30e6b38727b"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
+              "sha256": "8c066e329ab189ed17db7b528e66ac7649ec479145abf982214a4fd91ff13ce3"
+            },
+            {
+              "path": "apps/web/src/pages/vat-recovery.test.tsx",
+              "sha256": "94d9e392ed1e08ac384ed186a6d0b51645348f9b0c083fb3bbebae15396b643e"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/src/schema/product-price-versions.test.ts",
+              "sha256": "2a511a6f80a6fc5e8743edbbd5f3cb1672f9ca6c586bc4ac63ba27c4cde5d170"
+            },
+            {
+              "path": "packages/db/src/schema/upload-policies.ts",
+              "sha256": "17e2642b59a12cead8aa4850de6683686201eeaf8ff474142ba6fdbc2c2ca45d"
+            },
+            {
+              "path": "packages/db/src/schema/vat-configurations.test.ts",
+              "sha256": "8a0d86d8cca763ff67f318b534edb8bc0d0f475c042677aa09ce92daaa96f7b7"
+            },
+            {
+              "path": "packages/db/src/schema/vat-configurations.ts",
+              "sha256": "4e18fc12a883b42aecde311efb25893a353a441e4c562b70530e5ec0c3394179"
+            },
+            {
+              "path": "packages/i18n/src/vat.ts",
+              "sha256": "4dd96497e27872f71eeb737470f3d73dc3d0b09f8e6eabfcb41f722b5a07f2e1"
+            },
+            {
+              "path": "packages/shared/src/finance/vat-config.test.ts",
+              "sha256": "0eaae5696604fc7831348b9fe73c18b06dae2c4925e25993e1781ef2452f285f"
+            },
+            {
+              "path": "packages/shared/src/finance/vat-config.ts",
+              "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "495 distinct passing cases:473 fresh (321 API =257 catalogue/VAT/upload policies+content unit/HTTP,6 actual stored-byte upload HTTP,58 shared-context/security/preference cases;92 UI;48 table/recovery production-browser;12 real migrated-API live journeys) and22 retained exact-source VAT calculator/repository unit+migrated DB cases. Four upload cases completed in the second stopped run,four VAT cases completed in the corrected run andfour final catalogue cases passed in the separate successful finalrun. No whole failed/stopped-suite pass claim; failed/interrupted/skipped/unrun/duplicates excluded. Incidental role-list compatibility cases do notcertify newroles scope.",
+            "Upload policy writes alreadyrequired step-up atHTTP boundary butcouldcommit aftersession/CSRF/step-up changed. Eightfinal-boundary HTTPred failures reproduced. Both create/end nowforward exactvalidatedsession,assertactor match,requirecurrentgrants/session/CSRF/step-up afteraccountlock andagainbeforecommit;recordactualverified timestamp. Twelveadditional regressions pass withpolicy/history/audit/session rollback. Existinghistory/no-op/effectivewindows/deployment caps anduploadcontent algorithms retained.",
+            "Shared contextgate blockedstaffown timezone/theme preferences anddisabled datedadmineditors. Two staff HTTPred failures andreal403browserreads reproduced. Permit onlyexactselfowned timezone/theme paths alongside existingconversation identity. Existingaccount handlers usecurrentauthenticateduser,strictpayload/CSRF/current-session/audit. Allotherstaff/customer/profile classifiers anddenialbranch byte-exact;newrealHTTPdeniesforeignaccountpayloads,missingCSRF andcustomerprivate routesinstaffcontext.",
+            "Fourcatalogue types retaincurrentpermission,exactbigintprices,effectivepriceversions/history,active/inactive/archive/restore,canonicalsystemfixtures,referenced-order preservation,Savingcompatiblehardware/activeagreement readiness andenabledrule deactivationwarnings. VAT retainsdatedbasispoint0..10000versions,productoverride/category/zero precedence,immutableinvoice snapshot consumers andhistory,FA/EN time-zone/DST/numericstyle editing. Userapprovedexistingcatalogue representations retained.",
+            "Uploads remainbounded byactiveDB policy intersected withdeployment extension/MIME/size caps. RealstorageHTTPcasesdenyunavailablepolicy,changedallowedextension,PNG disguised asJPG,arbitraryZIP/OLE claimed asOffice,invalidCSV encoding/quotes andunrecognizedvideocontainers. Existingcontroller/resolver/source scans retained; no malware/realprovider certificationclaim.",
+            "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
+            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+          "limitations": [
+            "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
+          ]
+        }
       }
     },
     {
@@ -37589,12 +37968,10 @@
         "story": "02-auth-users-admin.md#spec-c21690a72109"
       },
       "requirement": "**T-09.12.02 — VAT configuration**\n\n- Description: Admin configures VAT rates by charge category, with optional product override. Effective dates. Product override wins; category default applies otherwise; 0% as fallback.\n- Technical notes: Versioned with effective dates. Snapshotted on invoice at calculation time. Rate stored as basis points or decimal. Audit: change_recorded. Validation: 0 ≤ rate ≤ 100%.\n- UI/UX: Table: category/product, rate, effective from, status. Add new rate (future effective date). Product override toggle.\n- Dependencies: admin config framework, products module\n- Complexity: L",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -37722,9 +38099,348 @@
           "packages/i18n/src/vat.ts"
         ],
         "batches": [
-          "2026-10-03-vat-forms"
+          "2026-10-03-vat-forms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
+          "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+          "source_evidence": [
+            {
+              "path": "apps/api/scripts/admin-ui-fixture.ts",
+              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.test.ts",
+              "sha256": "5894c6f306660f002649549e95bf5f4a237c483b7b5525131cc6c7620a9a6638"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.ts",
+              "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.test.ts",
+              "sha256": "50a30e56df116728fec45eab02388239fe49d708c904176e33876e9f377f36a9"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.ts",
+              "sha256": "d58d3d1a09a1dfd5b2a265b86184070304f9dc96cc907142f858ed0f44437378"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config-http.integration.test.ts",
+              "sha256": "a87233c1797ac5399db228cf8881541227df482435ce198d0f7aab464fb280dc"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.controller.test.ts",
+              "sha256": "a62ef62d3d838a3bc56f7b4956974aa9038543051ea3027cf7a143f70e193d70"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.controller.ts",
+              "sha256": "b4a2e354eca051ec2975cfa6042d540e243b7968fbb28e3565225d77dc4c89e8"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.service.test.ts",
+              "sha256": "abc776f7d6bdca80e25646873bd614ccffc37db0bdee47458427e99f0415eefd"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.service.ts",
+              "sha256": "3e3bfe82dc60cbd83ff9f82b330940a8c1cf8ff20d65457f28f5a1c6fb3bcef3"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+              "sha256": "74d00489ed954606d57d49f32c7665b45516e7bdf462c24e586b0edc9e8b02fb"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+              "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+              "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+              "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.integration.test.ts",
+              "sha256": "e0a8b296c9e0e80d6875bee7ae02d98a1c9eaef6fc058f17d23063b352339ef7"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.service.ts",
+              "sha256": "2535ab1ed97d1980b98814f54420c443577b9a20da534710abd2daf9df41b44e"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.test.ts",
+              "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+            },
+            {
+              "path": "apps/api/src/public/branding-http.integration.test.ts",
+              "sha256": "c4f62657ec1ac166fc102986ffea87262e3729bfe270a0d15b4179ae561c4bca"
+            },
+            {
+              "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
+              "sha256": "5888a69052b3ff154b4f7e9892407b2a0a63eeeb632a02027abc792e2a620c71"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+            },
+            {
+              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
+            },
+            {
+              "path": "apps/api/src/session/operating-context.ts",
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.test.ts",
+              "sha256": "2563f4a361b3b57e3e907debc2772005b9ce19ded342960dbe09e0d02ab362ee"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.test.ts",
+              "sha256": "53c17e030b620dc38fc2cd67af7fbc240fd13905619c9b0e30b3091225f26d51"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.ts",
+              "sha256": "b73e7c2e3c6fbab3ee6cd8cef1b499e9bc8658b24823b030cd251a91b99fe521"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.test.ts",
+              "sha256": "5b958573f28ac64b0d61990103e85ce7e29a652d12a85028b1b1702bc1659343"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.ts",
+              "sha256": "addcd46a97e3c1e16fb33764fba7d33ef4365e0dad9e21863da905b674e0aba4"
+            },
+            {
+              "path": "apps/api/src/upload/document-parser.cjs",
+              "sha256": "c32bb44d54090d3ee7f4947f4a86dd22286095645f4b11da8e068c9c6f93e43c"
+            },
+            {
+              "path": "apps/api/src/upload/file-policy.test.ts",
+              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "06c0985be504019735f627c8e32096a123d056c2c00ad76fdb4984b9509b4e16"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.ts",
+              "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+            },
+            {
+              "path": "apps/api/src/upload/upload.config.ts",
+              "sha256": "f5fdd73ae14ae87c859a9c192e0d89281df6b29e2607d36fd3cb825b27b1251f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "8148fdf77c21ea21b8a89f057239fbfe1c3d125a8480db7d2bb1fa32aa34cade"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "bee114695b555e72880f2b56d72ea6b3bdfde2e8bc399ee1b7e4c5e332812220"
+            },
+            {
+              "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+              "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+            },
+            {
+              "path": "apps/api/src/user-settings/theme-http.integration.test.ts",
+              "sha256": "5f166595f99185dd6756431b9df153c0ac0fbd21277b5cf5c6c86e6ef1d2a20c"
+            },
+            {
+              "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+              "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+            },
+            {
+              "path": "apps/api/src/user-settings/user-settings.controller.ts",
+              "sha256": "ae50b0b03f65adcfa2cfdd9ce74c63144d0043767573be09c0ab27f7d1404e06"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+            },
+            {
+              "path": "apps/web/e2e/catalogue.spec.ts",
+              "sha256": "65d4f3f237bcb93b6e0e42b00b5eb00dcb250ed751be892b94a7d36a6a0fa58f"
+            },
+            {
+              "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
+              "sha256": "453c9aff3e82ab1683309ec5e4d48a962ba494b525eeeddad53fb3ff95fe43c6"
+            },
+            {
+              "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
+              "sha256": "d9c4002b6a96f7815de2166eee15f3e68a5752aab2affa0bc59636e43ea54154"
+            },
+            {
+              "path": "apps/web/e2e/vat-recovery.spec.ts",
+              "sha256": "109683dd920939632ddd4833dcee8e334ed11831f5ba78af0918251d5f217559"
+            },
+            {
+              "path": "apps/web/e2e/vat.spec.ts",
+              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/ProductCatalogueFilters.tsx",
+              "sha256": "d52f2a76e8161e372777a8a52b22d44db6a7cfd88340f13df7d8a57e29a489c4"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/hooks/useTimezone.ts",
+              "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form.test.ts",
+              "sha256": "8f4379f4a24f149c250ab6df4776f61b8bb4deb1b8e2bab9c41eb8317e4e19cd"
+            },
+            {
+              "path": "apps/web/src/lib/vat-form.test.ts",
+              "sha256": "052f2b4c000502ae1e66b55ba99b6441b30c49b5837b7c7fb1d7e5d0f9c3e8c2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+              "sha256": "b0508f19bc81d5fa3834eca2919c3faf94a3043ec88d58b8686e1f581a8be2b6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+              "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVatPage.tsx",
+              "sha256": "d825ece0b840e222cbf6f261eb021d6e5092c4021c3f03ab1176262d3b0cdcef"
+            },
+            {
+              "path": "apps/web/src/pages/catalogue-forms.test.tsx",
+              "sha256": "470532c84e6c841557c58ec13b2b11de43b06e92de7d7948215972b4383054fc"
+            },
+            {
+              "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
+              "sha256": "b6acf421e2e62775f0f457230588bad916d13e8e8d60ab863209b30e6b38727b"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
+              "sha256": "8c066e329ab189ed17db7b528e66ac7649ec479145abf982214a4fd91ff13ce3"
+            },
+            {
+              "path": "apps/web/src/pages/vat-recovery.test.tsx",
+              "sha256": "94d9e392ed1e08ac384ed186a6d0b51645348f9b0c083fb3bbebae15396b643e"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/src/schema/product-price-versions.test.ts",
+              "sha256": "2a511a6f80a6fc5e8743edbbd5f3cb1672f9ca6c586bc4ac63ba27c4cde5d170"
+            },
+            {
+              "path": "packages/db/src/schema/upload-policies.ts",
+              "sha256": "17e2642b59a12cead8aa4850de6683686201eeaf8ff474142ba6fdbc2c2ca45d"
+            },
+            {
+              "path": "packages/db/src/schema/vat-configurations.test.ts",
+              "sha256": "8a0d86d8cca763ff67f318b534edb8bc0d0f475c042677aa09ce92daaa96f7b7"
+            },
+            {
+              "path": "packages/db/src/schema/vat-configurations.ts",
+              "sha256": "4e18fc12a883b42aecde311efb25893a353a441e4c562b70530e5ec0c3394179"
+            },
+            {
+              "path": "packages/i18n/src/vat.ts",
+              "sha256": "4dd96497e27872f71eeb737470f3d73dc3d0b09f8e6eabfcb41f722b5a07f2e1"
+            },
+            {
+              "path": "packages/shared/src/finance/vat-config.test.ts",
+              "sha256": "0eaae5696604fc7831348b9fe73c18b06dae2c4925e25993e1781ef2452f285f"
+            },
+            {
+              "path": "packages/shared/src/finance/vat-config.ts",
+              "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "495 distinct passing cases:473 fresh (321 API =257 catalogue/VAT/upload policies+content unit/HTTP,6 actual stored-byte upload HTTP,58 shared-context/security/preference cases;92 UI;48 table/recovery production-browser;12 real migrated-API live journeys) and22 retained exact-source VAT calculator/repository unit+migrated DB cases. Four upload cases completed in the second stopped run,four VAT cases completed in the corrected run andfour final catalogue cases passed in the separate successful finalrun. No whole failed/stopped-suite pass claim; failed/interrupted/skipped/unrun/duplicates excluded. Incidental role-list compatibility cases do notcertify newroles scope.",
+            "Upload policy writes alreadyrequired step-up atHTTP boundary butcouldcommit aftersession/CSRF/step-up changed. Eightfinal-boundary HTTPred failures reproduced. Both create/end nowforward exactvalidatedsession,assertactor match,requirecurrentgrants/session/CSRF/step-up afteraccountlock andagainbeforecommit;recordactualverified timestamp. Twelveadditional regressions pass withpolicy/history/audit/session rollback. Existinghistory/no-op/effectivewindows/deployment caps anduploadcontent algorithms retained.",
+            "Shared contextgate blockedstaffown timezone/theme preferences anddisabled datedadmineditors. Two staff HTTPred failures andreal403browserreads reproduced. Permit onlyexactselfowned timezone/theme paths alongside existingconversation identity. Existingaccount handlers usecurrentauthenticateduser,strictpayload/CSRF/current-session/audit. Allotherstaff/customer/profile classifiers anddenialbranch byte-exact;newrealHTTPdeniesforeignaccountpayloads,missingCSRF andcustomerprivate routesinstaffcontext.",
+            "Fourcatalogue types retaincurrentpermission,exactbigintprices,effectivepriceversions/history,active/inactive/archive/restore,canonicalsystemfixtures,referenced-order preservation,Savingcompatiblehardware/activeagreement readiness andenabledrule deactivationwarnings. VAT retainsdatedbasispoint0..10000versions,productoverride/category/zero precedence,immutableinvoice snapshot consumers andhistory,FA/EN time-zone/DST/numericstyle editing. Userapprovedexistingcatalogue representations retained.",
+            "Uploads remainbounded byactiveDB policy intersected withdeployment extension/MIME/size caps. RealstorageHTTPcasesdenyunavailablepolicy,changedallowedextension,PNG disguised asJPG,arbitraryZIP/OLE claimed asOffice,invalidCSV encoding/quotes andunrecognizedvideocontainers. Existingcontroller/resolver/source scans retained; no malware/realprovider certificationclaim.",
+            "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
+            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+          "limitations": [
+            "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
+          ]
+        }
       }
     },
     {
@@ -37928,12 +38644,10 @@
         "story": "02-auth-users-admin.md#spec-c21690a72109"
       },
       "requirement": "**T-09.12.05 — Upload policies configuration**\n\n- Description: Admin configures file upload policies: allowed formats and size limits per category (documents, images, videos). Within deployment-safe boundaries.\n- Technical notes: Category → allowed extensions[], max file size. Validate both extension and detected content type at upload. Config versioned. System enforces both DB config and deployment-level limits.\n- UI/UX: Table: category, formats, max size. Edit modal. Warning about security implications.\n- Dependencies: admin config framework, file storage module\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -38017,9 +38731,348 @@
         ],
         "batches": [
           "2026-10-04-storage-policy-forms",
-          "2026-10-05-admin-policy-tables"
+          "2026-10-05-admin-policy-tables",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
+          "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+          "source_evidence": [
+            {
+              "path": "apps/api/scripts/admin-ui-fixture.ts",
+              "sha256": "78e0581234e695f305b42477ef6ebf46e6edffcfe58ea30c0b19c553087c83de"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.test.ts",
+              "sha256": "5894c6f306660f002649549e95bf5f4a237c483b7b5525131cc6c7620a9a6638"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.ts",
+              "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.test.ts",
+              "sha256": "50a30e56df116728fec45eab02388239fe49d708c904176e33876e9f377f36a9"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.ts",
+              "sha256": "d58d3d1a09a1dfd5b2a265b86184070304f9dc96cc907142f858ed0f44437378"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config-http.integration.test.ts",
+              "sha256": "a87233c1797ac5399db228cf8881541227df482435ce198d0f7aab464fb280dc"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.controller.test.ts",
+              "sha256": "a62ef62d3d838a3bc56f7b4956974aa9038543051ea3027cf7a143f70e193d70"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.controller.ts",
+              "sha256": "b4a2e354eca051ec2975cfa6042d540e243b7968fbb28e3565225d77dc4c89e8"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.service.test.ts",
+              "sha256": "abc776f7d6bdca80e25646873bd614ccffc37db0bdee47458427e99f0415eefd"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.service.ts",
+              "sha256": "3e3bfe82dc60cbd83ff9f82b330940a8c1cf8ff20d65457f28f5a1c6fb3bcef3"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+              "sha256": "74d00489ed954606d57d49f32c7665b45516e7bdf462c24e586b0edc9e8b02fb"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+              "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+              "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+              "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.integration.test.ts",
+              "sha256": "e0a8b296c9e0e80d6875bee7ae02d98a1c9eaef6fc058f17d23063b352339ef7"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.service.ts",
+              "sha256": "2535ab1ed97d1980b98814f54420c443577b9a20da534710abd2daf9df41b44e"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.test.ts",
+              "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+            },
+            {
+              "path": "apps/api/src/public/branding-http.integration.test.ts",
+              "sha256": "c4f62657ec1ac166fc102986ffea87262e3729bfe270a0d15b4179ae561c4bca"
+            },
+            {
+              "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
+              "sha256": "5888a69052b3ff154b4f7e9892407b2a0a63eeeb632a02027abc792e2a620c71"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.test.ts",
+              "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "d795e525a70bc39ad9b83f8c373ab7acb45e747279dd9ba87681406afd107fe9"
+            },
+            {
+              "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
+            },
+            {
+              "path": "apps/api/src/session/operating-context.ts",
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.test.ts",
+              "sha256": "2563f4a361b3b57e3e907debc2772005b9ce19ded342960dbe09e0d02ab362ee"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.test.ts",
+              "sha256": "53c17e030b620dc38fc2cd67af7fbc240fd13905619c9b0e30b3091225f26d51"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.ts",
+              "sha256": "b73e7c2e3c6fbab3ee6cd8cef1b499e9bc8658b24823b030cd251a91b99fe521"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.test.ts",
+              "sha256": "5b958573f28ac64b0d61990103e85ce7e29a652d12a85028b1b1702bc1659343"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.ts",
+              "sha256": "addcd46a97e3c1e16fb33764fba7d33ef4365e0dad9e21863da905b674e0aba4"
+            },
+            {
+              "path": "apps/api/src/upload/document-parser.cjs",
+              "sha256": "c32bb44d54090d3ee7f4947f4a86dd22286095645f4b11da8e068c9c6f93e43c"
+            },
+            {
+              "path": "apps/api/src/upload/file-policy.test.ts",
+              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "06c0985be504019735f627c8e32096a123d056c2c00ad76fdb4984b9509b4e16"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.ts",
+              "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+            },
+            {
+              "path": "apps/api/src/upload/upload.config.ts",
+              "sha256": "f5fdd73ae14ae87c859a9c192e0d89281df6b29e2607d36fd3cb825b27b1251f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "8148fdf77c21ea21b8a89f057239fbfe1c3d125a8480db7d2bb1fa32aa34cade"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "bee114695b555e72880f2b56d72ea6b3bdfde2e8bc399ee1b7e4c5e332812220"
+            },
+            {
+              "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+              "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+            },
+            {
+              "path": "apps/api/src/user-settings/theme-http.integration.test.ts",
+              "sha256": "5f166595f99185dd6756431b9df153c0ac0fbd21277b5cf5c6c86e6ef1d2a20c"
+            },
+            {
+              "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+              "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+            },
+            {
+              "path": "apps/api/src/user-settings/user-settings.controller.ts",
+              "sha256": "ae50b0b03f65adcfa2cfdd9ce74c63144d0043767573be09c0ab27f7d1404e06"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+            },
+            {
+              "path": "apps/web/e2e/catalogue.spec.ts",
+              "sha256": "65d4f3f237bcb93b6e0e42b00b5eb00dcb250ed751be892b94a7d36a6a0fa58f"
+            },
+            {
+              "path": "apps/web/e2e/policy-catalogue-recovery.spec.ts",
+              "sha256": "453c9aff3e82ab1683309ec5e4d48a962ba494b525eeeddad53fb3ff95fe43c6"
+            },
+            {
+              "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
+              "sha256": "d9c4002b6a96f7815de2166eee15f3e68a5752aab2affa0bc59636e43ea54154"
+            },
+            {
+              "path": "apps/web/e2e/vat-recovery.spec.ts",
+              "sha256": "109683dd920939632ddd4833dcee8e334ed11831f5ba78af0918251d5f217559"
+            },
+            {
+              "path": "apps/web/e2e/vat.spec.ts",
+              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/ProductCatalogueFilters.tsx",
+              "sha256": "d52f2a76e8161e372777a8a52b22d44db6a7cfd88340f13df7d8a57e29a489c4"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "449166c692c3e0d3f95ff9b993e0ef968ec68e3f32458016e05d4b21c8664a59"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/hooks/useTimezone.ts",
+              "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form.test.ts",
+              "sha256": "8f4379f4a24f149c250ab6df4776f61b8bb4deb1b8e2bab9c41eb8317e4e19cd"
+            },
+            {
+              "path": "apps/web/src/lib/vat-form.test.ts",
+              "sha256": "052f2b4c000502ae1e66b55ba99b6441b30c49b5837b7c7fb1d7e5d0f9c3e8c2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+              "sha256": "b0508f19bc81d5fa3834eca2919c3faf94a3043ec88d58b8686e1f581a8be2b6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+              "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVatPage.tsx",
+              "sha256": "d825ece0b840e222cbf6f261eb021d6e5092c4021c3f03ab1176262d3b0cdcef"
+            },
+            {
+              "path": "apps/web/src/pages/catalogue-forms.test.tsx",
+              "sha256": "470532c84e6c841557c58ec13b2b11de43b06e92de7d7948215972b4383054fc"
+            },
+            {
+              "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
+              "sha256": "b6acf421e2e62775f0f457230588bad916d13e8e8d60ab863209b30e6b38727b"
+            },
+            {
+              "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
+              "sha256": "8c066e329ab189ed17db7b528e66ac7649ec479145abf982214a4fd91ff13ce3"
+            },
+            {
+              "path": "apps/web/src/pages/vat-recovery.test.tsx",
+              "sha256": "94d9e392ed1e08ac384ed186a6d0b51645348f9b0c083fb3bbebae15396b643e"
+            },
+            {
+              "path": "package.json",
+              "sha256": "db0d2409f5308da7b2d105d6f0d1a5fe16ebd018018655fa11160b2e4d7b7529"
+            },
+            {
+              "path": "packages/db/src/schema/product-price-versions.test.ts",
+              "sha256": "2a511a6f80a6fc5e8743edbbd5f3cb1672f9ca6c586bc4ac63ba27c4cde5d170"
+            },
+            {
+              "path": "packages/db/src/schema/upload-policies.ts",
+              "sha256": "17e2642b59a12cead8aa4850de6683686201eeaf8ff474142ba6fdbc2c2ca45d"
+            },
+            {
+              "path": "packages/db/src/schema/vat-configurations.test.ts",
+              "sha256": "8a0d86d8cca763ff67f318b534edb8bc0d0f475c042677aa09ce92daaa96f7b7"
+            },
+            {
+              "path": "packages/db/src/schema/vat-configurations.ts",
+              "sha256": "4e18fc12a883b42aecde311efb25893a353a441e4c562b70530e5ec0c3394179"
+            },
+            {
+              "path": "packages/i18n/src/vat.ts",
+              "sha256": "4dd96497e27872f71eeb737470f3d73dc3d0b09f8e6eabfcb41f722b5a07f2e1"
+            },
+            {
+              "path": "packages/shared/src/finance/vat-config.test.ts",
+              "sha256": "0eaae5696604fc7831348b9fe73c18b06dae2c4925e25993e1781ef2452f285f"
+            },
+            {
+              "path": "packages/shared/src/finance/vat-config.ts",
+              "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "495 distinct passing cases:473 fresh (321 API =257 catalogue/VAT/upload policies+content unit/HTTP,6 actual stored-byte upload HTTP,58 shared-context/security/preference cases;92 UI;48 table/recovery production-browser;12 real migrated-API live journeys) and22 retained exact-source VAT calculator/repository unit+migrated DB cases. Four upload cases completed in the second stopped run,four VAT cases completed in the corrected run andfour final catalogue cases passed in the separate successful finalrun. No whole failed/stopped-suite pass claim; failed/interrupted/skipped/unrun/duplicates excluded. Incidental role-list compatibility cases do notcertify newroles scope.",
+            "Upload policy writes alreadyrequired step-up atHTTP boundary butcouldcommit aftersession/CSRF/step-up changed. Eightfinal-boundary HTTPred failures reproduced. Both create/end nowforward exactvalidatedsession,assertactor match,requirecurrentgrants/session/CSRF/step-up afteraccountlock andagainbeforecommit;recordactualverified timestamp. Twelveadditional regressions pass withpolicy/history/audit/session rollback. Existinghistory/no-op/effectivewindows/deployment caps anduploadcontent algorithms retained.",
+            "Shared contextgate blockedstaffown timezone/theme preferences anddisabled datedadmineditors. Two staff HTTPred failures andreal403browserreads reproduced. Permit onlyexactselfowned timezone/theme paths alongside existingconversation identity. Existingaccount handlers usecurrentauthenticateduser,strictpayload/CSRF/current-session/audit. Allotherstaff/customer/profile classifiers anddenialbranch byte-exact;newrealHTTPdeniesforeignaccountpayloads,missingCSRF andcustomerprivate routesinstaffcontext.",
+            "Fourcatalogue types retaincurrentpermission,exactbigintprices,effectivepriceversions/history,active/inactive/archive/restore,canonicalsystemfixtures,referenced-order preservation,Savingcompatiblehardware/activeagreement readiness andenabledrule deactivationwarnings. VAT retainsdatedbasispoint0..10000versions,productoverride/category/zero precedence,immutableinvoice snapshot consumers andhistory,FA/EN time-zone/DST/numericstyle editing. Userapprovedexistingcatalogue representations retained.",
+            "Uploads remainbounded byactiveDB policy intersected withdeployment extension/MIME/size caps. RealstorageHTTPcasesdenyunavailablepolicy,changedallowedextension,PNG disguised asJPG,arbitraryZIP/OLE claimed asOffice,invalidCSV encoding/quotes andunrecognizedvideocontainers. Existingcontroller/resolver/source scans retained; no malware/realprovider certificationclaim.",
+            "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
+            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+          "limitations": [
+            "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
+          ]
+        }
       }
     },
     {
@@ -70613,7 +71666,8 @@
           "2026-10-05-profile-lifecycle-forms",
           "release-0.2-step-up-action-audit",
           "release-0.3-invoice-core",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -70717,11 +71771,11 @@
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -70865,7 +71919,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/submission-audit-immutability/format.json",
             "Step-up audit renewal:441 distinct passing outcomes, with failed/intermediate/repeated/skipped cases deduplicated. Existing auth predicates and historical SQL/journal prefix unchanged; bounded additive audit provenance. Source/output proof and actual receipts: /Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -70903,11 +71958,12 @@
             "scope": "Renew prior effective criteria only; no incomplete task or milestone accepted by association."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/admin.controller.ts"
+              "apps/api/src/session/operating-context.ts",
+              "apps/api/src/session/operating-context-http.integration.test.ts"
             ]
           }
         }
@@ -70937,7 +71993,8 @@
           "2026-09-29-profile-data-export",
           "release-0.2-step-up-action-audit",
           "release-0.3-invoice-core",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -71041,11 +72098,11 @@
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -71189,7 +72246,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/submission-audit-immutability/format.json",
             "Step-up audit renewal:441 distinct passing outcomes, with failed/intermediate/repeated/skipped cases deduplicated. Existing auth predicates and historical SQL/journal prefix unchanged; bounded additive audit provenance. Source/output proof and actual receipts: /Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -71227,11 +72285,12 @@
             "scope": "Renew prior effective criteria only; no incomplete task or milestone accepted by association."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/admin.controller.ts"
+              "apps/api/src/session/operating-context.ts",
+              "apps/api/src/session/operating-context-http.integration.test.ts"
             ]
           }
         }
@@ -71261,7 +72320,8 @@
           "release-0.2-electricity-legacy-refund-adoption",
           "release-0.2-step-up-action-audit",
           "release-0.3-invoice-core",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -71301,11 +72361,11 @@
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -71543,7 +72603,8 @@
             "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption",
             "Step-up audit renewal:441 distinct passing outcomes, with failed/intermediate/repeated/skipped cases deduplicated. Existing auth predicates and historical SQL/journal prefix unchanged; bounded additive audit provenance. Source/output proof and actual receipts: /Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
           "limitations": [
@@ -71646,11 +72707,12 @@
             "scope": "Renew prior effective criteria only; no incomplete task or milestone accepted by association."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/admin.controller.ts"
+              "apps/api/src/session/operating-context-http.integration.test.ts",
+              "apps/api/src/session/operating-context.ts"
             ]
           }
         }
@@ -71686,7 +72748,8 @@
           "release-0.3-invoice-core",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -71770,11 +72833,11 @@
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -72170,7 +73233,8 @@
             "Four-service rehearsal renewal: prior effective criteria preserved. Production source/builds unchanged; all original browser route fixtures/direct business assertions and185 assertions retained. Final bilingual desktop/mobile journeys pass; saving duplicate fixture now independently provisions two units and all7 cases pass. Source-bound proof and receipts: /Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -72394,11 +73458,12 @@
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/admin.controller.ts"
+              "apps/api/src/session/operating-context-http.integration.test.ts",
+              "apps/api/src/session/operating-context.ts"
             ]
           }
         }
@@ -72434,7 +73499,8 @@
           "release-0.3-invoice-core",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -72518,11 +73584,11 @@
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -72918,7 +73984,8 @@
             "Four-service rehearsal renewal: prior effective criteria preserved. Production source/builds unchanged; all original browser route fixtures/direct business assertions and185 assertions retained. Final bilingual desktop/mobile journeys pass; saving duplicate fixture now independently provisions two units and all7 cases pass. Source-bound proof and receipts: /Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -73142,11 +74209,12 @@
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/admin.controller.ts"
+              "apps/api/src/session/operating-context-http.integration.test.ts",
+              "apps/api/src/session/operating-context.ts"
             ]
           }
         }
@@ -73175,7 +74243,8 @@
         "batches": [
           "release-0.2-step-up-action-audit",
           "release-0.3-invoice-core",
-          "release-0.3-admin-geography-terms"
+          "release-0.3-admin-geography-terms",
+          "release-0.3-admin-catalogue-vat-upload"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -73279,11 +74348,11 @@
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
-              "sha256": "f1dd5fab376106689f74402583eee6dff65ea64c52aedbcd044b102c3c920c5d"
+              "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
             },
             {
               "path": "apps/api/src/session/operating-context-http.integration.test.ts",
-              "sha256": "4dff4199e3c407ac863e160f1ef38b166f34536b397a49d9a8fc66a4e0b5bcd8"
+              "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -73427,7 +74496,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/submission-audit-immutability/format.json",
             "Step-up audit renewal:441 distinct passing outcomes, with failed/intermediate/repeated/skipped cases deduplicated. Existing auth predicates and historical SQL/journal prefix unchanged; bounded additive audit provenance. Source/output proof and actual receipts: /Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
-            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed."
+            "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -73465,11 +74535,12 @@
             "scope": "Renew prior effective criteria only; no incomplete task or milestone accepted by association."
           },
           "scoped_renewal": {
-            "base_commit": "76a2477b622714ef6a0d6291b8d6c16e50fab5ac",
-            "batch": "release-0.3-admin-geography-terms",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
+            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
+            "batch": "release-0.3-admin-catalogue-vat-upload",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
             "changed_paths": [
-              "apps/api/src/admin/admin.controller.ts"
+              "apps/api/src/session/operating-context.ts",
+              "apps/api/src/session/operating-context-http.integration.test.ts"
             ]
           }
         }
@@ -189010,6 +190081,39 @@
         "No implementation gap orproduct/test change. Onebounded criterion review completed. Productbuild/types/lint/OpenAPI/dependencies/output hashes remainexact toadmin-geography-terms binding; reusewithoutrebuild orredundantchecks. Prior Wallet300.13KB/300KB failure,earlier owner/dependency/coverage/operational gates andproduction authorization remainopen."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-financial-controls"
+    },
+    "release-0.3-admin-catalogue-vat-upload": {
+      "title": "Accept catalogue,VAT andupload policies;correct session anddisplay-preference boundaries",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.05",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01"
+      ],
+      "summary": "Threecriteria accepted. Repair demonstratedupload-policy authority andshared accountpreference regression;retain allfinancial/upload/readiness safeguards.14prior large-test bindings renewed narrowly.",
+      "validation": [
+        "495 distinct passing cases:473 fresh (321 API =257 catalogue/VAT/upload policies+content unit/HTTP,6 actual stored-byte upload HTTP,58 shared-context/security/preference cases;92 UI;48 table/recovery production-browser;12 real migrated-API live journeys) and22 retained exact-source VAT calculator/repository unit+migrated DB cases. Four upload cases completed in the second stopped run,four VAT cases completed in the corrected run andfour final catalogue cases passed in the separate successful finalrun. No whole failed/stopped-suite pass claim; failed/interrupted/skipped/unrun/duplicates excluded. Incidental role-list compatibility cases do notcertify newroles scope.",
+        "Upload policy writes alreadyrequired step-up atHTTP boundary butcouldcommit aftersession/CSRF/step-up changed. Eightfinal-boundary HTTPred failures reproduced. Both create/end nowforward exactvalidatedsession,assertactor match,requirecurrentgrants/session/CSRF/step-up afteraccountlock andagainbeforecommit;recordactualverified timestamp. Twelveadditional regressions pass withpolicy/history/audit/session rollback. Existinghistory/no-op/effectivewindows/deployment caps anduploadcontent algorithms retained.",
+        "Shared contextgate blockedstaffown timezone/theme preferences anddisabled datedadmineditors. Two staff HTTPred failures andreal403browserreads reproduced. Permit onlyexactselfowned timezone/theme paths alongside existingconversation identity. Existingaccount handlers usecurrentauthenticateduser,strictpayload/CSRF/current-session/audit. Allotherstaff/customer/profile classifiers anddenialbranch byte-exact;newrealHTTPdeniesforeignaccountpayloads,missingCSRF andcustomerprivate routesinstaffcontext.",
+        "Fourcatalogue types retaincurrentpermission,exactbigintprices,effectivepriceversions/history,active/inactive/archive/restore,canonicalsystemfixtures,referenced-order preservation,Savingcompatiblehardware/activeagreement readiness andenabledrule deactivationwarnings. VAT retainsdatedbasispoint0..10000versions,productoverride/category/zero precedence,immutableinvoice snapshot consumers andhistory,FA/EN time-zone/DST/numericstyle editing. Userapprovedexistingcatalogue representations retained.",
+        "Uploads remainbounded byactiveDB policy intersected withdeployment extension/MIME/size caps. RealstorageHTTPcasesdenyunavailablepolicy,changedallowedextension,PNG disguised asJPG,arbitraryZIP/OLE claimed asOffice,invalidCSV encoding/quotes andunrecognizedvideocontainers. Existingcontroller/resolver/source scans retained; no malware/realprovider certificationclaim.",
+        "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
+        "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload"
     }
   },
   "historical_improvements": [
@@ -189049,13 +190153,12 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-admin-catalogue-vat-upload",
+    "id": "release-0.3-admin-operational-triage",
     "release": "0.3.0",
-    "goal": "Inspect andaccept existingfour-type productcatalogue,VAT anduploadpolicies against exact admin criteria. Verify currentgrants/session/configaudit,immutable price/ratehistory,referenced-product archive/rule safety,VAT precedence/snapshots andsafe format/content/size enforcement. Buildonly demonstrated gaps;reuse accepted domain andsource-bound checks. Earlierowner/release/budget/operational gates remainopen.",
+    "goal": "Inspect andaccept existing failed backgroundjobs anddead-letter notification dashboards againstexact criteria,currentcapabilities/session/retry boundaries,maskedmetadata,state/attempt/history,pendingcommand ownership andactualworker/notification outcomes. Buildonlydemonstratedgaps;reuse valid source-bound evidence. Earlierowner/release/budget/operational gates remainopen.",
     "task_keys": [
-      "02-auth-users-admin.md#T-09.12.01",
-      "02-auth-users-admin.md#T-09.12.02",
-      "02-auth-users-admin.md#T-09.12.05"
+      "02-auth-users-admin.md#T-09.09.02",
+      "02-auth-users-admin.md#T-09.09.03"
     ]
   },
   "launch_forecast": {

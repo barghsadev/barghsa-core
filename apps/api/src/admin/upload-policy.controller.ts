@@ -201,6 +201,7 @@ export class UploadPolicyController {
         ? { effectiveFrom: parsed.data.effectiveFrom }
         : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -239,6 +240,7 @@ export class UploadPolicyController {
         ? { effectiveUntil: parsed.data.effectiveUntil }
         : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }

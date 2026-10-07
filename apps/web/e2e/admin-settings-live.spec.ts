@@ -607,8 +607,17 @@ for (const locale of ['en', 'fa'])
     });
     await page.goto('/admin/upload-policies');
     const row = page
-      .locator('tbody tr')
-      .filter({ has: page.getByRole('rowheader', { name, exact: true }) });
+      .getByRole('row')
+      .filter({ has: page.getByRole('rowheader', { name, exact: true }) })
+      .or(
+        page
+          .getByRole('list', {
+            name: fa ? 'محدودیت‌های مؤثر بارگذاری' : 'Effective upload limits',
+            exact: true,
+          })
+          .getByRole('listitem')
+          .filter({ has: page.getByRole('heading', { name, exact: true }) })
+      );
     await expect(row).toContainText(fa ? 'پیش‌فرض استقرار' : 'Deployment defaults');
     for (const value of ['1', '2']) {
       await row
@@ -1781,12 +1790,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const headers = {
       cookie: `barghsa_session=${http.session}`,
       'x-csrf-token': http.csrf,
@@ -2059,12 +2063,7 @@ for (const locale of ['en', 'fa'])
     // This full lifecycle repeats real password verification for each protected operation.
     test.setTimeout(60_000);
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const headers = {
       cookie: `barghsa_session=${http.session}`,
       'x-csrf-token': http.csrf,
@@ -2134,6 +2133,21 @@ for (const locale of ['en', 'fa'])
       ['saving_plan', fa ? 'طرح‌های صرفه‌جویی' : 'Saving plans'],
     ]) {
       const name = `Catalogue ${type} ${locale}`;
+      if (type === 'saving_plan') {
+        const hardware = (await (
+          await page.request.get(`${apiBase}?type=hardware`, { headers })
+        ).json()) as Array<{ id: string; title: { en: string } }>;
+        const compatible = hardware.find((row) => row.title.en === `Catalogue hardware ${locale}`);
+        expect(compatible).toBeDefined();
+        expect(
+          (
+            await page.request.put(`${apiBase}/${compatible!.id}`, {
+              headers,
+              data: { status: 'active' },
+            })
+          ).status()
+        ).toBe(200);
+      }
       await page.getByRole('tab', { name: tab, exact: true }).click();
       await page
         .getByRole('button', { name: fa ? 'افزودن محصول' : 'Add product', exact: true })
@@ -2148,6 +2162,10 @@ for (const locale of ['en', 'fa'])
       if (type === 'consultation')
         await form
           .getByLabel(fa ? 'مشاوره نیروگاه' : 'Generation station consultation', { exact: true })
+          .check();
+      if (type === 'saving_plan')
+        await form
+          .getByRole('checkbox', { name: new RegExp(`Catalogue hardware ${locale}`) })
           .check();
       await save();
       await page
@@ -2171,6 +2189,29 @@ for (const locale of ['en', 'fa'])
       await expect(page.locator('main')).toContainText(
         fa ? '9,007,199,254,740,993' : '۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۳'
       );
+      if (type === 'saving_plan') {
+        const agreementBase = `${http.base}/api/admin/catalogue/saving-plans/${id}/agreements`;
+        const drafted = await page.request.post(`${agreementBase}/draft`, {
+          headers,
+          data: {
+            title: `Catalogue agreement ${locale}`,
+            body: 'The customer accepts this plan and its compatible equipment.',
+          },
+        });
+        expect(drafted.status()).toBe(201);
+        const agreement = (await drafted.json()) as { id: string };
+        expect(
+          (
+            await page.request.post(`${agreementBase}/${agreement.id}/activate`, { headers })
+          ).status()
+        ).toBe(201);
+        await settleLiveRequests();
+        await page.reload();
+        await page.getByRole('tab', { name: tab, exact: true }).click();
+        await page
+          .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+          .click();
+      }
       await page.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true }).click();
       await confirm();
       expect(await detail()).toMatchObject({ status: 'active' });

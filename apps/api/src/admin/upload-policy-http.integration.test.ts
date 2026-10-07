@@ -255,3 +255,96 @@ it('requires explicit offsets for policy scheduling and persists the intended UT
   expect(row.effective_from.toISOString()).toBe('2035-01-01T08:30:00.000Z');
   expect(row.effective_until.toISOString()).toBe('2035-01-02T20:00:00.000Z');
 });
+
+async function resetPolicyActor() {
+  await http.pool.query(
+    "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day',step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='operator'",
+    [headers.operator!['X-CSRF-Token']]
+  );
+}
+async function policySnapshot() {
+  return {
+    policies: (await http.pool.query('SELECT * FROM upload_policies ORDER BY id')).rows,
+    audits: (
+      await http.pool.query(
+        "SELECT * FROM audit_log WHERE event='change_recorded' AND metadata::jsonb->>'entity'='upload_policy' ORDER BY id"
+      )
+    ).rows,
+  };
+}
+function policyAuthorityMutation(change: string) {
+  return change === 'revoked'
+    ? 'revoked_at=clock_timestamp()'
+    : change === 'expired'
+      ? "expires_at=clock_timestamp()-INTERVAL '1 second'"
+      : change === 'csrf'
+        ? "csrf_token='changed-proof'"
+        : "step_up_verified_at=clock_timestamp()-INTERVAL '16 minutes'";
+}
+for (const action of ['create', 'end'] as const) {
+  for (const change of ['revoked', 'expired', 'csrf', 'step-up'] as const) {
+    it(`rolls back upload policy ${action} when ${change} authority changes before commit`, async () => {
+      await resetPolicyActor();
+      await http.pool.query('DELETE FROM upload_policies');
+      const initial = await request('', 'POST', policy);
+      expect(initial.status).toBe(201);
+      const saved = (await initial.json()) as { id: string };
+      const before = await policySnapshot();
+      await http.pool
+        .query(`CREATE FUNCTION change_policy_session() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN UPDATE sessions SET ${policyAuthorityMutation(change)} WHERE user_id='operator'; RETURN NEW; END $$;
+        CREATE TRIGGER change_policy_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='change_recorded' AND NEW.metadata::jsonb->>'entity'='upload_policy') EXECUTE FUNCTION change_policy_session()`);
+      try {
+        const response =
+          action === 'create'
+            ? await request('', 'POST', { ...policy, maxSizeBytes: 2048 })
+            : await request(`/${saved.id}/end`, 'POST', {});
+        expect(response.status).toBe(['revoked', 'expired'].includes(change) ? 401 : 403);
+        expect(await policySnapshot()).toEqual(before);
+        expect((await request('/access')).status).toBe(200);
+      } finally {
+        await http.pool.query(
+          'DROP TRIGGER change_policy_session ON audit_log; DROP FUNCTION change_policy_session()'
+        );
+        await resetPolicyActor();
+      }
+    });
+  }
+}
+for (const change of ['revoked', 'expired', 'csrf', 'step-up'] as const) {
+  it(`rejects upload policy creation when ${change} authority changes while waiting for the actor`, async () => {
+    await resetPolicyActor();
+    await http.pool.query('DELETE FROM upload_policies');
+    const before = await policySnapshot();
+    const client = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='operator' FOR UPDATE");
+      const blocker = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      pending = request('', 'POST', policy);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                'SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+                [blocker]
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await client.query(
+        `UPDATE sessions SET ${policyAuthorityMutation(change)} WHERE user_id='operator'`
+      );
+      await client.query('COMMIT');
+      expect((await pending).status).toBe(['revoked', 'expired'].includes(change) ? 401 : 403);
+      expect(await policySnapshot()).toEqual(before);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await resetPolicyActor();
+    }
+  });
+}

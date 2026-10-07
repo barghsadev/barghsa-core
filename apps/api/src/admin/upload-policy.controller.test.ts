@@ -104,6 +104,7 @@ describe('UploadPolicyController (T-09.12.05)', () => {
       maxSizeBytes: 5 * 1024 * 1024,
       effectiveFrom: '2026-02-01T00:00:00.000Z',
       actorUserId: 'admin-1',
+      session: adminReq.session,
       ip: '127.0.0.1',
     });
     expect(result).toEqual(policyDto);
@@ -189,6 +190,7 @@ describe('UploadPolicyController (T-09.12.05)', () => {
       id: POLICY_ID,
       effectiveUntil: '2026-08-28T12:00:00.000Z',
       actorUserId: 'admin-1',
+      session: adminReq.session,
       ip: '127.0.0.1',
     });
     expect(result).toEqual(policyDto);
@@ -207,6 +209,7 @@ describe('UploadPolicyController (T-09.12.05)', () => {
     expect(service.end).toHaveBeenCalledWith({
       id: POLICY_ID,
       actorUserId: 'admin-1',
+      session: adminReq.session,
       ip: '127.0.0.1',
     });
   });

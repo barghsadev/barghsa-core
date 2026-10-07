@@ -1,3 +1,6 @@
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -69,6 +72,7 @@ export interface CreateUploadPolicyInput {
   /** ISO timestamp the policy takes effect (inclusive). Defaults to now. */
   effectiveFrom?: string;
   actorUserId: string;
+  session: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -77,6 +81,7 @@ export interface EndUploadPolicyInput {
   /** ISO timestamp the policy stops applying (exclusive). Defaults to now. */
   effectiveUntil?: string;
   actorUserId: string;
+  session: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -247,7 +252,7 @@ export class UploadPolicyService {
       throw this.invalidEffectiveDate('effectiveFrom');
     }
 
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const open = await this.findOpenPolicy(q, input.category);
       if (open !== null) {
         const openFrom = new Date(open.effective_from);
@@ -331,7 +336,7 @@ export class UploadPolicyService {
           new Date(),
         ]
       );
-      await this.recordChange(q, {
+      await this.recordChange(verifiedAt, q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
         entity: 'upload_policy',
@@ -371,7 +376,7 @@ export class UploadPolicyService {
       throw this.invalidEffectiveDate('effectiveUntil');
     }
 
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const current = await this.findPolicyById(q, input.id);
       if (!current) throw this.policyNotFound(input.id);
 
@@ -401,7 +406,7 @@ export class UploadPolicyService {
           WHERE id = $2 AND effective_until IS NULL`,
         [effectiveUntil, input.id]
       );
-      await this.recordChange(q, {
+      await this.recordChange(verifiedAt, q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
         entity: 'upload_policy',
@@ -515,14 +520,19 @@ export class UploadPolicyService {
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
   private async withTransaction<T>(
     actorUserId: string,
-    fn: (q: DbExecutor) => Promise<T>
+    session: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    fn: (q: DbExecutor, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actorUserId)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:uploads:edit');
-      const result = await fn(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await fn(client, verifiedAt);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       committed = true;
       return result;
@@ -561,6 +571,7 @@ export class UploadPolicyService {
 
   /** Record the epic's `change_recorded` audit event. */
   private async recordChange(
+    verifiedAt: Date,
     q: DbExecutor,
     input: {
       actorUserId: string;
@@ -579,7 +590,13 @@ export class UploadPolicyService {
       [
         uuidv7(),
         input.actorUserId,
-        JSON.stringify({ entity: input.entity, action: input.action, ...input.meta }),
+        JSON.stringify({
+          entity: input.entity,
+          action: input.action,
+          ...input.meta,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        }),
         correlationId,
         input.ip,
         new Date(),

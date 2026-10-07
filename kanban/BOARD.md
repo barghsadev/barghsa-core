@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 418 | Accepted with unchanged source bindings. |
-| verify | 874 | Existing work may be complete; inspect evidence before building. |
+| done | 421 | Accepted with unchanged source bindings. |
+| verify | 871 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,11 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect andaccept existingfour-type productcatalogue,VAT anduploadpolicies against exact admin criteria. Verify currentgrants/session/configaudit,immutable price/ratehistory,referenced-product archive/rule safety,VAT precedence/snapshots andsafe format/content/size enforcement. Buildonly demonstrated gaps;reuse accepted domain andsource-bound checks. Earlierowner/release/budget/operational gates remainopen.
+Inspect andaccept existing failed backgroundjobs anddead-letter notification dashboards againstexact criteria,currentcapabilities/session/retry boundaries,maskedmetadata,state/attempt/history,pendingcommand ownership andactualworker/notification outcomes. Buildonlydemonstratedgaps;reuse valid source-bound evidence. Earlierowner/release/budget/operational gates remainopen.
 
-- `02-auth-users-admin.md#T-09.12.01`: Product catalogue management
-- `02-auth-users-admin.md#T-09.12.02`: VAT configuration
-- `02-auth-users-admin.md#T-09.12.05`: Upload policies configuration
+- `02-auth-users-admin.md#T-09.09.02`: Failed jobs dashboard
+- `02-auth-users-admin.md#T-09.09.03`: Dead-letter notifications
 
 ## v0.2.0: Complete customer journeys
 
@@ -343,11 +342,11 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.10.01` | done | Earlier acceptance_verified | Online wallet top-up limit |
 | `02-auth-users-admin.md#T-09.10.02` | partial | Earlier partial | Mandatory green-electricity rules |
 | `02-auth-users-admin.md#T-09.10.03` | partial | Earlier partial | Green rule activation safety check |
-| `02-auth-users-admin.md#T-09.12.01` | verify | Earlier acceptance_verified | Product catalogue management |
-| `02-auth-users-admin.md#T-09.12.02` | verify | Earlier acceptance_verified | VAT configuration |
+| `02-auth-users-admin.md#T-09.12.01` | done | Earlier acceptance_verified | Product catalogue management |
+| `02-auth-users-admin.md#T-09.12.02` | done | Earlier acceptance_verified | VAT configuration |
 | `02-auth-users-admin.md#T-09.12.03` | partial | Earlier partial | Gift code management |
 | `02-auth-users-admin.md#T-09.12.04` | partial | Earlier partial | Contract template management |
-| `02-auth-users-admin.md#T-09.12.05` | verify | Earlier acceptance_verified | Upload policies configuration |
+| `02-auth-users-admin.md#T-09.12.05` | done | Earlier acceptance_verified | Upload policies configuration |
 | `02-auth-users-admin.md#T-09.12.06` | partial | Earlier partial | Contract electricity increase limits |
 | `02-auth-users-admin.md#T-10.01.01` | done | Earlier acceptance_verified | Staff user list (admin) |
 | `02-auth-users-admin.md#T-10.01.02` | done | Earlier acceptance_verified | Staff permission audit view |

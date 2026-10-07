@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date('2026-01-01T00:00:00Z')),
+}));
 vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -61,6 +64,11 @@ function policyRow(over: Record<string, unknown> = {}) {
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = {
+  userId: ACTOR,
+  sessionId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  csrfToken: 'policy-test-csrf',
+};
 const POLICY_ID = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 
 beforeEach(() => {
@@ -84,6 +92,7 @@ function createInput(
     allowedExtensions: ['.pdf', '.docx'],
     maxSizeBytes: 5 * 1024 * 1024,
     actorUserId: ACTOR,
+    session: SESSION,
     ip: '127.0.0.1',
     ...over,
   } as import('./upload-policy.service.js').CreateUploadPolicyInput;
@@ -93,6 +102,7 @@ function endInput(over: Record<string, unknown> = {}) {
   return {
     id: POLICY_ID,
     actorUserId: ACTOR,
+    session: SESSION,
     ip: '127.0.0.1',
     ...over,
   };
