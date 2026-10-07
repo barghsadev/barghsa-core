@@ -86,6 +86,7 @@ const events = [
   'contract.changes_requested',
   'order.submitted',
   'order.status_changed',
+  'order.cancellation_requested',
 ];
 it.each(events.flatMap((event) => ['owner', 'archived'].map((change) => [event, change] as const)))(
   'denies private %s delivery after its profile %s changes',

@@ -1,3 +1,8 @@
+import {
+  expectCancellationRequestDelivery,
+  expectCancellationRequestRollback,
+} from '../test/cancellation-request-notification-proof.js';
+import { orderDeliverySnapshot } from '../test/order-status-notification-proof.js';
 import { expectCoreAudit } from '../test/core-audit.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
@@ -123,6 +128,7 @@ it('creates only a staff review request, preserves exact retries and exposes it 
   const f = await fixture();
   await publish(f);
   const body = requestBody(f);
+  await expectCancellationRequestRollback(http.pool, f.row.id, () => submit(f, body));
   const response = await submit(f, body);
   expect(response.status, await response.clone().text()).toBe(201);
   const request = (await response.json()) as RequestDto;
@@ -131,7 +137,20 @@ it('creates only a staff review request, preserves exact retries and exposes it 
     reason: body.reason,
     preferredDestination: 'external_bank',
   });
+  const number = (
+    await http.pool.query('SELECT contract_number::text FROM contracts WHERE id=$1', [f.row.id])
+  ).rows[0].contract_number;
+  const notice = await expectCancellationRequestDelivery(
+    http.pool,
+    f.row.id,
+    request.id,
+    f.owner,
+    number,
+    `/contracts/${f.row.id}`
+  );
+  const savedDelivery = await orderDeliverySnapshot(http.pool, notice.id);
   expect(await (await submit(f, body)).json()).toEqual(request);
+  expect(await orderDeliverySnapshot(http.pool, notice.id)).toEqual(savedDelivery);
   await expectCoreAudit(http.pool, 'contract.cancellation_requested', request.id, {
     entity: 'contract_cancellation_request',
     fromState: null,
@@ -615,4 +634,53 @@ it('keeps a solar cancellation request advisory until staff resolves its bound i
     actor: 'request-legal',
     context: 'staff',
   });
+});
+
+it('keeps each advisory request distinct after rejection and keeps manager submission private to its owner', async () => {
+  const f = await fixture();
+  await publish(f);
+  const manager = await login(randomUUID());
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,$2,'Manager')",
+    [f.profile, manager]
+  );
+  await http.pool.query('INSERT INTO user_profile_contexts(user_id,profile_id) VALUES($1,$2)', [
+    manager,
+    f.profile,
+  ]);
+  const first = await submit(f, requestBody(f), manager);
+  expect(first.status, http.logs()).toBe(201);
+  const a = (await first.json()) as RequestDto;
+  expect((await reject(a.id)).status).toBe(201);
+  const second = await submit(f, requestBody(f), manager);
+  expect(second.status, http.logs()).toBe(201);
+  const b = (await second.json()) as RequestDto;
+  const number = (
+    await http.pool.query('SELECT contract_number::text FROM contracts WHERE id=$1', [f.row.id])
+  ).rows[0].contract_number;
+  await expectCancellationRequestDelivery(
+    http.pool,
+    f.row.id,
+    a.id,
+    f.owner,
+    number,
+    `/contracts/${f.row.id}`
+  );
+  await expectCancellationRequestDelivery(
+    http.pool,
+    f.row.id,
+    b.id,
+    f.owner,
+    number,
+    `/contracts/${f.row.id}`
+  );
+  expect(a.id).not.toBe(b.id);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT * FROM in_app_notifications WHERE profile_id=$1 AND recipient_user_id=$2 AND type='order.cancellation_requested'",
+        [f.profile, manager]
+      )
+    ).rows
+  ).toEqual([]);
 });

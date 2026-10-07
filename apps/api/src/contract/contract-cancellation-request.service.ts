@@ -165,7 +165,14 @@ export class ContractCancellationRequestService {
                   preferredDestination: input.preferredDestination,
                 }
               );
-              await notifyContractReview(client, id, 'cancellation_requested', input.reason);
+              await notifyContractReview(
+                client,
+                id,
+                'cancellation_requested',
+                input.reason,
+                undefined,
+                requestId
+              );
               return requestId;
             }
           );

@@ -1,3 +1,4 @@
+import { expectCancellationRequestDelivery } from '../test/cancellation-request-notification-proof.js';
 import {
   expectSavingStatusDeliveries,
   expectSavingStatusRollback,
@@ -4706,6 +4707,14 @@ it('binds specified saving cancellation routes to customer requests, approved de
     return (await response.json()) as { id: string };
   };
   const first = await submitRequest();
+  await expectCancellationRequestDelivery(
+    http.pool,
+    order.contractId,
+    first.id,
+    'saving-order-buyer',
+    order.savingOrderId,
+    `/savings/orders/${order.savingOrderId}`
+  );
   const rejection = {
     requestId: first.id,
     reason: 'Confirm the installation address first',

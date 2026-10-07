@@ -1,3 +1,4 @@
+import { notifyCancellationRequest } from './contract-cancellation-request-notifications.js';
 import { contractText } from '@barghsa/i18n/contracts';
 import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
@@ -81,7 +82,8 @@ export async function notifyContractReview(
   id: string,
   event: keyof typeof messages,
   reason?: string,
-  versionId?: string
+  versionId?: string,
+  requestId?: string
 ) {
   const profile = (
     await client.query<{
@@ -163,7 +165,10 @@ export async function notifyContractReview(
       },
     } as const;
     const notifications = new NotificationsService();
-    if (operatingContext === 'customer' && eventKey)
+    if (operatingContext === 'customer' && event === 'cancellation_requested') {
+      if (!requestId) throw new Error('Cancellation notice requires the saved request');
+      await notifyCancellationRequest(client, id, requestId, params);
+    } else if (operatingContext === 'customer' && eventKey)
       await notifications.createCustomerBusinessEvent(
         {
           ...params,
