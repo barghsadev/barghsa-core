@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07T02:18:46.442057+00:00",
+  "updated": "2026-10-07T02:33:55.787294+00:00",
   "source_commit": "93028ff8f858544835a25a16e1ff55536eca4b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -3708,7 +3708,8 @@
       "launch_required": true,
       "remaining": [
         "Renew the earlier acceptance against changed paths; preserve working code.",
-        "Current bundle gate fails Wallet300.19KB/300KB; clean baseline HEAD build also fails300.22KB. Repair payload within unchanged budget before accepting this platform/release gate. Receipts: /Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle"
+        "Current bundle gate fails Wallet300.19KB/300KB; clean baseline HEAD build also fails300.22KB. Repair payload within unchanged budget before accepting this platform/release gate. Receipts: /Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
+        "Wallet cleanup reduces current payload to300.08KB but still violates unchanged300KB budget. This performance criterion is not accepted. Preserve failed measurements and source-bound passing feature evidence; repair remaining overflow at a coherent shared/performance batch. /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups"
       ],
       "owner": null,
       "depends_on": [],
@@ -20108,7 +20109,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.2-electricity-legacy-refund-adoption",
-          "release-0.2-four-service-rehearsal"
+          "release-0.2-four-service-rehearsal",
+          "release-0.3-wallet-ledger-topups"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -20352,7 +20354,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
-              "sha256": "f50d69b3240a87957a8bda0c5f92da4814431e0e40d7504496dd077563b2280d"
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -20435,7 +20437,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
             "Legacy refund adoption renewal:153 distinct related cases pass, plus2 snapshot checks; final API/DB/web types, builds, lint/format and affected SAST pass. Exact historical SQL/journal and original refund engine preserved; prior dictionary AST unchanged. Current receipt and source-bound proof: /Users/majid/.local/state/barghsa-manual-batches/electricity-legacy-refund-adoption",
-            "Four-service rehearsal renewal: prior effective criteria preserved. Production source/builds unchanged; all original browser route fixtures/direct business assertions and185 assertions retained. Final bilingual desktop/mobile journeys pass; saving duplicate fixture now independently provisions two units and all7 cases pass. Source-bound proof and receipts: /Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal"
+            "Four-service rehearsal renewal: prior effective criteria preserved. Production source/builds unchanged; all original browser route fixtures/direct business assertions and185 assertions retained. Final bilingual desktop/mobile journeys pass; saving duplicate fixture now independently provisions two units and all7 cases pass. Source-bound proof and receipts: /Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
+            "Scoped wallet cleanup renewal only. Full load/review/submit/confirm/profile guard body is byte-identical to prior source. Removed scalar error branches were unreachable because owned form feedback already handles those codes; current62 customer UI and68 scoped browsers preserve amount/file/limit/private denial and retry assertions. Pure previews retain exact prior parsing/integer/rounding/bigint expressions. Other accepted criteria retained; no broad rerehearsal claimed. /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -48325,12 +48328,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.01 | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48389,8 +48390,89 @@
           "apps/api/src/wallet/wallet.service.test.ts",
           "apps/api/src/wallet/wallet-credit.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current wallets schema uses profileId as required UUID PK/RESTRICT FK, one wallet per profile; posted/reserved int8 defaults0,integer version and timestamps remain. availableBalance is derived on reads as posted-reserved and is not stored. Actual current schema/PostgreSQL and HTTP access cases verify FK,default,profile isolation and int8 serialization.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48404,12 +48486,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.02 | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48470,8 +48550,89 @@
           "apps/api/src/wallet/wallet.service.test.ts",
           "apps/api/src/wallet/wallet-credit.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current UUIDv7 ledger schema retains wallet FK,seven canonical types,seven canonical states,signed nonzero int8,unique idempotency key,optional reference/description,JSONB/defaults and timestamps. Receipt attachment and reversal links add uniqueness without deleting history. Schema/PG cases verify every canonical state/type,nonzero/FK/idempotency enforcement and deletion restrictions. Existing application mutations preserve original issued monetary rows and explicit lifecycle/reversal history.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48485,12 +48646,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.03 | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48551,8 +48710,89 @@
           "apps/api/src/wallet/wallet.service.test.ts",
           "apps/api/src/wallet/wallet-credit.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "WalletService.credit validates positive int8/reference/type/key,locks profile then wallet and uses the current transaction-owned shared postWalletCredit kernel. It inserts one Completed credit and increments postedBalance/version with expected version and nonnegative-posted guard atomically. Exact replay matches canonical profile,amount,type and reference; mismatches/conflicts and archived new mutations fail closed. Caller-owned clients never commit/release independently. Current real PostgreSQL credit and actual receipt confirmation cases pass.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48566,12 +48806,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.04 | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48631,8 +48869,89 @@
           "apps/api/src/wallet/wallet.service.test.ts",
           "apps/api/src/wallet/wallet-credit.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "WalletService.debit validates positive amount/debit type/key,locks canonical profile/wallet and checks available balance and optional expected version. Reserve-then-complete changes posted/reserved/version and inserts exact negative Completed debit within one transaction. Insufficient funds,version mismatch,idempotency collisions,concurrency and caller-owned rollback preserve one outcome/no overspend. Current PG/unit cases pass.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48646,12 +48965,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.05 | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48711,8 +49028,89 @@
           "apps/api/src/wallet/wallet.service.test.ts",
           "apps/api/src/wallet/wallet-credit.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Reserve locks profile/wallet,checks positive amount/current available/version and inserts one Reserved reservation with exact replay matching. Release locks profile/reservation/wallet,rechecks type/state and reserved floor,updates reserved/version and marks Released atomically. Repeated release returns the stored result; invalid states,archived new mutations,canonical UUID spellings and concurrent attempts retain boundaries. Current PG cases pass.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48726,12 +49124,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.06 | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48790,8 +49186,89 @@
           "apps/api/src/wallet/wallet.service.test.ts",
           "apps/api/src/wallet/wallet-credit.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "All current balance mutation paths retain version predicates/increments under appropriate profile/wallet locks. applyPostedBalanceDelta uses a materialized active-profile lock and current expected version plus optional posted/available floor; stale writes throw Conflict. Real PG optimistic-lock/concurrent debit/credit/reserve cases verify exact money and rollback; no cache overwrite bypass added.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48805,12 +49282,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.07 | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48869,8 +49344,89 @@
           "apps/api/src/wallet/wallet.service.test.ts",
           "apps/api/src/wallet/wallet-credit.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+              "sha256": "f5cb5f51109b5f782e05e6260c4dfb39f57f61b6c9ff385243a78ae2b16040d3"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+              "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+              "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+              "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current Drizzle and production constraints enforce (posted_balance-reserved_balance)>=0 on the derived expression. No stored available-balance column introduced. Current schema/PostgreSQL tests reject overspending/invalid derived balance and retain exact valid values and defaults.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48884,12 +49440,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-749a11efe955"
       },
       "requirement": "| T-04.2.01.08 | Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -48936,8 +49490,85 @@
         "changed_paths": [
           "apps/worker/src/main.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
+              "sha256": "7c63417d465ac9f5ec9b7851235839362011eba700918b242bb6dd0e9756d1e6"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
+              "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
+              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reconciliation.ts",
+              "sha256": "6e9b100dfa56f366f183fcab9b82ec50a7b12715a6792712ce9e3d56dd460712"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current main worker registers bounded,overlap/drain-safe reconciliation polling with default hourly cadence and job result recording. Scanner locks each wallet with SKIP LOCKED,recomputes Completed posted sums and active Reserved sums as exact bigint,then reports current mismatches to the Finance reconciliation queue. It does not repair/overwrite money automatically and does not duplicate an open exception.41 current reconciliation/expiry worker cases include matching,pending-only,oversized sums,concurrency,retry and per-row isolation.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -48951,12 +49582,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d18942aedc0f"
       },
       "requirement": "| T-04.2.02.01 | Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -49027,9 +49656,101 @@
         "batches": [
           "2026-09-24-invoice-return-after-top-up",
           "2026-09-24-invoice-wallet-shortfall-handoff",
-          "2026-09-30-online-topup-financial-review"
+          "2026-09-30-online-topup-financial-review",
+          "release-0.3-wallet-ledger-topups"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/financial-submission-actor.ts",
+              "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-authority.integration.test.ts",
+              "sha256": "a3f7cfcf9c73462673474e04d9a060c64bc067c9e5187fa6a821e6acad22f00e"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+              "sha256": "75cfaae2a6308de878f20ff3c1b474e5dbb65b5b20115807c35e6e3e83a853b8"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.integration.test.ts",
+              "sha256": "e6f2e4e9c291452813914a6d1442fe476cddba5a585f98a390909e5d9712c009"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/web/e2e/online-payment-return.spec.ts",
+              "sha256": "9b6e148f7806514d1c41ab858e94faf520aad52354482126c73a057bba1f4485"
+            },
+            {
+              "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+              "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current customer/API flow validates exact positive amount and locked versioned ceiling,with default2,000,000,000IRR and owner-approved zero kill switch. Current actor/profile/session/CSRF and captured review protect new Pending intent creation; no wallet credit occurs at initiation. Durable provider initialization claim and provider idempotency key bind one attempt; uncertain start recovers rather than minting another payment. Original accepted intents replay their stored configuration while new intents use current limits. Exact acknowledgement/redirect checks,current access recheck and local provider/HTTP concurrency cases pass.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -49118,8 +49839,18 @@
           "apps/web/src/routes/_app/wallet.tsx",
           "apps/web/e2e/online-payment-return.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": null,
+        "implementation_checkpoint": {
+          "base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "checks": [
+            "55 current callback service/controller/PG/recovery cases pass. Current verified merchant/order/amount binding,event replay,late expiry recovery,server provider verification and one WalletService credit inspected. Browser GET redirects to current authenticated CSRF confirmation; redirect alone does not credit. Literal callback CSRF policy awaits the previously requested owner decision."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "acceptance": "implemented financial boundaries verified; task remains partial pending owner policy and live-provider operational gates"
+        }
       }
     },
     {
@@ -49133,12 +49864,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d18942aedc0f"
       },
       "requirement": "| T-04.2.02.03 | Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -49228,9 +49957,113 @@
           "2026-09-30-bank-receipt-topup-financial-review",
           "2026-10-01-wallet-receipt-bank-metadata",
           "2026-10-01-wallet-receipt-evidence",
-          "2026-10-01-wallet-receipt-timeline"
+          "2026-10-01-wallet-receipt-timeline",
+          "release-0.3-wallet-ledger-topups"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+              "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+            },
+            {
+              "path": "apps/api/src/finance/financial-submission-actor.ts",
+              "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-actor.ts",
+              "sha256": "619524a50c605981d2316b437a3c1dac9dc808bf6f53ed6c46c9240143fe9165"
+            },
+            {
+              "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+              "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+            },
+            {
+              "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+              "sha256": "2401f88002bde001a366c719f30140f6e48d8e4a7b0bfe55dd113e8267779153"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-topup.integration.test.ts",
+              "sha256": "154e281b83918ae7e040e606ea98a66fda9f0d6bda90660e2662589d855493a1"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+              "sha256": "422fb39d48c2f300060677b7606995c3b1696cac25cc11d285e28cc2e3ba43eb"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "97379da0b9ec5794a25f8119308b957fbe45a8ef489c8a315c2366412eb44adf"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-fields.ts",
+              "sha256": "74bc5c9c5c6ec43c95ad749e6d3f80c9479fe7a57cb6d977b1201c1911152105"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
+              "sha256": "ff33834ecf13c1eec0f00989220c3e33f15db7a45a174cf31a98917644b4f551"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current receipt submission preserves positive int8 amount without configured maximum,date,payer reference,file and optional note/bank name. Current actor/profile/session,confirmed provenance,attachment-first/idempotency locks,shared cross-flow claim,immutable sealing and review hash bind one Pending receipt without changing wallet balance. Exact replay retains frozen metadata; conflicting/missing/corrupt/foreign/unconfirmed attachments fail. Customer source/browser cases retain exact money/file through field errors,lost acknowledgements,profile changes and safe retries; all original validation assertions remain.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -49244,12 +50077,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d18942aedc0f"
       },
       "requirement": "| T-04.2.02.04 | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -49378,9 +50209,153 @@
         "batches": [
           "2026-10-01-staff-receipt-queue-query",
           "2026-10-01-wallet-receipt-bank-metadata",
-          "2026-10-01-wallet-receipt-timeline"
+          "2026-10-01-wallet-receipt-timeline",
+          "release-0.3-wallet-ledger-topups"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+              "sha256": "eac2a0488f4eddee7c1c6585176931781cd1f1d6a04994415b4e5f1a47b6df00"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+              "sha256": "22ca40322761d6de2190332ee314b38629008dcaea3fab2233f68f4df51634f2"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "abfa5762b9d80a65bd367b1e1649c99649722e00448f3b55f7de94a640c60a55"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/e2e/receipt-emergency.spec.ts",
+              "sha256": "4f7d0b8938e8e0169871c13615931b54ee4390163d1a86e8e70ad4570c6813a8"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/bank-receipt-confirmation.ts",
+              "sha256": "1572ee12f4defc1166bd5aaca35d6e8d8916f57403495d7bdf6859887a15d97d"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+              "sha256": "4fbe73ae188a72f8a867021fc8c4167206c040beb3e9e5f693f1164ea55b8160"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "143786921ef55380f04f91b9edb8456ca6b79c69064fa8d564e9f4d8620de383"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+            },
+            {
+              "path": "docs/operations/notification-delivery-recovery.md",
+              "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/i18n/src/wallet-receipts.ts",
+              "sha256": "2f86ee0207cb4f0784c015303722258ff300b9bd3fb1231442ae729b6da8db4d"
+            },
+            {
+              "path": "packages/shared/src/finance/online-topup-expiry.ts",
+              "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current Finance list/detail/UI/API reviews frozen receipt data and captured target/hash; dedicated permission,current session/CSRF/recent proof and threshold/approval locks are rechecked inside the transaction and before commit. Confirm posts one verified Completed credit and releases the Pending intent; reject requires a visible reason and never credits. Decision/audit/customer outbox commit atomically or fully roll back; concurrent retry and revocation/expiry preserve boundaries.72 staff UI cases and current HTTP/PG plus captured approval/denial/owned-feedback browsers pass.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -49394,12 +50369,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d18942aedc0f"
       },
       "requirement": "| T-04.2.02.05 | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -49478,8 +50451,113 @@
           "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
           "apps/api/src/wallet/wallet.service.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "b62ff1862e00f0623f1722fd5c52bb595734ffcc51f467dac4c1344f88c012ac"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+              "sha256": "eac2a0488f4eddee7c1c6585176931781cd1f1d6a04994415b4e5f1a47b6df00"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+              "sha256": "22ca40322761d6de2190332ee314b38629008dcaea3fab2233f68f4df51634f2"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "593444e86b08c0a4f15d4b28525dfd7c1c2ce2b6650216b4257865e1fcebf28c"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "abfa5762b9d80a65bd367b1e1649c99649722e00448f3b55f7de94a640c60a55"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-overpayment.ts",
+              "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current invoice-linked confirmation locks wallet then invoice,enforces the same profile and eligible state,and allocates min(receipt,remaining) to invoice. Exact excess uses a separate WalletService.credit and independent receipt-bound idempotency key,with immutable allocation snapshot and audit. No invoice over-settlement. Exact/partial/excess,bigint,racing/replayed confirmations and failure rollback are verified by actual PG/service cases and shared allocation contracts.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -49493,12 +50571,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d18942aedc0f"
       },
       "requirement": "| T-04.2.02.06 | Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -49566,8 +50642,93 @@
           "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
           "apps/web/src/pages/WalletPage.tsx"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "9df696127369ffffd531e5e2890e9f7384df672d1d0a0f6f4d7ae13607ba0765"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "c5d93fc3339c06455138d9dcc898acf9df4c500712ef90a145036ecca9fe43d5"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.integration.test.ts",
+              "sha256": "e6f2e4e9c291452813914a6d1442fe476cddba5a585f98a390909e5d9712c009"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-topup-config.ts",
+              "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current versioned app_config ceiling read/default/corrupt-value handling and update remain owner-approved. Writer and new-intent validator share advisory/config locks,including absent first row. Expected-version/current grant/session/proof checks and old/new value/version/audit commit together; global cache version invalidates only after success.19 config unit and15 actual current HTTP cases plus scoped limit/retry browsers pass,including revoke/CSRF/proof changes while waiting and audit-time expiry rollback.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -49581,12 +50742,10 @@
         "story": "04-invoices-wallet-contracts.md#spec-d18942aedc0f"
       },
       "requirement": "| T-04.2.02.07 | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -49659,8 +50818,109 @@
           "apps/worker/src/main.ts",
           "apps/api/src/wallet/online-topup.service.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ],
+        "current_acceptance": {
+          "kind": "current-wallet-ledger-and-topup-verification",
+          "reviewed_base_commit": "567c623aef4792a93d61b021c903927ad597f956",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/wallet/online-topup-authority.integration.test.ts",
+              "sha256": "a3f7cfcf9c73462673474e04d9a060c64bc067c9e5187fa6a821e6acad22f00e"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "cfdab11dad62b75f909cab6e2ad4ae7cfe17801b916f6cfeede8b628bbc026e5"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+            },
+            {
+              "path": "apps/api/src/wallet/profile-lock.ts",
+              "sha256": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d"
+            },
+            {
+              "path": "apps/web/src/hooks/useReceiptForm.ts",
+              "sha256": "b2c2b14971f6bd8b9128b96e7e079887a65002680c3de5b5da21666fbc2d2201"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/online-topup-action.ts",
+              "sha256": "b65e5f3b4a22e379d7befa2dbffc79d08915586b00b8b9f436f711389bc016b2"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "ec2eb119085a1e0fe464cf95c0196db93e239272671764658ddd0a2de0c4dbf0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "b44be92207f3b1082cc497d01e883b7db8f5e6d0efe4899fbaa1cbd38f3123de"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "4490f0e77b4d786a2c2d41e3db7852dc769cf3192e35d2ac420a85a0ac9f03c1"
+            },
+            {
+              "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+              "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+              "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+              "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+            },
+            {
+              "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+              "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+            },
+            {
+              "path": "docs/operations/notification-delivery-recovery.md",
+              "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
+            },
+            {
+              "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
+              "sha256": "f4de404ae7c395f4e7e1aa7b58c1c75f133aad3402270b4ee8a710b28263b73d"
+            },
+            {
+              "path": "packages/db/src/schema/wallets.ts",
+              "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            },
+            {
+              "path": "packages/shared/src/finance/online-topup-expiry.ts",
+              "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "df2c5babee6c3ce209dc473c776bdb4555f06410400928c92bde5dde30b4d4f1"
+            }
+          ],
+          "checks": [
+            "Current expiry worker selects only old online Pending top-ups within configurable TTL/batch bounds,rechecks under profile/row locks and rejects with expiry metadata,mandatory system-actor audit and one customer notice. Bank receipts/non-Pending/concurrently changed/locked rows are skipped; missing actor aborts without writes and per-row failure is isolated. Historical provider references remain available: authenticated verified late settlement/recovery posts at most one credit rather than losing a paid result. Current worker/PG and callback recovery cases pass.",
+            "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+            "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+          "limitations": [
+            "Local actual PostgreSQL/compiled HTTP and production-browser fixtures; live payment/provider/deployment remain operational gates.",
+            "Callback CSRF disposition and Wallet bundle budget remain unresolved. No release acceptance or production authorization."
+          ]
+        }
       }
     },
     {
@@ -142492,7 +143752,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
-              "sha256": "f50d69b3240a87957a8bda0c5f92da4814431e0e40d7504496dd077563b2280d"
+              "sha256": "f2a7a961de0a14ac89a90ff63c3d254bb3354e00e2af3a203ee47619ce6f58f5"
             },
             {
               "path": "apps/web/src/routes/_app/wallet.tsx",
@@ -142520,11 +143780,14 @@
             "Eight zero-retry production browser cases pass in Persian/English, light/dark and Chromium/mobile Safari; denial clears private content/pagination, exactly one deliberate recovery fetch starts page one, applied filters and unsubmitted bank draft remain. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/browser-reviewed.json",
             "Web production build/types, focused lint and all 85 unchanged numeric route/interaction budgets pass; 495 build assets bound. /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/browser-source.json",
             "Native amounts above Number.MAX_SAFE_INTEGER, original receipt recovery, keyboard and WCAG assertions retained. Reviewed original Persian captures and exact failed-check dispositions: /Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope/review.json",
-            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json"
+            "Scoped dependency renewal at ba890a5: only proxy-addr/source-map-js patch packages change; production source is unchanged.136 boundary cases, monorepo types/build and85budgets pass;978compiled web/i18n files are byte-identical, so prior browser receipts are reused for identical client behavior. /Users/majid/.local/state/barghsa-manual-batches/dependency-security-patches/review.json",
+            "Scoped wallet cleanup renewal only. Full load/review/submit/confirm/profile guard body is byte-identical to prior source. Removed scalar error branches were unreachable because owned form feedback already handles those codes; current62 customer UI and68 scoped browsers preserve amount/file/limit/private denial and retry assertions. Pure previews retain exact prior parsing/integer/rounding/bigint expressions. Other accepted criteria retained; no broad rerehearsal claimed. /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope"
         },
-        "batches": []
+        "batches": [
+          "release-0.3-wallet-ledger-topups"
+        ]
       }
     },
     {
@@ -152223,6 +153486,34 @@
         "Complete bounded final diff reviewed; final API/web types,changed lint/format,strict SAST,suppression checker and production web build pass. Only production edit is native invoice table focus/arrow scrolling. Global bundle gate remains FAILED only for Wallet at300.19KB/300KB; baseline HEAD also fails at300.22KB. Budget and assertions unchanged. This batch accepts only these effective task criteria, not a release or the global performance gate."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle"
+    },
+    "release-0.3-wallet-ledger-topups": {
+      "title": "Accept current wallet ledger and top-up boundaries; remove obsolete root feedback branches",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.01.01",
+        "04-invoices-wallet-contracts.md#T-04.2.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.01.03",
+        "04-invoices-wallet-contracts.md#T-04.2.01.04",
+        "04-invoices-wallet-contracts.md#T-04.2.01.05",
+        "04-invoices-wallet-contracts.md#T-04.2.01.06",
+        "04-invoices-wallet-contracts.md#T-04.2.01.07",
+        "04-invoices-wallet-contracts.md#T-04.2.01.08",
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "02-auth-users-admin.md#T-03.03.06",
+        "release-readiness#R-01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02"
+      ],
+      "summary": "Fourteen wallet criteria accepted and two prior WalletPage bindings renewed narrowly.55 callback cases pass but task remains partial pending owner policy. Wallet budget reduced but still fails; no release/deployment.",
+      "validation": [
+        "898 distinct feature cases pass:483 API (394 ledger/top-up/receipt+19 config unit+15 config HTTP+55 callback),41 worker,52 DB,120 shared,134 UI (62 current customer+72 staff),68 production browsers. All failed/no-case/skipped/overlapping runs excluded. Current backend/dependency artifacts match prior final binding; exact reviewed source and production output restored from the passing browser invocation. Complete receipts/hash/proof: /Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups",
+        "Complete bounded final WalletPage cleanup reviewed. Only unreachable root error branches and cheap pure memo wrappers removed; all network/review/profile/idempotency/acknowledgement handlers,field registration,labels and controls unchanged. Current web types,lint/format,SAST and build pass. Global bundle gate remains FAILED only Wallet300.08KB/300KB,baseline300.22KB; its budget/checker unchanged and acceptance not claimed. Signed callback policy and release dependencies remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-ledger-topups"
     }
   },
   "historical_improvements": [
@@ -152262,25 +153553,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-wallet-ledger-topups",
+    "id": "release-0.3-wallet-payments-reversals",
     "release": "0.3.0",
-    "goal": "Inspect current ledger,balance/version/lock/reconciliation and online/bank-receipt top-up implementation before rebuilding. Verify demonstrated gaps with targeted current-source evidence; fix baseline Wallet bundle overflow within existing budget. Preserve profile isolation,int8 money,receipt/review/idempotency/callback/rollback boundaries. Owner-only callback and v0.2 dispositions remain pending; no milestone acceptance/deployment before dependency gates.",
+    "goal": "Inspect existing invoice wallet funding,replay/concurrency and compensating reversal/chargeback boundaries before rebuilding. Reuse valid unchanged-source wallet/top-up evidence; verify actual payment callers and Finance alerts. Preserve profile/current authority,int8 money,immutable original ledger,derived available floor and exact idempotency/recovery. Signed callback disposition and Wallet300.08KB/300KB performance gate remain unfinished; no milestone acceptance before release dependencies.",
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.01.01",
-      "04-invoices-wallet-contracts.md#T-04.2.01.02",
-      "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "04-invoices-wallet-contracts.md#T-04.2.01.04",
-      "04-invoices-wallet-contracts.md#T-04.2.01.05",
-      "04-invoices-wallet-contracts.md#T-04.2.01.06",
-      "04-invoices-wallet-contracts.md#T-04.2.01.07",
-      "04-invoices-wallet-contracts.md#T-04.2.01.08",
-      "04-invoices-wallet-contracts.md#T-04.2.02.01",
-      "04-invoices-wallet-contracts.md#T-04.2.02.02",
-      "04-invoices-wallet-contracts.md#T-04.2.02.03",
-      "04-invoices-wallet-contracts.md#T-04.2.02.04",
-      "04-invoices-wallet-contracts.md#T-04.2.02.05",
-      "04-invoices-wallet-contracts.md#T-04.2.02.06",
-      "04-invoices-wallet-contracts.md#T-04.2.02.07"
+      "04-invoices-wallet-contracts.md#T-04.2.03.01",
+      "04-invoices-wallet-contracts.md#T-04.2.03.02",
+      "04-invoices-wallet-contracts.md#T-04.2.03.03",
+      "04-invoices-wallet-contracts.md#T-04.2.03.04",
+      "04-invoices-wallet-contracts.md#T-04.2.04.01",
+      "04-invoices-wallet-contracts.md#T-04.2.04.02",
+      "04-invoices-wallet-contracts.md#T-04.2.04.03"
     ]
   },
   "launch_forecast": {

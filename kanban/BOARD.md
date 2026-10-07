@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T02:18:46.442057+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T02:33:55.787294+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 293 | Accepted with unchanged source bindings. |
-| verify | 1014 | Existing work may be complete; inspect evidence before building. |
+| done | 307 | Accepted with unchanged source bindings. |
+| verify | 1000 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,23 +39,15 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current ledger,balance/version/lock/reconciliation and online/bank-receipt top-up implementation before rebuilding. Verify demonstrated gaps with targeted current-source evidence; fix baseline Wallet bundle overflow within existing budget. Preserve profile isolation,int8 money,receipt/review/idempotency/callback/rollback boundaries. Owner-only callback and v0.2 dispositions remain pending; no milestone acceptance/deployment before dependency gates.
+Inspect existing invoice wallet funding,replay/concurrency and compensating reversal/chargeback boundaries before rebuilding. Reuse valid unchanged-source wallet/top-up evidence; verify actual payment callers and Finance alerts. Preserve profile/current authority,int8 money,immutable original ledger,derived available floor and exact idempotency/recovery. Signed callback disposition and Wallet300.08KB/300KB performance gate remain unfinished; no milestone acceptance before release dependencies.
 
-- `04-invoices-wallet-contracts.md#T-04.2.01.01`: Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance`
-- `04-invoices-wallet-contracts.md#T-04.2.01.02`: Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps
-- `04-invoices-wallet-contracts.md#T-04.2.01.03`: Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0`
-- `04-invoices-wallet-contracts.md#T-04.2.01.04`: Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes
-- `04-invoices-wallet-contracts.md#T-04.2.01.05`: Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow
-- `04-invoices-wallet-contracts.md#T-04.2.01.06`: Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion`
-- `04-invoices-wallet-contracts.md#T-04.2.01.07`: Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column
-- `04-invoices-wallet-contracts.md#T-04.2.01.08`: Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue
-- `04-invoices-wallet-contracts.md#T-04.2.02.01`: Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway
-- `04-invoices-wallet-contracts.md#T-04.2.02.02`: Build provider callback handler: verify signature, replay window, event id, merchant context; apply credit via `WalletService.credit()` with idempotency key
-- `04-invoices-wallet-contracts.md#T-04.2.02.03`: Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state
-- `04-invoices-wallet-contracts.md#T-04.2.02.04`: Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()`
-- `04-invoices-wallet-contracts.md#T-04.2.02.05`: Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet
-- `04-invoices-wallet-contracts.md#T-04.2.02.06`: Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission
-- `04-invoices-wallet-contracts.md#T-04.2.02.07`: Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL
+- `04-invoices-wallet-contracts.md#T-04.2.03.01`: Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method
+- `04-invoices-wallet-contracts.md#T-04.2.03.02`: Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit
+- `04-invoices-wallet-contracts.md#T-04.2.03.03`: Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry
+- `04-invoices-wallet-contracts.md#T-04.2.03.04`: Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions
+- `04-invoices-wallet-contracts.md#T-04.2.04.01`: Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance
+- `04-invoices-wallet-contracts.md#T-04.2.04.02`: Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up
+- `04-invoices-wallet-contracts.md#T-04.2.04.03`: Finance alert: push notification + dashboard warning for unresolved chargeback
 
 ## v0.2.0: Complete customer journeys
 
@@ -64,7 +56,7 @@ All four services have a safe browse → intake → review → payment where app
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-01.01` | done | Recorded batch work | Renew identity and all-four-service journey acceptance |
-| `release-readiness#R-01.02` | done | Inventory needed | Inspect and repair customer wallet history ownership |
+| `release-readiness#R-01.02` | done | Recorded batch work | Inspect and repair customer wallet history ownership |
 | `release-readiness#R-01.03` | done | Recorded batch work | Finish the already validated consultation history changes |
 | `release-readiness#R-01.04` | done | Recorded batch work | Verify four complete customer and staff intake journeys |
 | `release-readiness#R-01.05` | done | Inventory needed | Group release notes and screenshots into at most two Telegram posts |
@@ -450,21 +442,21 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.1.05.02` | done | Earlier acceptance_verified | Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement |
 | `04-invoices-wallet-contracts.md#T-04.1.05.03` | done | Earlier acceptance_verified | Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit |
 | `04-invoices-wallet-contracts.md#T-04.1.05.04` | done | Earlier acceptance_verified | Customer-facing invoice details page shows original + linked corrections/replacements with explanations |
-| `04-invoices-wallet-contracts.md#T-04.2.01.01` | verify | Earlier acceptance_verified | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` |
-| `04-invoices-wallet-contracts.md#T-04.2.01.02` | verify | Earlier acceptance_verified | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps |
-| `04-invoices-wallet-contracts.md#T-04.2.01.03` | verify | Earlier acceptance_verified | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` |
-| `04-invoices-wallet-contracts.md#T-04.2.01.04` | verify | Earlier acceptance_verified | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes |
-| `04-invoices-wallet-contracts.md#T-04.2.01.05` | verify | Earlier acceptance_verified | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow |
-| `04-invoices-wallet-contracts.md#T-04.2.01.06` | verify | Earlier acceptance_verified | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` |
-| `04-invoices-wallet-contracts.md#T-04.2.01.07` | verify | Earlier acceptance_verified | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column |
-| `04-invoices-wallet-contracts.md#T-04.2.01.08` | verify | Earlier acceptance_verified | Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue |
-| `04-invoices-wallet-contracts.md#T-04.2.02.01` | verify | Earlier acceptance_verified | Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway |
+| `04-invoices-wallet-contracts.md#T-04.2.01.01` | done | Earlier acceptance_verified | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` |
+| `04-invoices-wallet-contracts.md#T-04.2.01.02` | done | Earlier acceptance_verified | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps |
+| `04-invoices-wallet-contracts.md#T-04.2.01.03` | done | Earlier acceptance_verified | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` |
+| `04-invoices-wallet-contracts.md#T-04.2.01.04` | done | Earlier acceptance_verified | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes |
+| `04-invoices-wallet-contracts.md#T-04.2.01.05` | done | Earlier acceptance_verified | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow |
+| `04-invoices-wallet-contracts.md#T-04.2.01.06` | done | Earlier acceptance_verified | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` |
+| `04-invoices-wallet-contracts.md#T-04.2.01.07` | done | Earlier acceptance_verified | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column |
+| `04-invoices-wallet-contracts.md#T-04.2.01.08` | done | Earlier acceptance_verified | Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue |
+| `04-invoices-wallet-contracts.md#T-04.2.02.01` | done | Earlier acceptance_verified | Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway |
 | `04-invoices-wallet-contracts.md#T-04.2.02.02` | partial | Earlier partial | Build provider callback handler: verify signature, replay window, event id, merchant context; apply credit via `WalletService.credit()` with idempotency key |
-| `04-invoices-wallet-contracts.md#T-04.2.02.03` | verify | Earlier acceptance_verified | Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state |
-| `04-invoices-wallet-contracts.md#T-04.2.02.04` | verify | Earlier acceptance_verified | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` |
-| `04-invoices-wallet-contracts.md#T-04.2.02.05` | verify | Earlier acceptance_verified | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet |
-| `04-invoices-wallet-contracts.md#T-04.2.02.06` | verify | Earlier acceptance_verified | Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission |
-| `04-invoices-wallet-contracts.md#T-04.2.02.07` | verify | Earlier acceptance_verified | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL |
+| `04-invoices-wallet-contracts.md#T-04.2.02.03` | done | Earlier acceptance_verified | Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state |
+| `04-invoices-wallet-contracts.md#T-04.2.02.04` | done | Earlier acceptance_verified | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` |
+| `04-invoices-wallet-contracts.md#T-04.2.02.05` | done | Earlier acceptance_verified | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet |
+| `04-invoices-wallet-contracts.md#T-04.2.02.06` | done | Earlier acceptance_verified | Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission |
+| `04-invoices-wallet-contracts.md#T-04.2.02.07` | done | Earlier acceptance_verified | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL |
 | `04-invoices-wallet-contracts.md#T-04.2.03.01` | verify | Earlier acceptance_verified | Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method |
 | `04-invoices-wallet-contracts.md#T-04.2.03.02` | verify | Earlier acceptance_verified | Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit |
 | `04-invoices-wallet-contracts.md#T-04.2.03.03` | verify | Earlier acceptance_verified | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry |

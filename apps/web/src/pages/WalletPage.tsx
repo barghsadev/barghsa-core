@@ -13,7 +13,7 @@ import {
   type WalletPaymentReturn,
 } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
@@ -54,18 +54,10 @@ function advertisedOnlineTopUpLimit(wallet: WalletBalance | null): number | null
   return wallet.onlineTopUpLimit;
 }
 
-type PageError = 'no-profile' | 'load' | OnlineTopUpActionError;
+type PageError =
+  'no-profile' | 'load' | Exclude<OnlineTopUpActionError, 'invalid-amount' | 'limit-exceeded'>;
 
-type ReceiptError =
-  | 'invalid-amount'
-  | 'invalid-date'
-  | 'invalid-payer-ref'
-  | 'invalid-bank-name'
-  | 'invalid-file'
-  | 'upload'
-  | 'conflict'
-  | 'maintenance'
-  | 'generic';
+type ReceiptError = 'upload' | 'conflict' | 'maintenance' | 'generic';
 
 function newIdempotencyKey(): string {
   return crypto.randomUUID();
@@ -74,7 +66,6 @@ function newIdempotencyKey(): string {
 function mapReceiptSubmitError(status: number): ReceiptError {
   if (status === 503) return 'maintenance';
   if (status === 409) return 'conflict';
-  if (status === 400) return 'generic';
   return 'generic';
 }
 
@@ -164,20 +155,14 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
 
   const amountDigits = normalizeIrrAmountDigits(amountInput);
   const amountValue = amountDigits === '' ? null : Number(amountDigits);
-  const tomanPreview = useMemo(() => {
-    if (amountValue === null || !Number.isSafeInteger(amountValue)) return null;
-    return Math.round(amountValue / 10);
-  }, [amountValue]);
+  const tomanPreview =
+    amountValue === null || !Number.isSafeInteger(amountValue)
+      ? null
+      : Math.round(amountValue / 10);
 
   const receiptAmountDigits = normalizeIrrAmountDigits(receiptAmountInput);
-  const receiptAmountIrR = useMemo(
-    () => parseBankReceiptTopUpAmountIrR(receiptAmountDigits),
-    [receiptAmountDigits]
-  );
-  const receiptTomanPreview = useMemo(() => {
-    if (receiptAmountIrR === null) return null;
-    return receiptAmountIrR / 10n;
-  }, [receiptAmountIrR]);
+  const receiptAmountIrR = parseBankReceiptTopUpAmountIrR(receiptAmountDigits);
+  const receiptTomanPreview = receiptAmountIrR === null ? null : receiptAmountIrR / 10n;
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -440,38 +425,24 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
         ? t('wallet.page.noProfile', locale)
         : error === 'load'
           ? t('wallet.page.loadError', locale)
-          : error === 'limit-exceeded'
-            ? t('wallet.page.limitExceeded', locale)
-            : error === 'invalid-amount'
-              ? t('wallet.page.invalidAmount', locale)
-              : error === 'gateway'
-                ? t('wallet.page.gatewayError', locale)
-                : error === 'conflict'
-                  ? t('wallet.page.conflict', locale)
-                  : error === 'maintenance'
-                    ? tMaintenance('title', locale)
-                    : t('wallet.page.loadError', locale);
+          : error === 'gateway'
+            ? t('wallet.page.gatewayError', locale)
+            : error === 'conflict'
+              ? t('wallet.page.conflict', locale)
+              : error === 'maintenance'
+                ? tMaintenance('title', locale)
+                : t('wallet.page.loadError', locale);
 
   const receiptErrorMessage =
     receiptError === null
       ? null
-      : receiptError === 'invalid-amount'
-        ? t('wallet.page.invalidAmount', locale)
-        : receiptError === 'invalid-date'
-          ? t('wallet.page.receiptInvalidDate', locale)
-          : receiptError === 'invalid-payer-ref'
-            ? t('wallet.page.receiptInvalidPayerRef', locale)
-            : receiptError === 'invalid-bank-name'
-              ? t('wallet.page.receiptInvalidBankName', locale)
-              : receiptError === 'invalid-file'
-                ? t('wallet.page.receiptInvalidFile', locale)
-                : receiptError === 'upload'
-                  ? t('wallet.page.receiptUploadError', locale)
-                  : receiptError === 'conflict'
-                    ? t('wallet.page.conflict', locale)
-                    : receiptError === 'maintenance'
-                      ? tMaintenance('title', locale)
-                      : t('wallet.page.receiptGenericError', locale);
+      : receiptError === 'upload'
+        ? t('wallet.page.receiptUploadError', locale)
+        : receiptError === 'conflict'
+          ? t('wallet.page.conflict', locale)
+          : receiptError === 'maintenance'
+            ? tMaintenance('title', locale)
+            : t('wallet.page.receiptGenericError', locale);
 
   return (
     <div
@@ -577,7 +548,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                     .join(' ')}
                   onChange={(event) => {
                     setAmountInput(normalizeIrrAmountDigits(event.target.value));
-                    if (error === 'invalid-amount' || error === 'limit-exceeded') setError(null);
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
@@ -680,7 +650,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptAmountInput(normalizeIrrAmountDigits(event.target.value));
-                    if (receiptError === 'invalid-amount') setReceiptError(null);
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
@@ -721,7 +690,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptDate(event.target.value);
-                    if (receiptError === 'invalid-date') setReceiptError(null);
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
@@ -755,7 +723,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptPayerRef(event.target.value);
-                    if (receiptError === 'invalid-payer-ref') setReceiptError(null);
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
@@ -788,7 +755,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   disabled={receiptLocked}
                   onChange={(event) => {
                     setReceiptBankName(event.target.value);
-                    if (receiptError === 'invalid-bank-name') setReceiptError(null);
                   }}
                   className="mt-2 w-full rounded-lg border border-border bg-background p-3 text-foreground"
                 />
@@ -833,7 +799,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                         const file = event.target.files?.[0] ?? null;
                         setReceiptFile(file);
                         setReceiptUploaded(null);
-                        if (receiptError === 'invalid-file' || receiptError === 'upload') {
+                        if (receiptError === 'upload') {
                           setReceiptError(null);
                         }
                       }}
