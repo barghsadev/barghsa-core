@@ -17038,7 +17038,8 @@
           "release-0.3-refunds-financial-closure",
           "release-0.3-electricity-refund-obligations",
           "release-0.3-electricity-price-credit-settlement",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -17298,7 +17299,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -17395,7 +17396,8 @@
             "Scoped invoice-origin renewal only: all previous journal entries retained; existing consultation columns/keys unchanged except an additive generated parent key and erased callback return-type annotation. Contract fixture now uses a real unrelated parent and its original assertions remain byte-identical. Saving test differs only in richer400-response diagnostics, with all old requests/assertions recovered byte-for-byte. Current migrated origin5,full saving7,consultation workflow/payment,contract,solar andelectricity callers pass. Prior unrelated criterion acceptance retained; no whole feature rerun claimed. /Users/majid/.local/state/barghsa-manual-batches/invoice-core",
             "Scoped refund notice test renewal only: one existing wallet refund/backoff case now requires exactly1 Failed and1 Completed notice and excludes private provider text. Every original current Finance/session/CSRF/step-up,recent-proof/final-expiry,approval/idempotency,one-credit/exact-money/rollback assertion remains. All other test cases and step-up implementation/compiled API source unchanged.97 unaffected cases retained plus2 corrected notice cases pass against final emitted shared DB,along with48 captured verification browser cases. This renews only changed test binding; other original acceptance/limitations remain. /Users/majid/.local/state/barghsa-manual-batches/refunds-financial-closure",
             "Scoped electricity-refund renewal: prior complete electricity test recovered exactly after removing additive notice assertions; approved prose changes2rows only;0259 suffix retains old rows/history/rollback. Current225distinct affected cases support notice/fixture changes; unchanged prior criteria retained. /Users/majid/.local/state/barghsa-manual-batches/electricity-refund-obligations",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -17410,9 +17412,9 @@
             "scope": "Only reviewed additive test/dictionary/handoff paths renewed; prior unrelated assertions, criteria andlimitations retained. Current settlement/price/UI/browser checks cover affected behavior."
           },
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -21884,7 +21886,8 @@
         "batches": [
           "release-0.3-solar-document-review",
           "release-0.3-admin-geography-terms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -21948,7 +21951,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22082,7 +22085,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22188,9 +22192,9 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -22279,7 +22283,8 @@
         "batches": [
           "release-0.3-solar-document-review",
           "release-0.3-admin-geography-terms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -22343,7 +22348,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22477,7 +22482,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22583,9 +22589,9 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -22682,7 +22688,8 @@
         "batches": [
           "release-0.3-solar-document-review",
           "release-0.3-admin-geography-terms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -22746,7 +22753,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -22880,7 +22887,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/renewal-proof.json",
             "/Users/majid/.local/state/barghsa-manual-batches/electricity-reviewed-rejection/source-binding.json",
             "Scoped renewal at 76a2477b6227: terms admin writes now require current session before writes and commit; other shared controller methods andpublic/consent terms code byte-exact. Both old HTTP testfiles are byte-exact prefixes.167 related API cases and4 migrated terms browser cases pass; all other bound sources exact. No unrelated whole-task rerun claimed.",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -22986,9 +22994,9 @@
             "scope": "Only additive alias registration/contract metadata andextended solar test fixture renewed. All pre-existing controller/module implementation andOpenAPI paths/operation names exact; prior unrelated acceptance/results/limitations retained."
           },
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -28582,7 +28590,8 @@
           "2026-10-05-geography-native-forms",
           "2026-10-05-geography-tables",
           "release-0.3-admin-geography-terms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -28698,7 +28707,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -28814,7 +28823,8 @@
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -28822,9 +28832,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -28942,7 +28952,8 @@
         "batches": [
           "2026-10-05-geography-native-forms",
           "release-0.3-admin-geography-terms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -29058,7 +29069,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -29174,7 +29185,8 @@
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -29182,9 +29194,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -29301,7 +29313,8 @@
         "batches": [
           "2026-10-04-content-forms",
           "release-0.3-admin-geography-terms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -29417,7 +29430,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -29533,7 +29546,8 @@
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -29541,9 +29555,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -29659,7 +29673,8 @@
         "batches": [
           "2026-10-05-admin-policy-tables",
           "release-0.3-admin-geography-terms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -29775,7 +29790,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -29891,7 +29906,8 @@
             "Twenty added HTTP regressions verify rejected blank names, normalization, all four terms writes rolling back after revoked/expired/changed-CSRF sessions and terms creation denied after initial actor-lock waits. Database versions/audits/session changes roll back atomically.",
             "Geography retains bilingual names,status/search/pagination,nested city CRUD,200-row all-or-none import,active-profile reference guards and soft deletion,versioned configuration/audits/current-session checks and31 default bilingual province seeds. Terms retains rich text/Markdown preservation,FA/EN preview and side-by-side active content,revision-bound edit/publish/discard,single draft/active version,major/minor material consent boundary,last editor/audit and immutable history.",
             "Final API build/types,changed-file lint/format,diff,generated OpenAPI equality andSemgrep3 productionfiles5rules0findings pass. No schema/contract/web-product change. 503 web compiled outputs match prior binding. Existing Wallet300.13KB/300KB failure and earlier owner/dependency/operational/coverage gates retained.",
-            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed."
+            "Scoped renewal at 7fddbbcb2644: large admin liveE2E changes arelimited toupload row/cardselector,VAT/cataloguelocale andrequiredSavinghardware/agreement fixtureprerequisites. Alloriginal300assertions remaininorder; removingthosefixturesetup blocksrecoverswholepriorfile byte-exact. Threecriteria livejourneys pass inFA/EN desktop/mobile,58 relatedcontext/security cases pass. Other tested sources/criteria andearlierlimitations retained; no unrelated whole-task rerun claimed.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -29899,9 +29915,9 @@
             "Unsupported imported Markdown preserves explicit source editing; no silent content loss."
           ],
           "scoped_renewal": {
-            "base_commit": "7fddbbcb26445d25e6524e91de92acdf21c8f7a7",
-            "batch": "release-0.3-admin-catalogue-vat-upload",
-            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
             "changed_paths": [
               "apps/web/e2e/admin-settings-live.spec.ts"
             ]
@@ -35813,12 +35829,10 @@
         "story": "02-auth-users-admin.md#spec-981865acab03"
       },
       "requirement": "**T-09.09.02 — Failed jobs dashboard**\n\n- Description: View failed background jobs with error details, retry count, last attempt. Retry or Resolve actions. Dead-letter queue overview.\n- Technical notes: GET `/api/admin/failed-jobs`. States: Failed, Retrying, DeadLetter, Resolved. Permissions: `admin:jobs:view`, `admin:jobs:retry`. Worker job table query.\n- UI/UX: Table: job type, error message, attempts, last run. Retry button (single or bulk). Dead-letter tab shows exhausted jobs.\n- Dependencies: worker framework\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -35886,9 +35900,175 @@
         ],
         "batches": [
           "2026-10-05-operational-command-review",
-          "2026-10-05-operational-queue-tables"
+          "2026-10-05-operational-queue-tables",
+          "release-0.3-admin-operational-triage"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-operational-queues-and-worker-exhaustion",
+          "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/failed-jobs-http.integration.test.ts",
+              "sha256": "64b19d1311ea6b2c542afa0fb44d0e4920f0e5d433423c3a584f5b23ac7c4b72"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.controller.test.ts",
+              "sha256": "fd72c0edbd99903ad6292475b8ee8910671964b0b2899203f6fad70839d25a2b"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.controller.ts",
+              "sha256": "b8678908536e24d5b88cfa911433e69d8e586ae8860d895a0c529caadd21330f"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.service.test.ts",
+              "sha256": "df9789e6688ccb88ff4842f9fcee5f76cbd00bd517cb7ce15390210cea83cd32"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.service.ts",
+              "sha256": "2eea6accec06da6ff700dd4d904763e5a2976e27c2498306c0f819f31c787c08"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
+              "sha256": "cd3b7e3a67faa6452204aacb960795ffa3dce0d0d0cd208dc27f397b3225ace0"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.controller.ts",
+              "sha256": "ec5d2772c357b366c437f9a8c25ced6f86a2ab94423e63441b10acc024426772"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.service.test.ts",
+              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.service.ts",
+              "sha256": "38a8166272ce16f9431f6eefe62a6feca5a8cb92f1cad8725e000a38a7a3871f"
+            },
+            {
+              "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+              "sha256": "2c6f25f561a9cea80aa7e6bca8822ded75bfa0fc8b9fbf6e0b3a716881b66c88"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
+            },
+            {
+              "path": "apps/web/e2e/failed-jobs.spec.ts",
+              "sha256": "a9aa674815b52c92b4d550a8ef5bd50c8e33f84587c1719f73f2cb9e9486fd49"
+            },
+            {
+              "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
+              "sha256": "7a76eb80bb011686899e27a8ee957de7854a69e7d86ce7d9b67b9d75da99b663"
+            },
+            {
+              "path": "apps/web/e2e/failed-notifications.spec.ts",
+              "sha256": "ba86995b8a12c6162535ad50438ee7ab7cb36545d3d46e3e583d69469a6430f9"
+            },
+            {
+              "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
+              "sha256": "8ee68d7684fb4406a740638a2206a4d0cac3fc6e49e572f085811b9b67c5af3b"
+            },
+            {
+              "path": "apps/web/e2e/operational-queue-tables.spec.ts",
+              "sha256": "1a6f08ee59c0445f058762c29133d22e7bef6216a1a7169f7dbefd7221f12581"
+            },
+            {
+              "path": "apps/web/src/components/DeadLetterPanel.tsx",
+              "sha256": "f503a0562b9f4fe1952f587d576401a29369f95714ff330be3c17dc6037a1b78"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "e694a07053f263f4c4bc7a96e72ee9e9b29c5e182a962647c09bd07a0a6d6ef9"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/hooks/useOperationalQueue.ts",
+              "sha256": "172cfe305c0c17ec01c334df2aec8de50c89897643a3bd4063dcc803011424a6"
+            },
+            {
+              "path": "apps/web/src/pages/operational-queue-recovery.test.tsx",
+              "sha256": "e188523d5fa7f9de9ce6d05778890512cdb19dbb60fbb97cff6187b7e5265e2b"
+            },
+            {
+              "path": "apps/web/src/routes/admin/failed-jobs.tsx",
+              "sha256": "db6b6cc267aa28d52bce1b2e2de313f4703b750942f20f1d04ecf49d75e3de96"
+            },
+            {
+              "path": "apps/web/src/routes/admin/failed-notifications.tsx",
+              "sha256": "219394e20d76c865a8cb4ae48cf543b035b5acb11653433a5b058812eba0a681"
+            },
+            {
+              "path": "apps/web/src/test/operational-queue-fixtures.ts",
+              "sha256": "1f73a7bd820a812a13176826277e7bc8ad5834eae689f93ba901c4d78c8b3091"
+            },
+            {
+              "path": "apps/worker/src/jobs/job-recorder.test.ts",
+              "sha256": "f3c89d994b4ac49210779a45f62b6638c46dc2e8e913d703238d00d676f5d7b5"
+            },
+            {
+              "path": "apps/worker/src/jobs/job-recorder.ts",
+              "sha256": "e2275cd8bc3a114ca79484519e4ef087561eea7d21719d2a44e1f044df42d859"
+            },
+            {
+              "path": "apps/worker/src/jobs/poller-group.test.ts",
+              "sha256": "5e5bd04543b7167c3fe8db0c507d2da6ad14ecfc15b60a28326d51bcc3d2390e"
+            },
+            {
+              "path": "apps/worker/src/jobs/poller-group.ts",
+              "sha256": "d22697ce850bd8adcb7b0496781a84743d26df556126fb9032cb159d84bb5d8b"
+            },
+            {
+              "path": "apps/worker/src/notifications/dead-letter.test.ts",
+              "sha256": "feb0e84449770df1ed34f2fb2b563eb25f79f72365a3e4e4c3fb226a51072cb0"
+            },
+            {
+              "path": "apps/worker/src/notifications/dead-letter.ts",
+              "sha256": "483af94f514fe75ad0d99e91e9f58c24309a88c14b130d37837da18f9deecf54"
+            },
+            {
+              "path": "apps/worker/src/notifications/error-redact.ts",
+              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+              "sha256": "e597ce4fb2ede1548543022cbd7e5ea43ed3489a499ab10e1060c07d99c4bfa7"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+            },
+            {
+              "path": "packages/db/src/schema/notification-dead-letter.ts",
+              "sha256": "8bd2027d5f00ee9cb8307dd7a985b22666dcbb2b5b3b9ba5fa571c44288e8e1a"
+            },
+            {
+              "path": "apps/worker/src/jobs/job-recorder.integration.test.ts",
+              "sha256": "7b2a2e98ef556056d8319766a6cd73bb55cd7e0b1f6019b9a5bfbda9874620e7"
+            }
+          ],
+          "checks": [
+            "185 distinct passing cases: 159 fresh (98 API service/controller/real HTTP and migrated dead-letter recovery; 27 UI; 10 worker including two new migrated-DB regressions; 16 production-browser queue fixtures; eight real migrated-API live journeys in FA/EN desktop/mobile) plus 26 unchanged worker poller/dead-letter/outbox cases completed in the earlier failed run. Four notification journeys passed before the final job-only selector correction; all four final job journeys pass. Failed/stopped/unrun/duplicate cases excluded; no whole failed-suite pass claimed.",
+            "Fix exhausted one-attempt initial worker failures: INSERT immediately records dead_letter and NULL next_run_at. Red regression reproduced; PostgreSQL CASE parameter requires explicit timestamptz cast. Default-five budget, atomic concurrent increments, sanitization, best-effort handling, conflict logic and resolved history remain unchanged; migrated DB verifies all boundaries.",
+            "Failed jobs expose failed/retrying/dead_letter/resolved filters, masked error/details, attempts/limit and last-run; current view/retry grants, account/session/CSRF/step-up initial and final writes, sorted bulk row locks, terminal/missing skips, atomic audits, retry and resolution history preserved. Recurring workers continue their configured cadence and resolve on success; this is recorded in source and UI.",
+            "Notification-specific queue exposes masked payload/history and view/retry/resolve/dismiss actions. Current authority and verified proof checked through writes; parent-before-channel locking, exact acknowledgement and pending-command ownership preserved. Sending/unknown receipts refuse manual retry; idempotency, immutable delivery snapshots, cumulative attempts and active-claim/cancellation boundaries retained. Audit failure rolls back queue/triage changes; dismiss/resolve do not resend.",
+            "Worker build/typecheck, final changed-file lint/format, and Semgrep one production file/five rules/zero findings pass. API/web compiled outputs and all other tracked source remain exact to prior binding. No API contract/schema/migration/web product/financial engine change. Existing Wallet 300.13KB/300KB launch budget failure and prior owner/dependency/operational gates remain open.",
+            "Live test fixes only saved locale and obsolete desktop-row/mobile-card selectors in two queue flows. Actual accessible job names include status; identify escaped immutable job type at whitespace/end boundary. All old action/state/count/masking/actor/reload assertions retained, with one new protected-read HTTP 200 assertion. Entire file outside those two flows is byte-exact. Earlier errors and failed receipts retained for diagnosis."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
+          "limitations": [
+            "Local triage acceptance does not certify external provider delivery or whole milestone operational readiness. Earlier owner/release/global quality gates remain open. Production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -35902,12 +36082,10 @@
         "story": "02-auth-users-admin.md#spec-981865acab03"
       },
       "requirement": "**T-09.09.03 — Dead-letter notifications**\n\n- Description: Failed notification deliveries go to dead-letter queue. Staff can view, retry, or dismiss.\n- Technical notes: Same pattern as failed jobs but filtered to notification type. Admin can view raw notification data (masked).\n- UI/UX: Separate \"Failed notifications\" section. Retry/dismiss actions.\n- Dependencies: notification service, T-09.09.02\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.3.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -35958,8 +36136,175 @@
           "apps/web/e2e/failed-notifications.spec.ts",
           "apps/web/e2e/failed-notifications-recovery.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.3-admin-operational-triage"
+        ],
+        "current_acceptance": {
+          "kind": "verified-operational-queues-and-worker-exhaustion",
+          "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/failed-jobs-http.integration.test.ts",
+              "sha256": "64b19d1311ea6b2c542afa0fb44d0e4920f0e5d433423c3a584f5b23ac7c4b72"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.controller.test.ts",
+              "sha256": "fd72c0edbd99903ad6292475b8ee8910671964b0b2899203f6fad70839d25a2b"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.controller.ts",
+              "sha256": "b8678908536e24d5b88cfa911433e69d8e586ae8860d895a0c529caadd21330f"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.service.test.ts",
+              "sha256": "df9789e6688ccb88ff4842f9fcee5f76cbd00bd517cb7ce15390210cea83cd32"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.service.ts",
+              "sha256": "2eea6accec06da6ff700dd4d904763e5a2976e27c2498306c0f819f31c787c08"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
+              "sha256": "cd3b7e3a67faa6452204aacb960795ffa3dce0d0d0cd208dc27f397b3225ace0"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.controller.ts",
+              "sha256": "ec5d2772c357b366c437f9a8c25ced6f86a2ab94423e63441b10acc024426772"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.service.test.ts",
+              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+            },
+            {
+              "path": "apps/api/src/admin/failed-notifications.service.ts",
+              "sha256": "38a8166272ce16f9431f6eefe62a6feca5a8cb92f1cad8725e000a38a7a3871f"
+            },
+            {
+              "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+              "sha256": "2c6f25f561a9cea80aa7e6bca8822ded75bfa0fc8b9fbf6e0b3a716881b66c88"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
+            },
+            {
+              "path": "apps/web/e2e/failed-jobs.spec.ts",
+              "sha256": "a9aa674815b52c92b4d550a8ef5bd50c8e33f84587c1719f73f2cb9e9486fd49"
+            },
+            {
+              "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
+              "sha256": "7a76eb80bb011686899e27a8ee957de7854a69e7d86ce7d9b67b9d75da99b663"
+            },
+            {
+              "path": "apps/web/e2e/failed-notifications.spec.ts",
+              "sha256": "ba86995b8a12c6162535ad50438ee7ab7cb36545d3d46e3e583d69469a6430f9"
+            },
+            {
+              "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
+              "sha256": "8ee68d7684fb4406a740638a2206a4d0cac3fc6e49e572f085811b9b67c5af3b"
+            },
+            {
+              "path": "apps/web/e2e/operational-queue-tables.spec.ts",
+              "sha256": "1a6f08ee59c0445f058762c29133d22e7bef6216a1a7169f7dbefd7221f12581"
+            },
+            {
+              "path": "apps/web/src/components/DeadLetterPanel.tsx",
+              "sha256": "f503a0562b9f4fe1952f587d576401a29369f95714ff330be3c17dc6037a1b78"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "e694a07053f263f4c4bc7a96e72ee9e9b29c5e182a962647c09bd07a0a6d6ef9"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/hooks/useOperationalQueue.ts",
+              "sha256": "172cfe305c0c17ec01c334df2aec8de50c89897643a3bd4063dcc803011424a6"
+            },
+            {
+              "path": "apps/web/src/pages/operational-queue-recovery.test.tsx",
+              "sha256": "e188523d5fa7f9de9ce6d05778890512cdb19dbb60fbb97cff6187b7e5265e2b"
+            },
+            {
+              "path": "apps/web/src/routes/admin/failed-jobs.tsx",
+              "sha256": "db6b6cc267aa28d52bce1b2e2de313f4703b750942f20f1d04ecf49d75e3de96"
+            },
+            {
+              "path": "apps/web/src/routes/admin/failed-notifications.tsx",
+              "sha256": "219394e20d76c865a8cb4ae48cf543b035b5acb11653433a5b058812eba0a681"
+            },
+            {
+              "path": "apps/web/src/test/operational-queue-fixtures.ts",
+              "sha256": "1f73a7bd820a812a13176826277e7bc8ad5834eae689f93ba901c4d78c8b3091"
+            },
+            {
+              "path": "apps/worker/src/jobs/job-recorder.test.ts",
+              "sha256": "f3c89d994b4ac49210779a45f62b6638c46dc2e8e913d703238d00d676f5d7b5"
+            },
+            {
+              "path": "apps/worker/src/jobs/job-recorder.ts",
+              "sha256": "e2275cd8bc3a114ca79484519e4ef087561eea7d21719d2a44e1f044df42d859"
+            },
+            {
+              "path": "apps/worker/src/jobs/poller-group.test.ts",
+              "sha256": "5e5bd04543b7167c3fe8db0c507d2da6ad14ecfc15b60a28326d51bcc3d2390e"
+            },
+            {
+              "path": "apps/worker/src/jobs/poller-group.ts",
+              "sha256": "d22697ce850bd8adcb7b0496781a84743d26df556126fb9032cb159d84bb5d8b"
+            },
+            {
+              "path": "apps/worker/src/notifications/dead-letter.test.ts",
+              "sha256": "feb0e84449770df1ed34f2fb2b563eb25f79f72365a3e4e4c3fb226a51072cb0"
+            },
+            {
+              "path": "apps/worker/src/notifications/dead-letter.ts",
+              "sha256": "483af94f514fe75ad0d99e91e9f58c24309a88c14b130d37837da18f9deecf54"
+            },
+            {
+              "path": "apps/worker/src/notifications/error-redact.ts",
+              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+              "sha256": "e597ce4fb2ede1548543022cbd7e5ea43ed3489a499ab10e1060c07d99c4bfa7"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "1e68c6545a64fc7c5993019b224841bf32bfe6c33d210826974f2ecf86e29db7"
+            },
+            {
+              "path": "packages/db/src/schema/notification-dead-letter.ts",
+              "sha256": "8bd2027d5f00ee9cb8307dd7a985b22666dcbb2b5b3b9ba5fa571c44288e8e1a"
+            },
+            {
+              "path": "apps/worker/src/jobs/job-recorder.integration.test.ts",
+              "sha256": "7b2a2e98ef556056d8319766a6cd73bb55cd7e0b1f6019b9a5bfbda9874620e7"
+            }
+          ],
+          "checks": [
+            "185 distinct passing cases: 159 fresh (98 API service/controller/real HTTP and migrated dead-letter recovery; 27 UI; 10 worker including two new migrated-DB regressions; 16 production-browser queue fixtures; eight real migrated-API live journeys in FA/EN desktop/mobile) plus 26 unchanged worker poller/dead-letter/outbox cases completed in the earlier failed run. Four notification journeys passed before the final job-only selector correction; all four final job journeys pass. Failed/stopped/unrun/duplicate cases excluded; no whole failed-suite pass claimed.",
+            "Fix exhausted one-attempt initial worker failures: INSERT immediately records dead_letter and NULL next_run_at. Red regression reproduced; PostgreSQL CASE parameter requires explicit timestamptz cast. Default-five budget, atomic concurrent increments, sanitization, best-effort handling, conflict logic and resolved history remain unchanged; migrated DB verifies all boundaries.",
+            "Failed jobs expose failed/retrying/dead_letter/resolved filters, masked error/details, attempts/limit and last-run; current view/retry grants, account/session/CSRF/step-up initial and final writes, sorted bulk row locks, terminal/missing skips, atomic audits, retry and resolution history preserved. Recurring workers continue their configured cadence and resolve on success; this is recorded in source and UI.",
+            "Notification-specific queue exposes masked payload/history and view/retry/resolve/dismiss actions. Current authority and verified proof checked through writes; parent-before-channel locking, exact acknowledgement and pending-command ownership preserved. Sending/unknown receipts refuse manual retry; idempotency, immutable delivery snapshots, cumulative attempts and active-claim/cancellation boundaries retained. Audit failure rolls back queue/triage changes; dismiss/resolve do not resend.",
+            "Worker build/typecheck, final changed-file lint/format, and Semgrep one production file/five rules/zero findings pass. API/web compiled outputs and all other tracked source remain exact to prior binding. No API contract/schema/migration/web product/financial engine change. Existing Wallet 300.13KB/300KB launch budget failure and prior owner/dependency/operational gates remain open.",
+            "Live test fixes only saved locale and obsolete desktop-row/mobile-card selectors in two queue flows. Actual accessible job names include status; identify escaped immutable job type at whitespace/end boundary. All old action/state/count/masking/actor/reload assertions retained, with one new protected-read HTTP 200 assertion. Entire file outside those two flows is byte-exact. Earlier errors and failed receipts retained for diagnosis."
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
+          "limitations": [
+            "Local triage acceptance does not certify external provider delivery or whole milestone operational readiness. Earlier owner/release/global quality gates remain open. Production requires explicit owner authorization."
+          ]
+        }
       }
     },
     {
@@ -37614,7 +37959,8 @@
         "batches": [
           "2026-10-03-catalogue-forms",
           "2026-10-03-saving-catalogue-forms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -37822,7 +38168,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -37948,12 +38294,21 @@
             "Fourcatalogue types retaincurrentpermission,exactbigintprices,effectivepriceversions/history,active/inactive/archive/restore,canonicalsystemfixtures,referenced-order preservation,Savingcompatiblehardware/activeagreement readiness andenabledrule deactivationwarnings. VAT retainsdatedbasispoint0..10000versions,productoverride/category/zero precedence,immutableinvoice snapshot consumers andhistory,FA/EN time-zone/DST/numericstyle editing. Userapprovedexistingcatalogue representations retained.",
             "Uploads remainbounded byactiveDB policy intersected withdeployment extension/MIME/size caps. RealstorageHTTPcasesdenyunavailablepolicy,changedallowedextension,PNG disguised asJPG,arbitraryZIP/OLE claimed asOffice,invalidCSV encoding/quotes andunrecognizedvideocontainers. Existingcontroller/resolver/source scans retained; no malware/realprovider certificationclaim.",
             "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
-            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
+            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
             "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -38100,7 +38455,8 @@
         ],
         "batches": [
           "2026-10-03-vat-forms",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -38308,7 +38664,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -38434,12 +38790,21 @@
             "Fourcatalogue types retaincurrentpermission,exactbigintprices,effectivepriceversions/history,active/inactive/archive/restore,canonicalsystemfixtures,referenced-order preservation,Savingcompatiblehardware/activeagreement readiness andenabledrule deactivationwarnings. VAT retainsdatedbasispoint0..10000versions,productoverride/category/zero precedence,immutableinvoice snapshot consumers andhistory,FA/EN time-zone/DST/numericstyle editing. Userapprovedexistingcatalogue representations retained.",
             "Uploads remainbounded byactiveDB policy intersected withdeployment extension/MIME/size caps. RealstorageHTTPcasesdenyunavailablepolicy,changedallowedextension,PNG disguised asJPG,arbitraryZIP/OLE claimed asOffice,invalidCSV encoding/quotes andunrecognizedvideocontainers. Existingcontroller/resolver/source scans retained; no malware/realprovider certificationclaim.",
             "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
-            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
+            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
             "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -38732,7 +39097,8 @@
         "batches": [
           "2026-10-04-storage-policy-forms",
           "2026-10-05-admin-policy-tables",
-          "release-0.3-admin-catalogue-vat-upload"
+          "release-0.3-admin-catalogue-vat-upload",
+          "release-0.3-admin-operational-triage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -38940,7 +39306,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "9baaa6c195d6caf1f41b9707707ff1aad98101b736a536837be0fc2237c8526e"
+              "sha256": "955f2fea0fb8ba69c086c9caaa8c42083c18b58c4a6f8a3f04c2a03b40556e70"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -39066,12 +39432,21 @@
             "Fourcatalogue types retaincurrentpermission,exactbigintprices,effectivepriceversions/history,active/inactive/archive/restore,canonicalsystemfixtures,referenced-order preservation,Savingcompatiblehardware/activeagreement readiness andenabledrule deactivationwarnings. VAT retainsdatedbasispoint0..10000versions,productoverride/category/zero precedence,immutableinvoice snapshot consumers andhistory,FA/EN time-zone/DST/numericstyle editing. Userapprovedexistingcatalogue representations retained.",
             "Uploads remainbounded byactiveDB policy intersected withdeployment extension/MIME/size caps. RealstorageHTTPcasesdenyunavailablepolicy,changedallowedextension,PNG disguised asJPG,arbitraryZIP/OLE claimed asOffice,invalidCSV encoding/quotes andunrecognizedvideocontainers. Existingcontroller/resolver/source scans retained; no malware/realprovider certificationclaim.",
             "FinalAPIbuild/types,webtypes,changedlint/format/diff,generatedOpenAPIequality andSemgrep3productionfiles5rules0findings pass. No schema/migration/contract/webproduct change.503webcompiledoutputs exact. PreservepriorWallet300.13KB/300KBfailure,earlierowner/dependency/globalquality/operational/productionauthorization gates.",
-            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
+            "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease.",
+            "Scoped operational-triage renewal: only two live E2E queue flows changed; locale and obsolete row/card selectors corrected, original assertions retained. All other flows byte-exact; eight real queue journeys pass. Prior unrelated criterion acceptance and limitations retained. /Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
             "Local acceptance does notcertifydeployedstorage/malwarescan/provider/financialsettlement orproductionoperational evidence. Earlierowner/release/globalquality gates remainopen. Productionrequires explicitownerauthorization."
-          ]
+          ],
+          "scoped_renewal": {
+            "base_commit": "99de69991a8b7f136a0bafab324c01c21e8a5351",
+            "batch": "release-0.3-admin-operational-triage",
+            "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
+            "changed_paths": [
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ]
+          }
         }
       }
     },
@@ -190114,6 +190489,34 @@
         "Initiallivebrowserfailed/stopped receipts preserved. Fixturecorrectionschangeonlymobile row/card lookup,savedapp locale andactualprotectedAPI prerequisites forSavingactivation. All300originalassertions byte/ASTpreserved andfournewprerequisite assertions added. Persianmobile actualcapture reviewed. Batchdoesnotaccept orpublishamilestonerelease."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload"
+    },
+    "release-0.3-admin-operational-triage": {
+      "title": "Accept failed-job and notification triage; correct one-attempt worker exhaustion",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.05"
+      ],
+      "summary": "Two tasks accepted; one demonstrated worker exhaustion bug fixed. Prior live-test bindings renewed only for two corrected queue flows.",
+      "validation": [
+        "185 distinct passing cases: 159 fresh (98 API service/controller/real HTTP and migrated dead-letter recovery; 27 UI; 10 worker including two new migrated-DB regressions; 16 production-browser queue fixtures; eight real migrated-API live journeys in FA/EN desktop/mobile) plus 26 unchanged worker poller/dead-letter/outbox cases completed in the earlier failed run. Four notification journeys passed before the final job-only selector correction; all four final job journeys pass. Failed/stopped/unrun/duplicate cases excluded; no whole failed-suite pass claimed.",
+        "Fix exhausted one-attempt initial worker failures: INSERT immediately records dead_letter and NULL next_run_at. Red regression reproduced; PostgreSQL CASE parameter requires explicit timestamptz cast. Default-five budget, atomic concurrent increments, sanitization, best-effort handling, conflict logic and resolved history remain unchanged; migrated DB verifies all boundaries.",
+        "Failed jobs expose failed/retrying/dead_letter/resolved filters, masked error/details, attempts/limit and last-run; current view/retry grants, account/session/CSRF/step-up initial and final writes, sorted bulk row locks, terminal/missing skips, atomic audits, retry and resolution history preserved. Recurring workers continue their configured cadence and resolve on success; this is recorded in source and UI.",
+        "Notification-specific queue exposes masked payload/history and view/retry/resolve/dismiss actions. Current authority and verified proof checked through writes; parent-before-channel locking, exact acknowledgement and pending-command ownership preserved. Sending/unknown receipts refuse manual retry; idempotency, immutable delivery snapshots, cumulative attempts and active-claim/cancellation boundaries retained. Audit failure rolls back queue/triage changes; dismiss/resolve do not resend.",
+        "Worker build/typecheck, final changed-file lint/format, and Semgrep one production file/five rules/zero findings pass. API/web compiled outputs and all other tracked source remain exact to prior binding. No API contract/schema/migration/web product/financial engine change. Existing Wallet 300.13KB/300KB launch budget failure and prior owner/dependency/operational gates remain open.",
+        "Live test fixes only saved locale and obsolete desktop-row/mobile-card selectors in two queue flows. Actual accessible job names include status; identify escaped immutable job type at whitespace/end boundary. All old action/state/count/masking/actor/reload assertions retained, with one new protected-read HTTP 200 assertion. Entire file outside those two flows is byte-exact. Earlier errors and failed receipts retained for diagnosis."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage"
     }
   },
   "historical_improvements": [
@@ -190153,12 +190556,12 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.3-admin-operational-triage",
+    "id": "release-0.3-staff-support-escalation",
     "release": "0.3.0",
-    "goal": "Inspect andaccept existing failed backgroundjobs anddead-letter notification dashboards againstexact criteria,currentcapabilities/session/retry boundaries,maskedmetadata,state/attempt/history,pendingcommand ownership andactualworker/notification outcomes. Buildonlydemonstratedgaps;reuse valid source-bound evidence. Earlierowner/release/budget/operational gates remainopen.",
+    "goal": "Inspect existing staff ticket management and escalation alerts, including current ticket visibility, assignment rules, status transitions, internal/public comments, response targets and worker notification boundaries. Include necessary team/target dependencies; build only demonstrated gaps. Preserve existing owner, release, quality and operational blockers.",
     "task_keys": [
-      "02-auth-users-admin.md#T-09.09.02",
-      "02-auth-users-admin.md#T-09.09.03"
+      "02-auth-users-admin.md#T-06.01.03",
+      "02-auth-users-admin.md#T-09.08.03"
     ]
   },
   "launch_forecast": {

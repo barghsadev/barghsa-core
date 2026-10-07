@@ -83,7 +83,9 @@ export async function recordJobFailure(
          (job_type, status, error, error_category, attempts, max_attempts,
           payload, first_failed_at, last_run_at, next_run_at,
           created_at, updated_at)
-       VALUES ($1, 'failed', $2, $3, 1, $4, $5::jsonb, $6, $6, $7, $6, $6)
+       VALUES ($1, CASE WHEN $4 <= 1 THEN 'dead_letter' ELSE 'failed' END,
+               $2, $3, 1, $4, $5::jsonb, $6, $6,
+               CASE WHEN $4 <= 1 THEN NULL ELSE $7::timestamptz END, $6, $6)
        ON CONFLICT (job_type) WHERE ${ACTIVE_STATUSES_SQL}
        DO UPDATE SET
          status = CASE

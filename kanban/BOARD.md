@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 421 | Accepted with unchanged source bindings. |
-| verify | 871 | Existing work may be complete; inspect evidence before building. |
+| done | 423 | Accepted with unchanged source bindings. |
+| verify | 869 | Existing work may be complete; inspect evidence before building. |
 | partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 11 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,10 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect andaccept existing failed backgroundjobs anddead-letter notification dashboards againstexact criteria,currentcapabilities/session/retry boundaries,maskedmetadata,state/attempt/history,pendingcommand ownership andactualworker/notification outcomes. Buildonlydemonstratedgaps;reuse valid source-bound evidence. Earlierowner/release/budget/operational gates remainopen.
+Inspect existing staff ticket management and escalation alerts, including current ticket visibility, assignment rules, status transitions, internal/public comments, response targets and worker notification boundaries. Include necessary team/target dependencies; build only demonstrated gaps. Preserve existing owner, release, quality and operational blockers.
 
-- `02-auth-users-admin.md#T-09.09.02`: Failed jobs dashboard
-- `02-auth-users-admin.md#T-09.09.03`: Dead-letter notifications
+- `02-auth-users-admin.md#T-06.01.03`: Staff ticket management
+- `02-auth-users-admin.md#T-09.08.03`: Escalation alerts
 
 ## v0.2.0: Complete customer journeys
 
@@ -337,8 +337,8 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.08.02` | partial | Earlier partial | Staff teams and assignment rules |
 | `02-auth-users-admin.md#T-09.08.03` | verify | Earlier acceptance_verified | Escalation alerts |
 | `02-auth-users-admin.md#T-09.09.01` | partial | Earlier partial | Reconciliation exceptions view |
-| `02-auth-users-admin.md#T-09.09.02` | verify | Earlier acceptance_verified | Failed jobs dashboard |
-| `02-auth-users-admin.md#T-09.09.03` | verify | Earlier acceptance_verified | Dead-letter notifications |
+| `02-auth-users-admin.md#T-09.09.02` | done | Earlier acceptance_verified | Failed jobs dashboard |
+| `02-auth-users-admin.md#T-09.09.03` | done | Earlier acceptance_verified | Dead-letter notifications |
 | `02-auth-users-admin.md#T-09.10.01` | done | Earlier acceptance_verified | Online wallet top-up limit |
 | `02-auth-users-admin.md#T-09.10.02` | partial | Earlier partial | Mandatory green-electricity rules |
 | `02-auth-users-admin.md#T-09.10.03` | partial | Earlier partial | Green rule activation safety check |

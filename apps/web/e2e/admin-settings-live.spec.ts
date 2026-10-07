@@ -443,12 +443,7 @@ for (const locale of ['en', 'fa'])
   test(`failed jobs can be retried in bulk, resolved, and recovered from dead letter (${locale})`, async ({
     page,
   }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -466,7 +461,27 @@ for (const locale of ['en', 'fa'])
     const fa = locale === 'fa',
       ids = http.jobs[locale]!;
     await page.goto('/admin/failed-jobs');
-    const row = (id: string) => page.locator(`[data-job-id="${id}"]`);
+    const savedJobs = await page.request.get(`${http.base}/api/admin/failed-jobs`, {
+      headers: { cookie: `barghsa_session=${http.session}` },
+    });
+    expect(savedJobs.status()).toBe(200);
+    const records = (await savedJobs.json()) as Array<{ id: string; jobType: string }>;
+    const row = (id: string) => {
+      const record = records.find((item) => item.id === id)!;
+      const key = `admin.jobs.type.${record.jobType}`;
+      const translated = adminText(key, locale);
+      const name = translated === key ? record.jobType : translated;
+      const accessibleName = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$)`);
+      return page
+        .getByRole('row')
+        .filter({ has: page.getByRole('rowheader', { name: accessibleName }) })
+        .or(
+          page
+            .getByRole('list', { name: adminText('admin.jobs.title', locale), exact: true })
+            .getByRole('listitem')
+            .filter({ has: page.getByRole('heading', { name: accessibleName }) })
+        );
+    };
     await expect(row(ids.first)).toContainText('Local worker transport failed');
     await row(ids.first).getByRole('checkbox').check();
     await row(ids.second).getByRole('checkbox').check();
@@ -524,12 +539,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
@@ -545,13 +555,26 @@ for (const locale of ['en', 'fa'])
       });
     });
     await page.goto('/admin/failed-notifications');
+    const recordRows = (event: string | RegExp) =>
+      page
+        .getByRole('row')
+        .filter({ has: page.getByRole('rowheader', { name: event, exact: true }) })
+        .or(
+          page
+            .getByRole('list', {
+              name: adminText('admin.notifications.deadLetter.title', locale),
+              exact: true,
+            })
+            .getByRole('listitem')
+            .filter({ has: page.getByRole('heading', { name: event, exact: true }) })
+        );
     for (const [action, label, status] of [
       ['retry', fa ? 'تلاش مجدد' : 'Retry', 'retried'],
       ['resolve', fa ? 'حل‌شده' : 'Resolve', 'resolved'],
       ['dismiss', fa ? 'بستن' : 'Dismiss', 'dismissed'],
     ]) {
       const event = `triage.${locale}.${action}`;
-      const row = page.locator('tbody tr').filter({ hasText: event });
+      const row = recordRows(event);
       await expect(row).toBeVisible();
       await row.locator('summary').click();
       await expect(row).toContainText('***');
@@ -580,7 +603,7 @@ for (const locale of ['en', 'fa'])
     }
     await settleLiveRequests();
     await page.reload();
-    await expect(page.locator('tbody tr').filter({ hasText: `triage.${locale}.` })).toHaveCount(0);
+    await expect(recordRows(new RegExp(`triage\\.${locale}\\.`))).toHaveCount(0);
   });
 
 for (const locale of ['en', 'fa'])
