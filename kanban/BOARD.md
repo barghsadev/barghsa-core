@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-07T00:34:52.760556+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-07T00:57:33.551442+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 245 | Accepted with unchanged source bindings. |
+| done | 246 | Accepted with unchanged source bindings. |
 | verify | 1058 | Existing work may be complete; inspect evidence before building. |
-| partial | 54 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 12 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Renew current step-up protection across sensitive consumers and complete the deduplicated four-service production journey rehearsal. Persisted electricity terminal flows and exact finance reconciliation are accepted; retain pending owner policy/representation/private-wizard decisions. Prepare milestone gates without inferring live identity/provider or production authorization.
+Complete the deduplicated four-service production journey rehearsal and final scope dispositions. Step-up and valid persisted electricity terminal/finance reconciliation are accepted. Keep owner policy/representation/private-wizard decisions pending; do not infer live external provider or production authorization.
 
-- `02-auth-users-admin.md#T-02.02.04`: Step-up authentication for sensitive actions
 - `release-readiness#R-01.04`: Verify four complete customer and staff intake journeys
 - `release-readiness#R-01.01`: Renew identity and all-four-service journey acceptance
 
@@ -72,7 +71,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-02.02.01` | done | Earlier acceptance_verified | Session creation and cookie management |
 | `02-auth-users-admin.md#T-02.02.02` | done | Earlier acceptance_verified | Session revocation |
 | `02-auth-users-admin.md#T-02.02.03` | partial | Earlier partial | CSRF protection |
-| `02-auth-users-admin.md#T-02.02.04` | partial | Earlier partial | Step-up authentication for sensitive actions |
+| `02-auth-users-admin.md#T-02.02.04` | done | Earlier partial | Step-up authentication for sensitive actions |
 | `02-auth-users-admin.md#T-02.03.01` | done | Earlier acceptance_verified | Forgot password request UI |
 | `02-auth-users-admin.md#T-02.03.02` | done | Earlier acceptance_verified | OTP verification and password reset |
 | `02-auth-users-admin.md#T-02.03.03` | partial | Earlier partial | Account recovery support path |
@@ -103,7 +102,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-11.01.03` | done | Recorded batch work | Closure execution, revocation, retention and anonymization |
 | `02-auth-users-admin.md#T-11.02.01` | done | Recorded batch work | Explicit operating context in session and authorization policy |
 | `02-auth-users-admin.md#T-11.02.02` | done | Recorded batch work | Context-isolation integration and E2E tests |
-| `02-auth-users-admin.md#T-11.03.01` | done | Inventory needed | Atomic staff user/profile creation without customer onboarding |
+| `02-auth-users-admin.md#T-11.03.01` | done | Recorded batch work | Atomic staff user/profile creation without customer onboarding |
 | `03-core-business.md#T-03.01.01.01` | done | Earlier acceptance_verified | Create `products` table with columns: `id` (UUIDv7 PK), `type` (enum: `consultation`, `electricity`, `hardware`, `saving_plan`), `system_key` (nullable unique — used for immutable system products like electricity types), `title` (localized JSONB), `description` (localized JSONB, nullable), `price` (bigint nullable, in IRR), `status` (enum: `active`, `inactive`, `archived`), `created_at`, `updated_at` |
 | `03-core-business.md#T-03.01.01.02` | done | Earlier acceptance_verified | Create `product_price_versions` table for versioned pricing: `id`, `product_id` (FK), `price` (bigint), `vat_category_override` (FK nullable), `effective_from` (timestamptz), `effective_until` (timestamptz nullable), `created_by` (FK to users) |
 | `03-core-business.md#T-03.01.01.03` | done | Earlier acceptance_verified | Create `product_categories` table: `id`, `product_id` (FK), `category` (enum: `electricity_generation_station_consultation`, `electricity_saving_certificate_consultation`, `thermal_electricity`, `green_electricity`, `free_market_electricity`, `energy_saving_electricity`). Only for electricity and consultation types. |

@@ -1352,4 +1352,31 @@ it('reconciles a prior partial refund through the existing finance workflow befo
   expect(after.contracts).toBeNull();
   expect(after.root.status).toBe('CANCELLED');
   expect(after.draft.status).toBe('rejected');
+  const audits = (
+    await http.pool.query(
+      "SELECT a.user_id,a.metadata::jsonb AS metadata,s.step_up_verified_at AS verified_at FROM audit_log a JOIN sessions s ON s.session_id::text=a.metadata::jsonb->>'sessionId' WHERE a.metadata::jsonb->>'refundId'=$1 AND a.event IN ('refund.requested','refund.approved','refund.process_requested') ORDER BY a.id",
+      [partial.id]
+    )
+  ).rows;
+  expect(audits.length).toBeGreaterThanOrEqual(2);
+  for (const row of audits) {
+    expect(row.user_id).toBe('orphan-finance');
+    expect(row.metadata).toMatchObject({
+      stepUpVerified: true,
+      stepUpVerifiedAt: row.verified_at.toISOString(),
+    });
+  }
+  const terminal = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.draft.terminated' AND metadata::jsonb->>'entityId'=$1",
+      [id]
+    )
+  ).rows[0].metadata;
+  const verified = (
+    await http.pool.query("SELECT step_up_verified_at FROM sessions WHERE user_id='raw-reviewer'")
+  ).rows[0].step_up_verified_at as Date;
+  expect(terminal).toMatchObject({
+    stepUpVerified: true,
+    stepUpVerifiedAt: verified.toISOString(),
+  });
 });

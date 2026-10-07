@@ -91,7 +91,7 @@ for (const locale of ['en', 'fa'] as const)
           await page.goto('/admin/providers');
           if (action === 'email') {
             await page
-              .getByRole('row')
+              .getByRole('listitem')
               .filter({ hasText: 'Saved provider' })
               .getByRole('button', {
                 name: providerText('admin.providers.update', locale),

@@ -5,6 +5,27 @@ import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 const logger = new Logger('SessionStepUp');
 
+/** Bind audit proof to the already-validated actor for this transaction only. */
+async function captureStepUpProof(
+  client: { query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> },
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId'>,
+  verifiedAt: Date
+) {
+  await client.query(
+    `SELECT set_config('barghsa.step_up_actor',$1,true),
+       set_config('barghsa.step_up_session_id',$2::uuid::text,true),
+       set_config('barghsa.step_up_verified_at',$3,true),
+       set_config('barghsa.step_up_expires_at',$4,true)`,
+    [
+      actor.userId,
+      actor.sessionId,
+      verifiedAt.toISOString(),
+      new Date(verifiedAt.getTime() + SessionService.STEP_UP_WINDOW_MS).toISOString(),
+    ]
+  );
+  return verifiedAt;
+}
+
 /**
  * Call after locking the actor account, and again after writes before commit.
  * An expected revocation time is allowed only on the final check of a mutation
@@ -24,6 +45,7 @@ export async function requireCurrentSession(
     `SELECT csrf_token, step_up_verified_at,
        set_config('barghsa.actor_user_id',user_id,true) AS actor_user_scope,
        set_config('barghsa.actor_context',operating_context,true) AS actor_context_scope,
+       set_config('barghsa.actor_session_id',session_id::text,true) AS actor_session_scope,
        (CASE WHEN $4::timestamptz IS NULL THEN revoked_at IS NULL
              ELSE revoked_at=$4::timestamptz END)
        AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp() AS active,
@@ -56,7 +78,7 @@ export async function requireSessionStepUp(
   const session = await requireCurrentSession(client, actor, expectedRevokedAt);
   if (!session.stepUpFresh || !session.stepUpVerifiedAt)
     throw new HttpException({ error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code }, 403);
-  return session.stepUpVerifiedAt;
+  return captureStepUpProof(client, actor, session.stepUpVerifiedAt);
 }
 
 /** Sensitive settings require OTP proof on this exact live session, not password proof. */
@@ -79,5 +101,5 @@ export async function requireSessionOtpStepUp(
       { error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code, requiresOtp: true },
       403
     );
-  return proof.otp_step_up_verified_at as Date;
+  return captureStepUpProof(client, actor, proof.otp_step_up_verified_at as Date);
 }
