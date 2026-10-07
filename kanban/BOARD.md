@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect/reuse current shared active-inbox renderer for freshprivate API ticket/invitation/document andaccount/verification receipts. Batch complete compatible private payloads first;inspect actualsafe authnewdevice audit snapshot beforedevice/loginTime seedintegration. Preserve authorization/privateworkspace/transaction/strictsinks/idempotency/immutablehistoricalread/content/providerreceipt andacceptedcustomer template behavior. SQL/worker nativewriters,secureOTP/awaiting-staff owner dispositions,systempublication/alltemplatecontracts/liveprovider/storage/scanner/policy/operations/fourservice launch remainunfinished.
+Inspect current worker/DB/SQL nativeinbox writers andlateoutbox attachment order. Reuse existing validated plain-text/allowlisted engine semantics forfresh activefa/en templates only;choose smallest integration forcurrentprivate canonical receipts,lowbalance/scanner/admin/refund/contract/order snapshots. Preserve financial/provenance/audit/rollback/retry/lock order,mandatoryinstantinbox/nativeIDs/history,immutablepast read/signed/content andacceptedAPI behavior. SecureOTP/awaiting-staff owner dispositions,systempublication/alltemplatecontracts/liveprovider/storage/scanner/policy/operations/fourservice launch remainunfinished.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 - `05-notifications-documents-ai.md#T-05.04.02`: Variable interpolation & escaping

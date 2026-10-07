@@ -111,6 +111,18 @@ export class NotificationsService {
     const pool = transaction ?? getDbPool();
     const id = uuidv7();
     const now = new Date();
+    let localizedContent = params.localizedContent;
+    if (delivery) {
+      const saved = (await pool.query(
+        `SELECT payload FROM notification_outbox WHERE id=$1 AND user_id=$2
+         AND profile_id IS NOT DISTINCT FROM $3::uuid AND event_key=$4`,
+        [delivery.outboxId, params.userId, params.profileId ?? null, delivery.eventKey]
+      )) as { rows: Array<{ payload: Record<string, unknown> }> };
+      const payload = saved.rows[0]?.payload;
+      if (!payload || typeof payload !== 'object' || Array.isArray(payload))
+        throw new Error('Native inbox requires its private canonical payload');
+      localizedContent = await this.renderNativeInbox(params, delivery.eventKey, payload, pool);
+    }
 
     const inserted = await pool.query(
       `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
@@ -126,7 +138,7 @@ export class NotificationsService {
         params.body ?? null,
         notificationLink(params.link),
         now,
-        params.localizedContent ? JSON.stringify(params.localizedContent) : null,
+        localizedContent ? JSON.stringify(localizedContent) : null,
         delivery ? `outbox:${delivery.outboxId}` : null,
       ]
     );
@@ -148,6 +160,27 @@ export class NotificationsService {
       createdAt: now,
       updatedAt: now,
     };
+  }
+
+  private async renderNativeInbox(
+    params: CreateNotificationParams,
+    eventKey: string,
+    payload: Record<string, unknown>,
+    transaction: { query(sql: string, params?: unknown[]): Promise<unknown> }
+  ) {
+    const templates = (await transaction.query(
+      `SELECT locale,subject,body_template,variables FROM notification_templates
+       WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,
+      [eventKey]
+    )) as { rows: Parameters<typeof renderInboxTemplates>[1] };
+    return renderInboxTemplates(
+      params.localizedContent ?? {
+        fa: { title: params.title, body: params.body ?? '' },
+        en: { title: params.title, body: params.body ?? '' },
+      },
+      templates.rows,
+      payload
+    );
   }
 
   /** The caller owns the native business transaction and its stable occurrence identity. */
@@ -225,10 +258,7 @@ export class NotificationsService {
         params.profileId ?? null,
         params.operatingContext,
         params.eventKey,
-        params.localizedContent ?? {
-          fa: { title: params.title, body: params.body ?? '' },
-          en: { title: params.title, body: params.body ?? '' },
-        },
+        await this.renderNativeInbox(params, params.eventKey, payload, transaction),
         notificationLink(params.link),
         id,
         payload,
@@ -575,23 +605,7 @@ export class NotificationsService {
         throw new Error('Business notification occurrence conflicts with saved delivery');
       return false;
     }
-    const templates = await transaction.query(
-      `SELECT locale,subject,body_template,variables FROM notification_templates
-       WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,
-      [params.eventKey]
-    );
-    const localizedContent = renderInboxTemplates(
-      params.localizedContent ?? {
-        fa: { title: params.title, body: params.body ?? '' },
-        en: { title: params.title, body: params.body ?? '' },
-      },
-      templates.rows,
-      payload
-    );
-    const notice = await this.create({ ...params, localizedContent }, transaction, {
-      outboxId,
-      eventKey: params.eventKey,
-    });
+    const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
     const priority =
       classifyNotificationType(params.eventKey) === 'immediate' ? 'urgent' : 'normal';
     // In-app delivery is immediate and already persisted; only email awaits the worker/window.
@@ -620,7 +634,24 @@ export class NotificationsService {
     },
     transaction: { query(sql: string, params?: unknown[]): Promise<unknown> }
   ): Promise<NotificationResult> {
-    const notice = await this.create({ ...params, operatingContext: 'customer' }, transaction);
+    const nativeParams = { ...params, operatingContext: 'customer' as const };
+    const notice = await this.create(
+      {
+        ...nativeParams,
+        localizedContent: await this.renderNativeInbox(
+          nativeParams,
+          'profile.verification_status',
+          {
+            profileName: params.profileName,
+            status: params.status,
+            messageFa: params.localizedContent.fa.body,
+            messageEn: params.localizedContent.en.body,
+          },
+          transaction
+        ),
+      },
+      transaction
+    );
     const inbox = await transaction.query(
       `SELECT id FROM in_app_notifications WHERE id=$1 AND recipient_user_id=$2 AND profile_id=$3
        AND operating_context='customer' AND type=$4 AND delivery_key='direct:'||$1::text`,

@@ -1,5 +1,6 @@
 import type { Locale } from './index.js';
 const en = {
+  unrecognizedDevice: 'Unrecognized device',
   newDeviceTitle: 'Sign-in from an unrecognized device',
   newDeviceBody:
     'A sign-in from an unrecognized device completed on your account. Review your sessions. If this was not you, contact support immediately.',
@@ -26,6 +27,7 @@ const en = {
   loading: 'Loading…',
 } as const;
 const fa: Record<keyof typeof en, string> = {
+  unrecognizedDevice: 'دستگاه ناشناس',
   newDeviceTitle: 'ورود از دستگاه ناشناس',
   newDeviceBody:
     'ورود از دستگاه ناشناس به حساب شما انجام شد. نشست‌های خود را بررسی کنید. اگر این ورود کار شما نبوده، فوراً با پشتیبانی تماس بگیرید.',

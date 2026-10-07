@@ -115,7 +115,7 @@ export async function notifyNewDeviceLogin(client: PoolClient, userId: string): 
   const auditId = uuidv7();
   const audit = await client.query(
     `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-     VALUES($1,$2,'new_device_login',$3,$4,clock_timestamp()) RETURNING id`,
+     VALUES($1,$2,'new_device_login',$3,$4,clock_timestamp()) RETURNING id,created_at`,
     [
       auditId,
       userId,
@@ -144,7 +144,11 @@ export async function notifyNewDeviceLogin(client: PoolClient, userId: string): 
       link: '/settings/security',
       eventKey: 'auth.new_device_login',
       occurrenceKey: `auth.new_device_login:${auditId}:${userId}`,
-      payload: { auditId },
+      payload: {
+        auditId,
+        device: `${securitySettingsText('unrecognizedDevice', 'fa')} / ${securitySettingsText('unrecognizedDevice', 'en')}`,
+        loginTime: (audit.rows[0].created_at as Date).toISOString(),
+      },
     },
     client
   );

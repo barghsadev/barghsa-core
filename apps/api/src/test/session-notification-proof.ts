@@ -478,8 +478,14 @@ export async function expectNewDeviceNotice(
     max_attempts: 5,
     idempotency_key: `auth.new_device_login:${outbox.payload.auditId}:${user}`,
   });
+  const audit = (await pool.query('SELECT * FROM audit_log WHERE id=$1', [outbox.payload.auditId]))
+    .rows[0];
+  expect(audit).toMatchObject({ user_id: user, event: 'new_device_login' });
+  expect(JSON.parse(audit.metadata)).toEqual({ unrecognizedDevice: true });
   expect(outbox.payload).toEqual({
     auditId: outbox.payload.auditId,
+    device: 'دستگاه ناشناس / Unrecognized device',
+    loginTime: audit.created_at.toISOString(),
     link_route: '/settings/security',
   });
   const inbox = (
