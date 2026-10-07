@@ -113,7 +113,7 @@ export async function loadNotificationRecipient(
         'contract.signed','contract.active','contract.cancelled','contract.changes_requested',
         'order.submitted','order.status_changed','order.cancellation_requested',
         'document.review_completed','profile.verification_status',
-        'payment.wallet_topup_completed','payment.wallet_topup_failed'
+        'payment.wallet_topup_completed','payment.wallet_topup_failed','wallet.credit_received'
       ) OR (p.user_id=u.user_id AND NOT p.archived) OR EXISTS (
         SELECT 1 FROM in_app_notifications n
         WHERE n.delivery_key='outbox:'||o.id::text AND n.profile_id=o.profile_id
@@ -158,6 +158,13 @@ export async function loadNotificationRecipient(
           AND a.metadata::jsonb->>'targetUserId'=u.user_id AND NOT entity.archived AND entity.profile_type='LEGAL'
           AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
           AND n.operating_context='customer' AND n.type=o.event_key
+      )))
+      AND (o.event_key<>'wallet.credit_received' OR (p.user_id=u.user_id AND NOT p.archived AND EXISTS (
+        SELECT 1 FROM wallet_transactions w JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE w.id::text=o.payload->>'transactionId' AND w.wallet_id=o.profile_id
+          AND w.state='Completed' AND w.amount>0 AND w.type IN ('refund','reversal','compensating')
+          AND w.amount::text=o.payload->>'amount' AND n.profile_id=o.profile_id
+          AND n.recipient_user_id=u.user_id AND n.operating_context='customer' AND n.type=o.event_key
       )))
       AND (o.event_key<>'payment.refund_completed' OR (p.user_id=u.user_id AND NOT p.archived AND EXISTS (
         SELECT 1 FROM refunds r JOIN in_app_notifications n ON n.id::text=o.payload->>'inboxId'

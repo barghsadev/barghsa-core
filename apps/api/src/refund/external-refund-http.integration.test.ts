@@ -565,7 +565,7 @@ it('rolls wallet completion back if its customer notice cannot be persisted', as
     expect((await post(`wallet-refunds/${refund.id}/process`)).status).toBe(200);
   const notices = (
     await http.pool.query(
-      'SELECT delivery_key,localized_content FROM in_app_notifications WHERE profile_id=$1',
+      "SELECT delivery_key,localized_content FROM in_app_notifications WHERE profile_id=$1 AND type<>'wallet.credit_received'",
       [f.profile]
     )
   ).rows;
@@ -580,6 +580,21 @@ it('rolls wallet completion back if its customer notice cannot be persisted', as
     notices.find((notice) => notice.delivery_key === `refund:${refund.id}:Failed`).localized_content
       .en.body
   ).toContain('contact support');
+  const creditNotice = (
+    await http.pool.query(
+      "SELECT n.profile_id,n.operating_context,n.type,o.payload,w.amount::text AS amount FROM wallet_transactions w JOIN notification_outbox o ON o.payload->>'transactionId'=w.id::text AND o.event_key='wallet.credit_received' JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text WHERE w.ref_id=$1 AND w.wallet_id=$2 AND w.type='refund'",
+      [refund.id, f.profile]
+    )
+  ).rows;
+  expect(creditNotice).toHaveLength(1);
+  expect(creditNotice[0]).toMatchObject({
+    profile_id: f.profile,
+    operating_context: 'customer',
+    type: 'wallet.credit_received',
+    amount: '100',
+    payload: { amount: '100', link_route: '/wallet' },
+  });
+  expect(JSON.stringify(creditNotice)).not.toContain('private provider details');
 });
 
 it('returns only public bank-reference metadata before a failed external decision can write', async () => {

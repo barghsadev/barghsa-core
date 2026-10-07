@@ -1317,6 +1317,13 @@
       "when": 1791404922974,
       "tag": "0267_invoice_outcome_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 268,
+      "version": "7",
+      "when": 1791404922975,
+      "tag": "0268_wallet_credit_notifications",
+      "breakpoints": true
     }
   ]
 }

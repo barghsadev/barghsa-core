@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing wallet credit/low-balance native writers and real callers before building remaining canonical Appendix wallet.credit_received/wallet.low_balance gaps. Reuse immutable exact amounts,original credit/payment/reversal/threshold/authorization/profile/concurrency/idempotency/audit/retry/rollback;avoid duplicate topup/refund/history alerts and private internal financial detail. Keep accepted TTL/refund/invoice/earlier families and pending secure OTP owner disposition intact. Native templates/live provider/storage/policy/operations/all-four launch remain unfinished.
+Inspect existing customer lowBalanceWarning predicates andreal invoice/wallet write boundaries. Reuse current available posted-minus-reserved balance andactual unpaid customer invoices as existing UI threshold;define/read original eligibility andonlybuild canonical private mandatory immediate deficit entry/recovery/retry/no-spam gaps. Preserve money/authority/locks/concurrency/credits/payments/invoice snapshot/history/once semantics andacceptedwalletcredit/refund/TTL/invoice/topup/earlierfamilies. SecureOTP owner disposition,system/awaiting-staff/otherAppendix/nativetemplates/liveprovider/policy/operations/launch remain unfinished.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

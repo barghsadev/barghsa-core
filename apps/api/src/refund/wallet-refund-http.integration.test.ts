@@ -844,7 +844,7 @@ it('persists Failed with backoff and lets the registered worker retry exactly on
   ).toHaveLength(1);
   const notices = (
     await http.pool.query(
-      'SELECT delivery_key,localized_content FROM in_app_notifications WHERE profile_id=$1',
+      "SELECT delivery_key,localized_content FROM in_app_notifications WHERE profile_id=$1 AND type<>'wallet.credit_received'",
       [f.profile]
     )
   ).rows;
@@ -852,6 +852,21 @@ it('persists Failed with backoff and lets the registered worker retry exactly on
     [`refund:${refund.id}:Completed`, `refund:${refund.id}:Failed`].sort()
   );
   expect(JSON.stringify(notices)).not.toContain('private provider details');
+  const creditNotice = (
+    await http.pool.query(
+      "SELECT n.profile_id,n.operating_context,n.type,o.payload,w.amount::text AS amount FROM wallet_transactions w JOIN notification_outbox o ON o.payload->>'transactionId'=w.id::text AND o.event_key='wallet.credit_received' JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text WHERE w.ref_id=$1 AND w.wallet_id=$2 AND w.type='refund'",
+      [refund.id, f.profile]
+    )
+  ).rows;
+  expect(creditNotice).toHaveLength(1);
+  expect(creditNotice[0]).toMatchObject({
+    profile_id: f.profile,
+    operating_context: 'customer',
+    type: 'wallet.credit_received',
+    amount: '100',
+    payload: { amount: '100', link_route: '/wallet' },
+  });
+  expect(JSON.stringify(creditNotice)).not.toContain('private provider details');
 });
 
 it('recovers a committed processing request after a crash and serializes concurrent worker attempts', async () => {

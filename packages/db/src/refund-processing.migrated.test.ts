@@ -173,11 +173,25 @@ it('posts exact partial and full credits once through the production migration a
   expect(
     (
       await db.pool.query(
-        'SELECT count(*)::int AS count FROM in_app_notifications WHERE profile_id=$1',
+        "SELECT count(*)::int AS count FROM in_app_notifications WHERE profile_id=$1 AND type<>'wallet.credit_received'",
         [full.profile_id]
       )
     ).rows[0].count
   ).toBe(1);
+  const credits = (
+    await db.pool.query(
+      "SELECT o.payload,n.recipient_user_id,n.profile_id,n.operating_context,n.type FROM notification_outbox o JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text WHERE o.profile_id=$1 AND o.event_key='wallet.credit_received'",
+      [full.profile_id]
+    )
+  ).rows;
+  expect(credits).toHaveLength(1);
+  expect(credits[0]).toMatchObject({
+    recipient_user_id: finance,
+    profile_id: full.profile_id,
+    operating_context: 'customer',
+    type: 'wallet.credit_received',
+    payload: { amount: '9007199254740993', link_route: '/wallet' },
+  });
   await expect(
     db.pool.query(
       'UPDATE refund_retry_jobs SET completed_at=NULL,next_attempt_at=now() WHERE refund_id=$1',
