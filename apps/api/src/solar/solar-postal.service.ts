@@ -288,6 +288,7 @@ export class SolarPostalService {
           [cursor?.created_at ?? null, before ?? null, lane]
         )
       ).rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { requests: rows.slice(0, 100), nextBefore: rows.length > 100 ? rows[99]!.id : null };
     } catch (error) {

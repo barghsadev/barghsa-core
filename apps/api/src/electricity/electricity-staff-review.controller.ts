@@ -194,7 +194,7 @@ export class ElectricityStaffReviewController {
   @ApiResponse({ status: 200, description: 'Review detail.' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.requirePermission(req, false);
-    return this.service.detail(id);
+    return this.service.detail(id, req.session);
   }
 
   @Post(':id/financial-review')

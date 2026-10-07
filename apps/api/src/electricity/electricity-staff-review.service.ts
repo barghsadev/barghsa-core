@@ -332,157 +332,153 @@ export class ElectricityStaffReviewService {
     });
   }
 
-  async detail(id: string) {
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY');
-      const row = (await client.query<ReviewRow>(`${reviewQuery} WHERE o.id=$1`, [id])).rows[0];
-      if (!row) throw new NotFoundException('Electricity order not found');
-      const previous =
-        row.version_number > 1
-          ? (
-              await client.query<{
-                id: string;
-                content: Record<string, unknown>;
-                invoice_id: string | null;
-              }>(
-                `SELECT v.id,v.content,ar.initial_invoice_id AS invoice_id
+  async detail(id: string, actor: Actor) {
+    return staffOrderRead(
+      actor,
+      async (client) => {
+        const row = (await client.query<ReviewRow>(`${reviewQuery} WHERE o.id=$1`, [id])).rows[0];
+        if (!row) throw new NotFoundException('Electricity order not found');
+        const previous =
+          row.version_number > 1
+            ? (
+                await client.query<{
+                  id: string;
+                  content: Record<string, unknown>;
+                  invoice_id: string | null;
+                }>(
+                  `SELECT v.id,v.content,ar.initial_invoice_id AS invoice_id
              FROM contract_versions v
              LEFT JOIN contract_activation_requirements ar ON ar.version_id=v.id
              WHERE v.contract_id=$1 AND v.version_number=$2`,
-                [row.contract_id, row.version_number - 1]
-              )
-            ).rows[0]
-          : undefined;
-      const reason = previous
-        ? ((
-            await client.query<{ reason: string | null }>(
-              `SELECT metadata::jsonb->>'reason' AS reason FROM audit_log
+                  [row.contract_id, row.version_number - 1]
+                )
+              ).rows[0]
+            : undefined;
+        const reason = previous
+          ? ((
+              await client.query<{ reason: string | null }>(
+                `SELECT metadata::jsonb->>'reason' AS reason FROM audit_log
              WHERE event='electricity.order_review.request-changes'
                AND metadata::jsonb->>'orderId'=$1
                AND metadata::jsonb->>'versionId'=$2
              ORDER BY created_at DESC,id DESC LIMIT 1`,
-              [id, previous.id]
-            )
-          ).rows[0]?.reason ?? null)
-        : null;
-      const activity = (
-        await client.query<{
-          id: string;
-          event: string;
-          user_id: string | null;
-          actor_context: string;
-          created_at: Date;
-          metadata: Record<string, unknown>;
-        }>(
-          `SELECT id,event,user_id,created_at,COALESCE(operating_context,'unknown') AS actor_context,metadata::jsonb AS metadata FROM audit_log
+                [id, previous.id]
+              )
+            ).rows[0]?.reason ?? null)
+          : null;
+        const activity = (
+          await client.query<{
+            id: string;
+            event: string;
+            user_id: string | null;
+            actor_context: string;
+            created_at: Date;
+            metadata: Record<string, unknown>;
+          }>(
+            `SELECT id,event,user_id,created_at,COALESCE(operating_context,'unknown') AS actor_context,metadata::jsonb AS metadata FROM audit_log
              WHERE (metadata::jsonb->>'orderId'=$1
                     AND (event LIKE 'electricity.%' OR event='order_created'))
                 OR (metadata::jsonb->>'contractId'=$2 AND event='contract.cancelled')
              ORDER BY created_at DESC,id DESC LIMIT 100`,
-          [id, row.contract_id]
-        )
-      ).rows;
-      const lifecycle = (
-        await client.query<{ version_id: string; event: string; at: Date }>(
-          `SELECT version_id,'contract.activated' AS event,activated_at AS at
+            [id, row.contract_id]
+          )
+        ).rows;
+        const lifecycle = (
+          await client.query<{ version_id: string; event: string; at: Date }>(
+            `SELECT version_id,'contract.activated' AS event,activated_at AS at
              FROM contract_activations WHERE contract_id=$1
              UNION ALL
              SELECT version_id,'contract.completed' AS event,completed_at AS at
              FROM contract_completions WHERE contract_id=$1`,
-          [row.contract_id]
-        )
-      ).rows;
-      const names = await activityNames(
-        client,
-        activity.map((item) => item.user_id)
-      );
-      await client.query('COMMIT');
-      const content = row.contract_snapshot;
-      const beforePricing = previous?.content.pricing;
-      const afterPricing = content.pricing;
-      const summary = (value: unknown) => {
-        const facts =
-          value && typeof value === 'object' && !Array.isArray(value)
-            ? (value as Record<string, unknown>)
-            : {};
-        const get = (key: string) =>
-          typeof facts[key] === 'string' ? (facts[key] as string) : null;
-        const lines = Array.isArray(facts.lines)
-          ? facts.lines.flatMap((value: unknown) => {
-              if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
-              const line = value as Record<string, unknown>;
-              return typeof line.systemKey === 'string' && typeof line.quantityKwh === 'string'
-                ? [{ systemKey: line.systemKey, quantityKwh: line.quantityKwh }]
-                : [];
-            })
-          : [];
-        return {
-          periodStart: get('periodStart'),
-          periodEnd: get('periodEnd'),
-          totalKwh: get('totalKwh'),
-          totalIrR: get('totalIrR'),
-          lines,
+            [row.contract_id]
+          )
+        ).rows;
+        const names = await activityNames(
+          client,
+          activity.map((item) => item.user_id)
+        );
+        const content = row.contract_snapshot;
+        const beforePricing = previous?.content.pricing;
+        const afterPricing = content.pricing;
+        const summary = (value: unknown) => {
+          const facts =
+            value && typeof value === 'object' && !Array.isArray(value)
+              ? (value as Record<string, unknown>)
+              : {};
+          const get = (key: string) =>
+            typeof facts[key] === 'string' ? (facts[key] as string) : null;
+          const lines = Array.isArray(facts.lines)
+            ? facts.lines.flatMap((value: unknown) => {
+                if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
+                const line = value as Record<string, unknown>;
+                return typeof line.systemKey === 'string' && typeof line.quantityKwh === 'string'
+                  ? [{ systemKey: line.systemKey, quantityKwh: line.quantityKwh }]
+                  : [];
+              })
+            : [];
+          return {
+            periodStart: get('periodStart'),
+            periodEnd: get('periodEnd'),
+            totalKwh: get('totalKwh'),
+            totalIrR: get('totalIrR'),
+            lines,
+          };
         };
-      };
-      const delivery = (value: unknown) => {
-        const facts =
-          value && typeof value === 'object' && !Array.isArray(value)
-            ? (value as Record<string, unknown>)
-            : {};
-        return typeof facts.fullAddress === 'string' ? facts.fullAddress : null;
-      };
-      return {
-        ...present(row),
-        timeline: [
-          ...activity.map((item) => ({
-            id: item.id,
-            event: item.event,
-            at: item.created_at.toISOString(),
-            actor: item.user_id,
-            actorContext: item.actor_context,
-            actorName: item.user_id ? (names.get(item.user_id) ?? null) : null,
-            reason: typeof item.metadata.reason === 'string' ? item.metadata.reason : null,
-            comment:
-              typeof item.metadata.responseNote === 'string' ? item.metadata.responseNote : null,
-          })),
-          ...lifecycle.map((item) => ({
-            id: `${item.version_id}:${item.event}`,
-            event: item.event,
-            at: item.at.toISOString(),
-            actor: null,
-            actorContext: 'unknown',
-            actorName: null,
-            reason: null,
-            comment: null,
-          })),
-        ].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id)),
-        revisionReview: previous
-          ? {
-              versionNumber: row.version_number,
-              staffReason: reason,
-              customerResponse:
-                typeof content.customerResponse === 'string' ? content.customerResponse : null,
-              before: {
-                ...summary(beforePricing),
-                fullAddress:
-                  delivery(content.previousDelivery) ?? delivery(previous.content.delivery),
-                invoiceId: previous.invoice_id,
-              },
-              after: {
-                ...summary(afterPricing),
-                fullAddress: row.full_address,
-                invoiceId: row.invoice_id,
-              },
-            }
-          : null,
-      };
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+        const delivery = (value: unknown) => {
+          const facts =
+            value && typeof value === 'object' && !Array.isArray(value)
+              ? (value as Record<string, unknown>)
+              : {};
+          return typeof facts.fullAddress === 'string' ? facts.fullAddress : null;
+        };
+        return {
+          ...present(row),
+          timeline: [
+            ...activity.map((item) => ({
+              id: item.id,
+              event: item.event,
+              at: item.created_at.toISOString(),
+              actor: item.user_id,
+              actorContext: item.actor_context,
+              actorName: item.user_id ? (names.get(item.user_id) ?? null) : null,
+              reason: typeof item.metadata.reason === 'string' ? item.metadata.reason : null,
+              comment:
+                typeof item.metadata.responseNote === 'string' ? item.metadata.responseNote : null,
+            })),
+            ...lifecycle.map((item) => ({
+              id: `${item.version_id}:${item.event}`,
+              event: item.event,
+              at: item.at.toISOString(),
+              actor: null,
+              actorContext: 'unknown',
+              actorName: null,
+              reason: null,
+              comment: null,
+            })),
+          ].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id)),
+          revisionReview: previous
+            ? {
+                versionNumber: row.version_number,
+                staffReason: reason,
+                customerResponse:
+                  typeof content.customerResponse === 'string' ? content.customerResponse : null,
+                before: {
+                  ...summary(beforePricing),
+                  fullAddress:
+                    delivery(content.previousDelivery) ?? delivery(previous.content.delivery),
+                  invoiceId: previous.invoice_id,
+                },
+                after: {
+                  ...summary(afterPricing),
+                  fullAddress: row.full_address,
+                  invoiceId: row.invoice_id,
+                },
+              }
+            : null,
+        };
+      },
+      { repeatableRead: true }
+    );
   }
 
   async decide(

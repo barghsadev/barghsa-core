@@ -1899,6 +1899,123 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       expect.objectContaining({ id: costlyHardwareId }),
     ]),
   });
+  // A delayed private read must derive price-changing options from the current locked grant.
+  const beforePrivateRead = await savingSystemSnapshot(result.savingOrderId);
+  const capabilityBlocker = await http.pool.connect();
+  let capabilityRead: Promise<Response> | undefined;
+  const currentGrants = (
+    await http.pool.query("SELECT permissions FROM staff_roles WHERE role_id='saving-order-admin'")
+  ).rows[0].permissions;
+  try {
+    await capabilityBlocker.query('BEGIN');
+    await capabilityBlocker.query(
+      "UPDATE staff_roles SET permissions=permissions::jsonb-'invoices:write' WHERE role_id='saving-order-admin'"
+    );
+    await capabilityBlocker.query('LOCK TABLE products IN ACCESS EXCLUSIVE MODE');
+    const blockerPid = (await capabilityBlocker.query('SELECT pg_backend_pid() AS pid')).rows[0]
+      .pid as number;
+    capabilityRead = request(
+      `/api/staff/saving/orders/${result.savingOrderId}`,
+      'GET',
+      undefined,
+      staffHeaders
+    );
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))) AS blocked',
+              [blockerPid]
+            )
+          ).rows[0].blocked
+      )
+      .toBe(true);
+    await capabilityBlocker.query('COMMIT');
+    const current = await capabilityRead;
+    expect(current.status, http.logs()).toBe(200);
+    const options = (
+      (await current.json()) as { hardwareOptions: Array<{ id: string; priceDeltaIrR: string }> }
+    ).hardwareOptions;
+    expect(options).toContainEqual(
+      expect.objectContaining({ id: equalHardwareId, priceDeltaIrR: '0' })
+    );
+    expect(options.some((option) => option.id === costlyHardwareId)).toBe(false);
+    expect(await savingSystemSnapshot(result.savingOrderId)).toEqual(beforePrivateRead);
+  } finally {
+    await capabilityBlocker.query('ROLLBACK');
+    capabilityBlocker.release();
+    await capabilityRead;
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='saving-order-admin'",
+      [typeof currentGrants === 'string' ? currentGrants : JSON.stringify(currentGrants)]
+    );
+  }
+  // Session validity is checked again after the complete, delayed detail read.
+  const originalSessions = (
+    await http.pool.query(
+      "SELECT session_id,expires_at,idle_deadline FROM sessions WHERE user_id='saving-order-staff'"
+    )
+  ).rows;
+  const sessionBlocker = await http.pool.connect();
+  let delayedDetail: Promise<Response> | undefined;
+  let delayedStatus: number | undefined;
+  try {
+    await sessionBlocker.query('BEGIN');
+    await sessionBlocker.query('LOCK TABLE products IN ACCESS EXCLUSIVE MODE');
+    const blockerPid = (await sessionBlocker.query('SELECT pg_backend_pid() AS pid')).rows[0]
+      .pid as number;
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '1 second' WHERE user_id='saving-order-staff'"
+    );
+    delayedDetail = request(
+      `/api/staff/saving/orders/${result.savingOrderId}`,
+      'GET',
+      undefined,
+      staffHeaders
+    ).then((response) => {
+      delayedStatus = response.status;
+      return response;
+    });
+    await expect
+      .poll(async () =>
+        (
+          await http.pool.query(
+            'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))) AS blocked',
+            [blockerPid]
+          )
+        ).rows[0].blocked
+          ? 'blocked'
+          : delayedStatus === undefined
+            ? 'pending'
+            : `finished:${delayedStatus}`
+      )
+      .toBe('blocked');
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              "SELECT bool_and(expires_at<clock_timestamp()) AS expired FROM sessions WHERE user_id='saving-order-staff'"
+            )
+          ).rows[0].expired
+      )
+      .toBe(true);
+    await sessionBlocker.query('COMMIT');
+    const expired = await delayedDetail;
+    expect(expired.status, await expired.clone().text()).toBe(401);
+    expect(await expired.json()).not.toHaveProperty('hardwareOptions');
+    expect(await savingSystemSnapshot(result.savingOrderId)).toEqual(beforePrivateRead);
+  } finally {
+    await sessionBlocker.query('ROLLBACK');
+    sessionBlocker.release();
+    await delayedDetail;
+    for (const original of originalSessions)
+      await http.pool.query(
+        'UPDATE sessions SET expires_at=$2,idle_deadline=$3 WHERE session_id=$1',
+        [original.session_id, original.expires_at, original.idle_deadline]
+      );
+  }
   expect((await request(hardwarePath, 'POST', hardwareInput)).status).toBe(403);
   const { expectedReviewHash: _unusedHash, ...withoutHardwareHash } = hardwareInput;
   expect(

@@ -135,7 +135,7 @@ export class SavingFulfillmentController {
   @ApiOperation({ summary: 'Saving order review detail and fulfillment history' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.permission(req, false);
-    return this.service.detail(id, hasStaffPermission(req, 'invoices:write'));
+    return this.service.detail(id, req.session);
   }
 
   @Post(':id/financial-review')

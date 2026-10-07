@@ -1,6 +1,7 @@
 import { staffOrderRead } from '../orders/staff-order-read.js';
 import {
   ConflictException,
+  HttpException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -204,9 +205,15 @@ export class SavingFulfillmentService {
     });
   }
 
-  async detail(id: string, allowHardwarePriceAdjustment = false) {
-    const client = await getDbPool().connect();
-    try {
+  async detail(id: string, actor: Actor) {
+    return staffOrderRead(actor, async (client) => {
+      let allowHardwarePriceAdjustment = false;
+      try {
+        await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+        allowHardwarePriceAdjustment = true;
+      } catch (error) {
+        if (!(error instanceof HttpException) || error.getStatus() !== 403) throw error;
+      }
       const row = (await client.query<ReviewRow>(`${reviewQuery} WHERE s.id=$1`, [id])).rows[0];
       if (!row) throw new NotFoundException('Saving order not found');
       const stages = (
@@ -290,9 +297,7 @@ export class SavingFulfillmentService {
         canAmendAddress,
         canAmendHardware,
       };
-    } finally {
-      client.release();
-    }
+    });
   }
 
   private present(row: ReviewRow) {

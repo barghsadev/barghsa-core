@@ -238,6 +238,7 @@ export class SolarDocumentsService {
           [cursor?.created_at ?? null, before ?? null]
         )
       ).rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { requests: rows.slice(0, 100), nextBefore: rows.length > 100 ? rows[99]!.id : null };
     } catch (error) {
@@ -280,6 +281,7 @@ export class SolarDocumentsService {
           [cursor?.uploaded_at ?? null, before ?? null]
         )
       ).rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { documents: rows.slice(0, 100), nextBefore: rows.length > 100 ? rows[99]!.id : null };
     } catch (error) {
@@ -318,6 +320,7 @@ export class SolarDocumentsService {
           [requestId]
         )
       ).rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { request, documents, requestedDocuments: requests };
     } catch (error) {
