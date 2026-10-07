@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { enqueueOutbox } from './outbox-writer.js';
+import { InAppNotificationTransport } from './in-app-transport.js';
 import { EmailNotificationTransport } from './email-transport.js';
 import { SmsNotificationTransport } from './sms-transport.js';
 import { durableDelivery, DeliveryOutcomeUnknown } from './send-receipt.js';
@@ -998,6 +999,275 @@ it('rechecks role profile archive after rendering before the provider call', asy
       recipientId: f.owner,
       channel: 'email',
       eventKey: 'profile.agent_role_changed',
+      payload: {},
+      idempotencyKey: 'invite-key',
+    })
+  ).rejects.toThrow('recipient changed');
+  expect(request).not.toHaveBeenCalled();
+  expect(
+    (
+      await pool.query(
+        "SELECT delivery_payload FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+        [f.id]
+      )
+    ).rows[0].delivery_payload
+  ).toEqual(snapshot);
+});
+
+async function passwordFixture(event = 'password_changed') {
+  const f = await fixture('auth.password_changed', 'account'),
+    audit = randomUUID();
+  await pool.query('INSERT INTO audit_log(id,user_id,event,correlation_id) VALUES($1,$2,$3,$1)', [
+    audit,
+    f.owner,
+    event,
+  ]);
+  await pool.query('UPDATE notification_outbox SET profile_id=NULL,payload=$2 WHERE id=$1', [
+    f.id,
+    { auditId: audit, link_route: '/settings/security' },
+  ]);
+  await pool.query(
+    "UPDATE in_app_notifications SET profile_id=NULL,link_route='/settings/security' WHERE delivery_key='outbox:'||$1::text",
+    [f.id]
+  );
+  return { ...f, audit };
+}
+it.each(['password_changed', 'password_reset'])(
+  'resolves %s confirmations privately at account scope without profile membership',
+  async (event) => {
+    const f = await passwordFixture(event);
+    await pool.query('UPDATE profiles SET user_id=$2,archived=true WHERE id=$1', [
+      f.profile,
+      f.next,
+    ]);
+    expect(await loadNotificationRecipient(pool, f.id)).toMatchObject({
+      userId: f.owner,
+      profileId: null,
+      email: `${f.owner}@example.test`,
+    });
+    await pool.query('UPDATE notification_outbox SET user_id=$2 WHERE id=$1', [f.id, f.next]);
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+    await pool.query('UPDATE notification_outbox SET user_id=$2 WHERE id=$1', [f.id, f.owner]);
+    await pool.query(
+      "UPDATE in_app_notifications SET operating_context='customer' WHERE delivery_key='outbox:'||$1::text",
+      [f.id]
+    );
+    expect(await loadNotificationRecipient(pool, f.id)).toBeNull();
+  }
+);
+it.each(['disabled', 'activation', 'inbox', 'contact'] as const)(
+  'checks password confirmation privacy after %s changes',
+  async (change) => {
+    const f = await passwordFixture(),
+      before = await loadNotificationRecipient(pool, f.id);
+    expect(before).toMatchObject({ userId: f.owner, profileId: null });
+    if (change === 'disabled')
+      await pool.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [f.owner]);
+    else if (change === 'activation')
+      await pool.query('UPDATE users SET activation_token=$2 WHERE user_id=$1', [
+        f.owner,
+        randomUUID(),
+      ]);
+    else if (change === 'inbox')
+      await pool.query("DELETE FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text", [
+        f.id,
+      ]);
+    else
+      await pool.query('UPDATE users SET username=$2 WHERE user_id=$1', [
+        f.owner,
+        `${randomUUID()}@example.test`,
+      ]);
+    await expect(
+      assertNotificationRecipientAvailable(pool, f.id, 'auth.password_changed', 'email', before!)
+    ).rejects.toThrow('recipient changed');
+  }
+);
+it('preserves the password inbox content/read receipt after account activation changes', async () => {
+  const f = await passwordFixture();
+  await pool.query(
+    "UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE delivery_key='outbox:'||$1::text",
+    [f.id]
+  );
+  const before = (
+    await pool.query("SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text", [
+      f.id,
+    ])
+  ).rows;
+  await pool.query('UPDATE users SET activation_token=$2 WHERE user_id=$1', [
+    f.owner,
+    randomUUID(),
+  ]);
+  await expect(
+    new InAppNotificationTransport(pool).send({
+      outboxId: f.id,
+      profileId: null,
+      recipientId: f.owner,
+      eventKey: 'auth.password_changed',
+      channel: 'in_app',
+      payload: { auditId: f.audit, link_route: '/settings/security' },
+      idempotencyKey: 'retained-password',
+    })
+  ).resolves.toEqual({ status: 'delivered', providerRef: before[0].id });
+  expect(
+    (
+      await pool.query(
+        "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+        [f.id]
+      )
+    ).rows
+  ).toEqual(before);
+});
+it.each(['customer'] as const)(
+  'delivers a account-private password confirmation email (%s) once with its active template and durable provider receipt',
+  async () => {
+    const f = await passwordFixture();
+    await pool.query("UPDATE users SET locale='en' WHERE user_id=$1", [f.owner]);
+    await pool.query("UPDATE email_provider_configs SET status='disabled' WHERE status='active'");
+    await pool.query(
+      `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+ VALUES('resend','Controlled password test','active',$1,$2,'passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
+      [JSON.stringify({ api_key: 'local-test-only', from_email: 'sender@example.test' }), f.owner]
+    );
+    await pool.query(
+      `INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
+ VALUES('auth.password_changed','email','en','Password changed','<p>Your password changed</p>','[]','active',true,$1) ON CONFLICT DO NOTHING`,
+      [f.owner]
+    );
+    const request = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ id: 'password-email-receipt' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+    const transport = new EmailNotificationTransport(pool, request);
+    const payload = {
+      outboxId: f.id,
+      profileId: null,
+      recipientId: f.owner,
+      channel: 'email' as const,
+      eventKey: 'auth.password_changed',
+      payload: { auditId: f.audit },
+      idempotencyKey: `password-provider:${f.id}`,
+    };
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'password-email-receipt',
+    });
+    await expect(transport.send(payload)).resolves.toEqual({
+      status: 'delivered',
+      providerRef: 'password-email-receipt',
+    });
+    expect(request).toHaveBeenCalledTimes(1);
+    const sent = JSON.parse(String(request.mock.calls[0]![1]!.body));
+    expect(sent).toMatchObject({
+      to: [`${f.owner}@example.test`],
+      subject: 'Password changed',
+      html: expect.stringContaining('<p>Your password changed</p>'),
+    });
+    expect(JSON.stringify(sent)).not.toContain('Private conversation');
+    expect(
+      (
+        await pool.query(
+          'SELECT status,provider_ref FROM notification_send_receipts WHERE outbox_id=$1',
+          [f.id]
+        )
+      ).rows
+    ).toEqual([{ status: 'accepted', provider_ref: 'password-email-receipt' }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT delivery_payload FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+          [f.id]
+        )
+      ).rows[0].delivery_payload
+    ).toMatchObject({
+      profileId: null,
+      userId: f.owner,
+      templateVersion: 1,
+      destination: `${f.owner}@example.test`,
+      idempotencyKey: payload.idempotencyKey,
+    });
+    await expect(
+      transport.send({ ...payload, eventKey: 'wallet.topup_completed' })
+    ).rejects.toThrow('durable queued recipient');
+    expect(request).toHaveBeenCalledTimes(1);
+  }
+);
+it.each(['accepted', 'unknown'] as const)(
+  'preserves a password confirmation %s provider receipt after activation',
+  async (status) => {
+    const f = await passwordFixture(),
+      execute = durableDelivery(pool, f.id, 'email', 'role-receipt-key'),
+      provider = { id: randomUUID(), transport: 'smtp' as const };
+    if (status === 'accepted')
+      expect(await execute(provider, async () => 'role-receipt')).toBe('role-receipt');
+    else
+      await expect(
+        execute(provider, async () => {
+          throw new Error('timeout');
+        })
+      ).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+    const before = (
+      await pool.query('SELECT * FROM notification_send_receipts WHERE outbox_id=$1', [f.id])
+    ).rows;
+    await pool.query('UPDATE users SET activation_token=$2 WHERE user_id=$1', [
+      f.owner,
+      randomUUID(),
+    ]);
+    const request = vi.fn<typeof fetch>(),
+      result = new EmailNotificationTransport(pool, request).send({
+        outboxId: f.id,
+        profileId: null,
+        recipientId: f.owner,
+        channel: 'email',
+        eventKey: 'auth.password_changed',
+        payload: {},
+        idempotencyKey: 'role-receipt-key',
+      });
+    if (status === 'accepted')
+      await expect(result).resolves.toEqual({ status: 'delivered', providerRef: 'role-receipt' });
+    else await expect(result).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+    expect(request).not.toHaveBeenCalled();
+    expect(
+      (await pool.query('SELECT * FROM notification_send_receipts WHERE outbox_id=$1', [f.id])).rows
+    ).toEqual(before);
+  }
+);
+it('rechecks password contact change after rendering before the provider call', async () => {
+  const f = await passwordFixture(),
+    snapshot = {
+      version: 1,
+      userId: f.owner,
+      profileId: null,
+      idempotencyKey: 'invite-key',
+      destination: `${f.owner}@example.test`,
+      subject: 'Invitation',
+      html: '<p>Invite</p>',
+      providerId: randomUUID(),
+    };
+  await pool.query(
+    "UPDATE notification_job SET delivery_payload=$2 WHERE outbox_id=$1 AND channel='email'",
+    [f.id, snapshot]
+  );
+  const deliveryPool = {
+    async query(sql: string, params?: unknown[]) {
+      const result = await pool.query(sql, params);
+      if (sql.startsWith('SELECT delivery_payload'))
+        await pool.query('UPDATE users SET username=$2 WHERE user_id=$1', [
+          f.owner,
+          `${randomUUID()}@example.test`,
+        ]);
+      return result;
+    },
+  };
+  const request = vi.fn<typeof fetch>();
+  await expect(
+    new EmailNotificationTransport(deliveryPool, request).send({
+      outboxId: f.id,
+      profileId: null,
+      recipientId: f.owner,
+      channel: 'email',
+      eventKey: 'auth.password_changed',
       payload: {},
       idempotencyKey: 'invite-key',
     })

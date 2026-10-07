@@ -1,3 +1,4 @@
+import { notifyPasswordChanged } from './password-notifications.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import type { PoolClient } from 'pg';
@@ -546,17 +547,19 @@ export class AuthService {
         [now, user.user_id]
       );
 
+      const auditId = uuidv7();
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
          VALUES ($1,$2,'password_changed',$3,$4,$5,clock_timestamp())`,
         [
-          uuidv7(),
+          auditId,
           user.user_id,
           JSON.stringify({ reason: 'forced_change' }),
           correlationIdStorage.getStore() ?? uuidv7(),
           ip,
         ]
       );
+      await notifyPasswordChanged(client, user.user_id, auditId);
       // Hashing and credential/session writes may outlast the token deadline.
       // Keep every effect provisional until its final wall-clock check.
       const currentToken = await client.query('SELECT $1::timestamptz>clock_timestamp() AS valid', [
@@ -1385,6 +1388,7 @@ export class AuthService {
         [auditId, userId, 'password_reset', null, correlationId, ip, now]
       );
 
+      await notifyPasswordChanged(client, userId, auditId);
       // Credential revocation and audit writes can wait too. Expiry here
       // must roll back the OTP, password/history, sessions and audit together.
       await this.assertResetDeadline(client, input.challengeId);

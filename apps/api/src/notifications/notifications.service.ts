@@ -96,7 +96,8 @@ export class NotificationsService {
         | TicketBusinessEvent
         | PrivateDocumentEvent
         | 'profile.invitation_received'
-        | 'profile.agent_role_changed';
+        | 'profile.agent_role_changed'
+        | 'auth.password_changed';
     }
   ): Promise<NotificationResult> {
     const pool = transaction ?? getDbPool();
@@ -336,21 +337,22 @@ export class NotificationsService {
     return true;
   }
 
-  async createProfileRoleEvent(
+  async createAccountBusinessEvent(
     params: CreateNotificationParams & {
-      eventKey: 'profile.agent_role_changed';
+      eventKey: 'profile.agent_role_changed' | 'auth.password_changed';
       occurrenceKey: string;
-      payload: { auditId: string; entityName: string; newRole: string };
+      payload: Record<string, string>;
     },
     transaction: PoolClient
   ): Promise<boolean> {
     if (
-      params.operatingContext !== 'customer' ||
+      params.operatingContext !==
+        (params.eventKey === 'auth.password_changed' ? 'account' : 'customer') ||
       params.profileId ||
       !params.occurrenceKey.trim() ||
       !params.userId.trim()
     )
-      throw new Error('Role change delivery requires the original private recipient');
+      throw new Error('Account delivery requires the original private recipient');
     const payload = {
       ...params.payload,
       ...(params.link ? { link_route: notificationLink(params.link) } : {}),
@@ -390,38 +392,41 @@ export class NotificationsService {
         ]
       );
       if (!existing.rows[0])
-        throw new Error('Role change notification occurrence conflicts with saved delivery');
+        throw new Error('Account notification occurrence conflicts with saved delivery');
       return false;
     }
     const recipient = await transaction.query(
-      `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'
+      params.eventKey === 'auth.password_changed'
+        ? `SELECT id FROM audit_log WHERE id::text=$1 AND user_id=$2 AND event IN ('password_changed','password_reset')`
+        : `SELECT a.id FROM audit_log a JOIN profiles p ON p.id::text=a.metadata::jsonb->>'profileId'
        WHERE a.id::text=$1 AND a.event IN ('agent_roles_changed','agent_removed')
          AND a.metadata::jsonb->>'targetUserId'=$2 AND NOT p.archived AND p.profile_type='LEGAL'`,
       [params.payload.auditId, params.userId]
     );
-    if (recipient.rows.length !== 1) throw new Error('Private role-change recipient changed');
+    if (recipient.rows.length !== 1) throw new Error('Private account recipient changed');
     const notice = await this.create(params, transaction, { outboxId, eventKey: params.eventKey });
+    const priority =
+      classifyNotificationType(params.eventKey) === 'immediate' ? 'urgent' : 'normal';
     const inboxJob = await transaction.query(
       `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
-       VALUES($1,'in_app','done','normal',5,1,$2,$3)`,
-      [outboxId, notice.id, payload]
+       VALUES($1,'in_app','done',$2,5,1,$3,$4)`,
+      [outboxId, priority, notice.id, payload]
     );
-    if (inboxJob.rowCount !== 1) throw new Error('Role change inbox job was not stored');
+    if (inboxJob.rowCount !== 1) throw new Error('Account inbox job was not stored');
     {
       const emailJob = await transaction.query(
         `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts)
-         VALUES($1,'email','queued','normal',5,0)`,
-        [outboxId]
+         VALUES($1,'email','queued',$2,5,0)`,
+        [outboxId, priority]
       );
-      if (emailJob.rowCount !== 1) throw new Error('Role change email job was not stored');
+      if (emailJob.rowCount !== 1) throw new Error('Account email job was not stored');
     }
     const history = await transaction.query(
       `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
        VALUES($1,'in_app','delivered',1,$2)`,
       [outboxId, notice.id]
     );
-    if (history.rowCount !== 1)
-      throw new Error('Role change inbox delivery history was not stored');
+    if (history.rowCount !== 1) throw new Error('Account inbox delivery history was not stored');
     return true;
   }
 

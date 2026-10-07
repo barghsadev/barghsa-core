@@ -6,7 +6,10 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 export async function notifyAgentRoleChange(
   client: PoolClient,
   input: { recipientUserId: string; profileId: string; roles: string[]; auditId: string },
-  notifications: Pick<NotificationsService, 'createProfileRoleEvent'> = new NotificationsService()
+  notifications: Pick<
+    NotificationsService,
+    'createAccountBusinessEvent'
+  > = new NotificationsService()
 ): Promise<void> {
   const row = (
     await client.query(
@@ -34,7 +37,7 @@ export async function notifyAgentRoleChange(
       return [locale, { title: lifecycleFormText('roleChangedTitle', locale), body }];
     })
   ) as Record<'fa' | 'en', { title: string; body: string }>;
-  await notifications.createProfileRoleEvent(
+  await notifications.createAccountBusinessEvent(
     {
       userId: input.recipientUserId,
       operatingContext: 'customer',

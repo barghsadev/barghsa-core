@@ -1,5 +1,8 @@
 import type { Locale } from './index.js';
 const en = {
+  passwordChangedTitle: 'Your password changed',
+  passwordChangedBody:
+    'Your account password changed successfully. If you did not make this change, contact support immediately.',
   passwordRequired: 'Enter your current password.',
   invalidPassword: 'The password was not accepted. Check it and try again.',
   validationUnavailable: 'Validation is unavailable. Your password is kept; try again.',
@@ -17,6 +20,9 @@ const en = {
   loading: 'Loading…',
 } as const;
 const fa: Record<keyof typeof en, string> = {
+  passwordChangedTitle: 'رمز عبور شما تغییر کرد',
+  passwordChangedBody:
+    'رمز عبور حساب شما با موفقیت تغییر کرد. اگر این تغییر را شما انجام نداده‌اید، فوراً با پشتیبانی تماس بگیرید.',
   passwordRequired: 'رمز عبور فعلی خود را وارد کنید.',
   invalidPassword: 'رمز عبور پذیرفته نشد. آن را بررسی و دوباره تلاش کنید.',
   validationUnavailable: 'اعتبارسنجی در دسترس نیست. رمز عبور حفظ شده؛ دوباره تلاش کنید.',

@@ -149,6 +149,11 @@ export async function loadNotificationRecipient(
           AND a.metadata::jsonb->>'targetUserId'=u.user_id AND NOT entity.archived AND entity.profile_type='LEGAL'
           AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id
           AND n.operating_context='customer' AND n.type=o.event_key
+      )))
+      AND (o.event_key<>'auth.password_changed' OR (o.profile_id IS NULL AND EXISTS (
+        SELECT 1 FROM audit_log a JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+        WHERE a.id::text=o.payload->>'auditId' AND a.user_id=u.user_id AND a.event IN ('password_changed','password_reset')
+          AND n.profile_id IS NULL AND n.recipient_user_id=u.user_id AND n.operating_context='account' AND n.type=o.event_key
       )))`,
     [outboxId]
   );

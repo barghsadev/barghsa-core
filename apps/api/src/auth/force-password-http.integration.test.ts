@@ -1,3 +1,10 @@
+import { notifyPasswordChanged } from './password-notifications.js';
+import {
+  expectPasswordNotice,
+  passwordNoticeState,
+  failPasswordSink,
+  passwordFailureCases,
+} from '../test/password-notification-proof.js';
 import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeAll, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
@@ -259,4 +266,41 @@ it.each(['account', 'session'] as const)(
     }
   },
   15000
+);
+
+it.each(passwordFailureCases)(
+  'rolls back forced password credentials and $table delivery on $mode,then confirms exactly once',
+  async ({ table, mode }) => {
+    const before = await passwordNoticeState(http.pool),
+      drop = await failPasswordSink(http.pool, table, mode);
+    try {
+      expect((await change()).status).toBe(500);
+      expect(await passwordNoticeState(http.pool)).toEqual(before);
+    } finally {
+      await drop();
+    }
+    expect((await change()).status).toBe(200);
+    const notice = await expectPasswordNotice(http.pool, 'forced-user', [
+      token,
+      currentHash,
+      currentPassword,
+      newPassword,
+    ]);
+    await http.pool.query(
+      'UPDATE in_app_notifications SET is_read=true,read_at=NOW() WHERE id=$1',
+      [notice.inbox.id]
+    );
+    const delivered = await passwordNoticeState(http.pool),
+      client = await http.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await notifyPasswordChanged(client, 'forced-user', notice.outbox.payload.auditId);
+      await client.query('COMMIT');
+    } finally {
+      client.release();
+    }
+    expect(await passwordNoticeState(http.pool)).toEqual(delivered);
+    expect((await change()).status).toBe(400);
+    expect(await passwordNoticeState(http.pool)).toEqual(delivered);
+  }
 );

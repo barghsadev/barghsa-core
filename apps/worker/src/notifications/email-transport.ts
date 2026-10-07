@@ -34,6 +34,7 @@ export class EmailNotificationTransport implements INotificationTransport {
             'ticket.new_reply',
             'profile.invitation_received',
             'profile.agent_role_changed',
+            'auth.password_changed',
           ].includes(payload.eventKey)
         ))
     )
