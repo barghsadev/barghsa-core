@@ -520,6 +520,36 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
         )
       ).rows
     ).toHaveLength(1);
+    const { runOutboxPoll } = requireWorker(
+      './dist/notifications/outbox-runner.js'
+    ) as typeof import('../../../worker/dist/notifications/outbox-runner.js');
+    const { InAppNotificationTransport } = requireWorker(
+      './dist/notifications/in-app-transport.js'
+    ) as typeof import('../../../worker/dist/notifications/in-app-transport.js');
+    expect(
+      await runOutboxPoll({
+        pool: http.pool,
+        transports: { in_app: new InAppNotificationTransport(http.pool) },
+        deliveryWindow: { timezone: 'UTC', startHour: 9, endHour: 10 },
+      })
+    ).toMatchObject({ delivered: 2, failed: 0 });
+    const alerts = (
+      await http.pool.query(
+        "SELECT profile_id,recipient_user_id,operating_context,type,link_route,localized_content FROM in_app_notifications WHERE recipient_user_id=$1 AND type IN ('document.scan_failed','document.quarantined') ORDER BY type",
+        [admin]
+      )
+    ).rows;
+    expect(alerts).toHaveLength(2);
+    for (const alert of alerts) {
+      expect(alert).toMatchObject({
+        profile_id: null,
+        recipient_user_id: admin,
+        operating_context: 'staff',
+        link_route: '/admin/documents',
+      });
+      expect(alert.localized_content.en.body).toContain('evidence.pdf');
+      expect(alert.localized_content.fa.body).toMatch(/[\u0600-\u06ff]/);
+    }
   } finally {
     http = original;
     await configured.close();
@@ -2387,4 +2417,227 @@ it('targets the current private document owner without changing old submission n
     (await http.pool.query('SELECT uploaded_by FROM documents WHERE id=$1', [document.id])).rows[0]
       .uploaded_by
   ).toBe(f.user);
+});
+
+it('holds document state through mandatory scanner queue failures and delivers only to a current private administrator', async () => {
+  const { runDocumentScans } = requireWorker(
+    './dist/documents/scan-runner.js'
+  ) as typeof import('../../../worker/dist/documents/scan-runner.js');
+  const { runOutboxPoll } = requireWorker(
+    './dist/notifications/outbox-runner.js'
+  ) as typeof import('../../../worker/dist/notifications/outbox-runner.js');
+  const { InAppNotificationTransport } = requireWorker(
+    './dist/notifications/in-app-transport.js'
+  ) as typeof import('../../../worker/dist/notifications/in-app-transport.js');
+  const original = http;
+  process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
+  const configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
+  http = configured;
+  try {
+    const admin = await login(),
+      inactive = await login();
+    await http.pool.query(
+      'UPDATE users SET is_staff=true,is_admin=true WHERE user_id=ANY($1::text[])',
+      [[admin, inactive]]
+    );
+    await http.pool.query("UPDATE users SET activation_token='pending' WHERE user_id=$1", [
+      inactive,
+    ]);
+    const f = await owner();
+    const storage: StorageProvider = {
+      getObject: async () => ({
+        body: new ReadableStream<Uint8Array>({
+          start(c) {
+            c.enqueue(pdf);
+            c.close();
+          },
+        }),
+        contentType: 'application/pdf',
+        contentLength: pdf.length,
+        metadata: {},
+        etag: 'scanner-fixture',
+      }),
+      putObject: async () => {
+        throw new Error('Scanner must not write objects');
+      },
+      deleteObject: async () => {
+        throw new Error('Scanner must not delete objects');
+      },
+      presignedPutUrl: async () => {
+        throw new Error('Scanner must not reserve uploads');
+      },
+      presignedGetUrl: async () => {
+        throw new Error('Scanner must not sign downloads');
+      },
+      listObjects: async () => {
+        throw new Error('Scanner must not list objects');
+      },
+    };
+    const tables = (
+      await http.pool.query(
+        "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename"
+      )
+    ).rows.map((r) => r.tablename as string);
+    const snapshot = async (): Promise<Record<string, Array<Record<string, unknown>>>> =>
+      Object.fromEntries(
+        await Promise.all(
+          tables.map(async (table) => [
+            table,
+            (
+              await http.pool.query(
+                `SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM "${table.replaceAll('"', '""')}" t`
+              )
+            ).rows[0].rows,
+          ])
+        )
+      );
+    const poll = () =>
+      runOutboxPoll({
+        pool: http.pool,
+        transports: { in_app: new InAppNotificationTransport(http.pool) },
+        deliveryWindow: { timezone: 'UTC', startHour: 9, endHour: 10 },
+      });
+    for (const table of ['notification_outbox', 'notification_job'])
+      for (const mode of ['raise', 'suppress']) {
+        const document = await confirm(await create(f.user), f.user),
+          before = await snapshot();
+        const match = `idempotency_key LIKE 'document.quarantined:${document.id}:%'`;
+        const predicate =
+          table === 'notification_outbox'
+            ? `NEW.${match}`
+            : `EXISTS(SELECT 1 FROM notification_outbox WHERE id=NEW.outbox_id AND ${match})`;
+        await http.pool.query(
+          `CREATE FUNCTION fail_scanner_queue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${predicate} THEN ${mode === 'raise' ? "RAISE EXCEPTION 'scanner queue unavailable';" : 'RETURN NULL;'} END IF;RETURN NEW;END $$;CREATE TRIGGER fail_scanner_queue BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_scanner_queue()`
+        );
+        try {
+          expect(
+            await runDocumentScans(
+              http.pool,
+              storage,
+              { host: '127.0.0.1', port: 3310 },
+              async () => 'infected'
+            )
+          ).toEqual({ clean: 0, infected: 0, retrying: 1 });
+          const after = await snapshot(),
+            job = after.document_scan_jobs!.find((r) => r.document_id === document.id)!,
+            previous = before.document_scan_jobs!.find((r) => r.document_id === document.id)!;
+          expect(job).toMatchObject({
+            attempts: Number(previous.attempts) + 1,
+            last_error: 'scan_processing_failed',
+            completed_at: null,
+            verdict: null,
+          });
+          expect(Date.parse(job.next_attempt_at as string)).toBeGreaterThan(Date.now());
+          expect(Date.parse(job.updated_at as string)).toBeGreaterThanOrEqual(
+            Date.parse(previous.updated_at as string)
+          );
+          for (const key of ['attempts', 'last_error', 'next_attempt_at', 'updated_at'])
+            job[key] = previous[key];
+          expect(after).toEqual(before);
+        } finally {
+          await http.pool.query(
+            `DROP TRIGGER fail_scanner_queue ON ${table};DROP FUNCTION fail_scanner_queue()`
+          );
+        }
+        await http.pool.query(
+          "UPDATE document_scan_jobs SET next_attempt_at=NOW()-INTERVAL '1 second' WHERE document_id=$1",
+          [document.id]
+        );
+        expect(
+          await runDocumentScans(
+            http.pool,
+            storage,
+            { host: '127.0.0.1', port: 3310 },
+            async () => 'infected'
+          )
+        ).toEqual({ clean: 0, infected: 1, retrying: 0 });
+        const outbox = (
+          await http.pool.query('SELECT * FROM notification_outbox WHERE idempotency_key=$1', [
+            `document.quarantined:${document.id}:${admin}`,
+          ])
+        ).rows;
+        expect(outbox).toHaveLength(1);
+        expect(outbox[0]).toMatchObject({
+          profile_id: null,
+          user_id: admin,
+          event_key: 'document.quarantined',
+          channels: ['in_app'],
+        });
+        expect(
+          (
+            await http.pool.query('SELECT id FROM notification_outbox WHERE idempotency_key=$1', [
+              `document.quarantined:${document.id}:${inactive}`,
+            ])
+          ).rows
+        ).toEqual([]);
+        if (table === 'notification_outbox' && mode === 'raise') {
+          await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [admin]);
+          expect(await poll()).toMatchObject({ delivered: 0, failed: 1 });
+          expect(
+            (
+              await http.pool.query(
+                "SELECT id FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+                [outbox[0].id]
+              )
+            ).rows
+          ).toEqual([]);
+          await http.pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [admin]);
+          await http.pool.query(
+            "UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1",
+            [outbox[0].id]
+          );
+          await http.pool.query(
+            "UPDATE notification_outbox SET locked_until=NULL,scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1",
+            [outbox[0].id]
+          );
+        }
+        expect(await poll()).toMatchObject({ delivered: 1, failed: 0 });
+        const notices = (
+          await http.pool.query(
+            "SELECT * FROM in_app_notifications WHERE delivery_key='outbox:'||$1::text",
+            [outbox[0].id]
+          )
+        ).rows;
+        expect(notices).toHaveLength(1);
+        expect(notices[0]).toMatchObject({
+          profile_id: null,
+          recipient_user_id: admin,
+          operating_context: 'staff',
+          type: 'document.quarantined',
+          link_route: '/admin/documents',
+        });
+        expect(notices[0].localized_content.en.title).toBe('Document quarantined');
+        expect(notices[0].localized_content.fa.title).toMatch(/[\u0600-\u06ff]/);
+        expect(notices[0].localized_content.en.body).toContain('evidence.pdf');
+        const saved = notices[0];
+        await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [admin]);
+        await expect(
+          new InAppNotificationTransport(http.pool).send({
+            outboxId: outbox[0].id,
+            profileId: null,
+            recipientId: admin,
+            eventKey: 'document.quarantined',
+            channel: 'in_app',
+            payload: outbox[0].payload,
+            idempotencyKey: 'retained-receipt',
+          })
+        ).resolves.toEqual({ status: 'delivered', providerRef: saved.id });
+        expect(
+          (await http.pool.query('SELECT * FROM in_app_notifications WHERE id=$1', [saved.id])).rows
+        ).toEqual([saved]);
+        await http.pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [admin]);
+        expect(
+          (
+            await http.pool.query(
+              "SELECT id FROM in_app_notifications WHERE recipient_user_id=$1 AND type='document.quarantined'",
+              [f.user]
+            )
+          ).rows
+        ).toEqual([]);
+      }
+  } finally {
+    http = original;
+    await configured.close();
+    delete process.env['DOCUMENT_CLAMAV_HOST'];
+  }
 });

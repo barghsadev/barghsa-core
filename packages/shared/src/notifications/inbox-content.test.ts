@@ -30,3 +30,20 @@ it('uses valid invoice navigation and rejects an explicit unsafe link', () => {
     defaultInboxLink('payment.wallet_topup_completed', { link_route: 'https://outside.example' })
   ).toBeNull();
 });
+
+it.each(['document.scan_failed', 'document.quarantined'])(
+  'gives %s a private staff destination and useful bilingual document context',
+  (event) => {
+    expect(defaultInboxLink(event)).toBe('/admin/documents');
+    const content = defaultInboxContent(event, {
+      documentName: 'evidence.pdf',
+      reason: 'Scanner retry pending',
+    });
+    expect(content.en.title).toMatch(/Document (scan failed|quarantined)/);
+    for (const locale of ['fa', 'en'] as const) {
+      expect(content[locale].body).toContain('evidence.pdf');
+      expect(content[locale].body).toContain('Scanner retry pending');
+    }
+    expect(defaultInboxLink(event, { link_route: 'https://evil.example' })).toBeNull();
+  }
+);

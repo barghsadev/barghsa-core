@@ -96,6 +96,20 @@ export class InAppNotificationTransport implements INotificationTransport {
       [deliveryKey, payload.profileId, recipient, operatingContext, payload.eventKey]
     );
     if (existing.rows[0]) return { status: 'delivered', providerRef: existing.rows[0].id };
+    if (
+      payload.eventKey === 'document.scan_failed' ||
+      payload.eventKey === 'document.quarantined'
+    ) {
+      if (payload.profileId !== null || operatingContext !== 'staff')
+        throw new Error('Internal document alerts require a private staff recipient');
+      const allowed = await pool.query(
+        `SELECT user_id FROM users WHERE user_id=$1 AND is_staff=true AND is_admin=true
+         AND disabled_at IS NULL AND activation_token IS NULL FOR SHARE`,
+        [recipient]
+      );
+      if (!allowed.rows[0])
+        throw new Error('Document alert recipient is no longer an active administrator');
+    }
     const content = defaultInboxContent(payload.eventKey, payload.payload);
     const templates = await pool.query(
       `SELECT locale,subject,body_template,variables FROM notification_templates

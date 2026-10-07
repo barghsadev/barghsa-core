@@ -6,6 +6,18 @@ export interface InboxText {
 }
 export type InboxContent = Record<'fa' | 'en', InboxText>;
 const labels: Record<string, [string, string, string, string]> = {
+  'document.scan_failed': [
+    'اسکن مدرک ناموفق بود',
+    'Document scan failed',
+    'اسکن مدرک ناموفق بود و تلاش دوباره برنامه‌ریزی شده است.',
+    'The document scan failed and another attempt is scheduled.',
+  ],
+  'document.quarantined': [
+    'مدرک قرنطینه شد',
+    'Document quarantined',
+    'مدرک به دلیل شناسایی بدافزار قرنطینه شد و قابل دریافت نیست.',
+    'The document was quarantined after malware detection and cannot be downloaded.',
+  ],
   'auth.refresh_token_reused': [
     'قطع نشست برای حفظ امنیت حساب',
     'Session ended for account security',
@@ -85,6 +97,13 @@ export function defaultInboxContent(
     fa: { title: text[0]!, body: text[2]! },
     en: { title: text[1]!, body: text[3]! },
   };
+  if (event === 'document.scan_failed' || event === 'document.quarantined') {
+    const name = scalar(data.documentName);
+    if (name) {
+      content.fa.body += ` مدرک: ${name}`;
+      content.en.body += ` Document: ${name}`;
+    }
+  }
   const amount = scalar(data.amount ?? data.amount_irr);
   const reason = scalar(data.reason);
   if (amount) {
@@ -100,6 +119,8 @@ export function defaultInboxContent(
 export function defaultInboxLink(event: string, data: Record<string, unknown> = {}): string | null {
   if (Object.hasOwn(data, 'link_route'))
     return notificationLink(typeof data.link_route === 'string' ? data.link_route : null);
+  if (event === 'document.scan_failed' || event === 'document.quarantined')
+    return '/admin/documents';
   if (event.startsWith('payment.wallet_')) return '/wallet';
   if (event === 'auth.refresh_token_reused') return '/settings/security';
   if (event === 'payment.invoice_reminder') {

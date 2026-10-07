@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing document.uploaded and internal scan_failed/quarantined producers and recipient pipelines. Implement only missing durable upload/alert boundaries and retain accepted shared review delivery. Preserve two-phase pending/confirm upload and external copy retry,scanner/quarantine/preview/private access,immutable signed evidence/history,current staff/uploader scope,stable occurrences,rollback/retry and unknown receipts. Keep live storage/scanner/templates/providers and owner/operations/launch explicit.
+Inspect document.uploaded successful sealing/generated-document writers and manual quarantine internal producer paths. Implement only missing native durable boundaries with actual uploader/private staff scope; preserve two-phase pending/confirm and copy retry,all storage/scanner/quarantine/preview/access and immutable signed/history safeguards. Reuse accepted review/scanner delivery,stable occurrence/audit/rollback/replay; keep active templates/live provider/storage/scanner/owner/operations/launch explicit.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 

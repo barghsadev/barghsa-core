@@ -68,7 +68,7 @@ async function event(
 
 async function alertAdmins(client: PoolClient, row: ScanRow, eventKey: string) {
   const admins = await client.query<{ user_id: string; locale: string }>(
-    `SELECT user_id,locale FROM users WHERE is_staff=true AND is_admin=true AND disabled_at IS NULL`
+    `SELECT user_id,locale FROM users WHERE is_staff=true AND is_admin=true AND disabled_at IS NULL AND activation_token IS NULL FOR SHARE`
   );
   for (const admin of admins.rows) {
     const reason =
@@ -88,6 +88,18 @@ async function alertAdmins(client: PoolClient, row: ScanRow, eventKey: string) {
       idempotencyKey: `${eventKey}:${row.document_id}:${admin.user_id}`,
       priority: 'urgent',
     });
+    const stored = await client.query(
+      `SELECT o.id FROM notification_outbox o JOIN notification_job j ON j.outbox_id=o.id AND j.channel='in_app'
+       WHERE o.idempotency_key=$1 AND o.profile_id IS NULL AND o.user_id=$2 AND o.event_key=$3
+         AND o.channels=ARRAY['in_app'] AND o.payload=$4::jsonb`,
+      [
+        `${eventKey}:${row.document_id}:${admin.user_id}`,
+        admin.user_id,
+        eventKey,
+        { documentName: row.original_name, reason },
+      ]
+    );
+    if (!stored.rows[0]) throw new Error('Mandatory document alert queue was not stored');
   }
 }
 

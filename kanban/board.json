@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-10-07",
-  "source_commit": "c6ed6d9722a11b4a11c72967be97bb78bcdf5fe3",
+  "source_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -28842,7 +28842,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -29003,7 +29003,8 @@
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
@@ -29186,6 +29187,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         }
@@ -35708,7 +35732,7 @@
       "launch_required": true,
       "remaining": [
         "Inspect any remaining unaccepted generic/system order status paths. Native electricity review/revision/raw/protected legacy and SQL activation/completion/formal contract-cancellation now have scoped canonical owner delivery; accepted four-service submissions,customer cancellation,consultation/solar/saving/request families remain retained. Preserve true transitions versus internal/same-state information,Rejected versus formal Cancelled,and all financial/review/authority/session/audit/idempotency/ledger boundaries.",
-        "Inspect remaining unaccepted Appendix producers,including document upload/internal scan/quarantine and other review paths,profile invitations/roles,authentication,payments/wallet and system events,plus other native/generic contract/order paths. Shared customer-readable approval/rejection document review now has scoped canonical current-owner delivery,retaining unpublished-contract privacy and original staff submission/change/quarantine behavior. Ticket and native contract/order producer acceptance retained. Do not infer whole producer coverage; prove exact variables,current private recipients,mandatory channels,rollback/replay and unknown-delivery holds.",
+        "Inspect remaining unaccepted Appendix producers,including document.uploaded,manual quarantine/other internal and review paths,profile invitations/roles,authentication,payments/wallet/system events,and other native/generic contract/order writers. Shared customer-readable document approvals/rejections and existing scanner scan_failed/quarantined routes now have scoped atomic private delivery/queue/retry/current recipient acceptance. Preserve unpublished/signed/storage/quarantine/ticket and original lifecycle boundaries; do not infer whole producer coverage. Prove exact variables,current private recipients,mandatory channels,rollback/replay and unknown receipts.",
         "Verify and complete configured active in-app template rendering for native synchronous business notices with template tasks; current direct/native lifecycle writers preserve localized default content but do not establish custom active-template behavior. Preserve mandatory immediate delivery and immutable past read/content/history. Live template imports,provider callbacks/idempotency,alerts and production operations remain separate gates."
       ],
       "owner": null,
@@ -35782,7 +35806,8 @@
           "release-0.4-electricity-lifecycle-status-notification-producers",
           "release-0.4-native-contract-review-notification-producers",
           "release-0.4-ticket-notification-producers",
-          "release-0.4-document-review-notification-producers"
+          "release-0.4-document-review-notification-producers",
+          "release-0.4-document-scanner-notification-producers"
         ],
         "current_acceptance": {
           "kind": "partial-native-business-producer-acceptance",
@@ -36266,11 +36291,27 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
               "sha256": "88d5b465903b06438ef2ffa6bd64b78af677a870a384ed490541eb9a70d86682"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+            },
+            {
+              "path": "apps/worker/src/notifications/in-app-transport.ts",
+              "sha256": "bec31ea1a8ac652c14a4c6ffc445f20e5512b9f8f9dd6eabb5fd6c14071720c6"
+            },
+            {
+              "path": "packages/shared/src/notifications/inbox-content.test.ts",
+              "sha256": "703612eac205ebc869b257e4a485917d71343a2f0102a4268400514b0e01df4d"
+            },
+            {
+              "path": "packages/shared/src/notifications/inbox-content.ts",
+              "sha256": "9a63335aacbfa34683dd01cc6f431ee6bee8a0066087d8a4fea4307d3ca7ee44"
             }
           ],
           "checks": [
@@ -36399,10 +36440,17 @@
             "The profile owner query adds a share lock consistent with existing documentAccess. Current ownership/archive gating includes the new canonical family; queued recipients never retarget after profile ownership loss. Solar individual decisions already delegate to DocumentService.act and therefore reuse the same producer. Native PDF/source-document review keeps its original unpublished guard. No document/storage/scan/replacement/legal/signature/solar domain implementation is rebuilt.",
             "192 distinct scoped cases: 89 current (53 document/solar-document/contract-signature HTTP cases and 36 worker recipient cases), plus unchanged private customer writer/inbox 22 and other worker cases 81 reused with exact source/runtime bindings. Initial three new probes are covered by the final complete file and not counted again. Sixteen raised/silent approval/rejection failures across four required sinks preserve every public business row except HTTP session/rate counters, recover/replay exact command and preserve read/content/delivery receipts. Current-owner transfer keeps uploader and earlier submission evidence exact. Actual object storage, replacements, quarantine, signed-file immutability and publication/privacy assertions pass.",
             "One final scoped review/source proof retains all original shared notification service runtime, document privacy/recipient prefix/localized content and worker logic after only the family extension. Original 304 document and 48 worker assertions unchanged; all previous schema/migrations, budget/floor/limiter, other producers/domain/public/OpenAPI/web/shared/dependency sources exact. Final API/worker builds, API types, six-file lint/format and two-production-file/five-rule Semgrep zero findings pass, using matching prebuilt outputs.",
-            "Task and release remain partial. Required document upload/internal scan/quarantine and any other unaccepted review producer boundaries still need separate effective acceptance. Active in-app templates, other Appendix producers, live provider/storage/scanner receipts and owner/operations/launch criteria remain unfinished. No release/version/staging/Telegram/production deployment."
+            "Task and release remain partial. Required document upload/internal scan/quarantine and any other unaccepted review producer boundaries still need separate effective acceptance. Active in-app templates, other Appendix producers, live provider/storage/scanner receipts and owner/operations/launch criteria remain unfinished. No release/version/staging/Telegram/production deployment.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded.",
+            "Existing scan_failed/quarantined outbox alerts now have usable bilingual fallback labels/document names/reasons and the actual /admin/documents staff route. Explicit unsafe links still fail safely. Original template rendering, old labels/navigation and all other inbox behavior remain exact. Queues stay profile-less, explicit-recipient, urgent, in-app only with original document/admin occurrence keys and sanitized reasons; no scanner internals enter customer notices.",
+            "Scanner emitter excludes pending activation, holds eligible administrator rows and verifies the exact mandatory outbox/private job manifest after enqueue; raised or silently suppressed queue sinks cannot certify a completed scan result. The in-app transport checks current active staff/admin status before a new internal document alert, while matching existing delivered receipts preserve original content/read/history after privilege loss.",
+            "202 distinct scoped current/source/runtime-bound cases: 53 current (two scanner HTTP cases, worker inbox/identity/writer 47 and shared fallback four), plus unaffected document/solar/signature cases 52 and other worker cases 97 retained with exact semantic/runtime evidence. Repeated probes, skips and diagnostic failures are excluded. Four raised/silent outbox/job failures retain document/storage/audit/other public rows; only the existing scan retry row advances its required attempts/error/due time/updated timestamp, which are asserted before exact normalization. Recovery quarantines once and delivers a private administrator notice. Pending staff activation excluded; loss of current admin eligibility blocks new delivery, recovery targets the saved user and a retained receipt never rewrites history. Actual configured scanner clean/replacement/quarantine/retry workflow delivers both alert families.",
+            "One coherent scoped review/source proof retains all original scanner checksum/size/quarantine/replacement/audit/resolve/retry functions, original private inbox/receipt/template/insert pipeline and all old fallback labels/other navigation after removing only scoped changes. Original 310 document and six shared assertions preserved. No schema/migration/domain/finance/public/authority/scheduler/provider code or limiter/budget/floor/assertion weakened. Current required compiled runtime outside changed modules stays exact; shared rebuild remaps only metadata source maps over identical other JavaScript/declarations. Web runtime assets remain exact; only release metadata updates in its current build.",
+            "Final shared/API/worker builds, package ESM/CJS/type export checks, shared/API compiler, changed-file lint/format and three-production-file/five-rule Semgrep zero findings pass. Shared runtime change justified a web build and all 87 unchanged route/interaction gzip budgets pass; no new production-browser pass is claimed. Fixture retry updated_at/type shape corrections and pre-test Docker reaper-port timeout are retained as diagnostics; engine health/absent failed reaper verified and the unchanged final case retried. No bootstrap timeout, cleanup service, assertion or runtime weakened.",
+            "Task/release remain partial: document.uploaded,manual quarantine/other unaccepted internal/review producers,other Appendix events,active in-app templates and live scanner/storage/provider/operations/owner/launch gates remain unfinished. Existing scan notifications are now scoped through real private delivery; do not infer whole document-event or release acceptance. No version/release/staging/Telegram/production deployment."
           ],
           "limitations": [],
-          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-notification-producers",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
           "scope_qualification": "Local real worker/HTTP/PostgreSQL plus fixture production-browser evidence. Live provider delivery,operational alerts andowner design dispositions remain separate.",
           "accepted_producer_events": [
             "contract.awaiting_acceptance",
@@ -36652,6 +36700,35 @@
             "apps/api/src/documents/document-notifications.ts#notifyDocumentReview",
             "apps/api/src/documents/document.service.ts#DocumentService.act",
             "apps/api/src/solar/solar-documents.service.ts#SolarDocumentsService.decide"
+          ],
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
+            ]
+          },
+          "accepted_document_scanner_producer_paths": [
+            "apps/worker/src/documents/scan-runner.ts#alertAdmins",
+            "apps/worker/src/notifications/in-app-transport.ts#InAppNotificationTransport.send",
+            "packages/shared/src/notifications/inbox-content.ts#defaultInboxContent",
+            "packages/shared/src/notifications/inbox-content.ts#defaultInboxLink"
           ]
         }
       }
@@ -71126,7 +71203,7 @@
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
-              "sha256": "04cb783f855ca2899f509d79966717bc99c9f2aac0b6888acb1a120c3032d513"
+              "sha256": "bec31ea1a8ac652c14a4c6ffc445f20e5512b9f8f9dd6eabb5fd6c14071720c6"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -71154,7 +71231,7 @@
             },
             {
               "path": "packages/shared/src/notifications/inbox-content.ts",
-              "sha256": "872793652a8330792dd1715517e62195691feeba8f254fc8b3a71a94e74e24d1"
+              "sha256": "9a63335aacbfa34683dd01cc6f431ee6bee8a0066087d8a4fea4307d3ca7ee44"
             },
             {
               "path": "packages/shared/src/notifications/notification-registry.ts",
@@ -71169,13 +71246,37 @@
             "Current detector retains mapped/unmatched/unresolved status and retries Finance alert enqueue idempotently. At alert creation,only current active Finance-permission staff/admin account recipients are selected; urgent in-app/email jobs deduplicate per event/recipient and preserve older deliveries while repairing missing jobs. Real PG tests run leasing and in-app transport into private profileless staff inboxes with FA/EN content and /admin links; other accounts/profile selections do not expose or hide those account alerts. Current warning endpoint permits non-admin Finance and rejects current permission revocation/expired session. Dashboard retains unresolved rows through unavailable/malformed refreshes,clears on access denial and preserves assertive warning/zero Axe contrast violations across both locales/themes/engines. External email and broader notification policies remain separate operational gates.",
             "322 distinct feature cases pass:163 API,31 DB,63 shared,37 UI,28 browser. Browser12 unchanged cases retained from the first28-case run plus16 final locale/theme matrix cases; overlapping rerun excluded. API alert integration includes actual worker leasing/in-app persistence. Production source and all5505 compiled outputs unchanged; no rebuild,broad coverage or provider/deployment certification claimed. Receipts/hash/exact reversal: /Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
             "Complete bounded final two-file browser diff reviewed once. Only document locale/theme assertions added; exact reversal recovers prior files and every original money,authority,retry,review and Axe/contrast assertion. Changed lint/format pass. Prior Wallet300.08KB/300KB global budget failure remains unresolved. Chargeback callback CSRF owner disposition,v0.2 dependencies and generic invoice-engine naming remain pending; no milestone/deployment acceptance.",
-            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open."
+            "Narrow renewal in release-0.3-invoice-reconciliation: prior wallet schema declarations, all old main statements, all old job helpers/entries and dictionary values retained; index-only generated expand/schema upgrade preserves money/history; one monitoring enum extends the otherwise exact API contract. Current targeted worker/process/migration/32 API/29 UI checks and proof files are external. No unrelated task acceptance inferred; Wallet budget and broader financial/owner/launch gates stay open.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
             "Local actual PG/compiled HTTP/worker/in-app and production-browser fixtures; external payment/email/providers and deployment remain operational gates.",
             "Chargeback callback policy,Wallet bundle budget and release dependencies unresolved; no production authorization."
-          ]
+          ],
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
+            ]
+          }
         }
       }
     },
@@ -88403,7 +88504,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -88543,7 +88644,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -88657,7 +88758,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-document-lifecycle",
           "limitations": [
@@ -88741,6 +88843,29 @@
               "format",
               "sast"
             ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
+            ]
           }
         }
       }
@@ -88795,7 +88920,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -88935,7 +89060,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -89049,7 +89174,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-document-lifecycle",
           "limitations": [
@@ -89133,6 +89259,29 @@
               "format",
               "sast"
             ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
+            ]
           }
         }
       }
@@ -89184,7 +89333,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -89324,7 +89473,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -89438,7 +89587,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-document-lifecycle",
           "limitations": [
@@ -89522,6 +89672,29 @@
               "format",
               "sast"
             ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
+            ]
           }
         }
       }
@@ -89572,7 +89745,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -89712,7 +89885,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -89826,7 +89999,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-document-lifecycle",
           "limitations": [
@@ -89910,6 +90084,29 @@
               "format",
               "sast"
             ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
+            ]
           }
         }
       }
@@ -89962,7 +90159,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -90102,7 +90299,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -90216,7 +90413,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-document-lifecycle",
           "limitations": [
@@ -90299,6 +90497,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         }
@@ -196898,7 +197119,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -196982,7 +197203,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -197101,7 +197322,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
           "limitations": [
@@ -197240,6 +197462,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         }
@@ -197279,7 +197524,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -197363,7 +197608,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -197482,7 +197727,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
           "limitations": [
@@ -197621,6 +197867,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         }
@@ -197659,7 +197928,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -197743,7 +198012,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -197862,7 +198131,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
           "limitations": [
@@ -198001,6 +198271,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         }
@@ -218444,7 +218737,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -218951,7 +219244,8 @@
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "criterion_result": "Four customer submission event families now include entity/id/from/to/reason while retaining legacy metadata, mandatory actor, database timestamp, customer context and correlation. Real API/idempotent replay evidence passed. Complete audit acceptance remains partial for remaining event families and general immutability guard/fixture integration. Electricity staff decision audit also records the actual locked from/to state and entity, with one confirmed event on concurrent replay. Remaining audit families and integrated general immutability stay partial. General UPDATE/DELETE/TRUNCATE protection is now installed as0249 and accepted with existing history, current context errors, migration replay, business/audit rollback and822 fixture plus80 core-service API outcomes. Overall task remains partial solely for remaining event-family metadata. Price proposal/finalization/cancellation, consultation fee/paid closure/recovery and request actions, plus document state events now have actual entity/ID/from/to/reason metadata with current real HTTP evidence. Remaining families are listed explicitly; full task stays partial. Gift redemption and release now require attributable actors and mandatory same-transaction audits tied to each persisted ledger identity/state; missing actors, audit failure and replay boundaries pass with unchanged discount/restoration policy. Other listed event families remain open. Manual contract authoring/review/acceptance/signature/cancellation audits now carry exact entity and state metadata, including amendment/parent distinctions, requests, second-approval identity and refund transitions. 173 distinct related outcomes pass on current sources; automatic contract and listed other domain event families remain open. Automatic contract activation/completion now record actual locked previous/new states, explicit system actor and entity metadata while retaining documented affected-user association and immutable old history. Fresh/upgrade/replay/rollback and actual compiled-worker execution pass with79 distinct related outcomes; remaining service-specific families stay partial. Manual electricity cancellation, address/full-quote revision and quantity-increase request/approval/signature/rejection now record entity/ID and actual locked previous/new state/reason, retaining parent contract transitions and exact financial reviews.53 distinct related outcomes pass; automatic increase and other listed families remain open. Automatic electricity increase activation/expiry and associated unpaid invoice cancellation now carry actual old/new status, system actor, reason and exact entity/profile identity while preserving affected-user links and immutable prior history. Upgrade/replay/rollback/failure/retry plus all7 financial increase scenarios pass with14 distinct related outcomes; remaining other-domain families stay partial. Manual saving order review/change/address/hardware/upgrade and stage completion/start/reset now record actual entity/state/reason and attributable context/IP, including required one-to-one event audits and precise customer revision resets. Five stage update acknowledgements reject skipped writes.38 final-source outcomes preserve all438 original expect calls and verify six rollback probes; automatic SQL inventory/upgrade and other domain families remain open. Automatic saving inventory row events now use exact OLD/NEW status/hardware and event timestamps with explicit system identity; legacy swapped/released stock actions retain observed states and real entity associations. Hardware-upgrade applied/cancelled/expired events include request and invoice transitions.16 final related outcomes and7 rollback probes pass with462 preexisting API expects preserved. Solar/postal and automatic consultation audit families remain open. Paid consultation settlement now records consultation entity/id, actual locked offer_pending→offer_accepted state, acceptance/payment actor, profile and reason alongside existing invoice/acceptedBy provenance.11 payment/workflow outcomes preserve135 original payment-test expects; both payment/acceptance orders verify mandatory-audit rollback/retry and duplicate/unmatched/unaccepted no-op boundaries. Only solar progress/final/postal audit families remain open. Solar progress/final/postal/shipment/tracking and versioned guidance audit families now record actual entity/key and prior/new state with actor/reason and existing timestamp/correlation provenance. Postal records use their actual locked UUID; progress/tracking aggregates use their actual request key.27 solar and4 model cases pass, with11 audit-failure rollback/retries plus a skipped guidance write probe.362 original expectations retained. Historical state bindings renewed through exact-hash lookup and324 valid-pair comparisons. All explicitly remaining audit families are accepted; this task does not certify broader service journey, schema, identity, operational or release gates.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/common-business-acceptance",
@@ -219312,6 +219606,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         }
@@ -226493,7 +226810,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -226633,7 +226950,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -226747,7 +227064,8 @@
             "Scoped saving cancellation/migration renewal: /Users/majid/.local/state/barghsa-manual-batches/saving-cancellation-status-notification-producer. 211 distinct scoped current/source-bound cases and explicit snapshot gate; prior production SQL/domain/worker code and every original assertion retained. 0264 only adds the atomic future private cancellation notice; previous upgrade boundaries stay exact. All old public rows/functions preserved on upgrade/replay and new sink failures roll back native financial/inventory state. Other task/release/owner/provider/operations dispositions remain unchanged.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/contract-document-lifecycle",
           "limitations": [
@@ -226830,6 +227148,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         }
@@ -249583,7 +249924,7 @@
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
-              "sha256": "04cb783f855ca2899f509d79966717bc99c9f2aac0b6888acb1a120c3032d513"
+              "sha256": "bec31ea1a8ac652c14a4c6ffc445f20e5512b9f8f9dd6eabb5fd6c14071720c6"
             },
             {
               "path": "packages/db/src/seed/notification-templates.ts",
@@ -249595,7 +249936,7 @@
             },
             {
               "path": "packages/shared/src/notifications/inbox-content.ts",
-              "sha256": "872793652a8330792dd1715517e62195691feeba8f254fc8b3a71a94e74e24d1"
+              "sha256": "9a63335aacbfa34683dd01cc6f431ee6bee8a0066087d8a4fea4307d3ca7ee44"
             },
             {
               "path": "packages/shared/src/notifications/notification-registry.ts",
@@ -250311,7 +250652,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -250427,7 +250768,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "e29c76e816650e133f85f6b51424f92acd357d94ef612ce76f2a35d9bcdc54f2"
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -250920,7 +251261,8 @@
             "Scoped native electricity notification/legacy closure renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-status-notification-producers. 377 distinct current/source/runtime-bound cases, exact original domain effects/SQL and 53 unrelated members; guarded current-owner delivery, actual rollback/replay and new legacy scope protections. All original financial/review/audit/session/idempotency assertions retained; one stale comment count is made exact per family. SQL system/other producer/template/provider/owner/operations acceptance remains unfinished.",
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -251093,6 +251435,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         },
@@ -251711,7 +252076,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "8e65e4f801c56b68809048a7f9787d5a81a07012ea24e88bd5f59ace94ff3145"
+              "sha256": "df248d76d7c4374badbf96b45fe7eaafcc867e5dc6ac70027b526687b6c2fc83"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -253872,7 +254237,8 @@
             "Scoped electricity SQL lifecycle renewal: /Users/majid/.local/state/barghsa-manual-batches/electricity-lifecycle-status-notification-producers. 39 passing scoped cases, old production cores and original assertions exact; migration upgrade/public history/function preservation, rollback/replay, native paid recovery and schema gate accepted. Other Appendix/provider/launch criteria excluded.",
             "Scoped native contract review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/native-contract-review-notification-producers. 142 current passing cases, native core effects/38 unrelated members and original assertions retained; exact published version/requested reason, atomic mandatory delivery and replay accepted. Other Appendix/template/provider/launch criteria excluded.",
             "Scoped ticket notification producer renewal: /Users/majid/.local/state/barghsa-manual-batches/ticket-notification-producers. 249 scoped current/source/runtime-bound cases. Original writer members/ticket SQL/34 unrelated members/assertions exact, private canonical reply/assignment channels, current eligibility and actual profile-less email/receipt boundaries accepted. Other Appendix/template/provider/launch criteria excluded.",
-            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded."
+            "Scoped document review producer renewal: /Users/majid/.local/state/barghsa-manual-batches/document-notification-producers. 192 scoped current/source/runtime-bound cases. Original shared runtime/document privacy and content/domain effects/assertions exact; canonical current-owner approval/rejection channels, rollback/replay and publication privacy accepted. Upload/internal scanners/other Appendix/template/provider/launch criteria excluded.",
+            "Scoped document scanner delivery renewal: /Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers. 202 scoped current/source/runtime-bound cases. Scanner/inbox/old-label domain effects and original assertions retained; actual private scan_failed/quarantined routes/content/current administrators, mandatory queue rollback/retry and receipts accepted. All 87 budgets pass. Upload/manual quarantine/other Appendix/template/provider/launch criteria excluded."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -254111,6 +254477,29 @@
               "lint",
               "format",
               "sast"
+            ]
+          },
+          "document_scanner_scoped_renewal": {
+            "base_commit": "ba4de457256be593f324f1afed2fdd873c1ddf12",
+            "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+            "proof": "scope-proof.json",
+            "checks": [
+              "scanner-probes-ready",
+              "scanner-final-startup-recovered",
+              "worker-inbox",
+              "shared-inbox",
+              "shared-build",
+              "shared-types",
+              "api-build-final",
+              "worker-build",
+              "types-final",
+              "lint",
+              "lint-final",
+              "format",
+              "format-final",
+              "sast",
+              "web-build",
+              "bundle"
             ]
           }
         },
@@ -265789,6 +266178,23 @@
       ],
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-notification-producers",
       "release": false
+    },
+    "release-0.4-document-scanner-notification-producers": {
+      "title": "Private document scanner alert delivery",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02"
+      ],
+      "summary": "Existing document scanner alerts now deliver private bilingual administrator inboxes through the actual fallback route, current activation/admin gates, strict mandatory queue manifests and retry/receipt boundaries. Original domain/default behavior/assertions preserved; upload/manual quarantine/other Appendix/templates/providers/launch partial.",
+      "validation": [
+        "Existing scan_failed/quarantined outbox alerts now have usable bilingual fallback labels/document names/reasons and the actual /admin/documents staff route. Explicit unsafe links still fail safely. Original template rendering, old labels/navigation and all other inbox behavior remain exact. Queues stay profile-less, explicit-recipient, urgent, in-app only with original document/admin occurrence keys and sanitized reasons; no scanner internals enter customer notices.",
+        "Scanner emitter excludes pending activation, holds eligible administrator rows and verifies the exact mandatory outbox/private job manifest after enqueue; raised or silently suppressed queue sinks cannot certify a completed scan result. The in-app transport checks current active staff/admin status before a new internal document alert, while matching existing delivered receipts preserve original content/read/history after privilege loss.",
+        "202 distinct scoped current/source/runtime-bound cases: 53 current (two scanner HTTP cases, worker inbox/identity/writer 47 and shared fallback four), plus unaffected document/solar/signature cases 52 and other worker cases 97 retained with exact semantic/runtime evidence. Repeated probes, skips and diagnostic failures are excluded. Four raised/silent outbox/job failures retain document/storage/audit/other public rows; only the existing scan retry row advances its required attempts/error/due time/updated timestamp, which are asserted before exact normalization. Recovery quarantines once and delivers a private administrator notice. Pending staff activation excluded; loss of current admin eligibility blocks new delivery, recovery targets the saved user and a retained receipt never rewrites history. Actual configured scanner clean/replacement/quarantine/retry workflow delivers both alert families.",
+        "One coherent scoped review/source proof retains all original scanner checksum/size/quarantine/replacement/audit/resolve/retry functions, original private inbox/receipt/template/insert pipeline and all old fallback labels/other navigation after removing only scoped changes. Original 310 document and six shared assertions preserved. No schema/migration/domain/finance/public/authority/scheduler/provider code or limiter/budget/floor/assertion weakened. Current required compiled runtime outside changed modules stays exact; shared rebuild remaps only metadata source maps over identical other JavaScript/declarations. Web runtime assets remain exact; only release metadata updates in its current build.",
+        "Final shared/API/worker builds, package ESM/CJS/type export checks, shared/API compiler, changed-file lint/format and three-production-file/five-rule Semgrep zero findings pass. Shared runtime change justified a web build and all 87 unchanged route/interaction gzip budgets pass; no new production-browser pass is claimed. Fixture retry updated_at/type shape corrections and pre-test Docker reaper-port timeout are retained as diagnostics; engine health/absent failed reaper verified and the unchanged final case retried. No bootstrap timeout, cleanup service, assertion or runtime weakened.",
+        "Task/release remain partial: document.uploaded,manual quarantine/other unaccepted internal/review producers,other Appendix events,active in-app templates and live scanner/storage/provider/operations/owner/launch gates remain unfinished. Existing scan notifications are now scoped through real private delivery; do not infer whole document-event or release acceptance. No version/release/staging/Telegram/production deployment."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/document-upload-scanner-notification-producers",
+      "release": false
     }
   },
   "historical_improvements": [
@@ -265828,9 +266234,9 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-document-upload-scanner-notification-producers",
+    "id": "release-0.4-document-upload-notification-producers",
     "release": "0.4.0",
-    "goal": "Inspect existing document.uploaded and internal scan_failed/quarantined producers and recipient pipelines. Implement only missing durable upload/alert boundaries and retain accepted shared review delivery. Preserve two-phase pending/confirm upload and external copy retry,scanner/quarantine/preview/private access,immutable signed evidence/history,current staff/uploader scope,stable occurrences,rollback/retry and unknown receipts. Keep live storage/scanner/templates/providers and owner/operations/launch explicit.",
+    "goal": "Inspect document.uploaded successful sealing/generated-document writers and manual quarantine internal producer paths. Implement only missing native durable boundaries with actual uploader/private staff scope; preserve two-phase pending/confirm and copy retry,all storage/scanner/quarantine/preview/access and immutable signed/history safeguards. Reuse accepted review/scanner delivery,stable occurrence/audit/rollback/replay; keep active templates/live provider/storage/scanner/owner/operations/launch explicit.",
     "task_keys": [
       "05-notifications-documents-ai.md#T-05.01.02"
     ]
