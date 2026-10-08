@@ -100,12 +100,12 @@
       height: 0;
     }
     to {
-      height: var(--radix-accordion-content-height);
+      height: var(--accordion-panel-height, var(--radix-accordion-content-height));
     }
   }
   @keyframes accordion-up {
     from {
-      height: var(--radix-accordion-content-height);
+      height: var(--accordion-panel-height, var(--radix-accordion-content-height));
     }
     to {
       height: 0;
@@ -362,6 +362,28 @@
   .auth-form :where(button[type='submit']) {
     min-height: 3rem;
     margin-top: 0.75rem;
+  }
+}
+
+@keyframes progress-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 1rem 0;
+  }
+}
+
+@utility progress-striped {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--background) 25%, transparent) 0 4px,
+    transparent 4px 8px
+  );
+  background-size: 1rem 1rem;
+  animation: progress-stripes 1s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
 }
 

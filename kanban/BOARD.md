@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 542 | Accepted with unchanged source bindings. |
-| verify | 749 | Existing work may be complete; inspect evidence before building. |
+| done | 547 | Accepted with unchanged source bindings. |
+| verify | 744 | Existing work may be complete; inspect evidence before building. |
 | partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,13 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing Accordion, Switch/Toggle, Checkbox/RadioGroup, Progress and Slider controls. Build only demonstrated component gaps, review once and renew targeted caller/RTL/dark/mobile/accessibility evidence. Preserve the pending tooltip-link disposition and earlier release/live-provider/webhook gates; no later milestone release before dependencies.
+Inspect existing Textarea and Alert/Banner behavior and actual callers. Build only missing resize/counter/severity/dismissal/action criteria, review once and verify targeted forms/RTL/dark/mobile/accessibility evidence. Preserve pending tooltip and earlier release/provider/webhook gates.
 
-- `07-ui-ux-design.md#T-07.01.03.09`: Accordion — single or multiple open. Used for FAQ, settings sections, order detail sections. Chevron icon rotation animation.
-- `07-ui-ux-design.md#T-07.01.03.10`: Switch / Toggle — used for boolean settings, enable/disable toggles. Accessible label via `aria-label` or `htmlFor`.
-- `07-ui-ux-design.md#T-07.01.03.11`: Checkbox & RadioGroup — Checkbox: indeterminate state (for select-all). RadioGroup: horizontal/vertical layout. Both with error state integration.
-- `07-ui-ux-design.md#T-07.01.03.12`: Progress — linear progress bar (used for order fulfillment stages, document upload progress). Variants: `default`, `success` (green), `warning` (amber). Animated stripe option.
-- `07-ui-ux-design.md#T-07.01.03.13`: Slider — single thumb and range thumbs. Used for percentage inputs (green rule %, capacity). Step increments.
+- `07-ui-ux-design.md#T-07.01.03.14`: Textarea — auto-resize, character limit counter, error state. Used for ticket body, staff notes, address input.
+- `07-ui-ux-design.md#T-07.01.03.15`: Alert / Banner — severity: `info`, `success`, `warning`, `error`, `critical` (red pulse). Dismissible option. Action button slot (e.g. "Retry", "View details"). Use for: no-dead-end messages, profile verification banners, service outage notices.
 
 ## v0.2.0: Complete customer journeys
 
@@ -666,11 +663,11 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.06` | done | Recorded batch work | Select (native & custom) — native `<select>` fallback for mobile. Custom Select with search/filter, grouped options, multi-select with chips/tags, clearable. |
 | `07-ui-ux-design.md#T-07.01.03.07` | done | Recorded batch work | Command Palette / Combobox — searchable list with keyboard navigation (arrow keys, typeahead). Used for searchable dropdowns (city selector, product selector, agent selector). |
 | `07-ui-ux-design.md#T-07.01.03.08` | done | Recorded batch work | Tabs — variants: `underline` (default), `pills`, `boxed`. Orientation: horizontal, vertical. Controlled/uncontrolled. Responsive: horizontal scroll on mobile with overflow buttons. |
-| `07-ui-ux-design.md#T-07.01.03.09` | verify | Inventory needed | Accordion — single or multiple open. Used for FAQ, settings sections, order detail sections. Chevron icon rotation animation. |
-| `07-ui-ux-design.md#T-07.01.03.10` | verify | Inventory needed | Switch / Toggle — used for boolean settings, enable/disable toggles. Accessible label via `aria-label` or `htmlFor`. |
-| `07-ui-ux-design.md#T-07.01.03.11` | verify | Inventory needed | Checkbox & RadioGroup — Checkbox: indeterminate state (for select-all). RadioGroup: horizontal/vertical layout. Both with error state integration. |
-| `07-ui-ux-design.md#T-07.01.03.12` | verify | Inventory needed | Progress — linear progress bar (used for order fulfillment stages, document upload progress). Variants: `default`, `success` (green), `warning` (amber). Animated stripe option. |
-| `07-ui-ux-design.md#T-07.01.03.13` | verify | Inventory needed | Slider — single thumb and range thumbs. Used for percentage inputs (green rule %, capacity). Step increments. |
+| `07-ui-ux-design.md#T-07.01.03.09` | done | Recorded batch work | Accordion — single or multiple open. Used for FAQ, settings sections, order detail sections. Chevron icon rotation animation. |
+| `07-ui-ux-design.md#T-07.01.03.10` | done | Recorded batch work | Switch / Toggle — used for boolean settings, enable/disable toggles. Accessible label via `aria-label` or `htmlFor`. |
+| `07-ui-ux-design.md#T-07.01.03.11` | done | Recorded batch work | Checkbox & RadioGroup — Checkbox: indeterminate state (for select-all). RadioGroup: horizontal/vertical layout. Both with error state integration. |
+| `07-ui-ux-design.md#T-07.01.03.12` | done | Recorded batch work | Progress — linear progress bar (used for order fulfillment stages, document upload progress). Variants: `default`, `success` (green), `warning` (amber). Animated stripe option. |
+| `07-ui-ux-design.md#T-07.01.03.13` | done | Recorded batch work | Slider — single thumb and range thumbs. Used for percentage inputs (green rule %, capacity). Step increments. |
 | `07-ui-ux-design.md#T-07.01.03.14` | verify | Inventory needed | Textarea — auto-resize, character limit counter, error state. Used for ticket body, staff notes, address input. |
 | `07-ui-ux-design.md#T-07.01.03.15` | verify | Inventory needed | Alert / Banner — severity: `info`, `success`, `warning`, `error`, `critical` (red pulse). Dismissible option. Action button slot (e.g. "Retry", "View details"). Use for: no-dead-end messages, profile verification banners, service outage notices. |
 | `07-ui-ux-design.md#T-07.01.03.16` | verify | Inventory needed | Breadcrumb — auto-generated from route hierarchy. Collapse on mobile (show only last + "..." indicator). |

@@ -6,12 +6,24 @@ import { Children, isValidElement } from 'react';
 
 import { cn } from '../../lib/utils';
 
-function Progress({ className, children, value, ...props }: ProgressPrimitive.Root.Props) {
+function Progress({
+  className,
+  children,
+  value,
+  variant = 'default',
+  striped = false,
+  ...props
+}: ProgressPrimitive.Root.Props & {
+  variant?: 'default' | 'success' | 'warning';
+  striped?: boolean;
+}) {
   return (
     <ProgressPrimitive.Root
       value={value}
       data-slot="progress"
-      className={cn('flex flex-wrap gap-3', className)}
+      data-variant={variant}
+      data-striped={striped || undefined}
+      className={cn('group/progress flex flex-wrap gap-3', className)}
       {...props}
     >
       {children}
@@ -43,7 +55,10 @@ function ProgressIndicator({ className, ...props }: ProgressPrimitive.Indicator.
   return (
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
-      className={cn('h-full bg-primary transition-[width] duration-200', className)}
+      className={cn(
+        'h-full bg-primary transition-[width] duration-200 group-data-[variant=success]/progress:bg-success group-data-[variant=warning]/progress:bg-warning group-data-striped/progress:progress-striped motion-reduce:transition-none',
+        className
+      )}
       {...props}
     />
   );

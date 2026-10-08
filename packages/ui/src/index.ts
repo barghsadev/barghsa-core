@@ -17,6 +17,7 @@ export * from './components/ui/field';
 export * from './components/ui/label';
 export * from './components/ui/popover';
 export * from './components/ui/progress';
+export * from './components/ui/accordion';
 export * from './components/ui/job-progress';
 export * from './components/ui/radio-group';
 export * from './components/ui/scroll-area';
