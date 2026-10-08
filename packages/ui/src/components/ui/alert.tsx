@@ -2,9 +2,11 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../../lib/utils';
+import { XIcon } from 'lucide-react';
+import { Button } from './button';
 
 const alertVariants = cva(
-  "group/alert relative grid w-full gap-0.5 rounded-lg border px-4 py-3 text-start text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pe-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4",
+  "group/alert relative grid w-full gap-0.5 rounded-lg border px-4 py-3 text-start text-sm has-data-[slot=alert-action]:pe-18 has-data-[slot=alert-dismiss]:pe-14 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -16,6 +18,10 @@ const alertVariants = cva(
         info: 'border-info/20 bg-info-soft text-info *:data-[slot=alert-description]:text-info',
         destructive:
           'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive *:[svg]:text-current',
+        error:
+          'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive *:[svg]:text-current',
+        critical:
+          'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive *:[svg]:text-current after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-2 after:ring-destructive/40 after:animate-pulse motion-reduce:after:animate-none',
       },
     },
     defaultVariants: {
@@ -67,8 +73,40 @@ function AlertDescription({ className, ...props }: React.ComponentProps<'div'>) 
 
 function AlertAction({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div data-slot="alert-action" className={cn('absolute top-2 end-2', className)} {...props} />
+    <div
+      data-slot="alert-action"
+      className={cn(
+        'absolute top-2 end-2 group-has-data-[slot=alert-dismiss]/alert:static group-has-data-[slot=alert-dismiss]/alert:mt-2 group-has-data-[slot=alert-dismiss]/alert:col-span-full',
+        className
+      )}
+      {...props}
+    />
   );
 }
 
-export { Alert, AlertTitle, AlertDescription, AlertAction };
+function AlertDismiss({
+  dismissLabel,
+  onDismiss,
+  className,
+  ...props
+}: Omit<React.ComponentProps<typeof Button>, 'children' | 'aria-label' | 'onClick' | 'type'> & {
+  dismissLabel: string;
+  onDismiss: () => void;
+}) {
+  return (
+    <Button
+      {...props}
+      data-slot="alert-dismiss"
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      className={cn('absolute top-2 end-2 text-current', className)}
+      aria-label={dismissLabel}
+      onClick={onDismiss}
+    >
+      <XIcon aria-hidden="true" />
+    </Button>
+  );
+}
+
+export { Alert, AlertTitle, AlertDescription, AlertAction, AlertDismiss };

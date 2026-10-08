@@ -14,6 +14,10 @@ Use the shared `DirectionProvider` around headless widgets so portal placement f
 
 `Label` accepts `required` for a decorative asterisk, localized `optional` text, and `disabled` for labels placed before disabled inputs. Keep the native input's `required`/`disabled` state in sync; the label does not change validation. `Badge dot` keeps its children as screen-reader text and shows only a colored dot on a transparent background. Input adornments compose `InputGroupInput`, logical start/end addons, labelled buttons, and associated helper/error text; block addons also work with `InputGroupTextarea`. The primitives stories demonstrate password visibility, clearing, status icons and text prefixes/suffixes without changing input binding or refs.
 
+`Textarea` uses native content sizing, with a resize/reset fallback for browsers without it. It preserves native props and refs, including an explicit inline height. Use `TextareaWithCounter` when a limit needs a visible description: supply `maxLength` and a localized `counterLabel(count, limit)` formatter. It keeps existing helper/error descriptions and adds the counter description, handles controlled/uncontrolled values and native form resets, and uses the same UTF-16 units as native `maxLength`. Counter code is an opt-in export so ordinary textarea consumers can drop it.
+
+`Alert` supports `info`, `success`, `warning`, `error` and `critical`, alongside the existing `default` and `destructive` variants. Critical alerts pulse a decorative ring while keeping text readable; reduced motion stops the animation. Compose `AlertAction` with `AlertDismiss` for separate actions and closing. Supply the dismiss button's localized `dismissLabel` and an `onDismiss` callback that owns removal and any follow-up focus. The dismiss button never submits a form.
+
 The production-browser runner also tests the separately built catalogue:
 
 ```sh

@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 547 | Accepted with unchanged source bindings. |
-| verify | 744 | Existing work may be complete; inspect evidence before building. |
+| done | 549 | Accepted with unchanged source bindings. |
+| verify | 742 | Existing work may be complete; inspect evidence before building. |
 | partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,10 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing Textarea and Alert/Banner behavior and actual callers. Build only missing resize/counter/severity/dismissal/action criteria, review once and verify targeted forms/RTL/dark/mobile/accessibility evidence. Preserve pending tooltip and earlier release/provider/webhook gates.
+Inspect existing route Breadcrumb and ScrollArea implementations and callers. Build only missing mobile hierarchy/overflow/directional scrollbar criteria; review once and verify targeted route/RTL/theme/mobile/keyboard/accessibility behavior. Preserve earlier pending release/provider/tooltip/webhook gates.
 
-- `07-ui-ux-design.md#T-07.01.03.14`: Textarea — auto-resize, character limit counter, error state. Used for ticket body, staff notes, address input.
-- `07-ui-ux-design.md#T-07.01.03.15`: Alert / Banner — severity: `info`, `success`, `warning`, `error`, `critical` (red pulse). Dismissible option. Action button slot (e.g. "Retry", "View details"). Use for: no-dead-end messages, profile verification banners, service outage notices.
+- `07-ui-ux-design.md#T-07.01.03.16`: Breadcrumb — auto-generated from route hierarchy. Collapse on mobile (show only last + "..." indicator).
+- `07-ui-ux-design.md#T-07.01.03.17`: ScrollArea — custom scrollbar styling matching the theme (thinner, themed thumb). Support for both LTR and RTL scrollbar positions.
 
 ## v0.2.0: Complete customer journeys
 
@@ -668,8 +668,8 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.11` | done | Recorded batch work | Checkbox & RadioGroup — Checkbox: indeterminate state (for select-all). RadioGroup: horizontal/vertical layout. Both with error state integration. |
 | `07-ui-ux-design.md#T-07.01.03.12` | done | Recorded batch work | Progress — linear progress bar (used for order fulfillment stages, document upload progress). Variants: `default`, `success` (green), `warning` (amber). Animated stripe option. |
 | `07-ui-ux-design.md#T-07.01.03.13` | done | Recorded batch work | Slider — single thumb and range thumbs. Used for percentage inputs (green rule %, capacity). Step increments. |
-| `07-ui-ux-design.md#T-07.01.03.14` | verify | Inventory needed | Textarea — auto-resize, character limit counter, error state. Used for ticket body, staff notes, address input. |
-| `07-ui-ux-design.md#T-07.01.03.15` | verify | Inventory needed | Alert / Banner — severity: `info`, `success`, `warning`, `error`, `critical` (red pulse). Dismissible option. Action button slot (e.g. "Retry", "View details"). Use for: no-dead-end messages, profile verification banners, service outage notices. |
+| `07-ui-ux-design.md#T-07.01.03.14` | done | Recorded batch work | Textarea — auto-resize, character limit counter, error state. Used for ticket body, staff notes, address input. |
+| `07-ui-ux-design.md#T-07.01.03.15` | done | Recorded batch work | Alert / Banner — severity: `info`, `success`, `warning`, `error`, `critical` (red pulse). Dismissible option. Action button slot (e.g. "Retry", "View details"). Use for: no-dead-end messages, profile verification banners, service outage notices. |
 | `07-ui-ux-design.md#T-07.01.03.16` | verify | Inventory needed | Breadcrumb — auto-generated from route hierarchy. Collapse on mobile (show only last + "..." indicator). |
 | `07-ui-ux-design.md#T-07.01.03.17` | verify | Inventory needed | ScrollArea — custom scrollbar styling matching the theme (thinner, themed thumb). Support for both LTR and RTL scrollbar positions. |
 | `07-ui-ux-design.md#T-07.01.03.18` | verify | Inventory needed | Avatar — image fallback to initials (extracted from user name). Sizes: `xs` (24px) through `xl` (96px). Status ring (online/offline/busy). Used in profile switcher, user menu, agent list. |
