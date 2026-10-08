@@ -11,6 +11,7 @@ const pdfRendererAvailable = spawnSync('pdftoppm', ['-v'], { stdio: 'ignore' }).
 function fixture(source: Buffer) {
   const objects = new Map<string, Buffer>([['sealed/source', source]]);
   let writes = 0;
+  const expirations: string[] = [];
   const provider = {
     async listObjects(key: string) {
       return {
@@ -32,6 +33,10 @@ function fixture(source: Buffer) {
       writes++;
       objects.set(key, bytes);
     },
+    async scheduleExpiration(key: string) {
+      expirations.push(key);
+      return { eligibleVersions: 1, heldVersions: 0 };
+    },
     async presignedGetUrl(key: string) {
       return `https://storage.example/${key}`;
     },
@@ -40,6 +45,7 @@ function fixture(source: Buffer) {
     service: new DocumentStorageService({} as UploadService, provider),
     objects,
     writes: () => writes,
+    expirations,
   };
 }
 
@@ -62,13 +68,18 @@ describe('sealed document previews', () => {
     })
       .png()
       .toBuffer();
-    const { service, objects, writes } = fixture(original);
+    const { service, objects, writes, expirations } = fixture(original);
     const first = await service.preview('doc-1', 'sealed/source', 'image/png');
     expect(first.url).toContain('/previews/doc-1/');
     const image = objects.get(new URL(first.url).pathname.slice(1))!;
     expect((await sharp(image).metadata()).width).toBe(640);
     expect(await service.preview('doc-1', 'sealed/source', 'image/png')).toEqual(first);
     expect(writes()).toBe(1);
+    expect(expirations).toEqual([
+      new URL(first.url).pathname.slice(1),
+      new URL(first.url).pathname.slice(1),
+    ]);
+    expect(objects.get('sealed/source')).toEqual(original);
     objects.set('sealed/changed', original);
     const changed = await service.preview('doc-1', 'sealed/changed', 'image/png');
     expect(changed.url).not.toBe(first.url);

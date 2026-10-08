@@ -1,5 +1,8 @@
+import { randomUUID } from 'node:crypto';
+import { readCappedBytes } from './read-capped-bytes.js';
 import {
   BadRequestException,
+  HttpException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -177,17 +180,46 @@ export class StorageConfigService {
     } catch {
       throw new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
     }
-    for (const provider of [providers.internal, providers.browser]) {
-      await this.authorize(session);
-      try {
+    const key = `_storage_probes/${randomUUID()}`;
+    const expected = Buffer.from(`Barghsa storage probe ${randomUUID()}`);
+    let attemptedUpload = false;
+    let failure: unknown;
+    try {
+      for (const provider of [providers.internal, providers.browser]) {
+        await this.authorize(session);
         await provider.listObjects('', 1);
+      }
+      await this.authorize(session);
+      attemptedUpload = true;
+      await providers.internal.putObject(key, expected, 'application/octet-stream');
+      await this.authorize(session);
+      const url = await providers.browser.presignedGetUrl(key, 60);
+      const response = await fetch(url, { signal: AbortSignal.timeout(5000), redirect: 'error' });
+      if (!response.ok || !response.body) throw new Error('Probe download failed');
+      const downloaded = await readCappedBytes(response.body, expected.byteLength);
+      if (downloaded.truncated || !Buffer.from(downloaded.bytes).equals(expected))
+        throw new Error('Probe content mismatch');
+      await this.authorize(session);
+    } catch (error) {
+      failure =
+        error instanceof HttpException
+          ? error
+          : new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
+    } finally {
+      try {
+        // Trusted cleanup is limited to this server-generated disposable key,
+        // including when a send or the final authority check was uncertain.
+        if (attemptedUpload) await providers.internal.deleteObject(key);
       } catch {
-        // SDK errors may contain endpoint or credential details; expose a fixed message.
-        throw new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
+        failure ??= new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
+      } finally {
+        providers.internal.destroy?.();
+        providers.browser.destroy?.();
       }
     }
-    await this.authorize(session);
+    if (failure) throw failure;
   }
+
   async test(raw: unknown, session: MutationSession) {
     await this.authorize(session);
     const { config } = await this.candidate(raw);

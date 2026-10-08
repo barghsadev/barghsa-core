@@ -47,7 +47,7 @@ import {
 } from './content-type-sniffer.js';
 
 const UPLOAD_PREFIX = 'uploads/';
-const DEFAULT_EXPIRES_IN = 3600; // 1 hour
+const DEFAULT_EXPIRES_IN = 900; // 15 minutes
 const MULTIPART_EXPIRES_IN = 24 * 3600;
 const MULTIPART_PART_SIZE = 5 * 1024 * 1024;
 

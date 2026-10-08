@@ -241,7 +241,7 @@ it('authenticates every upload step and requires CSRF before storage access', as
     expiresIn: number;
   };
   expect(upload.key).toMatch(/^uploads\/document\/[a-f0-9-]+\.pdf$/);
-  expect(upload.expiresIn).toBe(3600);
+  expect(upload.expiresIn).toBe(900);
   objects.set(upload.key, bytes);
   const verify = await fetch(`${http.base}/api/upload/${encodeURIComponent(upload.key)}/verify`, {
     method: 'POST',

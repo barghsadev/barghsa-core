@@ -39,6 +39,9 @@ export async function ensureDocumentPreview(
     }
     await storage.putObject(key, image, 'image/png', { sourceHash });
   }
+  // Legacy cache hits also need the existing lifecycle opt-in. This helper
+  // preserves provider holds and never changes the immutable source.
+  await storage.scheduleExpiration?.(key);
   return key;
 }
 

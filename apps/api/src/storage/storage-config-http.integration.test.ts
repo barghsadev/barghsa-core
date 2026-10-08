@@ -12,6 +12,9 @@ let endpoint: string;
 let rejectProbe = false;
 let onProbe: (() => Promise<void>) | undefined;
 const authorizations: string[] = [];
+const probeObjects = new Map<string, Buffer>();
+const probeRequests: { method: string; key: string; signed: boolean; expiry: string | null }[] = [];
+let probeFault: 'none' | 'upload' | 'download' | 'corrupt' | 'oversize' | 'cleanup' = 'none';
 beforeAll(async () => {
   server = createServer(async (req, res) => {
     authorizations.push(req.headers.authorization ?? '');
@@ -19,6 +22,54 @@ beforeAll(async () => {
     if (rejectProbe) {
       res.writeHead(403);
       res.end('<Error><Code>AccessDenied</Code></Error>');
+      return;
+    }
+    const url = new URL(req.url!, 'http://localhost');
+    if (url.pathname.includes('/_storage_probes/')) {
+      probeRequests.push({
+        method: req.method!,
+        key: url.pathname,
+        signed: url.searchParams.has('X-Amz-Signature'),
+        expiry: url.searchParams.get('X-Amz-Expires'),
+      });
+      if (
+        (req.method === 'PUT' && probeFault === 'upload') ||
+        (req.method === 'GET' && probeFault === 'download') ||
+        (req.method === 'DELETE' && probeFault === 'cleanup')
+      ) {
+        res.writeHead(403);
+        res.end('<Error><Code>AccessDenied</Code></Error>');
+        return;
+      }
+      if (req.method === 'PUT') {
+        expect(req.headers['content-type']).toBe('application/octet-stream');
+        const chunks: Buffer[] = [];
+        for await (const chunk of req) chunks.push(Buffer.from(chunk));
+        probeObjects.set(url.pathname, Buffer.concat(chunks));
+        res.setHeader('ETag', '"probe-etag"');
+        res.end();
+        return;
+      }
+      if (req.method === 'DELETE') {
+        probeObjects.delete(url.pathname);
+        res.writeHead(204);
+        res.end();
+        return;
+      }
+      const bytes = probeObjects.get(url.pathname);
+      if (!bytes) {
+        res.writeHead(404);
+        res.end();
+        return;
+      }
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.end(
+        probeFault === 'corrupt'
+          ? Buffer.from('wrong bytes')
+          : probeFault === 'oversize'
+            ? Buffer.concat([bytes, Buffer.from('extra')])
+            : bytes
+      );
       return;
     }
     if (new URL(req.url!, 'http://localhost').searchParams.has('list-type')) {
@@ -415,3 +466,39 @@ it('records the exact verified timestamp with the storage credential audit', asy
     stepUpVerifiedAt: at,
   });
 });
+
+it('proves a disposable upload and signed browser download, then removes only its own probe object', async () => {
+  const candidate = await update();
+  const before = await current();
+  probeRequests.length = 0;
+  expect((await request('/test-connection', 'POST', candidate)).status).toBe(200);
+  expect(probeRequests.map((r) => r.method)).toEqual(['PUT', 'GET', 'DELETE']);
+  expect(new Set(probeRequests.map((r) => r.key)).size).toBe(1);
+  expect(probeRequests[0]?.key).toMatch(/\/_storage_probes\/[0-9a-f-]{36}$/);
+  expect(probeRequests[1]).toMatchObject({ signed: true, expiry: '60' });
+  expect(probeObjects.size).toBe(0);
+  expect(await current()).toEqual(before);
+});
+for (const fault of ['upload', 'download', 'corrupt', 'oversize', 'cleanup'] as const) {
+  it(`refuses an unproved ${fault} probe without changing configuration or echoing secrets`, async () => {
+    const before = await current();
+    probeFault = fault;
+    probeRequests.length = 0;
+    try {
+      const response = await request('/config', 'PUT', await update());
+      expect(response.status).toBe(503);
+      const body = await response.json();
+      expect(body).toMatchObject({
+        error: { code: 'STORAGE:CONNECTION_FAILED', correlationId: expect.any(String) },
+      });
+      expect(JSON.stringify(body)).not.toContain('new-secret-never-return');
+      expect(JSON.stringify(body)).not.toContain('new-access-key');
+      expect(await current()).toEqual(before);
+      expect(probeRequests.at(-1)?.method).toBe('DELETE');
+      if (fault !== 'cleanup') expect(probeObjects.size).toBe(0);
+    } finally {
+      probeFault = 'none';
+      probeObjects.clear();
+    }
+  });
+}

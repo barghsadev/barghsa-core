@@ -57,7 +57,12 @@ export interface S3StorageProviderConfig extends StorageProviderConfig {
   requestTimeoutMs?: number;
 }
 
-const DEFAULT_EXPIRES_IN = 3600; // 1 hour
+const DEFAULT_EXPIRES_IN = 900; // 15 minutes
+function signedUrlExpiry(value = DEFAULT_EXPIRES_IN): number {
+  if (!Number.isSafeInteger(value) || value < 1 || value > 3600)
+    throw new StorageProviderError('Signed URL expiry must be between 1 and 3600 seconds');
+  return value;
+}
 const DEFAULT_MAX_KEYS = 100;
 
 // ---------------------------------------------------------------------------
@@ -120,7 +125,12 @@ export class S3StorageProvider implements StorageProvider {
     return result.UploadId;
   }
 
-  presignedUploadPartUrl(key: string, uploadId: string, partNumber: number, expiresIn = 3600) {
+  async presignedUploadPartUrl(
+    key: string,
+    uploadId: string,
+    partNumber: number,
+    expiresIn?: number
+  ) {
     return getSignedUrl(
       this.client,
       new UploadPartCommand({
@@ -129,7 +139,7 @@ export class S3StorageProvider implements StorageProvider {
         UploadId: uploadId,
         PartNumber: partNumber,
       }),
-      { expiresIn }
+      { expiresIn: signedUrlExpiry(expiresIn) }
     );
   }
 
@@ -476,7 +486,7 @@ export class S3StorageProvider implements StorageProvider {
         this.client,
         new PutObjectCommand({ Bucket: this.bucket, Key: resolvedKey, IfNoneMatch: '*' }),
         {
-          expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN,
+          expiresIn: signedUrlExpiry(expiresIn),
           signableHeaders: new Set(['if-none-match']),
         }
       );
@@ -503,7 +513,7 @@ export class S3StorageProvider implements StorageProvider {
       return await getSignedUrl(
         this.client,
         new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN }
+        { expiresIn: signedUrlExpiry(expiresIn) }
       );
     } catch (err) {
       this.logger?.error(

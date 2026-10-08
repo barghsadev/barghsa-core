@@ -27,9 +27,14 @@ import type { UploadService } from '../upload/upload.service.js';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
 const requireWorker = createRequire(resolve(__dirname, '../../../worker/package.json'));
-const { S3Client, CreateBucketCommand, PutObjectCommand, GetObjectCommand } = requireShared(
-  '@aws-sdk/client-s3'
-) as {
+const {
+  S3Client,
+  CreateBucketCommand,
+  PutObjectCommand,
+  GetObjectCommand,
+  GetObjectTaggingCommand,
+  ListObjectsV2Command,
+} = requireShared('@aws-sdk/client-s3') as {
   S3Client: new (config: Record<string, unknown>) => {
     send(command: unknown): Promise<unknown>;
     destroy(): void;
@@ -42,6 +47,8 @@ const { S3Client, CreateBucketCommand, PutObjectCommand, GetObjectCommand } = re
     ContentType: string;
   }) => unknown;
   GetObjectCommand: new (input: { Bucket: string; Key: string }) => unknown;
+  GetObjectTaggingCommand: new (input: { Bucket: string; Key: string }) => unknown;
+  ListObjectsV2Command: new (input: { Bucket: string; Prefix: string }) => unknown;
 };
 let minio: StartedTestContainer;
 let s3: InstanceType<typeof S3Client>;
@@ -2298,6 +2305,18 @@ it('serves private bank receipt previews with current profile authorization and 
     expect(png.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
     const metadata = await sharp(png).metadata();
     expect(Math.max(metadata.width!, metadata.height!)).toBeLessThanOrEqual(640);
+    const previews = (await s3.send(
+      new ListObjectsV2Command({
+        Bucket: 'test-evidence',
+        Prefix: `previews/receipt-${receiptId}/`,
+      })
+    )) as { Contents: { Key: string }[] };
+    expect(previews.Contents).toHaveLength(1);
+    const previewKey = previews.Contents[0]!.Key;
+    const tagging = (await s3.send(
+      new GetObjectTaggingCommand({ Bucket: 'test-evidence', Key: previewKey })
+    )) as { TagSet: { Key: string; Value: string }[] };
+    expect(tagging.TagSet).toContainEqual({ Key: 'legal-hold', Value: 'false' });
     const cached = await preview(f.user, receiptId);
     expect(Buffer.from(await cached.arrayBuffer())).toEqual(png);
     const wrongInvoice = await send(

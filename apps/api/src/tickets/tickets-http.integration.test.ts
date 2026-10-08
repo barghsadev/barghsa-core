@@ -14,11 +14,25 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let storageServer: Server;
 const objects = new Map<string, Buffer>();
+const objectTags = new Map<string, string>();
 const headers: Record<string, Record<string, string>> = {};
 const transientActors: string[] = [];
 beforeAll(async () => {
   storageServer = createServer(async (req, res) => {
     const address = new URL(req.url!, 'http://localhost');
+    if (address.searchParams.has('versions')) {
+      const prefix = address.searchParams.get('prefix') ?? '';
+      res.setHeader('Content-Type', 'application/xml');
+      res.end(
+        `<ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><IsTruncated>false</IsTruncated>${[
+          ...objects.keys(),
+        ]
+          .filter((key) => key.startsWith(prefix))
+          .map((key) => `<Version><Key>${key}</Key><VersionId>null</VersionId></Version>`)
+          .join('')}</ListVersionsResult>`
+      );
+      return;
+    }
     if (address.searchParams.get('list-type') === '2') {
       const prefix = address.searchParams.get('prefix') ?? '';
       res.setHeader('Content-Type', 'application/xml');
@@ -35,6 +49,22 @@ beforeAll(async () => {
       return;
     }
     const key = decodeURIComponent(address.pathname).replace('/test-evidence/', '');
+    if (address.searchParams.has('tagging')) {
+      expect(objects.has(key)).toBe(true);
+      if (req.method === 'PUT') {
+        const chunks: Buffer[] = [];
+        for await (const chunk of req) chunks.push(Buffer.from(chunk));
+        objectTags.set(key, Buffer.concat(chunks).toString());
+        res.end();
+      } else {
+        res.setHeader('Content-Type', 'application/xml');
+        res.end(
+          objectTags.get(key) ??
+            '<Tagging xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><TagSet/></Tagging>'
+        );
+      }
+      return;
+    }
     if (req.method === 'PUT') {
       const chunks: Buffer[] = [];
       for await (const chunk of req) chunks.push(Buffer.from(chunk));

@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 467 | Accepted with unchanged source bindings. |
-| verify | 830 | Existing work may be complete; inspect evidence before building. |
-| partial | 64 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 468 | Accepted with unchanged source bindings. |
+| verify | 826 | Existing work may be complete; inspect evidence before building. |
+| partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing storage abstraction, S3 adapter, configured storage lifecycle/admin UI and safe preview derivatives together. Reuse current document/provider/authority evidence; build only demonstrated gaps and keep required live object-storage receipts and scanner/ops evidence open.
+Complete demonstrated storage abstraction/SDK gaps: sized upload receipts, provider copy, batch delete andexistence with scoped keys, error receipts andexisting immutable/version/hold boundaries. Reuse matching configuration/preview/authority checks; no replacement of existing consumers.
 
 - `05-notifications-documents-ai.md#T-05.09.01`: File storage abstraction interface
 - `05-notifications-documents-ai.md#T-05.09.02`: S3 adapter
-- `05-notifications-documents-ai.md#T-05.09.03`: Storage config entity & admin UI
-- `05-notifications-documents-ai.md#T-05.09.04`: Preview derivative generation
 
 ## v0.2.0: Complete customer journeys
 
@@ -573,10 +571,10 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.08.03` | done | Recorded batch work | Provider health dashboard |
 | `05-notifications-documents-ai.md#T-05.08.04` | done | Recorded batch work | Provider runbook documentation |
 | `05-notifications-documents-ai.md#T-05.08.05` | done | Recorded batch work | Provider test fakes & contract tests |
-| `05-notifications-documents-ai.md#T-05.09.01` | verify | Inventory needed | File storage abstraction interface |
-| `05-notifications-documents-ai.md#T-05.09.02` | verify | Inventory needed | S3 adapter |
-| `05-notifications-documents-ai.md#T-05.09.03` | verify | Recorded batch work | Storage config entity & admin UI |
-| `05-notifications-documents-ai.md#T-05.09.04` | verify | Recorded batch work | Preview derivative generation |
+| `05-notifications-documents-ai.md#T-05.09.01` | partial | Recorded batch work | File storage abstraction interface |
+| `05-notifications-documents-ai.md#T-05.09.02` | partial | Recorded batch work | S3 adapter |
+| `05-notifications-documents-ai.md#T-05.09.03` | partial | Recorded batch work | Storage config entity & admin UI |
+| `05-notifications-documents-ai.md#T-05.09.04` | done | Recorded batch work | Preview derivative generation |
 | `05-notifications-documents-ai.md#T-05.10.01` | verify | Recorded batch work | Document template entity |
 | `05-notifications-documents-ai.md#T-05.10.02` | verify | Inventory needed | Template file upload & placeholder extraction |
 | `05-notifications-documents-ai.md#T-05.10.03` | verify | Recorded batch work | Template admin UI |

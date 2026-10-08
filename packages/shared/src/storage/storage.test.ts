@@ -344,3 +344,85 @@ describe('createStorageProvider', () => {
     ).toThrow('Unknown storage provider type: "gcs"');
   });
 });
+
+it('expires only unheld exact preview versions without clearing other tags or changing source bytes', async () => {
+  const [provider, send] = createMockedProvider({ prefix: 'tenant/' });
+  send.mockImplementation(async (command) => {
+    if (command.constructor.name === 'ListObjectVersionsCommand')
+      return {
+        Versions: ['untagged', 'eligible', 'held', 'unknown']
+          .map((version) => ({
+            Key: 'tenant/previews/doc/hash.png',
+            VersionId: version,
+          }))
+          .concat([{ Key: 'tenant/previews/doc/hash.png-extra', VersionId: 'other' }]),
+      };
+    if (command.constructor.name === 'GetObjectTaggingCommand')
+      return {
+        TagSet:
+          command.input.VersionId === 'untagged'
+            ? [{ Key: 'purpose', Value: 'preview' }]
+            : [
+                {
+                  Key: 'legal-hold',
+                  Value: { eligible: 'false', held: 'true', unknown: 'pending' }[
+                    command.input.VersionId as 'eligible' | 'held' | 'unknown'
+                  ],
+                },
+              ],
+      };
+    return {};
+  });
+  try {
+    await expect(provider.scheduleExpiration('previews/doc/hash.png')).resolves.toEqual({
+      eligibleVersions: 2,
+      heldVersions: 2,
+    });
+    const writes = send.mock.calls.filter(
+      ([command]) => command.constructor.name === 'PutObjectTaggingCommand'
+    );
+    expect(writes).toHaveLength(1);
+    expect(writes[0]![0].input).toEqual({
+      Bucket: 'test-bucket',
+      Key: 'tenant/previews/doc/hash.png',
+      VersionId: 'untagged',
+      Tagging: {
+        TagSet: [
+          { Key: 'purpose', Value: 'preview' },
+          { Key: 'legal-hold', Value: 'false' },
+        ],
+      },
+    });
+    expect(
+      send.mock.calls.every(([command]) =>
+        [
+          'ListObjectVersionsCommand',
+          'GetObjectTaggingCommand',
+          'PutObjectTaggingCommand',
+        ].includes(command.constructor.name)
+      )
+    ).toBe(true);
+  } finally {
+    provider.destroy();
+  }
+});
+
+for (const operation of ['put', 'get', 'part'] as const) {
+  it(`bounds ${operation} signed URLs to a 15-minute default and one-hour maximum`, async () => {
+    const provider = new S3StorageProvider(makeConfig());
+    const sign = (expiry?: number) =>
+      operation === 'put'
+        ? provider.presignedPutUrl('expiry-test', expiry)
+        : operation === 'get'
+          ? provider.presignedGetUrl('expiry-test', expiry)
+          : provider.presignedUploadPartUrl('expiry-test', 'upload', 1, expiry);
+    try {
+      expect(new URL(await sign()).searchParams.get('X-Amz-Expires')).toBe('900');
+      expect(new URL(await sign(3600)).searchParams.get('X-Amz-Expires')).toBe('3600');
+      for (const expiry of [0, -1, 3601, 86400, 1.5, Number.NaN])
+        await expect(sign(expiry)).rejects.toThrow('expiry');
+    } finally {
+      provider.destroy();
+    }
+  });
+}
