@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -108,9 +109,11 @@ for (const scenario of scenarios)
         const Page = scenario.Page;
         await act(async () =>
           root!.render(
-            <AccountUserProvider value="customer-1">
-              <Page query={{ q: 'saved filter', sort: DEFAULT_HISTORY_SORT }} />
-            </AccountUserProvider>
+            <QueryComponentProvider>
+              <AccountUserProvider value="customer-1">
+                <Page query={{ q: 'saved filter', sort: DEFAULT_HISTORY_SORT }} />
+              </AccountUserProvider>
+            </QueryComponentProvider>
           )
         );
         await settled(() =>
@@ -180,9 +183,11 @@ async function start(handler: (input: string) => Promise<Response>) {
   root = createRoot(host);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="account-a">
-        <ConsultationsPage query={{ q: 'saved', sort: 'submitted_at:asc' }} />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        <AccountUserProvider value="account-a">
+          <ConsultationsPage query={{ q: 'saved', sort: 'submitted_at:asc' }} />
+        </AccountUserProvider>
+      </QueryComponentProvider>
     )
   );
   await settled(() => expect(link(first)).not.toBeNull());
@@ -207,9 +212,11 @@ it.each(['account', 'profile'] as const)(
     await act(async () => {
       if (kind === 'account')
         root!.render(
-          <AccountUserProvider value="account-b">
-            <ConsultationsPage query={{ q: 'saved', sort: 'submitted_at:asc' }} />
-          </AccountUserProvider>
+          <QueryComponentProvider>
+            <AccountUserProvider value="account-b">
+              <ConsultationsPage query={{ q: 'saved', sort: 'submitted_at:asc' }} />
+            </AccountUserProvider>
+          </QueryComponentProvider>
         );
       else refreshProfileContext();
     });

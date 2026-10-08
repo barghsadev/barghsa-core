@@ -178,6 +178,14 @@ async function mount(
     submit,
     fill,
     select,
+    hide: async () =>
+      act(async () =>
+        root.render(
+          <Provider>
+            <AccountUserProvider value="customer-one">{null}</AccountUserProvider>
+          </Provider>
+        )
+      ),
     close: async () => {
       await act(async () => root.unmount());
       host.remove();
@@ -844,6 +852,108 @@ it('renders consultation fee and ledger amounts exactly from decimal strings', a
   try {
     expect(view.host.textContent).toContain(new Intl.NumberFormat('en').format(9007199254740993n));
     expect(view.host.querySelector('form')).not.toBeNull();
+  } finally {
+    await view.close();
+  }
+});
+
+it('keeps consultation intake reads manual and cancels catalogue/history when only the page is removed', async () => {
+  const signals: AbortSignal[] = [],
+    finish: ((response: Response) => void)[] = [],
+    paths: string[] = [];
+  const view = await mount(
+    ConsultationsPage,
+    async (url, init) => {
+      paths.push(url);
+      if (url.includes('/products?') || url.includes('/requests?')) {
+        signals.push(init?.signal as AbortSignal);
+        return new Promise<Response>((resolve) => {
+          finish.push(resolve);
+        });
+      }
+      return Response.json(read(url));
+    },
+    'en',
+    QueryComponentProvider
+  );
+  try {
+    expect(signals).toHaveLength(2);
+    expect(signals.every((signal) => !signal.aborted)).toBe(true);
+    const before = paths.length;
+    await act(async () => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+    });
+    expect(paths).toHaveLength(before);
+    await view.hide();
+    expect(signals.every((signal) => signal.aborted)).toBe(true);
+    await act(async () => {
+      for (let i = 0; i < finish.length; i++)
+        finish[i]!(
+          Response.json(
+            read(paths.filter((p) => p.includes('/products?') || p.includes('/requests?'))[i]!)
+          )
+        );
+    });
+    expect(view.host.textContent).toBe('');
+  } finally {
+    await view.close();
+  }
+});
+
+it('cancels catalogue/history on intake account replacement and ignores their old private replies', async () => {
+  let next = false;
+  const signals: AbortSignal[] = [],
+    finish: ((response: Response) => void)[] = [],
+    paths: string[] = [];
+  const view = await mount(
+    ConsultationsPage,
+    async (url, init) => {
+      if (next) return new Response('{}', { status: 403 });
+      if (url.includes('/products?') || url.includes('/requests?')) {
+        signals.push(init?.signal as AbortSignal);
+        paths.push(url);
+        return new Promise<Response>((resolve) => {
+          finish.push(resolve);
+        });
+      }
+      return Response.json(read(url));
+    },
+    'en',
+    QueryComponentProvider
+  );
+  try {
+    expect(signals).toHaveLength(2);
+    next = true;
+    await view.render('customer-two');
+    expect(signals.every((signal) => signal.aborted)).toBe(true);
+    await act(async () => {
+      for (let i = 0; i < finish.length; i++) finish[i]!(Response.json(read(paths[i]!)));
+    });
+    expect(view.host.querySelector('input[type=radio]')).toBeNull();
+    expect(view.host.textContent).not.toContain(browseConsultation.title.en);
+    expect(view.host.textContent).toContain(
+      'This history is no longer available. Retry to check your current access.'
+    );
+    expect(routing.navigate).not.toHaveBeenCalled();
+  } finally {
+    await view.close();
+  }
+});
+
+it('refuses a blank consultation profile owner before starting catalogue or history reads', async () => {
+  const paths: string[] = [];
+  const view = await mount(ConsultationsPage, async (url) => {
+    paths.push(url);
+    return Response.json({
+      activeProfileId: ' ',
+      profiles: [{ id: ' ', profileType: 'INDIVIDUAL' }],
+    });
+  });
+  try {
+    expect(paths).toEqual(['/api/profiles']);
+    expect(view.host.querySelector('input[type=radio]')).toBeNull();
+    expect(view.host.textContent).toContain(copy('profileLoadError'));
   } finally {
     await view.close();
   }

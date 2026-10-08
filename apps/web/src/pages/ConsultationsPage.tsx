@@ -14,7 +14,9 @@ import { DEFAULT_HISTORY_SORT, type HistoryQuery } from '@barghsa/shared/validat
 import { t } from '@barghsa/i18n/app';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { Link, useNavigate } from '@tanstack/react-router';
 import {
   Alert,
@@ -122,6 +124,9 @@ export function ConsultationsPage({
   const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const actorId = useAccountUser();
+  const reader = useId();
+  const client = useQueryClient();
+  const readSequence = useRef(0);
   const contextRevision = useProfileContextRevision();
   const identity = JSON.stringify([actorId, contextRevision]);
   const currentIdentity = useRef(identity);
@@ -256,14 +261,47 @@ export function ConsultationsPage({
     catalogue.current.loading = true;
     setProductsRevision((value) => value + 1);
   }
+  async function readOwned(key: ServerQueryKey, path: string, controller: AbortController) {
+    if (controller.signal.aborted || !currentContext())
+      throw new Error('Obsolete consultation read');
+    const abort = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', abort, { once: true });
+    try {
+      return await client.fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(path, { credentials: 'include', signal });
+          return {
+            ok: response.ok,
+            status: response.status,
+            value: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
+      });
+    } finally {
+      controller.signal.removeEventListener('abort', abort);
+    }
+  }
   async function readProfile(controller: AbortController): Promise<SwitcherProfile | null> {
-    const response = await fetch('/api/profiles', {
-      credentials: 'include',
-      signal: controller.signal,
-    });
+    const response = await readOwned(
+      queryKeys.profiles.authority(
+        {
+          context: 'account',
+          ownerId: actorId?.trim() ? actorId : reader,
+          accountId: actorId,
+          revision: contextRevision,
+        },
+        JSON.stringify([reader, identity, 'consultation-profile', ++readSequence.current])
+      ),
+      '/api/profiles',
+      controller
+    );
     if (controller.signal.aborted || !currentContext()) throw new Error('Obsolete profile read');
     if (!response.ok) throw new ConsultationReadError('profile', response.status);
-    const data: unknown = await response.json();
+    const data: unknown = response.value;
     if (controller.signal.aborted || !currentContext()) throw new Error('Obsolete profile read');
     if (
       !data ||
@@ -279,6 +317,7 @@ export function ConsultationsPage({
     )
       throw new Error('Invalid profile read');
     if (data.activeProfileId === null) return null;
+    if (!data.activeProfileId.trim()) throw new Error('Invalid active profile');
     const selected = data.profiles.find(
       (row: unknown) =>
         row && typeof row === 'object' && 'id' in row && row.id === data.activeProfileId
@@ -312,13 +351,23 @@ export function ConsultationsPage({
     setProductsLoading(true);
     setProductsError(false);
     setProductsDenied(false);
-    void fetch(`/api/consultations/products?profileId=${encodeURIComponent(profile.id)}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
+    void readOwned(
+      queryKeys.catalogue.list(
+        {
+          context: 'customer',
+          ownerId: profile.id,
+          accountId: actorId,
+          revision: contextRevision,
+        },
+        new URLSearchParams({ reader, endpoint: 'consultation-products', profileId: profile.id }),
+        ++readSequence.current
+      ),
+      `/api/consultations/products?profileId=${encodeURIComponent(profile.id)}`,
+      controller
+    )
+      .then((response) => {
         if (!response.ok) throw new Error(String(response.status));
-        return response.json() as Promise<{ products: Product[] }>;
+        return response.value as { products: Product[] };
       })
       .then((data) => {
         if (controller.signal.aborted || !currentContext() || acceptedScope.current !== scope)
@@ -389,13 +438,23 @@ export function ConsultationsPage({
       if (dateRange.to) queryParams.set('to', dateRange.to);
       if (query.q) queryParams.set('q', query.q);
       if (query.sort !== DEFAULT_HISTORY_SORT) queryParams.set('sort', query.sort);
-      const response = await fetch(`/api/consultations/requests?${queryParams}`, {
-        credentials: 'include',
-        signal: controller.signal,
-      });
+      const response = await readOwned(
+        queryKeys.consultations.list(
+          {
+            context: 'customer',
+            ownerId: profile.id,
+            accountId: actorId,
+            revision: contextRevision,
+          },
+          new URLSearchParams([...queryParams, ['reader', reader]]),
+          ++readSequence.current
+        ),
+        `/api/consultations/requests?${queryParams}`,
+        controller
+      );
       if (!fresh()) return;
       if (!response.ok) throw new ConsultationReadError('history', response.status);
-      const result = (await response.json()) as {
+      const result = response.value as {
         requests: RequestRow[];
         nextBefore: string | null;
       };
