@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import {
   Button,
   Dialog,
@@ -8,6 +8,12 @@ import {
   DialogTitle,
 } from '@barghsa/ui';
 import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
+
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 
 /** Read the exact captured targets; a queue page cannot establish their saved status. */
 export function OperationalCommandReview<T extends { id: string }>({
@@ -31,39 +37,61 @@ export function OperationalCommandReview<T extends { id: string }>({
 }) {
   const word = (key: string) => t(`admin.operationalReview.${key}`, locale);
   const [revision, setRevision] = useState(0);
-  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [saved, setSaved] = useState<(T | null)[]>([]);
-  useEffect(() => {
-    const controller = new AbortController();
-    setState('loading');
-    setSaved([]);
-    void Promise.all(
-      rows.map(async (before) => {
-        const response = await fetch(`${endpoint}/${encodeURIComponent(before.id)}`, {
-          signal: controller.signal,
-        });
-        if (response.status === 401 || response.status === 403) throw new Error('denied');
-        if (response.status === 404) return null;
-        if (!response.ok) throw new Error('unavailable');
-        const value: unknown = await response.json();
-        if (!validate(value) || identity(value) !== identity(before))
-          throw new Error('invalid record');
-        return value;
-      })
-    )
-      .then((result) => {
-        if (controller.signal.aborted) return;
-        setSaved(result);
-        setState('ready');
-      })
-      .catch((reason: unknown) => {
-        if (controller.signal.aborted) return;
-        if (reason instanceof Error && reason.message === 'denied') onDenied();
-        else setState('error');
+  const reader = useId();
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const inputs = useRef({ rows, validate, identity, onDenied, revision: 0 });
+  if (
+    inputs.current.rows !== rows ||
+    inputs.current.validate !== validate ||
+    inputs.current.identity !== identity ||
+    inputs.current.onDenied !== onDenied
+  )
+    inputs.current = { rows, validate, identity, onDenied, revision: inputs.current.revision + 1 };
+  const query = useServerDetailQuery<(T | null)[]>({
+    queryKey: queryKeys.operations.detail(
+      { context: 'staff', ownerId: reader, accountId, revision: profileRevision },
+      JSON.stringify([endpoint, rows.map(identity), inputs.current.revision, revision])
+    ),
+    manual: true,
+    read: async (signal) => {
+      const controller = new AbortController();
+      const abort = () => controller.abort();
+      if (signal.aborted) abort();
+      else signal.addEventListener('abort', abort, { once: true });
+      try {
+        return await Promise.all(
+          rows.map(async (before) => {
+            const response = await fetch(`${endpoint}/${encodeURIComponent(before.id)}`, {
+              signal: controller.signal,
+            });
+            if (response.status === 401 || response.status === 403)
+              throw new ServerQueryError(response.status);
+            if (response.status === 404) return null;
+            if (!response.ok) throw new ServerQueryError(response.status);
+            const value: unknown = await response.json();
+            if (!validate(value) || identity(value) !== identity(before))
+              throw new Error('invalid record');
+            return value;
+          })
+        );
+      } catch (error) {
         controller.abort();
-      });
-    return () => controller.abort();
-  }, [endpoint, rows, validate, identity, revision, onDenied]);
+        throw error;
+      } finally {
+        signal.removeEventListener('abort', abort);
+      }
+    },
+  });
+  useEffect(() => {
+    if (
+      query.error instanceof ServerQueryError &&
+      (query.error.status === 401 || query.error.status === 403)
+    )
+      onDenied();
+  }, [query.error, onDenied]);
+  const state = query.isPending || query.isFetching ? 'loading' : query.isError ? 'error' : 'ready';
+  const saved = query.data ?? [];
   return (
     <Dialog open onOpenChange={() => {}}>
       <DialogContent
