@@ -49,7 +49,7 @@ describe('UploadPolicyResolver.resolveEffective (T-09.12.05)', () => {
     const policy = await resolver.resolveEffective('document');
 
     expect(policy).toMatchObject({
-      allowedExtensions: ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv'],
+      allowedExtensions: ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv', '.rtf'],
       maxSizeBytes: 10 * 1024 * 1024,
       source: 'deployment',
       policyId: null,
@@ -62,6 +62,7 @@ describe('UploadPolicyResolver.resolveEffective (T-09.12.05)', () => {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'text/plain',
       'text/csv',
+      'application/rtf',
     ]);
   });
 

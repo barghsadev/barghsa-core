@@ -293,11 +293,11 @@ describe('UploadController', () => {
       expect(result).toMatchObject({
         key: expect.stringContaining('uploads/'),
         presignedUrl: 'https://s3.example.com/presigned',
-        expiresIn: 3600,
+        expiresIn: 900,
       });
       expect(storage.presignedPutUrl).toHaveBeenCalledWith(
         expect.stringContaining('uploads/'),
-        3600
+        900
       );
     });
 
@@ -316,7 +316,7 @@ describe('UploadController', () => {
       expect(result).toMatchObject({
         key: expect.stringContaining('uploads/'),
         presignedUrl: 'https://s3.example.com/presigned',
-        expiresIn: 3600,
+        expiresIn: 900,
       });
     });
 
@@ -336,7 +336,7 @@ describe('UploadController', () => {
       expect(result).toMatchObject({
         key: expect.stringContaining('uploads/'),
         presignedUrl: 'https://s3.example.com/presigned',
-        expiresIn: 3600,
+        expiresIn: 900,
       });
     });
 

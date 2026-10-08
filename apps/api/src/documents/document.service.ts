@@ -11,6 +11,7 @@ import {
   createDbClient,
   desc,
   documents,
+  documentAccessLog,
   documentEvents,
   contractDocuments,
   eq,
@@ -41,6 +42,27 @@ type LinkedDocument = {
   contractVersionId: string | null;
   contractRole: string | null;
 };
+type AccessEvidence = { ipAddress: string; userAgent: string };
+
+async function logAccess(
+  client: PoolClient,
+  documentId: string,
+  actor: DocumentActor,
+  staff: boolean,
+  action: 'download' | 'view',
+  evidence: AccessEvidence
+) {
+  await createDbClient(client)
+    .insert(documentAccessLog)
+    .values({
+      documentId,
+      accessedBy: actor.userId,
+      accessedByType: staff ? 'staff' : 'customer',
+      action,
+      ipAddress: evidence.ipAddress.slice(0, 64),
+      userAgent: evidence.userAgent.slice(0, 1024),
+    });
+}
 async function writablePendingAmendment(
   client: PoolClient,
   contractId: string,
@@ -610,7 +632,12 @@ export class DocumentService {
     );
   }
 
-  async download(id: string, actor: DocumentActor, staff: boolean) {
+  async download(
+    id: string,
+    actor: DocumentActor,
+    staff: boolean,
+    evidence: AccessEvidence = { ipAddress: '', userAgent: '' }
+  ) {
     const context = await this.context(id);
     return documentAccess(
       actor,
@@ -626,13 +653,23 @@ export class DocumentService {
           ['Uploading', 'PendingScan', 'Quarantined'].includes(row.document.state)
         )
           throw new ConflictException('Document is not available for download');
-        return { url: await this.storage.download(row.document.storageKey), expiresIn: 300 };
+        const result = {
+          url: await this.storage.download(row.document.storageKey),
+          expiresIn: 300,
+        };
+        await logAccess(client, id, actor, staff, 'download', evidence);
+        return result;
       },
       context.businessRecordId ?? undefined
     );
   }
 
-  async preview(id: string, actor: DocumentActor, staff: boolean) {
+  async preview(
+    id: string,
+    actor: DocumentActor,
+    staff: boolean,
+    evidence: AccessEvidence = { ipAddress: '', userAgent: '' }
+  ) {
     const context = await this.context(id);
     return documentAccess(
       actor,
@@ -648,7 +685,13 @@ export class DocumentService {
           ['Uploading', 'PendingScan', 'Quarantined', 'Removed'].includes(row.document.state)
         )
           throw new ConflictException('Document is not available for preview');
-        return this.storage.preview(id, row.document.storageKey, row.document.detectedMime ?? '');
+        const result = await this.storage.preview(
+          id,
+          row.document.storageKey,
+          row.document.detectedMime ?? ''
+        );
+        await logAccess(client, id, actor, staff, 'view', evidence);
+        return result;
       },
       context.businessRecordId ?? undefined
     );

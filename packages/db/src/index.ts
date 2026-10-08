@@ -761,6 +761,7 @@ export * from './schema/documents';
 export * from './schema/document-scan-jobs';
 export * from './schema/document-retention';
 export * from './schema/document-templates';
+export * from './schema/document-access-log.js';
 
 export * from './schema/contract-signatures';
 

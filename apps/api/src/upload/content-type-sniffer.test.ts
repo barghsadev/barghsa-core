@@ -28,6 +28,13 @@ describe('sniffContentTypes (T-09.12.05)', () => {
     expect(sniffContentTypes(bytes('%PDF-1.7\n...'))).toEqual(['application/pdf']);
   });
 
+  it('detects an RTF header before generic JSON without accepting embedded or forged markers', () => {
+    expect(sniffContentTypes(bytes('{\\rtf1\\ansi Hello}'))).toEqual(['application/rtf']);
+    for (const text of ['prefix {\\rtf1 body}', '{\\rtf body}', '{"rtf":1}', 'MZ\0{\\rtf1 body}'])
+      expect(pick(bytes(text), ['application/rtf'])).toBeNull();
+    expect(pick(bytes('{\\rtf1 body}'), ['application/pdf', 'text/plain'])).toBeNull();
+  });
+
   it('detects JPEG', () => {
     expect(sniffContentTypes(hex([0xff, 0xd8, 0xff, 0xe0, 0x00]))).toEqual(['image/jpeg']);
   });

@@ -127,6 +127,44 @@ async function row(key: string) {
   return (await http.pool.query('SELECT * FROM storage_records WHERE storage_key=$1', [key]))
     .rows[0];
 }
+it('reserves required RTF documents and rejects substituted bytes before sealing them', async () => {
+  const bytes = Buffer.from('{\\rtf1\\ansi Proof}');
+  const response = await fetch(`${http.base}/api/upload/presigned-url`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      fileName: 'proof.rtf',
+      contentType: 'application/rtf',
+      fileSize: bytes.length,
+      category: 'document',
+    }),
+  });
+  expect(response.status, await response.clone().text()).toBe(200);
+  const upload = (await response.json()) as { key: string };
+  expect(upload.key).toMatch(/\.rtf$/);
+  const verify = () =>
+    fetch(`${http.base}/api/upload/${encodeURIComponent(upload.key)}/verify`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ category: 'document' }),
+    });
+  objects.set(upload.key, Buffer.alloc(bytes.length, 65));
+  expect(await (await verify()).json()).toMatchObject({ status: 'type_mismatch' });
+  expect((await row(upload.key)).status).toBe('removed');
+  objects.set(upload.key, bytes);
+  expect(await (await verify()).json()).toMatchObject({
+    status: 'confirmed',
+    detectedContentType: 'application/rtf',
+    exists: true,
+  });
+  const inspected = await row(upload.key);
+  expect(inspected.status).toBe('removed');
+  expect(inspected.metadata.storageInspection).toMatchObject({
+    contentType: 'application/rtf',
+    contentLength: bytes.length,
+  });
+});
+
 it('reads real metadata and binds an idempotent signature to the authenticated actor', async () => {
   const key = await seed();
   expect(await (await request(key)).json()).toMatchObject({

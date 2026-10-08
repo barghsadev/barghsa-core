@@ -24,6 +24,7 @@ const EXTENSION_MIME_TYPES: Readonly<Record<string, readonly string[]>> = {
   '.xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
   '.txt': ['text/plain'],
   '.csv': ['text/csv'],
+  '.rtf': ['application/rtf'],
   '.jpg': ['image/jpeg'],
   '.jpeg': ['image/jpeg'],
   '.png': ['image/png'],
@@ -52,8 +53,9 @@ const DEFAULT_CATEGORIES: Record<string, UploadCategoryConfig> = {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'text/plain',
       'text/csv',
+      'application/rtf',
     ],
-    allowedExtensions: ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv'],
+    allowedExtensions: ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv', '.rtf'],
     maxSizeBytes: 10 * MB,
   },
   image: {

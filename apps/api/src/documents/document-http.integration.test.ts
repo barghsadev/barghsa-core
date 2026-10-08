@@ -199,6 +199,143 @@ async function act(
   return (await response.json()) as DocumentDto;
 }
 
+it('seals a required RTF document with the actual MIME, checksum and original download bytes', async () => {
+  const f = await owner();
+  const bytes = Buffer.from('{\\rtf1\\ansi Verified document}');
+  const created = await create(f.user, {
+    fileName: 'evidence.rtf',
+    contentType: 'application/rtf',
+    fileSize: bytes.length,
+  });
+  expect(
+    (
+      await fetch(created.upload.presignedUrl, {
+        method: 'PUT',
+        headers: { ...created.upload.headers, 'Content-Type': 'application/rtf' },
+        body: bytes,
+      })
+    ).status
+  ).toBe(200);
+  const confirmation = await send(
+    `documents/${created.document.id}/confirm`,
+    f.user,
+    'POST',
+    command(1)
+  );
+  expect(confirmation.status, await confirmation.clone().text()).toBe(200);
+  expect(await confirmation.json()).toMatchObject({
+    state: 'Available',
+    detectedMime: 'application/rtf',
+    sizeBytes: bytes.length,
+    checksum: createHash('sha256').update(bytes).digest('hex'),
+  });
+  const download = await send(`documents/${created.document.id}/download`, f.user);
+  const receipt = (await download.json()) as { url: string };
+  expect(Buffer.from(await (await fetch(receipt.url)).arrayBuffer())).toEqual(bytes);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS n FROM document_access_log WHERE document_id=$1',
+        [created.document.id]
+      )
+    ).rows[0]!.n
+  ).toBe(1);
+});
+
+it('records bounded current customer and staff download/view issuances without logging denied access', async () => {
+  const f = await owner();
+  const document = await confirm(await create(f.user), f.user);
+  const read = (user: string, staff: boolean, action: string) =>
+    fetch(`${http.base}/api/${staff ? 'admin/' : ''}documents/${document.id}/${action}`, {
+      headers: { ...headers[user]!, 'User-Agent': 'audit-proof-'.repeat(120) },
+    });
+  expect((await read(f.user, false, 'download')).status).toBe(200);
+  expect((await read('document-legal', true, 'download')).status).toBe(200);
+  if (pdfRendererAvailable) expect((await read(f.user, false, 'preview')).status).toBe(200);
+  const stranger = await owner();
+  expect((await read(stranger.user, false, 'download')).status).toBe(404);
+  expect((await read('document-finance', true, 'download')).status).toBe(403);
+  const result = await http.pool.query(
+    'SELECT document_id,accessed_by,accessed_by_type,action,ip_address,user_agent,created_at FROM document_access_log WHERE document_id=$1 ORDER BY created_at,id',
+    [document.id]
+  );
+  expect(result.rows).toHaveLength(pdfRendererAvailable ? 3 : 2);
+  expect(result.rows[0]).toMatchObject({
+    document_id: document.id,
+    accessed_by: f.user,
+    accessed_by_type: 'customer',
+    action: 'download',
+    user_agent: 'audit-proof-'.repeat(120).slice(0, 1024),
+  });
+  expect(result.rows[1]).toMatchObject({
+    accessed_by: 'document-legal',
+    accessed_by_type: 'staff',
+    action: 'download',
+  });
+  if (pdfRendererAvailable)
+    expect(result.rows[2]).toMatchObject({ accessed_by: f.user, action: 'view' });
+  for (const row of result.rows) {
+    expect(row.ip_address).toMatch(/127\.0\.0\.1|::1/);
+    expect(row.created_at).toBeInstanceOf(Date);
+  }
+  for (const statement of [
+    "UPDATE document_access_log SET action='view' WHERE document_id=$1",
+    'DELETE FROM document_access_log WHERE document_id=$1',
+  ])
+    await expect(http.pool.query(statement, [document.id])).rejects.toMatchObject({
+      code: '23514',
+    });
+  await expect(http.pool.query('TRUNCATE document_access_log')).rejects.toMatchObject({
+    code: '23514',
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS n FROM document_access_log WHERE document_id=$1',
+        [document.id]
+      )
+    ).rows[0]!.n
+  ).toBe(result.rows.length);
+});
+
+it('withholds the signed URL when the access ledger fails and leaves no false successful receipt', async () => {
+  const f = await owner();
+  const document = await confirm(await create(f.user), f.user);
+  await http.pool
+    .query(`CREATE FUNCTION fail_document_access_probe() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'synthetic access sink failure'; END $$;
+    CREATE TRIGGER test_access_sink_failure BEFORE INSERT ON document_access_log FOR EACH ROW EXECUTE FUNCTION fail_document_access_probe()`);
+  try {
+    for (const kind of ['download', ...(pdfRendererAvailable ? ['preview'] : [])]) {
+      const response = await send(`documents/${document.id}/${kind}`, f.user);
+      expect(response.status).toBe(500);
+      const body = await response.text();
+      expect(body).not.toContain('X-Amz-');
+      expect(body).not.toContain('synthetic access sink failure');
+    }
+    expect(
+      (
+        await http.pool.query(
+          'SELECT count(*)::int AS n FROM document_access_log WHERE document_id=$1',
+          [document.id]
+        )
+      ).rows[0]!.n
+    ).toBe(0);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER test_access_sink_failure ON document_access_log; DROP FUNCTION fail_document_access_probe()'
+    );
+  }
+  expect((await send(`documents/${document.id}/download`, f.user)).status).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS n FROM document_access_log WHERE document_id=$1',
+        [document.id]
+      )
+    ).rows[0]!.n
+  ).toBe(1);
+});
+
 it('resumes a large document upload and confirms the sealed document', async () => {
   const person = await owner();
   const bytes = Buffer.alloc(5 * 1024 * 1024 + 83, 65);

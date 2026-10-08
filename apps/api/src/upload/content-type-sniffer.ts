@@ -126,6 +126,10 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
 
   if (bytes.length >= 5 && bytesAt(bytes, 0, '%PDF-')) return ['application/pdf'];
 
+  // The required RTF header takes precedence over the generic JSON/text probe.
+  if (bytesAt(bytes, 0, '{\\rtf') && bytes[5]! >= 0x31 && bytes[5]! <= 0x39)
+    return ['application/rtf'];
+
   if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
     return ['image/jpeg'];
   }

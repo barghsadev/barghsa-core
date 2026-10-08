@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 475 | Accepted with unchanged source bindings. |
-| verify | 821 | Existing work may be complete; inspect evidence before building. |
-| partial | 65 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 480 | Accepted with unchanged source bindings. |
+| verify | 808 | Existing work may be complete; inspect evidence before building. |
+| partial | 73 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,20 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current document upload/scan/review/supersession/soft removal, file validation andauthorizedsigned/privatepreview access together. Reuse current storage/template/contract evidence andactualmatched journeychecks; buildonly demonstratedgaps. Keep configuredlive scanner/retention/destruction operations separate.
+Removeoriginal-fileinlineembeds fromgenericDocumentDetail downloadpane. RetainboundedderivedFilePreview andexplicitoriginaldownloadlink/nativeviewerzoom, currentreviewmetadata/history/versionchain/permission/draftcontrols. VerifyaffectedFA/EN/UI journeys andrenewonlymatching source evidence; ownerroute/cache/retention/globalstaff/upload-policy decisions remainopen.
 
-- `05-notifications-documents-ai.md#T-05.11.02`: Upload pipeline
-- `05-notifications-documents-ai.md#T-05.11.03`: Document scanning integration
 - `05-notifications-documents-ai.md#T-05.11.04`: Document review workflow
-- `05-notifications-documents-ai.md#T-05.11.05`: Document supersession & immutability
-- `05-notifications-documents-ai.md#T-05.11.06`: Soft delete & hard delete
 - `05-notifications-documents-ai.md#T-05.11.07`: Document admin/staff UI
-- `05-notifications-documents-ai.md#T-05.12.01`: File validation service
-- `05-notifications-documents-ai.md#T-05.12.02`: Category & limit configuration
-- `05-notifications-documents-ai.md#T-05.12.03`: Rejection handling
-- `05-notifications-documents-ai.md#T-05.13.01`: Signed URL generation API
-- `05-notifications-documents-ai.md#T-05.13.02`: Access control middleware
-- `05-notifications-documents-ai.md#T-05.13.03`: Download access logging
 - `05-notifications-documents-ai.md#T-05.13.04`: Safe preview derivative endpoint
 
 ## v0.2.0: Complete customer journeys
@@ -591,19 +581,19 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.10.03` | done | Recorded batch work | Template admin UI |
 | `05-notifications-documents-ai.md#T-05.10.04` | done | Recorded batch work | Placeholder re-extraction on file changes |
 | `05-notifications-documents-ai.md#T-05.10.05` | done | Recorded batch work | Placeholder conflict detection & validation |
-| `05-notifications-documents-ai.md#T-05.11.02` | verify | Inventory needed | Upload pipeline |
-| `05-notifications-documents-ai.md#T-05.11.03` | verify | Recorded batch work | Document scanning integration |
-| `05-notifications-documents-ai.md#T-05.11.04` | verify | Recorded batch work | Document review workflow |
-| `05-notifications-documents-ai.md#T-05.11.05` | verify | Recorded batch work | Document supersession & immutability |
-| `05-notifications-documents-ai.md#T-05.11.06` | verify | Inventory needed | Soft delete & hard delete |
-| `05-notifications-documents-ai.md#T-05.11.07` | verify | Recorded batch work | Document admin/staff UI |
-| `05-notifications-documents-ai.md#T-05.12.01` | verify | Inventory needed | File validation service |
-| `05-notifications-documents-ai.md#T-05.12.02` | verify | Inventory needed | Category & limit configuration |
-| `05-notifications-documents-ai.md#T-05.12.03` | verify | Inventory needed | Rejection handling |
-| `05-notifications-documents-ai.md#T-05.13.01` | verify | Inventory needed | Signed URL generation API |
-| `05-notifications-documents-ai.md#T-05.13.02` | verify | Inventory needed | Access control middleware |
-| `05-notifications-documents-ai.md#T-05.13.03` | verify | Inventory needed | Download access logging |
-| `05-notifications-documents-ai.md#T-05.13.04` | verify | Inventory needed | Safe preview derivative endpoint |
+| `05-notifications-documents-ai.md#T-05.11.02` | done | Recorded batch work | Upload pipeline |
+| `05-notifications-documents-ai.md#T-05.11.03` | done | Recorded batch work | Document scanning integration |
+| `05-notifications-documents-ai.md#T-05.11.04` | partial | Recorded batch work | Document review workflow |
+| `05-notifications-documents-ai.md#T-05.11.05` | done | Recorded batch work | Document supersession & immutability |
+| `05-notifications-documents-ai.md#T-05.11.06` | partial | Recorded batch work | Soft delete & hard delete |
+| `05-notifications-documents-ai.md#T-05.11.07` | partial | Recorded batch work | Document admin/staff UI |
+| `05-notifications-documents-ai.md#T-05.12.01` | done | Recorded batch work | File validation service |
+| `05-notifications-documents-ai.md#T-05.12.02` | partial | Recorded batch work | Category & limit configuration |
+| `05-notifications-documents-ai.md#T-05.12.03` | partial | Recorded batch work | Rejection handling |
+| `05-notifications-documents-ai.md#T-05.13.01` | partial | Recorded batch work | Signed URL generation API |
+| `05-notifications-documents-ai.md#T-05.13.02` | partial | Recorded batch work | Access control middleware |
+| `05-notifications-documents-ai.md#T-05.13.03` | done | Recorded batch work | Download access logging |
+| `05-notifications-documents-ai.md#T-05.13.04` | partial | Recorded batch work | Safe preview derivative endpoint |
 | `05-notifications-documents-ai.md#T-05.14.01` | verify | Recorded batch work | Retention policy configuration |
 | `05-notifications-documents-ai.md#T-05.14.02` | verify | Recorded batch work | Legal hold |
 | `05-notifications-documents-ai.md#T-05.14.03` | verify | Recorded batch work | Destruction job |

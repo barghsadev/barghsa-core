@@ -59,11 +59,17 @@ export class DocumentController {
   }
   @Get(':id/download')
   download(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
-    return this.documents.download(id, request.session, false);
+    return this.documents.download(id, request.session, false, {
+      ipAddress: request.ip ?? '',
+      userAgent: request.get('user-agent') ?? '',
+    });
   }
   @Get(':id/preview')
   preview(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
-    return this.documents.preview(id, request.session, false);
+    return this.documents.preview(id, request.session, false, {
+      ipAddress: request.ip ?? '',
+      userAgent: request.get('user-agent') ?? '',
+    });
   }
   @Post(':id/confirm')
   @HttpCode(200)
@@ -123,11 +129,17 @@ export class StaffDocumentController {
   }
   @Get(':id/download')
   download(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
-    return this.documents.download(id, request.session, true);
+    return this.documents.download(id, request.session, true, {
+      ipAddress: request.ip ?? '',
+      userAgent: request.get('user-agent') ?? '',
+    });
   }
   @Get(':id/preview')
   preview(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
-    return this.documents.preview(id, request.session, true);
+    return this.documents.preview(id, request.session, true, {
+      ipAddress: request.ip ?? '',
+      userAgent: request.get('user-agent') ?? '',
+    });
   }
   @Post(':id/confirm')
   @HttpCode(200)
