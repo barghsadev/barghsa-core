@@ -365,6 +365,46 @@
   }
 }
 
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@utility alert-layout {
+  @apply relative grid w-full gap-0.5 rounded-lg border px-4 py-3 text-start text-sm;
+  &:has([data-slot='alert-action']) {
+    @apply pe-18;
+  }
+  &:has([data-slot='alert-dismiss']) {
+    @apply pe-14;
+  }
+  &:has(> svg) {
+    @apply grid-cols-[auto_1fr] gap-x-2;
+  }
+  & > svg {
+    @apply row-span-2 translate-y-0.5 text-current;
+  }
+  & > svg:not([class*='size-']) {
+    @apply size-4;
+  }
+}
+
+@utility alert-critical {
+  &::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--destructive) 40%, transparent);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
 @keyframes progress-stripes {
   from {
     background-position: 0 0;

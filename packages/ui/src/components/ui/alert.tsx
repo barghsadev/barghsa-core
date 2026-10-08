@@ -5,30 +5,27 @@ import { cn } from '../../lib/utils';
 import { XIcon } from 'lucide-react';
 import { Button } from './button';
 
-const alertVariants = cva(
-  "group/alert relative grid w-full gap-0.5 rounded-lg border px-4 py-3 text-start text-sm has-data-[slot=alert-action]:pe-18 has-data-[slot=alert-dismiss]:pe-14 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4",
-  {
-    variants: {
-      variant: {
-        default: 'bg-card text-card-foreground',
-        success:
-          'border-success/20 bg-success-soft text-success *:data-[slot=alert-description]:text-success',
-        warning:
-          'border-warning/20 bg-warning-soft text-warning *:data-[slot=alert-description]:text-warning',
-        info: 'border-info/20 bg-info-soft text-info *:data-[slot=alert-description]:text-info',
-        destructive:
-          'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive *:[svg]:text-current',
-        error:
-          'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive *:[svg]:text-current',
-        critical:
-          'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive *:[svg]:text-current after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-2 after:ring-destructive/40 after:animate-pulse motion-reduce:after:animate-none',
-      },
+const alertVariants = cva('group/alert alert-layout', {
+  variants: {
+    variant: {
+      default: 'bg-card text-card-foreground',
+      success:
+        'border-success/20 bg-success-soft text-success *:data-[slot=alert-description]:text-success',
+      warning:
+        'border-warning/20 bg-warning-soft text-warning *:data-[slot=alert-description]:text-warning',
+      info: 'border-info/20 bg-info-soft text-info *:data-[slot=alert-description]:text-info',
+      destructive:
+        'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive',
+      error:
+        'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive',
+      critical:
+        'border-destructive/20 bg-danger-soft text-destructive *:data-[slot=alert-description]:text-destructive alert-critical',
     },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 function Alert({
   className,

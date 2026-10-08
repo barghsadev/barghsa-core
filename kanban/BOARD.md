@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 551 | Accepted with unchanged source bindings. |
-| verify | 740 | Existing work may be complete; inspect evidence before building. |
-| partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 737 | Existing work may be complete; inspect evidence before building. |
+| partial | 74 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,11 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing Avatar, Skeleton and Separator implementations and callers. Build only missing initials/status/size/shimmer/placeholder/orientation criteria; review once and pass targeted RTL/theme/mobile/accessibility and applicable output-budget checks. Preserve earlier pending release/provider/tooltip/webhook gates.
+Inspect existing offset/cursor Pagination and actual callers. Build only missing compound controls/count/page-size/ellipsis criteria; review once and pass targeted RTL/mobile/keyboard tests. Identity/loading component adoption remains explicitly partial and must close before release acceptance. Preserve earlier provider/policy/live webhook gates.
 
-- `07-ui-ux-design.md#T-07.01.03.18`: Avatar — image fallback to initials (extracted from user name). Sizes: `xs` (24px) through `xl` (96px). Status ring (online/offline/busy). Used in profile switcher, user menu, agent list.
-- `07-ui-ux-design.md#T-07.01.03.19`: Skeleton — shimmer loading placeholders. Variants: `text` (single line, multi-line), `card`, `avatar` (circle), `table-row`, `chart`. Used on every list, detail, and dashboard page.
-- `07-ui-ux-design.md#T-07.01.03.20`: Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections.
+- `07-ui-ux-design.md#T-07.01.03.21`: — Pagination compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination.
 
 ## v0.2.0: Complete customer journeys
 
@@ -673,9 +671,9 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.15` | done | Recorded batch work | Alert / Banner — severity: `info`, `success`, `warning`, `error`, `critical` (red pulse). Dismissible option. Action button slot (e.g. "Retry", "View details"). Use for: no-dead-end messages, profile verification banners, service outage notices. |
 | `07-ui-ux-design.md#T-07.01.03.16` | done | Recorded batch work | Breadcrumb — auto-generated from route hierarchy. Collapse on mobile (show only last + "..." indicator). |
 | `07-ui-ux-design.md#T-07.01.03.17` | done | Recorded batch work | ScrollArea — custom scrollbar styling matching the theme (thinner, themed thumb). Support for both LTR and RTL scrollbar positions. |
-| `07-ui-ux-design.md#T-07.01.03.18` | verify | Inventory needed | Avatar — image fallback to initials (extracted from user name). Sizes: `xs` (24px) through `xl` (96px). Status ring (online/offline/busy). Used in profile switcher, user menu, agent list. |
-| `07-ui-ux-design.md#T-07.01.03.19` | verify | Inventory needed | Skeleton — shimmer loading placeholders. Variants: `text` (single line, multi-line), `card`, `avatar` (circle), `table-row`, `chart`. Used on every list, detail, and dashboard page. |
-| `07-ui-ux-design.md#T-07.01.03.20` | verify | Inventory needed | Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections. |
+| `07-ui-ux-design.md#T-07.01.03.18` | partial | Recorded batch work | Avatar — image fallback to initials (extracted from user name). Sizes: `xs` (24px) through `xl` (96px). Status ring (online/offline/busy). Used in profile switcher, user menu, agent list. |
+| `07-ui-ux-design.md#T-07.01.03.19` | partial | Recorded batch work | Skeleton — shimmer loading placeholders. Variants: `text` (single line, multi-line), `card`, `avatar` (circle), `table-row`, `chart`. Used on every list, detail, and dashboard page. |
+| `07-ui-ux-design.md#T-07.01.03.20` | partial | Recorded batch work | Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections. |
 | `07-ui-ux-design.md#T-07.01.03.21` | verify | Inventory needed | — Pagination compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination. |
 | `07-ui-ux-design.md#T-07.01.04.01` | verify | Inventory needed | Install `@tanstack/react-query` and configure `QueryClient` in the app root with production defaults: `staleTime: 30_000` (30s for non-financial reads), `gcTime: 5 * 60_000` (5 min cache), `retry: 2` with exponential backoff, `refetchOnWindowFocus: true` for list pages, `refetchOnMount: true`. Create `QueryProvider` wrapper component. |
 | `07-ui-ux-design.md#T-07.01.04.02` | verify | Inventory needed | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |

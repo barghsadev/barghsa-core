@@ -18,6 +18,10 @@ Use the shared `DirectionProvider` around headless widgets so portal placement f
 
 `Alert` supports `info`, `success`, `warning`, `error` and `critical`, alongside the existing `default` and `destructive` variants. Critical alerts pulse a decorative ring while keeping text readable; reduced motion stops the animation. Compose `AlertAction` with `AlertDismiss` for separate actions and closing. Supply the dismiss button's localized `dismissLabel` and an `onDismiss` callback that owns removal and any follow-up focus. The dismiss button never submits a form.
 
+`SizedAvatar` supplies `xs`/`sm`/`md`/`lg`/`xl` sizes of 24/32/48/64/96px. The original `Avatar` keeps its existing 24/32/40px sizes. Compose `AvatarNameFallback` with a person's `name` to use the first and last word's initials when an image is absent or fails; explicit children override those initials. `SizedAvatarGroupCount` matches the chosen size. `AvatarPresence` requires an owner-supplied status and localized `statusLabel`; online, offline and busy use distinct solid, dashed and double rings. Supply the person's accessible name separately. These components do not fetch photos or infer presence.
+
+`SkeletonText` accepts a line count; `SkeletonCard`, `SkeletonAvatar` and `SkeletonChart` provide common shapes. Put `SkeletonTableRow` inside a native table body and set its column count. Place loading shapes inside an owner-labelled loading status. The placeholders are decorative and stop shimmering under reduced motion. Existing `Skeleton` and page loading states retain their original defaults.
+
 The production-browser runner also tests the separately built catalogue:
 
 ```sh
