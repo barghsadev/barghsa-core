@@ -221,12 +221,12 @@ export class AiTestChatService {
     }
   }
 
-  /** Shared inference path for a read-only, profile-bound customer question. */
-  async answerForCustomerSlot(input: {
+  /** Shared inference path; callers establish the fixed slot and its authorized scope. */
+  async answerForKnowledgeSlot(input: {
     agentId: string;
-    slotKey: 'individual_chatbot' | 'legal_entity_chatbot';
+    slotKey: 'individual_chatbot' | 'legal_entity_chatbot' | 'website_chatbot';
     message: string;
-    sessionId: string;
+    sessionId: string | null;
     userId: string;
     remainingQuota: number;
   }): Promise<TestChatResponse> {
@@ -252,7 +252,7 @@ export class AiTestChatService {
   private async generate(
     input: TestChatInput,
     safeMessage: string,
-    sessionId: string,
+    sessionId: string | null,
     userId: string,
     conversationId: string,
     remainingQuota: number,

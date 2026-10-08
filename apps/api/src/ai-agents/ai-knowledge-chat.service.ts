@@ -157,7 +157,7 @@ export class AiKnowledgeChatService {
       await client.query('COMMIT');
       if (!admitted) fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, Number(quotaRow.reset_ms));
 
-      const generated = await this.inference.answerForCustomerSlot({
+      const generated = await this.inference.answerForKnowledgeSlot({
         agentId: scope.agentId,
         slotKey: scope.slotKey,
         message: input.message,

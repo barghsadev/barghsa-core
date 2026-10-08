@@ -119,6 +119,9 @@ const groups: readonly (readonly [number, boolean, readonly string[]])[] = [
       'AI_MODEL_CHANGED',
       'AI_MODEL_IN_USE',
       'AI_POLICY_GROUP_MEMBER_LINK_FAILED',
+      'AI_WEBSITE_UNAVAILABLE',
+      'AI_WEBSITE_SCOPE_CHANGED',
+      'AI_WEBSITE_SOURCE_CHANGED',
       'CATALOGUE_PRICE_ADD_FAILED',
       'CATALOGUE_PRICE_OVERLAP',
       'CONFIG:VERSION_CONFLICT',
@@ -154,7 +157,7 @@ const groups: readonly (readonly [number, boolean, readonly string[]])[] = [
     ],
   ],
   [413, false, ['CONTRACT_TEMPLATE_FILE_TOO_LARGE']],
-  [422, false, ['AI_TEST_CHAT_POLICY_BLOCKED']],
+  [422, false, ['AI_TEST_CHAT_POLICY_BLOCKED', 'AI_WEBSITE_POLICY_BLOCKED']],
   [
     500,
     false,
@@ -188,6 +191,7 @@ const groups: readonly (readonly [number, boolean, readonly string[]])[] = [
     true,
     [
       'AI_MODEL_TEST_UNAVAILABLE',
+      'AI_WEBSITE_BUSY',
       'NOTIFICATION_TEMPLATE_DELIVERY_FAILED',
       'STORAGE:CONNECTION_FAILED',
       'STORAGE:UNAVAILABLE',

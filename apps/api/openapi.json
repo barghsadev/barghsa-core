@@ -26699,6 +26699,36 @@
         ]
       }
     },
+    "/api/public/knowledge/availability": {
+      "get": {
+        "operationId": "AiWebsiteChatController_availability",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Check the published website knowledge guide",
+        "tags": [
+          "Public knowledge"
+        ]
+      }
+    },
+    "/api/public/knowledge/questions": {
+      "post": {
+        "operationId": "AiWebsiteChatController_ask",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Ask a stateless question using published public knowledge",
+        "tags": [
+          "Public knowledge"
+        ]
+      }
+    },
     "/api/saving/orders": {
       "get": {
         "operationId": "SavingOrderController_list",

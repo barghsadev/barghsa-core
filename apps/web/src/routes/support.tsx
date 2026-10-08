@@ -4,6 +4,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { Card, CardContent } from '@barghsa/ui';
 import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { PublicKnowledgeAssistant } from '../components/PublicKnowledgeAssistant.js';
 
 export const Route = createFileRoute('/support')({
   component: SupportPage,
@@ -141,6 +142,7 @@ function SupportPage() {
                   </div>
                 </div>
               </div>
+              <PublicKnowledgeAssistant locale={locale} />
             </div>
           </CardContent>
 

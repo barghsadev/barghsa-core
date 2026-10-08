@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect andimplement the required actual anonymous website consumer using onlypublished public knowledge andthe configured website slot. Reuse existing inference,budgets,queue,redaction,policy andsafe source rendering;verify anonymous/profile isolation andpublication changes. Preserve explicit remaining staff/Telegram/tool scope criteria.
+Inspect and implement actual fixed staff-slot knowledge consumption through existing session and role authorization, with current authority and publication checks. Preserve unresolved business profile-data/tool scope and linked Telegram criteria.
 
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
