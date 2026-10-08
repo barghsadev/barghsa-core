@@ -1,6 +1,10 @@
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import {
   Button,
@@ -92,7 +96,10 @@ export function ConsultationDetailPage() {
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const actorId = useAccountUser();
-  const scope = `${actorId ?? ''}:${requestId}`;
+  const profileRevision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
+  const scope = JSON.stringify([actorId, profileRevision, requestId]);
   const currentScope = useRef(scope);
   const generation = useRef(0);
   if (currentScope.current !== scope) {
@@ -147,6 +154,59 @@ export function ConsultationDetailPage() {
     },
     []
   );
+  const detailQueryKey = queryKeys.consultations.detail(
+    {
+      context: 'account',
+      ownerId: actorId?.trim() ? actorId : reader,
+      accountId: actorId,
+      revision: profileRevision,
+    },
+    JSON.stringify([reader, scope, revision])
+  );
+  const detailQuery = useServerDetailQuery<Detail>({
+    queryKey: detailQueryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(`/api/consultations/requests/${encodeURIComponent(requestId)}`, {
+        credentials: 'include',
+        signal,
+      });
+      if (!response.ok) throw new Error('request');
+      const value = (await response.json()) as Detail;
+      if (
+        !value ||
+        value.request?.id !== requestId ||
+        !consultationUuid(value.request.profile_id) ||
+        typeof value.request.status !== 'string' ||
+        typeof value.request.product_snapshot?.title?.en !== 'string' ||
+        typeof value.request.product_snapshot?.title?.fa !== 'string' ||
+        !Array.isArray(value.history) ||
+        !value.history.every(
+          (event) =>
+            typeof event.status === 'string' &&
+            typeof event.actor_type === 'string' &&
+            (event.reason === null || typeof event.reason === 'string') &&
+            typeof event.created_at === 'string'
+        ) ||
+        !Array.isArray(value.adjustments) ||
+        !Array.isArray(value.refunds)
+      )
+        throw new Error('request');
+      if (
+        (value.request.fee !== null &&
+          (typeof value.request.fee !== 'string' || !/^[0-9]+$/.test(value.request.fee))) ||
+        !value.adjustments.every(
+          (item) => item && typeof item.amount === 'string' && /^[0-9]+$/.test(item.amount)
+        ) ||
+        !value.refunds.every(
+          (item) => item && typeof item.amount === 'string' && /^[0-9]+$/.test(item.amount)
+        )
+      )
+        throw new Error('request');
+      return value;
+    },
+  });
   useEffect(() => {
     const controller = new AbortController();
     const capturedGeneration = generation.current;
@@ -154,33 +214,13 @@ export function ConsultationDetailPage() {
     setLoading(true);
     setError(false);
     setDetail(null);
-    void fetch(`/api/consultations/requests/${encodeURIComponent(requestId)}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('request');
-        const value = (await response.json()) as Detail;
-        if (
-          !value ||
-          value.request?.id !== requestId ||
-          !consultationUuid(value.request.profile_id) ||
-          typeof value.request.status !== 'string' ||
-          typeof value.request.product_snapshot?.title?.en !== 'string' ||
-          typeof value.request.product_snapshot?.title?.fa !== 'string' ||
-          !Array.isArray(value.history) ||
-          !value.history.every(
-            (event) =>
-              typeof event.status === 'string' &&
-              typeof event.actor_type === 'string' &&
-              (event.reason === null || typeof event.reason === 'string') &&
-              typeof event.created_at === 'string'
-          ) ||
-          !Array.isArray(value.adjustments) ||
-          !Array.isArray(value.refunds)
-        )
-          throw new Error('request');
-        return value;
+    void detailQuery
+      .refetch()
+      .then((reply) => {
+        if (controller.signal.aborted || capturedGeneration !== generation.current)
+          throw new Error('Abandoned consultation read');
+        if (!reply.isSuccess || !reply.data) throw new Error('request');
+        return reply.data;
       })
       .then((result) => {
         if (controller.signal.aborted || capturedGeneration !== generation.current) return;
@@ -221,7 +261,10 @@ export function ConsultationDetailPage() {
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      void client.cancelQueries({ queryKey: detailQueryKey, exact: true });
+    };
   }, [scope, revision]);
 
   function provideInfo(event: FormEvent<HTMLFormElement>) {

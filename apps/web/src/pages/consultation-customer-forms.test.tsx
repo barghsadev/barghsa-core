@@ -1,4 +1,5 @@
-import { QueryProvider } from '../test/query-provider.js';
+import { QueryProvider, QueryComponentProvider } from '../test/query-provider.js';
+import { refreshProfileContext } from '../lib/profile-context.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -126,7 +127,8 @@ function button(host: ParentNode, text: string) {
 async function mount(
   Page: typeof ConsultationsPage | typeof ConsultationDetailPage,
   handler: (url: string, options?: RequestInit) => Promise<Response>,
-  locale: 'en' | 'fa' = 'en'
+  locale: 'en' | 'fa' = 'en',
+  Provider = QueryProvider
 ) {
   document.documentElement.lang = locale;
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -137,11 +139,11 @@ async function mount(
   const render = async (actor = 'customer-one') =>
     act(async () =>
       root.render(
-        <QueryProvider>
+        <Provider>
           <AccountUserProvider value={actor}>
             <Page />
           </AccountUserProvider>
-        </QueryProvider>
+        </Provider>
       )
     );
   await render();
@@ -691,6 +693,157 @@ it('history denial preserves an unconfirmed intake and its exact original retry 
       to: '/consultations/$requestId',
       params: { requestId: browseRequestId },
     });
+  } finally {
+    await view.close();
+  }
+});
+
+it.each(['fee', 'adjustment', 'refund'] as const)(
+  'rejects numeric consultation %s money before trusted detail rendering',
+  async (field) => {
+    const value = {
+      ...detail(),
+      request: { ...detail().request },
+      adjustments: [] as unknown[],
+      refunds: [] as unknown[],
+    };
+    const numeric = JSON.parse('9007199254740993') as number;
+    if (field === 'fee') Object.assign(value.request, { fee: numeric });
+    if (field === 'adjustment')
+      value.adjustments.push({
+        id: 'adjustment',
+        amount: numeric,
+        adjustment_kind: 'charge',
+        state: 'Paid',
+      });
+    if (field === 'refund')
+      value.refunds.push({
+        id: 'refund',
+        amount: numeric,
+        state: 'Approved',
+        destination: 'wallet',
+      });
+    const view = await mount(ConsultationDetailPage, async () => Response.json(value));
+    try {
+      expect(view.host.querySelector('form')).toBeNull();
+      expect(view.host.textContent).not.toContain('Private requested detail');
+      expect(view.host.textContent).toContain(copy('loadError'));
+    } finally {
+      await view.close();
+    }
+  }
+);
+
+it('keeps consultation detail reads manual and cancels an explicit reload on unmount', async () => {
+  let reads = 0,
+    finish!: (response: Response) => void,
+    signal!: AbortSignal;
+  const writes: unknown[] = [];
+  const view = await mount(ConsultationDetailPage, async (url, init) => {
+    if (init?.method) {
+      writes.push(init.body);
+      return validation(['reason']);
+    }
+    if (++reads === 2) {
+      signal = init?.signal as AbortSignal;
+      return new Promise<Response>((resolve) => {
+        finish = resolve;
+      });
+    }
+    return Response.json(read(url));
+  });
+  await view.fill('Unsent reply');
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(reads).toBe(1);
+  await view.click(copy('informationReload'));
+  expect(signal).toBeInstanceOf(AbortSignal);
+  expect(signal.aborted).toBe(false);
+  await view.close();
+  expect(signal.aborted).toBe(true);
+  await act(async () => finish(Response.json(detail())));
+  expect(view.host.textContent).toBe('');
+  expect(writes).toEqual([]);
+});
+
+it('cancels an old consultation read after a profile revision without replacing its provider', async () => {
+  let phase = 'accepted',
+    signal!: AbortSignal,
+    finish!: (response: Response) => void;
+  const view = await mount(
+    ConsultationDetailPage,
+    async (url, init) => {
+      if (phase === 'denied') return new Response('{}', { status: 403 });
+      if (phase === 'pending') {
+        signal = init?.signal as AbortSignal;
+        return new Promise<Response>((resolve) => {
+          finish = resolve;
+        });
+      }
+      return Response.json(read(url));
+    },
+    'en',
+    QueryComponentProvider
+  );
+  try {
+    await view.fill('Old private draft');
+    phase = 'pending';
+    await view.click(copy('informationReload'));
+    phase = 'denied';
+    await act(async () => refreshProfileContext());
+    expect(signal.aborted).toBe(true);
+    await act(async () => finish(Response.json(detail())));
+    expect(view.host.querySelector('form')).toBeNull();
+    expect(view.host.textContent).not.toContain('Private requested detail');
+    expect(view.host.textContent).not.toContain('Old private draft');
+    expect(view.host.textContent).toContain(copy('loadError'));
+  } finally {
+    await view.close();
+  }
+});
+
+it('keeps unsent consultation information through a rejected fresh read and authorized manual recovery', async () => {
+  let valid = true,
+    reads = 0;
+  const view = await mount(ConsultationDetailPage, async () => {
+    reads++;
+    return Response.json(valid ? detail() : { request: { id: routing.requestId } });
+  });
+  try {
+    await view.fill(' Raw retained reply ');
+    valid = false;
+    await view.click(copy('informationReload'));
+    expect(view.host.querySelector('form')).toBeNull();
+    expect(view.host.textContent).not.toContain('Private requested detail');
+    valid = true;
+    await view.click(copy('informationReload'));
+    expect(view.host.querySelector<HTMLTextAreaElement>('#consultation-information')!.value).toBe(
+      ' Raw retained reply '
+    );
+    expect(reads).toBe(3);
+  } finally {
+    await view.close();
+  }
+});
+
+it('renders consultation fee and ledger amounts exactly from decimal strings', async () => {
+  const value = {
+    ...detail(),
+    request: { ...detail().request, fee: '9007199254740993' },
+    adjustments: [
+      { id: 'adjustment', amount: '9007199254740993', adjustment_kind: 'charge', state: 'Paid' },
+    ],
+    refunds: [
+      { id: 'refund', amount: '9007199254740993', state: 'Completed', destination: 'wallet' },
+    ],
+  };
+  const view = await mount(ConsultationDetailPage, async () => Response.json(value));
+  try {
+    expect(view.host.textContent).toContain(new Intl.NumberFormat('en').format(9007199254740993n));
+    expect(view.host.querySelector('form')).not.toBeNull();
   } finally {
     await view.close();
   }
