@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 486 | Accepted with unchanged source bindings. |
-| verify | 803 | Existing work may be complete; inspect evidence before building. |
+| done | 491 | Accepted with unchanged source bindings. |
+| verify | 798 | Existing work may be complete; inspect evidence before building. |
 | partial | 72 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,13 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing AI model catalogue, encrypted credentials, capability validation, durable connection tests, admin UI and circuit integration together. Reuse current provider/authority evidence; build only demonstrated gaps. Live model/provider and pending shared provider-pause policy remain separate.
+Inspect existing knowledge catalogue, source processing/vector chunks, groups and test query together. Reuse current model/provider/authority evidence; build only demonstrated requirements. Preserve later working modules while reconciling earlier partial management acceptance.
 
-- `02-auth-users-admin.md#T-09.11.01`: AI model management
-- `05-notifications-documents-ai.md#T-05.16.01`: AI model entity & CRUD
-- `05-notifications-documents-ai.md#T-05.16.02`: AI model test
-- `05-notifications-documents-ai.md#T-05.16.03`: Model admin UI
-- `05-notifications-documents-ai.md#T-05.16.04`: AI model circuit breaker integration
+- `02-auth-users-admin.md#T-09.11.02`: Knowledge base management
+- `05-notifications-documents-ai.md#T-05.17.01`: Knowledge base entity & CRUD
+- `05-notifications-documents-ai.md#T-05.17.02`: KB processing pipeline
+- `05-notifications-documents-ai.md#T-05.17.03`: KB Groups
+- `05-notifications-documents-ai.md#T-05.17.04`: KB test query
 
 ## v0.2.0: Complete customer journeys
 
@@ -530,7 +530,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | done | Earlier acceptance_verified | SMS.ir configuration |
 | `02-auth-users-admin.md#T-09.06.03` | done | Earlier acceptance_verified | Notification daytime window configuration |
-| `02-auth-users-admin.md#T-09.11.01` | verify | Earlier acceptance_verified | AI model management |
+| `02-auth-users-admin.md#T-09.11.01` | done | Earlier acceptance_verified | AI model management |
 | `02-auth-users-admin.md#T-09.11.02` | partial | Earlier partial | Knowledge base management |
 | `02-auth-users-admin.md#T-09.11.03` | verify | Earlier acceptance_verified | Policy management |
 | `02-auth-users-admin.md#T-09.11.04` | partial | Earlier partial | AI agent management |
@@ -601,10 +601,10 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.14.03` | partial | Recorded batch work | Destruction job |
 | `05-notifications-documents-ai.md#T-05.15.01` | done | Recorded batch work | Multipart upload API |
 | `05-notifications-documents-ai.md#T-05.15.02` | done | Recorded batch work | Orphan detection & cleanup |
-| `05-notifications-documents-ai.md#T-05.16.01` | verify | Recorded batch work | AI model entity & CRUD |
-| `05-notifications-documents-ai.md#T-05.16.02` | verify | Recorded batch work | AI model test |
-| `05-notifications-documents-ai.md#T-05.16.03` | verify | Recorded batch work | Model admin UI |
-| `05-notifications-documents-ai.md#T-05.16.04` | verify | Recorded batch work | AI model circuit breaker integration |
+| `05-notifications-documents-ai.md#T-05.16.01` | done | Recorded batch work | AI model entity & CRUD |
+| `05-notifications-documents-ai.md#T-05.16.02` | done | Recorded batch work | AI model test |
+| `05-notifications-documents-ai.md#T-05.16.03` | done | Recorded batch work | Model admin UI |
+| `05-notifications-documents-ai.md#T-05.16.04` | done | Recorded batch work | AI model circuit breaker integration |
 | `05-notifications-documents-ai.md#T-05.17.01` | verify | Recorded batch work | Knowledge base entity & CRUD |
 | `05-notifications-documents-ai.md#T-05.17.02` | verify | Recorded batch work | KB processing pipeline |
 | `05-notifications-documents-ai.md#T-05.17.03` | verify | Recorded batch work | KB Groups |

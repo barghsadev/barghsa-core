@@ -489,15 +489,16 @@ it('opens a per-model circuit after provider failures and recovers with one prob
     "UPDATE ai_model_circuit_states SET cooldown_until=NOW()-INTERVAL '1 second' WHERE id=$1",
     [modelId]
   );
-  failCompletionMessage = 'Recovery fails';
+  failCompletionMessage = 'Reply with exactly: OK. Model=test';
   const beforeFailedRecovery = completions;
   const failedRecovery = await send({
     agentId,
     requestId: randomUUID(),
-    message: failCompletionMessage,
+    message: 'Recovery fails',
   });
   expect(failedRecovery.status).toBe(503);
   expect(completions).toBe(beforeFailedRecovery + 1);
+  expect(lastChatMessages).toEqual([{ role: 'user', content: failCompletionMessage }]);
   expect(
     (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
       .rows[0]
@@ -510,7 +511,7 @@ it('opens a per-model circuit after provider failures and recovers with one prob
   const attempts = completions;
   const recovered = await send({ agentId, requestId: randomUUID(), message: 'Recovered?' });
   expect(recovered.status).toBe(200);
-  expect(completions).toBe(attempts + 1);
+  expect(completions).toBe(attempts + 2);
   expect(
     (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
       .rows[0]

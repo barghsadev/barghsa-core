@@ -148,13 +148,17 @@ const defaultApiClient: AiModelApiClientLike = {
   },
 };
 
+export function aiModelTestPrompt(modelName: string): string {
+  return `Reply with exactly: OK. Model=${modelName}`;
+}
+
 function buildRequest(input: AiModelTestInput): {
   url: string;
   headers: Record<string, string>;
   body: Record<string, unknown>;
 } {
   const base = input.baseUrl.trim().replace(/\/+$/, '');
-  const prompt = `Reply with exactly: OK. Model=${input.modelName}`;
+  const prompt = aiModelTestPrompt(input.modelName);
   if (input.providerType === 'anthropic') {
     return {
       url: `${base}/messages`,
