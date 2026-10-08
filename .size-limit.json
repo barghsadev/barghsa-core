@@ -91,6 +91,12 @@
     "limitKB": 60
   },
   {
+    "name": "Wallet payment return panel when present",
+    "phase": "interaction",
+    "entries": ["src/components/OnlinePaymentReturnPanel.tsx"],
+    "limitKB": 5
+  },
+  {
     "name": "Wallet top-up review on demand",
     "phase": "interaction",
     "entries": ["src/components/OnlineTopUpReviewDialog.tsx"],

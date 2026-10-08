@@ -9,7 +9,7 @@ export const cardVariants = cva('bg-card text-card-foreground', {
     variant: {
       default: 'ring-1 ring-border shadow-sm',
       interactive:
-        'ring-1 ring-border shadow-sm transition-shadow hover:ring-input hover:shadow-md',
+        'cursor-pointer ring-1 ring-border shadow-sm transition-shadow hover:ring-input hover:shadow-md',
       flat: 'bg-muted',
       widget: 'ring-1 ring-border shadow-sm',
     },

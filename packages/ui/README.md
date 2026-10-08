@@ -12,6 +12,8 @@ Stories group related compound components: primitives and their variants, menus/
 
 Use the shared `DirectionProvider` around headless widgets so portal placement follows the active direction. Give NumberField its input identifier on the root, not on NumberFieldInput, so its increment/decrement controls target the correct input. A labelled AvatarBadge needs a semantic role, such as `role="img"`; decorative badges can use `aria-hidden`. Command separators are decorative listbox content and are hidden from assistive technology.
 
+`Label` accepts `required` for a decorative asterisk, localized `optional` text, and `disabled` for labels placed before disabled inputs. Keep the native input's `required`/`disabled` state in sync; the label does not change validation. `Badge dot` keeps its children as screen-reader text and shows only a colored dot on a transparent background. Input adornments compose `InputGroupInput`, logical start/end addons, labelled buttons, and associated helper/error text; block addons also work with `InputGroupTextarea`. The primitives stories demonstrate password visibility, clearing, status icons and text prefixes/suffixes without changing input binding or refs.
+
 The production-browser runner also tests the separately built catalogue:
 
 ```sh

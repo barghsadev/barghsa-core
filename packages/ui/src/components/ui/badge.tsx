@@ -33,14 +33,23 @@ function Badge({
   className,
   variant = 'default',
   size = 'default',
+  dot = false,
+  children,
   render,
   ...props
-}: useRender.ComponentProps<'span'> & VariantProps<typeof badgeVariants>) {
+}: useRender.ComponentProps<'span'> & VariantProps<typeof badgeVariants> & { dot?: boolean }) {
   return useRender({
     defaultTagName: 'span',
     props: mergeProps<'span'>(
       {
-        className: cn(badgeVariants({ variant, size }), className),
+        className: cn(
+          badgeVariants({ variant, size }),
+          dot &&
+            'min-h-0 rounded-full border-0 bg-transparent p-0 before:size-full before:rounded-full before:bg-current',
+          dot && { sm: 'size-1.5', default: 'size-2', lg: 'size-2.5' }[size ?? 'default'],
+          className
+        ),
+        children: dot ? <span className="sr-only">{children}</span> : children,
       },
       props
     ),
@@ -48,6 +57,7 @@ function Badge({
     state: {
       slot: 'badge',
       variant,
+      ...(dot ? { dot: true } : {}),
     },
   });
 }

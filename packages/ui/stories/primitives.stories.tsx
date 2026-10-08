@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Story } from '@ladle/react';
-import { Search, ArrowUpRight } from 'lucide-react';
+import { Search, ArrowUpRight, CircleAlert, CircleCheck, Eye, EyeOff, Zap } from 'lucide-react';
 import * as UI from '../src/index';
 import { useStoryText } from './story-context';
 export const Buttons: Story = () => {
@@ -30,7 +30,7 @@ export const Buttons: Story = () => {
             <Search />
           </UI.Button>
         ))}
-        <UI.Button render={<a href="#story-link" />} nativeButton={false}>
+        <UI.Button render={<a href="#story-link" />} nativeButton={false} role="link">
           {text('پیوند نمونه', 'Example link')}
           <ArrowUpRight aria-hidden="true" />
         </UI.Button>
@@ -90,21 +90,28 @@ export const Inputs: Story = () => {
 };
 export const Cards: Story = () => (
   <div className="grid gap-4 sm:grid-cols-2">
-    {(['default', 'interactive', 'flat', 'widget'] as const).map((variant) => (
-      <UI.Card key={variant} variant={variant}>
-        <UI.CardHeader>
-          <UI.CardTitle>{variant}</UI.CardTitle>
-          <UI.CardDescription>CardDescription</UI.CardDescription>
-          <UI.CardAction>
-            <UI.Badge>CardAction</UI.Badge>
-          </UI.CardAction>
-        </UI.CardHeader>
-        <UI.CardContent>CardContent</UI.CardContent>
-        <UI.CardFooter>
-          <UI.Button variant="outline">CardFooter</UI.Button>
-        </UI.CardFooter>
-      </UI.Card>
-    ))}
+    {(['default', 'interactive', 'flat', 'widget'] as const).flatMap((variant) =>
+      (['default', 'sm'] as const).map((size) => (
+        <UI.Card key={variant + size} variant={variant} size={size}>
+          <UI.CardHeader>
+            <UI.CardTitle>
+              <span className="flex items-center gap-2">
+                {variant === 'widget' ? <Zap aria-hidden="true" className="size-4" /> : null}
+                {variant} · {size}
+              </span>
+            </UI.CardTitle>
+            <UI.CardDescription>CardDescription</UI.CardDescription>
+            <UI.CardAction>
+              <UI.Badge>CardAction</UI.Badge>
+            </UI.CardAction>
+          </UI.CardHeader>
+          <UI.CardContent>CardContent</UI.CardContent>
+          <UI.CardFooter>
+            <UI.Button variant="outline">CardFooter</UI.Button>
+          </UI.CardFooter>
+        </UI.Card>
+      ))
+    )}
   </div>
 );
 export const Badges: Story = () => (
@@ -131,8 +138,149 @@ export const Badges: Story = () => (
         ))}
       </div>
     ))}
+    {(['sm', 'default', 'lg'] as const).map((size) => (
+      <div key={size} className="flex flex-wrap items-center gap-3">
+        {(
+          [
+            'default',
+            'secondary',
+            'destructive',
+            'outline',
+            'success',
+            'warning',
+            'info',
+            'purple',
+          ] as const
+        ).map((variant) => (
+          <UI.Badge key={variant} size={size} variant={variant} dot>
+            {variant} · {size}
+          </UI.Badge>
+        ))}
+      </div>
+    ))}
   </div>
 );
+
+export const Labels: Story = () => {
+  const text = useStoryText();
+  return (
+    <div className="max-w-lg space-y-5">
+      <div className="space-y-2">
+        <UI.Label htmlFor="required-name" required>
+          {text('نام ضروری', 'Required name')}
+        </UI.Label>
+        <UI.Input id="required-name" required />
+      </div>
+      <div className="space-y-2">
+        <UI.Label htmlFor="optional-name" optional={text('اختیاری', 'Optional')}>
+          {text('نام دوم', 'Other name')}
+        </UI.Label>
+        <UI.Input id="optional-name" />
+      </div>
+      <div className="space-y-2">
+        <UI.Label htmlFor="disabled-name" disabled>
+          {text('نام غیرفعال', 'Disabled name')}
+        </UI.Label>
+        <UI.Input id="disabled-name" disabled />
+      </div>
+    </div>
+  );
+};
+
+export const InputAddons: Story = () => {
+  const text = useStoryText();
+  const [visible, setVisible] = useState(false);
+  const [value, setValue] = useState('Sample');
+  return (
+    <div className="max-w-lg space-y-5">
+      <UI.Label htmlFor="secret">{text('گذرواژه نمونه', 'Sample password')}</UI.Label>
+      <UI.InputGroup>
+        <UI.InputGroupInput
+          id="secret"
+          type={visible ? 'text' : 'password'}
+          defaultValue="example"
+        />
+        <UI.InputGroupAddon align="inline-end">
+          <UI.InputGroupButton
+            size="icon-sm"
+            aria-label={
+              visible ? text('پنهان کردن', 'Hide password') : text('نمایش گذرواژه', 'Show password')
+            }
+            aria-pressed={visible}
+            onClick={() => setVisible(!visible)}
+          >
+            {visible ? <EyeOff /> : <Eye />}
+          </UI.InputGroupButton>
+        </UI.InputGroupAddon>
+      </UI.InputGroup>
+      <UI.Label htmlFor="clear-input">{text('متن نمونه', 'Sample text')}</UI.Label>
+      <UI.InputGroup>
+        <UI.InputGroupAddon>
+          <Search aria-hidden="true" />
+        </UI.InputGroupAddon>
+        <UI.InputGroupInput
+          id="clear-input"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <UI.InputGroupAddon align="inline-end">
+          <UI.InputGroupButton onClick={() => setValue('')}>
+            {text('پاک کردن', 'Clear')}
+          </UI.InputGroupButton>
+        </UI.InputGroupAddon>
+      </UI.InputGroup>
+      {(['error', 'success'] as const).map((variant) => (
+        <div key={variant} className="space-y-2">
+          <UI.Label htmlFor={'adorned-' + variant}>{variant}</UI.Label>
+          <UI.InputGroup className={variant === 'success' ? 'border-success' : undefined}>
+            <UI.InputGroupInput
+              id={'adorned-' + variant}
+              aria-invalid={variant === 'error' || undefined}
+              aria-describedby={'adorned-help-' + variant}
+            />
+            <UI.InputGroupAddon align="inline-end">
+              {variant === 'error' ? (
+                <CircleAlert aria-hidden="true" className="text-destructive" />
+              ) : (
+                <CircleCheck aria-hidden="true" className="text-success" />
+              )}
+            </UI.InputGroupAddon>
+          </UI.InputGroup>
+          <p
+            id={'adorned-help-' + variant}
+            className={
+              variant === 'error' ? 'text-sm text-destructive' : 'text-sm text-muted-foreground'
+            }
+          >
+            {variant === 'error'
+              ? text('مقدار را اصلاح کنید', 'Correct this value')
+              : text('مقدار تأیید شد', 'Value confirmed')}
+          </p>
+        </div>
+      ))}
+      <UI.Label htmlFor="money">{text('مبلغ', 'Amount')}</UI.Label>
+      <UI.InputGroup>
+        <UI.InputGroupAddon>
+          <UI.InputGroupText>IRR</UI.InputGroupText>
+        </UI.InputGroupAddon>
+        <UI.InputGroupInput id="money" inputMode="numeric" />
+        <UI.InputGroupAddon align="inline-end">
+          <UI.InputGroupText>kWh</UI.InputGroupText>
+        </UI.InputGroupAddon>
+      </UI.InputGroup>
+      <UI.Label htmlFor="group-notes">{text('یادداشت چندخطی', 'Multiline notes')}</UI.Label>
+      <UI.InputGroup>
+        <UI.InputGroupAddon align="block-start">
+          <UI.InputGroupText>{text('راهنمای نمونه', 'Sample guidance')}</UI.InputGroupText>
+        </UI.InputGroupAddon>
+        <UI.InputGroupTextarea id="group-notes" />
+        <UI.InputGroupAddon align="block-end">
+          <UI.InputGroupButton>{text('ثبت نمایشی', 'Save sample')}</UI.InputGroupButton>
+        </UI.InputGroupAddon>
+      </UI.InputGroup>
+    </div>
+  );
+};
 export const Avatars: Story = () => (
   <div className="flex flex-wrap gap-4">
     {(['sm', 'default', 'lg'] as const).map((size) => (

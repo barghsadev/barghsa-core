@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 519 | Accepted with unchanged source bindings. |
-| verify | 762 | Existing work may be complete; inspect evidence before building. |
-| partial | 82 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 523 | Accepted with unchanged source bindings. |
+| verify | 757 | Existing work may be complete; inspect evidence before building. |
+| partial | 83 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,13 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing Button, Input, Label, Card and Badge against exact primitive requirements. Reuse current catalogue and matching checks; implement only demonstrated gaps, preserve the pending headless preset/polymorphism decision, and extend targeted examples/interaction evidence. Earlier release publication remains dependency-gated.
+Inspect existing Dialog, Sheet, DropdownMenu and Popover against their exact overlay requirements. Reuse accepted portal keyboard/theme cases, implement only demonstrated size/close/placement gaps and exercise affected callers. Preserve pending preset decisions and earlier release dependency gates.
 
-- `07-ui-ux-design.md#T-07.01.02.01`: Button — variants: `default` (primary brand), `secondary`, `destructive` (danger red), `outline`, `ghost`, `link`. Sizes: `xs`, `sm`, `default`, `lg`, `xl` (full-width responsive). States: loading (spinner icon + disabled), disabled (reduced opacity + no events), active (press animation). Support `asChild` from Radix for polymorphic rendering (buttons as anchors or router Links).
-- `07-ui-ux-design.md#T-07.01.02.02`: Input — variants: `default`, `error` (red border + error icon), `success` (green check). Sizes matching Button. States: disabled, read-only, focused (ring). Supporting elements: leading icon slot, trailing icon slot (for password visibility toggle, clear button), helper text below, error message below. Prefix/suffix text (e.g. IRR currency prefix, kWh suffix).
-- `07-ui-ux-design.md#T-07.01.02.03`: Label — association with input via `htmlFor`. Required indicator (red asterisk). Optional muted text. Disabled label styling when associated input is disabled.
-- `07-ui-ux-design.md#T-07.01.02.04`: Card — variants: `default` (bordered, shadow-sm), `interactive` (hover elevation + cursor-pointer), `flat` (no border, subtle bg), `widget` (dashboard card with icon header). Subcomponents: CardHeader, CardTitle, CardDescription, CardContent, CardFooter.
-- `07-ui-ux-design.md#T-07.01.02.05`: Badge — variants: `default` (neutral), `secondary`, `destructive`, `outline`, `success` (green), `warning` (amber), `info` (blue), `purple` (premium). Sizes: `sm`, `default`, `lg`. Dot mode (colored dot without text background). Used for status indicators throughout the app.
+- `07-ui-ux-design.md#T-07.01.03.01`: Dialog/Modal — sizes: `sm`, `default`, `lg`, `xl`, `fullscreen`. Props: open/close, onOpenChange, preventCloseOnOverlayClick (for forms), closeButton (optional). Portal rendering, focus trap, Escape to close, aria-labelledby/describedby. Animation: scale + fade on open/close.
+- `07-ui-ux-design.md#T-07.01.03.02`: Sheet (Drawer) — side: `left` (sidebar mobile menu), `right` (notification panel, details panel), `top`, `bottom` (mobile action sheet). Sizes proportional to viewport. Backdrop blur option.
+- `07-ui-ux-design.md#T-07.01.03.03`: DropdownMenu — nested submenus, checkbox items, radio items, separator, disabled items, shortcut labels. Used in table row actions, user menu, overflow menus.
+- `07-ui-ux-design.md#T-07.01.03.04`: Popover — controlled/uncontrolled, placement (top/bottom/left/right + align start/center/end), offset, arrow. Used for date picker popups, filter dropdowns, info tooltips (rich content).
 
 ## v0.2.0: Complete customer journeys
 
@@ -653,11 +652,11 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.01.06` | done | Recorded batch work | Create a `packages/ui/src/index.ts` barrel export. Verify tree-shaking: importing only Button should not pull in Dialog or DatePicker. |
 | `07-ui-ux-design.md#T-07.01.01.07` | partial | Recorded batch work | Verify all shadcn/ui components render correctly in RTL mode. Patch any component that uses hardcoded `left`/`right` margins or assumes LTR direction. |
 | `07-ui-ux-design.md#T-07.01.01.08` | partial | Recorded batch work | Verify all Base UI components respect the theme's CSS custom properties and dark mode. Fix any hardcoded colors in vendor components. |
-| `07-ui-ux-design.md#T-07.01.02.01` | verify | Inventory needed | Button — variants: `default` (primary brand), `secondary`, `destructive` (danger red), `outline`, `ghost`, `link`. Sizes: `xs`, `sm`, `default`, `lg`, `xl` (full-width responsive). States: loading (spinner icon + disabled), disabled (reduced opacity + no events), active (press animation). Support `asChild` from Radix for polymorphic rendering (buttons as anchors or router Links). |
-| `07-ui-ux-design.md#T-07.01.02.02` | verify | Inventory needed | Input — variants: `default`, `error` (red border + error icon), `success` (green check). Sizes matching Button. States: disabled, read-only, focused (ring). Supporting elements: leading icon slot, trailing icon slot (for password visibility toggle, clear button), helper text below, error message below. Prefix/suffix text (e.g. IRR currency prefix, kWh suffix). |
-| `07-ui-ux-design.md#T-07.01.02.03` | verify | Inventory needed | Label — association with input via `htmlFor`. Required indicator (red asterisk). Optional muted text. Disabled label styling when associated input is disabled. |
-| `07-ui-ux-design.md#T-07.01.02.04` | verify | Inventory needed | Card — variants: `default` (bordered, shadow-sm), `interactive` (hover elevation + cursor-pointer), `flat` (no border, subtle bg), `widget` (dashboard card with icon header). Subcomponents: CardHeader, CardTitle, CardDescription, CardContent, CardFooter. |
-| `07-ui-ux-design.md#T-07.01.02.05` | verify | Inventory needed | Badge — variants: `default` (neutral), `secondary`, `destructive`, `outline`, `success` (green), `warning` (amber), `info` (blue), `purple` (premium). Sizes: `sm`, `default`, `lg`. Dot mode (colored dot without text background). Used for status indicators throughout the app. |
+| `07-ui-ux-design.md#T-07.01.02.01` | partial | Recorded batch work | Button — variants: `default` (primary brand), `secondary`, `destructive` (danger red), `outline`, `ghost`, `link`. Sizes: `xs`, `sm`, `default`, `lg`, `xl` (full-width responsive). States: loading (spinner icon + disabled), disabled (reduced opacity + no events), active (press animation). Support `asChild` from Radix for polymorphic rendering (buttons as anchors or router Links). |
+| `07-ui-ux-design.md#T-07.01.02.02` | done | Recorded batch work | Input — variants: `default`, `error` (red border + error icon), `success` (green check). Sizes matching Button. States: disabled, read-only, focused (ring). Supporting elements: leading icon slot, trailing icon slot (for password visibility toggle, clear button), helper text below, error message below. Prefix/suffix text (e.g. IRR currency prefix, kWh suffix). |
+| `07-ui-ux-design.md#T-07.01.02.03` | done | Recorded batch work | Label — association with input via `htmlFor`. Required indicator (red asterisk). Optional muted text. Disabled label styling when associated input is disabled. |
+| `07-ui-ux-design.md#T-07.01.02.04` | done | Recorded batch work | Card — variants: `default` (bordered, shadow-sm), `interactive` (hover elevation + cursor-pointer), `flat` (no border, subtle bg), `widget` (dashboard card with icon header). Subcomponents: CardHeader, CardTitle, CardDescription, CardContent, CardFooter. |
+| `07-ui-ux-design.md#T-07.01.02.05` | done | Recorded batch work | Badge — variants: `default` (neutral), `secondary`, `destructive`, `outline`, `success` (green), `warning` (amber), `info` (blue), `purple` (premium). Sizes: `sm`, `default`, `lg`. Dot mode (colored dot without text background). Used for status indicators throughout the app. |
 | `07-ui-ux-design.md#T-07.01.03.01` | verify | Inventory needed | Dialog/Modal — sizes: `sm`, `default`, `lg`, `xl`, `fullscreen`. Props: open/close, onOpenChange, preventCloseOnOverlayClick (for forms), closeButton (optional). Portal rendering, focus trap, Escape to close, aria-labelledby/describedby. Animation: scale + fade on open/close. |
 | `07-ui-ux-design.md#T-07.01.03.02` | verify | Inventory needed | Sheet (Drawer) — side: `left` (sidebar mobile menu), `right` (notification panel, details panel), `top`, `bottom` (mobile action sheet). Sizes proportional to viewport. Backdrop blur option. |
 | `07-ui-ux-design.md#T-07.01.03.03` | verify | Inventory needed | DropdownMenu — nested submenus, checkbox items, radio items, separator, disabled items, shortcut labels. Used in table row actions, user menu, overflow menus. |

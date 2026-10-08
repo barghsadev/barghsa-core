@@ -8,10 +8,7 @@ import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { TransactionList } from '../components/WalletTransactionList.js';
 import { Currency } from '../components/Currency.js';
-import {
-  OnlinePaymentReturnPanel,
-  type WalletPaymentReturn,
-} from '../components/OnlinePaymentReturnPanel.js';
+import type { WalletPaymentReturn } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
@@ -35,6 +32,11 @@ import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 
 const OnlineTopUpReviewDialog = lazy(() => import('../components/OnlineTopUpReviewDialog.js'));
+const OnlinePaymentReturnPanel = lazy(() =>
+  import('../components/OnlinePaymentReturnPanel.js').then((module) => ({
+    default: module.OnlinePaymentReturnPanel,
+  }))
+);
 const BankReceiptTopUpReviewDialog = lazy(
   () => import('../components/BankReceiptTopUpReviewDialog.js')
 );
@@ -464,12 +466,14 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       </header>
 
       {paymentReturn && (
-        <OnlinePaymentReturnPanel
-          key={`${paymentReturn.orderId}:${paymentReturn.authority}`}
-          payment={paymentReturn}
-          locale={locale}
-          onConfirmed={() => void load()}
-        />
+        <Suspense fallback={<p role="status">{t('wallet.page.reviewLoading', locale)}</p>}>
+          <OnlinePaymentReturnPanel
+            key={`${paymentReturn.orderId}:${paymentReturn.authority}`}
+            payment={paymentReturn}
+            locale={locale}
+            onConfirmed={() => void load()}
+          />
+        </Suspense>
       )}
 
       {loading ? (
