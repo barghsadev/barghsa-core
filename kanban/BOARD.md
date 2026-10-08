@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 527 | Accepted with unchanged source bindings. |
+| done | 528 | Accepted with unchanged source bindings. |
 | verify | 753 | Existing work may be complete; inspect evidence before building. |
-| partial | 83 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 82 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,22 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Apply explicit owner decisions to v0.4 requirements and acceptance. Prioritize permanent financial/contractual byte retention; preserve legal holds, approved non-financial destruction, retries and audit. Inspect existing implementation before building gaps. Then resume approved read-only Telegram assistant using the configured bot, with protected webhook and private-profile isolation.
+Reconcile explicitly approved existing storage/upload/access, AI model/slot/budget and dedicated queue representations with their actual source-bound requirements. Record approved read-only launch scope and deferred business tools/writes explicitly; inspect final implementation and remaining criteria before marking tasks done. Keep live providers, pending cadence and Telegram linkage gates separate.
 
-- `05-notifications-documents-ai.md#T-05.11.06`: Soft delete & hard delete
+- `05-notifications-documents-ai.md#T-05.09.03`: Storage config entity & admin UI
+- `05-notifications-documents-ai.md#T-05.13.01`: Signed URL generation API
+- `05-notifications-documents-ai.md#T-05.13.04`: Safe preview derivative endpoint
+- `05-notifications-documents-ai.md#T-05.12.02`: Category & limit configuration
+- `05-notifications-documents-ai.md#T-05.12.03`: Rejection handling
+- `05-notifications-documents-ai.md#T-05.13.02`: Access control middleware
+- `05-notifications-documents-ai.md#T-05.19.02`: Agent CRUD API
+- `05-notifications-documents-ai.md#T-05.20.01`: Agent slot entity & configuration
+- `05-notifications-documents-ai.md#T-05.22.01`: AuthZ for AI actions
+- `05-notifications-documents-ai.md#T-05.22.02`: Trusted-UI confirmation for writes
+- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
+- `05-notifications-documents-ai.md#T-05.23.02`: Per-model token/cost budget
+- `05-notifications-documents-ai.md#T-05.24.02`: JobService submit & process
+- `05-notifications-documents-ai.md#T-05.24.04`: JobProgress UI component
 
 ## v0.2.0: Complete customer journeys
 
@@ -583,7 +596,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.11.03` | done | Recorded batch work | Document scanning integration |
 | `05-notifications-documents-ai.md#T-05.11.04` | done | Recorded batch work | Document review workflow |
 | `05-notifications-documents-ai.md#T-05.11.05` | done | Recorded batch work | Document supersession & immutability |
-| `05-notifications-documents-ai.md#T-05.11.06` | partial | Recorded batch work | Soft delete & hard delete |
+| `05-notifications-documents-ai.md#T-05.11.06` | done | Recorded batch work | Soft delete & hard delete |
 | `05-notifications-documents-ai.md#T-05.11.07` | done | Recorded batch work | Document admin/staff UI |
 | `05-notifications-documents-ai.md#T-05.12.01` | done | Recorded batch work | File validation service |
 | `05-notifications-documents-ai.md#T-05.12.02` | partial | Recorded batch work | Category & limit configuration |

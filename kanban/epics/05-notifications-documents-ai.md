@@ -344,7 +344,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | **T-05.11.05 — Document supersession & immutability** | M | P1 |
 | When a document is replaced: old document → `Superseded`, new document → `Available` with `supersedes_document_id` pointing to old. Chain preserved for audit. Signed contracts: if `business_record_type=contract` and contract is signed → document is immutable. Immutable documents cannot transition to Superseded or Removed. | | |
 | **T-05.11.06 — Soft delete & hard delete** | L | P1 |
-| Soft delete (`Removed` state): record retained in DB, storage key retained, but not listed in normal queries. Hard delete (physical removal from S3): only for non-financial, non-contractual records, and only after configurable retention period (default 10 years for financial). `Removed` documents remain for audit queries and legal hold. | | |
+| Soft delete (`Removed` state): record retained in DB, storage key retained, but not listed in normal queries. Financial and contractual bytes are retained permanently, regardless of parent closure, configured duration or prior destruction approval. This includes invoice, contract and purchase-order documents, contract-category uploads and solar intake linked to a contract. Physical removal from S3 is permitted only for non-financial, non-contractual records after the configured retention deadline, legal approval and hold checks. `Removed` documents remain for audit queries and legal hold. Owner decision: 2026-10-08. | | |
 | **T-05.11.07 — Document admin/staff UI** | L | P1 |
 | Admin document list: searchable, filterable by state, category, business record, profile. Detail view: state history timeline, all versions (supersession chain), download button, metadata. "Upload document" button for staff. Preview inline for images/PDFs. | | |
 
@@ -405,10 +405,10 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 
 **Acceptance Criteria:**
 - Retention configured by record category (contract, invoice, payment, etc.)
-- Default: 10 years after record closure for contracts, invoices, payments, refunds, signed docs
+- Financial and contractual bytes remain permanent; the default 10-year policy never authorizes their destruction, including after closure or a prior approval
 - Other customer uploads: parent record's retention or 5 years
 - Legal hold overrides deletion
-- Destruction job: physically deletes expired objects from S3, hard-deletes record
+- Destruction job: deletes only eligible non-financial, non-contractual object versions; retains document identity, events, approvals and minimal anonymized audit history
 - Destruction requires approval, runs on schedule, fully audited
 
 | Task | Complexity | Priority |
@@ -418,7 +418,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | **T-05.14.02 — Legal hold** | M | P1 |
 | `legal_holds` table: `id`, `document_id` or `profile_id` (global hold), `reason`, `initiated_by`, `initiated_at`, `expires_at` (or null = indefinite), `released_by`, `released_at`. If any active legal hold covers a document → retention job cannot delete. Admin UI: manage legal holds (create, view, release). | | |
 | **T-05.14.03 — Destruction job** | L | P1 |
-| Scheduled worker (cron: nightly). Query documents where `state = 'Removed'` and retention period elapsed and no active legal hold. For each: 1. Generate destruction manifest (audit). 2. Delete from S3. 3. Hard-delete DB record or anonymize (keep minimal audit trail). 4. Log destruction event. Run in batches with progress reporting. | | |
+| Scheduled worker (cron: nightly). Query non-financial, non-contractual documents where `state = 'Removed'`, retention has elapsed and no active legal hold applies. For each: 1. Generate an immutable manifest for legal approval. 2. Recheck permanent retention before initial and retry deletion, then delete exact S3 versions. 3. Anonymize file metadata while retaining record identity, events and the approval/retry manifest. 4. Log destruction. Run in bounded batches with progress reporting. Earlier financial/contractual manifests are cancelled with an audit record; their bytes and historical approvals remain. Stop old destruction workers before applying the policy migration; application rollback keeps the stronger database policy. Owner permanence decision: 2026-10-08. | | |
 
 ---
 

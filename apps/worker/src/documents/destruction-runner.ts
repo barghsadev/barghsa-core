@@ -22,6 +22,7 @@ type DocumentRow = {
   upload_key: string;
   state: string;
   uploaded_by: string;
+  permanently_retained: boolean;
 };
 
 async function audit(
@@ -89,7 +90,9 @@ async function lockedItem(client: PoolClient, candidate: Item) {
   await client.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [candidate.profile_id]);
   const document = (
     await client.query<DocumentRow>(
-      'SELECT id,profile_id,business_record_type,storage_key,upload_key,state,uploaded_by FROM documents WHERE id=$1 FOR UPDATE',
+      `SELECT id,profile_id,business_record_type,storage_key,upload_key,state,uploaded_by,
+        document_is_permanently_retained(id) AS permanently_retained
+       FROM documents WHERE id=$1 FOR UPDATE`,
       [candidate.document_id]
     )
   ).rows[0];
@@ -103,6 +106,20 @@ async function lockedItem(client: PoolClient, candidate: Item) {
   return { document, item };
 }
 
+async function cancelDestruction(
+  client: PoolClient,
+  document: DocumentRow,
+  item: Item,
+  reason: string
+) {
+  await client.query(
+    `UPDATE document_destruction_items SET status='cancelled',updated_at=NOW(),
+      last_error=$2 WHERE id=$1`,
+    [item.id, reason]
+  );
+  await audit(client, document.uploaded_by, 'document_destruction_cancelled', item.id, document.id);
+}
+
 async function beginDestruction(pool: Pool, candidate: Item) {
   const client = await pool.connect();
   try {
@@ -110,6 +127,12 @@ async function beginDestruction(pool: Pool, candidate: Item) {
     const { document, item } = await lockedItem(client, candidate);
     if (!document || !item || !['approved', 'destroying'].includes(item.status)) {
       await client.query('ROLLBACK');
+      return false;
+    }
+    // Recheck even a started legacy manifest before any provider retry.
+    if (document.permanently_retained) {
+      await cancelDestruction(client, document, item, 'permanent_retention');
+      await client.query('COMMIT');
       return false;
     }
     if (item.status === 'destroying') {
@@ -139,18 +162,7 @@ async function beginDestruction(pool: Pool, candidate: Item) {
       !(await client.query<{ held: boolean }>('SELECT document_is_held($1) AS held', [document.id]))
         .rows[0]?.held;
     if (!valid) {
-      await client.query(
-        `UPDATE document_destruction_items SET status='cancelled',updated_at=NOW(),
-          last_error='eligibility_changed' WHERE id=$1`,
-        [item.id]
-      );
-      await audit(
-        client,
-        document.uploaded_by,
-        'document_destruction_cancelled',
-        item.id,
-        document.id
-      );
+      await cancelDestruction(client, document, item, 'eligibility_changed');
       await client.query('COMMIT');
       return false;
     }
@@ -177,6 +189,11 @@ async function finishDestruction(pool: Pool, candidate: Item, storage: StoragePr
     const { document, item } = await lockedItem(client, candidate);
     if (!document || !item || item.status !== 'destroying') {
       await client.query('ROLLBACK');
+      return false;
+    }
+    if (document.permanently_retained) {
+      await cancelDestruction(client, document, item, 'permanent_retention');
+      await client.query('COMMIT');
       return false;
     }
     if (
@@ -256,6 +273,7 @@ export async function runDocumentDestruction(pool: Pool, storage: StorageProvide
         continue;
       }
       if (await finishDestruction(pool, candidate, storage!)) result.destroyed++;
+      else result.cancelled++;
     } catch {
       result.failed++;
     }

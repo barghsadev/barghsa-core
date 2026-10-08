@@ -35,7 +35,12 @@ afterAll(async () => {
 });
 beforeEach(() => deleteObjectVersions.mockReset().mockResolvedValue(1));
 
-async function document(ageYears = 6, invoiceId: string | null = null) {
+async function document(
+  ageYears = 6,
+  businessId: string | null = null,
+  businessType = businessId ? 'invoice' : 'standalone',
+  category = 'document'
+) {
   const id = randomUUID();
   const uploadKey = `uploads/${id}`;
   const storageKey = `business-documents/${id}/hash`;
@@ -49,14 +54,16 @@ async function document(ageYears = 6, invoiceId: string | null = null) {
   try {
     // Build a historical removed record without waiting five years in the test clock.
     await client.query('ALTER TABLE documents DISABLE TRIGGER document_lifecycle_guard');
+    if (businessType === 'contract')
+      await client.query('ALTER TABLE documents DISABLE TRIGGER document_commit_guard');
     await client.query('BEGIN');
     await client.query(
       `INSERT INTO documents(id,profile_id,business_record_type,business_record_id,category,state,scan_state,
         upload_key,storage_key,original_name,size_bytes,uploaded_by,uploaded_by_type,removed_at)
-       VALUES($1,$2,CASE WHEN $7::uuid IS NULL THEN 'standalone' ELSE 'invoice' END::document_business_type,
-         $7,'document','Removed','Available',$3,$4,'Sensitive proof.pdf',123,$5,'customer',
+       VALUES($1,$2,$8::document_business_type,
+         $7,$9,'Removed','Available',$3,$4,'Sensitive proof.pdf',123,$5,'customer',
          NOW()-($6::int * interval '1 year'))`,
-      [id, profile, uploadKey, storageKey, user, ageYears, invoiceId]
+      [id, profile, uploadKey, storageKey, user, ageYears, businessId, businessType, category]
     );
     await client.query(
       `INSERT INTO document_events(document_id,revision,state,actor_id,reason)
@@ -69,6 +76,8 @@ async function document(ageYears = 6, invoiceId: string | null = null) {
     throw error;
   } finally {
     await client.query('ALTER TABLE documents ENABLE TRIGGER document_lifecycle_guard');
+    if (businessType === 'contract')
+      await client.query('ALTER TABLE documents ENABLE TRIGGER document_commit_guard');
     client.release();
   }
   return { id, uploadKey, storageKey };
@@ -152,9 +161,122 @@ it('retains an old removed document while its parent invoice remains open', asyn
       await pool.query('SELECT retention_deadline FROM document_retention_eligibility($1)', [
         doc.id,
       ])
-    ).rows[0].retention_deadline
-  ).toBeNull();
+    ).rows
+  ).toEqual([]);
 });
+
+it.each(['Paid', 'Cancelled', 'Refunded'])(
+  'retains fifty-year-old invoice bytes even after the parent is %s',
+  async (state) => {
+    const invoiceId = randomUUID();
+    await pool.query(
+      `INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount,refunded_amount,paid_at,cancelled_at)
+       VALUES($1,$2,$3::invoice_state,100,CASE WHEN $3='Cancelled' THEN 0 ELSE 100 END,
+         CASE WHEN $3='Refunded' THEN 100 ELSE 0 END,
+         CASE WHEN $3='Paid' THEN NOW()-INTERVAL '50 years' ELSE NULL END,
+         CASE WHEN $3='Cancelled' THEN NOW()-INTERVAL '50 years' ELSE NULL END)`,
+      [invoiceId, profile, state]
+    );
+    const doc = await document(50, invoiceId);
+    expect(await planDocumentDestruction(pool)).toBe(0);
+    expect(
+      (await pool.query('SELECT * FROM document_retention_eligibility($1)', [doc.id])).rows
+    ).toEqual([]);
+    expect(await runDocumentDestruction(pool, storage)).toMatchObject({ destroyed: 0, failed: 0 });
+    expect(deleteObjectVersions).not.toHaveBeenCalled();
+    expect(
+      (await pool.query('SELECT storage_key FROM documents WHERE id=$1', [doc.id])).rows[0]
+        .storage_key
+    ).toBe(doc.storageKey);
+  }
+);
+
+it.each(['contract', 'invoice', 'order', 'standalone'])(
+  'permanently retains old %s bytes and refuses forged destruction approvals',
+  async (type) => {
+    const doc = await document(
+      50,
+      type === 'standalone' ? null : randomUUID(),
+      type,
+      type === 'standalone' ? 'contract' : 'document'
+    );
+    expect(await planDocumentDestruction(pool)).toBe(0);
+    expect(
+      (await pool.query('SELECT * FROM document_retention_eligibility($1)', [doc.id])).rows
+    ).toEqual([]);
+    await expect(
+      pool.query(
+        `INSERT INTO document_destruction_items
+        (document_id,profile_id,policy_id,storage_key,upload_key,retention_deadline)
+       SELECT $1,$2,id,$3,$4,NOW()-INTERVAL '1 year' FROM document_retention_policies
+       WHERE business_record_type=$5 ORDER BY effective_date DESC LIMIT 1`,
+        [doc.id, profile, doc.storageKey, doc.uploadKey, type]
+      )
+    ).rejects.toThrow('retained permanently');
+    await expect(
+      pool.query('UPDATE documents SET storage_key=NULL WHERE id=$1', [doc.id])
+    ).rejects.toThrow('retained permanently');
+    expect(deleteObjectVersions).not.toHaveBeenCalled();
+  }
+);
+
+it.each(['approved', 'destroying'])(
+  'cancels a legacy %s financial manifest before calling the storage provider',
+  async (status) => {
+    const doc = await document(50, randomUUID());
+    const client = await pool.connect();
+    try {
+      await client.query(
+        'ALTER TABLE document_destruction_items DISABLE TRIGGER document_permanent_destruction_guard'
+      );
+      await client.query(
+        `INSERT INTO document_destruction_items
+          (document_id,profile_id,policy_id,storage_key,upload_key,retention_deadline,
+           status,approved_by,approved_at,destruction_started_at,attempts)
+         SELECT $1,$2,id,$3,$4,NOW()-INTERVAL '1 year',$5,$6,NOW(),
+           CASE WHEN $5='destroying' THEN NOW() ELSE NULL END,2
+         FROM document_retention_policies WHERE business_record_type='invoice'
+         ORDER BY effective_date DESC LIMIT 1`,
+        [doc.id, profile, doc.storageKey, doc.uploadKey, status, user]
+      );
+    } finally {
+      await client.query(
+        'ALTER TABLE document_destruction_items ENABLE TRIGGER document_permanent_destruction_guard'
+      );
+      client.release();
+    }
+    expect(await runDocumentDestruction(pool, storage)).toMatchObject({
+      destroyed: 0,
+      cancelled: 1,
+      failed: 0,
+    });
+    expect(deleteObjectVersions).not.toHaveBeenCalled();
+    expect(
+      (
+        await pool.query(
+          'SELECT status,last_error,attempts,approved_by FROM document_destruction_items WHERE document_id=$1',
+          [doc.id]
+        )
+      ).rows[0]
+    ).toMatchObject({
+      status: 'cancelled',
+      last_error: 'permanent_retention',
+      attempts: 2,
+      approved_by: user,
+    });
+    expect(
+      (await pool.query('SELECT storage_key FROM documents WHERE id=$1', [doc.id])).rows[0]
+        .storage_key
+    ).toBe(doc.storageKey);
+    expect(
+      (
+        await pool.query("SELECT event FROM audit_log WHERE metadata::jsonb->>'documentId'=$1", [
+          doc.id,
+        ])
+      ).rows
+    ).toContainEqual({ event: 'document_destruction_cancelled' });
+  }
+);
 
 it('cancels approval when a legal hold arrives before destruction', async () => {
   const doc = await document();

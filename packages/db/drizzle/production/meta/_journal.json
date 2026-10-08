@@ -1345,6 +1345,13 @@
       "when": 1791419299058,
       "tag": "0271_document_access_log",
       "breakpoints": true
+    },
+    {
+      "idx": 272,
+      "version": "7",
+      "when": 1791437516832,
+      "tag": "0272_permanent_document_retention",
+      "breakpoints": true
     }
   ]
 }
