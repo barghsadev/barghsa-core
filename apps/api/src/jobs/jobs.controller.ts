@@ -1,6 +1,7 @@
 import { Controller, Get, HttpCode, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
+import { relativeLinkRoute } from '@barghsa/shared/notifications';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { JobService } from './jobs.service.js';
 
@@ -35,12 +36,9 @@ export class JobsController {
     @Res() res: Response
   ): Promise<void> {
     const job = await this.jobs.get(id, req.session.userId, req.session.operatingContext);
-    if (
-      job.status === 'completed' &&
-      job.result_url?.startsWith('/') &&
-      !job.result_url.startsWith('//')
-    ) {
-      res.redirect(302, job.result_url);
+    const resultUrl = relativeLinkRoute({ link_route: job.result_url });
+    if (job.status === 'completed' && resultUrl) {
+      res.redirect(302, resultUrl);
       return;
     }
     if (job.status === 'completed') {
@@ -59,6 +57,6 @@ export class JobsController {
   @HttpCode(202)
   @ApiOperation({ summary: 'Retry your failed async job' })
   retry(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    return this.jobs.retry(id, req.session.userId, req.session.operatingContext);
+    return this.jobs.retry(id, req.session);
   }
 }

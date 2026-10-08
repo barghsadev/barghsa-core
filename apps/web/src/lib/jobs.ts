@@ -1,4 +1,5 @@
 import { withCsrf } from './csrf.js';
+import { relativeLinkRoute } from '@barghsa/shared/notifications';
 
 export interface JobStatus {
   id: string;
@@ -22,10 +23,7 @@ function parseJob(value: unknown, id: string): JobStatus {
     !Number.isInteger(job.progress_pct) ||
     Number(job.progress_pct) < 0 ||
     Number(job.progress_pct) > 100 ||
-    (job.result_url !== null &&
-      (typeof job.result_url !== 'string' ||
-        !job.result_url.startsWith('/') ||
-        job.result_url.startsWith('//')))
+    (job.result_url !== null && relativeLinkRoute({ link_route: job.result_url }) === null)
   )
     throw new Error('Invalid job response');
   return job as unknown as JobStatus;

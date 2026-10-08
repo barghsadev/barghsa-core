@@ -23,6 +23,7 @@ import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import { TicketAttachmentsService } from './ticket-attachments.service.js';
 import { createHash, randomUUID } from 'node:crypto';
+import { v7 as uuidv7 } from 'uuid';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import {
   Injectable,
@@ -946,7 +947,7 @@ export class TicketsService {
         )
       ).rows[0];
       if (!request) throw new HttpException('Export request not found', 404);
-      const jobId = request.privacy_export_job_id ?? randomUUID();
+      const jobId = request.privacy_export_job_id ?? uuidv7();
       if (!request.privacy_export_job_id) {
         await client.query(
           `INSERT INTO async_jobs(id,type,payload,created_by,operating_context)

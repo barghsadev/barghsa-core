@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 513 | Accepted with unchanged source bindings. |
-| verify | 772 | Existing work may be complete; inspect evidence before building. |
-| partial | 76 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 515 | Accepted with unchanged source bindings. |
+| verify | 768 | Existing work may be complete; inspect evidence before building. |
+| partial | 78 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing generic jobs entity, submit/process/retries, owned status/result API and JobProgress against exact requirements. Reuse matching evidence and build only demonstrated gaps.
+Reconcile exact current document/notification/AI/jobs acceptance and concrete remaining release criteria. Inspect existing staging/provider/storage operational evidence without inferring current deployment or authorizing real sends. Continue independent meaningful implementation as gates allow.
 
-- `05-notifications-documents-ai.md#T-05.24.01`: Jobs table & entity
-- `05-notifications-documents-ai.md#T-05.24.02`: JobService submit & process
-- `05-notifications-documents-ai.md#T-05.24.03`: Job status & result API
-- `05-notifications-documents-ai.md#T-05.24.04`: JobProgress UI component
+- `release-readiness#R-03.01`: Renew document, notification and AI acceptance
+- `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
 
 ## v0.2.0: Complete customer journeys
 
@@ -629,10 +627,10 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.23.02` | partial | Recorded batch work | Per-model token/cost budget |
 | `05-notifications-documents-ai.md#T-05.23.03` | done | Recorded batch work | AI request queue & concurrency limit |
 | `05-notifications-documents-ai.md#T-05.23.04` | done | Recorded batch work | Health endpoint isolation |
-| `05-notifications-documents-ai.md#T-05.24.01` | verify | Recorded batch work | Jobs table & entity |
-| `05-notifications-documents-ai.md#T-05.24.02` | verify | Inventory needed | JobService submit & process |
-| `05-notifications-documents-ai.md#T-05.24.03` | verify | Recorded batch work | Job status & result API |
-| `05-notifications-documents-ai.md#T-05.24.04` | verify | Recorded batch work | JobProgress UI component |
+| `05-notifications-documents-ai.md#T-05.24.01` | done | Recorded batch work | Jobs table & entity |
+| `05-notifications-documents-ai.md#T-05.24.02` | partial | Recorded batch work | JobService submit & process |
+| `05-notifications-documents-ai.md#T-05.24.03` | done | Recorded batch work | Job status & result API |
+| `05-notifications-documents-ai.md#T-05.24.04` | partial | Recorded batch work | JobProgress UI component |
 
 ## v0.5.0: Usable and accessible product
 

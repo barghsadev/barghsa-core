@@ -302,6 +302,7 @@ export async function generateProfileExport(
      LEFT JOIN user_profile_contexts c ON c.user_id=u.user_id
      WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3 AND t.privacy_request_type='export'
        AND t.privacy_export_job_id=$4 AND j.status='processing' AND j.lease_token=$5
+       AND j.lease_until>clock_timestamp()
        AND j.operating_context='customer' AND p.user_id=$2 AND NOT p.archived
        AND ((c.user_id IS NULL AND p.is_default) OR c.profile_id=p.id)`,
     [ticketId, userId, profileId, context.jobId, context.leaseToken]
@@ -365,6 +366,9 @@ export async function generateProfileExport(
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      // Match account-before-job lock order used by authorized retries.
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+      await client.query('SELECT id FROM async_jobs WHERE id=$1 FOR UPDATE', [context.jobId]);
       const updated = await client.query(
         `UPDATE tickets t SET privacy_export_storage_key=$5,
          privacy_export_expires_at=now()+interval '24 hours',privacy_export_downloaded_at=NULL
@@ -373,6 +377,7 @@ export async function generateProfileExport(
        WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3
          AND t.privacy_request_type='export' AND t.privacy_export_job_id=$4
          AND j.id=$4 AND j.status='processing' AND j.lease_token=$6
+         AND j.lease_until>clock_timestamp()
          AND j.operating_context='customer'
          AND p.id=t.profile_id AND p.user_id=$2 AND NOT p.archived
          AND u.user_id=$2 AND u.disabled_at IS NULL

@@ -1,0 +1,15 @@
+# Async jobs
+
+Product operations expected to exceed five seconds must authorize and validate the request, enqueue durable work, and return a job ID instead of holding an HTTP request open. The browser follows the job's status and opens its result only when complete.
+
+Use `JobService.submit(type, payload, userId, operatingContext)` from an authorized product service. It creates a UUIDv7 job with status `queued`; payloads are limited to 64 KiB and never appear in browser responses. When a parent record and its job must commit together, insert both in that product service's transaction, as the profile-export flow does. Do not expose arbitrary job submission or let payloads choose executable code.
+
+Register a trusted handler by type through `JobHandlerRegistry` at worker startup. The worker claims one eligible job using `FOR UPDATE SKIP LOCKED`, with a 60-second lease renewed every 20 seconds. Handlers receive the job ID and lease token, report integer progress from 0 through 99, and return an optional application-relative result path. Progress, renewal and final state updates require an unexpired matching lease. Handlers must enforce current product authorization before reading or publishing private data, and fence their own side effects with the same lease. Use idempotent writes and clean up unpublished storage objects when work loses authority.
+
+Unknown types stay queued until their handler is deployed. Interrupted leases can be reclaimed up to three attempts; exhausted interruptions and handler errors produce safe failure codes rather than raw exceptions. A failed job's owner may request a retry, which rechecks the current session, resets its attempt count and records an atomic audit event.
+
+`GET /api/jobs/:id` and its `/status` alias return owner- and operating-context-scoped status, progress and timestamps. `GET /api/jobs/:id/result` returns 202 while active, 409 after failure, 302 for a completed safe result path, or 204 when no safe result exists. `POST /api/jobs/:id/retry` requires session and CSRF proof. Result paths use the existing same-origin path validator in the worker, API redirect and browser parser; encoded host escapes are refused.
+
+Mount `JobProgress` with the returned ID. It polls every two seconds while queued or processing, stops on terminal state, cancels stale reads when the ID changes, and offers loading recovery, failed-job retry and the completed result link. Supply an estimated duration only when the operation can provide one; otherwise the component states that an estimate is unavailable. Persian and English labels and accessible progress/status announcements are shared with the UI package.
+
+The current worker registers the profile-export handler, and the profile lifecycle screen uses this component. Document scanning, knowledge processing and model tests have their own durable queues and status flows. Document generation and media-processing integrations must use their approved workflow when those product operations are added; their presence is not inferred from the generic framework.

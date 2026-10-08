@@ -440,7 +440,7 @@ it('creates a private archive with customer fields and eligible document bytes, 
   expect(await cleanupExpiredProfileExports(pool, provider)).toBe(0);
 });
 
-it.each(['lease change', 'audit failure'] as const)(
+it.each(['lease change', 'lease expiry', 'audit failure'] as const)(
   'removes an uploaded archive without publishing it after %s',
   async (failure) => {
     const before = (
@@ -459,6 +459,11 @@ it.each(['lease change', 'audit failure'] as const)(
             jobId,
             randomUUID(),
           ]);
+        else if (failure === 'lease expiry')
+          await pool.query(
+            "UPDATE async_jobs SET lease_until=now()-interval '1 second' WHERE id=$1",
+            [jobId]
+          );
         else
           await pool.query(`CREATE FUNCTION reject_export_audit() RETURNS trigger LANGUAGE plpgsql AS $$
           BEGIN IF NEW.event='profile_export_generated' THEN RAISE EXCEPTION 'audit unavailable'; END IF; RETURN NEW; END $$;
@@ -473,7 +478,9 @@ it.each(['lease change', 'audit failure'] as const)(
           pool,
           intercepted
         )
-      ).rejects.toThrow(failure === 'lease change' ? 'authorization changed' : 'audit unavailable');
+      ).rejects.toThrow(
+        failure === 'audit failure' ? 'audit unavailable' : 'authorization changed'
+      );
       expect(uploadedKey).toMatch(/^tmp\/profile-exports\//);
       expect(objects.has(uploadedKey)).toBe(false);
       expect(
@@ -488,7 +495,10 @@ it.each(['lease change', 'audit failure'] as const)(
         ).rows[0].count
       ).toBe(before);
     } finally {
-      await pool.query('UPDATE async_jobs SET lease_token=$2 WHERE id=$1', [jobId, leaseToken]);
+      await pool.query(
+        "UPDATE async_jobs SET lease_token=$2,lease_until=now()+interval '1 minute' WHERE id=$1",
+        [jobId, leaseToken]
+      );
       if (failure === 'audit failure')
         await pool.query(
           'DROP TRIGGER IF EXISTS reject_export_audit ON audit_log; DROP FUNCTION IF EXISTS reject_export_audit()'

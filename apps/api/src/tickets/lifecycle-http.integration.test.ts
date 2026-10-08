@@ -112,6 +112,9 @@ it('shows active-profile closure blockers and routes each type to one audited su
   const queued = await startExport(exportRequest.ticketId as string);
   expect(queued.status, http.logs()).toBe(202);
   const queuedBody = await responseBody(queued);
+  expect(queuedBody.jobId).toMatch(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+  );
   expect(queuedBody).toMatchObject({ ticketId: exportRequest.ticketId, created: true });
   const replayedJob = await startExport(exportRequest.ticketId as string);
   expect(await responseBody(replayedJob)).toMatchObject({

@@ -21,6 +21,90 @@ afterAll(async () => {
   if (db) await dropTestSchema(db.schemaName);
 });
 
+it.each(['/\\outside.test', '/%5coutside.test', '/%255coutside.test'])(
+  'refuses a handler result that escapes the application: %s',
+  async (resultUrl) => {
+    const id = randomUUID();
+    await db.pool.query(
+      "INSERT INTO async_jobs(id,type,payload,created_by) VALUES ($1,'unsafe-link','{}','owner')",
+      [id]
+    );
+    const registry = new JobHandlerRegistry();
+    registry.register('unsafe-link', async () => ({ resultUrl }));
+    expect(await runOneAsyncJob(db.pool, registry)).toBe(true);
+    expect(
+      (
+        await db.pool.query('SELECT status,result_url,error_message FROM async_jobs WHERE id=$1', [
+          id,
+        ])
+      ).rows[0]
+    ).toMatchObject({ status: 'failed', result_url: null, error_message: 'JOB_FAILED' });
+  }
+);
+
+it('does not complete an expired lease before a successor has reclaimed it', async () => {
+  const id = randomUUID();
+  await db.pool.query(
+    "INSERT INTO async_jobs(id,type,payload,created_by) VALUES ($1,'expired-owner','{}','owner')",
+    [id]
+  );
+  const registry = new JobHandlerRegistry();
+  registry.register('expired-owner', async () => {
+    await db.pool.query("UPDATE async_jobs SET lease_until=now()-interval '1 second' WHERE id=$1", [
+      id,
+    ]);
+    return { resultUrl: '/account' };
+  });
+  expect(await runOneAsyncJob(db.pool, registry)).toBe(true);
+  expect(
+    (await db.pool.query('SELECT status,result_url,lease_token FROM async_jobs WHERE id=$1', [id]))
+      .rows[0]
+  ).toMatchObject({ status: 'processing', result_url: null, lease_token: expect.any(String) });
+});
+
+it.each(['progress', 'failure'] as const)(
+  'leaves an expired lease available for recovery after stale %s',
+  async (action) => {
+    const id = randomUUID();
+    await db.pool.query(
+      "INSERT INTO async_jobs(id,type,payload,created_by) VALUES ($1,'stale-owner','{}','owner')",
+      [id]
+    );
+    const registry = new JobHandlerRegistry();
+    registry.register('stale-owner', async (_payload, context) => {
+      await db.pool.query(
+        "UPDATE async_jobs SET lease_until=now()-interval '1 second' WHERE id=$1",
+        [id]
+      );
+      if (action === 'progress')
+        await expect(context.setProgress(42)).rejects.toThrow('lease lost');
+      else throw new Error('private stale exception');
+    });
+    expect(await runOneAsyncJob(db.pool, registry)).toBe(true);
+    expect(
+      (
+        await db.pool.query(
+          'SELECT status,progress_pct,result_url,error_message,lease_token FROM async_jobs WHERE id=$1',
+          [id]
+        )
+      ).rows[0]
+    ).toMatchObject({
+      status: 'processing',
+      progress_pct: 0,
+      result_url: null,
+      error_message: null,
+      lease_token: expect.any(String),
+    });
+    const successor = new JobHandlerRegistry();
+    successor.register('stale-owner', async () => ({ resultUrl: '/account' }));
+    expect(await runOneAsyncJob(db.pool, successor)).toBe(true);
+    expect(
+      (await db.pool.query('SELECT status,attempts,result_url FROM async_jobs WHERE id=$1', [id]))
+        .rows[0]
+    ).toMatchObject({ status: 'completed', attempts: 2, result_url: '/account' });
+  }
+);
+
 it('claims a job once across competing workers, records progress, and completes with a safe URL', async () => {
   const id = randomUUID();
   await db.pool.query(

@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
+import { relativeLinkRoute } from '@barghsa/shared/notifications';
 
 interface LeasedJob {
   id: string;
@@ -72,7 +73,8 @@ export async function runOneAsyncJob(
   const renew = async () => {
     const result = await pool.query(
       `UPDATE async_jobs SET lease_until=now()+interval '60 seconds'
-       WHERE id=$1 AND status='processing' AND lease_token=$2`,
+         WHERE id=$1 AND status='processing' AND lease_token=$2
+           AND lease_until>clock_timestamp()`,
       [job.id, token]
     );
     if (result.rowCount !== 1) leaseLost = true;
@@ -95,20 +97,22 @@ export async function runOneAsyncJob(
           throw new Error('Invalid job progress');
         const result = await pool.query(
           `UPDATE async_jobs SET progress_pct=$3
-           WHERE id=$1 AND status='processing' AND lease_token=$2`,
+             WHERE id=$1 AND status='processing' AND lease_token=$2
+               AND lease_until>clock_timestamp()`,
           [job.id, token, percentage]
         );
         if (result.rowCount !== 1) throw new Error('Async job lease lost');
       },
     });
     const resultUrl = output?.resultUrl ?? null;
-    if (resultUrl !== null && (!resultUrl.startsWith('/') || resultUrl.startsWith('//')))
+    if (resultUrl !== null && relativeLinkRoute({ link_route: resultUrl }) === null)
       throw new Error('Invalid job result URL');
     if (leaseLost) throw new Error('Async job lease lost');
     await pool.query(
       `UPDATE async_jobs SET status='completed',progress_pct=100,result_url=$3,
          error_message=NULL,lease_token=NULL,lease_until=NULL,completed_at=now()
-       WHERE id=$1 AND status='processing' AND lease_token=$2`,
+         WHERE id=$1 AND status='processing' AND lease_token=$2
+           AND lease_until>clock_timestamp()`,
       [job.id, token, resultUrl]
     );
   } catch {
@@ -116,7 +120,8 @@ export async function runOneAsyncJob(
     await pool.query(
       `UPDATE async_jobs SET status='failed',error_message='JOB_FAILED',
          lease_token=NULL,lease_until=NULL,completed_at=now()
-       WHERE id=$1 AND status='processing' AND lease_token=$2`,
+         WHERE id=$1 AND status='processing' AND lease_token=$2
+           AND lease_until>clock_timestamp()`,
       [job.id, token]
     );
   } finally {

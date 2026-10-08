@@ -18,6 +18,20 @@ afterEach(() => {
   document.cookie = 'barghsa_csrf=; Max-Age=0; Path=/';
 });
 
+it.each(['/\\outside.test', '/%5coutside.test', '/%255coutside.test'])(
+  'refuses an escaped job result before rendering a link: %s',
+  async (resultUrl) => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ ...job, result_url: resultUrl }),
+      })
+    );
+    await expect(fetchJobStatus('job-1')).rejects.toThrow('Invalid job response');
+  }
+);
+
 it('accepts an owner-scoped job and refuses an external result link', async () => {
   const fetcher = vi
     .fn()
