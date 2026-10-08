@@ -1,6 +1,9 @@
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { Link, useParams } from '@tanstack/react-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { queryKeys } from '../lib/query-keys.js';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
@@ -75,6 +78,8 @@ export function SavingOrderDetailPage() {
   const copy = (key: string) => tSaving(key, locale);
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
   const scope = JSON.stringify([actor, profileRevision, orderId]);
   const currentScope = useRef(scope);
   currentScope.current = scope;
@@ -94,22 +99,40 @@ export function SavingOrderDetailPage() {
       return;
     setRevision((value) => value + 1);
   }
+  const detailQueryKey = queryKeys.saving.detail(
+    {
+      context: 'account',
+      ownerId: actor?.trim() ? actor : reader,
+      accountId: actor,
+      revision: profileRevision,
+    },
+    JSON.stringify([reader, scope, orderId, revision])
+  );
+  const detailQuery = useServerDetailQuery<Detail>({
+    queryKey: detailQueryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(`/api/saving/orders/${orderId}`, {
+        credentials: 'include',
+        signal,
+      });
+      if (!response.ok) throw new Error('order');
+      return response.json() as Promise<Detail>;
+    },
+  });
   useEffect(() => {
     if (commandLock.current.scope === scope && commandLock.current.locked) return;
     const controller = new AbortController();
     setDetail(null);
     setState('loading');
-    void fetch(`/api/saving/orders/${orderId}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('order');
-        return response.json() as Promise<Detail>;
-      })
-      .then((result) => {
+    void detailQuery
+      .refetch()
+      .then((reply) => {
+        if (controller.signal.aborted) return;
+        if (!reply.isSuccess || !reply.data) throw new Error('order');
         if (!controller.signal.aborted) {
-          setDetail({ scope, value: result });
+          setDetail({ scope, value: reply.data });
           setState('ready');
         }
       })
@@ -119,7 +142,10 @@ export function SavingOrderDetailPage() {
           setState('error');
         }
       });
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      void client.cancelQueries({ queryKey: detailQueryKey, exact: true });
+    };
   }, [orderId, revision, scope]);
   const action = detail ? savingNextAction(detail) : null;
   const latestCompletedStage = detail?.stages.filter((stage) => stage.completed_at).at(-1);

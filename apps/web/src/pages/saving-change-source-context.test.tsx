@@ -180,3 +180,53 @@ it('withdraws current whole-resource detail and ignores an obsolete same-scope w
   await act(async () => old.onWithdrawal!());
   expect(host.textContent).toContain('Private change workspace');
 });
+
+it('keeps saving detail reads manual and aborts a fresh owned read on unmount', async () => {
+  const signals: AbortSignal[] = [];
+  let hold = false,
+    finish!: (response: Response) => void;
+  const mock = vi.fn(async (_url: string, init?: RequestInit) => {
+    signals.push(init?.signal as AbortSignal);
+    if (hold)
+      return new Promise<Response>((resolve) => {
+        finish = resolve;
+      });
+    return Response.json(detail());
+  });
+  await render(mock);
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(mock).toHaveBeenCalledTimes(1);
+  hold = true;
+  await act(async () => panel.props!.onChanged());
+  expect(mock).toHaveBeenCalledTimes(2);
+  expect(signals[1]).toBeInstanceOf(AbortSignal);
+  expect(signals[1]!.aborted).toBe(false);
+  await act(async () => root!.unmount());
+  root = undefined;
+  expect(signals[1]!.aborted).toBe(true);
+  await act(async () => finish(Response.json(detail())));
+  expect(host.textContent).toBe('');
+});
+
+it('does not reuse an accepted saving detail after a failed fresh read', async () => {
+  let fail = false;
+  const mock = vi.fn(async () =>
+    fail ? new Response('{}', { status: 503 }) : Response.json(detail())
+  );
+  await render(mock);
+  fail = true;
+  await act(async () => panel.props!.onChanged());
+  expect(mock).toHaveBeenCalledTimes(2);
+  expect(host.textContent).not.toContain('Private change workspace');
+  expect(host.textContent).not.toContain('Old street');
+  fail = false;
+  const retry = [...host.querySelectorAll('button')].find((b) => b.textContent === 'Try again')!;
+  await act(async () => retry.click());
+  expect(mock).toHaveBeenCalledTimes(3);
+  expect(host.textContent).toContain('Private change workspace');
+  expect(host.textContent).toContain('Old street');
+});
