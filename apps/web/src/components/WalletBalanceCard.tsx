@@ -3,7 +3,7 @@ import { Alert, AlertDescription, buttonVariants, cn } from '@barghsa/ui';
 import { exactIrr } from '@barghsa/i18n/numbers';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { Currency } from './Currency.js';
 
 export interface WalletBalanceCardProps {

@@ -1,5 +1,5 @@
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
-import { t as appText, type Locale } from '@barghsa/i18n/app';
+import { t as appText, type Locale } from '@barghsa/i18n/workspace';
 import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { ReceiptAttachmentPreview } from './ReceiptAttachmentPreview.js';

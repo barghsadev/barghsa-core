@@ -14,7 +14,7 @@ import {
   FileText,
   BookOpenText,
 } from 'lucide-react';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js';

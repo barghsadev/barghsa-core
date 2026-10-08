@@ -10,7 +10,7 @@ import {
   cn,
   type ListView,
 } from '@barghsa/ui';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
 import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import {

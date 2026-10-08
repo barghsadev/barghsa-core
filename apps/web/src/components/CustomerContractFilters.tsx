@@ -5,7 +5,7 @@ import {
 } from '../hooks/useHistoryFilterDraft.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from './HistoryFilterPanel.js';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
 import { ListSortDropdown, SelectFilter, StatusFilter, TextFilter } from '@barghsa/ui';
 import {

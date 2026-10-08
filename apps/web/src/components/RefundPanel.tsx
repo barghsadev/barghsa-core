@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n/admin-ui';
-import { t as appText } from '@barghsa/i18n/app';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
 import { Button, Card, CardContent, Input, Field, FieldLabel, StatusBadge } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';

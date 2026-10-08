@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@barghsa/ui';
-import { t, type Locale } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
 
 /** Read the exact captured targets; a queue page cannot establish their saved status. */
 export function OperationalCommandReview<T extends { id: string }>({

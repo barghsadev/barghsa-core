@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { tSaving } from '@barghsa/i18n/saving';
 import { FileCheck2, Package, LifeBuoy, ReceiptText, ArrowUpRight } from 'lucide-react';
 import { cn } from '@barghsa/ui';

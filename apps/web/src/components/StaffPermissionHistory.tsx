@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState } from 'react';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';

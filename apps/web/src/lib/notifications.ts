@@ -1,5 +1,6 @@
 import { notificationLink } from '@barghsa/shared/notifications';
-import { t, type Locale } from '@barghsa/i18n/app';
+import type { Locale } from '@barghsa/i18n/app';
+export { notificationContent } from './notification-content.js';
 import { withCsrf } from './csrf.js';
 import { isAccountSettingsPath } from './session-role.js';
 
@@ -291,17 +292,4 @@ export function toNavigationTarget(
     target.search = item.linkParams as Record<string, unknown>;
   }
   return target;
-}
-
-export function notificationContent(
-  item: NotificationItem,
-  locale: Locale
-): { title: string; body: string } {
-  return (
-    item.localizedContent?.[locale] ??
-    item.localizedContent?.original ?? {
-      title: interpolate(t(item.titleI18nKey, locale), item.params),
-      body: interpolate(t(item.bodyI18nKey, locale), item.params),
-    }
-  );
 }

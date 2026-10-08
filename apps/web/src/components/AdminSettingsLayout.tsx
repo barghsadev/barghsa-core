@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { Label, NativeSelect, NativeSelectOptGroup, NativeSelectOption } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { activeAdminSettingsPath, adminSettingsGroups } from '../lib/admin-settings-navigation.js';
 import type { NavigationGroup } from './AppShell.js';
 

@@ -1,8 +1,8 @@
 import { FinancialReviewSummary } from '@barghsa/ui';
 import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
-import { t as appText } from '@barghsa/i18n/app';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';

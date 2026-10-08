@@ -1,4 +1,4 @@
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import {
   CreditCardIcon,
   FileTextIcon,

@@ -4,7 +4,7 @@ import {
   parseInvoiceBankReceiptRejectReason,
 } from '@barghsa/shared/finance/browser';
 import { tWalletReceipts as walletText } from '@barghsa/i18n/wallet-receipts';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { useLocale } from './useLocale.js';
 import { useWizardForm as useDraftForm } from './useWizardForm.js';
 import { useActionFieldErrors } from './useActionFieldErrors.js';

@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 
 export interface ElectricityContractTermsSnapshot {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/admin-ui';
-import { t as appText } from '@barghsa/i18n/app';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
+import { t as appText } from '@barghsa/i18n/workspace';
 import type { InvoiceDueAtOverrideSnapshot } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';

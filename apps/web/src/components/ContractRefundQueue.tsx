@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { RefundDecisionControls, type RefundDecisionDraft } from './RefundDecisionControls.js';
 import { RefundFormAlert } from './RefundFormFeedback.js';
 import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js';
 import { validRefundReceipt } from '../lib/refund-receipt.js';
 import type { RefundDecisionValues, RefundOperation } from '../hooks/useRefundForm.js';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';

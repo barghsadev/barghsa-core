@@ -1,6 +1,6 @@
 import { t, type Locale } from '@barghsa/i18n/app';
+import { notificationContent } from '../lib/notification-content.js';
 import {
-  notificationContent,
   formatRelativeTime,
   toNavigationTarget,
   type NotificationItem,

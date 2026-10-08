@@ -11,7 +11,7 @@ import {
   NativeSelectOption,
 } from '@barghsa/ui';
 import { tDuePeriods as t } from '@barghsa/i18n/invoice-due-periods';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { type ServiceDuePeriodSetting, type ServiceDuePeriodType } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';

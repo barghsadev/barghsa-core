@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { dashboardText } from '@barghsa/i18n/dashboard';
 import { contractText } from '@barghsa/i18n/contracts';
 import { Progress } from '@barghsa/ui';

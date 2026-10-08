@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Button, Field, FieldLabel, Input, PageLoading } from '@barghsa/ui';
 import { tInvoiceCorrections as t } from '@barghsa/i18n/invoice-corrections';
-import { t as appText } from '@barghsa/i18n/app';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';

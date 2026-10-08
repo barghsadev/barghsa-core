@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Input, Label } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import { useLocale } from '../hooks/useLocale.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';

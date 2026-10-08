@@ -3,7 +3,7 @@ import { Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import { walletHistoryQueryOptions } from '../lib/wallet-history-query.js';
 import { WalletHistoryFilters } from './WalletHistoryFilters.js';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { WalletTransactionRecords, type WalletTransaction } from './WalletTransactionRecords.js';
 import { useListView } from '../hooks/useListView.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';

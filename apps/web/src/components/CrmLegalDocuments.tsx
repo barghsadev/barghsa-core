@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/crm';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-crm';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 

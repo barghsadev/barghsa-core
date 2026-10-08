@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@barghsa/ui';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 
 /** Request private image bytes only when the customer opens the receipt preview. */

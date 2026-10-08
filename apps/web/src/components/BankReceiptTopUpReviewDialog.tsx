@@ -1,6 +1,6 @@
 import { ConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
 export default function BankReceiptTopUpReviewDialog({

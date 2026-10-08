@@ -10,7 +10,7 @@ import {
   type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import type { Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {

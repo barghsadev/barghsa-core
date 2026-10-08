@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { chatTokenTotal, type TestChatResult } from '../lib/assistant-chat.js';

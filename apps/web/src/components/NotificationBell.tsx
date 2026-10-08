@@ -1,7 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { BellIcon, CheckCheckIcon } from 'lucide-react';
 import {
   LoadingSkeleton,
@@ -22,7 +22,9 @@ import {
   toNavigationTarget,
   type NotificationItem,
 } from '../lib/notifications.js';
-import { NotificationRow } from './NotificationRow.js';
+const NotificationRow = lazy(() =>
+  import('./NotificationRow.js').then((module) => ({ default: module.NotificationRow }))
+);
 
 const DROPDOWN_SIZE = 10;
 
@@ -259,12 +261,16 @@ export function NotificationBell({
                   className="flex w-full items-start gap-3 rounded-md px-1.5 py-2 text-start hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
                 >
-                  <NotificationRow
-                    item={item}
-                    locale={locale}
-                    unread={!item.isRead}
-                    operatingContext={operatingContext}
-                  />
+                  <Suspense
+                    fallback={<span role="status">{t('notifications.loading', locale)}</span>}
+                  >
+                    <NotificationRow
+                      item={item}
+                      locale={locale}
+                      unread={!item.isRead}
+                      operatingContext={operatingContext}
+                    />
+                  </Suspense>
                 </button>
               </li>
             ))}

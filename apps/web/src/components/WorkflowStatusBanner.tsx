@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { Link } from '@tanstack/react-router';
 
 export type WorkflowOwner = 'customer' | 'staff' | 'none';

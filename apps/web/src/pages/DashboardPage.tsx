@@ -12,7 +12,7 @@ import { dashboardText } from '@barghsa/i18n/dashboard';
 import { ArrowUpRight, Wallet, Gauge, ReceiptText, Package, FileCheck2 } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { WalletBalanceCard, type WalletBalanceCardProps } from '../components/WalletBalanceCard.js';
 import { QuickStatusCards, type QuickStatusCardsProps } from '../components/QuickStatusCards.js';
 import {

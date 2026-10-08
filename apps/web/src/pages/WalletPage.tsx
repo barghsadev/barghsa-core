@@ -11,7 +11,7 @@ import { Currency } from '../components/Currency.js';
 import type { WalletPaymentReturn } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import {

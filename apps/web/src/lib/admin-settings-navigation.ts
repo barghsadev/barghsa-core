@@ -1,5 +1,5 @@
 import type { NavigationGroup } from '../components/AppShell.js';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 
 /** Only implemented configuration routes. Operational queues keep the normal workspace. */
 export const ADMIN_SETTINGS_SECTIONS = [

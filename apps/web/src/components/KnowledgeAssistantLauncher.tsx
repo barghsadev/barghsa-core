@@ -1,7 +1,7 @@
 import { readAssistantAvailability, type AssistantAvailability } from '../lib/assistant-chat.js';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { BookOpenText } from 'lucide-react';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 
 const KnowledgeAssistantPanel = lazy(() => import('./KnowledgeAssistantPanel.js'));

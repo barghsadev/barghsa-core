@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Button, ListPage, ListViewToggle, PageLoading } from '@barghsa/ui';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
-import { t as appText } from '@barghsa/i18n/app';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useListView } from '../hooks/useListView.js';
 import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { ListFilterPanel, type ListFilterChip } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import type { DateRangeFilterValue, NumberRangeValue } from '@barghsa/shared/validation';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';

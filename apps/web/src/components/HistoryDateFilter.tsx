@@ -1,5 +1,5 @@
 import { DateRangeFilter, type DateRangeValue } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 
 export function HistoryDateFilter({

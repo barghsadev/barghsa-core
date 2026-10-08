@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { Button, Input, ListToolbar, ListSortDropdown, ListPage } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { encodeFinanceCursor, type FinanceCursor } from '../lib/finance-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';

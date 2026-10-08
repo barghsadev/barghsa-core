@@ -358,6 +358,21 @@
       "types": "./dist/telegram.d.ts",
       "import": "./dist/telegram.js",
       "default": "./dist/telegram.js"
+    },
+    "./workspace": {
+      "types": "./dist/workspace.d.ts",
+      "import": "./dist/workspace.js",
+      "default": "./dist/workspace.js"
+    },
+    "./workspace-crm": {
+      "types": "./dist/workspace-crm.d.ts",
+      "import": "./dist/workspace-crm.js",
+      "default": "./dist/workspace-crm.js"
+    },
+    "./workspace-admin": {
+      "types": "./dist/workspace-admin.d.ts",
+      "import": "./dist/workspace-admin.js",
+      "default": "./dist/workspace-admin.js"
     }
   },
   "scripts": {

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { Button, Input, Label, DependentSelect } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/crm';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-crm';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';

@@ -1,5 +1,5 @@
 import type { useAccountTime } from '../hooks/useAccountTime.js';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 
 import type { PendingInvitation } from '../lib/invitation-api.js';
 

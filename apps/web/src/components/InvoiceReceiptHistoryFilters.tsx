@@ -1,6 +1,6 @@
 import { TextFilter, ListToolbar, ListSortDropdown, NumberFilter } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { t } from '@barghsa/i18n/workspace';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import {
   HISTORY_SORT_OPTIONS,
   parseNumberRange,

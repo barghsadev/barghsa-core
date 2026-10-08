@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
 import { withCsrf } from '../lib/csrf.js';
 import { inputErrorFields } from '../lib/input-error-fields.js';

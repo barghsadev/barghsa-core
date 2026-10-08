@@ -1,6 +1,6 @@
 import InvoiceCorrectionsPanel from '../components/InvoiceCorrectionsPanel.js';
 import { lazy, Suspense, useState } from 'react';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { contractText } from '@barghsa/i18n/contracts';
 import { Button } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';

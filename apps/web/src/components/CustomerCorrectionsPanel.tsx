@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import { Button } from '@barghsa/ui';
-import { t, type Locale } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 

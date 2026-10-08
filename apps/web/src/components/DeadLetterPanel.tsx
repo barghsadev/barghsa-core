@@ -3,7 +3,7 @@ import { OperationalCommandReview } from './OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { Button, DateCell, TextCell, ListPage } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';

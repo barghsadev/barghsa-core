@@ -1,6 +1,6 @@
 import { Button, StatusBadge, type ListView } from '@barghsa/ui';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';

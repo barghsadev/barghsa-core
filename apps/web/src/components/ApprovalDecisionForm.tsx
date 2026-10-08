@@ -1,7 +1,7 @@
 import { useRef, type FormEvent } from 'react';
 import { z } from 'zod/mini';
 import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { Button, Label } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';

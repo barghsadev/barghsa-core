@@ -12,7 +12,7 @@ const ConversationIdentityDialog = lazy(() =>
     default: module.ConversationIdentityDialog,
   }))
 );
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 
 async function readAccount(response: Response) {
   if (!response.ok) throw new Error('Account unavailable');

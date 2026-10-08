@@ -1,6 +1,6 @@
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
 import {

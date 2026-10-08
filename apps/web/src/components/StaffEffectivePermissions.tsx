@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { validEffective, type EffectivePermissions } from '../lib/staff-permissions.js';
 import { EffectivePermissionsView } from './EffectivePermissionsView.js';

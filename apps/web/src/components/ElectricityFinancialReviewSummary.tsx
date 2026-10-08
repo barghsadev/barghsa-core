@@ -1,5 +1,5 @@
 import { FinancialReviewSummary } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import type { Locale } from '@barghsa/i18n/auth';
 
 type ElectricityLine = {

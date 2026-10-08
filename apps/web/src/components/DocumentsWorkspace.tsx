@@ -15,7 +15,7 @@ import {
   ListViewToggle,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
-import { t as appText } from '@barghsa/i18n/app';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { useCursorPageRows } from '../hooks/useCursorPageRows.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { RecordListQuery } from '../lib/record-list-query.js';

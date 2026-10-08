@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { groupPermissions, type EffectivePermissions } from '../lib/staff-permissions.js';
 

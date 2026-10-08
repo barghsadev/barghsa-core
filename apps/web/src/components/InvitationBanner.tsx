@@ -3,7 +3,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { lazy, Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { Button } from '@barghsa/ui';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import {

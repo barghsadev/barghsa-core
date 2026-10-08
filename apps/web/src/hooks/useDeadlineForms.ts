@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { tDuePeriods } from '@barghsa/i18n/invoice-due-periods';
 import { deadlineInstant } from '../lib/due-at-override.js';
 import { useLocale } from './useLocale.js';

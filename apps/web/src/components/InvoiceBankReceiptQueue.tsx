@@ -16,8 +16,8 @@ import {
   PageLoading,
   StatusBadge,
 } from '@barghsa/ui';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
-import { t as appText } from '@barghsa/i18n/app';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from '@barghsa/shared/finance/browser';
 import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';

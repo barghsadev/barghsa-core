@@ -1,5 +1,5 @@
 import { ListToolbar, TextFilter, ListSortDropdown, NumberFilter } from '@barghsa/ui';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import {
   HISTORY_SORT_OPTIONS,
   parseNumberRange,

@@ -31,7 +31,7 @@ import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
 import { WorkflowStatusBanner } from './WorkflowStatusBanner.js';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { customerContractNextAction } from '../lib/contract-guidance.js';
 
 import {

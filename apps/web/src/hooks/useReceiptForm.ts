@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from './useLocale.js';
 import { useWizardForm as useDraftForm } from './useWizardForm.js';
 import { useActionFieldErrors } from './useActionFieldErrors.js';

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { dashboardText } from '@barghsa/i18n/dashboard';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { tSaving } from '@barghsa/i18n/saving';

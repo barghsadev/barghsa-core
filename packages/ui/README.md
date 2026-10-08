@@ -31,3 +31,7 @@ BARGHSA_TEST_PREBUILT=1 node scripts/run-production-browser.mjs e2e/ladle-compon
 ```
 
 Use the prebuilt flag only after verifying matching product and catalogue outputs. The catalogue test server binds only loopback, serves the immutable story build and closes after the run. Component scans keep all accessibility assertions; failed examples must be corrected before acceptance. Catalogue evidence does not certify customer routes, live providers or release readiness.
+
+The web `QueryProvider` creates a fresh TanStack Query client for each profile revision and clears discarded clients. Ordinary reads use 30-second freshness, five-minute inactive retention and at most two transient retries. Authorization/input failures do not retry. Financial resource prefixes disable automatic focus/mount/reconnect refresh, polling and retries; mutations never retry automatically. Existing fetch owners remain in place until their scoped query keys and signal forwarding are verified. Query devtools load only in development and stay out of production and browser acceptance runs.
+
+Startup and deferred finance views use the scoped workspace message entries. The complete app, CRM and admin translators retain their legacy fallbacks for other consumers. The full dictionaries reuse the scoped message data. A caller-prefix check keeps dynamic admin labels in the scoped entry, with unchanged Persian/English values.

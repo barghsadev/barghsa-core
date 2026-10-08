@@ -3,8 +3,8 @@
  */
 import { Link } from '@tanstack/react-router';
 import { AlertTriangle, ShieldCheck } from 'lucide-react';
-import { t } from '@barghsa/i18n/app';
-import { t as tCrm } from '@barghsa/i18n/crm';
+import { t } from '@barghsa/i18n/workspace';
+import { tWorkspace as tCrm } from '@barghsa/i18n/workspace-crm';
 import { useLocale } from '../hooks/useLocale.js';
 import { AdminBusinessWorkCounts } from '../components/AdminBusinessWorkCounts.js';
 import { AdminMaintenanceSummary } from '../components/AdminMaintenanceSummary.js';

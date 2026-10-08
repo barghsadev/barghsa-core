@@ -36,8 +36,8 @@ import {
   Sun,
   MessagesSquare,
 } from 'lucide-react';
-import { t } from '@barghsa/i18n/admin-ui';
-import { t as appText } from '@barghsa/i18n/app';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { documentText } from '@barghsa/i18n/documents';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { shellText } from '@barghsa/i18n/shell';

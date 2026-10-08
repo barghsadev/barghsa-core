@@ -1,5 +1,5 @@
 import { StatusTimeline } from '@barghsa/ui';
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import type { InvoiceReceiptActivity } from '../lib/customer-invoices.js';
 
 export function ReceiptStatusTimeline({

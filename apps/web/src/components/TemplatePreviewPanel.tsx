@@ -1,7 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useState, useEffect } from 'react';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import type { Locale } from '@barghsa/i18n/app';
 import BrandedEmailPreview from './BrandedEmailPreview.js';
 import {

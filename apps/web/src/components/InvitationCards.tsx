@@ -1,4 +1,4 @@
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { Button } from '@barghsa/ui';
 import { InvitationDetails } from './InvitationDetails.js';
 import type { PendingInvitation } from '../lib/invitation-api.js';

@@ -1,6 +1,6 @@
 import { useId, type ReactNode } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { useLocale } from '../hooks/useLocale.js';
 
 /** Previews are provided by the domain; arbitrary template HTML is never executed here. */

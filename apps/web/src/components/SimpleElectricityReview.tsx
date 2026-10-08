@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/app';
+import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { PriceQuote } from '../routes/_app/electricity/order.js';

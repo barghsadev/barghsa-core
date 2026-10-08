@@ -8,7 +8,7 @@ import {
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react';
 import { Alert, Button } from '@barghsa/ui';
-import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import type { Locale } from '@barghsa/i18n/app';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
