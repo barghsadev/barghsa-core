@@ -87,6 +87,7 @@ services:
       API_TRUSTED_PROXY_IPS: ${BARGHSA_PROXY_IPS:-}
       DOCUMENT_CLAMAV_HOST: clamav
       DOCUMENT_CLAMAV_PORT: '3310'
+      AI_INFERENCE_URL: http://ai-inference:9091
     ports:
       - '127.0.0.1:4000:4000'
     depends_on:
@@ -138,6 +139,35 @@ services:
     stop_grace_period: 40s
     restart: unless-stopped
     mem_limit: 768m
+    networks: [private]
+
+  ai-inference:
+    image: ${BARGHSA_APP_IMAGE:?Set the released API/worker image}
+    pull_policy: never
+    command: [node, worker/dist/ai-inference/main.js]
+    env_file: /etc/barghsa/staging/runtime.env
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=256
+      AI_INFERENCE_HOST: '0.0.0.0'
+      AI_INFERENCE_PORT: '9091'
+      WORKER_PORT: '9091'
+      DB_POOL_MAX: '5'
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, node, worker/healthcheck.js]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+    read_only: true
+    tmpfs: ['/tmp:size=64m,mode=1777']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 40s
+    restart: unless-stopped
+    mem_limit: 384m
     networks: [private]
 
   web:

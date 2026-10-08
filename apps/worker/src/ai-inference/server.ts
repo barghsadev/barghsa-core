@@ -13,6 +13,8 @@ interface ModelRow {
   base_url: string;
   model_name: string;
   api_token: string | null;
+  is_enabled: boolean;
+  last_test_status: 'pending' | 'passed' | 'failed';
 }
 
 interface CompletionRequest {
@@ -119,12 +121,14 @@ export function createAiInferenceServer(options: {
       const body = await readRequest(req);
       const model = (
         await options.pool.query<ModelRow>(
-          'SELECT provider_type,base_url,model_name,api_token FROM ai_models WHERE id=$1',
+          'SELECT provider_type,base_url,model_name,api_token,is_enabled,last_test_status FROM ai_models WHERE id=$1',
           [body.modelId]
         )
       ).rows[0];
       if (
         !model ||
+        model.is_enabled !== true ||
+        model.last_test_status !== 'passed' ||
         model.provider_type !== body.expected.providerType ||
         model.base_url !== body.expected.baseUrl ||
         model.model_name !== body.expected.modelName

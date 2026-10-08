@@ -5,6 +5,8 @@ import { OpenAiEmbeddingClient, type ChatMessage } from '@barghsa/shared/ai-mode
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { v7 as uuidv7 } from 'uuid';
 import { AiModelSecretsService } from '../ai-models/ai-model-secrets.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { RuntimePolicy, PolicyResult } from './ai-test-chat-policy.js';
 import { evaluatePolicies, evaluatePolicyOutput } from './ai-test-chat-policy.js';
 import { redactAiText } from './ai-prompt-redaction.js';
@@ -29,6 +31,7 @@ function audiencesForSlot(slotKey: AgentSlotKey | undefined): string[] | null {
 interface TestChatSession {
   sessionId: string;
   userId: string;
+  csrfToken: string;
 }
 interface AgentModelRow {
   model_id: string;
@@ -112,6 +115,8 @@ export class AiTestChatService {
     let admitted = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, session.userId, 'admin:ai:agents');
+      await requireCurrentSession(client, session);
       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
         `ai-test-chat:${session.sessionId}:${input.requestId}`,
       ]);
@@ -185,11 +190,24 @@ export class AiTestChatService {
         started,
         false
       );
-      await pool.query(
-        `UPDATE ai_test_chat_turns SET state='completed',reply=$3,response=$4,completed_at=now()
-         WHERE session_id=$1 AND request_id=$2 AND state='processing'`,
-        [session.sessionId, input.requestId, response.reply, JSON.stringify(response)]
-      );
+      const save = await pool.connect();
+      try {
+        await save.query('BEGIN');
+        await requireStaffMutationPermission(save, session.userId, 'admin:ai:agents');
+        await requireCurrentSession(save, session);
+        const saved = await save.query(
+          `UPDATE ai_test_chat_turns SET state='completed',reply=$3,response=$4,completed_at=now()
+           WHERE session_id=$1 AND request_id=$2 AND state='processing'`,
+          [session.sessionId, input.requestId, response.reply, JSON.stringify(response)]
+        );
+        if (saved.rowCount !== 1) fail(409, 'AI_TEST_CHAT_SESSION_CHANGED');
+        await save.query('COMMIT');
+      } catch (error) {
+        await save.query('ROLLBACK').catch(() => undefined);
+        throw error;
+      } finally {
+        save.release();
+      }
       return response;
     } catch (error) {
       await pool

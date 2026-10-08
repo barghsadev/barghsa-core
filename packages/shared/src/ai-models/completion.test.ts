@@ -73,3 +73,45 @@ it('blocks private destinations without an allowlist', async () => {
     })
   ).rejects.toThrow();
 });
+
+it.each(['openai_compatible', 'anthropic'] as const)(
+  'redacts an opaque stored token echoed in a successful %s completion',
+  async (providerType) => {
+    const apiToken = 'opaque.[token]+12345678';
+    const reply = `Answer ${apiToken} then ${apiToken} and sk-truncatedecho`;
+    const server = createServer((_request, response) => {
+      response.end(
+        JSON.stringify(
+          providerType === 'anthropic'
+            ? { content: [{ text: reply }], usage: { input_tokens: 3, output_tokens: 2 } }
+            : {
+                choices: [{ message: { content: reply } }],
+                usage: { prompt_tokens: 3, completion_tokens: 2 },
+              }
+        )
+      );
+    });
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    try {
+      const address = server.address();
+      if (!address || typeof address === 'string') throw new Error('No port');
+      process.env.AI_MODEL_BASE_URL_ALLOWLIST = '127.0.0.1';
+      const result = await completeChat({
+        providerType,
+        baseUrl: `http://127.0.0.1:${address.port}/v1`,
+        modelName: 'test',
+        apiToken,
+        messages: [{ role: 'user', content: 'Hi' }],
+        temperature: 0,
+        maxTokens: 100,
+      });
+      expect(result).toEqual({
+        reply: 'Answer [REDACTED] then [REDACTED] and [REDACTED]',
+        tokenUsage: { input: 3, output: 2 },
+      });
+      expect(JSON.stringify(result)).not.toContain(apiToken);
+    } finally {
+      await new Promise<void>((resolve) => server.close(() => resolve()));
+    }
+  }
+);

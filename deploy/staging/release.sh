@@ -19,9 +19,12 @@ source "$runtime"
 source "$candidate"
 set +a
 
-for key in POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD DATABASE_URL PGDIRECT_URL REDIS_URL S3_ENDPOINT S3_PRIVATE_ENDPOINT S3_PUBLIC_ENDPOINT S3_REGION S3_BUCKET S3_ACCESS_KEY_ID S3_SECRET_ACCESS_KEY APP_PUBLIC_URL API_PUBLIC_URL SESSION_SECRET CSRF_SECRET PROVIDER_CONFIG_ENCRYPTION_KEY AUTH_DELIVERY_ENCRYPTION_KEY AI_MODEL_ENCRYPTION_KEY STORAGE_CONFIG_ENCRYPTION_KEY PAYMENT_GATEWAY_MERCHANT_ID PAYMENT_GATEWAY_WEBHOOK_SECRET; do
+for key in POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD DATABASE_URL PGDIRECT_URL REDIS_URL S3_ENDPOINT S3_PRIVATE_ENDPOINT S3_PUBLIC_ENDPOINT S3_REGION S3_BUCKET S3_ACCESS_KEY_ID S3_SECRET_ACCESS_KEY APP_PUBLIC_URL API_PUBLIC_URL SESSION_SECRET CSRF_SECRET PROVIDER_CONFIG_ENCRYPTION_KEY AUTH_DELIVERY_ENCRYPTION_KEY AI_MODEL_ENCRYPTION_KEY AI_INFERENCE_SHARED_SECRET STORAGE_CONFIG_ENCRYPTION_KEY PAYMENT_GATEWAY_MERCHANT_ID PAYMENT_GATEWAY_WEBHOOK_SECRET; do
   [[ -n "${!key:-}" ]] || { printf 'Missing runtime value: %s\n' "$key" >&2; exit 1; }
 done
+[[ ${#AI_INFERENCE_SHARED_SECRET} -ge 32 ]] || {
+  echo 'AI inference secret must be at least 32 characters' >&2; exit 1;
+}
 [[ "$APP_PUBLIC_URL" == https://stg.barghsa.com && "$API_PUBLIC_URL" == "$APP_PUBLIC_URL" ]] || {
   echo 'Public app URLs must match https://stg.barghsa.com' >&2; exit 1;
 }
@@ -53,9 +56,9 @@ rollback() {
   echo 'Release failed; restoring previous app images' >&2
   if [[ -r "$active" ]]; then
     local previous=(docker compose --env-file "$runtime" --env-file "$active" -f "$compose")
-    "${previous[@]}" up -d --no-deps api web worker || true
+    "${previous[@]}" up -d --no-deps api web worker ai-inference || true
   else
-    "${dc[@]}" stop worker web api || true
+    "${dc[@]}" stop worker web api ai-inference || true
   fi
   exit "$status"
 }
@@ -76,8 +79,9 @@ BARGHSA_PROXY_IPS=$(docker network inspect barghsa-staging-private --format '{{(
 }
 echo 'Disposable staging: no offsite backup is configured' >&2
 
-"${dc[@]}" stop worker || true
+"${dc[@]}" stop worker ai-inference || true
 "${dc[@]}" run --rm --no-deps api node run-packaged-migrations.cjs
+"${dc[@]}" up -d --no-deps --wait --wait-timeout 240 ai-inference
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 api
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 web
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 worker

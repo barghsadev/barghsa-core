@@ -13,6 +13,8 @@ const model = {
   base_url: 'https://provider.example.test/v1',
   model_name: 'model-a',
   api_token: secrets.encryptToken('provider-secret'),
+  is_enabled: true,
+  last_test_status: 'passed',
 };
 const body = {
   modelId,
@@ -41,10 +43,13 @@ async function fixture(
       input: ChatCompletionInput
     ) => Promise<{ reply: string; tokenUsage: { input: number; output: number } }>;
     maxConcurrency?: number;
+    modelState?: Partial<typeof model>;
   } = {}
 ) {
   const query = vi.fn(async (sql: string) =>
-    sql.includes('FROM ai_models') ? { rows: [model] } : { rows: [{ '?column?': 1 }] }
+    sql.includes('FROM ai_models')
+      ? { rows: [{ ...model, ...overrides.modelState }] }
+      : { rows: [{ '?column?': 1 }] }
   );
   const completion = vi.fn(
     overrides.completion ?? (async () => ({ reply: 'done', tokenUsage: { input: 1, output: 2 } }))
@@ -92,6 +97,18 @@ it('rejects stale model configuration before provider use', async () => {
   const { post, completion } = await fixture();
   const response = await post({ ...body, expected: { ...body.expected, modelName: 'old' } });
   expect(response.status).toBe(409);
+  expect(completion).not.toHaveBeenCalled();
+});
+
+it.each([
+  { is_enabled: false, last_test_status: 'passed' },
+  { is_enabled: true, last_test_status: 'pending' },
+  { is_enabled: true, last_test_status: 'failed' },
+])('refuses a model that is no longer ready before provider I/O: %j', async (modelState) => {
+  const { post, completion } = await fixture({ modelState });
+  const response = await post();
+  expect(response.status).toBe(409);
+  expect(await response.json()).toEqual({ error: 'AI_MODEL_CHANGED' });
   expect(completion).not.toHaveBeenCalled();
 });
 

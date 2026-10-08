@@ -15,6 +15,7 @@ let customerKbId: string;
 let publicKbId: string;
 let adminKbId: string;
 let completions = 0;
+let beforeProviderReply: (() => Promise<void>) | null = null;
 let lastMessages: Array<{ role: string; content: string }> = [];
 const previousEmbeddingBase = process.env.KB_EMBEDDING_BASE_URL;
 
@@ -35,6 +36,9 @@ beforeAll(async () => {
       JSON.parse(Buffer.concat(chunks).toString()) as { messages: typeof lastMessages }
     ).messages;
     completions += 1;
+    const mutation = beforeProviderReply;
+    beforeProviderReply = null;
+    await mutation?.();
     response.setHeader('content-type', 'application/json');
     response.end(
       JSON.stringify({
@@ -402,3 +406,74 @@ it('rejects a customer question before provider use when the assigned model budg
   expect(await denied.json()).toMatchObject({ error: { code: 'AI_MODEL_BUDGET_EXHAUSTED' } });
   expect(completions).toBe(before);
 }, 30_000);
+
+it.each([
+  ['disabled', 401],
+  ['revoked', 401],
+  ['expires', 401],
+  ['idle', 401],
+  ['csrf', 403],
+] as const)(
+  'denies late customer %s changes before exposing an answer',
+  async (change, status) => {
+    await http.pool.query('DELETE FROM ai_model_budgets WHERE model_id=$1', [modelId]);
+    await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+      'ai:knowledge:user:knowledge-user:profile:' + individualId,
+    ]);
+    await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+      'ai:knowledge:user:knowledge-user:profile:' + legalId,
+    ]);
+    const sessionId = headers.cookie!.split('=')[1]!;
+    const requestId = randomUUID();
+    beforeProviderReply = async () => {
+      if (change === 'disabled')
+        await http.pool.query("UPDATE users SET disabled_at=now() WHERE user_id='knowledge-user'");
+      else if (change === 'csrf')
+        await http.pool.query('UPDATE sessions SET csrf_token=$2 WHERE session_id=$1', [
+          sessionId,
+          randomUUID(),
+        ]);
+      else {
+        const column =
+          change === 'revoked'
+            ? 'revoked_at'
+            : change === 'expires'
+              ? 'expires_at'
+              : 'idle_deadline';
+        await http.pool.query(
+          'UPDATE sessions SET ' + column + "=now()-interval '1 second' WHERE session_id=$1",
+          [sessionId]
+        );
+      }
+    };
+    try {
+      const result = await ask({ requestId, message: 'Late session boundary' });
+      expect(result.status).toBe(status);
+      expect(JSON.stringify(await result.json())).not.toContain('Use the published guide.');
+      expect(
+        (
+          await http.pool.query(
+            'SELECT state FROM ai_knowledge_questions WHERE session_id=$1 AND request_id=$2',
+            [sessionId, requestId]
+          )
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT authorization_result,output FROM ai_audit_log WHERE input->>'requestId'=$1",
+            [requestId]
+          )
+        ).rows
+      ).toMatchObject([{ authorization_result: 'denied', output: { status } }]);
+    } finally {
+      beforeProviderReply = null;
+      await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='knowledge-user'");
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL,expires_at=now()+interval '1 day',idle_deadline=now()+interval '1 hour',csrf_token=$2 WHERE session_id=$1",
+        [sessionId, headers['x-csrf-token']]
+      );
+    }
+  },
+  30_000
+);

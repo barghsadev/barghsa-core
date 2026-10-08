@@ -10,6 +10,7 @@ let agentId: string;
 let modelId: string;
 let headers: Record<string, string>;
 let completions = 0;
+let beforeProviderReply: (() => Promise<void>) | null = null;
 let providerReply = 'A test answer';
 let providerFailure = false;
 let failCompletionMessage: string | null = null;
@@ -34,6 +35,9 @@ beforeAll(async () => {
     };
     lastChatMessages = payload.messages;
     completions++;
+    const mutation = beforeProviderReply;
+    beforeProviderReply = null;
+    await mutation?.();
     if (providerFailure || payload.messages.at(-1)?.content === failCompletionMessage) {
       response.writeHead(503, { 'content-type': 'application/json' });
       response.end(JSON.stringify({ error: 'temporarily unavailable' }));
@@ -661,3 +665,87 @@ it('resolves group priority, filters input/output and applies policy rate limits
   expect(limited.headers.get('retry-after')).not.toBeNull();
   providerReply = 'A test answer';
 }, 30000);
+
+it.each([
+  ['role', 403],
+  ['disabled', 403],
+  ['revoked', 401],
+  ['expires', 401],
+  ['idle', 401],
+  ['csrf', 403],
+] as const)(
+  'denies late admin %s changes before exposing an answer',
+  async (change, status) => {
+    await http.pool.query(
+      "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
+    );
+    const freshAgent = (
+      await http.pool.query<{ id: string }>(
+        "INSERT INTO ai_agents(title,model_id,created_by) VALUES ('Late authority',$1,'test-chat-admin') RETURNING id",
+        [modelId]
+      )
+    ).rows[0]!.id;
+    const sessionId = headers.cookie!.split('=')[1]!;
+    const requestId = randomUUID();
+    beforeProviderReply = async () => {
+      if (change === 'role')
+        await http.pool.query("DELETE FROM user_roles WHERE user_id='test-chat-admin'");
+      else if (change === 'disabled')
+        await http.pool.query("UPDATE users SET disabled_at=now() WHERE user_id='test-chat-admin'");
+      else if (change === 'csrf')
+        await http.pool.query('UPDATE sessions SET csrf_token=$2 WHERE session_id=$1', [
+          sessionId,
+          randomUUID(),
+        ]);
+      else {
+        const column =
+          change === 'revoked'
+            ? 'revoked_at'
+            : change === 'expires'
+              ? 'expires_at'
+              : 'idle_deadline';
+        await http.pool.query(
+          'UPDATE sessions SET ' + column + "=now()-interval '1 second' WHERE session_id=$1",
+          [sessionId]
+        );
+      }
+    };
+    try {
+      const result = await send({
+        agentId: freshAgent,
+        requestId,
+        message: 'Late authority boundary',
+      });
+      expect(result.status).toBe(status);
+      expect(JSON.stringify(await result.json())).not.toContain('A test answer');
+      expect(
+        (
+          await http.pool.query(
+            'SELECT state FROM ai_test_chat_turns WHERE session_id=$1 AND request_id=$2',
+            [sessionId, requestId]
+          )
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT authorization_result,output FROM ai_audit_log WHERE input->>'requestId'=$1",
+            [requestId]
+          )
+        ).rows
+      ).toMatchObject([{ authorization_result: 'denied', output: { status } }]);
+    } finally {
+      beforeProviderReply = null;
+      await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='test-chat-admin'");
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ('test-chat-admin','test-chat-editor') ON CONFLICT DO NOTHING"
+      );
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL,expires_at=now()+interval '1 day',idle_deadline=now()+interval '1 hour',csrf_token=$2 WHERE session_id=$1",
+        [sessionId, headers['x-csrf-token']]
+      );
+      await http.pool.query('DELETE FROM ai_agents WHERE id=$1', [freshAgent]);
+    }
+  },
+  30_000
+);

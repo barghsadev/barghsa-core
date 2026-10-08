@@ -1,4 +1,4 @@
-import type { AiModelProviderType } from './tester.js';
+import { redactSecret, type AiModelProviderType } from './tester.js';
 import { guardedRequest } from './guarded-http.js';
 
 export interface ChatMessage {
@@ -112,5 +112,5 @@ export async function completeChat(input: ChatCompletionInput): Promise<ChatComp
     Number(outputTokens) >= 0
       ? { input: Number(inputTokens), output: Number(outputTokens) }
       : null;
-  return { reply, tokenUsage };
+  return { reply: redactSecret(input.apiToken, reply, '[REDACTED]'), tokenUsage };
 }

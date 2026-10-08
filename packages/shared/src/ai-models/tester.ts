@@ -409,15 +409,19 @@ export class AiModelTester {
  * `ai_models.last_test_error` and the audit trail — it must never contain
  * the token in clear.
  */
-function redactSecret(apiToken: string | null, detail: string): string {
+export function redactSecret(
+  apiToken: string | null,
+  detail: string,
+  replacement = '[redacted]'
+): string {
   if (!detail) return '';
   let out = detail;
   if (apiToken && apiToken.length > 0) {
-    out = out.split(apiToken).join('[redacted]');
+    out = out.split(apiToken).join(replacement);
   }
   // Defense in depth: bearer-looking substrings (sk-…, ant-…) even when the
   // exact token was not matched (e.g. truncated echo or different key value).
-  out = out.replace(/\b(?:sk|ant)-[A-Za-z0-9_-]{4,}/g, '[redacted]');
+  out = out.replace(/\b(?:sk|ant)-[A-Za-z0-9_-]{4,}/g, replacement);
   return out;
 }
 

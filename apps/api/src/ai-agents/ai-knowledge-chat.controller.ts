@@ -88,7 +88,7 @@ export class AiKnowledgeChatController {
               ? code
               : 'AI_KNOWLEDGE_UNAVAILABLE',
         },
-        authorizationResult: status === 403 ? 'denied' : 'allowed',
+        authorizationResult: status === 401 || status === 403 ? 'denied' : 'allowed',
         confirmationRequired: false,
         confirmationResult: 'not_required',
         tokenUsage: null,

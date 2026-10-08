@@ -149,7 +149,11 @@ export class AiTestChatController {
     try {
       result = await this.service.send(normalized, req.session);
     } catch (error) {
-      await record(auditFailure(error), 'allowed');
+      const failure = auditFailure(error);
+      await record(
+        failure,
+        failure.status === 401 || failure.status === 403 ? 'denied' : 'allowed'
+      );
       throw error;
     }
     await record(

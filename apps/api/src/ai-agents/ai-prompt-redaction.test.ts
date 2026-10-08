@@ -1,6 +1,20 @@
 import { expect, it } from 'vitest';
 import { redactAiText } from './ai-prompt-redaction.js';
 
+it.each(['0123456789', '۰۱۲۳۴۵۶۷۸۹', '٠١٢٣٤٥٦٧٨٩'])(
+  'redacts unlabelled Iranian IBANs with %s digits without retaining a suffix',
+  (alphabet) => {
+    const iban = 'IR820540102680020817909002'.replace(
+      /[0-9]/g,
+      (digit) => alphabet[Number(digit)]!
+    );
+    expect(redactAiText('حساب ' + iban + ' متعلق به من است')).toEqual({
+      text: 'حساب [REDACTED] متعلق به من است',
+      categories: ['bank_detail'],
+    });
+  }
+);
+
 it('redacts credentials and bank values while leaving ordinary text intact', () => {
   expect(
     redactAiText(

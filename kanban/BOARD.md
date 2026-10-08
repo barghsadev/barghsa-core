@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 504 | Accepted with unchanged source bindings. |
-| verify | 785 | Existing work may be complete; inspect evidence before building. |
-| partial | 72 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 513 | Accepted with unchanged source bindings. |
+| verify | 772 | Existing work may be complete; inspect evidence before building. |
+| partial | 76 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,22 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing admin/customer chat, isolation/redaction/audit, inference worker/budget/queue/health and actual external slot consumers together. Reuse current model/policy/agent/UI receipts; build demonstrated missing runtime boundaries. Keep owner representation decisions pending.
+Inspect existing generic jobs entity, submit/process/retries, owned status/result API and JobProgress against exact requirements. Reuse matching evidence and build only demonstrated gaps.
 
-- `05-notifications-documents-ai.md#T-05.21.01`: Test chat API
-- `05-notifications-documents-ai.md#T-05.21.02`: Test chat UI
-- `05-notifications-documents-ai.md#T-05.21.03`: Rate limiting for test
-- `05-notifications-documents-ai.md#T-05.22.01`: AuthZ for AI actions
-- `05-notifications-documents-ai.md#T-05.22.02`: Trusted-UI confirmation for writes
-- `05-notifications-documents-ai.md#T-05.22.03`: AI audit logging
-- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
-- `05-notifications-documents-ai.md#T-05.22.05`: Sensitive value redaction
-- `05-notifications-documents-ai.md#T-05.22.06`: Source attribution in answers
-- `05-notifications-documents-ai.md#T-05.23.01`: AI worker process isolation
-- `05-notifications-documents-ai.md#T-05.23.02`: Per-model token/cost budget
-- `05-notifications-documents-ai.md#T-05.23.03`: AI request queue & concurrency limit
-- `05-notifications-documents-ai.md#T-05.23.04`: Health endpoint isolation
-- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
+- `05-notifications-documents-ai.md#T-05.24.01`: Jobs table & entity
+- `05-notifications-documents-ai.md#T-05.24.02`: JobService submit & process
+- `05-notifications-documents-ai.md#T-05.24.03`: Job status & result API
+- `05-notifications-documents-ai.md#T-05.24.04`: JobProgress UI component
 
 ## v0.2.0: Complete customer journeys
 
@@ -626,19 +616,19 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.19.03` | done | Recorded batch work | Agent admin UI |
 | `05-notifications-documents-ai.md#T-05.20.01` | partial | Recorded batch work | Agent slot entity & configuration |
 | `05-notifications-documents-ai.md#T-05.20.02` | done | Recorded batch work | Slot assignment admin UI |
-| `05-notifications-documents-ai.md#T-05.21.01` | verify | Recorded batch work | Test chat API |
-| `05-notifications-documents-ai.md#T-05.21.02` | verify | Recorded batch work | Test chat UI |
-| `05-notifications-documents-ai.md#T-05.21.03` | verify | Recorded batch work | Rate limiting for test |
-| `05-notifications-documents-ai.md#T-05.22.01` | verify | Recorded batch work | AuthZ for AI actions |
-| `05-notifications-documents-ai.md#T-05.22.02` | verify | Inventory needed | Trusted-UI confirmation for writes |
-| `05-notifications-documents-ai.md#T-05.22.03` | verify | Recorded batch work | AI audit logging |
-| `05-notifications-documents-ai.md#T-05.22.04` | verify | Recorded batch work | Data isolation per slot |
-| `05-notifications-documents-ai.md#T-05.22.05` | verify | Recorded batch work | Sensitive value redaction |
-| `05-notifications-documents-ai.md#T-05.22.06` | verify | Recorded batch work | Source attribution in answers |
-| `05-notifications-documents-ai.md#T-05.23.01` | verify | Recorded batch work | AI worker process isolation |
-| `05-notifications-documents-ai.md#T-05.23.02` | verify | Recorded batch work | Per-model token/cost budget |
-| `05-notifications-documents-ai.md#T-05.23.03` | verify | Recorded batch work | AI request queue & concurrency limit |
-| `05-notifications-documents-ai.md#T-05.23.04` | verify | Recorded batch work | Health endpoint isolation |
+| `05-notifications-documents-ai.md#T-05.21.01` | done | Recorded batch work | Test chat API |
+| `05-notifications-documents-ai.md#T-05.21.02` | done | Recorded batch work | Test chat UI |
+| `05-notifications-documents-ai.md#T-05.21.03` | done | Recorded batch work | Rate limiting for test |
+| `05-notifications-documents-ai.md#T-05.22.01` | partial | Recorded batch work | AuthZ for AI actions |
+| `05-notifications-documents-ai.md#T-05.22.02` | partial | Recorded batch work | Trusted-UI confirmation for writes |
+| `05-notifications-documents-ai.md#T-05.22.03` | done | Recorded batch work | AI audit logging |
+| `05-notifications-documents-ai.md#T-05.22.04` | partial | Recorded batch work | Data isolation per slot |
+| `05-notifications-documents-ai.md#T-05.22.05` | done | Recorded batch work | Sensitive value redaction |
+| `05-notifications-documents-ai.md#T-05.22.06` | done | Recorded batch work | Source attribution in answers |
+| `05-notifications-documents-ai.md#T-05.23.01` | done | Recorded batch work | AI worker process isolation |
+| `05-notifications-documents-ai.md#T-05.23.02` | partial | Recorded batch work | Per-model token/cost budget |
+| `05-notifications-documents-ai.md#T-05.23.03` | done | Recorded batch work | AI request queue & concurrency limit |
+| `05-notifications-documents-ai.md#T-05.23.04` | done | Recorded batch work | Health endpoint isolation |
 | `05-notifications-documents-ai.md#T-05.24.01` | verify | Recorded batch work | Jobs table & entity |
 | `05-notifications-documents-ai.md#T-05.24.02` | verify | Inventory needed | JobService submit & process |
 | `05-notifications-documents-ai.md#T-05.24.03` | verify | Recorded batch work | Job status & result API |

@@ -3,11 +3,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ProfilesService } from '../profiles/profiles.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 import { AiTestChatService, type TestChatResponse } from './ai-test-chat.service.js';
 import type { PolicyType } from '../ai-policies/ai-policies.service.js';
 
 type CustomerSlot = 'individual_chatbot' | 'legal_entity_chatbot';
-type Session = { sessionId: string; userId: string };
+type Session = { sessionId: string; userId: string; csrfToken: string };
 
 export interface KnowledgeAnswer {
   reply: string;
@@ -79,12 +80,14 @@ export class AiKnowledgeChatService {
          WHERE expires_at<=now() ORDER BY expires_at LIMIT 25
        )`
     );
-    const client = await pool.connect();
+    // Capacity leases span COMMIT and require one physical session through unlock.
+    const client = await getDbPool({ session: true }).connect();
     let capacityKey: string | null = null;
     let remainingQuota = 0;
     let admitted = false;
     try {
       await client.query('BEGIN');
+      await this.requireCurrentAuthority(client, session);
       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
         `ai:knowledge:${session.sessionId}:${input.requestId}`,
       ]);
@@ -162,6 +165,9 @@ export class AiKnowledgeChatService {
         userId: session.userId,
         remainingQuota,
       });
+      // Revalidate authority after provider work; keep locks only for the final save.
+      await client.query('BEGIN');
+      await this.requireCurrentAuthority(client, session);
       const currentScope = await this.scopeFor(session.userId);
       if (
         currentScope?.profileId !== scope.profileId ||
@@ -185,7 +191,7 @@ export class AiKnowledgeChatService {
           .filter((check) => check.count > 0),
         answeredAt: null,
       };
-      const saved = await pool.query<{ response: KnowledgeAnswer }>(
+      const saved = await client.query<{ response: KnowledgeAnswer }>(
         `WITH stamp AS (SELECT statement_timestamp() AS at)
            UPDATE ai_knowledge_questions q
            SET state='completed',
@@ -197,6 +203,7 @@ export class AiKnowledgeChatService {
         [session.sessionId, input.requestId, JSON.stringify(answer)]
       );
       if (saved.rowCount !== 1) fail(409, 'AI_KNOWLEDGE_SESSION_CHANGED');
+      await client.query('COMMIT');
       return {
         answer: saved.rows[0]!.response,
         profileId: scope.profileId,
@@ -232,6 +239,20 @@ export class AiKnowledgeChatService {
         }
       client.release(unlockFailed);
     }
+  }
+
+  private async requireCurrentAuthority(
+    client: Parameters<typeof requireCurrentSession>[0],
+    session: Session
+  ): Promise<void> {
+    const users = await client.query(
+      'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR UPDATE',
+      [session.userId]
+    );
+    const user = users.rows[0];
+    if (!user || user.disabled_at || user.activation_token)
+      fail(401, ErrorCodes.AUTH_UNAUTHENTICATED.code);
+    await requireCurrentSession(client, session);
   }
 
   private async scopeFor(userId: string): Promise<Scope | null> {

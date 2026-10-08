@@ -27,7 +27,9 @@ export function redactAiText(input: string): {
     /\b(?:sk-[A-Za-z0-9_-]{12,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/g,
     () => replace('credential')
   );
-  text = text.replace(/\bIR\d{24}\b/gi, () => replace('bank_detail'));
+  text = text.replace(/(?<![A-Za-z0-9۰-۹٠-٩])IR[0-9۰-۹٠-٩]{24}(?![A-Za-z0-9۰-۹٠-٩])/gi, () =>
+    replace('bank_detail')
+  );
   text = text.replace(/(?<![0-9۰-۹٠-٩])(?:[0-9۰-۹٠-٩][ -]?){15}[0-9۰-۹٠-٩](?![0-9۰-۹٠-٩])/g, () =>
     replace('bank_detail')
   );
