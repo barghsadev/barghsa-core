@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, createRef } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -60,13 +61,15 @@ afterEach(async () => {
 async function render(info = legal) {
   await act(async () =>
     root.render(
-      <CrmLegalEditor
-        profileId="profile-one"
-        legalInfo={info}
-        onSaved={onSaved}
-        onCancel={onCancel}
-        returnFocus={createRef()}
-      />
+      <QueryProvider>
+        <CrmLegalEditor
+          profileId="profile-one"
+          legalInfo={info}
+          onSaved={onSaved}
+          onCancel={onCancel}
+          returnFocus={createRef()}
+        />
+      </QueryProvider>
     )
   );
 }

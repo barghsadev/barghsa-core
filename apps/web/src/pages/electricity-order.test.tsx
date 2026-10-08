@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -162,7 +163,13 @@ afterEach(async () => {
 });
 
 const mount = async () => {
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Page />
+      </QueryProvider>
+    )
+  );
   await act(async () => {
     await import('../components/SimpleElectricityReview.js');
   });
@@ -357,7 +364,13 @@ it('resumes saved period and quantity after remounting the page', async () => {
   await advance();
   expect(draft).toMatchObject({ currentStep: 3, data: { period: 'next_week', totalKwh: '10' } });
   expect(new URLSearchParams(window.location.search).get('step')).toBe('3');
-  await act(async () => root.render(<Page key="resumed" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Page key="resumed" />
+      </QueryProvider>
+    )
+  );
   expect(container.textContent).toContain(t('electricity.order.step3', 'en'));
   await settlePreview();
   expect(container.textContent).toContain('2500000');
@@ -373,7 +386,13 @@ it('saves an unfinished first step and restores it from a direct URL', async () 
   await act(async () => save.click());
   expect(draft).toMatchObject({ currentStep: 1, data: { period: 'next_week' } });
   window.history.replaceState({}, '', '?step=1');
-  await act(async () => root.render(<Page key="direct-link" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Page key="direct-link" />
+      </QueryProvider>
+    )
+  );
   expect(container.querySelector<HTMLSelectElement>('#electricity-period')?.value).toBe(
     'next_week'
   );

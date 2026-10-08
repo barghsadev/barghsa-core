@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi, type Mock } from 'vitest';
@@ -168,9 +169,11 @@ async function renderDetails(actor = 'buyer-one') {
   await import('./ElectricityOrderRevisionForm.js');
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <ElectricityOrderDetailsPage orderId={order.orderId} />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <ElectricityOrderDetailsPage orderId={order.orderId} />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await vi.waitFor(() => expect(host.querySelector('#revision-note')).not.toBeNull());
@@ -179,7 +182,9 @@ async function renderRevision(value = order, onComplete = vi.fn(), onDenied = vi
   await import('../lib/electricity-correction-form-schemas.js');
   await act(async () =>
     root.render(
-      <ElectricityOrderRevisionForm order={value} onComplete={onComplete} onDenied={onDenied} />
+      <QueryProvider>
+        <ElectricityOrderRevisionForm order={value} onComplete={onComplete} onDenied={onDenied} />
+      </QueryProvider>
     )
   );
   return { onComplete, onDenied };
@@ -447,9 +452,11 @@ it('fences stale account writes before they can publish a receipt or private dat
   );
   await act(async () =>
     root.render(
-      <AccountUserProvider value="buyer-two">
-        <ElectricityOrderDetailsPage orderId={order.orderId} />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="buyer-two">
+          <ElectricityOrderDetailsPage orderId={order.orderId} />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await act(async () =>
@@ -516,10 +523,12 @@ it('links each advanced date label and first-error focus to the real picker trig
   // An inverted period is rejected before any server preview and focuses its composite picker.
   await act(async () =>
     root.render(
-      <ElectricityOrderRevisionForm
-        order={{ ...order, mode: 'advanced', versionId: id('9'), periodEnd: order.periodStart }}
-        onComplete={() => {}}
-      />
+      <QueryProvider>
+        <ElectricityOrderRevisionForm
+          order={{ ...order, mode: 'advanced', versionId: id('9'), periodEnd: order.periodStart }}
+          onComplete={() => {}}
+        />
+      </QueryProvider>
     )
   );
   await change('revision-note', 'Valid preserved response');
@@ -555,9 +564,11 @@ it('rejects an old retry callback before it can borrow a new order attempt', asy
   );
   await act(async () =>
     root.render(
-      <AccountUserProvider value="buyer-one">
-        <ElectricityOrderDetailsPage orderId={nextOrder.orderId} />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="buyer-one">
+          <ElectricityOrderDetailsPage orderId={nextOrder.orderId} />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await vi.waitFor(() => expect(host.querySelector('#correction-note')).not.toBeNull());

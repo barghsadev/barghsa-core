@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -38,12 +39,14 @@ afterEach(async () => {
 async function render() {
   await act(async () =>
     root.render(
-      <CrmAddressEditor
-        profileId="profile-one"
-        address={address}
-        onCancel={vi.fn()}
-        onSaved={onSaved}
-      />
+      <QueryProvider>
+        <CrmAddressEditor
+          profileId="profile-one"
+          address={address}
+          onCancel={vi.fn()}
+          onSaved={onSaved}
+        />
+      </QueryProvider>
     )
   );
 }

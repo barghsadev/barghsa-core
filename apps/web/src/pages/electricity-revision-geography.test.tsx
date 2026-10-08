@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -80,7 +81,11 @@ it('blocks a changed province until its bound city list recovers and preserves a
   });
   vi.stubGlobal('fetch', requests);
   await act(async () =>
-    root.render(<ElectricityOrderRevisionForm order={order} onComplete={() => {}} />)
+    root.render(
+      <QueryProvider>
+        <ElectricityOrderRevisionForm order={order} onComplete={() => {}} />
+      </QueryProvider>
+    )
   );
   await note();
   await select(1, 'p2');
@@ -121,7 +126,11 @@ it('allows review of an unchanged historical address while geography is unavaila
     )
   );
   await act(async () =>
-    root.render(<ElectricityOrderRevisionForm order={order} onComplete={() => {}} />)
+    root.render(
+      <QueryProvider>
+        <ElectricityOrderRevisionForm order={order} onComplete={() => {}} />
+      </QueryProvider>
+    )
   );
   await note();
   expect(host.querySelectorAll('select')[2]!.value).toBe('c1');

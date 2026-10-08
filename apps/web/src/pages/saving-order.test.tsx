@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -109,7 +110,13 @@ it.each(['en', 'fa'] as const)(
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<SavingsOrderPage />));
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <SavingsOrderPage />
+          </QueryProvider>
+        )
+      );
       expect(container.textContent).toContain(locale === 'fa' ? 'طرح خانه' : 'Home plan');
       await act(async () =>
         (container.querySelector('input[value="plan-1"]') as HTMLInputElement).click()
@@ -278,7 +285,13 @@ for (const locale of ['en', 'fa'] as const)
         });
       }
       try {
-        await act(async () => root.render(<SavingsOrderPage />));
+        await act(async () =>
+          root.render(
+            <QueryProvider>
+              <SavingsOrderPage />
+            </QueryProvider>
+          )
+        );
         await act(async () =>
           container.querySelector<HTMLInputElement>(`input[value="${planId}"]`)!.click()
         );

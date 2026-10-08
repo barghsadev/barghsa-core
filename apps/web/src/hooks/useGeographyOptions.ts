@@ -1,16 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useId, useRef, useState } from 'react';
+import { useAccountUser } from './useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useServerDetailQuery } from './useServerQuery.js';
 
 export interface GeographyOption {
   id: string;
   nameFa: string;
   nameEn: string;
   provinceId?: string;
-}
-interface State {
-  path: string | null;
-  provinceId: string | undefined;
-  status: 'loading' | 'ready' | 'error';
-  options: GeographyOption[];
 }
 const empty: GeographyOption[] = [];
 
@@ -40,33 +38,40 @@ export async function loadGeographyOptions(path: string, signal: AbortSignal, pr
 /** Validate option lists and bind city results to their requested province. */
 export function useGeographyOptions(path: string | null, provinceId?: string) {
   const [revision, setRevision] = useState(0);
-  const [state, setState] = useState<State | null>(null);
+  const reader = useId();
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
   const retry = useCallback(() => setRevision((value) => value + 1), []);
-  useEffect(() => {
-    if (!path) {
-      setState(null);
-      return;
-    }
-    const controller = new AbortController();
-    setState({ path, provinceId, status: 'loading', options: empty });
-    void (async () => {
-      try {
-        const data = await loadGeographyOptions(path, controller.signal, provinceId);
-        if (!controller.signal.aborted)
-          setState({ path, provinceId, status: 'ready', options: data as GeographyOption[] });
-      } catch {
-        if (!controller.signal.aborted)
-          setState({ path, provinceId, status: 'error', options: empty });
-      }
-    })();
-    return () => controller.abort();
-  }, [path, provinceId, revision]);
-  const current = path !== null && state?.path === path && state.provinceId === provinceId;
+  const request = JSON.stringify([path, provinceId, revision]);
+  const readOwner = useRef({ request, revision: 0 });
+  if (readOwner.current.request !== request)
+    readOwner.current = { request, revision: readOwner.current.revision + 1 };
+  const query = useServerDetailQuery<GeographyOption[]>({
+    queryKey: path
+      ? queryKeys.catalogue.detail(
+          {
+            context: 'account',
+            ownerId: accountId?.trim() ? accountId : reader,
+            accountId,
+            revision: profileRevision,
+          },
+          JSON.stringify([
+            path,
+            provinceId,
+            readOwner.current.revision === 0 ? 0 : [reader, readOwner.current.revision],
+          ])
+        )
+      : null,
+    manual: true,
+    read: (signal) => loadGeographyOptions(path!, signal, provinceId),
+  });
+  const loading = path !== null && (query.isPending || query.isFetching);
+  const ready = !!path && query.isSuccess && !loading;
   return {
-    options: current ? state.options : empty,
-    ready: current && state.status === 'ready',
-    loading: path !== null && (!current || state.status === 'loading'),
-    error: current && state.status === 'error',
+    options: ready ? query.data : empty,
+    ready,
+    loading,
+    error: !!path && query.isError,
     retry,
   };
 }
