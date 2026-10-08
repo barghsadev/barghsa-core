@@ -6,6 +6,12 @@ import type { EmbeddingClient } from '@barghsa/shared/ai-models';
 import { runMigrations } from '../../../../packages/db/src/migrate';
 import { runKnowledgeBaseProcessing } from './processing-runner.js';
 
+const network = vi.hoisted(() => ({ request: vi.fn() }));
+vi.mock('@barghsa/shared/ai-models', async (load) => ({
+  ...(await load<typeof import('@barghsa/shared/ai-models')>()),
+  guardedRequest: network.request,
+}));
+
 const database = `test_kb_processing_${randomUUID().replaceAll('-', '')}`;
 let management: Pool;
 let pool: Pool;
@@ -44,6 +50,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   getObject.mockClear();
+  network.request.mockReset();
   await pool.query('DELETE FROM knowledge_bases');
   await pool.query("DELETE FROM storage_records WHERE storage_key LIKE 'kb-test/%'");
 });
@@ -88,6 +95,10 @@ it('extracts, chunks, embeds and publishes a ready KB with retrievable vectors',
   ).rows;
   expect(chunks.length).toBeGreaterThan(1);
   expect(chunks.every((chunk) => chunk.embedded && chunk.content.length <= 100)).toBe(true);
+  expect(
+    (await pool.query("SELECT indexdef FROM pg_indexes WHERE indexname='idx_kb_chunks_embedding'"))
+      .rows[0]?.indexdef
+  ).toContain('USING hnsw (embedding vector_cosine_ops)');
   expect(
     (await pool.query('SELECT processing_status FROM kb_documents WHERE kb_id=$1', [kb])).rows
   ).toEqual([{ processing_status: 'ready' }]);
@@ -150,4 +161,86 @@ it('records a safe error and failed document status when embedding fails', async
       )
     ).rows
   ).toEqual([{ processing_status: 'failed', processing_error: 'kb_processing_failed' }]);
+});
+
+it.each(['url', 'api'] as const)(
+  'publishes a %s source through bounded extraction with private URL metadata omitted',
+  async (sourceType) => {
+    const url = 'https://kb.example.test/guide?key=private-query';
+    const kb = (
+      await pool.query<{ id: string }>(
+        `INSERT INTO knowledge_bases(title,created_by,source_type,source_config,vector_embedding_model)
+       VALUES ('Network guide',$1,$2,$3::jsonb,'embed-1536') RETURNING id`,
+        [user, sourceType, JSON.stringify(sourceType === 'url' ? { urls: [url] } : { apiUrl: url })]
+      )
+    ).rows[0]!.id;
+    network.request.mockResolvedValue({
+      status: 200,
+      headers: {
+        'content-type': sourceType === 'url' ? 'text/html; charset=utf-8' : 'application/json',
+      },
+      body: Buffer.from(
+        sourceType === 'url'
+          ? '<head>Hidden title</head><script>private-script</script><p>Useful meter guide</p>'
+          : JSON.stringify({ guide: 'Useful meter guide' })
+      ),
+    });
+    const embed = vi.fn(async (texts: string[], model: string) => {
+      expect(model).toBe('embed-1536');
+      expect(texts.join(' ')).toContain('Useful meter guide');
+      expect(texts.join(' ')).not.toContain('private-script');
+      return texts.map(vector);
+    });
+    expect(await runKnowledgeBaseProcessing(pool, storage, { embed })).toBe('ready');
+    expect(getObject).not.toHaveBeenCalled();
+    expect(network.request).toHaveBeenCalledExactlyOnceWith(url, {
+      maxBytes: 2 * 1024 * 1024,
+      timeoutMs: 15_000,
+      headers: { accept: 'text/html,text/plain,application/json' },
+    });
+    expect(
+      (await pool.query('SELECT content_state,is_enabled FROM knowledge_bases WHERE id=$1', [kb]))
+        .rows[0]
+    ).toEqual({ content_state: 'ready', is_enabled: false });
+    expect(
+      (await pool.query('SELECT document_id,metadata FROM kb_chunks WHERE kb_id=$1', [kb])).rows
+    ).toEqual([
+      { document_id: null, metadata: { sourceType, url: 'https://kb.example.test/guide' } },
+    ]);
+  }
+);
+
+it('does not publish or enable web content when the source responds with an error or unsupported MIME', async () => {
+  for (const [status, mime, reason] of [
+    [503, 'text/plain', 'kb_source_http_503'],
+    [200, 'application/octet-stream', 'kb_source_content_type'],
+  ] as const) {
+    await pool.query('DELETE FROM knowledge_bases');
+    const kb = (
+      await pool.query<{ id: string }>(
+        `INSERT INTO knowledge_bases(title,created_by,source_type,source_config,vector_embedding_model)
+       VALUES ('Failed source',$1,'url','{"urls":["https://kb.example.test/guide"]}','embed-1536') RETURNING id`,
+        [user]
+      )
+    ).rows[0]!.id;
+    network.request.mockResolvedValue({
+      status,
+      headers: { 'content-type': mime },
+      body: Buffer.from('unsafe source'),
+    });
+    const embed = vi.fn(async (texts: string[]) => texts.map(vector));
+    expect(await runKnowledgeBaseProcessing(pool, storage, { embed })).toBe('error');
+    expect(embed).not.toHaveBeenCalled();
+    expect(
+      (
+        await pool.query(
+          'SELECT content_state,is_enabled,content_error FROM knowledge_bases WHERE id=$1',
+          [kb]
+        )
+      ).rows[0]
+    ).toEqual({ content_state: 'error', is_enabled: false, content_error: reason });
+    expect((await pool.query('SELECT id FROM kb_chunks WHERE kb_id=$1', [kb])).rows).toHaveLength(
+      0
+    );
+  }
 });
