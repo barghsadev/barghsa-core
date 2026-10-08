@@ -21,7 +21,12 @@ export const REDIS_CLIENT = Symbol('REDIS_CLIENT');
           host: rawHost,
           port: process.env['REDIS_PORT'] ? Number(process.env['REDIS_PORT']) : undefined,
           password: process.env['REDIS_PASSWORD'],
-          tls: process.env['NODE_ENV'] === 'production' ? true : undefined,
+          // Only an explicit plain Redis URL opts out of the production TLS default.
+          tls: rawUrl?.startsWith('redis://')
+            ? undefined
+            : process.env['NODE_ENV'] === 'production'
+              ? true
+              : undefined,
         };
 
         // Validate — silently skip on invalid env config

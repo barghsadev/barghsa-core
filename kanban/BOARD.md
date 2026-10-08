@@ -10,10 +10,10 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 515 | Accepted with unchanged source bindings. |
+| done | 516 | Accepted with unchanged source bindings. |
 | verify | 768 | Existing work may be complete; inspect evidence before building. |
-| partial | 78 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 9 | New, concrete work or release checks. |
+| partial | 79 | An earlier review found unmet criteria; reconcile later fixes. |
+| todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 1 | Explicit approved scope disposition. |
@@ -39,10 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile exact current document/notification/AI/jobs acceptance and concrete remaining release criteria. Inspect existing staging/provider/storage operational evidence without inferring current deployment or authorizing real sends. Continue independent meaningful implementation as gates allow.
+Inspect andimplement the required actual anonymous website consumer using onlypublished public knowledge andthe configured website slot. Reuse existing inference,budgets,queue,redaction,policy andsafe source rendering;verify anonymous/profile isolation andpublication changes. Preserve explicit remaining staff/Telegram/tool scope criteria.
 
-- `release-readiness#R-03.01`: Renew document, notification and AI acceptance
-- `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
+- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
+- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 
 ## v0.2.0: Complete customer journeys
 
@@ -521,8 +521,8 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-03.01` | todo | Inventory needed | Renew document, notification and AI acceptance |
-| `release-readiness#R-03.02` | todo | Inventory needed | Verify live staging provider and storage boundaries |
+| `release-readiness#R-03.01` | done | Recorded batch work | Renew document, notification and AI acceptance |
+| `release-readiness#R-03.02` | partial | Recorded batch work | Verify live staging provider and storage boundaries |
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | done | Earlier acceptance_verified | SMS.ir configuration |

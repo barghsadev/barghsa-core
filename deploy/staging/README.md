@@ -5,7 +5,8 @@
 private S3 gateway without changing the signed URL path. PostgreSQL (with
 PostGIS and pgvector), Redis, SeaweedFS, ClamAV, API, web, and worker all run
 as Docker Compose services on the same Ubuntu 24.04 VPS. Only NGINX ports 80
-and 443 and the VPS SSH port 30222 are public.
+and 443 and the VPS SSH port 30222 are public. AI inference runs in a separate
+private service on port 9091 with its own database pool and memory limit.
 
 ## First host setup
 
@@ -41,7 +42,9 @@ access to the VPS:
 deploy/staging/deploy.sh
 ```
 
-After a batch's related local checks and direct push to `main`, enqueue its release:
+After a release milestone and its gates are accepted, prepare its version and
+notes, push directly to `main`, verify the exact remote SHA, and immediately enqueue
+that immutable release:
 
 ```sh
 python3 deploy/staging/release-queue.py enqueue --commit "$(git rev-parse HEAD)" \
