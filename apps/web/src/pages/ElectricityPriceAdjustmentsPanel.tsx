@@ -1,4 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useServerListQuery } from '../hooks/useServerQuery.js';
+import { useEffect, useId, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button, Card, CardContent } from '@barghsa/ui';
@@ -45,6 +48,11 @@ export function ElectricityPriceAdjustmentsPanel({
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const scopeKey = JSON.stringify([actor, profileRevision, profileId, contractId, versionId]);
+  const reader = useId();
+  const client = useQueryClient();
+  const readOwner = useRef({ scopeKey, epoch: 0 });
+  if (readOwner.current.scopeKey !== scopeKey)
+    readOwner.current = { scopeKey, epoch: readOwner.current.epoch + 1 };
   const scope = useRef(scopeKey);
   const generation = useRef(0);
   const pending = useRef(false);
@@ -67,6 +75,37 @@ export function ElectricityPriceAdjustmentsPanel({
     setRevision((value) => value + 1);
   }
 
+  const queryKey = queryKeys.contracts.list(
+    {
+      context: 'customer',
+      ownerId: profileId.trim() ? profileId : reader,
+      accountId: actor,
+      revision: profileRevision,
+    },
+    new URLSearchParams({
+      reader,
+      kind: 'price-adjustments',
+      contractId,
+      versionId: versionId ?? '',
+      epoch: String(readOwner.current.epoch),
+    }),
+    revision
+  );
+  const query = useServerListQuery<{ status: number; value: unknown }>({
+    queryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(
+        `/api/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
+        { credentials: 'include', signal }
+      );
+      if ([401, 403, 404].includes(response.status))
+        return { status: response.status, value: null };
+      if (!response.ok) throw new Error('Price history unavailable');
+      return { status: response.status, value: (await response.json()) as unknown };
+    },
+  });
   useEffect(() => {
     const controller = new AbortController();
     const token = generation.current;
@@ -74,21 +113,18 @@ export function ElectricityPriceAdjustmentsPanel({
     pending.current = true;
     setLoading(true);
     setError(false);
-    void fetch(`/api/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
+    void query
+      .refetch()
+      .then((reply) => {
         if (!current()) return null;
-        if ([401, 403, 404].includes(response.status)) {
+        if (!reply.isSuccess || !reply.data) throw new Error('Price history unavailable');
+        if ([401, 403, 404].includes(reply.data.status)) {
           setAdjustments([]);
           setAcceptedScope(null);
           setError(true);
           return null;
         }
-        if (!response.ok) throw new Error('Price history unavailable');
-        const result: unknown = await response.json();
-        if (!current()) return null;
+        const result: unknown = reply.data.value;
         if (
           !result ||
           typeof result !== 'object' ||
@@ -121,6 +157,7 @@ export function ElectricityPriceAdjustmentsPanel({
       });
     return () => {
       controller.abort();
+      void client.cancelQueries({ queryKey, exact: true });
       if (token === generation.current) ++generation.current;
     };
   }, [scopeKey, contractId, revision]);

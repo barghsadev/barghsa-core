@@ -356,3 +356,43 @@ it('retains consent and the full signing command through step-up and uncertain r
     t('electricity.increase.status.awaiting_effective_date', 'en')
   );
 });
+
+it('keeps increase snapshots manual and forwards fresh retry cancellation signals', async () => {
+  read = () => Response.json({}, { status: 503 });
+  await render();
+  expect(reads()).toHaveLength(1);
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(reads()).toHaveLength(1);
+  read = () => Response.json(eligibleState());
+  await act(async () =>
+    host.querySelector<HTMLButtonElement>('[data-testid=electricity-increase-refresh]')!.click()
+  );
+  expect(reads()).toHaveLength(2);
+  const signals = reads().map((request) => request[1]?.signal);
+  expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+  expect(new Set(signals).size).toBe(2);
+  expect(input().disabled).toBe(false);
+  expect(posts()).toHaveLength(0);
+});
+
+it('aborts a pending increase snapshot on unmount without publishing its response', async () => {
+  let release!: (response: Response) => void;
+  read = () =>
+    new Promise<Response>((done) => {
+      release = done;
+    });
+  await render();
+  const signal = reads()[0]![1]?.signal;
+  expect(signal?.aborted).toBe(false);
+  await act(async () => root.unmount());
+  root = createRoot(host);
+  expect(signal?.aborted).toBe(true);
+  await act(async () => release(Response.json(signingState())));
+  expect(host.textContent).toBe('');
+  expect(reads()).toHaveLength(1);
+  expect(posts()).toHaveLength(0);
+});

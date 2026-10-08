@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -48,11 +49,13 @@ it('keeps increases hidden while the policy is disabled', async () => {
   try {
     await act(async () =>
       root.render(
-        <ElectricityIncreasePanel
-          contractId={contractId}
-          versionId={versionId}
-          profileId={profileId}
-        />
+        <QueryProvider>
+          <ElectricityIncreasePanel
+            contractId={contractId}
+            versionId={versionId}
+            profileId={profileId}
+          />
+        </QueryProvider>
       )
     );
     expect(container.querySelector('input')).toBeNull();
@@ -94,11 +97,13 @@ it('shows the one submitted request without offering a second submission', async
   try {
     await act(async () =>
       root.render(
-        <ElectricityIncreasePanel
-          contractId={contractId}
-          versionId={versionId}
-          profileId={profileId}
-        />
+        <QueryProvider>
+          <ElectricityIncreasePanel
+            contractId={contractId}
+            versionId={versionId}
+            profileId={profileId}
+          />
+        </QueryProvider>
       )
     );
     expect(container.textContent).toContain('Awaiting staff review');
@@ -154,11 +159,13 @@ it('shows approved amendment terms before the customer signs', async () => {
   try {
     await act(async () =>
       root.render(
-        <ElectricityIncreasePanel
-          contractId={contractId}
-          versionId={versionId}
-          profileId={profileId}
-        />
+        <QueryProvider>
+          <ElectricityIncreasePanel
+            contractId={contractId}
+            versionId={versionId}
+            profileId={profileId}
+          />
+        </QueryProvider>
       )
     );
     expect(container.textContent).toContain('Quantity increase amendment');
@@ -224,11 +231,13 @@ it('does not offer signing when the priced review does not reconcile', async () 
   try {
     await act(async () =>
       root.render(
-        <ElectricityIncreasePanel
-          contractId={contractId}
-          versionId={versionId}
-          profileId={profileId}
-        />
+        <QueryProvider>
+          <ElectricityIncreasePanel
+            contractId={contractId}
+            versionId={versionId}
+            profileId={profileId}
+          />
+        </QueryProvider>
       )
     );
     expect(container.textContent).toContain('The financial review is unavailable');
@@ -278,11 +287,13 @@ it.each([
     try {
       await act(async () =>
         root.render(
-          <ElectricityIncreasePanel
-            contractId={contractId}
-            versionId={versionId}
-            profileId={profileId}
-          />
+          <QueryProvider>
+            <ElectricityIncreasePanel
+              contractId={contractId}
+              versionId={versionId}
+              profileId={profileId}
+            />
+          </QueryProvider>
         )
       );
       expect(container.textContent).toContain(message);

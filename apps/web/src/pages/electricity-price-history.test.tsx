@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi, type Mock } from 'vitest';
@@ -64,9 +65,11 @@ async function render(overrides: Partial<Scope> = {}) {
   };
   await act(async () =>
     root.render(
-      <AccountUserProvider value={props.actor}>
-        <ElectricityPriceAdjustmentsPanel {...props} formatTimestamp={String} />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={props.actor}>
+          <ElectricityPriceAdjustmentsPanel {...props} formatTimestamp={String} />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
 }
@@ -247,4 +250,54 @@ it('formats a large persisted percentage without converting its integer basis po
   read = () => Response.json({ adjustments: [row] });
   await render({ versionId: null });
   expect(host.textContent).toContain('9,999,999,999,999,999.99%');
+});
+
+it('keeps financial history manual and gives explicit retries fresh query signals', async () => {
+  read = () => new Response('', { status: 503 });
+  await render();
+  expect(requests).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(requests).toHaveBeenCalledTimes(1);
+  read = () => Response.json({ adjustments: [priceAdjustmentRow()] });
+  await act(async () => retry().click());
+  expect(requests).toHaveBeenCalledTimes(2);
+  const signals = requests.mock.calls.map((request) => request[1]?.signal);
+  expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+  expect(new Set(signals).size).toBe(2);
+  expect(host.textContent).toContain('Published tariff correction');
+});
+
+it('aborts a pending price history read on unmount', async () => {
+  let release!: (response: Response) => void;
+  read = () =>
+    new Promise<Response>((done) => {
+      release = done;
+    });
+  await render();
+  const signal = requests.mock.calls[0]![1]?.signal;
+  expect(signal?.aborted).toBe(false);
+  await act(async () => root.unmount());
+  root = createRoot(host);
+  expect(signal?.aborted).toBe(true);
+  await act(async () =>
+    release(Response.json({ adjustments: [rowWithReason('Retired private history')] }))
+  );
+  expect(host.textContent).toBe('');
+  expect(requests).toHaveBeenCalledTimes(1);
+});
+
+it('reads afresh when an observer returns to a previously visited account scope', async () => {
+  await render();
+  read = () => Response.json({ adjustments: [rowWithReason('Other account history')] });
+  await render({ actor: 'other-customer' });
+  read = () => Response.json({ adjustments: [rowWithReason('Fresh returned history')] });
+  await render();
+  expect(requests).toHaveBeenCalledTimes(3);
+  expect(host.textContent).toContain('Fresh returned history');
+  expect(host.textContent).not.toContain('Other account history');
+  expect(host.textContent).not.toContain('Published tariff correction');
 });

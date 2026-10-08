@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/workspace';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
@@ -58,6 +61,11 @@ export function ElectricityIncreasePanel({
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const scopeKey = JSON.stringify([actor, profileRevision, profileId, contractId, versionId]);
+  const reader = useId();
+  const client = useQueryClient();
+  const readOwner = useRef({ scopeKey, epoch: 0 });
+  if (readOwner.current.scopeKey !== scopeKey)
+    readOwner.current = { scopeKey, epoch: readOwner.current.epoch + 1 };
   const scope = useRef(scopeKey);
   const generation = useRef(0);
   if (scope.current !== scopeKey) {
@@ -149,6 +157,30 @@ export function ElectricityIncreasePanel({
       ++generation.current;
     };
   }, [scopeKey]);
+  const queryKey = queryKeys.contracts.detail(
+    {
+      context: 'customer',
+      ownerId: profileId.trim() ? profileId : reader,
+      accountId: actor,
+      revision: profileRevision,
+    },
+    JSON.stringify([reader, 'increase', contractId, versionId, readOwner.current.epoch, retry])
+  );
+  const query = useServerDetailQuery<{ status: number; value: unknown }>({
+    queryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(
+        `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase`,
+        { credentials: 'include', signal }
+      );
+      if ([401, 403, 404].includes(response.status))
+        return { status: response.status, value: null };
+      if (!response.ok) throw new Error('Increase unavailable');
+      return { status: response.status, value: (await response.json()) as unknown };
+    },
+  });
   useEffect(() => {
     const controller = new AbortController();
     const token = generation.current;
@@ -157,19 +189,16 @@ export function ElectricityIncreasePanel({
     setLoading(true);
     setError(null);
     setAgreed(false);
-    void fetch(`/api/electricity/contracts/${encodeURIComponent(contractId)}/increase`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
+    void query
+      .refetch()
+      .then((reply) => {
         if (controller.signal.aborted || token !== generation.current) return null;
-        if ([401, 403, 404].includes(response.status)) {
+        if (!reply.isSuccess || !reply.data) throw new Error('Increase unavailable');
+        if ([401, 403, 404].includes(reply.data.status)) {
           withdraw();
           return null;
         }
-        if (!response.ok) throw new Error('Increase unavailable');
-        const value: unknown = await response.json();
-        if (controller.signal.aborted || token !== generation.current) return null;
+        const value: unknown = reply.data.value;
         if (!increaseState(value)) throw new Error('Increase malformed');
         if (
           value.request &&
@@ -196,7 +225,10 @@ export function ElectricityIncreasePanel({
       .finally(() => {
         if (!controller.signal.aborted && token === generation.current) setLoading(false);
       });
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      void client.cancelQueries({ queryKey, exact: true });
+    };
   }, [scopeKey, contractId, retry]);
   const maximum = data ? maximumIncreaseQuantity(data.originalKwh, data.maxPercentage) : '';
   const confirmedReview = data
