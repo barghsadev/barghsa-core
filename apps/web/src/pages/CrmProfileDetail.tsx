@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useWizardForm as useDraftForm, type WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { CrmLegalEditor } from '../components/CrmLegalEditor.js';
@@ -201,7 +205,9 @@ const TAB_DEFS: TabDef[] = [
 
 export default function CrmProfileDetail() {
   const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
-  return <CrmProfileDetailContent key={profileId} />;
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <CrmProfileDetailContent key={JSON.stringify([profileId, actor, revision])} />;
 }
 
 function CrmProfileDetailContent() {
@@ -209,6 +215,66 @@ function CrmProfileDetailContent() {
   const locale: Locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
+  const sequence = useRef(0);
+  const alive = useRef(false);
+  const activeRead = useRef<{ cancel: () => void } | null>(null);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+      activeRead.current?.cancel();
+    };
+  }, []);
+  function readProfile() {
+    activeRead.current?.cancel();
+    const attempt = ++sequence.current;
+    const key = queryKeys.profiles.detail(
+      {
+        context: 'staff',
+        ownerId: profileId,
+        accountId: actor,
+        revision,
+      },
+      JSON.stringify([reader, 'crm-profile', locale, attempt])
+    );
+    let cancelled = false;
+    const current = () => alive.current && !cancelled && sequence.current === attempt;
+    const cancel = () => {
+      cancelled = true;
+      void client.cancelQueries({ queryKey: key, exact: true });
+    };
+    activeRead.current = { cancel };
+    const result = client.fetchQuery({
+      queryKey: key,
+      staleTime: 0,
+      gcTime: 0,
+      retry: false,
+      queryFn: async ({ signal }) => {
+        const response = await fetch(`/api/crm/profiles/${profileId}`, {
+          credentials: 'include',
+          signal,
+        });
+        if (!response.ok) return { status: response.status, value: null };
+        const value = (await response.json()) as ProfileDetail;
+        if (
+          !value ||
+          value.profile?.id !== profileId ||
+          !value.user ||
+          !Array.isArray(value.addresses) ||
+          !value.sessions ||
+          !Array.isArray(value.sessions.entries) ||
+          !Array.isArray(value.siblingProfiles)
+        )
+          throw new Error('Invalid CRM profile detail');
+        return { status: response.status, value };
+      },
+    });
+    return { current, cancel, result };
+  }
   const [data, setData] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -280,22 +346,24 @@ function CrmProfileDetailContent() {
     setData(null);
     setLoading(true);
     setError(null);
-    fetch(`/api/crm/profiles/${profileId}`, { signal: abort.signal, credentials: 'include' })
+    const owned = readProfile();
+    void owned.result
       .then((res) => {
-        if (!res.ok) {
+        if (!owned.current() || abort.signal.aborted) throw new Error('Abandoned CRM read');
+        if (!res.value) {
           if (res.status === 404) throw new Error(t('crm.profile.error.notFound', locale));
           if (res.status === 403) throw new Error(t('crm.profile.error.accessDenied', locale));
           throw new Error(t('crm.profile.error.generic', locale));
         }
-        return res.json();
+        return res.value;
       })
       .then((json: ProfileDetail) => {
-        if (abort.signal.aborted) return;
+        if (abort.signal.aborted || !owned.current()) return;
         setData(json);
         setLoading(false);
       })
       .catch((err: Error) => {
-        if (abort.signal.aborted) return;
+        if (abort.signal.aborted || !owned.current()) return;
         const expected = [
           t('crm.profile.error.notFound', locale),
           t('crm.profile.error.accessDenied', locale),
@@ -305,7 +373,10 @@ function CrmProfileDetailContent() {
         );
         setLoading(false);
       });
-    return () => abort.abort();
+    return () => {
+      abort.abort();
+      owned.cancel();
+    };
   }, [profileId, locale, reloadKey]);
 
   /** Enter edit mode, pre-filling form fields from current data */
@@ -462,12 +533,16 @@ function CrmProfileDetailContent() {
       setExpireSessionsReason('');
     }
     // A committed mutation stays successful even when the subsequent read fails.
+    const owned = readProfile();
     try {
-      const response = await fetch(`/api/crm/profiles/${profileId}`, { credentials: 'include' });
-      if (response.ok) setData((await response.json()) as ProfileDetail);
+      const response = await owned.result;
+      if (!owned.current()) return;
+      if (response.value) setData(response.value);
       else setError(t('crm.profile.error.generic', locale));
     } catch {
-      setError(t('crm.profile.error.generic', locale));
+      if (owned.current()) setError(t('crm.profile.error.generic', locale));
+    } finally {
+      if (owned.current()) setLoading(false);
     }
   }
 
