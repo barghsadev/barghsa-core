@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -57,13 +58,15 @@ for (const kind of ['provinces', 'cities']) {
   it(`${kind}: initial debounce cannot undo pagination, but a changed search resets it`, async () => {
     await act(async () =>
       root.render(
-        kind === 'provinces' ? (
-          <AdminGeographyPage />
-        ) : (
-          <CitiesPanel
-            province={{ id: 'p1', nameFa: 'تهران', nameEn: 'Tehran', status: 'active' }}
-          />
-        )
+        <QueryProvider>
+          {kind === 'provinces' ? (
+            <AdminGeographyPage />
+          ) : (
+            <CitiesPanel
+              province={{ id: 'p1', nameFa: 'تهران', nameEn: 'Tehran', status: 'active' }}
+            />
+          )}
+        </QueryProvider>
       )
     );
     expect(container.textContent).toContain('First page');
@@ -110,7 +113,7 @@ function response(kind: string, total: number, name = 'Recovered') {
 for (const kind of ['provinces', 'cities']) {
   it(`${kind}: returns to an available page when the last page disappears`, async () => {
     const fetchMock = vi.mocked(fetch);
-    await act(async () => root.render(pageFor(kind)));
+    await act(async () => root.render(<QueryProvider>{pageFor(kind)}</QueryProvider>));
     fetchMock.mockResolvedValue(response(kind, 1));
     await act(async () => button('Next').click());
     expect(container.textContent).toContain('Recovered');
@@ -124,7 +127,7 @@ for (const kind of ['provinces', 'cities']) {
     vi.mocked(fetch)
       .mockRejectedValueOnce(new TypeError('offline'))
       .mockResolvedValue(response(kind, 0));
-    await act(async () => root.render(pageFor(kind)));
+    await act(async () => root.render(<QueryProvider>{pageFor(kind)}</QueryProvider>));
     expect(container.querySelector('[role="alert"]')).not.toBeNull();
     await act(async () => button('Retry').click());
     expect(container.querySelector('[role="alert"]')).toBeNull();
@@ -142,7 +145,7 @@ for (const kind of ['provinces', 'cities']) {
             reject = no;
           })
       );
-      await act(async () => root.render(pageFor(kind)));
+      await act(async () => root.render(<QueryProvider>{pageFor(kind)}</QueryProvider>));
       const firstSignal = vi.mocked(fetch).mock.calls[0]![1]!.signal!;
       await act(async () => {
         const select = container.querySelector('select')!;

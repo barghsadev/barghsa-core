@@ -201,8 +201,8 @@ export default function AdminAgentSlotsPage() {
             role="region"
             aria-label={copy('slotsTable')}
           >
-            <table className="w-full min-w-[940px] table-fixed text-start text-sm">
-              <colgroup>
+            <table className="w-full table-fixed text-start text-sm md:min-w-[940px]">
+              <colgroup className="hidden md:table-column-group">
                 <col className="w-[170px]" />
                 <col className="w-[180px]" />
                 <col className="w-[190px]" />
@@ -211,8 +211,12 @@ export default function AdminAgentSlotsPage() {
               <thead className="border-b bg-muted">
                 <tr>
                   {[copy('slot'), label('current'), copy('lastChanged'), copy('assignment')].map(
-                    (name) => (
-                      <th key={name} scope="col" className="p-4 text-start font-semibold">
+                    (name, index) => (
+                      <th
+                        key={name}
+                        scope="col"
+                        className={`${index < 3 ? 'hidden md:table-cell ' : ''}p-4 text-start font-semibold`}
+                      >
                         {name}
                       </th>
                     )
@@ -233,16 +237,28 @@ export default function AdminAgentSlotsPage() {
                     .map((other) => label(other.slotKey));
                   return (
                     <tr key={slot.slotKey} className="border-b align-top last:border-0">
-                      <th scope="row" className="p-4 text-start font-semibold">
+                      <th scope="row" className="hidden p-4 text-start font-semibold md:table-cell">
                         {label(slot.slotKey)}
                       </th>
-                      <td className="break-words p-4" dir="auto">
+                      <td className="hidden break-words p-4 md:table-cell" dir="auto">
                         {slot.agent?.title ?? label('unassigned')}
                       </td>
-                      <td className="p-4">
+                      <td className="hidden p-4 md:table-cell">
                         <time dateTime={slot.updatedAt}>{time.format(slot.updatedAt)}</time>
                       </td>
                       <td className="p-4">
+                        <dl className="mb-4 space-y-2 text-sm md:hidden">
+                          <div>
+                            <dt className="font-medium">{label('current')}</dt>
+                            <dd className="break-words" dir="auto">
+                              {slot.agent?.title ?? label('unassigned')}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">{copy('lastChanged')}</dt>
+                            <dd>{time.format(slot.updatedAt)}</dd>
+                          </div>
+                        </dl>
                         <AgentSlotChoiceForm
                           slot={slot}
                           agents={agents.data ?? []}

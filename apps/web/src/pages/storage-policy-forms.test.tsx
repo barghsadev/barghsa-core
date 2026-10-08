@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -121,7 +122,9 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function mount(domain: 'storage' | 'cleanup' | 'policy') {
-  await act(async () => root.render(domain === 'policy' ? <Policies /> : <Storage />));
+  await act(async () =>
+    root.render(<QueryProvider>{domain === 'policy' ? <Policies /> : <Storage />}</QueryProvider>)
+  );
   if (domain === 'policy') await click('Edit');
 }
 const field = (id: string) => document.querySelector<HTMLInputElement>(`#${id}`)!;

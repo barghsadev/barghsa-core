@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -100,7 +101,11 @@ it('restores UTC filters after timezone recovery and preserves untouched seconds
     })
   );
   await act(async () =>
-    root.render(<Bound kind="reconciliation" initial={{ createdFrom: from }} />)
+    root.render(
+      <QueryProvider>
+        {<Bound kind="reconciliation" initial={{ createdFrom: from }} />}
+      </QueryProvider>
+    )
   );
   const apply = [...document.querySelectorAll('button')].find(
     (b) => b.textContent?.trim() === 'Apply filters'
@@ -127,7 +132,7 @@ for (const kind of ['approval', 'reconciliation'] as const)
         return Response.json(kind === 'approval' ? [approval] : [reconciliationItem]);
       })
     );
-    await act(async () => root.render(<Bound kind={kind} />));
+    await act(async () => root.render(<QueryProvider>{<Bound kind={kind} />}</QueryProvider>));
     if (kind === 'reconciliation') {
       await click(reconciliationItem.description);
       await click('Investigate');

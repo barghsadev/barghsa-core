@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -59,7 +60,7 @@ async function render(read: (path: string, init?: RequestInit) => Response | Pro
     Promise.resolve(read(String(path), init))
   );
   vi.stubGlobal('fetch', fetchMock);
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
   return fetchMock;
 }
 it.each([
@@ -354,7 +355,9 @@ it('restored code selection waits for the catalogue baseline before initializing
     )
   );
   const selection = { id: giftCode().id, set: vi.fn(), apply: vi.fn() };
-  await act(async () => root.render(<Page selection={selection} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<Page selection={selection} />}</QueryProvider>)
+  );
   expect(host.querySelector('#gift-value')).toBeNull();
   await act(async () => finish(reply([giftCode()])));
   expect(host.querySelector<HTMLInputElement>('#gift-value')?.value).toBe('1000');
@@ -372,7 +375,9 @@ it('unavailable restored code statistics can be closed without an initialized dr
     )
   );
   const selection = { id: giftCode().id, set: vi.fn(), apply: vi.fn() };
-  await act(async () => root.render(<Page selection={selection} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<Page selection={selection} />}</QueryProvider>)
+  );
   expect(host.querySelector('#gift-value')).toBeNull();
   await click('Cancel');
   expect(selection.set).toHaveBeenCalledWith('');

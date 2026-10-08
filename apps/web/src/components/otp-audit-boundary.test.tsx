@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -50,7 +51,7 @@ it.each(['denied', 'cancelled', 'unmounted'] as const)(
       await act(async () => button!.click());
     };
     try {
-      await act(async () => root.render(<OtpConfigPanel />));
+      await act(async () => root.render(<QueryProvider>{<OtpConfigPanel />}</QueryProvider>));
       const input = host.querySelector<HTMLInputElement>('#otp-lifetime')!;
       await act(async () => {
         Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(

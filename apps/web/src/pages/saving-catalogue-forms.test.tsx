@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -65,22 +66,24 @@ async function mount(
     busy = vi.fn();
   const render = (id = kind === 'agreement' ? catalogueId : hardwareId, refreshVersion = 0) =>
     root.render(
-      kind === 'agreement' ? (
-        <SavingAgreementEditor
-          planId={id}
-          refreshVersion={refreshVersion}
-          onChanged={changed}
-          onDenied={denied}
-          onBusyChange={busy}
-        />
-      ) : (
-        <SavingInventoryPanel
-          hardwareId={id}
-          refreshVersion={refreshVersion}
-          onDenied={denied}
-          onBusyChange={busy}
-        />
-      )
+      <QueryProvider>
+        {kind === 'agreement' ? (
+          <SavingAgreementEditor
+            planId={id}
+            refreshVersion={refreshVersion}
+            onChanged={changed}
+            onDenied={denied}
+            onBusyChange={busy}
+          />
+        ) : (
+          <SavingInventoryPanel
+            hardwareId={id}
+            refreshVersion={refreshVersion}
+            onDenied={denied}
+            onBusyChange={busy}
+          />
+        )}
+      </QueryProvider>
     );
   await act(async () => render());
   return {

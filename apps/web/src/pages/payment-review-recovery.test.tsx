@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -78,7 +79,7 @@ it('queue retry keeps the same receipt draft and invoice allocation without rere
       : read(url)
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Keep this bank discrepancy');
   await fill('input[name="invoiceId"]', paymentInvoiceId);
   const draft = document.querySelector('#reject-reason');
@@ -105,7 +106,7 @@ it('independent detail retry keeps the draft and blocks decisions until fresh el
       : read(url)
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Keep detail draft');
   expect(confirm().disabled).toBe(true);
   detailStatus = 200;
@@ -138,7 +139,7 @@ it('financial review retry keeps invoice and reason and binds confirmation to th
       return read(url);
     })
   );
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('input[name="invoiceId"]', paymentInvoiceId);
   await fill('#reject-reason', 'Reviewed transfer');
   reviewStatus = 503;
@@ -165,7 +166,7 @@ it('a queue denial clears private work and ignores a late financial review', asy
       return Promise.resolve(read(url));
     })
   );
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Private bank note');
   hold = true;
   await click('Review latest details');
@@ -196,7 +197,7 @@ it('an obsolete financial denial cannot clear a newer selected receipt', async (
       return Promise.resolve(read(url));
     })
   );
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   hold = true;
   await click('Review latest details');
   const select = [...container.querySelectorAll<HTMLButtonElement>('nav button')].find((b) =>
@@ -219,7 +220,7 @@ it('uncertain write errors remain visible through successful queue reads', async
       return read(url);
     })
   );
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await act(async () => confirm().click());
   expect(container.textContent).toContain('Failed to save');
   await click('Refresh receipt queue');
@@ -237,7 +238,7 @@ it('fresh decision eligibility disables an old receipt without erasing its note'
       return read(url);
     })
   );
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Retained review');
   changed = true;
   await click('Refresh receipt queue');
@@ -253,7 +254,7 @@ it('reconciliation read recovery keeps an open note and retries the same applied
       : Promise.resolve(read(url))
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<Reconciliation />));
+  await act(async () => root.render(<QueryProvider>{<Reconciliation />}</QueryProvider>));
   hold = true;
   await click('Refresh exceptions');
   await click('Ledger mismatch');
@@ -284,7 +285,7 @@ it('reconciliation permission recovery retains work on a transient error and cle
       return Promise.resolve(read(url));
     })
   );
-  await act(async () => root.render(<Reconciliation />));
+  await act(async () => root.render(<QueryProvider>{<Reconciliation />}</QueryProvider>));
   hold = true;
   await click('Refresh exceptions');
   await click('Ledger mismatch');
@@ -310,7 +311,7 @@ it('a fresh reconciliation state closes stale note work', async () => {
         : Promise.resolve(read(url))
     )
   );
-  await act(async () => root.render(<Reconciliation />));
+  await act(async () => root.render(<QueryProvider>{<Reconciliation />}</QueryProvider>));
   hold = true;
   await click('Refresh exceptions');
   await click('Ledger mismatch');
@@ -337,12 +338,16 @@ it.each(['unmount', 'disable'] as const)(
       requiresPassword: true,
     };
     const props = { action, onSuccess: vi.fn(async () => {}), onClose: vi.fn() };
-    await act(async () => root.render(<TeamActionDialog {...props} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<TeamActionDialog {...props} />}</QueryProvider>)
+    );
     await fill('input[type="password"]', 'test-password');
     await click('Confirm');
     await act(async () =>
       root.render(
-        change === 'unmount' ? null : <TeamActionDialog {...props} confirmationDisabled />
+        <QueryProvider>
+          {change === 'unmount' ? null : <TeamActionDialog {...props} confirmationDisabled />}
+        </QueryProvider>
       )
     );
     await act(async () => pending.resolve(Response.json({ verified: true })));
@@ -363,7 +368,7 @@ it('a late queue success cannot restore private receipts after a newer detail de
       return Promise.resolve(read(url));
     })
   );
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   holdQueue = true;
   await click('Refresh receipt queue');
   denyReview = true;
@@ -380,7 +385,7 @@ it('malformed rejection success cannot discard a review draft or claim a saved d
       init?.method === 'POST' ? Response.json({}) : read(url)
     )
   );
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Receipt reference does not match');
   await click('Reject receipt');
   expect(container.textContent).toContain('Failed to save');
@@ -401,7 +406,7 @@ it('a financial refresh cannot invalidate an in-flight rejection because decisio
     return Promise.resolve(read(url));
   });
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<Receipts />));
+  await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Duplicate bank receipt');
   hold = true;
   await click('Review latest details');

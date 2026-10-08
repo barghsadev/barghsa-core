@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -63,7 +64,7 @@ afterEach(async () => {
 });
 const response = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status });
 async function render(Page: typeof Knowledge | typeof Policies) {
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
 }
 async function click(text: string) {
   const button = [...host.querySelectorAll<HTMLButtonElement>('button')].find(

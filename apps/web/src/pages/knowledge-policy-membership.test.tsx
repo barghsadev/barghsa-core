@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -120,7 +121,9 @@ async function mount(entry: (typeof cases)[number], options: { twoMembers?: bool
   });
   vi.stubGlobal('fetch', request);
   const Page = entry.Page;
-  await act(async () => root.render(<Page initialKind={entry.kind as never} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<Page initialKind={entry.kind as never} />}</QueryProvider>)
+  );
   await click('Open');
   return { data, request };
 }
@@ -291,7 +294,9 @@ for (const kind of ['knowledge-bases', 'kb-groups'] as const)
         return Response.json(path.endsWith(kind) ? [kind === 'knowledge-bases' ? kb : kg] : [kb]);
       })
     );
-    await act(async () => root.render(<Knowledge initialKind={kind} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<Knowledge initialKind={kind} />}</QueryProvider>)
+    );
     await click('Open');
     await submit('kb-test-query');
     await vi.waitFor(async () => {

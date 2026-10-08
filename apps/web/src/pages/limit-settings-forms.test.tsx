@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -119,7 +120,7 @@ for (const item of cases) {
     async (locale) => {
       harness.locale = locale;
       readValue = item.initial;
-      await act(async () => root.render(<item.Page />));
+      await act(async () => root.render(<QueryProvider>{<item.Page />}</QueryProvider>));
       await fill(item.selector, item.invalid);
       await submit();
       expect(harness.confirmation).toBeNull();
@@ -145,7 +146,7 @@ for (const item of cases) {
   );
   it(`${item.name}: failed and unchanged reads preserve raw edits; changed settings reset them`, async () => {
     readValue = item.initial;
-    await act(async () => root.render(<item.Page />));
+    await act(async () => root.render(<QueryProvider>{<item.Page />}</QueryProvider>));
     await fill(item.selector, item.raw);
     failed = true;
     await reload();
@@ -161,7 +162,7 @@ for (const item of cases) {
   });
   it(`${item.name}: uncertain receipts require cancellation and recovery; saved status clears on editing`, async () => {
     readValue = item.initial;
-    await act(async () => root.render(<item.Page />));
+    await act(async () => root.render(<QueryProvider>{<item.Page />}</QueryProvider>));
     await fill(item.selector, item.raw);
     await submit();
     await act(async () =>
@@ -183,7 +184,7 @@ for (const item of cases) {
 }
 it('wallet: a newer version with the same amount replaces an unsaved draft and cannot reuse an old receipt', async () => {
   readValue = cases[1].initial;
-  await act(async () => root.render(<Wallet />));
+  await act(async () => root.render(<QueryProvider>{<Wallet />}</QueryProvider>));
   await fill('#online-top-up-limit', '250000');
   await submit();
   const old = harness.confirmation!;

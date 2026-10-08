@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -95,7 +96,9 @@ const baseData = (path: string) =>
       ? crmCaseDetail
       : crmCorrectionProfile;
 async function render(corrections = true) {
-  await act(async () => root.render(corrections ? <Corrections /> : <Directory />));
+  await act(async () =>
+    root.render(<QueryProvider>{corrections ? <Corrections /> : <Directory />}</QueryProvider>)
+  );
 }
 async function click(text: string) {
   const node = [...host.querySelectorAll<HTMLButtonElement>('button')].find(
@@ -152,7 +155,7 @@ function BoundCorrections() {
 }
 async function boundQueue() {
   replaceNavigation = undefined;
-  await act(async () => root.render(<BoundCorrections />));
+  await act(async () => root.render(<QueryProvider>{<BoundCorrections />}</QueryProvider>));
 }
 it.each([false, true])(
   'bound queue retries exact pages and retains independent creation drafts (profile=%s)',

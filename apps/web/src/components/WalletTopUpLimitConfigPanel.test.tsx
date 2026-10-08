@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -54,7 +55,7 @@ describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
 
   async function renderPanel() {
     await act(async () => {
-      root.render(<WalletTopUpLimitConfigPanel />);
+      root.render(<QueryProvider>{<WalletTopUpLimitConfigPanel />}</QueryProvider>);
     });
     await act(async () => {
       await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean));

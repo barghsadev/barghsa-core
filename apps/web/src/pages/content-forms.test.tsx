@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -93,7 +94,9 @@ async function click(text: string) {
 async function mount(domain: typeof kind) {
   kind = domain;
   rows = domain === 'terms' ? [] : [contractTemplate];
-  await act(async () => root.render(domain === 'terms' ? <Terms /> : <Templates />));
+  await act(async () =>
+    root.render(<QueryProvider>{domain === 'terms' ? <Terms /> : <Templates />}</QueryProvider>)
+  );
   await click(domain === 'terms' ? 'New Draft' : 'Open');
 }
 function field(name: string) {

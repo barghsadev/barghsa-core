@@ -67,6 +67,7 @@ export const queryKeys = {
   invoices: resourceKeys('invoices'),
   contracts: resourceKeys('contracts'),
   dashboard: resourceKeys('dashboard'),
+  catalogue: resourceKeys('catalogue'),
   saving: resourceKeys('saving'),
   solar: resourceKeys('solar'),
   preferences: resourceKeys('preferences'),

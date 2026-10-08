@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { giftCode } from '../test/gift-code-fixtures.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -55,7 +56,7 @@ it('loads another code page and shows per-profile usage with restoration history
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminGiftCodesPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminGiftCodesPage />}</QueryProvider>));
     expect(container.textContent).toContain('CODE00');
     const more = [...container.querySelectorAll('button')].find(
       (button) => button.textContent === 'Load more codes'

@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -40,7 +41,7 @@ function reads(
   return requests;
 }
 async function render() {
-  await act(async () => root.render(<Geography />));
+  await act(async () => root.render(<QueryProvider>{<Geography />}</QueryProvider>));
 }
 async function click(name: string, dialog = false) {
   const area = dialog ? document.querySelector('[role=dialog]')! : host;
@@ -322,11 +323,17 @@ it('failed city navigation retains the accepted page and retries its exact offse
 });
 it('changing the parent province removes a city import draft and scopes the next read', async () => {
   const requests = reads({ cities: () => response({ cities: [], total: 0 }) });
-  await act(async () => root.render(<CitiesPanel province={province} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<CitiesPanel province={province} />}</QueryProvider>)
+  );
   await click('Import Cities');
   await fill('#city-import-rows', 'اسلامشهر\tEslamshahr');
   await act(async () =>
-    root.render(<CitiesPanel province={{ ...province, id: 'p2', nameEn: 'Other' }} />)
+    root.render(
+      <QueryProvider>
+        {<CitiesPanel province={{ ...province, id: 'p2', nameEn: 'Other' }} />}
+      </QueryProvider>
+    )
   );
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(String(requests.mock.calls.at(-1)![0])).toContain('/p2/cities?');

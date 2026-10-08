@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, it, expect, vi } from 'vitest';
@@ -86,7 +87,11 @@ function button(label: string, id = first) {
 }
 async function render(requestId?: string) {
   await act(async () =>
-    root.render(<AdminApprovalRequestsView {...(requestId ? { requestId } : {})} />)
+    root.render(
+      <QueryProvider>
+        {<AdminApprovalRequestsView {...(requestId ? { requestId } : {})} />}
+      </QueryProvider>
+    )
   );
   await vi.waitFor(() => expect(field()).toBeTruthy());
 }

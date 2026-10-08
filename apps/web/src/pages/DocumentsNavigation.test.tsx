@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { NavigationProvider } from '../hooks/useNavigation.js';
 import { getProfileContextRevision } from '../lib/profile-context.js';
 import { Route as CustomerRoute } from '../routes/_app/documents.js';
@@ -59,35 +60,43 @@ it('makes the implemented document workspaces reachable from both existing shell
     vi.spyOn(DocumentsRoute, 'useSearch').mockReturnValue({ q: 'Review' });
     vi.spyOn(DocumentsRoute, 'useNavigate').mockReturnValue(vi.fn());
     const StaffView = DocumentsRoute.options.component!;
-    await act(async () => root.render(<StaffView />));
+    await act(async () => root.render(<QueryProvider>{<StaffView />}</QueryProvider>));
     expect(container.querySelector('[aria-label="Staff documents"]')).not.toBeNull();
     expect(container.querySelector<HTMLInputElement>('input')?.value).toBe('Review');
     const Pending = DocumentsRoute.options.pendingComponent;
-    await act(async () => root.render(Pending ? <Pending /> : null));
+    await act(async () =>
+      root.render(<QueryProvider>{Pending ? <Pending /> : null}</QueryProvider>)
+    );
     expect(container.querySelector('[role=status]')).not.toBeNull();
     vi.spyOn(CustomerRoute, 'useSearch').mockReturnValue({ q: 'Customer review' });
     vi.spyOn(CustomerRoute, 'useNavigate').mockReturnValue(vi.fn());
     const CustomerView = CustomerRoute.options.component!;
-    await act(async () => root.render(<CustomerView />));
+    await act(async () => root.render(<QueryProvider>{<CustomerView />}</QueryProvider>));
     expect(container.querySelector('[aria-label="Customer documents"]')).not.toBeNull();
     expect(container.querySelector<HTMLInputElement>('input')?.value).toBe('Customer review');
     const CustomerPending = CustomerRoute.options.pendingComponent;
-    await act(async () => root.render(CustomerPending ? <CustomerPending /> : null));
+    await act(async () =>
+      root.render(<QueryProvider>{CustomerPending ? <CustomerPending /> : null}</QueryProvider>)
+    );
     expect(container.querySelector('[role=status]')).not.toBeNull();
     await act(async () =>
       root.render(
-        <NavigationProvider
-          configuration={{
-            version: 1,
-            area: 'staff',
-            profileId: null,
-            profileType: null,
-            paths: ['/admin/contracts', '/admin/documents'],
-          }}
-          revision={getProfileContextRevision()}
-        >
-          <AdminLayout />
-        </NavigationProvider>
+        <QueryProvider>
+          {
+            <NavigationProvider
+              configuration={{
+                version: 1,
+                area: 'staff',
+                profileId: null,
+                profileType: null,
+                paths: ['/admin/contracts', '/admin/documents'],
+              }}
+              revision={getProfileContextRevision()}
+            >
+              <AdminLayout />
+            </NavigationProvider>
+          }
+        </QueryProvider>
       )
     );
     expect(container.querySelector('a[href="/admin/documents"]')?.textContent).toBe(
@@ -95,18 +104,22 @@ it('makes the implemented document workspaces reachable from both existing shell
     );
     await act(async () =>
       root.render(
-        <NavigationProvider
-          configuration={{
-            version: 1,
-            area: 'customer',
-            profileId: 'profile',
-            profileType: 'INDIVIDUAL',
-            paths: ['/contracts', '/documents'],
-          }}
-          revision={getProfileContextRevision()}
-        >
-          <DashboardLayout />
-        </NavigationProvider>
+        <QueryProvider>
+          {
+            <NavigationProvider
+              configuration={{
+                version: 1,
+                area: 'customer',
+                profileId: 'profile',
+                profileType: 'INDIVIDUAL',
+                paths: ['/contracts', '/documents'],
+              }}
+              revision={getProfileContextRevision()}
+            >
+              <DashboardLayout />
+            </NavigationProvider>
+          }
+        </QueryProvider>
       )
     );
     expect(container.querySelector('a[href="/documents"]')?.textContent).toBe('Documents');
@@ -142,7 +155,7 @@ it('clears document cursor and selection before a profile change remounts the ro
     return <CustomerView key={revision} />;
   }
   try {
-    await act(async () => root.render(<ScopedRoute />));
+    await act(async () => root.render(<QueryProvider>{<ScopedRoute />}</QueryProvider>));
     expect(navigate).not.toHaveBeenCalled();
     for (let change = 0; change < 2; change++) {
       search = {

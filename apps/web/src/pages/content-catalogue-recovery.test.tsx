@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useEffect, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -99,13 +100,15 @@ async function render(
   vi.stubGlobal('fetch', requests);
   await act(async () =>
     root.render(
-      strict ? (
-        <StrictMode>
+      <QueryProvider>
+        {strict ? (
+          <StrictMode>
+            <Page domain={domain} />
+          </StrictMode>
+        ) : (
           <Page domain={domain} />
-        </StrictMode>
-      ) : (
-        <Page domain={domain} />
-      )
+        )}
+      </QueryProvider>
     )
   );
   return requests;

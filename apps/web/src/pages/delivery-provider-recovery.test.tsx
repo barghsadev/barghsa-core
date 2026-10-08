@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -117,7 +118,7 @@ for (const scenario of scenarios) {
     return fetcher;
   }
   const render = async () => {
-    await act(async () => root.render(scenario.page));
+    await act(async () => root.render(<QueryProvider>{scenario.page}</QueryProvider>));
   };
   it(`${scenario.name}: draft credentials survive read failure and key-order/health refresh`, async () => {
     let failed = false;
@@ -279,7 +280,7 @@ it('email recipient survives a failed retry and is reset for a changed configura
       reply([{ ...email, label: changed ? 'Changed provider' : email.label }], fail ? 503 : 200)
     )
   );
-  await act(async () => root.render(<Email />));
+  await act(async () => root.render(<QueryProvider>{<Email />}</QueryProvider>));
   await fill('tbody input[type=email]', 'staff@example.test');
   fail = true;
   await click('Refresh providers');
@@ -306,7 +307,7 @@ it('SMS event-key retry is independent and preserves mappings through withdrawal
         : reply([sms])
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<Sms />));
+  await act(async () => root.render(<QueryProvider>{<Sms />}</QueryProvider>));
   await click('Edit draft');
   await fill('#sms-key', 'synthetic-secret');
   failed = true;
@@ -347,7 +348,7 @@ it('SMS event permission denial hides catalogue and cancels a pending provider r
               })
     )
   );
-  await act(async () => root.render(<Sms />));
+  await act(async () => root.render(<QueryProvider>{<Sms />}</QueryProvider>));
   await click('Edit draft');
   await click('Refresh providers');
   deny = true;
@@ -367,7 +368,7 @@ it('SMS event-key failure does not hide the catalogue or prevent opening a local
           : reply([sms])
     )
   );
-  await act(async () => root.render(<Sms />));
+  await act(async () => root.render(<QueryProvider>{<Sms />}</QueryProvider>));
   expect(host.textContent).toContain('Saved provider');
   await click('Edit draft');
   expect(host.querySelector<HTMLInputElement>('input[list=sms-events]')!.value).toBe('auth.otp');
@@ -394,7 +395,7 @@ it('SMS preview keeps the selected test event during catalogue recovery', async 
           : reply([{ ...sms, maskedConfig: config }], fail ? 503 : 200)
     )
   );
-  await act(async () => root.render(<Sms />));
+  await act(async () => root.render(<QueryProvider>{<Sms />}</QueryProvider>));
   await click('Test preview');
   await act(async () => {
     const select = host.querySelector<HTMLSelectElement>('#sms-test-event')!;
@@ -428,7 +429,7 @@ it('SMS masked credential rotation invalidates a saved draft without copying it 
             ])
     )
   );
-  await act(async () => root.render(<Sms />));
+  await act(async () => root.render(<QueryProvider>{<Sms />}</QueryProvider>));
   await click('Edit draft');
   expect(host.querySelector<HTMLInputElement>('#sms-key')!.value).toBe('');
   await fill('#sms-key', 'synthetic-secret');
@@ -444,7 +445,7 @@ it('email malformed saved configuration shows one recoverable alert without open
     'fetch',
     vi.fn(async () => reply([{ ...email, maskedConfig: valid ? email.maskedConfig : null }]))
   );
-  await act(async () => root.render(<Email />));
+  await act(async () => root.render(<QueryProvider>{<Email />}</QueryProvider>));
   await click('Save');
   expect(host.querySelectorAll('[role=alert]')).toHaveLength(1);
   expect(host.querySelector('form')).toBeNull();

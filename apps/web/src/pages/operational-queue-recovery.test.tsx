@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -80,7 +81,7 @@ for (const scenario of cases) {
     return requests;
   }
   const render = async () => {
-    await act(async () => root.render(scenario.page));
+    await act(async () => root.render(<QueryProvider>{scenario.page}</QueryProvider>));
   };
   it(`${scenario.name}: uncertain saves require exact-record review and a fresh queue before another command`, async () => {
     let detailFails = true,
@@ -354,7 +355,7 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
             : response([failedJob, other], fail ? 503 : 200)
     )
   );
-  await act(async () => root.render(<Jobs />));
+  await act(async () => root.render(<QueryProvider>{<Jobs />}</QueryProvider>));
   await act(async () => {
     host.querySelectorAll<HTMLInputElement>('table input[type=checkbox]').forEach((n) => n.click());
   });
@@ -382,7 +383,7 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
 it('malformed job authority never dispatches a queue read', async () => {
   const requests = vi.fn(async () => response({ canView: 'true', canRetry: true }));
   vi.stubGlobal('fetch', requests);
-  await act(async () => root.render(<Jobs />));
+  await act(async () => root.render(<QueryProvider>{<Jobs />}</QueryProvider>));
   expect(requests).toHaveBeenCalledTimes(1);
   expect(host.querySelector('[role=alert]')).not.toBeNull();
 });
@@ -399,7 +400,9 @@ it('delivery history remains mounted through queue recovery and is removed on pa
           : response([deadLetter], fail ? 503 : 200)
     )
   );
-  await act(async () => root.render(<DeadLetters uiLocale="en" />));
+  await act(async () =>
+    root.render(<QueryProvider>{<DeadLetters uiLocale="en" />}</QueryProvider>)
+  );
   await act(async () => {
     host.querySelector('details')!.open = true;
   });

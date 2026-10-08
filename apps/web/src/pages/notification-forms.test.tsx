@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -65,7 +66,7 @@ async function click(name: string) {
   await act(async () => button.click());
 }
 async function mount() {
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
   await click('Edit');
 }
 const field = (name: string) =>
@@ -205,7 +206,7 @@ it('blocks another protected write when the retried save receipt cannot be verif
 });
 
 it('keeps a saved template outside the applied event scope out of the catalogue when refresh fails', async () => {
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
   const event = host.querySelector<HTMLInputElement>('#notification-event-filter')!;
   event.value = notificationTemplate().eventKey;
   await act(async () =>

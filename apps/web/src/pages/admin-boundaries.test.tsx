@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import ManualInvoiceForm from '../components/ManualInvoiceForm.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -70,7 +71,7 @@ for (const locale of ['en', 'fa']) {
           return new Response(JSON.stringify({ message: 'Unavailable' }), { status: failure });
         });
         vi.stubGlobal('fetch', requests);
-        await act(async () => root.render(<Page />));
+        await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
         await act(async () => {
           await Promise.resolve();
           await Promise.resolve();
@@ -128,7 +129,7 @@ for (const locale of ['en', 'fa']) {
         return new Response(JSON.stringify(body));
       });
       vi.stubGlobal('fetch', requests);
-      await act(async () => root.render(<Page />));
+      await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
       await act(async () => {
         await Promise.resolve();
         await Promise.resolve();
@@ -203,7 +204,7 @@ it.each(invalidTerms)('terms history rejects %s without enabling a write', async
     'fetch',
     vi.fn(async () => new Response(JSON.stringify(data)))
   );
-  await act(async () => root.render(<AdminTosPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   expect(host.querySelector('[role=alert]')?.textContent?.trim()).toBeTruthy();
   expect(host.querySelector('form')).toBeNull();
   for (const call of vi.mocked(fetch).mock.calls) expect(call[1]?.method ?? 'GET').toBe('GET');
@@ -224,7 +225,7 @@ it.each([
     'fetch',
     vi.fn(async () => new Response(JSON.stringify([version])))
   );
-  await act(async () => root.render(<AdminTosPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   expect(host.querySelector('[role=alert]')).toBeNull();
   expect(host.querySelector('tbody')?.textContent).toContain('1');
 });
@@ -255,7 +256,7 @@ it.each(
     'fetch',
     vi.fn(async () => new Response(JSON.stringify(data)))
   );
-  await act(async () => root.render(<AdminRolesPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
   expect(host.querySelector('[role=alert]')?.textContent?.trim()).toBeTruthy();
   expect(host.textContent).not.toContain(validRole.name);
 });
@@ -270,7 +271,7 @@ it.each(
       'fetch',
       vi.fn(async () => new Response(JSON.stringify([{ ...validRole, permissions }])))
     );
-    await act(async () => root.render(<AdminRolesPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
     expect(host.querySelector('[role=alert]')).toBeNull();
     expect(host.textContent).toContain(validRole.name);
     for (const permission of permissions) expect(host.textContent).toContain(permission);
@@ -293,7 +294,7 @@ for (const result of [200, 403, 503, 'network'] as const) {
           })
       );
       vi.stubGlobal('fetch', requests);
-      await act(async () => root.render(<Page />));
+      await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
       expect(requests).toHaveBeenCalled();
       await act(async () => root.unmount());
       mounted = false;
@@ -350,7 +351,7 @@ it.each(invalidEffective.map((data) => ({ data })))(
           new Response(JSON.stringify(String(url).endsWith('/roles') ? [validRole] : data))
       )
     );
-    await act(async () => root.render(<AdminRolesPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
     const catalogueBidi = [...host.querySelectorAll('bdi')].map((item) => item.textContent);
     const lookup = host.querySelector('#staffUserId')!.closest('section')!;
     await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
@@ -386,7 +387,7 @@ it.each([404, 503, 'network'] as const)(
         return new Response('{}', { status });
       })
     );
-    await act(async () => root.render(<AdminRolesPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
     await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
     await act(async () =>
       host
@@ -419,7 +420,9 @@ async function openTemplate() {
         )
     )
   );
-  await act(async () => root.render(<AdminContractTemplatesPage />));
+  await act(async () =>
+    root.render(<QueryProvider>{<AdminContractTemplatesPage />}</QueryProvider>)
+  );
   const open = host.querySelector<HTMLButtonElement>('button[aria-label$="Agreement"]')!;
   await act(async () => open.click());
   expect(host.querySelector('#template-file')).not.toBeNull();
@@ -537,7 +540,7 @@ it.each(
     'fetch',
     vi.fn(async () => new Response(JSON.stringify([{ ...smtp, maskedConfig }])))
   );
-  await act(async () => root.render(<AdminEmailProvidersPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminEmailProvidersPage />}</QueryProvider>));
   await clickText('Save');
   expect(host.querySelector('[role=alert]')).not.toBeNull();
   expect(host.querySelector('#email-provider-label')).toBeNull();
@@ -559,7 +562,9 @@ it.each(['', 'replacement-secret'])(
           )
       )
     );
-    await act(async () => root.render(<AdminEmailProvidersPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminEmailProvidersPage />}</QueryProvider>)
+    );
     await clickText('Save');
     await setInput(host.querySelector<HTMLInputElement>('#email-provider-label')!, 'Updated mail');
     const passwordInput = host.querySelector<HTMLInputElement>('input[type=password]')!;
@@ -612,7 +617,7 @@ it.each(
         )
     )
   );
-  await act(async () => root.render(<AdminTosPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   await clickText('Edit');
   await act(async () =>
     host
@@ -638,7 +643,7 @@ it.each([204, 409, 503, 'cancel', 'no-revision'] as const)(
       )
     );
     try {
-      await act(async () => root.render(<AdminTosPage />));
+      await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
       await clickText('Discard');
       const deletes = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === 'DELETE');
       if (status === 'cancel' || status === 'no-revision') expect(deletes).toHaveLength(0);
@@ -688,7 +693,7 @@ it.each([
         )
     )
   );
-  await act(async () => root.render(<AdminTosPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   await clickText('Publish');
   const region = host.querySelector('[role=region][aria-label="Publish TOS Version"]')!;
   const publish = Array.from(region.querySelectorAll('button')).find(
@@ -723,7 +728,7 @@ it.each([200, 409, 503, 'network'] as const)(
         return new Response(JSON.stringify([revisionTerms]));
       })
     );
-    await act(async () => root.render(<AdminTosPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
     await clickText('Edit');
     await act(async () =>
       host
@@ -786,7 +791,7 @@ it('previews and saves bounded brand layout settings', async () => {
     return new Response(JSON.stringify(_url.endsWith('/configs') ? [brand] : brand));
   });
   vi.stubGlobal('fetch', requests);
-  await act(async () => root.render(<AdminBrandingConfig />));
+  await act(async () => root.render(<QueryProvider>{<AdminBrandingConfig />}</QueryProvider>));
   await clickText('Edit');
   await setInput(
     host.querySelector<HTMLInputElement>('input[aria-label="Light background hex value"]')!,
@@ -843,7 +848,7 @@ it.each(
     'fetch',
     vi.fn(async () => new Response(JSON.stringify(data)))
   );
-  await act(async () => root.render(<AdminBrandingConfig />));
+  await act(async () => root.render(<QueryProvider>{<AdminBrandingConfig />}</QueryProvider>));
   expect(host.querySelector('[role=alert]')).not.toBeNull();
   expect(
     Array.from(host.querySelectorAll('button'))
@@ -875,7 +880,9 @@ it.each([
   ['vat', '1.234'],
 ])('blocks invalid replacement invoice %s=%s before issuing', async (field, value) => {
   vi.stubGlobal('fetch', vi.fn());
-  await act(async () => root.render(<ManualInvoiceForm correction={correction} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ManualInvoiceForm correction={correction} />}</QueryProvider>)
+  );
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct invoice');
   await setInput(host.querySelector<HTMLInputElement>(`[id^="manual-${field}-"]`)!, value);
   expect(host.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(false);
@@ -999,7 +1006,9 @@ it.each([
       );
     })
   );
-  await act(async () => root.render(<ManualInvoiceForm correction={correction} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ManualInvoiceForm correction={correction} />}</QueryProvider>)
+  );
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct invoice');
   await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
   await vi.waitFor(() =>
@@ -1043,7 +1052,7 @@ it.each(
     'fetch',
     vi.fn(async () => new Response(JSON.stringify(data)))
   );
-  await act(async () => root.render(<AdminVerificationConfig />));
+  await act(async () => root.render(<QueryProvider>{<AdminVerificationConfig />}</QueryProvider>));
   expect(host.querySelector('fieldset')?.disabled).toBe(true);
   expect(host.querySelector('[role=alert]')).not.toBeNull();
 });
@@ -1079,7 +1088,7 @@ it.each(
         )
     )
   );
-  await act(async () => root.render(<AdminRolesPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
   await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
   await act(async () =>
     host
@@ -1119,7 +1128,7 @@ it.each([
   const activated = vi.fn();
   window.addEventListener('barghsa:branding-activated', activated);
   try {
-    await act(async () => root.render(<AdminBrandingConfig />));
+    await act(async () => root.render(<QueryProvider>{<AdminBrandingConfig />}</QueryProvider>));
     await clickText('Activate');
     await act(async () =>
       document
@@ -1160,7 +1169,7 @@ it.each([
           : new Response(JSON.stringify([revisionTerms]))
     )
   );
-  await act(async () => root.render(<AdminTosPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   await clickText('Edit');
   await act(async () =>
     host
@@ -1207,7 +1216,7 @@ it.each([
         )
     )
   );
-  await act(async () => root.render(<AdminBrandingConfig />));
+  await act(async () => root.render(<QueryProvider>{<AdminBrandingConfig />}</QueryProvider>));
   await clickText('Edit');
   await setInput(
     host.querySelector<HTMLInputElement>('#adminbrandingconfig-field-2')!,
@@ -1245,7 +1254,9 @@ it.each(['superseded', 'disabled', 'active'] as const)(
       'fetch',
       vi.fn(async () => new Response(JSON.stringify([provider])))
     );
-    await act(async () => root.render(<AdminEmailProvidersPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminEmailProvidersPage />}</QueryProvider>)
+    );
     expect(host.textContent).toContain('Connection refused');
     expect(host.textContent).toContain('operator-one');
     expect(host.querySelector('#email-provider-label')).toBeNull();
@@ -1266,7 +1277,7 @@ it('abandons an effective permission lookup when the staff identity changes', as
         })
   );
   vi.stubGlobal('fetch', requests);
-  await act(async () => root.render(<AdminRolesPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
   await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
   await act(async () =>
     host
@@ -1361,7 +1372,11 @@ it.each([
     })
   );
   await act(async () =>
-    root.render(<ManualInvoiceForm correction={{ ...correction, kind: 'adjustment' }} />)
+    root.render(
+      <QueryProvider>
+        {<ManualInvoiceForm correction={{ ...correction, kind: 'adjustment' }} />}
+      </QueryProvider>
+    )
   );
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct amount');
   await setInput(host.querySelector<HTMLInputElement>('#correction-amount')!, '-100');
@@ -1388,7 +1403,7 @@ it.each([revisionTerms, publishedTerms].map((version) => ({ version })))(
       'fetch',
       vi.fn(async () => new Response(JSON.stringify([version])))
     );
-    await act(async () => root.render(<AdminTosPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
     await clickText('View');
     const dialog = document.querySelector('[role=dialog]')!;
     expect(dialog).not.toBeNull();

@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { validTeamActivity } from '@barghsa/shared/team-activity';
 import { act, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -59,13 +60,15 @@ async function render(
   vi.stubGlobal('fetch', fetch);
   await act(async () =>
     root.render(
-      strict ? (
-        <StrictMode>
+      <QueryProvider>
+        {strict ? (
+          <StrictMode>
+            <TeamPage />
+          </StrictMode>
+        ) : (
           <TeamPage />
-        </StrictMode>
-      ) : (
-        <TeamPage />
-      )
+        )}
+      </QueryProvider>
     )
   );
   return fetch;

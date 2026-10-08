@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -49,7 +50,7 @@ afterEach(async () => {
 });
 const field = (name: string) => host.querySelector<HTMLInputElement>(`#delivery-window-${name}`)!;
 async function mount() {
-  await act(async () => root.render(<Panel uiLocale="en" />));
+  await act(async () => root.render(<QueryProvider>{<Panel uiLocale="en" />}</QueryProvider>));
   await vi.waitFor(() => expect(field('start')?.value).toBe('09:00'));
 }
 async function fill(name: string, value: string) {

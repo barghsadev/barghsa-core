@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -51,7 +52,7 @@ afterEach(async () => {
 });
 
 it('submits a changed multipart cleanup age with its configuration version', async () => {
-  await act(async () => root.render(<AdminStorageConfig />));
+  await act(async () => root.render(<QueryProvider>{<AdminStorageConfig />}</QueryProvider>));
   const hours = container.querySelector<HTMLInputElement>('#storage-cleanup-hours')!;
   expect(hours.value).toBe('24');
   await act(async () => {

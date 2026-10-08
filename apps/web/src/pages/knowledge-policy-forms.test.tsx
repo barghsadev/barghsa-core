@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -97,7 +98,9 @@ afterEach(async () => {
 async function mount(entry: (typeof cases)[number], read = () => Response.json([entry.row])) {
   vi.stubGlobal('fetch', vi.fn(read));
   const Page = entry.Page;
-  await act(async () => root.render(<Page initialKind={entry.kind as never} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<Page initialKind={entry.kind as never} />}</QueryProvider>)
+  );
 }
 function button(text: string) {
   const node = [...host.querySelectorAll<HTMLButtonElement>('button')].find(

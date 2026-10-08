@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -77,7 +78,7 @@ function slotReads(
   return requests;
 }
 const renderSlots = async () => {
-  await act(async () => root.render(<Slots />));
+  await act(async () => root.render(<QueryProvider>{<Slots />}</QueryProvider>));
 };
 it('slot choices and password survive independent read retries', async () => {
   let fail = false,
@@ -296,7 +297,7 @@ function targetReads(
   return requests;
 }
 const renderTargets = async () => {
-  await act(async () => root.render(<Targets />));
+  await act(async () => root.render(<QueryProvider>{<Targets />}</QueryProvider>));
 };
 const target = () => host.querySelector<HTMLInputElement>('#target-ticket')!;
 it('target draft survives transient failure and property ordering without losing the edited value', async () => {

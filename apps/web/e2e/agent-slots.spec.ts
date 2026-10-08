@@ -3,9 +3,12 @@ import { cookieResponse } from './cookie-response';
 import { assignmentAgent, assignmentSlots } from '../src/test/assignment-settings-fixtures';
 import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
-  test(`slot assignment retries after password verification (${locale})`, async ({ page }) => {
+  test(`slot assignment retries after password verification (${locale})`, async ({
+    page,
+  }, info) => {
     const fa = locale === 'fa';
     await setupCatalogueForms(page, locale as 'en' | 'fa', false);
+    await page.setViewportSize({ width: 1280, height: 900 });
     let failed = true,
       verified = false,
       denied = false;
@@ -50,6 +53,15 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
+    const table = page.getByRole('table');
+    await expect(table.getByRole('columnheader')).toHaveCount(4);
+    await expect(table.getByRole('rowheader')).toHaveCount(5);
+    await expect(table.locator('time')).toHaveCount(5);
+    await expect(table.locator('time').first()).toHaveAttribute(
+      'datetime',
+      assignmentSlots()[0]!.updatedAt
+    );
+
     await page
       .getByLabel(fa ? 'عامل · گفت‌وگوی شخص حقیقی' : 'Agent · Individual chatbot', { exact: true })
       .selectOption(agent.id);
@@ -67,6 +79,10 @@ for (const locale of ['en', 'fa'])
         exact: true,
       })
     ).toBeVisible();
+    await page.screenshot({
+      path: info.outputPath(`slots-desktop-${locale}-${info.project.name}.png`),
+      fullPage: true,
+    });
     await page
       .getByRole('button', {
         name: fa ? 'ذخیره تخصیص گفت‌وگوی شخص حقیقی' : 'Save assignment Individual chatbot',

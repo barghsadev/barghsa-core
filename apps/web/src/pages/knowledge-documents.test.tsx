@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -130,7 +131,7 @@ async function mount(attached = false) {
     return Response.json([{ ...kb, sourceType: 'document', sourceConfig: {} }]);
   });
   vi.stubGlobal('fetch', request);
-  await act(async () => root.render(<Knowledge />));
+  await act(async () => root.render(<QueryProvider>{<Knowledge />}</QueryProvider>));
   await click('Open');
   return { data, request };
 }
@@ -214,7 +215,11 @@ it('drops deferred selection validation after permission loss or target unmount'
     deny = vi.fn();
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json([doc])));
   await act(async () =>
-    root.render(<KnowledgeBaseDocumentPicker attachedKeys={[]} onAttach={attach} onDenied={deny} />)
+    root.render(
+      <QueryProvider>
+        {<KnowledgeBaseDocumentPicker attachedKeys={[]} onAttach={attach} onDenied={deny} />}
+      </QueryProvider>
+    )
   );
   await fill('kb-file', storageKey);
   let release!: () => void;
@@ -223,7 +228,7 @@ it('drops deferred selection validation after permission loss or target unmount'
   });
   await submit('kb-file');
   await submit('kb-file');
-  await act(async () => root.render(<p>Other target</p>));
+  await act(async () => root.render(<QueryProvider>{<p>Other target</p>}</QueryProvider>));
   await act(async () => {
     release();
     await state.gate;
@@ -232,7 +237,9 @@ it('drops deferred selection validation after permission loss or target unmount'
 });
 it('fails closed when deferred validation is unavailable and preserves the selected file', async () => {
   const attach = vi.fn();
-  await act(async () => root.render(<KnowledgeBaseUpload onAttach={attach} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<KnowledgeBaseUpload onAttach={attach} />}</QueryProvider>)
+  );
   await file(new File(['text'], 'Guide.txt'));
   state.unavailable = true;
   await submit('kb-new-document');
@@ -243,7 +250,9 @@ it('focuses unsupported and empty files without reserving storage', async () => 
   const request = vi.fn(),
     attach = vi.fn();
   vi.stubGlobal('fetch', request);
-  await act(async () => root.render(<KnowledgeBaseUpload onAttach={attach} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<KnowledgeBaseUpload onAttach={attach} />}</QueryProvider>)
+  );
   for (const value of [null, new File(['data'], 'tool.exe'), new File([], 'empty.pdf')]) {
     await file(value);
     await submit('kb-new-document');
@@ -268,7 +277,9 @@ it('reuses verified uploaded bytes after cancellation and owned server feedback'
     return new Response(null, { status: 200 });
   });
   vi.stubGlobal('fetch', request);
-  await act(async () => root.render(<KnowledgeBaseUpload onAttach={attach} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<KnowledgeBaseUpload onAttach={attach} />}</QueryProvider>)
+  );
   await file(new File(['data'], 'guide.txt'));
   await submit('kb-new-document');
   expect(attach).toHaveBeenCalledTimes(1);
@@ -294,7 +305,7 @@ it.each([401, 403] as const)(
 );
 it('rejects invalid catalogue counts rather than presenting them as legitimate metadata', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json([{ ...kb, documentCount: -1 }])));
-  await act(async () => root.render(<Knowledge />));
+  await act(async () => root.render(<QueryProvider>{<Knowledge />}</QueryProvider>));
   expect(host.textContent).not.toContain(kb.title);
   expect(button('Retry')).toBeDefined();
 });

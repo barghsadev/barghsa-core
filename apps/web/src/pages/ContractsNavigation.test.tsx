@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { NavigationProvider } from '../hooks/useNavigation.js';
 import { getProfileContextRevision } from '../lib/profile-context.js';
 import { Route as CustomerRoute } from '../routes/_app/contracts.js';
@@ -64,30 +65,38 @@ it('makes the implemented document workspaces reachable from both existing shell
     });
     vi.spyOn(ContractsRoute, 'useNavigate').mockReturnValue(vi.fn());
     const StaffView = ContractsRoute.options.component!;
-    await act(async () => root.render(<StaffView />));
+    await act(async () => root.render(<QueryProvider>{<StaffView />}</QueryProvider>));
     expect(container.querySelector('[aria-label="Staff contracts"]')).not.toBeNull();
     expect(container.querySelector<HTMLInputElement>('input')?.value).toBe('9223372036854775807');
     const Pending = ContractsRoute.options.pendingComponent;
-    await act(async () => root.render(Pending ? <Pending /> : null));
+    await act(async () =>
+      root.render(<QueryProvider>{Pending ? <Pending /> : null}</QueryProvider>)
+    );
     expect(container.querySelector('[role=status]')).not.toBeNull();
     expect(CustomerRoute.options.component).toBeDefined();
     const CustomerPending = CustomerRoute.options.pendingComponent;
-    await act(async () => root.render(CustomerPending ? <CustomerPending /> : null));
+    await act(async () =>
+      root.render(<QueryProvider>{CustomerPending ? <CustomerPending /> : null}</QueryProvider>)
+    );
     expect(container.querySelector('[role=status]')).not.toBeNull();
     await act(async () =>
       root.render(
-        <NavigationProvider
-          configuration={{
-            version: 1,
-            area: 'staff',
-            profileId: null,
-            profileType: null,
-            paths: ['/admin/contracts', '/admin/documents'],
-          }}
-          revision={getProfileContextRevision()}
-        >
-          <AdminLayout />
-        </NavigationProvider>
+        <QueryProvider>
+          {
+            <NavigationProvider
+              configuration={{
+                version: 1,
+                area: 'staff',
+                profileId: null,
+                profileType: null,
+                paths: ['/admin/contracts', '/admin/documents'],
+              }}
+              revision={getProfileContextRevision()}
+            >
+              <AdminLayout />
+            </NavigationProvider>
+          }
+        </QueryProvider>
       )
     );
     expect(container.querySelector('a[href="/admin/contracts"]')?.textContent).toBe(
@@ -95,18 +104,22 @@ it('makes the implemented document workspaces reachable from both existing shell
     );
     await act(async () =>
       root.render(
-        <NavigationProvider
-          configuration={{
-            version: 1,
-            area: 'customer',
-            profileId: 'profile',
-            profileType: 'INDIVIDUAL',
-            paths: ['/contracts', '/documents'],
-          }}
-          revision={getProfileContextRevision()}
-        >
-          <DashboardLayout />
-        </NavigationProvider>
+        <QueryProvider>
+          {
+            <NavigationProvider
+              configuration={{
+                version: 1,
+                area: 'customer',
+                profileId: 'profile',
+                profileType: 'INDIVIDUAL',
+                paths: ['/contracts', '/documents'],
+              }}
+              revision={getProfileContextRevision()}
+            >
+              <DashboardLayout />
+            </NavigationProvider>
+          }
+        </QueryProvider>
       )
     );
     expect(container.querySelector('a[href="/contracts"]')?.textContent).toBe('Contracts');

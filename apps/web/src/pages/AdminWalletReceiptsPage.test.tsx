@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -184,7 +185,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
   });
 
   it('changes views without clearing invoice/rejection drafts or refetching review data', async () => {
-    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+    );
     await flush();
     const invoice = container.querySelector<HTMLInputElement>('#apply-invoice-id')!;
     const reason = container.querySelector<HTMLTextAreaElement>('#reject-reason')!;
@@ -216,7 +219,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
 
   it('renders pending receipts and confirms the selected one', async () => {
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -275,7 +278,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         })
       );
       await act(async () => {
-        root.render(<AdminWalletReceiptsPage />);
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
       });
       await flush();
       await act(async () => {
@@ -326,7 +329,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         return defaultFetch(input, init);
       });
       await act(async () => {
-        root.render(<AdminWalletReceiptsPage />);
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
       });
       await flush();
       const button = container.querySelector(
@@ -396,7 +399,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
 
   it('requires a rejection reason before posting reject', async () => {
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -437,7 +440,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
   it.each(['   ', 'bad\u0000reason', 'x'.repeat(2001)])(
     'validates rejection on blur and retains invalid text: %j',
     async (reason) => {
-      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await act(async () =>
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+      );
       await flush();
       const input = await editReason(reason);
       await act(async () => input.dispatchEvent(new FocusEvent('focusout', { bubbles: true })));
@@ -471,7 +476,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
           return defaultFetch(input, init);
         })
       );
-      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await act(async () =>
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+      );
       await flush();
       const invoice = container.querySelector<HTMLInputElement>('#apply-invoice-id')!;
       await act(async () => {
@@ -519,7 +526,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         return defaultFetch(input, init);
       })
     );
-    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+    );
     await flush();
     await editReason('Clear this private investigation');
     await submitReason();
@@ -538,7 +547,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       return defaultFetch(input, init);
     });
     vi.stubGlobal('fetch', fetcher);
-    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+    );
     await flush();
     const input = await editReason('Keep this investigation');
     await act(async () => {
@@ -563,7 +574,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
 
   it('rejects with a customer-visible reason and never posts confirm', async () => {
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -606,7 +617,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
 
   it('previews overpayment and confirms with the invoice id', async () => {
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -669,7 +680,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     });
 
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -735,7 +746,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     });
 
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -799,7 +810,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         return defaultFetch(input, init);
       });
       await act(async () => {
-        root.render(<AdminWalletReceiptsPage />);
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
       });
       await flush();
       if (decision === 'reject') {
@@ -878,7 +889,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     });
 
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -925,7 +936,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     });
 
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -977,7 +988,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     });
 
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -1038,7 +1049,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     });
 
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
 
@@ -1075,7 +1086,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
   it('renders Persian copy when the document language is fa', async () => {
     document.documentElement.lang = 'fa';
     await act(async () => {
-      root.render(<AdminWalletReceiptsPage />);
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
     });
     await flush();
     expect(container.textContent).toContain('بررسی رسید شارژ کیف پول');
@@ -1101,7 +1112,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         ? new Response(JSON.stringify(body), { status: 403 })
         : defaultFetch(input, init)
     );
-    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+    );
     await flush();
     await act(async () =>
       container.querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')!.click()
@@ -1124,7 +1137,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         }
         return defaultFetch(input, init);
       });
-      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await act(async () =>
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+      );
       await flush();
       expect(container.querySelector('[role=alert]')?.textContent).toBeTruthy();
       expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).toBeNull();
@@ -1145,7 +1160,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         }
         return defaultFetch(input, init);
       });
-      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await act(async () =>
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+      );
       await flush();
       await act(async () =>
         container
@@ -1211,7 +1228,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
             ? new Response(JSON.stringify(dto))
             : defaultFetch(input, init)
       );
-      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await act(async () =>
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+      );
       await flush();
       expect(container.querySelector(selector)).not.toBeNull();
       expect(container.textContent).not.toContain('Invalid Date');
@@ -1227,7 +1246,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         }
         return defaultFetch(input, init);
       });
-      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await act(async () =>
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+      );
       await flush();
       expect(container.textContent).toContain('TRK-aaaa');
       expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).not.toBeNull();
@@ -1243,7 +1264,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         }
         return defaultFetch(input, init);
       });
-      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await act(async () =>
+        root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+      );
       await flush();
       await act(async () =>
         container
@@ -1299,7 +1322,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
           : existing(input, init)
       );
     }
-    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+    );
     await flush();
     await vi.waitFor(() => expect(confirmNode(emergency)?.disabled).toBe(false));
   }
@@ -1506,7 +1531,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     );
     await renderConfirmation();
     await submitConfirmation();
-    await act(async () => root.render(<AdminWalletReceiptsPage key="replacement" />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage key="replacement" />}</QueryProvider>)
+    );
     await flush();
     const field = await editConfirmationField('apply-invoice-id', INVOICE_ID);
     await act(async () =>
@@ -1570,7 +1597,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       if (String(input).includes('/review?')) throw new Error('offline');
       return defaultFetch(input, init);
     });
-    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await act(async () =>
+      root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
+    );
     await flush();
     const input = container.querySelector<HTMLInputElement>('#apply-invoice-id')!;
     await act(async () => {

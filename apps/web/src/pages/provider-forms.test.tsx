@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi, type Mock } from 'vitest';
@@ -133,7 +134,7 @@ for (const scenario of scenarios) {
       return reply(list);
     });
     vi.stubGlobal('fetch', fetcher);
-    await act(async () => root.render(scenario.page));
+    await act(async () => root.render(<QueryProvider>{scenario.page}</QueryProvider>));
     await click(scenario.edit);
     await fill(scenario.label, 'Local draft');
   }
@@ -281,7 +282,7 @@ it('SMS mapping errors keep variable rows and focus the mapping control', async 
       )
     )
   );
-  await act(async () => root.render(<Sms />));
+  await act(async () => root.render(<QueryProvider>{<Sms />}</QueryProvider>));
   await click('Edit draft');
   await fill('input[aria-label="SMS.ir template ID 1"]', '0');
   await submit();

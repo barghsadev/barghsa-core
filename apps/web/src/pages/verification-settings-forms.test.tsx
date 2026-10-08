@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, Profiler } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -108,7 +109,7 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function mount() {
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
 }
 const ttl = () => host.querySelector<HTMLInputElement>('#otp-lifetime')!;
 const selected = () => host.querySelector<HTMLInputElement>('#verification-mode-MANUAL')!;
@@ -150,12 +151,16 @@ it('never displays the initial manual choice before saved disabled settings hydr
   const choices: boolean[] = [];
   await act(async () =>
     root.render(
-      <Profiler
-        id="verification-hydration"
-        onRender={() => choices.push(selected()?.checked ?? false)}
-      >
-        <Page />
-      </Profiler>
+      <QueryProvider>
+        {
+          <Profiler
+            id="verification-hydration"
+            onRender={() => choices.push(selected()?.checked ?? false)}
+          >
+            <Page />
+          </Profiler>
+        }
+      </QueryProvider>
     )
   );
   expect(choices).not.toContain(true);

@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -73,7 +74,7 @@ it.each(['en', 'fa'] as const)(
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<SavingsPage />));
+      await act(async () => root.render(<QueryProvider>{<SavingsPage />}</QueryProvider>));
       expect(container.textContent).toContain(locale === 'fa' ? 'خانه کم‌مصرف' : 'Efficient home');
       expect(container.textContent).toContain(locale === 'fa' ? 'کنترلگر' : 'Controller');
       expect(container.textContent).toContain(
@@ -129,7 +130,14 @@ it('offers an explicit publish action for a staff agreement draft', async () => 
   try {
     await act(async () =>
       root.render(
-        <SavingAgreementEditor planId="11111111-1111-4111-8111-111111111111" onChanged={() => {}} />
+        <QueryProvider>
+          {
+            <SavingAgreementEditor
+              planId="11111111-1111-4111-8111-111111111111"
+              onChanged={() => {}}
+            />
+          }
+        </QueryProvider>
       )
     );
     expect(container.textContent).toContain('Current terms');

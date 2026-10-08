@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useEffect, type ComponentProps } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -76,7 +77,9 @@ async function mount(read: (path: string) => Response = defaultRead) {
   const host = document.createElement('div');
   document.body.append(host);
   const root = createRoot(host);
-  await act(async () => root.render(<AdminElectricityRulesPage />));
+  await act(async () =>
+    root.render(<QueryProvider>{<AdminElectricityRulesPage />}</QueryProvider>)
+  );
   await flush(() => expect(field(host, 'retention')).not.toBeNull());
   return {
     host,

@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -54,7 +55,7 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function fill() {
-  await act(async () => root.render(<AdminTosPage />));
+  await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   await act(async () =>
     Array.from(host.querySelectorAll('button'))
       .find((button) => button.textContent === 'New Draft')!

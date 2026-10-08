@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot, type Root } from 'react-dom/client';
@@ -79,11 +80,15 @@ for (const locale of ['en', 'fa'] as const) {
     vi.stubGlobal('fetch', requests);
     await act(async () =>
       root.render(
-        <GeographyDialog
-          modal={{ kind: 'add', province: null, trigger }}
-          onClose={vi.fn()}
-          onSaved={vi.fn()}
-        />
+        <QueryProvider>
+          {
+            <GeographyDialog
+              modal={{ kind: 'add', province: null, trigger }}
+              onClose={vi.fn()}
+              onSaved={vi.fn()}
+            />
+          }
+        </QueryProvider>
       )
     );
     await fill('province-name-en', '  Tehran  ');
@@ -120,11 +125,15 @@ for (const locale of ['en', 'fa'] as const) {
     vi.stubGlobal('fetch', requests);
     await act(async () =>
       root.render(
-        <GeographyDialog
-          modal={{ kind: 'add', province: null, trigger }}
-          onClose={vi.fn()}
-          onSaved={saved}
-        />
+        <QueryProvider>
+          {
+            <GeographyDialog
+              modal={{ kind: 'add', province: null, trigger }}
+              onClose={vi.fn()}
+              onSaved={saved}
+            />
+          }
+        </QueryProvider>
       )
     );
     await fill('province-name-fa', '  تهران  ');
@@ -163,7 +172,9 @@ for (const locale of ['en', 'fa'] as const) {
         return response({ cities: [], total: 0 });
       })
     );
-    await act(async () => root.render(<CitiesPanel province={province} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<CitiesPanel province={province} />}</QueryProvider>)
+    );
     await click(t('importCities'));
     await fill('city-import-rows', Array.from({ length: 201 }, () => 'شهر\tCity').join('\n'));
     await submit();
@@ -212,11 +223,15 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await act(async () =>
       root.render(
-        <GeographyDialog
-          modal={{ kind: 'add', province: null, trigger }}
-          onClose={vi.fn()}
-          onSaved={vi.fn()}
-        />
+        <QueryProvider>
+          {
+            <GeographyDialog
+              modal={{ kind: 'add', province: null, trigger }}
+              onClose={vi.fn()}
+              onSaved={vi.fn()}
+            />
+          }
+        </QueryProvider>
       )
     );
     await fill('province-name-fa', 'تهران');
@@ -237,12 +252,12 @@ it('retires validation before a catalogue pause and retains the draft without is
   const render = (ready: boolean) => (
     <GeographyDialog modal={modal} readReady={ready} onClose={vi.fn()} onSaved={vi.fn()} />
   );
-  await act(async () => root.render(render(true)));
+  await act(async () => root.render(<QueryProvider>{render(true)}</QueryProvider>));
   await fill('province-name-fa', 'تهران');
   await fill('province-name-en', '  Tehran  ');
   await act(async () => {
     form().dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-    flushSync(() => root.render(render(false)));
+    flushSync(() => root.render(<QueryProvider>{render(false)}</QueryProvider>));
   });
   await settled(() => expect(form().getAttribute('aria-busy')).toBe('false'));
   expect(requests).not.toHaveBeenCalled();

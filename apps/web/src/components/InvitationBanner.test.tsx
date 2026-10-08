@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -5,7 +6,10 @@ import { InvitationBanner } from './InvitationBanner.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 const harness = vi.hoisted(() => ({ invalidate: vi.fn(), navigate: vi.fn(), refresh: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useRouter: () => harness }));
-vi.mock('../lib/profile-context.js', () => ({ refreshProfileContext: () => harness.refresh() }));
+vi.mock('../lib/profile-context.js', async (importOriginal) => ({
+  ...((await importOriginal()) as typeof import('../lib/profile-context.js')),
+  refreshProfileContext: () => harness.refresh(),
+}));
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ format: (v: string) => v }),
 }));
@@ -56,9 +60,13 @@ afterEach(async () => {
 async function mount(account: string | null = 'customer', locale: 'en' | 'fa' = 'en') {
   await act(async () =>
     root.render(
-      <AccountUserProvider value={account}>
-        <InvitationBanner locale={locale} />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={account}>
+            <InvitationBanner locale={locale} />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
 }

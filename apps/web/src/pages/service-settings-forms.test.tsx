@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -117,7 +118,9 @@ for (const item of cases) {
     async (locale) => {
       harness.locale = locale;
       read = item.initial;
-      await act(async () => root.render(<ServiceSettingsEditor kind={item.kind} />));
+      await act(async () =>
+        root.render(<QueryProvider>{<ServiceSettingsEditor kind={item.kind} />}</QueryProvider>)
+      );
       await fill(item.selector, '1e3');
       await submit();
       expect(harness.command).toBeNull();
@@ -145,7 +148,9 @@ for (const item of cases) {
   );
   it(`${item.kind}: failed or unchanged reads keep a proposal; changed reads require reset`, async () => {
     read = item.initial;
-    await act(async () => root.render(<ServiceSettingsEditor kind={item.kind} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<ServiceSettingsEditor kind={item.kind} />}</QueryProvider>)
+    );
     await fill(item.selector, '72');
     await submit();
     const old = harness.command!;
@@ -173,7 +178,9 @@ for (const item of cases) {
   });
   it(`${item.kind}: unverified acknowledgement blocks a retry, and verified save resets cleanly`, async () => {
     read = item.initial;
-    await act(async () => root.render(<ServiceSettingsEditor kind={item.kind} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<ServiceSettingsEditor kind={item.kind} />}</QueryProvider>)
+    );
     await fill(item.selector, '72');
     await submit();
     await act(async () => {
@@ -195,7 +202,9 @@ for (const item of cases) {
   });
   it(`${item.kind}: malformed reads freeze retained drafts and denied reads clear them`, async () => {
     read = item.initial;
-    await act(async () => root.render(<ServiceSettingsEditor kind={item.kind} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<ServiceSettingsEditor kind={item.kind} />}</QueryProvider>)
+    );
     await fill(item.selector, '72');
     read = {};
     await refresh();
@@ -216,7 +225,7 @@ it('a denied target capability does not clear the independently granted escalati
       ? Response.json(policy(24))
       : Response.json({}, { status: 403 })
   );
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
   expect(input('#target-ticket')).toBeNull();
   expect(input('#escalation-ticketLevel2').value).toBe('24');
   await fill('#escalation-ticketLevel2', '72');
@@ -230,7 +239,7 @@ it('a captured action locks the other editor, which cannot replace the active co
       ? Response.json(policy(24))
       : Response.json(cases[0].initial)
   );
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
   await fill('#target-ticket', '72');
   await submit();
   const command = harness.command!;
@@ -253,9 +262,13 @@ it.each(['en', 'fa'] as const)(
     read = {};
     await act(async () =>
       root.render(
-        <div role="region" aria-label={text('admin.targets.title', locale)}>
-          <Page />
-        </div>
+        <QueryProvider>
+          {
+            <div role="region" aria-label={text('admin.targets.title', locale)}>
+              <Page />
+            </div>
+          }
+        </QueryProvider>
       )
     );
     const target = host.querySelector<HTMLElement>(

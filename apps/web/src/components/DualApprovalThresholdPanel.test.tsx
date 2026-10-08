@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -42,7 +43,9 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function render(key = 'threshold') {
-  await act(async () => root.render(<DualApprovalThresholdPanel key={key} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<DualApprovalThresholdPanel key={key} />}</QueryProvider>)
+  );
 }
 function field() {
   return host.querySelector<HTMLInputElement>('#receipt-threshold')!;

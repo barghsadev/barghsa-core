@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -46,7 +47,7 @@ it('shows linked counts without treating missing metadata as zero or discarding 
       )
     )
   );
-  await act(async () => root.render(<Agents />));
+  await act(async () => root.render(<QueryProvider>{<Agents />}</QueryProvider>));
   const counts = () => [...host.querySelectorAll('li dl dd')].map((node) => node.textContent);
   expect(counts()).toEqual(['1', '0']);
   await click('Edit');
@@ -67,7 +68,7 @@ it('shows audited slot timestamps and retries timezone independently without los
     return Response.json(path.endsWith('/agents') ? [assignmentAgent] : assignmentSlots());
   });
   vi.stubGlobal('fetch', fetches);
-  await act(async () => root.render(<Slots />));
+  await act(async () => root.render(<QueryProvider>{<Slots />}</QueryProvider>));
   const stamps = () => [...host.querySelectorAll('tbody time')];
   expect(stamps()).toHaveLength(5);
   expect(stamps()[0]!.getAttribute('datetime')).toBe(assignmentSlots()[0]!.updatedAt);

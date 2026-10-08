@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -117,7 +118,11 @@ it('cancellation retry preserves selected detail and exact cursor without reread
       : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<ContractCancellationRequestQueue service="savings" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<ContractCancellationRequestQueue service="savings" />}</QueryProvider>
+    )
+  );
   await click(en.cancellationRequestOpen);
   await set('detail-draft', 'Keep review');
   const input = container.querySelector('#detail-draft');
@@ -142,12 +147,18 @@ it('cancellation scope changes clear selected work and abandon the earlier page 
       : Promise.resolve(Response.json({ requests: [cancellationRow], nextBefore: null }))
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<ContractCancellationRequestQueue service="savings" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<ContractCancellationRequestQueue service="savings" />}</QueryProvider>
+    )
+  );
   await click(en.cancellationRequestOpen);
   const oldChanged = captured.changed!;
   hold = true;
   await click(en.refresh);
-  await act(async () => root.render(<ContractCancellationRequestQueue />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ContractCancellationRequestQueue />}</QueryProvider>)
+  );
   const count = fetcher.mock.calls.length;
   await act(async () => {
     pending.resolve(
@@ -167,7 +178,9 @@ it('cancellation denial clears detail and blocks its late update callback', asyn
       : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<ContractCancellationRequestQueue />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ContractCancellationRequestQueue />}</QueryProvider>)
+  );
   await click(en.cancellationRequestOpen);
   const changed = captured.changed!;
   status = 401;
@@ -182,7 +195,9 @@ it('selecting the same cancellation contract keeps its active detail callback us
     Response.json({ requests: [cancellationRow], nextBefore: null })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<ContractCancellationRequestQueue />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ContractCancellationRequestQueue />}</QueryProvider>)
+  );
   await click(en.cancellationRequestOpen);
   await click(en.cancellationRequestOpen);
   const count = fetcher.mock.calls.length;
@@ -228,7 +243,7 @@ it('refund cursor retry and first-page refresh preserve bank references and conf
     }
     return reads(url, options);
   });
-  await act(async () => root.render(<ContractRefundQueue />));
+  await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   await click(en['cancellation.queue.record-transfer']);
   const action = captured.action;
@@ -278,7 +293,7 @@ it('refund denial clears references and invalidates a late successful write', as
     }
     return reads(url, options);
   });
-  await act(async () => root.render(<ContractRefundQueue />));
+  await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   await click(en['cancellation.queue.record-transfer']);
   const success = captured.success!;
@@ -321,7 +336,7 @@ it('duplicate refund pages update fresh eligibility once and clear stale confirm
     }
     return reads(url, options);
   });
-  await act(async () => root.render(<ContractRefundQueue />));
+  await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   await click(en['cancellation.queue.record-transfer']);
   changed = true;
@@ -363,7 +378,7 @@ it('malformed refund pages recover locally while accepted rows and references re
     }
     return reads(url, options);
   });
-  await act(async () => root.render(<ContractRefundQueue />));
+  await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
   await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   malformed = true;
   await click(en.refresh);
@@ -385,7 +400,9 @@ it('approval pagination retries the failed offset with rejection drafts and acce
       : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<AdminApprovalRequestsView />));
+  await act(async () =>
+    root.render(<QueryProvider>{<AdminApprovalRequestsView />}</QueryProvider>)
+  );
   await set('reason-' + approvalRow.id, 'Reject draft');
   const input = container.querySelector('#reason-' + approvalRow.id);
   status = 503;
@@ -409,7 +426,9 @@ it('approval confirmation survives unchanged recovery and closes on changed requ
         : Response.json({}, { status })
     )
   );
-  await act(async () => root.render(<AdminApprovalRequestsView />));
+  await act(async () =>
+    root.render(<QueryProvider>{<AdminApprovalRequestsView />}</QueryProvider>)
+  );
   await click('Approve');
   const action = captured.action;
   status = 503;
@@ -435,7 +454,9 @@ it('approval filters stay usable during loading and ignore the abandoned pending
           )
     )
   );
-  await act(async () => root.render(<AdminApprovalRequestsView />));
+  await act(async () =>
+    root.render(<QueryProvider>{<AdminApprovalRequestsView />}</QueryProvider>)
+  );
   await set('approval-status', 'approved');
   await act(async () => pending.resolve(Response.json([approvalRow])));
   expect(container.textContent).toContain('History row');
@@ -447,7 +468,9 @@ it('approval denial clears drafts and old callbacks cannot overwrite recovered w
     status === 200 ? Response.json([approvalRow]) : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<AdminApprovalRequestsView />));
+  await act(async () =>
+    root.render(<QueryProvider>{<AdminApprovalRequestsView />}</QueryProvider>)
+  );
   await click('Approve');
   const success = captured.success!;
   status = 403;
@@ -476,11 +499,17 @@ it('changing a linked approval clears its drafts and ignores the old request res
           )
     )
   );
-  await act(async () => root.render(<AdminApprovalRequestsView requestId={approvalRow.id} />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<AdminApprovalRequestsView requestId={approvalRow.id} />}</QueryProvider>
+    )
+  );
   await set('reason-' + approvalRow.id, 'Old draft');
   hold = true;
   await click('Refresh');
-  await act(async () => root.render(<AdminApprovalRequestsView requestId={other} />));
+  await act(async () =>
+    root.render(<QueryProvider>{<AdminApprovalRequestsView requestId={other} />}</QueryProvider>)
+  );
   await act(async () => pending.resolve(Response.json(approvalRow)));
   expect(container.querySelector('#reason-' + approvalRow.id)).toBeNull();
   expect((container.querySelector('textarea') as HTMLTextAreaElement).value).toBe('');

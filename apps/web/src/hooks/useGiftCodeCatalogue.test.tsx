@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -28,7 +29,7 @@ async function mountHook<T>(hook: () => T) {
   document.body.append(host);
   const root = createRoot(host);
   roots.push({ root, host });
-  await act(async () => root.render(<Probe />));
+  await act(async () => root.render(<QueryProvider>{<Probe />}</QueryProvider>));
   return { result: result as { current: T } };
 }
 async function mount(initial: Record<string, unknown> = {}) {

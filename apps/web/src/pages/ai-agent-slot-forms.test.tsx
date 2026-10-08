@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -136,7 +137,7 @@ async function proposal() {
   return harness.action!;
 }
 async function openAgent() {
-  await act(async () => root.render(<Agents />));
+  await act(async () => root.render(<QueryProvider>{<Agents />}</QueryProvider>));
   await click('Edit');
 }
 for (const domain of ['agent', 'slot'] as const) {
@@ -144,7 +145,7 @@ for (const domain of ['agent', 'slot'] as const) {
   const changedValue = domain === 'agent' ? '512' : assignmentAgent.id;
   async function open() {
     if (domain === 'agent') await openAgent();
-    else await act(async () => root.render(<Slots />));
+    else await act(async () => root.render(<QueryProvider>{<Slots />}</QueryProvider>));
     await fill(selector, changedValue);
   }
   it(`${domain} retries failed validation while preserving its input`, async () => {

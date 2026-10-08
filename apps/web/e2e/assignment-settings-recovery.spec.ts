@@ -148,7 +148,7 @@ for (const locale of ['en', 'fa'] as const)
         }
         expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
         await page.screenshot({
-          path: `/tmp/barghsa-assignment-${domain}-${locale}-${theme}.png`,
+          path: info.outputPath(`assignment-${domain}-${locale}-${theme}-${info.project.name}.png`),
           fullPage: true,
         });
         await form
