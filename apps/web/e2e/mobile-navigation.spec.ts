@@ -133,6 +133,17 @@ for (const locale of ['en', 'fa'] as const)
       await breadcrumbs.getByRole('link').focus();
       await page.keyboard.press('Escape');
       await expect(breadcrumbs.getByLabel(copy('parentPages'))).toBeFocused();
+      await breadcrumbs.getByLabel(copy('parentPages')).press('Enter');
+      await expect(breadcrumbs.getByRole('link')).toBeVisible();
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('nav[aria-label="' + copy('breadcrumbs') + '"]')
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      await breadcrumbs.getByLabel(copy('parentPages')).press('Escape');
+      await expect(breadcrumbs.getByLabel(copy('parentPages'))).toBeFocused();
       await page.setViewportSize({ width: 900, height: 820 });
       await expect(quick).toBeVisible();
       await expect(

@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 549 | Accepted with unchanged source bindings. |
-| verify | 742 | Existing work may be complete; inspect evidence before building. |
+| done | 551 | Accepted with unchanged source bindings. |
+| verify | 740 | Existing work may be complete; inspect evidence before building. |
 | partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,10 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing route Breadcrumb and ScrollArea implementations and callers. Build only missing mobile hierarchy/overflow/directional scrollbar criteria; review once and verify targeted route/RTL/theme/mobile/keyboard/accessibility behavior. Preserve earlier pending release/provider/tooltip/webhook gates.
+Inspect existing Avatar, Skeleton and Separator implementations and callers. Build only missing initials/status/size/shimmer/placeholder/orientation criteria; review once and pass targeted RTL/theme/mobile/accessibility and applicable output-budget checks. Preserve earlier pending release/provider/tooltip/webhook gates.
 
-- `07-ui-ux-design.md#T-07.01.03.16`: Breadcrumb — auto-generated from route hierarchy. Collapse on mobile (show only last + "..." indicator).
-- `07-ui-ux-design.md#T-07.01.03.17`: ScrollArea — custom scrollbar styling matching the theme (thinner, themed thumb). Support for both LTR and RTL scrollbar positions.
+- `07-ui-ux-design.md#T-07.01.03.18`: Avatar — image fallback to initials (extracted from user name). Sizes: `xs` (24px) through `xl` (96px). Status ring (online/offline/busy). Used in profile switcher, user menu, agent list.
+- `07-ui-ux-design.md#T-07.01.03.19`: Skeleton — shimmer loading placeholders. Variants: `text` (single line, multi-line), `card`, `avatar` (circle), `table-row`, `chart`. Used on every list, detail, and dashboard page.
+- `07-ui-ux-design.md#T-07.01.03.20`: Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections.
 
 ## v0.2.0: Complete customer journeys
 
@@ -670,8 +671,8 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.13` | done | Recorded batch work | Slider — single thumb and range thumbs. Used for percentage inputs (green rule %, capacity). Step increments. |
 | `07-ui-ux-design.md#T-07.01.03.14` | done | Recorded batch work | Textarea — auto-resize, character limit counter, error state. Used for ticket body, staff notes, address input. |
 | `07-ui-ux-design.md#T-07.01.03.15` | done | Recorded batch work | Alert / Banner — severity: `info`, `success`, `warning`, `error`, `critical` (red pulse). Dismissible option. Action button slot (e.g. "Retry", "View details"). Use for: no-dead-end messages, profile verification banners, service outage notices. |
-| `07-ui-ux-design.md#T-07.01.03.16` | verify | Inventory needed | Breadcrumb — auto-generated from route hierarchy. Collapse on mobile (show only last + "..." indicator). |
-| `07-ui-ux-design.md#T-07.01.03.17` | verify | Inventory needed | ScrollArea — custom scrollbar styling matching the theme (thinner, themed thumb). Support for both LTR and RTL scrollbar positions. |
+| `07-ui-ux-design.md#T-07.01.03.16` | done | Recorded batch work | Breadcrumb — auto-generated from route hierarchy. Collapse on mobile (show only last + "..." indicator). |
+| `07-ui-ux-design.md#T-07.01.03.17` | done | Recorded batch work | ScrollArea — custom scrollbar styling matching the theme (thinner, themed thumb). Support for both LTR and RTL scrollbar positions. |
 | `07-ui-ux-design.md#T-07.01.03.18` | verify | Inventory needed | Avatar — image fallback to initials (extracted from user name). Sizes: `xs` (24px) through `xl` (96px). Status ring (online/offline/busy). Used in profile switcher, user menu, agent list. |
 | `07-ui-ux-design.md#T-07.01.03.19` | verify | Inventory needed | Skeleton — shimmer loading placeholders. Variants: `text` (single line, multi-line), `card`, `avatar` (circle), `table-row`, `chart`. Used on every list, detail, and dashboard page. |
 | `07-ui-ux-design.md#T-07.01.03.20` | verify | Inventory needed | Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections. |
