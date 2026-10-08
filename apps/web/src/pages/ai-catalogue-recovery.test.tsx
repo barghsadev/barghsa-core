@@ -1,3 +1,6 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { refreshProfileContext } from '../lib/profile-context.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -50,7 +53,13 @@ afterEach(async () => {
 });
 const response = (json: unknown, status = 200) => new Response(JSON.stringify(json), { status });
 async function render(Page: typeof Models | typeof Agents) {
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <Page />
+      </QueryComponentProvider>
+    )
+  );
 }
 async function click(text: string) {
   const button = [...host.querySelectorAll<HTMLButtonElement>('button')].find(
@@ -437,4 +446,96 @@ it('linked collection display-name reordering preserves agent prompt and selecte
     systemPrompt: 'Keep selected context',
     kbIds: ['01900000-0000-7000-8000-000000000021', '01900000-0000-7000-8000-000000000022'],
   });
+});
+
+async function renderScopedAgent(actor: string, visible = true) {
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <AccountUserProvider value={actor}>{visible ? <Agents /> : null}</AccountUserProvider>
+      </QueryComponentProvider>
+    )
+  );
+}
+it('agent reads remain manual and abort transport on page-only unmount', async () => {
+  const signals: AbortSignal[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+      if (!String(url).startsWith('/api/admin/agents')) return Promise.resolve(response({}));
+      signals.push(init!.signal as AbortSignal);
+      return new Promise<Response>(() => {});
+    })
+  );
+  await renderScopedAgent('staff-a');
+  expect(signals).toHaveLength(2);
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+  });
+  expect(signals).toHaveLength(2);
+  expect(signals.every((signal) => !signal.aborted)).toBe(true);
+  await renderScopedAgent('staff-a', false);
+  expect(signals.every((signal) => signal.aborted)).toBe(true);
+});
+it('agent account replacement aborts old reads and rejects late denial', async () => {
+  let old = true;
+  const signals: AbortSignal[] = [],
+    completions: ((r: Response) => void)[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+      if (!String(url).startsWith('/api/admin/agents')) return Promise.resolve(response({}));
+      if (old) {
+        signals.push(init!.signal as AbortSignal);
+        return new Promise<Response>((done) => completions.push(done));
+      }
+      return Promise.resolve(response(String(url).endsWith('/options') ? aiOptions : [aiAgent]));
+    })
+  );
+  await renderScopedAgent('staff-a');
+  old = false;
+  await renderScopedAgent('staff-b');
+  expect(signals).toHaveLength(2);
+  expect(signals.every((signal) => signal.aborted)).toBe(true);
+  expect(host.textContent).toContain(aiAgent.title);
+  await act(async () => completions.forEach((done) => done(response({}, 403))));
+  expect(host.textContent).toContain(aiAgent.title);
+  expect(host.textContent).not.toContain('permission to manage');
+});
+it('agent profile-context replacement discards private draft and pending detail body', async () => {
+  let detailPending = false;
+  let detailDone!: (value: unknown) => void;
+  let detailSignal!: AbortSignal;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      const path = String(url);
+      if (!path.startsWith('/api/admin/agents')) return response({});
+      if (path.endsWith('/options')) return response(aiOptions);
+      if (path === '/api/admin/agents') return response([aiAgent]);
+      if (!detailPending) return response(aiDetail);
+      detailSignal = init!.signal as AbortSignal;
+      const res = response(aiDetail);
+      res.json = () =>
+        new Promise((done) => {
+          detailDone = done;
+        });
+      return res;
+    })
+  );
+  await renderScopedAgent('staff-a');
+  await click('Edit');
+  await fill('#agent-system-prompt', 'Private unsaved prompt');
+  detailPending = true;
+  await click('Refresh');
+  expect(host.querySelector<HTMLTextAreaElement>('#agent-system-prompt')!.value).toBe(
+    'Private unsaved prompt'
+  );
+  await act(async () => refreshProfileContext());
+  expect(detailSignal.aborted).toBe(true);
+  expect(host.querySelector('#agent-system-prompt')).toBeNull();
+  await act(async () => detailDone(aiDetail));
+  expect(host.querySelector('#agent-system-prompt')).toBeNull();
+  expect(host.textContent).toContain(aiAgent.title);
 });

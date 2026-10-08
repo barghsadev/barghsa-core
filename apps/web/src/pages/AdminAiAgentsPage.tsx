@@ -1,6 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
 import {
   useEffect,
+  useId,
   useState,
   useRef,
   useCallback,
@@ -51,6 +56,27 @@ import {
   matchesAgentDetail,
 } from '../lib/ai-agent-form.js';
 export default function AdminAiAgentsPage() {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return (
+    <OwnedAiAgentsPage
+      key={JSON.stringify([actor, contextRevision])}
+      actor={actor}
+      contextRevision={contextRevision}
+    />
+  );
+}
+
+function OwnedAiAgentsPage({
+  actor,
+  contextRevision,
+}: {
+  actor: string | null;
+  contextRevision: number;
+}) {
+  const client = useQueryClient();
+  const reader = useId();
+  const sequence = useRef(0);
   const locale = useLocale(),
     label = (key: string) => t(`admin.agents.${key}`, locale);
   const numbers = useNumberFormatting(locale);
@@ -199,20 +225,51 @@ export default function AdminAiAgentsPage() {
   }, [clearWork]);
   const read = useCallback(
     async (path: string, controller: AbortController): Promise<unknown> => {
-      const response = await fetch(path, { signal: controller.signal });
       if (controller.signal.aborted) throw new Error('Obsolete');
-      if (response.status === 401 || response.status === 403) {
-        deny();
-        throw new Error('Denied');
+      const key = queryKeys.catalogue.detail(
+        {
+          context: 'staff',
+          ownerId: actor ?? 'current-account',
+          accountId: actor,
+          revision: contextRevision,
+        },
+        JSON.stringify([reader, 'ai-agents', path, ++sequence.current])
+      );
+      const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+      controller.signal.addEventListener('abort', cancel, { once: true });
+      try {
+        const response = await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const response = await fetch(path, { signal });
+            return {
+              status: response.status,
+              ok: response.ok,
+              value: response.ok ? await response.json() : null,
+            };
+          },
+        });
+        if (controller.signal.aborted) throw new Error('Obsolete');
+        if (response.status === 401 || response.status === 403) {
+          deny();
+          throw new Error('Denied');
+        }
+        if (!response.ok) throw new Error('Unavailable');
+        return response.value;
+      } finally {
+        controller.signal.removeEventListener('abort', cancel);
       }
-      if (!response.ok) throw new Error('Unavailable');
-      return response.json();
     },
-    [deny]
+    [actor, contextRevision, client, reader, deny]
   );
   useEffect(
     () => () => {
       generation.current++;
+      for (const controller of requests.current) controller.abort();
+      requests.current.clear();
     },
     []
   );

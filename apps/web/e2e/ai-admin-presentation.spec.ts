@@ -168,6 +168,8 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: agentText('refresh'), exact: true }).click();
       await expect(page.locator('#admin-content pre')).toHaveCount(0);
 
+      // The independent slots scenario uses the standard theme, not the prompt color fixture.
+      await setupCatalogueForms(page, locale, dark);
       let zoneFailed = true;
       const reads: string[] = [];
       await page.route('**/api/admin/agents', (route) => {
@@ -183,6 +185,8 @@ for (const locale of ['en', 'fa'] as const)
           zoneFailed ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } }
         )
       );
+      // The slots table uses a single-column layout on mobile; exercise its desktop scroll region.
+      await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto('/admin/agent-slots');
       const region = page.getByRole('region', { name: copy('slotsTable'), exact: true }),
         viewport = region.locator('[data-slot=scroll-area-viewport]');
