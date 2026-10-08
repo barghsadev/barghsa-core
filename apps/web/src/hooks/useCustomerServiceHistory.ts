@@ -4,7 +4,7 @@ import { useCursorHistory } from './useCursorHistory.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
-import { useServerListQuery } from './useServerQuery.js';
+import { useServerDetailQuery, useServerListQuery } from './useServerQuery.js';
 
 type ReadState = {
   scope: string;
@@ -65,83 +65,99 @@ export function useCustomerServiceHistory<T extends object>({
     status: 'loading',
     noProfile: false,
   });
+  const authority = useServerDetailQuery({
+    queryKey: actor?.trim()
+      ? queryKeys.profiles.authority(
+          { context: 'account', ownerId: actor, accountId: actor, revision: profileRevision },
+          key
+        )
+      : null,
+    manual: true,
+    read: async (signal) => {
+      const fresh = () => !signal.aborted && getProfileContextRevision() === profileRevision;
+      const response = await fetch(profileEndpoint, { credentials: 'include', signal });
+      if (!fresh()) throw new DOMException('Abandoned profile read', 'AbortError');
+      if (!response.ok) throw new ServerQueryError(response.status);
+      const profile: unknown = await response.json();
+      if (!fresh()) throw new DOMException('Abandoned profile read', 'AbortError');
+      if (
+        !record(profile) ||
+        !(
+          profile.activeProfileId === null ||
+          (typeof profile.activeProfileId === 'string' && profile.activeProfileId.trim().length > 0)
+        )
+      )
+        throw new Error('profile');
+      return profile.activeProfileId as string | null;
+    },
+  });
+  const authorityDenied =
+    authority.isError &&
+    authority.error instanceof ServerQueryError &&
+    [401, 403].includes(authority.error.status);
   const profile =
     state.key === key ? state : { scope, key, status: 'loading' as const, noProfile: false };
-  const profileId = profile.status === 'ready' ? profile.profileId : undefined;
-
+  const profileStatus = authorityDenied
+    ? 'denied'
+    : authority.isError
+      ? 'error'
+      : authority.isPending || authority.isFetching
+        ? 'loading'
+        : profile.status;
+  const profileId = profileStatus === 'ready' ? profile.profileId : undefined;
   useEffect(() => {
-    const controller = new AbortController();
-    const fresh = () =>
-      !controller.signal.aborted &&
-      currentScope.current === scope &&
-      getProfileContextRevision() === profileRevision;
-    setState({ scope, key, status: 'loading', noProfile: false });
-    const denied = (response: Response) => {
-      if (![401, 403].includes(response.status)) return false;
+    if (
+      currentRequest.current !== key ||
+      getProfileContextRevision() !== profileRevision ||
+      authority.isPending ||
+      authority.isFetching
+    )
+      return;
+    if (authority.isError) {
+      if (authorityDenied) clear();
+      setState({ scope, key, status: authorityDenied ? 'denied' : 'error', noProfile: false });
+      return;
+    }
+    if (!authority.isSuccess) return;
+    const profileId = authority.data;
+    if (!profileId) {
+      owner.current = { actor, context: profileRevision, profile: null };
       clear();
-      setState({ scope, key, status: 'denied', noProfile: false });
-      return true;
-    };
-    void (async () => {
-      try {
-        const response = await fetch(profileEndpoint, {
-          credentials: 'include',
-          signal: controller.signal,
-        });
-        if (!fresh() || denied(response)) return;
-        if (!response.ok) throw new Error('profile');
-        const profile: unknown = await response.json();
-        if (!fresh()) return;
-        if (
-          !record(profile) ||
-          !(
-            profile.activeProfileId === null ||
-            (typeof profile.activeProfileId === 'string' &&
-              profile.activeProfileId.trim().length > 0)
-          )
-        )
-          throw new Error('profile');
-        const profileId = profile.activeProfileId as string | null;
-        if (!profileId) {
-          owner.current = { actor, context: profileRevision, profile: null };
-          clear();
-          setState({ scope, key, status: 'ready', noProfile: true });
-          return;
-        }
-        if (
-          owner.current.actor === actor &&
-          owner.current.context === profileRevision &&
-          owner.current.profile !== undefined &&
-          owner.current.profile !== profileId
-        ) {
-          owner.current = { actor, context: profileRevision, profile: profileId };
-          clear();
-          if (before) {
-            reset();
-            setRevision((value) => value + 1);
-            return;
-          }
-        }
-        owner.current = { actor, context: profileRevision, profile: profileId };
-        setState({ scope, key, status: 'ready', noProfile: false, profileId });
-      } catch {
-        if (fresh()) setState({ scope, key, status: 'error', noProfile: false });
+      setState({ scope, key, status: 'ready', noProfile: true });
+      return;
+    }
+    if (
+      owner.current.actor === actor &&
+      owner.current.context === profileRevision &&
+      owner.current.profile !== undefined &&
+      owner.current.profile !== profileId
+    ) {
+      owner.current = { actor, context: profileRevision, profile: profileId };
+      clear();
+      if (before) {
+        reset();
+        setRevision((value) => value + 1);
+        return;
       }
-    })();
-    return () => controller.abort();
+    }
+    owner.current = { actor, context: profileRevision, profile: profileId };
+    setState((previous) =>
+      previous.key === key && previous.status === 'ready' && previous.profileId === profileId
+        ? previous
+        : { scope, key, status: 'ready', noProfile: false, profileId }
+    );
   }, [
-    scope,
-    key,
     actor,
     profileRevision,
-    endpoint,
-    profileEndpoint,
-    implicitProfile,
-    query,
-    itemsKey,
-    identify,
+    scope,
+    key,
     before,
-    revision,
+    authorityDenied,
+    authority.data,
+    authority.isError,
+    authority.isSuccess,
+    authority.isPending,
+    authority.isFetching,
     clear,
     reset,
   ]);
@@ -213,17 +229,18 @@ export function useCustomerServiceHistory<T extends object>({
     key,
     profileRevision,
   ]);
-  const status = pageDenied
-    ? 'denied'
-    : !profileId
-      ? profile.status
-      : page.isPending || page.isFetching || page.isPlaceholderData
-        ? 'loading'
-        : page.isError
-          ? 'error'
-          : state.acceptedKey === key
-            ? 'ready'
-            : 'loading';
+  const status =
+    pageDenied || authorityDenied
+      ? 'denied'
+      : !profileId
+        ? profileStatus
+        : page.isPending || page.isFetching || page.isPlaceholderData
+          ? 'loading'
+          : page.isError
+            ? 'error'
+            : state.acceptedKey === key
+              ? 'ready'
+              : 'loading';
 
   const retry = () => {
     if (currentScope.current !== scope || getProfileContextRevision() !== profileRevision) return;
@@ -244,7 +261,7 @@ export function useCustomerServiceHistory<T extends object>({
     loading: status === 'loading',
     error:
       status === 'denied' ? ('denied' as const) : status === 'error' ? ('load' as const) : null,
-    noProfile: profile.noProfile,
+    noProfile: profileStatus === 'ready' && profile.noProfile,
     retry,
   };
 }

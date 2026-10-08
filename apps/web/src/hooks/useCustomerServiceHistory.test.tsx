@@ -34,7 +34,7 @@ afterEach(async () => {
   host?.remove();
   vi.unstubAllGlobals();
 });
-async function start(fetchMock: ReturnType<typeof vi.fn>) {
+async function start(fetchMock: ReturnType<typeof vi.fn>, account: string | null = 'account-a') {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.stubGlobal('fetch', fetchMock);
   host = document.createElement('div');
@@ -43,7 +43,7 @@ async function start(fetchMock: ReturnType<typeof vi.fn>) {
   await act(async () =>
     root!.render(
       <QueryProvider>
-        <AccountUserProvider value="account-a">
+        <AccountUserProvider value={account}>
           <Harness />
         </AccountUserProvider>
       </QueryProvider>
@@ -314,4 +314,52 @@ it('deduplicates two readers and keeps a shared pending read alive when one chan
   expect(pending.signal.aborted).toBe(true);
   await act(async () => more.resolve(reply(second, null)));
   expect(host.querySelector('#reader-a')?.textContent).toContain(second);
+});
+
+it('waits for an account identity before querying profile authority or private history', async () => {
+  const fetchMock = vi.fn(async (input: string) =>
+    input === '/api/profiles' ? Response.json({ activeProfileId: profileA }) : reply()
+  );
+  await start(fetchMock, null);
+  expect(fetchMock).not.toHaveBeenCalled();
+  expect(history.loading).toBe(true);
+  expect(history.items).toEqual([]);
+  await act(async () =>
+    root!.render(
+      <QueryProvider>
+        <AccountUserProvider value="account-a">
+          <Harness />
+        </AccountUserProvider>
+      </QueryProvider>
+    )
+  );
+  await settled(() => expect(host.textContent).toContain(first));
+  expect(fetchMock).toHaveBeenCalledTimes(2);
+});
+
+it('confirms profile authority freshly before each page and explicit retry', async () => {
+  let profileReads = 0,
+    failMore = true;
+  await start(
+    vi.fn(async (input: string) => {
+      const url = new URL(input, 'http://localhost');
+      if (url.pathname === '/api/profiles') {
+        profileReads++;
+        return Response.json({ activeProfileId: profileA });
+      }
+      if (url.searchParams.has('before'))
+        return failMore ? Response.json({}, { status: 503 }) : reply(second, null);
+      return reply();
+    })
+  );
+  await settled(() => expect(host.textContent).toContain(first));
+  expect(profileReads).toBe(1);
+  await act(async () => history.loadMore());
+  await settled(() => expect(history.error).toBe('load'));
+  expect(profileReads).toBe(2);
+  failMore = false;
+  await act(async () => history.retry());
+  await settled(() => expect(host.textContent).toContain(second));
+  expect(profileReads).toBe(3);
+  expect(host.textContent).toContain(first);
 });

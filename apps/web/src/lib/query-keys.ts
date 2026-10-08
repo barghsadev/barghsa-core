@@ -52,9 +52,17 @@ function resourceKeys(resource: string) {
 }
 
 const walletKeys = resourceKeys('wallet');
+const profileKeys = resourceKeys('profiles');
 
 export const queryKeys = {
-  profiles: resourceKeys('profiles'),
+  profiles: {
+    ...profileKeys,
+    authority: (scope: ServerQueryScope, request: string): ServerQueryKey => [
+      ...profileKeys.all(scope),
+      'authority',
+      request,
+    ],
+  },
   orders: resourceKeys('orders'),
   invoices: resourceKeys('invoices'),
   contracts: resourceKeys('contracts'),

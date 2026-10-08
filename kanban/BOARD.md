@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue server-state foundation through remaining read owners and actual mutation adoption. Provider/devtools, customer dashboard and four customer history lists are accepted. Inspect existing permission, ownership, cursor, retry and uncertain-write handling before migrating. Preserve the uncached authority probe until equivalent query-owned fresh confirmation is accepted.
+Continue server-state foundation through remaining read owners and actual mutation adoption. Provider/devtools, dashboard and four customer history/authority query flows are accepted. Inspect established permission, ownership, retry and uncertain-write handling before migrating. Query writes must never retry or optimistically alter financial records.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
