@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { TicketIntakeForm } from '../components/TicketIntakeForm.js';
 import { TicketStaffForms } from '../components/TicketStaffForms.js';
 import { useTicketCommand } from '../hooks/useTicketCommand.js';
@@ -15,7 +17,7 @@ import {
 import { TicketReplyInput } from '../components/TicketReplyInput.js';
 import { FilePreview } from '../components/FilePreview.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
 import { Button, Input, Label, ListPage, ListViewToggle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
@@ -68,6 +70,59 @@ export function StaffTicketsPage({ queries }: { queries?: SupportListQuery } = {
   return <Tickets staff {...(queries ? { queries } : {})} />;
 }
 function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuery }) {
+  const reader = useId();
+  const client = useQueryClient();
+  const readSequence = useRef(0);
+  const reads = useRef(new Map<string, ServerQueryKey>());
+  const cancelRead = useCallback(
+    (channel: string) => {
+      const key = reads.current.get(channel);
+      if (key) {
+        reads.current.delete(channel);
+        void client.cancelQueries({ queryKey: key, exact: true });
+      }
+    },
+    [client]
+  );
+  const queryRead = useCallback(
+    async <T,>(
+      channel: string,
+      key: ServerQueryKey,
+      signal: AbortSignal | undefined,
+      read: (signal: AbortSignal) => Promise<T>
+    ): Promise<T> => {
+      cancelRead(channel);
+      if (signal?.aborted) throw new DOMException('Abandoned ticket read', 'AbortError');
+      reads.current.set(channel, key);
+      const abort = () => void client.cancelQueries({ queryKey: key, exact: true });
+      signal?.addEventListener('abort', abort, { once: true });
+      try {
+        return await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const transport = new AbortController();
+            const abort = () => transport.abort();
+            if (signal.aborted) abort();
+            signal.addEventListener('abort', abort, { once: true });
+            try {
+              return await read(transport.signal);
+            } finally {
+              // Bound response bodies and abort sibling reads when a grouped read fails.
+              transport.abort();
+              signal.removeEventListener('abort', abort);
+            }
+          },
+        });
+      } finally {
+        signal?.removeEventListener('abort', abort);
+        if (reads.current.get(channel) === key) reads.current.delete(channel);
+      }
+    },
+    [client, cancelRead]
+  );
   const queryRef = useRef(queries);
   queryRef.current = queries;
   const time = useAccountTime(),
@@ -149,6 +204,12 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
   const identity = JSON.stringify([actor, profileRevision, prefix]),
     identityRef = useRef(identity);
   identityRef.current = identity;
+  useEffect(
+    () => () => {
+      for (const channel of [...reads.current.keys()]) cancelRead(channel);
+    },
+    [identity, cancelRead]
+  );
   const detail =
     detailIdentity === identity && (!queries || loadedDetail?.id === queries.selected)
       ? loadedDetail
@@ -193,6 +254,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     context = JSON.stringify([prefix, term, sort, filter, activeScoped]),
     visibleQueue = acceptedContext === context && acceptedIdentity === identity ? queue : null;
   function discardDetail(updateUrl = true) {
+    cancelRead('detail');
     if (updateUrl && queryRef.current?.selected) queryRef.current.select(null, true);
     ++detailGeneration.current;
     setDetail(null);
@@ -219,10 +281,29 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
             ...(filter ? { status: filter } : {}),
             ...(activeScoped ? { scope: 'active' } : {}),
           }),
-          response = await fetch(prefix + '?' + query, { credentials: 'include' });
-        if (!response.ok)
-          throw new Error([401, 403].includes(response.status) ? 'forbidden' : 'error');
-        const data = (await response.json()) as Queue;
+          data = await queryRead(
+            'queue',
+            queryKeys.tickets.list(
+              {
+                context: staff ? 'staff' : 'account',
+                ownerId: actor?.trim() ? actor : reader,
+                accountId: actor,
+                revision: profileRevision,
+              },
+              new URLSearchParams([...query, ['reader', reader], ['endpoint', prefix]]),
+              ++readSequence.current
+            ),
+            undefined,
+            async (signal) => {
+              const response = await fetch(prefix + '?' + query, {
+                credentials: 'include',
+                signal,
+              });
+              if (!response.ok)
+                throw new Error([401, 403].includes(response.status) ? 'forbidden' : 'error');
+              return (await response.json()) as Queue;
+            }
+          );
         if (
           !Array.isArray(data.data) ||
           !Number.isSafeInteger(data.totalPages) ||
@@ -277,7 +358,20 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
         if (current === generation.current && identityRef.current === token) setLoading(false);
       }
     },
-    [prefix, page, term, sort, filter, activeScoped, context, staff, actor, profileRevision]
+    [
+      prefix,
+      page,
+      term,
+      sort,
+      filter,
+      activeScoped,
+      context,
+      staff,
+      actor,
+      profileRevision,
+      queryRead,
+      reader,
+    ]
   );
   useEffect(() => {
     setCreating(false);
@@ -297,6 +391,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
     void load();
     return () => {
       ++generation.current;
+      cancelRead('queue');
     };
   }, [load]);
   useEffect(() => {
@@ -315,16 +410,31 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
       token = identityRef.current;
     setAssignmentLoading(true);
     setAssignmentError('');
-    void Promise.all(
-      ['assignees', 'teams'].map((path) =>
-        fetch(prefix + '/' + path, { credentials: 'include', signal: controller.signal })
-      )
-    )
-      .then(async (responses) => {
+    void queryRead(
+      'assignment',
+      queryKeys.catalogue.detail(
+        {
+          context: 'staff',
+          ownerId: actor?.trim() ? actor : reader,
+          accountId: actor,
+          revision: profileRevision,
+        },
+        JSON.stringify([reader, identity, 'ticket-assignment-options', ++readSequence.current])
+      ),
+      controller.signal,
+      async (signal) => {
+        const responses = await Promise.all(
+          ['assignees', 'teams'].map((path) =>
+            fetch(prefix + '/' + path, { credentials: 'include', signal })
+          )
+        );
         if (responses.some((r) => [401, 403].includes(r.status))) throw new Error('forbidden');
         if (responses.some((r) => !r.ok)) throw new Error('error');
-        const [people, groups] = await Promise.all(responses.map((r) => r.json())),
-          parsed = ticketAssignmentOptions(people, groups);
+        return Promise.all(responses.map((r) => r.json()));
+      }
+    )
+      .then(([people, groups]) => {
+        const parsed = ticketAssignmentOptions(people, groups);
         if (!parsed) throw new Error('error');
         if (!controller.signal.aborted && identityRef.current === token) {
           setAssignees(parsed.people);
@@ -363,21 +473,36 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
       token = identityRef.current;
     setDetailLoading(true);
     try {
-      const [recordResponse, commentsResponse] = await Promise.all([
-        fetch(prefix + '/' + encodeURIComponent(id), { credentials: 'include' }),
-        fetch(prefix + '/' + encodeURIComponent(id) + '/comments', { credentials: 'include' }),
-      ]);
-      if (
-        [401, 403, 404].includes(recordResponse.status) ||
-        [401, 403, 404].includes(commentsResponse.status)
-      )
-        throw new Error('forbidden');
-      if (!recordResponse.ok || !commentsResponse.ok) throw new Error('error');
-      const [ticket, conversation] = await Promise.all([
-          recordResponse.json(),
-          commentsResponse.json(),
-        ]),
-        parsed = ticketRecord(ticket, id);
+      const [ticket, conversation] = await queryRead(
+        'detail',
+        queryKeys.tickets.detail(
+          {
+            context: staff ? 'staff' : 'account',
+            ownerId: actor?.trim() ? actor : reader,
+            accountId: actor,
+            revision: profileRevision,
+          },
+          JSON.stringify([reader, prefix, id, ++readSequence.current])
+        ),
+        undefined,
+        async (signal) => {
+          const [recordResponse, commentsResponse] = await Promise.all([
+            fetch(prefix + '/' + encodeURIComponent(id), { credentials: 'include', signal }),
+            fetch(prefix + '/' + encodeURIComponent(id) + '/comments', {
+              credentials: 'include',
+              signal,
+            }),
+          ]);
+          if (
+            [401, 403, 404].includes(recordResponse.status) ||
+            [401, 403, 404].includes(commentsResponse.status)
+          )
+            throw new Error('forbidden');
+          if (!recordResponse.ok || !commentsResponse.ok) throw new Error('error');
+          return Promise.all([recordResponse.json(), commentsResponse.json()]);
+        }
+      );
+      const parsed = ticketRecord(ticket, id);
       if (
         !parsed ||
         !Array.isArray(conversation) ||

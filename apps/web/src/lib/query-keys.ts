@@ -90,6 +90,7 @@ export const queryKeys = {
   saving: resourceKeys('saving'),
   solar: resourceKeys('solar'),
   preferences: resourceKeys('preferences'),
+  tickets: resourceKeys('tickets'),
   wallet: {
     ...walletKeys,
     balance: (scope: ServerQueryScope, request?: string): ServerQueryKey => [

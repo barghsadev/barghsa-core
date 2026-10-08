@@ -525,3 +525,89 @@ it('staff status changes require a reason, keep it after failure, and clear it o
     await close();
   }
 });
+
+it('keeps ticket reads manual and cancels pending queue reads on unmount', async () => {
+  const signals: AbortSignal[] = [];
+  let hold = false,
+    finish!: (response: Response) => void;
+  const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
+    if (url.includes('?')) {
+      signals.push(init?.signal as AbortSignal);
+      if (hold)
+        return new Promise<Response>((done) => {
+          finish = done;
+        });
+    }
+    return Response.json(data(url));
+  });
+  vi.stubGlobal('fetch', fetcher);
+  const { host, close } = await mount(CustomerTicketsPage);
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(signals).toHaveLength(1);
+  hold = true;
+  await act(async () => button(host, 'Refresh tickets').click());
+  expect(signals).toHaveLength(2);
+  expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+  expect(signals[1]!.aborted).toBe(false);
+  await close();
+  expect(signals[1]!.aborted).toBe(true);
+  await act(async () => finish(Response.json(supportQueue)));
+  expect(fetcher.mock.calls.filter((request) => request[1]?.method)).toHaveLength(0);
+});
+
+it('cancels both conversation reads when a selected ticket is abandoned', async () => {
+  const signals: AbortSignal[] = [];
+  const finish: ((response: Response) => void)[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (!url.includes('?')) {
+        signals.push(init?.signal as AbortSignal);
+        return new Promise<Response>((done) => {
+          finish.push(done);
+        });
+      }
+      return Response.json(supportQueue);
+    })
+  );
+  const { host, close } = await mount(CustomerTicketsPage);
+  await act(async () => button(host, supportTicket.subject).click());
+  expect(signals).toHaveLength(2);
+  expect(signals.every((signal) => !signal.aborted)).toBe(true);
+  await close();
+  expect(signals.every((signal) => signal.aborted)).toBe(true);
+  await act(async () => {
+    finish[0]!(Response.json(supportTicket));
+    finish[1]!(Response.json(supportComments));
+  });
+});
+
+it('cancels pending staff assignment lookups when their owner unmounts', async () => {
+  const signals: AbortSignal[] = [],
+    finish: ((response: Response) => void)[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/teams') || url.endsWith('/assignees')) {
+        signals.push(init?.signal as AbortSignal);
+        return new Promise<Response>((done) => {
+          finish.push(done);
+        });
+      }
+      return Response.json(data(url));
+    })
+  );
+  const { close } = await mount(StaffTicketsPage);
+  expect(signals).toHaveLength(2);
+  expect(signals.every((signal) => !signal.aborted)).toBe(true);
+  await close();
+  expect(signals.every((signal) => signal.aborted)).toBe(true);
+  await act(async () => {
+    finish[0]!(Response.json(supportPeople));
+    finish[1]!(Response.json(supportTeams));
+  });
+});
