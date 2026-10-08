@@ -433,7 +433,7 @@ export default function DeadLetterPanel({
         <ListPage.Content
           loading={loading || access.loading}
           error={error || access.error}
-          retainContent={queue.data !== null}
+          retainContent={queue.data !== null && rows.length > 0}
           empty={queue.ready && !rows.length}
           emptyView={<p>{label('empty')}</p>}
           loadingView={<p role="status">{t('admin.notifications.loading', uiLocale)}</p>}

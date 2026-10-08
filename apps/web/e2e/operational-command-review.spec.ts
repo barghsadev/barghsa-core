@@ -73,9 +73,11 @@ async function setup(page: Page, locale: 'en' | 'fa', family: 'jobs' | 'notifica
   const reread = () => dialog().getByRole('button', { name: reviewWord('retry'), exact: true });
   const retry = () =>
     page
-      .locator('tbody tr')
-      .first()
-      .getByRole('button', { name: word('retry') });
+      .getByRole('button', {
+        name: family === 'jobs' ? word('retry') : `${word('retry')} ${deadLetter.eventKey}`,
+        exact: true,
+      })
+      .first();
   await page.goto(`/admin/failed-${family}`);
   await expect(page.locator('tbody tr')).toHaveCount(1);
   return {
@@ -120,7 +122,7 @@ async function inspect(page: Page, locale: string, project: string, name: string
     });
     await expect.poll(async () => (await dialog.boundingBox())?.y ?? -1).toBeGreaterThanOrEqual(0);
     await dialog.screenshot({
-      path: `/Users/majid/.local/state/barghsa-manual-batches/operational-command-review/${name}-fa.png`,
+      path: test.info().outputPath(`${name}-fa.png`),
     });
   }
 }

@@ -53,6 +53,7 @@ function resourceKeys(resource: string) {
 
 const walletKeys = resourceKeys('wallet');
 const profileKeys = resourceKeys('profiles');
+const operationsKeys = resourceKeys('operations');
 
 export const queryKeys = {
   profiles: {
@@ -68,6 +69,24 @@ export const queryKeys = {
   contracts: resourceKeys('contracts'),
   dashboard: resourceKeys('dashboard'),
   catalogue: resourceKeys('catalogue'),
+  operations: {
+    ...operationsKeys,
+    queue: (
+      scope: ServerQueryScope,
+      endpoint: string,
+      params: URLSearchParams,
+      permissionEpoch: number,
+      readRevision: number
+    ): ServerQueryKey => {
+      const { criteria, pagination } = serverListParams(params);
+      return [
+        ...operationsKeys.all(scope),
+        'list',
+        JSON.stringify([endpoint, permissionEpoch, criteria]),
+        JSON.stringify([pagination, readRevision]),
+      ];
+    },
+  },
   saving: resourceKeys('saving'),
   solar: resourceKeys('solar'),
   preferences: resourceKeys('preferences'),

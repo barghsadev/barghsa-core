@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAccountUser } from './useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
+import { useServerListQuery } from './useServerQuery.js';
 import { useCatalogueResource, useCatalogueScope } from './useCatalogueResource.js';
 
 type QueueAccess = { canView: boolean; canRetry: boolean };
@@ -22,67 +27,94 @@ export function useOperationalQueue<T extends { id: string }>(
   const access = useCatalogueResource(scope, `${endpoint}/access`, isAccess);
   const canView = !denied && access.data?.canView === true;
   const [revision, setRevision] = useState(0);
-  const key = `${version}:${endpoint}:${criteria}`;
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const key = JSON.stringify([
+    scope.identity,
+    accountId,
+    profileRevision,
+    version,
+    endpoint,
+    criteria,
+  ]);
+  const request = JSON.stringify([key, offset, revision]);
+  const readSequence = useRef({ request, revision: 0 });
+  if (readSequence.current.request !== request)
+    readSequence.current = { request, revision: readSequence.current.revision + 1 };
   const [accepted, setAccepted] = useState<{
     key: string;
+    request: string;
     offset: number;
     rows: T[];
     hasMore: boolean;
-  } | null>(null);
-  const [state, setState] = useState<{
-    key: string;
-    offset: number;
-    loading: boolean;
-    error: boolean;
   } | null>(null);
   const retry = useCallback(() => setRevision((value) => value + 1), []);
   useEffect(() => {
     if (access.data && !access.data.canView) deny();
   }, [access.data, deny]);
+  const params = new URLSearchParams(criteria);
+  params.set('limit', '26');
+  params.set('offset', String(offset));
+  const query = useServerListQuery<{ rows: T[]; hasMore: boolean }>({
+    queryKey: canView
+      ? queryKeys.operations.queue(
+          { context: 'staff', ownerId: scope.identity, accountId, revision: profileRevision },
+          endpoint,
+          params,
+          version,
+          readSequence.current.revision
+        )
+      : null,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(`${endpoint}?${params}`, { signal });
+      if (!response.ok) throw new ServerQueryError(response.status);
+      const rows: unknown = await response.json();
+      if (
+        !Array.isArray(rows) ||
+        rows.length > 26 ||
+        !rows.every(validate) ||
+        new Set(rows.map((row) => row.id)).size !== rows.length
+      )
+        throw new Error('Invalid queue');
+      return { rows: rows.slice(0, 25), hasMore: rows.length > 25 };
+    },
+  });
+  const forbidden =
+    query.error instanceof ServerQueryError &&
+    (query.error.status === 401 || query.error.status === 403);
   useEffect(() => {
     if (!canView) {
-      if (denied) {
-        setAccepted(null);
-        setState(null);
-      }
+      if (denied) setAccepted(null);
       return;
     }
-    const controller = new AbortController();
-    const current = () => !controller.signal.aborted && live.current === version;
-    const query = new URLSearchParams(criteria);
-    query.set('limit', '26');
-    query.set('offset', String(offset));
-    setState({ key, offset, loading: true, error: false });
-    void (async () => {
-      try {
-        const response = await fetch(`${endpoint}?${query}`, { signal: controller.signal });
-        if (!current()) return;
-        if (response.status === 401 || response.status === 403) {
-          deny();
-          return;
-        }
-        if (!response.ok) throw new Error('Unavailable');
-        const rows: unknown = await response.json();
-        if (!current()) return;
-        if (
-          !Array.isArray(rows) ||
-          rows.length > 26 ||
-          !rows.every(validate) ||
-          new Set(rows.map((row) => row.id)).size !== rows.length
-        )
-          throw new Error('Invalid queue');
-        setAccepted({ key, offset, rows: rows.slice(0, 25), hasMore: rows.length > 25 });
-        setState({ key, offset, loading: false, error: false });
-      } catch {
-        if (current()) setState({ key, offset, loading: false, error: true });
-      }
-    })();
-    return () => controller.abort();
-  }, [canView, denied, endpoint, criteria, offset, key, live, version, deny, revision, validate]);
-  const data = canView && accepted?.key === key ? accepted : null;
-  const status = canView && state?.key === key && state.offset === offset ? state : null;
-  const loading = canView && (status?.loading ?? true);
-  const error = status?.error ?? false;
+    if (live.current !== version) return;
+    if (forbidden) {
+      deny();
+      return;
+    }
+    if (query.isSuccess && !query.isFetching && !query.isPlaceholderData)
+      setAccepted({ key, request, offset, rows: query.data.rows, hasMore: query.data.hasMore });
+  }, [
+    canView,
+    denied,
+    key,
+    request,
+    offset,
+    live,
+    version,
+    deny,
+    forbidden,
+    query.isSuccess,
+    query.isFetching,
+    query.isPlaceholderData,
+    query.data,
+  ]);
+  const data = canView && !forbidden && accepted?.key === key ? accepted : null;
+  const loading =
+    canView &&
+    (query.isPending || query.isFetching || (query.isSuccess && accepted?.request !== request));
+  const error = canView && query.isError;
   const ready = canView && !!data && !loading && !error && !access.loading && !access.error;
   function refresh() {
     if (denied) scope.recover();

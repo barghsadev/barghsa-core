@@ -371,7 +371,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
         <ListPage.Content
           loading={loading || access.loading}
           error={error || access.error}
-          retainContent={queue.data !== null}
+          retainContent={queue.data !== null && jobs.length > 0}
           empty={queue.ready && !jobs.length}
           emptyView={<p>{label('empty')}</p>}
           loadingView={<p role="status">{label('loading')}</p>}
