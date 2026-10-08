@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -12,10 +13,16 @@ import {
   changeContractId,
   changeCursor,
   increaseRow,
-  increaseReview,
+  increaseReview as originalIncreaseReview,
   priceState,
 } from '../test/electricity-change-fixtures.js';
 
+const increaseReview = (...args: Parameters<typeof originalIncreaseReview>) => {
+  const review = originalIncreaseReview(...args);
+  return args[0] === 'approve'
+    ? { ...review, data: { ...review.data, reason: 'Capacity reviewed' } }
+    : review;
+};
 let confirmation: { onSuccess: () => Promise<void>; onClose: () => void } | null;
 vi.mock('../components/TeamActionDialog.js', () => ({
   TeamActionDialog: (props: NonNullable<typeof confirmation>) => {
@@ -67,6 +74,17 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function click(label: string) {
+  if (label === 'Approve and issue amendment') {
+    const input = document.querySelector<HTMLInputElement>('input[id^=increase-approval-reason-]')!;
+    expect(input).not.toBeNull();
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        input,
+        'Capacity reviewed'
+      );
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
   const button = [...host.querySelectorAll('button')].find((b) => b.textContent?.trim() === label);
   expect(button, label).toBeDefined();
   await act(async () => button!.click());
@@ -86,7 +104,13 @@ it('increase history clears private work and old callbacks cannot dismiss a newe
       : Response.json({ requests: [increaseRow], nextBefore: changeCursor })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<Bound />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Bound />
+      </QueryProvider>
+    )
+  );
   await fill('increase-reason-' + increaseRow.requestId, 'Private draft');
   await click('Approve and issue amendment');
   await act(async () => vi.dynamicImportSettled());
@@ -118,7 +142,13 @@ it('a pending increase page keeps More visible but disabled and refuses a repeat
         : Promise.resolve(Response.json({ requests: [increaseRow], nextBefore: changeCursor }))
     )
   );
-  await act(async () => root.render(<Bound />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Bound />
+      </QueryProvider>
+    )
+  );
   await fill('increase-reason-' + increaseRow.requestId, 'Local draft');
   await click('More requests');
   const more = [...host.querySelectorAll('button')].find(
@@ -147,7 +177,13 @@ it('late increase reviews are discarded after restored cursor navigation', async
         : Promise.resolve(Response.json({ requests: [increaseRow], nextBefore: null }))
     )
   );
-  await act(async () => root.render(<Bound />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Bound />
+      </QueryProvider>
+    )
+  );
   await click('Approve and issue amendment');
   await act(async () => navigate({ cursor: changeCursor }));
   await act(async () => finish(Response.json(increaseReview('approve'))));
@@ -158,7 +194,13 @@ it('price selection restores the contract input and clears only obsolete contrac
     Response.json({ ...priceState, contractId: url.split('/')[5] })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<Bound price />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Bound price />
+      </QueryProvider>
+    )
+  );
   await fill('price-reason', 'Private price reason');
   await fill('electricity-price-contract', 'Unapplied input');
   expect(fetcher).toHaveBeenCalledTimes(1);

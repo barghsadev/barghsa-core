@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi, type Mock } from 'vitest';
@@ -73,14 +74,16 @@ async function render(
 ) {
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <ElectricityIncreasePanel
-          contractId={contractId}
-          versionId={versionId}
-          profileId={profileId}
-          {...overrides}
-        />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <ElectricityIncreasePanel
+            contractId={contractId}
+            versionId={versionId}
+            profileId={profileId}
+            {...overrides}
+          />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
 }

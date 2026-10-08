@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import type { ReactNode } from 'react';
@@ -82,9 +83,11 @@ it('uses a selected immutable source and invoice lines in the create command', a
   stubRequests();
   await act(async () =>
     root.render(
-      <AccountUserProvider value="staff-opaque">
-        <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="staff-opaque">
+          <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await input('Contract source', `template:${versionId}`);
@@ -120,9 +123,11 @@ it('requires an explicit full value and supports a variable pricing rule', async
   stubRequests();
   await act(async () =>
     root.render(
-      <AccountUserProvider value="staff-opaque">
-        <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="staff-opaque">
+          <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await input('Contract source', `template:${versionId}`);

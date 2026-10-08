@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -95,16 +96,18 @@ const coordination = {
 async function mount(actor = 'opaque-staff', request = solarRequestId, scope = 'approved') {
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <SolarContractForm
-          requestId={request}
-          profileId={solarProfileId}
-          scopeKey={scope}
-          coordination={coordination}
-          onDenied={denied}
-          onCreated={created}
-        />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <SolarContractForm
+            requestId={request}
+            profileId={solarProfileId}
+            scopeKey={scope}
+            coordination={coordination}
+            onDenied={denied}
+            onCreated={created}
+          />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
 }
@@ -429,9 +432,11 @@ it('parent shared owner blocks lane/row/final/guidance actions and clears only s
         : defaultResponse(url, init);
   await act(async () =>
     root.render(
-      <AccountUserProvider value="opaque-staff">
-        <AdminSolarPostalPage />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="opaque-staff">
+          <AdminSolarPostalPage />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await vi.waitFor(async () => {

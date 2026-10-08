@@ -225,3 +225,30 @@ it('does not request a dependent list until its validated owner key exists', asy
     vi.unstubAllGlobals();
   }
 });
+it('wallet read tokens retain the legacy balance key and the same invalidation owner prefix', () => {
+  const scope = {
+    context: 'customer' as const,
+    ownerId: 'profile',
+    accountId: 'actor',
+    revision: 7,
+  };
+  expect(queryKeys.wallet.balance(scope)).toEqual([
+    'barghsa',
+    'wallet',
+    'customer',
+    'profile',
+    7,
+    'actor',
+    'balance',
+  ]);
+  expect(queryKeys.wallet.balance(scope, 'fresh-read')).toEqual([
+    ...queryKeys.wallet.balance(scope),
+    'fresh-read',
+  ]);
+  expect(queryKeys.wallet.balance(scope, 'fresh-read').slice(0, 6)).toEqual(
+    queryKeys.wallet.all(scope)
+  );
+  expect(queryKeys.wallet.balance(scope, 'fresh-read')).not.toEqual(
+    queryKeys.wallet.balance({ ...scope, accountId: 'other' }, 'fresh-read')
+  );
+});

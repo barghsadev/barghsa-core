@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -27,9 +28,11 @@ async function mount(props: Parameters<typeof OrderWalletBalance>[0], actor = 'f
   const render = async (next = props, who = actor) => {
     await act(async () =>
       root.render(
-        <AccountUserProvider value={who}>
-          <OrderWalletBalance {...next} />
-        </AccountUserProvider>
+        <QueryProvider>
+          <AccountUserProvider value={who}>
+            <OrderWalletBalance {...next} />
+          </AccountUserProvider>
+        </QueryProvider>
       )
     );
   };
@@ -137,4 +140,64 @@ it.each([
   expect(container.querySelector('a')).toBeNull();
   expect(container.textContent).not.toContain('Wallet top-up needed:');
   expect(container.textContent).not.toContain('private-invalid');
+});
+it('keeps balance refresh manual and hides an earlier amount while the explicit refresh is pending', async () => {
+  let finish!: (value: Response) => void;
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(response('100'))
+    .mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          finish = resolve;
+        })
+    );
+  vi.stubGlobal('fetch', fetcher);
+  const { container } = await mount({ profileId: profile });
+  expect(container.textContent).toContain('Available wallet balance: 100');
+  window.dispatchEvent(new Event('focus'));
+  window.dispatchEvent(new Event('online'));
+  await act(async () => {});
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  await act(async () => container.querySelector<HTMLButtonElement>('button')!.click());
+  expect(container.textContent).not.toContain('100');
+  expect(container.querySelector<HTMLButtonElement>('button')!.disabled).toBe(true);
+  await act(async () => finish(response('200')));
+  expect(container.textContent).toContain('Available wallet balance: 200');
+  expect(fetcher).toHaveBeenCalledTimes(2);
+});
+it('a reviewed scope change cancels the discarded read and returns to a scope with a fresh balance', async () => {
+  let old!: (value: Response) => void;
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(response('100'))
+    .mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          old = resolve;
+        })
+    )
+    .mockResolvedValueOnce(response('300'));
+  vi.stubGlobal('fetch', fetcher);
+  const { container, render } = await mount({ profileId: profile, scopeKey: 'review-a' });
+  expect(container.textContent).toContain('Available wallet balance: 100');
+  await render({ profileId: profile, scopeKey: 'review-b' });
+  const signal = fetcher.mock.calls[1]![1].signal as AbortSignal;
+  expect(container.textContent).not.toContain('100');
+  await render({ profileId: profile, scopeKey: 'review-a' });
+  expect(signal.aborted).toBe(true);
+  expect(container.textContent).toContain('Available wallet balance: 300');
+  await act(async () => old(new Response('{}', { status: 403 })));
+  expect(container.textContent).toContain('Available wallet balance: 300');
+  expect(container.textContent).not.toContain('Current access does not allow');
+  expect(fetcher).toHaveBeenCalledTimes(3);
+});
+it('makes no wallet request or funding offer while the profile owner is unresolved', async () => {
+  const fetcher = vi.fn();
+  vi.stubGlobal('fetch', fetcher);
+  const { container } = await mount({ profileId: '', total: '100' });
+  expect(fetcher).not.toHaveBeenCalled();
+  expect(container.querySelector('a')).toBeNull();
+  expect(container.textContent).not.toContain('Wallet top-up needed:');
+  expect(container.querySelector<HTMLButtonElement>('button')!.disabled).toBe(true);
 });

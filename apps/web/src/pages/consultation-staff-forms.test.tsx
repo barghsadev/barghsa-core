@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -81,7 +82,13 @@ async function mount(
   const container = document.createElement('div');
   document.body.append(container);
   const root = createRoot(container);
-  await act(async () => root.render(<AdminConsultationsPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminConsultationsPage />
+      </QueryProvider>
+    )
+  );
   const select = async (id = firstWork) =>
     act(async () => {
       [...container.querySelectorAll<HTMLButtonElement>('button')]

@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -80,19 +81,29 @@ const detail = () => ({
   hardwareAmendments: [],
   hardwareUpgrades: [],
 });
+const walletReads: string[] = [];
 let root: Root | undefined;
 let host: HTMLDivElement;
-async function render(mock: ReturnType<typeof vi.fn>) {
+async function render(mock: (url: string, init?: RequestInit) => Promise<Response>) {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  vi.stubGlobal('fetch', mock);
+  walletReads.length = 0;
+  vi.stubGlobal('fetch', (url: string, init?: RequestInit) => {
+    if (url === `/api/wallet/${ids.profileId}`) {
+      walletReads.push(url);
+      return Promise.resolve(new Response('{}', { status: 403 }));
+    }
+    return mock(url, init);
+  });
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="buyer">
-        <SavingOrderDetailPage />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="buyer">
+          <SavingOrderDetailPage />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
 }
@@ -118,12 +129,14 @@ it('binds source IDs and blocks sibling refresh/remount while captured command r
     sibling.changed!();
   });
   expect(mock).toHaveBeenCalledTimes(1);
+  expect(walletReads).toEqual([`/api/wallet/${ids.profileId}`]);
   expect(host.textContent).toContain('Private change workspace');
   await act(async () => {
     panel.props!.onCommandLock!(false);
     panel.props!.onChanged();
   });
   expect(mock).toHaveBeenCalledTimes(2);
+  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
   expect(host.textContent).toContain('Private change workspace');
 });
 it('fences old refresh/lock callbacks after confirmed profile revision with unchanged detail source', async () => {
@@ -132,6 +145,7 @@ it('fences old refresh/lock callbacks after confirmed profile revision with unch
   const old = panel.props!;
   await act(async () => refreshProfileContext());
   expect(mock).toHaveBeenCalledTimes(2);
+  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
   const fresh = panel.props!;
   await act(async () => {
     old.onCommandLock!(true);
@@ -139,8 +153,10 @@ it('fences old refresh/lock callbacks after confirmed profile revision with unch
     old.onWithdrawal!();
   });
   expect(mock).toHaveBeenCalledTimes(2);
+  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
   await act(async () => fresh.onChanged());
   expect(mock).toHaveBeenCalledTimes(3);
+  expect(walletReads).toEqual(Array(3).fill(`/api/wallet/${ids.profileId}`));
 });
 
 it('withdraws current whole-resource detail and ignores an obsolete same-scope withdrawal after authorized retry', async () => {
@@ -159,6 +175,7 @@ it('withdraws current whole-resource detail and ignores an obsolete same-scope w
   expect(retry).toBeDefined();
   await act(async () => retry.click());
   expect(mock).toHaveBeenCalledTimes(2);
+  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
   expect(host.textContent).toContain('Private change workspace');
   await act(async () => old.onWithdrawal!());
   expect(host.textContent).toContain('Private change workspace');

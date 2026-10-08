@@ -858,6 +858,7 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
     reviewed = route.request().postDataJSON() as SolarCommand;
     const review = solarContractReview(requestId, reviewed);
     review.data.source.label = 'Solar agreement';
+    if (review.data.template) review.data.template.name = 'Solar agreement';
     review.data.source.versionNumber = 2;
     return route.fulfill({ json: { ...review, hash: 'c'.repeat(64) } });
   });

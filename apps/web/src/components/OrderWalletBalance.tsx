@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { WalletFundingPrompt } from './WalletFundingPrompt.js';
 import { Button } from '@barghsa/ui';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 
 export function OrderWalletBalance({
@@ -28,46 +30,54 @@ export function OrderWalletBalance({
     profileRevision = useProfileContextRevision();
   const [revision, setRevision] = useState(0);
   const key = JSON.stringify([actor, profileRevision, profileId, scopeKey, staff, revision]);
-  const [snapshot, setSnapshot] = useState<{
-    key: string;
-    balance: string | null;
-    denied: boolean;
-  } | null>(null);
-  const current = snapshot?.key === key ? snapshot : null;
-  useEffect(() => {
-    const abort = new AbortController();
-    void fetch(
-      staff
-        ? `/api/staff/profiles/${encodeURIComponent(profileId)}/wallet-balance`
-        : `/api/wallet/${encodeURIComponent(profileId)}`,
-      { credentials: 'include', signal: abort.signal, cache: 'no-store' }
-    )
-      .then(async (response) => {
-        if (response.status === 403 || response.status === 404)
-          return { balance: null, denied: true };
-        if (!response.ok) throw new Error('Wallet unavailable');
-        const value = (await response.json()) as {
-          balance?: unknown;
-          profileId?: unknown;
-          currency?: unknown;
-        };
-        if (
-          value.currency !== 'IRR' ||
-          typeof value.balance !== 'string' ||
-          !/^-?\d{1,20}$/.test(value.balance) ||
-          (staff && value.profileId !== profileId)
-        )
-          throw new Error('Invalid wallet balance');
-        return { balance: value.balance, denied: false };
-      })
-      .then((value) => {
-        if (!abort.signal.aborted) setSnapshot({ key, ...value });
-      })
-      .catch(() => {
-        if (!abort.signal.aborted) setSnapshot({ key, balance: null, denied: false });
-      });
-    return () => abort.abort();
-  }, [key, profileId, staff]);
+  const reader = useId();
+  const readOwner = useRef({ key, revision: 0 });
+  if (readOwner.current.key !== key)
+    readOwner.current = { key, revision: readOwner.current.revision + 1 };
+  const query = useServerDetailQuery<{ balance: string | null; denied: boolean }>({
+    queryKey:
+      typeof profileId === 'string' && profileId.trim()
+        ? queryKeys.wallet.balance(
+            {
+              context: staff ? 'staff' : 'customer',
+              ownerId: profileId,
+              accountId: actor,
+              revision: profileRevision,
+            },
+            JSON.stringify([reader, scopeKey, readOwner.current.revision])
+          )
+        : null,
+    read: async (signal) => {
+      const response = await fetch(
+        staff
+          ? `/api/staff/profiles/${encodeURIComponent(profileId)}/wallet-balance`
+          : `/api/wallet/${encodeURIComponent(profileId)}`,
+        { credentials: 'include', signal, cache: 'no-store' }
+      );
+      if (response.status === 403 || response.status === 404)
+        return { balance: null, denied: true };
+      if (!response.ok) throw new Error('Wallet unavailable');
+      const value = (await response.json()) as {
+        balance?: unknown;
+        profileId?: unknown;
+        currency?: unknown;
+      };
+      if (
+        value.currency !== 'IRR' ||
+        typeof value.balance !== 'string' ||
+        !/^-?\d{1,20}$/.test(value.balance) ||
+        (staff && value.profileId !== profileId)
+      )
+        throw new Error('Invalid wallet balance');
+      return { balance: value.balance, denied: false };
+    },
+  });
+  const current =
+    query.isPending || query.isFetching
+      ? null
+      : query.isSuccess
+        ? query.data
+        : { balance: null, denied: false };
   let remaining = '0';
   try {
     const amount =

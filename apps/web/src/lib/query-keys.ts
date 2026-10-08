@@ -92,7 +92,11 @@ export const queryKeys = {
   preferences: resourceKeys('preferences'),
   wallet: {
     ...walletKeys,
-    balance: (scope: ServerQueryScope): ServerQueryKey => [...walletKeys.all(scope), 'balance'],
+    balance: (scope: ServerQueryScope, request?: string): ServerQueryKey => [
+      ...walletKeys.all(scope),
+      'balance',
+      ...(request === undefined ? [] : [request]),
+    ],
   },
 };
 

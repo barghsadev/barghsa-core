@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -136,9 +137,11 @@ async function mount(
   const render = async (actor = 'customer-one') =>
     act(async () =>
       root.render(
-        <AccountUserProvider value={actor}>
-          <Page />
-        </AccountUserProvider>
+        <QueryProvider>
+          <AccountUserProvider value={actor}>
+            <Page />
+          </AccountUserProvider>
+        </QueryProvider>
       )
     );
   await render();

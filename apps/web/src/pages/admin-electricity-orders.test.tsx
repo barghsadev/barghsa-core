@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -154,9 +155,11 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   try {
     await act(async () =>
       root.render(
-        <AccountUserProvider value="reviewer">
-          <AdminElectricityOrdersPage />
-        </AccountUserProvider>
+        <QueryProvider>
+          <AccountUserProvider value="reviewer">
+            <AdminElectricityOrdersPage />
+          </AccountUserProvider>
+        </QueryProvider>
       )
     );
     expect(container.textContent).toContain('Electricity Buyer');
@@ -363,7 +366,13 @@ it.each(['awaiting_staff_review', 'submitted', 'changes_requested', 'approved'] 
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<AdminElectricityOrdersPage />));
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <AdminElectricityOrdersPage />
+          </QueryProvider>
+        )
+      );
       const queueButton = [...container.querySelectorAll('button')].find((button) =>
         button.textContent?.includes('Electricity Buyer')
       );
@@ -486,7 +495,13 @@ it('opens a linked order directly even when it is no longer in the review queue'
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminElectricityOrdersPage />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AdminElectricityOrdersPage />
+        </QueryProvider>
+      )
+    );
     expect(fetchMock).toHaveBeenCalledWith(
       `/api/staff/electricity/orders/${orderId}`,
       expect.any(Object)

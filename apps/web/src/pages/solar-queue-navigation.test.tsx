@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -85,7 +86,13 @@ it('a contract created on a restored postal page keeps its result link after ref
       });
     })
   );
-  await act(async () => root.render(<Bound kind="postal" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Bound kind="postal" />
+      </QueryProvider>
+    )
+  );
   await act(async () => navigate({ cursor: firstSolar }));
   await click('First solar buyer');
   await click('Create contract');
@@ -124,7 +131,13 @@ for (const kind of ['requests', 'files', 'postal'] as const) {
         );
       })
     );
-    await act(async () => root.render(<Bound kind={kind} />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Bound kind={kind} />
+        </QueryProvider>
+      )
+    );
     const list = host.querySelectorAll('[data-slot="list-page"]')[kind === 'requests' ? 1 : 0]!;
     const label = kind === 'files' ? 'More files' : 'More requests';
     const more = () =>
@@ -167,7 +180,13 @@ for (const kind of ['requests', 'files', 'postal'] as const) {
         });
       })
     );
-    await act(async () => root.render(<Bound kind={kind} />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Bound kind={kind} />
+        </QueryProvider>
+      )
+    );
     await click('First solar buyer');
     await act(async () => host.querySelector<HTMLFormElement>('form')!.requestSubmit());
     await vi.waitFor(() => expect(host.querySelector('[data-testid=confirmation]')).not.toBeNull());

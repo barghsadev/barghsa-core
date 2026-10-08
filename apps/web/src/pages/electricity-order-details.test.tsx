@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -89,7 +90,13 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<ElectricityOrderDetailsPage orderId={orderId} />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <ElectricityOrderDetailsPage orderId={orderId} />
+        </QueryProvider>
+      )
+    );
     const reason = [...container.querySelectorAll('textarea')].find((item) =>
       item.closest('label')?.textContent?.includes('Cancellation reason')
     )!;
@@ -237,9 +244,11 @@ it('loads an order confirmation with its invoice and contract references', async
   try {
     await act(async () =>
       root.render(
-        <AccountUserProvider value="buyer">
-          <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />
-        </AccountUserProvider>
+        <QueryProvider>
+          <AccountUserProvider value="buyer">
+            <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />
+          </AccountUserProvider>
+        </QueryProvider>
       )
     );
     expect(request).toHaveBeenCalledWith(
@@ -348,7 +357,11 @@ it.each([
     const root = createRoot(container);
     try {
       await act(async () =>
-        root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+        root.render(
+          <QueryProvider>
+            <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />
+          </QueryProvider>
+        )
       );
       expect(container.textContent).toContain(expected);
       expect(container.textContent).toContain(settlement);
@@ -442,7 +455,11 @@ it.each([
     const root = createRoot(container);
     try {
       await act(async () =>
-        root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+        root.render(
+          <QueryProvider>
+            <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />
+          </QueryProvider>
+        )
       );
       const actionLink = Array.from(container.querySelectorAll('a')).find((link) =>
         link.textContent?.includes(message)
@@ -604,7 +621,11 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
   try {
     await import('./ElectricityOrderRevisionForm.js');
     await act(async () =>
-      root.render(<ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />)
+      root.render(
+        <QueryProvider>
+          <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />
+        </QueryProvider>
+      )
     );
     await vi.waitFor(
       () => expect(container.textContent).toContain('Change period, quantity or price'),
@@ -718,7 +739,13 @@ it.each(['en', 'fa'] as const)(
     document.body.append(host);
     const root = createRoot(host);
     try {
-      await act(async () => root.render(<ElectricityOrderDetailsPage orderId={orderId} />));
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <ElectricityOrderDetailsPage orderId={orderId} />
+          </QueryProvider>
+        )
+      );
       expect(host.textContent).toContain('Retained draft');
       expect(host.textContent).not.toContain('1970');
       expect([...host.querySelectorAll('time')].every((el) => !!el.getAttribute('dateTime'))).toBe(

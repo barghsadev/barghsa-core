@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -148,9 +149,11 @@ async function render(
   root = createRoot(host);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="staff-opaque">
-        {queryBound ? <QueryPage /> : <Page />}
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="staff-opaque">
+          {queryBound ? <QueryPage /> : <Page />}
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   const item = [...host.querySelectorAll('button')].find((button) =>
@@ -560,9 +563,11 @@ it('fences old actor/profile dialog callbacks from clearing the new private work
   const old = capture.dialogs.at(-1)!;
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="new-staff">
-        <Page />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="new-staff">
+          <Page />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await settled(() => expect(document.querySelector('[role="dialog"]')).toBeNull());

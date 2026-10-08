@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -82,7 +83,13 @@ it.each(['fa', 'en'] as const)(
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<SolarRequestPage />));
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <SolarRequestPage />
+          </QueryProvider>
+        )
+      );
       expect(container.textContent).toContain(
         locale === 'fa'
           ? 'نوع نیروگاه خورشیدی مورد نظر خودتان را انتخاب کنید.'
@@ -191,7 +198,13 @@ it('restores a solar draft before showing the form', async () => {
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<SolarRequestPage />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <SolarRequestPage />
+        </QueryProvider>
+      )
+    );
     expect(container.querySelector('#solar-area')).not.toBeNull();
     expect((container.querySelector('#solar-area') as HTMLInputElement).value).toBe('250');
     expect(container.textContent).toContain('Roof survey pending');
@@ -230,7 +243,13 @@ it('keeps entered solar details when draft saving fails', async () => {
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<SolarRequestPage />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <SolarRequestPage />
+        </QueryProvider>
+      )
+    );
     await act(async () =>
       (container.querySelector('input[value="non_household"]') as HTMLInputElement).click()
     );

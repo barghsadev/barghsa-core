@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -8,7 +9,7 @@ import {
   changeContractId,
   changeCursor,
   increaseRow,
-  increaseReview,
+  increaseReview as originalIncreaseReview,
   priceReview,
   priceRow,
   priceState,
@@ -30,6 +31,12 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
     numberStyle: 'western',
   }),
 }));
+const increaseReview = (...args: Parameters<typeof originalIncreaseReview>) => {
+  const review = originalIncreaseReview(...args);
+  return args[0] === 'approve'
+    ? { ...review, data: { ...review.data, reason: 'Capacity reviewed' } }
+    : review;
+};
 const captured = vi.hoisted(() => ({
   action: null as TeamAction | null,
   success: null as (() => Promise<void>) | null,
@@ -75,6 +82,17 @@ afterEach(async () => {
   window.history.replaceState({}, '', '/');
 });
 async function click(label: string) {
+  if (label === 'Approve and issue amendment') {
+    const input = document.querySelector<HTMLInputElement>('input[id^=increase-approval-reason-]')!;
+    expect(input).not.toBeNull();
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        input,
+        'Capacity reviewed'
+      );
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
   const button = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
     (item) => item.textContent?.trim() === label
   );
@@ -121,7 +139,13 @@ it('retries the exact increase cursor with rows, reasons and dates kept until de
       : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<AdminElectricityIncreasesPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityIncreasesPage />
+      </QueryProvider>
+    )
+  );
   await set(`increase-reason-${increaseRow.requestId}`, 'Capacity explanation');
   await set(`increase-effective-${increaseRow.requestId}`, '2026-10-06T12:00');
   const input = container.querySelector(`#increase-reason-${increaseRow.requestId}`);
@@ -162,7 +186,13 @@ it('retains an increase confirmation across transient refresh and removes it whe
           : Response.json({}, { status })
     )
   );
-  await act(async () => root.render(<AdminElectricityIncreasesPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityIncreasesPage />
+      </QueryProvider>
+    )
+  );
   await click('Approve and issue amendment');
   await act(async () => vi.dynamicImportSettled());
   expect(container.querySelector('[role="dialog"]')).not.toBeNull();
@@ -193,7 +223,13 @@ it('abandons an increase preview and clears drafts when the view changes', async
           )
     )
   );
-  await act(async () => root.render(<AdminElectricityIncreasesPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityIncreasesPage />
+      </QueryProvider>
+    )
+  );
   await set(`increase-reason-${increaseRow.requestId}`, 'Draft');
   await click('Approve and issue amendment');
   await click('Expired');
@@ -221,7 +257,13 @@ it('ignores a late increase preview after queue permission denial', async () => 
           )
     )
   );
-  await act(async () => root.render(<AdminElectricityIncreasesPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityIncreasesPage />
+      </QueryProvider>
+    )
+  );
   await click('Approve and issue amendment');
   status = 401;
   await click('Refresh');
@@ -240,7 +282,13 @@ it('recovers malformed increase envelopes locally without discarding accepted ro
       )
     )
   );
-  await act(async () => root.render(<AdminElectricityIncreasesPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityIncreasesPage />
+      </QueryProvider>
+    )
+  );
   malformed = true;
   await click('Refresh');
   expect(container.textContent).toContain(increaseRow.orderId);
@@ -260,7 +308,13 @@ it('preserves price proposal drafts, confirmation and publish key through recove
         : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityPriceAdjustmentsPage />
+      </QueryProvider>
+    )
+  );
   await proposal();
   const action = captured.action;
   expect(container.querySelector('[role="dialog"]')).not.toBeNull();
@@ -294,7 +348,13 @@ it('keeps a failed price preview error while the separate list recovers', async 
           : Response.json({}, { status })
     )
   );
-  await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityPriceAdjustmentsPage />
+      </QueryProvider>
+    )
+  );
   await proposal();
   const message = container.querySelector('[role="alert"]')!.textContent;
   status = 503;
@@ -322,7 +382,13 @@ it('invalidates price confirmation and its publish key when the version changes 
       });
     })
   );
-  await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityPriceAdjustmentsPage />
+      </QueryProvider>
+    )
+  );
   await proposal();
   const oldKey = (captured.action!.body as { idempotencyKey: string }).idempotencyKey;
   changed = true;
@@ -351,7 +417,13 @@ it('scope changes clear price drafts and block late previews for the old contrac
           )
     )
   );
-  await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityPriceAdjustmentsPage />
+      </QueryProvider>
+    )
+  );
   await proposal();
   await set('electricity-price-contract', '88888888-8888-4888-8888-888888888888');
   await click('Open contract');
@@ -384,7 +456,13 @@ it('closes price finalization when fresh data removes the permission and keeps r
       })
     )
   );
-  await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityPriceAdjustmentsPage />
+      </QueryProvider>
+    )
+  );
   await click('Finalize and issue adjustment');
   expect(container.querySelector('[role="dialog"]')).not.toBeNull();
   allowed = false;
@@ -403,7 +481,13 @@ it('an obsolete price write cannot clear new drafts after permission recovery', 
         : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityPriceAdjustmentsPage />
+      </QueryProvider>
+    )
+  );
   await proposal();
   const oldSuccess = captured.success!;
   expect(oldSuccess).toBeTypeOf('function');
@@ -426,7 +510,13 @@ it('an obsolete increase write cannot reload a different queue view', async () =
       : Response.json({ requests: url.includes('expired') ? [] : [increaseRow], nextBefore: null })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<AdminElectricityIncreasesPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AdminElectricityIncreasesPage />
+      </QueryProvider>
+    )
+  );
   await click('Approve and issue amendment');
   const oldSuccess = captured.success!;
   expect(oldSuccess).toBeTypeOf('function');

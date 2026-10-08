@@ -1,3 +1,4 @@
+import { QueryComponentProvider as QueryProvider } from '../test/query-provider.js';
 import { act, useLayoutEffect, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -104,10 +105,12 @@ async function render(fetchMock: ReturnType<typeof vi.fn>, actor = 'staff-actor'
   root = createRoot(host);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value={actor}>
-        <Page />
-        <Probe actor={actor} />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <Page />
+          <Probe actor={actor} />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await click('Buyer Company');
@@ -508,10 +511,12 @@ it('hides old actor review at the new actor commit and rejects all old callbacks
   const old = dialogs.at(-1)!;
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="new-staff">
-        <Page />
-        <Probe actor="new-staff" />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="new-staff">
+          <Page />
+          <Probe actor="new-staff" />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   expect(commits.at(-1)).toBe(false);

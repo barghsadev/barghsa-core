@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -136,9 +137,11 @@ async function mount(
   let actor = 'staff-one';
   const render = () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <AdminElectricityOrdersPage />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <AdminElectricityOrdersPage />
+        </AccountUserProvider>
+      </QueryProvider>
     );
   await act(async () => render());
   await act(async () =>
@@ -193,9 +196,11 @@ it('settles a withdrawn queue permission into its explicit error instead of endl
   try {
     await act(async () =>
       root.render(
-        <AccountUserProvider value="denied-staff">
-          <AdminElectricityOrdersPage />
-        </AccountUserProvider>
+        <QueryProvider>
+          <AccountUserProvider value="denied-staff">
+            <AdminElectricityOrdersPage />
+          </AccountUserProvider>
+        </QueryProvider>
       )
     );
     expect(host.textContent).toContain('You cannot review electricity orders.');

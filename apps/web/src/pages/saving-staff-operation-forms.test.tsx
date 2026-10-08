@@ -1,3 +1,4 @@
+import { QueryComponentProvider as QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -155,9 +156,11 @@ async function render(
   root = createRoot(host);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value={actor}>
-        <Page />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <Page />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   const row = [...host.querySelectorAll('button')].find((button) =>
@@ -597,9 +600,11 @@ it('fences old actor/profile callbacks before displaying a new private draft', a
   );
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="another-opaque-staff">
-        <Page />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="another-opaque-staff">
+          <Page />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
   await settled(() => expect(document.getElementById('saving-staff-note')).toBeNull());

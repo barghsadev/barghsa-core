@@ -1,3 +1,4 @@
+import { QueryComponentProvider as QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -69,12 +70,12 @@ async function render(fetchMock: ReturnType<typeof vi.fn>) {
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
-  await act(async () => root!.render(tree()));
+  await act(async () => root!.render(<QueryProvider>{tree()}</QueryProvider>));
 }
 async function rerender(patch: Partial<SavingChangeSource> = {}, nextActor = actor) {
   current = { ...current, ...patch };
   actor = nextActor;
-  await act(async () => root!.render(tree()));
+  await act(async () => root!.render(<QueryProvider>{tree()}</QueryProvider>));
 }
 async function settled(check: () => void) {
   await vi.waitFor(async () => {

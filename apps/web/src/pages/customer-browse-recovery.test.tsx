@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -62,7 +63,13 @@ async function mount(Page: ComponentType) {
   const host = document.createElement('div');
   document.body.append(host);
   const root = createRoot(host);
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Page />
+      </QueryProvider>
+    )
+  );
   return {
     host,
     close: async () => {

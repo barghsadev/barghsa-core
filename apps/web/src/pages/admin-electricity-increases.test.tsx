@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -57,7 +58,13 @@ it('shows expired finance cases in the staff queue without review actions', asyn
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminElectricityIncreasesPage />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AdminElectricityIncreasesPage />
+        </QueryProvider>
+      )
+    );
     const expired = Array.from(container.querySelectorAll('button')).find((button) =>
       button.textContent?.includes('Expired')
     );
@@ -114,7 +121,7 @@ it('shows each staff increase decision review and submits its exact hash', async
     },
     data: {
       action,
-      reason: action === 'reject' ? 'Outside capacity plan' : '',
+      reason: action === 'reject' ? 'Outside capacity plan' : 'Capacity reviewed',
       requestId,
       contractId,
       orderId,
@@ -182,7 +189,24 @@ it('shows each staff increase decision review and submits its exact hash', async
     });
   };
   try {
-    await act(async () => root.render(<AdminElectricityIncreasesPage />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AdminElectricityIncreasesPage />
+        </QueryProvider>
+      )
+    );
+    const approvalReason = container.querySelector<HTMLInputElement>(
+      `input[id^="increase-approval-reason-${requestId}"]`
+    )!;
+    expect(approvalReason).not.toBeNull();
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        approvalReason,
+        'Capacity reviewed'
+      );
+      approvalReason.dispatchEvent(new Event('input', { bubbles: true }));
+    });
     await click('Approve and issue amendment');
     expect(document.body.textContent).toContain('Publish amendment for customer signature');
     expect(fetchMock.mock.calls.some(([path]) => path.endsWith('/approve'))).toBe(false);
