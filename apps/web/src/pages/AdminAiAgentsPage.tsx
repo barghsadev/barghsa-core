@@ -29,6 +29,7 @@ const TeamActionDialog = lazy(() =>
 import { AgentPromptTextarea } from '../components/AgentPromptTextarea.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AdminAgentTestChat } from '../components/AdminAgentTestChat.js';
+import { StaffKnowledgeAssistant } from '../components/PublicKnowledgeAssistant.js';
 import {
   type Agent,
   type Detail,
@@ -490,6 +491,7 @@ export default function AdminAiAgentsPage() {
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
+      {!denied && <StaffKnowledgeAssistant locale={locale} />}
       {(changed || uncertain) && (
         <>
           <Alert variant="destructive">{copy(uncertain ? 'uncertain' : 'changed')}</Alert>

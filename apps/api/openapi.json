@@ -30532,6 +30532,46 @@
         ]
       }
     },
+    "/api/staff/knowledge/availability": {
+      "get": {
+        "operationId": "AiStaffChatController_availability",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Check the assigned staff knowledge guide",
+        "tags": [
+          "Staff knowledge"
+        ]
+      }
+    },
+    "/api/staff/knowledge/questions": {
+      "post": {
+        "operationId": "AiStaffChatController_ask",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ask a stateless question using authorized staff knowledge",
+        "tags": [
+          "Staff knowledge"
+        ]
+      }
+    },
     "/api/staff/profiles/{profileId}/wallet-balance": {
       "get": {
         "operationId": "StaffWalletBalanceController_balance",

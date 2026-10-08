@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and implement actual fixed staff-slot knowledge consumption through existing session and role authorization, with current authority and publication checks. Preserve unresolved business profile-data/tool scope and linked Telegram criteria.
+Inspect existing linked-account Telegram requirements and implementation before building. Identify safe profile linkage, provider configuration and operational prerequisites; preserve release-only bot scope and continue independent authorized preparation if external configuration is missing.
 
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment

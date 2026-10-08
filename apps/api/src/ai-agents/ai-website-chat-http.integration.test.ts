@@ -13,6 +13,10 @@ let worker: ChildProcess | undefined;
 let modelId: string;
 let agentId: string;
 let publicKb: string;
+let staffKb: string;
+let staffSession: string;
+let staffCsrf: string;
+let staffHeaders: Record<string, string>;
 let cookie: string;
 let csrf: string;
 let calls = 0;
@@ -79,6 +83,19 @@ beforeAll(async () => {
     [session, csrf, randomUUID()]
   );
   cookie = 'barghsa_session=' + session;
+  await http.pool.query(`
+    INSERT INTO users(user_id,username,password_hash,is_staff)
+      VALUES ('staff-guide','staff-guide@example.test','test-only',true);
+    INSERT INTO staff_roles(role_id,name,description,permissions)
+      VALUES ('staff-guide-role','Staff guide role','Owned fixture','["admin:ai:agents"]');
+    INSERT INTO user_roles(user_id,role_id) VALUES ('staff-guide','staff-guide-role')`);
+  staffSession = randomUUID();
+  staffCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,'staff-guide',$2,$3,now()+interval '1 day',now()+interval '1 hour','staff')",
+    [staffSession, staffCsrf, randomUUID()]
+  );
+  staffHeaders = { cookie: 'barghsa_session=' + staffSession, 'x-csrf-token': staffCsrf };
   await http.pool.query(
     "INSERT INTO profiles(user_id,profile_type,status,is_default,first_name) VALUES ('website-owner','INDIVIDUAL','ACTIVE',true,'PROFILE_PRIVATE')"
   );
@@ -102,6 +119,7 @@ beforeAll(async () => {
       )
     ).rows[0]!.id;
     if (audience === 'public') publicKb = id;
+    if (audience === 'staff') staffKb = id;
     await http.pool.query('INSERT INTO ai_agent_kbs(agent_id,kb_id) VALUES ($1,$2)', [agentId, id]);
     await http.pool.query(
       'INSERT INTO kb_chunks(kb_id,chunk_index,content,embedding) VALUES ($1,0,$2,$3::vector)',
@@ -148,6 +166,26 @@ beforeEach(async () => {
   held = undefined;
   reply = 'Published service guidance.';
   await http.pool.query("DELETE FROM rate_limit_windows WHERE key LIKE 'ai:website:%'");
+  await http.pool.query("DELETE FROM rate_limit_windows WHERE key LIKE 'ai:staff:%'");
+  await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='staff-guide'");
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[\"admin:ai:agents\"]' WHERE role_id='staff-guide-role'"
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ('staff-guide','staff-guide-role') ON CONFLICT DO NOTHING"
+  );
+  await http.pool.query(
+    "UPDATE sessions SET operating_context='staff',csrf_token=$2,revoked_at=NULL,expires_at=now()+interval '1 day',idle_deadline=now()+interval '1 hour' WHERE session_id=$1",
+    [staffSession, staffCsrf]
+  );
+  await http.pool.query("UPDATE knowledge_bases SET audience='staff' WHERE id=$1", [staffKb]);
+  await http.pool.query(
+    'INSERT INTO ai_agent_kbs(agent_id,kb_id) VALUES ($1,$2) ON CONFLICT DO NOTHING',
+    [agentId, staffKb]
+  );
+  await http.pool.query("UPDATE ai_agent_slots SET agent_id=$1 WHERE slot_key='staff_chatbot'", [
+    agentId,
+  ]);
   await http.pool.query('DELETE FROM ai_model_budgets WHERE model_id=$1', [modelId]);
   await http.pool.query('DELETE FROM ai_agent_policies WHERE agent_id=$1', [agentId]);
   await http.pool.query("UPDATE ai_agents SET enabled=true,link_mode='any_kb' WHERE id=$1", [
@@ -376,4 +414,211 @@ it('bounds public requests while core readiness remains healthy', async () => {
   expect((await first).status).toBe(200);
   expect((await second).status).toBe(200);
   expect(calls).toBe(2);
+});
+
+function staffAsk(body: unknown = { message: 'Staff reference?' }, headers = staffHeaders) {
+  return fetch(http.base + '/api/staff/knowledge/questions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', ...headers },
+    body: JSON.stringify(body),
+  });
+}
+it('staff fixed slot consumes staff/public sources with session audit and no business profile or history', async () => {
+  expect(
+    await (
+      await fetch(http.base + '/api/staff/knowledge/availability', { headers: staffHeaders })
+    ).json()
+  ).toEqual({ available: true });
+  const result = await staffAsk();
+  expect(result.status).toBe(200);
+  expect(result.headers.get('cache-control')).toBe('private, no-cache, no-store, must-revalidate');
+  const body = (await result.json()) as KnowledgeAnswer;
+  expect(new Set(body.sources.map((s) => s.kbId))).toEqual(new Set([publicKb, staffKb]));
+  expect(body).toMatchObject({
+    attribution: 'retrieved_context',
+    remainingQuota: 4,
+    policyChecks: [],
+    answeredAt: expect.any(String),
+  });
+  const prompt = JSON.stringify(messages);
+  expect(prompt).toContain('staff_PRIVATE_CONTENT');
+  expect(prompt).toContain('PUBLIC_GUIDANCE');
+  expect(prompt).not.toMatch(/customer_PRIVATE|admin_PRIVATE|PROFILE_PRIVATE/);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT session_id,user_id,profile_id,agent_slot,authorization_result FROM ai_audit_log WHERE correlation_id=$1',
+        [result.headers.get('x-correlation-id')]
+      )
+    ).rows
+  ).toEqual([
+    {
+      session_id: staffSession,
+      user_id: 'staff-guide',
+      profile_id: null,
+      agent_slot: 'staff_chatbot',
+      authorization_result: 'allowed',
+    },
+  ]);
+  expect((await http.pool.query('SELECT count(*) FROM ai_test_chat_turns')).rows[0].count).toBe(
+    '0'
+  );
+  expect(calls).toBe(1);
+});
+it('staff route rejects guests, customer context, missing CSRF and insufficient current grants before I/O', async () => {
+  expect((await staffAsk(undefined, {})).status).toBe(401);
+  expect((await staffAsk(undefined, { cookie })).status).toBe(403);
+  expect((await staffAsk(undefined, { cookie, 'x-csrf-token': csrf })).status).toBe(403);
+  expect((await staffAsk(undefined, { cookie: staffHeaders.cookie! })).status).toBe(403);
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[\"admin:ai:models\"]' WHERE role_id='staff-guide-role'"
+  );
+  const denied = await staffAsk();
+  expect(denied.status).toBe(403);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT authorization_result FROM ai_audit_log WHERE correlation_id=$1',
+        [denied.headers.get('x-correlation-id')]
+      )
+    ).rows
+  ).toEqual([{ authorization_result: 'denied' }]);
+  expect(
+    (await fetch(http.base + '/api/staff/knowledge/availability', { headers: staffHeaders })).status
+  ).toBe(403);
+  expect(calls).toBe(0);
+});
+it('staff request rejects all agent/profile/slot overrides and hides a missing or mixed all-KB assignment', async () => {
+  expect(
+    (
+      await staffAsk({
+        message: 'Question',
+        agentId,
+        slotKey: 'website_chatbot',
+        profileId: publicKb,
+      })
+    ).status
+  ).toBe(400);
+  await http.pool.query("UPDATE ai_agent_slots SET agent_id=NULL WHERE slot_key='staff_chatbot'");
+  expect((await staffAsk()).status).toBe(409);
+  await http.pool.query("UPDATE ai_agent_slots SET agent_id=$1 WHERE slot_key='staff_chatbot'", [
+    agentId,
+  ]);
+  await http.pool.query("UPDATE ai_agents SET link_mode='all_kbs' WHERE id=$1", [agentId]);
+  expect(
+    await (
+      await fetch(http.base + '/api/staff/knowledge/availability', { headers: staffHeaders })
+    ).json()
+  ).toEqual({ available: false });
+  expect((await staffAsk()).status).toBe(409);
+  expect(calls).toBe(0);
+});
+it.each(['role', 'disabled', 'revoked', 'expired', 'idle', 'csrf', 'context'] as const)(
+  'staff reply is withheld after late %s authority loss',
+  async (change) => {
+    beforeReply = async () => {
+      if (change === 'role')
+        await http.pool.query("DELETE FROM user_roles WHERE user_id='staff-guide'");
+      if (change === 'disabled')
+        await http.pool.query("UPDATE users SET disabled_at=now() WHERE user_id='staff-guide'");
+      if (change === 'revoked')
+        await http.pool.query('UPDATE sessions SET revoked_at=now() WHERE session_id=$1', [
+          staffSession,
+        ]);
+      if (change === 'expired')
+        await http.pool.query(
+          "UPDATE sessions SET expires_at=now()-interval '1 second' WHERE session_id=$1",
+          [staffSession]
+        );
+      if (change === 'idle')
+        await http.pool.query(
+          "UPDATE sessions SET idle_deadline=now()-interval '1 second' WHERE session_id=$1",
+          [staffSession]
+        );
+      if (change === 'csrf')
+        await http.pool.query('UPDATE sessions SET csrf_token=$2 WHERE session_id=$1', [
+          staffSession,
+          randomUUID(),
+        ]);
+      if (change === 'context')
+        await http.pool.query(
+          "UPDATE sessions SET operating_context='customer' WHERE session_id=$1",
+          [staffSession]
+        );
+    };
+    const result = await staffAsk();
+    expect(result.status).toBe(['revoked', 'expired', 'idle'].includes(change) ? 401 : 403);
+    expect(JSON.stringify(await result.json())).not.toContain(reply);
+    expect(calls).toBe(1);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT authorization_result FROM ai_audit_log WHERE correlation_id=$1',
+          [result.headers.get('x-correlation-id')]
+        )
+      ).rows
+    ).toEqual([{ authorization_result: 'denied' }]);
+  }
+);
+it.each(['slot', 'audience', 'membership', 'agent', 'model'] as const)(
+  'staff reply is withheld after late %s knowledge scope change',
+  async (change) => {
+    beforeReply = async () => {
+      if (change === 'slot')
+        await http.pool.query(
+          "UPDATE ai_agent_slots SET agent_id=NULL WHERE slot_key='staff_chatbot'"
+        );
+      if (change === 'audience')
+        await http.pool.query("UPDATE knowledge_bases SET audience='admin' WHERE id=$1", [staffKb]);
+      if (change === 'membership')
+        await http.pool.query('DELETE FROM ai_agent_kbs WHERE agent_id=$1 AND kb_id=$2', [
+          agentId,
+          staffKb,
+        ]);
+      if (change === 'agent')
+        await http.pool.query('UPDATE ai_agents SET enabled=false WHERE id=$1', [agentId]);
+      if (change === 'model')
+        await http.pool.query('UPDATE ai_models SET is_enabled=false WHERE id=$1', [modelId]);
+    };
+    const result = await staffAsk();
+    expect(result.status).toBe(409);
+    expect(JSON.stringify(await result.json())).not.toContain(reply);
+    expect(calls).toBe(1);
+  }
+);
+it('staff quota is account-bound across sessions and independent of the public quota', async () => {
+  const other = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,'staff-guide',$2,$3,now()+interval '1 day',now()+interval '1 hour','staff')",
+    [other, staffCsrf, randomUUID()]
+  );
+  for (let i = 0; i < 5; i++) expect((await staffAsk()).status).toBe(200);
+  const denied = await staffAsk(undefined, {
+    cookie: 'barghsa_session=' + other,
+    'x-csrf-token': staffCsrf,
+  });
+  expect(denied.status).toBe(429);
+  expect(Number(denied.headers.get('retry-after'))).toBeGreaterThan(0);
+  expect((await ask({ message: 'Independent public request' })).status).toBe(200);
+  expect(calls).toBe(6);
+}, 30_000);
+it('staff policy blocks hide private rule identities and redaction remains applied', async () => {
+  const id = (
+    await http.pool.query(
+      "INSERT INTO ai_policies(title,policy_type,rules,created_by) VALUES ('Staff internal filter','content_filter','{\"blockedTerms\":[\"blocked\"]}','website-owner') RETURNING id"
+    )
+  ).rows[0].id as string;
+  await http.pool.query('INSERT INTO ai_agent_policies(agent_id,policy_id) VALUES ($1,$2)', [
+    agentId,
+    id,
+  ]);
+  const denied = await staffAsk({ message: 'blocked' });
+  expect(denied.status).toBe(422);
+  const detail = await denied.json();
+  expect(detail).toMatchObject({ error: { code: 'AI_KNOWLEDGE_POLICY_BLOCKED' } });
+  expect(JSON.stringify(detail)).not.toContain(id);
+  expect(calls).toBe(0);
+  const ok = await staffAsk({ message: 'password: owned-secret' });
+  expect(ok.status).toBe(200);
+  expect(JSON.stringify(messages)).not.toContain('owned-secret');
 });

@@ -198,6 +198,10 @@ export const fa: I18nDictionary = {
   'jobs.estimate': 'زمان تقریبی باقی‌مانده: {remaining}',
   'assistant.open': 'پرسش از راهنمای برقسا',
   'assistant.public.title': 'از راهنمای برقسا بپرسید',
+  'assistant.staff.title': 'راهنمای کارکنان',
+  'assistant.staff.description': 'پرسش خود را از راهنمای منتشرشده کارکنان بپرسید.',
+  'assistant.staff.scope':
+    'این راهنما از منابع کارکنان و عمومی استفاده می‌کند. به پرونده مشتری دسترسی ندارد.',
   'assistant.public.description':
     'درباره برق، صرفه‌جویی، خورشیدی و مشاوره بپرسید. پاسخ‌ها از راهنمای منتشرشده برقسا تهیه می‌شوند.',
   'assistant.public.scope':
@@ -2024,6 +2028,10 @@ export const en: I18nDictionary = {
   'jobs.estimate': 'Estimated time remaining: {remaining}',
   'assistant.open': 'Ask Barghsa guide',
   'assistant.public.title': 'Ask the Barghsa guide',
+  'assistant.staff.title': 'Staff guide',
+  'assistant.staff.description': 'Ask a question using published staff guidance.',
+  'assistant.staff.scope':
+    'This guide uses staff and public sources. It has no customer record access.',
   'assistant.public.description':
     'Ask about electricity, saving, solar and consultation. Answers use Barghsa’s published guidance.',
   'assistant.public.scope': 'For your account or personal requests, sign in or contact support.',

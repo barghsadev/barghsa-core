@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { PublicKnowledgeAssistant } from './PublicKnowledgeAssistant.js';
+import { PublicKnowledgeAssistant, StaffKnowledgeAssistant } from './PublicKnowledgeAssistant.js';
 import { t } from '@barghsa/i18n/app';
 
 const answer = {
@@ -32,6 +32,7 @@ afterEach(async () => {
   host.remove();
   vi.useRealTimers();
   vi.unstubAllGlobals();
+  document.cookie = 'barghsa_csrf=; Max-Age=0; path=/';
 });
 async function render(locale: 'en' | 'fa' = 'en') {
   await act(async () => root.render(<PublicKnowledgeAssistant locale={locale} />));
@@ -179,3 +180,40 @@ it('refuses malformed success metadata and never renders a raw error message', a
   expect(host.textContent).not.toContain('PRIVATE_SERVER_DETAIL');
   expect(host.textContent).toContain(t('assistant.public.failure', 'en'));
 });
+
+it.each(['en', 'fa'] as const)(
+  'staff questions include current CSRF and clear retained answers after authority loss (%s)',
+  async (locale) => {
+    document.cookie = 'barghsa_csrf=staff-owned-token; path=/';
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(Response.json({ available: true }))
+      .mockResolvedValueOnce(Response.json(answer))
+      .mockResolvedValueOnce(
+        Response.json({ error: { code: 'AUTHZ:FORBIDDEN' } }, { status: 403 })
+      );
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () => root.render(<StaffKnowledgeAssistant locale={locale} />));
+    expect(host.textContent).toContain(t('assistant.staff.title', locale));
+    expect(host.textContent).toContain(t('assistant.staff.scope', locale));
+    await fill('Staff question');
+    await submit();
+    expect(host.textContent).toContain(answer.reply);
+    document.cookie = 'barghsa_csrf=rotated-owned-token; path=/';
+    await fill('Next staff question');
+    await submit();
+    expect(host.textContent).not.toContain(answer.reply);
+    expect(host.querySelector('textarea')).toBeNull();
+    const requests = fetcher.mock.calls as unknown as [string, RequestInit][];
+    expect(requests.map(([url]) => url)).toEqual([
+      '/api/staff/knowledge/availability',
+      '/api/staff/knowledge/questions',
+      '/api/staff/knowledge/questions',
+    ]);
+    expect(requests.every(([, r]) => r.credentials === 'include')).toBe(true);
+    expect(new Headers(requests[1]![1].headers).get('x-csrf-token')).toBe('staff-owned-token');
+    expect(new Headers(requests[2]![1].headers).get('x-csrf-token')).toBe('rotated-owned-token');
+    expect(JSON.parse(requests[1]![1].body as string)).toEqual({ message: 'Staff question' });
+    expect(JSON.parse(requests[2]![1].body as string)).toEqual({ message: 'Next staff question' });
+  }
+);

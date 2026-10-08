@@ -7,10 +7,22 @@ import { chatRecord, readKnowledgeAnswer, type KnowledgeAnswer } from '../lib/as
 import { authErrorCode } from '../lib/auth-errors.js';
 import { useChatRetryAfter } from '../hooks/useChatRetryAfter.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { withCsrf } from '../lib/csrf.js';
 
 /** A public, stateless question. No account request, cookie or conversation history is sent. */
 export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
+  return <KnowledgeQuestionAssistant locale={locale} staff={false} />;
+}
+
+export function StaffKnowledgeAssistant({ locale }: { locale: Locale }) {
+  return <KnowledgeQuestionAssistant locale={locale} staff />;
+}
+
+function KnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; staff: boolean }) {
   const copy = (key: string) => t('assistant.public.' + key, locale);
+  const scopeCopy = (key: string) => t('assistant.' + (staff ? 'staff.' : 'public.') + key, locale);
+  const endpoint = staff ? '/api/staff/knowledge' : '/api/public/knowledge';
+  const credentials = staff ? 'include' : 'omit';
   const [available, setAvailable] = useState<boolean | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [draft, setDraft] = useState('');
@@ -34,8 +46,8 @@ export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
     setError(null);
     setFieldError(false);
     sending.current = null;
-    void fetch('/api/public/knowledge/availability', {
-      credentials: 'omit',
+    void fetch(endpoint + '/availability', {
+      credentials,
       signal: controller.signal,
     })
       .then(async (response) => {
@@ -56,7 +68,7 @@ export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
       controller.abort();
       sending.current?.abort();
     };
-  }, [locale, attempt]);
+  }, [locale, attempt, endpoint, credentials]);
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!available || sending.current || cooldown.blocked()) return;
@@ -74,16 +86,24 @@ export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
     setQuestion({ text: message, at: Date.now() });
     setAnswer(null);
     try {
-      const response = await fetch('/api/public/knowledge/questions', {
+      const headers = { 'Content-Type': 'application/json', 'Accept-Language': locale };
+      const response = await fetch(endpoint + '/questions', {
         method: 'POST',
-        credentials: 'omit',
-        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+        credentials,
+        headers: staff ? withCsrf(headers) : headers,
         body: JSON.stringify({ message }),
         signal: controller.signal,
       });
       const body: unknown = await response.json().catch(() => null);
       if (controller.signal.aborted) return;
       if (!response.ok) {
+        if (staff && (response.status === 401 || response.status === 403)) {
+          setAvailable(false);
+          setAnswer(null);
+          setQuestion(null);
+          setDraft('');
+          return;
+        }
         if (response.status === 429) cooldown.read(response);
         if (response.status === 409) setAvailable(false);
         const code = authErrorCode(body);
@@ -93,7 +113,7 @@ export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
         } else
           setError(
             copy(
-              code === 'AI_WEBSITE_POLICY_BLOCKED'
+              code === 'AI_WEBSITE_POLICY_BLOCKED' || code === 'AI_KNOWLEDGE_POLICY_BLOCKED'
                 ? 'blocked'
                 : code === 'AI_WEBSITE_BUSY'
                   ? 'busy'
@@ -119,17 +139,20 @@ export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
   }
   return (
     <section
-      data-slot="public-knowledge"
-      aria-labelledby="public-knowledge-title"
+      data-slot={staff ? 'staff-knowledge' : 'public-knowledge'}
+      aria-labelledby={staff ? 'staff-knowledge-title' : 'public-knowledge-title'}
       className="space-y-5 border-t border-border pt-6"
     >
       <div className="space-y-2">
-        <h2 id="public-knowledge-title" className="text-lg font-semibold">
-          {copy('title')}
+        <h2
+          id={staff ? 'staff-knowledge-title' : 'public-knowledge-title'}
+          className="text-lg font-semibold"
+        >
+          {scopeCopy('title')}
         </h2>
-        <p className="text-sm leading-6 text-muted-foreground">{copy('description')}</p>
+        <p className="text-sm leading-6 text-muted-foreground">{scopeCopy('description')}</p>
         <p id="public-knowledge-scope" className="text-xs leading-5 text-muted-foreground">
-          {copy('scope')}
+          {scopeCopy('scope')}
         </p>
       </div>
       {available === null ? (

@@ -6,14 +6,14 @@ import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { rejectContentFields } from '../admin/content-input-fields.js';
 import { appendAiAudit } from './ai-audit.js';
-import { AiWebsiteChatService } from './ai-website-chat.service.js';
+import { AiStatelessKnowledgeService } from './ai-stateless-knowledge.service.js';
 
 const Question = z.object({ message: z.string().trim().min(1).max(1000) }).strict();
 
 @ApiTags('Public knowledge')
 @Controller('api/public/knowledge')
 export class AiWebsiteChatController {
-  constructor(private readonly service: AiWebsiteChatService) {}
+  constructor(private readonly service: AiStatelessKnowledgeService) {}
 
   @Get('availability')
   @ApiOperation({ summary: 'Check the published website knowledge guide' })

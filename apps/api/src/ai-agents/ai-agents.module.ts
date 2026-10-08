@@ -11,8 +11,9 @@ import { ProfilesModule } from '../profiles/profiles.module.js';
 import { AiKnowledgeChatController } from './ai-knowledge-chat.controller.js';
 import { AiKnowledgeChatService } from './ai-knowledge-chat.service.js';
 import { AiHealthController } from './ai-health.controller.js';
+import { AiStaffChatController } from './ai-staff-chat.controller.js';
 import { AiWebsiteChatController } from './ai-website-chat.controller.js';
-import { AiWebsiteChatService } from './ai-website-chat.service.js';
+import { AiStatelessKnowledgeService } from './ai-stateless-knowledge.service.js';
 
 /**
  * AI agent administration module (S-09.11, T-09.11.04 + T-09.11.05).
@@ -32,13 +33,14 @@ import { AiWebsiteChatService } from './ai-website-chat.service.js';
     AiKnowledgeChatController,
     AiHealthController,
     AiWebsiteChatController,
+    AiStaffChatController,
   ],
   providers: [
     AiAgentsService,
     AgentSlotsService,
     AiTestChatService,
     AiKnowledgeChatService,
-    AiWebsiteChatService,
+    AiStatelessKnowledgeService,
   ],
   exports: [AiAgentsService, AgentSlotsService],
 })
