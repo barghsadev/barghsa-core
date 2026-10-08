@@ -1,5 +1,6 @@
 import { fulfillDashboard } from './dashboard-fixture';
 import { test, expect } from './coverage-fixture';
+import { shellText } from '@barghsa/i18n/shell';
 
 test('dashboard shows invoices, orders and contracts, then clears them after switching profiles', async ({
   page,
@@ -194,13 +195,30 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
     /\/contracts\?state=Active/
   );
 
-  await page.getByRole('button', { name: 'Switch language to Persian' }).click();
+  async function switchLanguage(name: string, locale: 'en' | 'fa') {
+    const control = page.getByRole('button', { name, exact: true });
+    const inAccountMenu = !(await control.isVisible());
+    if (inAccountMenu)
+      await page
+        .getByRole('button', { name: shellText('accountMenu', locale), exact: true })
+        .click();
+    await control.click();
+    if (inAccountMenu) {
+      await page.keyboard.press('Escape');
+      await expect(
+        page.locator('[data-slot="popover-content"]').filter({
+          has: page.locator('a[href="/settings"]'),
+        })
+      ).not.toBeVisible();
+    }
+  }
+  await switchLanguage('Switch language to Persian', 'en');
   const persianInvoices = page.getByRole('region', { name: 'فاکتورهای پیش‌رو' });
   await expect(persianInvoices).toBeVisible();
   await expect(persianInvoices).toHaveCSS('direction', 'rtl');
   await expect(page.getByRole('region', { name: 'آخرین سفارش‌ها' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'قراردادهای فعال' })).toBeVisible();
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await switchLanguage('تغییر زبان به انگلیسی', 'fa');
 
   const menu = page.locator('button[aria-controls="dashboard-navigation"]');
   if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) === 'false')

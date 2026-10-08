@@ -25,6 +25,10 @@ import { ActiveContractsWidget, type ActiveContract } from '../components/Active
 import { DashboardLayout } from '../components/dashboard/DashboardLayout.js';
 import { DashboardWidget } from '../components/dashboard/DashboardWidget.js';
 import { useAsyncData, type AsyncData } from '../hooks/useAsyncData.js';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 
 interface DashboardContext {
   profile: { id: string; name: string };
@@ -34,13 +38,33 @@ interface DashboardContext {
 type WidgetKey = 'wallet' | 'status' | 'invoices' | 'orders' | 'contracts';
 
 function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
-  const resource = useAsyncData<{ profileId: string; data: T }>(
-    `/api/dashboard/widgets/${widget}?profileId=${encodeURIComponent(profileId)}`
-  );
-  if (resource.status !== 'ready') return resource;
-  if (!resource.data || resource.data.profileId !== profileId || resource.data.data == null)
-    return { status: 'error', data: null, retry: resource.retry };
-  return { status: 'ready', data: resource.data.data, retry: resource.retry };
+  const revision = useProfileContextRevision();
+  const scope = { context: 'customer' as const, ownerId: profileId, revision };
+  const resource = useServerDetailQuery<{ profileId: string; data: T }>({
+    queryKey:
+      widget === 'status'
+        ? queryKeys.dashboard.detail(scope, widget)
+        : queryKeys[widget].detail(scope, 'dashboard'),
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(
+        `/api/dashboard/widgets/${widget}?profileId=${encodeURIComponent(profileId)}`,
+        { credentials: 'include', signal }
+      );
+      if (!response.ok) throw new ServerQueryError(response.status);
+      return response.json();
+    },
+  });
+  const retry = () => void resource.refetch();
+  if (resource.isPending || resource.isFetching) return { status: 'loading', data: null, retry };
+  if (
+    resource.isError ||
+    !resource.data ||
+    resource.data.profileId !== profileId ||
+    resource.data.data == null
+  )
+    return { status: 'error', data: null, retry };
+  return { status: 'ready', data: resource.data.data, retry };
 }
 
 function WalletWidget({ profileId, locale }: { profileId: string; locale: Locale }) {

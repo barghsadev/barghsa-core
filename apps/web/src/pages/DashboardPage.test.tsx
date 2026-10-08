@@ -2,6 +2,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { DashboardPage } from './DashboardPage.js';
+import { QueryProvider } from '../providers/QueryProvider.js';
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
@@ -48,7 +49,13 @@ it('does not fetch or render widgets denied by current profile permissions', asy
         })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<DashboardPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <DashboardPage />
+      </QueryProvider>
+    )
+  );
   expect(container.textContent).toContain('Welcome, Legal agent');
   expect(container.querySelectorAll('[role="region"]')).toHaveLength(1);
   expect(fetcher.mock.calls.map(([url]) => url)).toEqual([
@@ -72,10 +79,18 @@ it('shows a local retry instead of another profile’s response', async () => {
           })
   );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<DashboardPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <DashboardPage />
+      </QueryProvider>
+    )
+  );
   expect(container.textContent).not.toContain('private-foreign-order');
   expect(container.querySelectorAll('[role="region"]')).toHaveLength(2);
-  expect(container.querySelector('[role="alert"]')?.textContent).toContain('Retry this section');
+  await vi.waitFor(() =>
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Retry this section')
+  );
 });
 
 it('can retry a failed context without requesting protected widget data first', async () => {
@@ -95,7 +110,13 @@ it('can retry a failed context without requesting protected widget data first', 
       })
     );
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<DashboardPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <DashboardPage />
+      </QueryProvider>
+    )
+  );
   expect(fetcher).toHaveBeenCalledTimes(1);
   const retry = container.querySelector('[role="alert"] button') as HTMLButtonElement;
   await act(async () => retry.click());

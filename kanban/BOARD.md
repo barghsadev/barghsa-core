@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 554 | Accepted with unchanged source bindings. |
-| verify | 733 | Existing work may be complete; inspect evidence before building. |
-| partial | 75 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 731 | Existing work may be complete; inspect evidence before building. |
+| partial | 77 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue the existing server-state foundation: inspect current scoped fetch owners, establish keys/read/mutation hooks, forward cancellation signals and adopt coherent customer/staff journeys. Provider and development-only devtools are accepted. Keep manual financial refresh, profile isolation and all existing launch/provider/policy gates.
+Continue the existing server-state foundation with actual list/detail owners and mutation adoption. Customer dashboard query keys, signal-forwarding reads and manual financial refresh are accepted. Inspect established catalogue/session scope and permission handling before migrating owners; preserve explicit owner/refetch/invalidation and uncertain-write boundaries.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
@@ -679,8 +679,8 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.20` | partial | Recorded batch work | Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections. |
 | `07-ui-ux-design.md#T-07.01.03.21` | done | Recorded batch work | — Pagination compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination. |
 | `07-ui-ux-design.md#T-07.01.04.01` | done | Recorded batch work | Install `@tanstack/react-query` and configure `QueryClient` in the app root with production defaults: `staleTime: 30_000` (30s for non-financial reads), `gcTime: 5 * 60_000` (5 min cache), `retry: 2` with exponential backoff, `refetchOnWindowFocus: true` for list pages, `refetchOnMount: true`. Create `QueryProvider` wrapper component. |
-| `07-ui-ux-design.md#T-07.01.04.02` | verify | Inventory needed | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |
-| `07-ui-ux-design.md#T-07.01.04.03` | verify | Inventory needed | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. |
+| `07-ui-ux-design.md#T-07.01.04.02` | partial | Recorded batch work | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |
+| `07-ui-ux-design.md#T-07.01.04.03` | partial | Recorded batch work | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. |
 | `07-ui-ux-design.md#T-07.01.04.04` | verify | Inventory needed | Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts. |
 | `07-ui-ux-design.md#T-07.01.04.05` | partial | Recorded batch work | Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action. |
 | `07-ui-ux-design.md#T-07.01.04.06` | done | Recorded batch work | Configure `@tanstack/react-query-devtools` in development mode only. Never expose query cache, stale data, or retry attempts in production. Devtools toggle bound to `process.env.NODE_ENV`. |
