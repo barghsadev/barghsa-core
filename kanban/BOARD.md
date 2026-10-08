@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 539 | Accepted with unchanged source bindings. |
-| verify | 753 | Existing work may be complete; inspect evidence before building. |
-| partial | 70 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 542 | Accepted with unchanged source bindings. |
+| verify | 749 | Existing work may be complete; inspect evidence before building. |
+| partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and accept the existing Tooltip, Select/Combobox and Tabs implementation, building only demonstrated interaction gaps. Renew affected callers, RTL/dark/mobile/accessibility and bundle evidence in one coherent batch. Earlier live provider/webhook and owner decisions remain pending; this independent build does not release a later milestone ahead of dependencies.
+Inspect existing Accordion, Switch/Toggle, Checkbox/RadioGroup, Progress and Slider controls. Build only demonstrated component gaps, review once and renew targeted caller/RTL/dark/mobile/accessibility evidence. Preserve the pending tooltip-link disposition and earlier release/live-provider/webhook gates; no later milestone release before dependencies.
 
-- `07-ui-ux-design.md#T-07.01.03.05`: Tooltip — delay show/hide, placement, rich content (HTML, links), disabled trigger handling.
-- `07-ui-ux-design.md#T-07.01.03.06`: Select (native & custom) — native `<select>` fallback for mobile. Custom Select with search/filter, grouped options, multi-select with chips/tags, clearable.
-- `07-ui-ux-design.md#T-07.01.03.07`: Command Palette / Combobox — searchable list with keyboard navigation (arrow keys, typeahead). Used for searchable dropdowns (city selector, product selector, agent selector).
-- `07-ui-ux-design.md#T-07.01.03.08`: Tabs — variants: `underline` (default), `pills`, `boxed`. Orientation: horizontal, vertical. Controlled/uncontrolled. Responsive: horizontal scroll on mobile with overflow buttons.
+- `07-ui-ux-design.md#T-07.01.03.09`: Accordion — single or multiple open. Used for FAQ, settings sections, order detail sections. Chevron icon rotation animation.
+- `07-ui-ux-design.md#T-07.01.03.10`: Switch / Toggle — used for boolean settings, enable/disable toggles. Accessible label via `aria-label` or `htmlFor`.
+- `07-ui-ux-design.md#T-07.01.03.11`: Checkbox & RadioGroup — Checkbox: indeterminate state (for select-all). RadioGroup: horizontal/vertical layout. Both with error state integration.
+- `07-ui-ux-design.md#T-07.01.03.12`: Progress — linear progress bar (used for order fulfillment stages, document upload progress). Variants: `default`, `success` (green), `warning` (amber). Animated stripe option.
+- `07-ui-ux-design.md#T-07.01.03.13`: Slider — single thumb and range thumbs. Used for percentage inputs (green rule %, capacity). Step increments.
 
 ## v0.2.0: Complete customer journeys
 
@@ -661,10 +662,10 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.02` | done | Recorded batch work | Sheet (Drawer) — side: `left` (sidebar mobile menu), `right` (notification panel, details panel), `top`, `bottom` (mobile action sheet). Sizes proportional to viewport. Backdrop blur option. |
 | `07-ui-ux-design.md#T-07.01.03.03` | done | Recorded batch work | DropdownMenu — nested submenus, checkbox items, radio items, separator, disabled items, shortcut labels. Used in table row actions, user menu, overflow menus. |
 | `07-ui-ux-design.md#T-07.01.03.04` | done | Recorded batch work | Popover — controlled/uncontrolled, placement (top/bottom/left/right + align start/center/end), offset, arrow. Used for date picker popups, filter dropdowns, info tooltips (rich content). |
-| `07-ui-ux-design.md#T-07.01.03.05` | verify | Inventory needed | Tooltip — delay show/hide, placement, rich content (HTML, links), disabled trigger handling. |
-| `07-ui-ux-design.md#T-07.01.03.06` | verify | Inventory needed | Select (native & custom) — native `<select>` fallback for mobile. Custom Select with search/filter, grouped options, multi-select with chips/tags, clearable. |
-| `07-ui-ux-design.md#T-07.01.03.07` | verify | Inventory needed | Command Palette / Combobox — searchable list with keyboard navigation (arrow keys, typeahead). Used for searchable dropdowns (city selector, product selector, agent selector). |
-| `07-ui-ux-design.md#T-07.01.03.08` | verify | Inventory needed | Tabs — variants: `underline` (default), `pills`, `boxed`. Orientation: horizontal, vertical. Controlled/uncontrolled. Responsive: horizontal scroll on mobile with overflow buttons. |
+| `07-ui-ux-design.md#T-07.01.03.05` | partial | Recorded batch work | Tooltip — delay show/hide, placement, rich content (HTML, links), disabled trigger handling. |
+| `07-ui-ux-design.md#T-07.01.03.06` | done | Recorded batch work | Select (native & custom) — native `<select>` fallback for mobile. Custom Select with search/filter, grouped options, multi-select with chips/tags, clearable. |
+| `07-ui-ux-design.md#T-07.01.03.07` | done | Recorded batch work | Command Palette / Combobox — searchable list with keyboard navigation (arrow keys, typeahead). Used for searchable dropdowns (city selector, product selector, agent selector). |
+| `07-ui-ux-design.md#T-07.01.03.08` | done | Recorded batch work | Tabs — variants: `underline` (default), `pills`, `boxed`. Orientation: horizontal, vertical. Controlled/uncontrolled. Responsive: horizontal scroll on mobile with overflow buttons. |
 | `07-ui-ux-design.md#T-07.01.03.09` | verify | Inventory needed | Accordion — single or multiple open. Used for FAQ, settings sections, order detail sections. Chevron icon rotation animation. |
 | `07-ui-ux-design.md#T-07.01.03.10` | verify | Inventory needed | Switch / Toggle — used for boolean settings, enable/disable toggles. Accessible label via `aria-label` or `htmlFor`. |
 | `07-ui-ux-design.md#T-07.01.03.11` | verify | Inventory needed | Checkbox & RadioGroup — Checkbox: indeterminate state (for select-all). RadioGroup: horizontal/vertical layout. Both with error state integration. |

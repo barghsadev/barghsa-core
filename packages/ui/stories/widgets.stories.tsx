@@ -99,6 +99,7 @@ export const Choices: Story = () => {
       <UI.ComboBox items={items} value={selected} onValueChange={setSelected}>
         <UI.ComboBoxLabel>{text('شهر', 'City')}</UI.ComboBoxLabel>
         <UI.ComboBoxInput aria-label={text('شهر', 'City')} />
+        <UI.ComboBoxClear clearLabel={text('پاک‌کردن شهر', 'Clear city')} />
         <UI.ComboBoxPopup emptyMessage={text('نتیجه‌ای یافت نشد', 'No results')}>
           {(item: string) => (
             <UI.ComboBoxItem key={item} value={item}>
@@ -134,6 +135,7 @@ export const MultipleChoices: Story = () => {
           ))}
           <UI.MultiSelectInput id="choices" />
         </UI.MultiSelectChips>
+        <UI.MultiSelectClear clearLabel={text('پاک‌کردن انتخاب‌ها', 'Clear choices')} />
         <UI.MultiSelectPopup emptyMessage={text('نتیجه‌ای یافت نشد', 'No results')}>
           {(item: string) => (
             <UI.MultiSelectItem key={item} value={item}>

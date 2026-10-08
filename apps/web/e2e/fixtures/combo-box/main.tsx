@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import {
   ComboBox,
   ComboBoxInput,
+  ComboBoxClear,
   ComboBoxTrigger,
   ComboBoxPopup,
   ComboBoxItem,
@@ -14,6 +15,7 @@ import {
   MultiSelectItem,
   MultiSelectChips,
   MultiSelectChip,
+  MultiSelectClear,
 } from '@barghsa/ui';
 
 const params = new URLSearchParams(location.search);
@@ -51,6 +53,7 @@ function Fixture() {
               aria-label={fa ? 'نمایش دسته‌ها' : 'Show categories'}
               render={<button type="button" data-custom-trigger="true" />}
             />
+            <ComboBoxClear clearLabel={fa ? 'پاک‌کردن دسته' : 'Clear category'} />
             <ComboBoxPopup>
               {(item: string) => (
                 <ComboBoxItem key={item} value={item}>
@@ -76,6 +79,7 @@ function Fixture() {
               ))}
               <MultiSelectInput id="topics" />
             </MultiSelectChips>
+            <MultiSelectClear clearLabel={fa ? 'پاک‌کردن موضوع‌ها' : 'Clear topics'} />
             <MultiSelectPopup>
               {(item: string) => (
                 <MultiSelectItem key={item} value={item}>
@@ -86,6 +90,7 @@ function Fixture() {
           </MultiSelect>
           <ComboBox items={items} name="disabled" disabled defaultValue={items[0]}>
             <ComboBoxInput aria-label={fa ? 'غیرفعال' : 'Disabled'} />
+            <ComboBoxClear clearLabel={fa ? 'پاک‌کردن انتخاب غیرفعال' : 'Clear disabled choice'} />
           </ComboBox>
           <button type="submit">{fa ? 'ارسال' : 'Submit'}</button>
         </form>

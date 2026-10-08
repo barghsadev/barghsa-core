@@ -242,6 +242,50 @@ export const Tooltips: Story = () => {
     </UI.TooltipProvider>
   );
 };
+export const TooltipOptions: Story = () => {
+  const text = useStoryText();
+  return (
+    <UI.TooltipProvider delay={150} closeDelay={100}>
+      <div className="flex flex-wrap gap-4">
+        <UI.Tooltip>
+          <UI.TooltipTrigger render={<UI.Button variant="outline" />}>
+            {text('راهنمای توضیحی', 'Descriptive guidance')}
+          </UI.TooltipTrigger>
+          <UI.TooltipContent>
+            <span>
+              <strong>{text('یادآوری', 'Reminder')}</strong> ·{' '}
+              {text('راهنمای نمایشی برای این دکمه.', 'Sample guidance for this button.')}
+            </span>
+          </UI.TooltipContent>
+        </UI.Tooltip>
+        <UI.Tooltip>
+          <UI.TooltipTrigger
+            render={<span tabIndex={0} role="group" />}
+            aria-label={text('دلیل غیرفعال بودن', 'Why unavailable')}
+          >
+            <UI.Button disabled className="pointer-events-none">
+              {text('غیرفعال', 'Unavailable')}
+            </UI.Button>
+          </UI.TooltipTrigger>
+          <UI.TooltipContent>
+            {text(
+              'این اقدام در وضعیت نمونه آماده نیست.',
+              'This action is unavailable in the sample state.'
+            )}
+          </UI.TooltipContent>
+        </UI.Tooltip>
+        <UI.Tooltip disabled>
+          <UI.TooltipTrigger render={<UI.Button variant="outline" />}>
+            {text('راهنمای خاموش', 'Disabled tooltip')}
+          </UI.TooltipTrigger>
+          <UI.TooltipContent>
+            {text('این راهنما نباید نمایش داده شود.', 'This tooltip must remain hidden.')}
+          </UI.TooltipContent>
+        </UI.Tooltip>
+      </div>
+    </UI.TooltipProvider>
+  );
+};
 export const Menus: Story = () => {
   const text = useStoryText();
   const [checked, setChecked] = useState(false);
@@ -313,7 +357,7 @@ export const CustomSelect: Story = () => {
 };
 export const Tabs: Story = () => (
   <div className="space-y-8">
-    {(['default', 'line'] as const).flatMap((variant) =>
+    {(['default', 'line', 'underline', 'pills', 'boxed'] as const).flatMap((variant) =>
       (['horizontal', 'vertical'] as const).map((orientation) => (
         <UI.Tabs key={variant + orientation} defaultValue="one" orientation={orientation}>
           <UI.TabsList variant={variant} aria-label={variant + ' ' + orientation}>
@@ -332,6 +376,31 @@ export const Tabs: Story = () => (
     )}
   </div>
 );
+export const ScrollingTabs: Story = () => {
+  const text = useStoryText();
+  const [value, setValue] = useState<unknown>(0);
+  return (
+    <UI.Tabs value={value} onValueChange={setValue} className="max-w-lg">
+      <UI.ScrollableTabsList
+        variant="underline"
+        aria-label={text('خدمات نمونه', 'Sample services')}
+        previousLabel={text('نمایش زبانه‌های قبلی', 'Show previous tabs')}
+        nextLabel={text('نمایش زبانه‌های بعدی', 'Show next tabs')}
+      >
+        {Array.from({ length: 12 }, (_, index) => (
+          <UI.TabsTrigger key={index} value={index}>
+            {text('خدمت ', 'Service ') + (index + 1)}
+          </UI.TabsTrigger>
+        ))}
+      </UI.ScrollableTabsList>
+      {Array.from({ length: 12 }, (_, index) => (
+        <UI.TabsContent key={index} value={index}>
+          {text('جزئیات خدمت ', 'Service details ') + (index + 1)}
+        </UI.TabsContent>
+      ))}
+    </UI.Tabs>
+  );
+};
 export const Commands: Story = () => {
   const text = useStoryText();
   const [selection, setSelection] = useState('');

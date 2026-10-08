@@ -72,6 +72,22 @@ for (const locale of ['en', 'fa'])
       await category.press('Enter');
       await expect(category).toHaveValue(billing);
       await expect(page.getByRole('listbox')).toBeHidden();
+      await category.press('Tab');
+      const clearCategory = page.getByRole('button', {
+        name: fa ? 'پاک‌کردن دسته' : 'Clear category',
+        exact: true,
+      });
+      await expect(clearCategory).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(category).toBeFocused();
+      await expect(category).toHaveValue('');
+      await expect(clearCategory).toHaveCount(0);
+      await submit.click();
+      await expect(page.getByRole('status', { name: 'Submitted values' })).toBeEmpty();
+      await expect(category).toBeFocused();
+      await category.fill(billing);
+      await category.press('ArrowDown');
+      await category.press('Enter');
       const trigger = page.getByRole('button', { name: fa ? 'نمایش دسته‌ها' : 'Show categories' });
       await expect(trigger).toHaveAttribute('data-custom-trigger', 'true');
       await expect(trigger).toContainText(billing);
@@ -108,6 +124,33 @@ for (const locale of ['en', 'fa'])
       }
       if ((await topics.getAttribute('aria-expanded')) === 'true') await topics.press('Escape');
       await expect(page.locator('[data-slot="combobox-chip"]')).toHaveCount(2);
+      const clearTopics = page.getByRole('button', {
+        name: fa ? 'پاک‌کردن موضوع‌ها' : 'Clear topics',
+        exact: true,
+      });
+      await topics.focus();
+      await topics.press('Tab');
+      await expect(clearTopics).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(topics).toBeFocused();
+      await expect(page.locator('[data-slot="combobox-chip"]')).toHaveCount(0);
+      await expect(clearTopics).toHaveCount(0);
+      for (const value of [billing, orders]) {
+        await topics.fill(value);
+        await expect(page.getByRole('option', { name: value, exact: true })).toBeVisible();
+        await topics.press('ArrowDown');
+        await expect(page.getByRole('option', { name: value, exact: true })).toHaveAttribute(
+          'data-highlighted',
+          ''
+        );
+        await topics.press('Enter');
+        await expect(
+          page.locator('[data-slot="combobox-chip"]').filter({ hasText: value })
+        ).toBeVisible();
+        await expect(topics).toHaveValue('');
+        await expect(page.getByRole('listbox')).toBeHidden();
+      }
+      await expect(page.locator('[data-slot="combobox-chip"]')).toHaveCount(2);
       await page
         .getByRole('button', { name: fa ? `حذف ${billing}` : `Remove ${billing}`, exact: true })
         .click();
@@ -118,6 +161,12 @@ for (const locale of ['en', 'fa'])
       );
       await expect(
         page.getByRole('combobox', { name: fa ? 'غیرفعال' : 'Disabled', exact: true })
+      ).toBeDisabled();
+      await expect(
+        page.getByRole('button', {
+          name: fa ? 'پاک‌کردن انتخاب غیرفعال' : 'Clear disabled choice',
+          exact: true,
+        })
       ).toBeDisabled();
       expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
     });

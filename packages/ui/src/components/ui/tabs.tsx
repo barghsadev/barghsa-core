@@ -20,8 +20,11 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted',
+        default: 'gap-1 bg-transparent',
         line: 'gap-1 bg-transparent',
+        pills: 'bg-muted',
+        underline: 'gap-1 bg-transparent',
+        boxed: 'border bg-muted',
       },
     },
     defaultVariants: {
@@ -35,10 +38,16 @@ function TabsList({
   variant = 'default',
   ...props
 }: TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants>) {
+  const style =
+    variant === 'default' || variant === 'underline'
+      ? 'line'
+      : variant === 'pills'
+        ? 'default'
+        : variant;
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      data-variant={variant}
+      data-variant={style}
       className={cn(tabsListVariants({ variant }), className)}
       {...props}
     />

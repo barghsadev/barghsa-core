@@ -63,6 +63,29 @@ function ComboBoxInput({ className, ...props }: ComboboxPrimitive.Input.Props) {
   );
 }
 
+/** Clears selection through the primitive so controlled value, input and form state agree. */
+function ComboBoxClear({
+  className,
+  clearLabel,
+  ...props
+}: Omit<ComboboxPrimitive.Clear.Props, 'aria-label' | 'type'> & { clearLabel: string }) {
+  return (
+    <ComboboxPrimitive.Clear
+      data-slot="combobox-clear"
+      tabIndex={0}
+      className={cn(
+        'inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+        className
+      )}
+      {...props}
+      type="button"
+      aria-label={clearLabel}
+    >
+      <XIcon aria-hidden="true" className="size-4" />
+    </ComboboxPrimitive.Clear>
+  );
+}
+
 function ComboBoxPopup({
   className,
   children,
@@ -200,6 +223,7 @@ export {
   ComboBoxLabel,
   ComboBoxTrigger,
   ComboBoxInput,
+  ComboBoxClear,
   ComboBoxPopup,
   ComboBoxItem,
   ComboBoxEmpty,

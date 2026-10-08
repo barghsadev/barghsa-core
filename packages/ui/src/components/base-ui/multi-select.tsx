@@ -12,6 +12,7 @@ export {
   ComboBoxLabel as MultiSelectLabel,
   ComboBoxTrigger as MultiSelectTrigger,
   ComboBoxInput as MultiSelectInput,
+  ComboBoxClear as MultiSelectClear,
   ComboBoxPopup as MultiSelectPopup,
   ComboBoxItem as MultiSelectItem,
   ComboBoxEmpty as MultiSelectEmpty,

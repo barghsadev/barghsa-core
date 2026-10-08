@@ -19,7 +19,7 @@ export default function AdminDeliveryProvidersPage() {
       >
         {providerText('admin.providers.runbook', locale)}
       </a>
-      <TabsList aria-label={smsProviderText('tabs', locale)}>
+      <TabsList variant="pills" aria-label={smsProviderText('tabs', locale)}>
         <TabsTrigger value="email">{smsProviderText('email', locale)}</TabsTrigger>
         <TabsTrigger value="sms">{smsProviderText('sms', locale)}</TabsTrigger>
       </TabsList>
