@@ -1,3 +1,5 @@
+import { AccountUserProvider } from './useAccountUser.js';
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -30,8 +32,16 @@ afterEach(async () => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
 });
-async function mount(profile = 'one', legal = false) {
-  await act(async () => root.render(<Harness profile={profile} legal={legal} />));
+async function mount(profile = 'one', legal = false, actor: string | null = null) {
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <Harness profile={profile} legal={legal} />
+        </AccountUserProvider>
+      </QueryProvider>
+    )
+  );
 }
 const change = async (name: string) => act(async () => edit({ name }));
 
@@ -164,4 +174,97 @@ it('ignores an old profile save receipt and resets submission authority for the 
   expect(draft.isSubmitted()).toBe(false);
   expect(draft.ready).toBe(true);
   expect(draft.hasUnsavedChanges()).toBe(false);
+});
+
+it('keeps hydration manual, retries only explicitly and preserves the version of a valid fresh draft', async () => {
+  let reads = 0;
+  const fetcher = vi.fn(async () =>
+    ++reads === 1 ? json({}, 503) : json({ version: 4, data: { name: 'Fresh' } })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await mount();
+  expect(draft.ready).toBe(false);
+  expect(draft.status).toBe('error');
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  await act(async () => draft.reload());
+  expect(draft.ready).toBe(true);
+  expect(draft.hasUnsavedChanges()).toBe(false);
+  await act(async () => expect(await draft.flush()).toBe(4));
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  const signals = vi.mocked(fetch).mock.calls.map((request) => request[1]?.signal);
+  expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+  expect(new Set(signals).size).toBe(2);
+});
+
+it('cancels old-account hydration and refuses its late restore on the same profile', async () => {
+  let finish!: (value: Response) => void, signal: AbortSignal | null | undefined;
+  const fetcher = vi.fn(async (_url: string, options?: RequestInit) => {
+    if (fetcher.mock.calls.length === 1) {
+      signal = options?.signal;
+      return new Promise<Response>((done) => {
+        finish = done;
+      });
+    }
+    return json({ version: 5, data: { name: 'New account' } });
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await mount();
+  await mount('one', false, 'replacement-account');
+  expect(signal?.aborted).toBe(true);
+  await act(async () => finish(json({ version: 8, data: { name: 'Retired account' } })));
+  expect(draft.ready).toBe(true);
+  expect(draft.hasUnsavedChanges()).toBe(false);
+  await act(async () => expect(await draft.flush()).toBe(5));
+  expect(fetcher).toHaveBeenCalledTimes(2);
+});
+
+it('aborts pending onboarding hydration on unmount', async () => {
+  let finish!: (value: Response) => void, signal: AbortSignal | null | undefined;
+  const fetcher = vi.fn(async (_url: string, options?: RequestInit) => {
+    signal = options?.signal;
+    return new Promise<Response>((done) => {
+      finish = done;
+    });
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await mount();
+  await act(async () => root.unmount());
+  root = createRoot(container);
+  expect(signal?.aborted).toBe(true);
+  await act(async () => finish(json({ version: 8, data: { name: 'Retired account' } })));
+  expect(draft.ready).toBe(false);
+  expect(fetcher).toHaveBeenCalledTimes(1);
+});
+
+it('refuses an old-account flush and its late acknowledgement on the same profile', async () => {
+  let finish!: (value: Response) => void;
+  const fetcher = vi.fn(async (_url: string, options?: RequestInit) =>
+    options?.method === 'PUT'
+      ? new Promise<Response>((done) => {
+          finish = done;
+        })
+      : json({ version: 4, data: { name: 'Current' } })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await mount();
+  await change('Retired account');
+  const oldFlush = draft.flush;
+  let pending!: Promise<number | undefined>;
+  await act(async () => {
+    pending = oldFlush();
+  });
+  await mount('one', false, 'replacement-account');
+  await act(async () => expect(await oldFlush()).toBeUndefined());
+  await act(async () => {
+    finish(json({ version: 5 }));
+    expect(await pending).toBeUndefined();
+  });
+  expect(draft.hasUnsavedChanges()).toBe(false);
+  await act(async () => expect(await draft.flush()).toBe(4));
+  expect(fetcher.mock.calls.filter((request) => request[1]?.method === 'PUT')).toHaveLength(1);
 });

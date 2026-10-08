@@ -1,3 +1,5 @@
+import { AccountUserProvider } from './useAccountUser.js';
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -25,8 +27,16 @@ async function harness() {
     result = useFormDraft(draftKey, schema, 4);
     return null;
   }
-  const render = async (key: string | null) => {
-    await act(async () => root.render(<Harness draftKey={key} />));
+  const render = async (key: string | null, actor: string | null = null) => {
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AccountUserProvider value={actor}>
+            <Harness draftKey={key} />
+          </AccountUserProvider>
+        </QueryProvider>
+      )
+    );
   };
   await render(first);
   return {
@@ -191,6 +201,101 @@ it('rejects a save completion after retry replaced its hydration generation', as
     });
     expect(await saving).toBeInstanceOf(Error);
     expect(view.current.draft).toEqual(stored);
+  } finally {
+    await view.close();
+  }
+});
+
+it('keeps reads manual and forwards a new abort signal for each explicit retry', async () => {
+  const fetcher = vi.fn(async () => response(stored));
+  vi.stubGlobal('fetch', fetcher);
+  const view = await harness();
+  try {
+    await act(async () => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await act(async () => view.current.retry());
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    const signals = vi.mocked(fetch).mock.calls.map((request) => request[1]?.signal);
+    expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+    expect(new Set(signals).size).toBe(2);
+    expect(view.current.draft).toEqual(stored);
+  } finally {
+    await view.close();
+  }
+});
+
+it('cancels a retired account read and hides it even when its profile URL is unchanged', async () => {
+  let finish!: (value: Response) => void, signal: AbortSignal | null | undefined;
+  const fetcher = vi.fn(async (_url: string, options?: RequestInit) => {
+    if (fetcher.mock.calls.length === 1) {
+      signal = options?.signal;
+      return new Promise<Response>((done) => {
+        finish = done;
+      });
+    }
+    return response({ ...stored, data: { text: 'replacement account' } });
+  });
+  vi.stubGlobal('fetch', fetcher);
+  const view = await harness();
+  try {
+    await view.render(first, 'replacement-account');
+    expect(signal?.aborted).toBe(true);
+    await act(async () => finish(response(stored)));
+    expect(view.current.draft?.data).toEqual({ text: 'replacement account' });
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  } finally {
+    await view.close();
+  }
+});
+
+it('aborts pending hydration on unmount', async () => {
+  let finish!: (value: Response) => void, signal: AbortSignal | null | undefined;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (_url: string, options?: RequestInit) => {
+      signal = options?.signal;
+      return new Promise<Response>((done) => {
+        finish = done;
+      });
+    })
+  );
+  const view = await harness();
+  await view.close();
+  expect(signal?.aborted).toBe(true);
+  await act(async () => finish(response(stored)));
+  expect(view.current.draft).toBeNull();
+});
+
+it('rejects a captured old-account save and late save receipt on an unchanged profile URL', async () => {
+  let finish!: (value: Response) => void;
+  const fetcher = vi.fn(async (_url: string, options?: RequestInit) =>
+    options?.method === 'PUT'
+      ? new Promise<Response>((done) => {
+          finish = done;
+        })
+      : response(stored)
+  );
+  vi.stubGlobal('fetch', fetcher);
+  const view = await harness();
+  try {
+    const oldSave = view.current.save;
+    let pending!: Promise<unknown>;
+    await act(async () => {
+      pending = oldSave(3, { text: 'retired account' }).catch((error: unknown) => error);
+    });
+    await view.render(first, 'replacement-account');
+    await expect(oldSave(3, { text: 'retired account' })).rejects.toThrow('Draft key unavailable');
+    await act(async () => {
+      finish(response({ profileId: 'first', currentStep: 3, data: { text: 'retired account' } }));
+      await pending;
+    });
+    expect(await pending).toBeInstanceOf(Error);
+    expect(view.current.draft).toEqual(stored);
+    expect(fetcher.mock.calls.filter((request) => request[1]?.method === 'PUT')).toHaveLength(1);
   } finally {
     await view.close();
   }

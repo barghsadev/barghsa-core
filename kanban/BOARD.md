@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue useFormDraft/useOnboardingDraft reads, then remaining customer/staff list/detail reads and mutation owners with eligible low-risk optimism. Profile/saved-address editors, account identity, preferences, security lists, manual wallet display and prior shared scopes are accepted. Preserve captured drafts, fresh owned reads, validated receipts, financial/manual policy and no automatic write replay.
+Continue BankReceiptsPage customer history and remaining financial/customer/staff list/detail reads, then mutation owners with eligible low-risk optimism. Service/onboarding drafts, profile/address editors and prior shared scopes are accepted. Preserve fresh owned reads, financial/manual policy, captured commands, validated receipts and no automatic write replay.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.

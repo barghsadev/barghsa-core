@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from './useServerQuery.js';
+import { useAccountUser } from './useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 import { withCsrf } from '../lib/csrf.js';
 import { confirmedDraftReceipt } from '../lib/form-receipt.js';
 
@@ -18,8 +23,22 @@ export function useFormDraft<T extends object>(
   schema: DraftSchema<T>,
   maxStep = 6
 ) {
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
+  const identity = JSON.stringify([accountId, profileRevision, key]);
+  const currentIdentity = useRef(identity);
+  currentIdentity.current = identity;
+  const inputs = useRef({ key, schema, maxStep, revision: 0 });
+  if (
+    inputs.current.key !== key ||
+    inputs.current.schema !== schema ||
+    inputs.current.maxStep !== maxStep
+  )
+    inputs.current = { key, schema, maxStep, revision: inputs.current.revision + 1 };
   const [draft, setDraft] = useState<FormDraft<T> | null>(null);
-  const [scope, setScope] = useState(key);
+  const [scope, setScope] = useState(identity);
   const [loading, setLoading] = useState(Boolean(key));
   const [error, setError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -29,9 +48,34 @@ export function useFormDraft<T extends object>(
     currentKey.current = key;
   }, [key]);
 
+  const profileId = key
+    ? new URL(key, 'https://barghsa.invalid').searchParams.get('profileId')
+    : null;
+  const resource = key?.includes('/solar/') ? queryKeys.solar : queryKeys.saving;
+  const queryKey = key
+    ? resource.detail(
+        {
+          context: 'customer',
+          ownerId: profileId?.trim() ? profileId : reader,
+          accountId,
+          revision: profileRevision,
+        },
+        JSON.stringify([reader, key, inputs.current.revision, retryCount])
+      )
+    : null;
+  const query = useServerDetailQuery<{ value: unknown }>({
+    queryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(key!, { credentials: 'include', signal });
+      if (!response.ok) throw new Error('Draft unavailable');
+      return { value: (await response.json()) as unknown };
+    },
+  });
   useEffect(() => {
     const epoch = ++generation.current;
-    setScope(key);
+    setScope(identity);
     setDraft(null);
     setError(false);
     if (!key) {
@@ -42,10 +86,11 @@ export function useFormDraft<T extends object>(
     const controller = new AbortController();
     setLoading(true);
     setError(false);
-    void fetch(key, { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Draft unavailable');
-        const result: unknown = await response.json();
+    void query
+      .refetch()
+      .then((reply) => {
+        if (!reply.isSuccess || !reply.data) throw new Error('Draft unavailable');
+        const result: unknown = reply.data.value;
         if (
           !result ||
           typeof result !== 'object' ||
@@ -62,23 +107,40 @@ export function useFormDraft<T extends object>(
         return result as FormDraft<T>;
       })
       .then((result) => {
-        if (!controller.signal.aborted && currentKey.current === key) setDraft(result);
+        if (
+          !controller.signal.aborted &&
+          currentKey.current === key &&
+          currentIdentity.current === identity
+        )
+          setDraft(result);
       })
       .catch(() => {
-        if (!controller.signal.aborted && currentKey.current === key) setError(true);
+        if (
+          !controller.signal.aborted &&
+          currentKey.current === key &&
+          currentIdentity.current === identity
+        )
+          setError(true);
       })
       .finally(() => {
-        if (!controller.signal.aborted && currentKey.current === key) setLoading(false);
+        if (
+          !controller.signal.aborted &&
+          currentKey.current === key &&
+          currentIdentity.current === identity
+        )
+          setLoading(false);
       });
     return () => {
       controller.abort();
+      void client.cancelQueries({ queryKey: queryKey!, exact: true });
       if (generation.current === epoch) generation.current++;
     };
-  }, [key, schema, retryCount, maxStep]);
+  }, [key, schema, retryCount, maxStep, identity]);
 
   const save = useCallback(
     async (currentStep: number, data: T) => {
-      if (!key || currentKey.current !== key) throw new Error('Draft key unavailable');
+      if (!key || currentKey.current !== key || currentIdentity.current !== identity)
+        throw new Error('Draft key unavailable');
       const epoch = generation.current;
       if (!Number.isInteger(currentStep) || currentStep < 1 || currentStep > maxStep)
         throw new Error('Invalid draft step');
@@ -100,19 +162,23 @@ export function useFormDraft<T extends object>(
         !schema.safeParse((result as FormDraft<T>).data).success
       )
         throw new Error('Invalid saved draft');
-      if (currentKey.current !== key || generation.current !== epoch)
+      if (
+        currentKey.current !== key ||
+        generation.current !== epoch ||
+        currentIdentity.current !== identity
+      )
         throw new Error('Draft scope changed');
-      setScope(key);
+      setScope(identity);
       setDraft(result as FormDraft<T>);
       return result as FormDraft<T>;
     },
-    [key, schema, maxStep]
+    [key, schema, maxStep, identity]
   );
 
   return {
-    draft: scope === key ? draft : null,
-    loading: scope === key ? loading : Boolean(key),
-    error: scope === key && error,
+    draft: scope === identity ? draft : null,
+    loading: scope === identity ? loading : Boolean(key),
+    error: scope === identity && error,
     save,
     retry: () => setRetryCount((value) => value + 1),
   };
