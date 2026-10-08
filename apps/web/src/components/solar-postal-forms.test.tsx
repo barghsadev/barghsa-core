@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -37,7 +38,13 @@ async function mount(handler: (url: string, options?: RequestInit) => Promise<Re
   document.body.append(container);
   const root = createRoot(container);
   const render = async (profile = profileId) =>
-    act(async () => root.render(<SolarPostalPanel requestId={requestId} profileId={profile} />));
+    act(async () =>
+      root.render(
+        <QueryComponentProvider>
+          <SolarPostalPanel requestId={requestId} profileId={profile} />
+        </QueryComponentProvider>
+      )
+    );
   await render();
   const fill = async (id: string, value: string) =>
     act(async () => {

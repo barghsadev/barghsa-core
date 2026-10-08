@@ -1,5 +1,10 @@
 import { historyContextText } from '../lib/history-context.js';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 import { Link, useParams } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
@@ -43,6 +48,29 @@ interface SolarRequest {
 
 export function SolarRequestDetailPage() {
   const { requestId } = useParams({ from: '/_app/solar/requests/$requestId' });
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  return (
+    <SolarRequestDetail
+      key={JSON.stringify([actor, profileRevision, requestId])}
+      requestId={requestId}
+      actor={actor}
+      profileRevision={profileRevision}
+    />
+  );
+}
+
+function SolarRequestDetail({
+  requestId,
+  actor,
+  profileRevision,
+}: {
+  requestId: string;
+  actor: string | null;
+  profileRevision: number;
+}) {
+  const reader = useId();
+  const client = useQueryClient();
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
@@ -53,6 +81,12 @@ export function SolarRequestDetailPage() {
   const [progress, setProgress] = useState<SolarProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [readDenied, setReadDenied] = useState(false);
+  const [detailVersion, setDetailVersion] = useState(0);
+  const [documentsVersion, setDocumentsVersion] = useState(0);
+  const [documentReadError, setDocumentReadError] = useState(false);
+  const detailPending = useRef(false);
+  const documentsPending = useRef(false);
   const [documentsInfo, setDocumentsInfo] = useState<{
     guidance: { fa: string; en: string; suggestions: Array<{ fa: string; en: string }> };
     requestedDocuments: Array<{ id: string; description: string }>;
@@ -72,60 +106,165 @@ export function SolarRequestDetailPage() {
     }),
     [requestId]
   );
+  const detailQueryKey = queryKeys.solar.detail(
+    {
+      context: 'account',
+      ownerId: actor?.trim() ? actor : reader,
+      accountId: actor,
+      revision: profileRevision,
+    },
+    JSON.stringify([reader, requestId, 'request', detailVersion])
+  );
+  const detailQuery = useServerDetailQuery<{
+    request: SolarRequest;
+    progress?: SolarProgress;
+    history?: Array<{ event: string; at: string; actorContext?: string | null }>;
+  }>({
+    queryKey: detailQueryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(`/api/solar/requests/${encodeURIComponent(requestId)}`, {
+        credentials: 'include',
+        signal,
+      });
+      if ([401, 403, 404].includes(response.status)) throw new Error('forbidden');
+      if (!response.ok) throw new Error('request');
+      return response.json();
+    },
+  });
+  const showDocuments =
+    request &&
+    ['submitted', 'uploading_documents', 'documents_under_review', 'changes_requested'].includes(
+      request.status
+    );
+  const documentsQueryKey =
+    showDocuments && request
+      ? queryKeys.solar.detail(
+          {
+            context: 'customer',
+            ownerId: request.profile_id,
+            accountId: actor,
+            revision: profileRevision,
+          },
+          JSON.stringify([reader, requestId, 'documents', documentsVersion])
+        )
+      : null;
+  const documentsQuery = useServerDetailQuery<NonNullable<typeof documentsInfo>>({
+    queryKey: documentsQueryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(
+        `/api/solar/requests/${encodeURIComponent(requestId)}/documents`,
+        {
+          credentials: 'include',
+          signal,
+        }
+      );
+      if ([401, 403, 404].includes(response.status)) throw new Error('forbidden');
+      if (!response.ok) throw new Error('documents');
+      return response.json();
+    },
+  });
   useEffect(() => {
     const controller = new AbortController();
+    detailPending.current = true;
     setRequest(null);
     setProgress(null);
     setHistory([]);
     setDocumentsInfo(null);
     setLoading(true);
     setError(false);
-    void fetch(`/api/solar/requests/${encodeURIComponent(requestId)}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('request');
-        return response.json() as Promise<{
-          request: SolarRequest;
-          progress?: SolarProgress;
-          history?: Array<{ event: string; at: string; actorContext?: string | null }>;
-        }>;
+    setReadDenied(false);
+    void detailQuery
+      .refetch()
+      .then((reply) => {
+        if (controller.signal.aborted) return;
+        if (!reply.isSuccess || !reply.data) throw reply.error ?? new Error('request');
+        const result = reply.data;
+        if (
+          !result.request ||
+          result.request.id !== requestId ||
+          typeof result.request.profile_id !== 'string' ||
+          !result.request.profile_id.trim()
+        )
+          throw new Error('request');
+        setRequest(result.request);
+        setProgress(result.progress ?? null);
+        setHistory(result.history ?? []);
       })
-      .then((result) => {
+      .catch((reason: unknown) => {
         if (!controller.signal.aborted) {
-          setRequest(result.request);
-          setProgress(result.progress ?? null);
-          setHistory(result.history ?? []);
+          detailPending.current = false;
+          setReadDenied(reason instanceof Error && reason.message === 'forbidden');
+          setError(true);
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          detailPending.current = false;
+          setLoading(false);
+        }
+      });
+    return () => {
+      controller.abort();
+      void client.cancelQueries({ queryKey: detailQueryKey, exact: true });
+    };
+  }, [requestId, detailVersion]);
+  useEffect(() => {
+    if (!request || !documentsQueryKey) return;
+    const controller = new AbortController();
+    documentsPending.current = true;
+    setDocumentsInfo(null);
+    setDocumentReadError(false);
+    setDocumentError(false);
+    void documentsQuery
+      .refetch()
+      .then((reply) => {
+        if (controller.signal.aborted) return;
+        if (!reply.isSuccess || !reply.data) throw reply.error ?? new Error('documents');
+        const value = reply.data;
+        if (
+          !value.guidance ||
+          typeof value.guidance.fa !== 'string' ||
+          typeof value.guidance.en !== 'string' ||
+          !Array.isArray(value.guidance.suggestions) ||
+          !value.guidance.suggestions.every(
+            (item) => item && typeof item.fa === 'string' && typeof item.en === 'string'
+          ) ||
+          !Array.isArray(value.requestedDocuments) ||
+          !value.requestedDocuments.every(
+            (item) => item && typeof item.id === 'string' && typeof item.description === 'string'
+          )
+        )
+          throw new Error('documents');
+        setDocumentsInfo(value);
+      })
+      .catch((reason: unknown) => {
+        if (!controller.signal.aborted) {
+          documentsPending.current = false;
+          if (reason instanceof Error && reason.message === 'forbidden') {
+            setRequest(null);
+            setProgress(null);
+            setHistory([]);
+            setDocumentsInfo(null);
+            setReadDenied(true);
+            setError(true);
+          } else {
+            setDocumentReadError(true);
+            setDocumentError(true);
+          }
+        }
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted) documentsPending.current = false;
       });
-    return () => controller.abort();
-  }, [requestId]);
-  useEffect(() => {
-    if (!request) return;
-    const controller = new AbortController();
-    void fetch(`/api/solar/requests/${encodeURIComponent(requestId)}/documents`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('documents');
-        return response.json() as Promise<NonNullable<typeof documentsInfo>>;
-      })
-      .then((value) => {
-        if (!controller.signal.aborted) setDocumentsInfo(value);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setDocumentError(true);
-      });
-    return () => controller.abort();
-  }, [requestId, request?.id]);
+    return () => {
+      controller.abort();
+      void client.cancelQueries({ queryKey: documentsQueryKey, exact: true });
+    };
+  }, [requestId, request?.id, showDocuments, documentsVersion]);
 
   async function completeDocuments() {
     if (!allUploaded || sendingDocuments) return;
@@ -169,7 +308,24 @@ export function SolarRequestDetailPage() {
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
       {time.notice}
       {loading && <p role="status">{copy('loading')}</p>}
-      {error && <p role="alert">{copy('notFound')}</p>}
+      {error && (
+        <div className="space-y-2">
+          <p role="alert">{copy('notFound')}</p>
+          {!readDenied && (
+            <button
+              type="button"
+              className="rounded-md border px-4 py-2"
+              onClick={() => {
+                if (detailPending.current) return;
+                detailPending.current = true;
+                setDetailVersion((value) => value + 1);
+              }}
+            >
+              {copy('retry')}
+            </button>
+          )}
+        </div>
+      )}
       {request && request.id === requestId && (
         <>
           <WorkflowStatusBanner
@@ -312,6 +468,20 @@ export function SolarRequestDetailPage() {
               </button>
               {documentSent && <p role="status">{copy('reviewSent')}</p>}
               {documentError && <p role="alert">{copy('documentError')}</p>}
+              {documentReadError && (
+                <button
+                  type="button"
+                  className="rounded-md border px-4 py-2"
+                  disabled={sendingDocuments}
+                  onClick={() => {
+                    if (documentsPending.current || sendingDocuments) return;
+                    documentsPending.current = true;
+                    setDocumentsVersion((value) => value + 1);
+                  }}
+                >
+                  {copy('retry')}
+                </button>
+              )}
             </section>
           )}
           {[

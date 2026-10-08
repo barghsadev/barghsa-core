@@ -980,3 +980,142 @@ for (const locale of ['en', 'fa'] as const)
     );
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
   });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`solar detail and guidance recover by keyboard without replaying submission (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    let detailReady = false,
+      guidanceReady = false,
+      reads = 0,
+      documentReads = 0,
+      writes = 0;
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'solar-reader',
+          isStaff: false,
+          operatingContext: 'customer',
+          requiresTosAcceptance: false,
+          navigation: fullNavigation('customer', 'INDIVIDUAL'),
+        },
+      })
+    );
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [{ id: profileId, profileType: 'INDIVIDUAL', title: 'Solar reader' }],
+          activeProfileId: profileId,
+          hasDefault: true,
+        },
+      })
+    );
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: {
+          activeProfileId: profileId,
+          profileStatus: 'ACTIVE',
+          verificationRequired: true,
+          isVerified: true,
+        },
+      })
+    );
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
+    await page.route('**/api/upload/policy/*', (route) =>
+      route.fulfill({ json: documentUploadPolicy })
+    );
+    await page.route('**/api/documents?*', (route) =>
+      route.fulfill({ json: { documents: [], nextBefore: null } })
+    );
+    await page.route(`**/api/solar/requests/${requestId}`, (route) => {
+      reads++;
+      return route.fulfill(
+        detailReady
+          ? {
+              json: {
+                request: {
+                  id: requestId,
+                  profile_id: profileId,
+                  status: 'submitted',
+                  building_type: 'building_apartment',
+                  grid_type: 'off_grid',
+                  site_address: 'Recovery site',
+                  agreement_version: 'v1',
+                  agreement_snapshot: 'Accepted solar terms',
+                  agreement_accepted_at: submittedAt,
+                  submitted_at: submittedAt,
+                },
+                history: [],
+              },
+            }
+          : { status: 503, json: {} }
+      );
+    });
+    await page.route(`**/api/solar/requests/${requestId}/documents`, (route) => {
+      documentReads++;
+      return route.fulfill(
+        guidanceReady
+          ? {
+              json: {
+                guidance: {
+                  fa: 'مدارک محل را بارگذاری کنید',
+                  en: 'Upload site evidence',
+                  suggestions: [],
+                },
+                requestedDocuments: [],
+              },
+            }
+          : { status: 503, json: {} }
+      );
+    });
+    await page.route(`**/api/solar/requests/${requestId}/documents/complete`, (route) => {
+      writes++;
+      return route.fulfill({ json: { status: 'documents_under_review' } });
+    });
+    await page.goto(`/solar/requests/${requestId}`);
+    const main = page.getByRole('main').last();
+    const retry = main.getByRole('button', { name: solarCopy('retry', locale), exact: true });
+    await expect(retry).toBeVisible();
+    expect(reads).toBe(1);
+    expect(documentReads).toBe(0);
+    detailReady = true;
+    await retry.focus();
+    await page.keyboard.press('Enter');
+    await expect(main.getByText('Recovery site', { exact: true })).toBeVisible();
+    await expect(retry).toBeVisible();
+    expect(reads).toBe(2);
+    expect(documentReads).toBe(1);
+    const checkbox = main.getByRole('checkbox', {
+      name: solarCopy('allUploaded', locale),
+      exact: true,
+    });
+    await checkbox.check();
+    guidanceReady = true;
+    await retry.focus();
+    await page.keyboard.press('Enter');
+    await expect(
+      main.getByText(locale === 'fa' ? 'مدارک محل را بارگذاری کنید' : 'Upload site evidence', {
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(checkbox).toBeChecked();
+    expect(reads).toBe(2);
+    expect(documentReads).toBe(2);
+    expect(writes).toBe(0);
+    await expect(retry).toHaveCount(0);
+    await page.evaluate(() => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+    });
+    expect(reads).toBe(2);
+    expect(documentReads).toBe(2);
+    expect(writes).toBe(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+  });
