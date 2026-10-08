@@ -1,6 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import {
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -120,7 +125,19 @@ export function ElectricityOrderRevisionForm({
   const actor = useAccountUser();
   const numbers = useNumberFormatting(locale);
   const advanced = order.mode === 'advanced';
-  const scopeKey = JSON.stringify([actor, order.orderId, order.profileId, order.versionId]);
+  const profileRevision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
+  const scopeKey = JSON.stringify([
+    actor,
+    profileRevision,
+    order.orderId,
+    order.profileId,
+    order.versionId,
+  ]);
+  const readOwner = useRef({ scopeKey, epoch: 0 });
+  if (readOwner.current.scopeKey !== scopeKey)
+    readOwner.current = { scopeKey, epoch: readOwner.current.epoch + 1 };
   const scope = useRef(scopeKey);
   const generation = useRef(0);
   if (scope.current !== scopeKey) {
@@ -133,6 +150,9 @@ export function ElectricityOrderRevisionForm({
   const [periods, setPeriods] = useState<Array<{ key: PeriodKey; start: string; end: string }>>([]);
   const [mandatoryGreen, setMandatoryGreen] = useState(false);
   const [optionsReady, setOptionsReady] = useState(false);
+  const [optionsError, setOptionsError] = useState(false);
+  const [optionsRevision, setOptionsRevision] = useState(0);
+  const optionsPending = useRef(false);
   const initial = (): ElectricityRevisionDraft => ({
     period: 'next_week',
     totalKwh: order.totalKwh,
@@ -262,27 +282,78 @@ export function ElectricityOrderRevisionForm({
       ++generation.current;
     };
   }, [scopeKey]);
+  const optionsQueryKey = queryKeys.catalogue.detail(
+    {
+      context: 'customer',
+      ownerId: order.profileId.trim() ? order.profileId : reader,
+      accountId: actor,
+      revision: profileRevision,
+    },
+    JSON.stringify([
+      reader,
+      'electricity-revision-periods',
+      scopeKey,
+      readOwner.current.epoch,
+      advanced,
+      order.periodStart,
+      order.periodEnd,
+      optionsRevision,
+    ])
+  );
+  const optionsQuery = useServerDetailQuery<{ status: number; value: unknown }>({
+    queryKey: optionsQueryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(
+        advanced ? '/api/electricity/periods/advanced' : '/api/electricity/periods/simple',
+        { credentials: 'include', signal }
+      );
+      if ([401, 403, 404].includes(response.status))
+        return { status: response.status, value: null };
+      if (!response.ok) throw new Error('Period options unavailable');
+      return { status: response.status, value: (await response.json()) as unknown };
+    },
+  });
+  function retryOptions() {
+    if (
+      scope.current !== scopeKey ||
+      !optionsError ||
+      optionsPending.current ||
+      pending.current ||
+      attempt.current ||
+      lock.owner
+    )
+      return;
+    ++generation.current;
+    optionsPending.current = true;
+    setOptionsReady(false);
+    setOptionsError(false);
+    setError(false);
+    setReview(null);
+    setOptionsRevision((value) => value + 1);
+  }
   useEffect(() => {
     const abort = new AbortController();
     const token = generation.current;
+    optionsPending.current = true;
+    setOptionsError(false);
     setPeriods([]);
     setMandatoryGreen(false);
     setOptionsReady(false);
-    void fetch(advanced ? '/api/electricity/periods/advanced' : '/api/electricity/periods/simple', {
-      credentials: 'include',
-      signal: abort.signal,
-    })
-      .then(async (response) => {
+    void optionsQuery
+      .refetch()
+      .then((reply) => {
         if (abort.signal.aborted || token !== generation.current) return null;
-        if ([401, 403, 404].includes(response.status)) {
+        if (!reply.isSuccess || !reply.data) throw new Error('Period options unavailable');
+        if ([401, 403, 404].includes(reply.data.status)) {
           withdraw();
           return null;
         }
-        if (!response.ok) throw new Error('Period options unavailable');
-        return response.json() as Promise<unknown>;
+        return reply.data.value;
       })
       .then((value) => {
-        if (abort.signal.aborted || token !== generation.current || !value) return;
+        if (abort.signal.aborted || token !== generation.current) return;
         if (!correctionRecord(value)) throw new Error('Period options unavailable');
         if (advanced) {
           if (typeof value.mandatoryGreenEnabled !== 'boolean')
@@ -313,13 +384,24 @@ export function ElectricityOrderRevisionForm({
           );
           if (current) form.setValue('period', current.key);
         }
+        optionsPending.current = false;
         setOptionsReady(true);
       })
       .catch(() => {
-        if (!abort.signal.aborted && token === generation.current) setError(true);
+        if (!abort.signal.aborted && token === generation.current) {
+          optionsPending.current = false;
+          setOptionsError(true);
+          setError(true);
+        }
+      })
+      .finally(() => {
+        if (!abort.signal.aborted && token === generation.current) optionsPending.current = false;
       });
-    return () => abort.abort();
-  }, [scopeKey, advanced, order.periodStart, order.periodEnd]);
+    return () => {
+      abort.abort();
+      void client.cancelQueries({ queryKey: optionsQueryKey, exact: true });
+    };
+  }, [scopeKey, advanced, order.periodStart, order.periodEnd, optionsRevision]);
 
   const terms = useMemo(() => {
     const common = {
@@ -828,6 +910,17 @@ export function ElectricityOrderRevisionForm({
             </p>
           ) : null}
           {lock.owner === 'address' ? <p role="status">{copy('busy')}</p> : null}
+          {optionsError ? (
+            <Button
+              type="button"
+              data-testid="electricity-revision-options-retry"
+              variant="outline"
+              disabled={busy || locked || optionsPending.current || !!attempt.current}
+              onClick={retryOptions}
+            >
+              {t('electricity.order.retry', locale)}
+            </Button>
+          ) : null}
           <Button
             type="submit"
             variant="outline"

@@ -759,3 +759,128 @@ it('aborts pending parent order details on unmount', async () => {
   expect(host.textContent).toBe('');
   expect(requests).toHaveBeenCalledTimes(1);
 });
+
+it.each(['simple', 'advanced'] as const)(
+  'recovers failed %s revision options explicitly without overwriting unsent fields or writing',
+  async (mode) => {
+    const fallback = requests.getMockImplementation()!;
+    let reads = 0,
+      finish!: (response: Response) => void;
+    requests.mockImplementation(async (path, init) => {
+      if (path === '/api/electricity/periods/' + mode) {
+        if (++reads === 1) return Response.json({}, { status: 503 });
+        return new Promise<Response>((done) => {
+          finish = done;
+        });
+      }
+      return fallback(path, init);
+    });
+    await renderRevision({ ...order, mode });
+    expect(
+      host.querySelector<HTMLButtonElement>('[data-testid=electricity-revision-options-retry]')!
+        .disabled
+    ).toBe(false);
+    await change('revision-note', 'Retained unsent response');
+    const preview = host.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    expect(preview.disabled).toBe(true);
+    const retry = host.querySelector<HTMLButtonElement>(
+      '[data-testid=electricity-revision-options-retry]'
+    )!;
+    expect(retry).not.toBeNull();
+    expect(retry.textContent).toBe(t('electricity.order.retry', 'en'));
+    await act(async () => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    expect(reads).toBe(1);
+    await act(async () => {
+      retry.click();
+      retry.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+    expect(reads).toBe(2);
+    expect(preview.disabled).toBe(true);
+    expect(input('revision-note').value).toBe('Retained unsent response');
+    await act(async () =>
+      finish(
+        Response.json(
+          mode === 'advanced'
+            ? { mandatoryGreenEnabled: true }
+            : { periods: [{ key: 'next_week', start: order.periodStart, end: order.periodEnd }] }
+        )
+      )
+    );
+    expect(preview.disabled).toBe(false);
+    expect(input('revision-note').value).toBe('Retained unsent response');
+    expect(host.querySelector('[data-testid=electricity-revision-options-retry]')).toBeNull();
+    expect(calls('/revision-preview')).toHaveLength(0);
+    expect(requests.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0);
+    const signals = requests.mock.calls
+      .filter(([path]) => path === '/api/electricity/periods/' + mode)
+      .map((request) => request[1]?.signal);
+    expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+    expect(new Set(signals).size).toBe(2);
+  }
+);
+
+it('withdraws the revision and denies read retry when recovery loses authority', async () => {
+  const fallback = requests.getMockImplementation()!;
+  let reads = 0;
+  requests.mockImplementation(async (path, init) =>
+    path === '/api/electricity/periods/advanced'
+      ? Response.json({}, { status: ++reads === 1 ? 503 : 403 })
+      : fallback(path, init)
+  );
+  const onDenied = vi.fn();
+  await renderRevision({ ...order, mode: 'advanced' }, vi.fn(), onDenied);
+  await change('revision-note', 'Private retained response');
+  await act(async () =>
+    host
+      .querySelector<HTMLButtonElement>('[data-testid=electricity-revision-options-retry]')!
+      .click()
+  );
+  expect(onDenied).toHaveBeenCalledTimes(1);
+  expect(host.querySelector('[data-testid=electricity-revision-form]')).toBeNull();
+  expect(host.querySelector('[data-testid=electricity-revision-options-retry]')).toBeNull();
+  expect(host.textContent).not.toContain('Private retained response');
+  expect(requests.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0);
+});
+
+it('cancels pending revision configuration when unmounted', async () => {
+  const fallback = requests.getMockImplementation()!;
+  let finish!: (response: Response) => void, signal: AbortSignal | null | undefined;
+  requests.mockImplementation(async (path, init) => {
+    if (path === '/api/electricity/periods/advanced') {
+      signal = init?.signal;
+      return new Promise<Response>((done) => {
+        finish = done;
+      });
+    }
+    return fallback(path, init);
+  });
+  await renderRevision({ ...order, mode: 'advanced' });
+  expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(true);
+  await act(async () => root.unmount());
+  root = createRoot(host);
+  expect(signal?.aborted).toBe(true);
+  await act(async () => finish(Response.json({ mandatoryGreenEnabled: true })));
+  expect(host.textContent).toBe('');
+  expect(requests.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0);
+});
+
+it.each([null, false, {}, { periods: [] }])(
+  'offers explicit recovery for malformed simple options %j',
+  async (body) => {
+    const fallback = requests.getMockImplementation()!;
+    requests.mockImplementation(async (path, init) =>
+      path === '/api/electricity/periods/simple' ? Response.json(body) : fallback(path, init)
+    );
+    await renderRevision();
+    expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(true);
+    expect(
+      host.querySelector<HTMLButtonElement>('[data-testid=electricity-revision-options-retry]')!
+        .disabled
+    ).toBe(false);
+    expect(calls('/revision-preview')).toHaveLength(0);
+  }
+);
