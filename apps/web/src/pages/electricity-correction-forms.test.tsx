@@ -650,3 +650,112 @@ it('ignores stale owned field feedback after the preview draft has been correcte
   expect(host.textContent).not.toContain('private server value');
   expect(calls('/resubmit')).toHaveLength(0);
 });
+
+async function renderRawDetails(actor = 'buyer-one') {
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <ElectricityOrderDetailsPage orderId={order.orderId} />
+        </AccountUserProvider>
+      </QueryProvider>
+    )
+  );
+}
+
+it.each(['totalIrR', 'paidIrR', 'refundedIrR'] as const)(
+  'rejects numeric JSON %s before publishing financial or private order data',
+  async (field) => {
+    const raw = JSON.stringify(order).replace(
+      `"${field}":"${order[field]}"`,
+      `"${field}":9007199254740993`
+    );
+    // The old digit regexp accepts this rounded Number; the wire must stay a string.
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    expect(typeof parsed[field]).toBe('number');
+    expect(/^\d+$/.test(String(parsed[field]))).toBe(true);
+    requests.mockImplementation(
+      async () => new Response(raw, { headers: { 'Content-Type': 'application/json' } })
+    );
+    await renderRawDetails();
+    expect(host.querySelector('[role=alert]')).not.toBeNull();
+    expect(host.textContent).not.toContain('Private buyer');
+    expect(host.textContent).not.toContain('Retained private address');
+    expect(host.querySelector('[data-testid=electricity-address-correction-form]')).toBeNull();
+    expect(requests.mock.calls.filter(([, init]) => init?.method)).toHaveLength(0);
+  }
+);
+
+it('keeps parent detail reads manual and preserves exact string amounts on explicit recovery', async () => {
+  let count = 0;
+  const fallback = requests.getMockImplementation()!;
+  requests.mockImplementation(async (path, init) =>
+    path !== '/api/electricity/orders/' + order.orderId
+      ? fallback(path, init)
+      : ++count === 1
+        ? Response.json({}, { status: 503 })
+        : Response.json({ ...order, totalIrR: '9007199254740993' })
+  );
+  await renderRawDetails();
+  expect(host.querySelector('[role=alert]')).not.toBeNull();
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(requests).toHaveBeenCalledTimes(1);
+  await act(async () => host.querySelector<HTMLButtonElement>('[role=alert] button')!.click());
+  expect(host.textContent).toContain('9007199254740993');
+  const reads = requests.mock.calls.filter(
+    ([path]) => path === '/api/electricity/orders/' + order.orderId
+  );
+  expect(reads).toHaveLength(2);
+  expect(reads.every((request) => request[1]?.signal instanceof AbortSignal)).toBe(true);
+  expect(reads[0]![1]?.signal).not.toBe(reads[1]![1]?.signal);
+  expect(requests.mock.calls.filter(([, init]) => init?.method)).toHaveLength(0);
+});
+
+it('cancels retired account details and refuses a late denial', async () => {
+  let finish!: (response: Response) => void,
+    signal: AbortSignal | null | undefined,
+    count = 0;
+  const fallback = requests.getMockImplementation()!;
+  requests.mockImplementation(async (path, init) => {
+    if (path !== '/api/electricity/orders/' + order.orderId) return fallback(path, init);
+    if (++count === 1) {
+      signal = init?.signal;
+      return new Promise<Response>((done) => {
+        finish = done;
+      });
+    }
+    return Response.json({ ...order, profileName: 'Replacement private buyer' });
+  });
+  await renderRawDetails();
+  await renderRawDetails('buyer-two');
+  expect(signal?.aborted).toBe(true);
+  await act(async () => finish(Response.json({}, { status: 403 })));
+  expect(host.textContent).toContain('Replacement private buyer');
+  expect(host.querySelector('[role=alert]')).toBeNull();
+  const reads = requests.mock.calls.filter(
+    ([path]) => path === '/api/electricity/orders/' + order.orderId
+  );
+  expect(reads).toHaveLength(2);
+  expect(requests.mock.calls.filter(([, init]) => init?.method)).toHaveLength(0);
+});
+
+it('aborts pending parent order details on unmount', async () => {
+  let finish!: (response: Response) => void, signal: AbortSignal | null | undefined;
+  requests.mockImplementation(async (_path, init) => {
+    signal = init?.signal;
+    return new Promise<Response>((done) => {
+      finish = done;
+    });
+  });
+  await renderRawDetails();
+  await act(async () => root.unmount());
+  root = createRoot(host);
+  expect(signal?.aborted).toBe(true);
+  await act(async () => finish(Response.json(order)));
+  expect(host.textContent).toBe('');
+  expect(requests).toHaveBeenCalledTimes(1);
+});

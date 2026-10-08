@@ -1,6 +1,10 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { contractText } from '@barghsa/i18n/contracts';
@@ -227,7 +231,13 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const actor = useAccountUser();
-  const scopeKey = JSON.stringify([actor, orderId]);
+  const profileRevision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
+  const scopeKey = JSON.stringify([actor, profileRevision, orderId]);
+  const readOwner = useRef({ scopeKey, epoch: 0 });
+  if (readOwner.current.scopeKey !== scopeKey)
+    readOwner.current = { scopeKey, epoch: readOwner.current.epoch + 1 };
   const scope = useRef(scopeKey);
   const generation = useRef(0);
   if (scope.current !== scopeKey) {
@@ -349,23 +359,45 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     };
   }, [scopeKey]);
 
+  const queryKey = queryKeys.orders.detail(
+    {
+      context: 'account',
+      ownerId: actor?.trim() ? actor : reader,
+      accountId: actor,
+      revision: profileRevision,
+    },
+    JSON.stringify([reader, orderId, readOwner.current.epoch, retry])
+  );
+  const query = useServerDetailQuery<{ status: number; value: ElectricityOrderDetail | null }>({
+    queryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(`/api/electricity/orders/${encodeURIComponent(orderId)}`, {
+        credentials: 'include',
+        signal,
+      });
+      if ([401, 403, 404].includes(response.status))
+        return { status: response.status, value: null };
+      if (!response.ok) throw new Error('Order unavailable');
+      return { status: response.status, value: (await response.json()) as ElectricityOrderDetail };
+    },
+  });
   useEffect(() => {
     const controller = new AbortController();
     const token = generation.current;
     setLoading(true);
     setError(false);
-    void fetch(`/api/electricity/orders/${encodeURIComponent(orderId)}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
+    void query
+      .refetch()
+      .then((reply) => {
         if (controller.signal.aborted || token !== generation.current) return null;
-        if ([401, 403, 404].includes(response.status)) {
+        if (!reply.isSuccess || !reply.data) throw new Error('Order unavailable');
+        if ([401, 403, 404].includes(reply.data.status)) {
           withdraw();
           return null;
         }
-        if (!response.ok) throw new Error('Order unavailable');
-        return response.json() as Promise<ElectricityOrderDetail>;
+        return reply.data.value;
       })
       .then((value) => {
         if (controller.signal.aborted || token !== generation.current || !value) return;
@@ -376,8 +408,11 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           !correctionUuid(value.versionId) ||
           !correctionUuid(value.contractId) ||
           !correctionUuid(value.invoiceId) ||
+          typeof value.totalIrR !== 'string' ||
           !/^\d+$/.test(value.totalIrR) ||
+          typeof value.paidIrR !== 'string' ||
           !/^\d+$/.test(value.paidIrR) ||
+          typeof value.refundedIrR !== 'string' ||
           !/^\d+$/.test(value.refundedIrR)
         )
           throw new Error('Invalid order detail');
@@ -404,7 +439,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       .finally(() => {
         if (!controller.signal.aborted && token === generation.current) setLoading(false);
       });
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      void client.cancelQueries({ queryKey, exact: true });
+    };
   }, [orderId, retry, scopeKey]);
 
   async function resubmitCorrection(event: FormEvent<HTMLFormElement>) {
