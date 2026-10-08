@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 496 | Accepted with unchanged source bindings. |
-| verify | 794 | Existing work may be complete; inspect evidence before building. |
+| done | 500 | Accepted with unchanged source bindings. |
+| verify | 790 | Existing work may be complete; inspect evidence before building. |
 | partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,12 +39,15 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing policy entity, groups, deterministic evaluation and admin editors together. Reuse unchanged mixed knowledge/policy form/membership/browser receipts from the prior batch; build only demonstrated policy engine or authority gaps.
+Inspect existing AI agents, direct/group relations and five slot assignments together. Reconcile earlier partial acceptance against current model/knowledge/policy implementations; build only demonstrated CRUD/authority/slot gaps.
 
-- `02-auth-users-admin.md#T-09.11.03`: Policy management
-- `05-notifications-documents-ai.md#T-05.18.01`: Policy entity & CRUD
-- `05-notifications-documents-ai.md#T-05.18.02`: Policy Groups
-- `05-notifications-documents-ai.md#T-05.18.03`: Policy evaluation engine
+- `02-auth-users-admin.md#T-09.11.04`: AI agent management
+- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
+- `05-notifications-documents-ai.md#T-05.19.01`: Agent entity & CRUD
+- `05-notifications-documents-ai.md#T-05.19.02`: Agent CRUD API
+- `05-notifications-documents-ai.md#T-05.19.03`: Agent admin UI
+- `05-notifications-documents-ai.md#T-05.20.01`: Agent slot entity & configuration
+- `05-notifications-documents-ai.md#T-05.20.02`: Slot assignment admin UI
 
 ## v0.2.0: Complete customer journeys
 
@@ -531,7 +534,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.06.03` | done | Earlier acceptance_verified | Notification daytime window configuration |
 | `02-auth-users-admin.md#T-09.11.01` | done | Earlier acceptance_verified | AI model management |
 | `02-auth-users-admin.md#T-09.11.02` | done | Earlier partial | Knowledge base management |
-| `02-auth-users-admin.md#T-09.11.03` | verify | Earlier acceptance_verified | Policy management |
+| `02-auth-users-admin.md#T-09.11.03` | done | Earlier acceptance_verified | Policy management |
 | `02-auth-users-admin.md#T-09.11.04` | partial | Earlier partial | AI agent management |
 | `02-auth-users-admin.md#T-09.11.05` | partial | Earlier partial | Agent slot assignment |
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
@@ -608,9 +611,9 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.17.02` | done | Recorded batch work | KB processing pipeline |
 | `05-notifications-documents-ai.md#T-05.17.03` | done | Recorded batch work | KB Groups |
 | `05-notifications-documents-ai.md#T-05.17.04` | done | Recorded batch work | KB test query |
-| `05-notifications-documents-ai.md#T-05.18.01` | verify | Recorded batch work | Policy entity & CRUD |
-| `05-notifications-documents-ai.md#T-05.18.02` | verify | Recorded batch work | Policy Groups |
-| `05-notifications-documents-ai.md#T-05.18.03` | verify | Recorded batch work | Policy evaluation engine |
+| `05-notifications-documents-ai.md#T-05.18.01` | done | Recorded batch work | Policy entity & CRUD |
+| `05-notifications-documents-ai.md#T-05.18.02` | done | Recorded batch work | Policy Groups |
+| `05-notifications-documents-ai.md#T-05.18.03` | done | Recorded batch work | Policy evaluation engine |
 | `05-notifications-documents-ai.md#T-05.19.01` | verify | Recorded batch work | Agent entity & CRUD |
 | `05-notifications-documents-ai.md#T-05.19.02` | verify | Recorded batch work | Agent CRUD API |
 | `05-notifications-documents-ai.md#T-05.19.03` | verify | Recorded batch work | Agent admin UI |
