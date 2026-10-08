@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 554 | Accepted with unchanged source bindings. |
-| verify | 731 | Existing work may be complete; inspect evidence before building. |
-| partial | 77 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 730 | Existing work may be complete; inspect evidence before building. |
+| partial | 78 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue server-state foundation through remaining read owners and actual mutation adoption. Provider/devtools, dashboard and four customer history/authority query flows are accepted. Inspect established permission, ownership, retry and uncertain-write handling before migrating. Query writes must never retry or optimistically alter financial records.
+Continue server-state foundation through remaining read/write owners and reviewed low-risk optimism. Provider/devtools, dashboard, four customer history/authority flows and three preference mutations are accepted. Preserve synchronous locks, owner isolation, financial non-optimism, CSRF, captured commands, retry limits and uncertain-write recovery.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
@@ -681,7 +681,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.04.01` | done | Recorded batch work | Install `@tanstack/react-query` and configure `QueryClient` in the app root with production defaults: `staleTime: 30_000` (30s for non-financial reads), `gcTime: 5 * 60_000` (5 min cache), `retry: 2` with exponential backoff, `refetchOnWindowFocus: true` for list pages, `refetchOnMount: true`. Create `QueryProvider` wrapper component. |
 | `07-ui-ux-design.md#T-07.01.04.02` | partial | Recorded batch work | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |
 | `07-ui-ux-design.md#T-07.01.04.03` | partial | Recorded batch work | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. |
-| `07-ui-ux-design.md#T-07.01.04.04` | verify | Inventory needed | Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts. |
+| `07-ui-ux-design.md#T-07.01.04.04` | partial | Recorded batch work | Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts. |
 | `07-ui-ux-design.md#T-07.01.04.05` | partial | Recorded batch work | Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action. |
 | `07-ui-ux-design.md#T-07.01.04.06` | done | Recorded batch work | Configure `@tanstack/react-query-devtools` in development mode only. Never expose query cache, stale data, or retry attempts in production. Devtools toggle bound to `process.env.NODE_ENV`. |
 | `07-ui-ux-design.md#T-07.02.01.01` | verify | Inventory needed | Define global color palette tokens in `globals.css`: neutral gray scale (`50–950`), brand primary (`50–950`), brand secondary, success (green), warning (amber), danger (red), info (blue). Each scale has light and dark values. |

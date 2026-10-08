@@ -8,6 +8,14 @@ import { useSettingsFormFeedback } from './useSettingsFormFeedback.js';
 import { useProfileContextRevision, useProfileContextReset } from '../lib/profile-context.js';
 import { accountWriteDenied, accountWriteRejected } from '../lib/account-settings-form.js';
 import { withCsrf } from '../lib/csrf.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { DiscardedServerMutation, useServerMutation } from './useServerMutation.js';
+
+class PreferenceWriteError extends Error {
+  constructor(readonly outcome: 'denied' | 'rejected' | 'uncertain') {
+    super('Preference save did not confirm the captured choices');
+  }
+}
 
 export function usePreferenceSettingsOwner() {
   const actor = useAccountUser(),
@@ -67,6 +75,7 @@ export function usePreferenceSettingsOwner() {
 type Owner = ReturnType<typeof usePreferenceSettingsOwner>;
 type SchemaModule = typeof import('../lib/contract-review-signature-form-schemas.js');
 type Options<Values, Source> = {
+  successMessage: string;
   family: string;
   path: string;
   initial: Values;
@@ -83,6 +92,8 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
   options: Options<Values, Source>
 ) {
   const copy = (key: string) => tPreferenceSettingsForms(key, locale);
+  const actor = useAccountUser(),
+    profileRevision = useProfileContextRevision();
   const source = useRef<Source | null>(null),
     sequence = useRef(0),
     checking = useRef(false);
@@ -120,6 +131,46 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
     !!result && scope.isCurrent()
   );
   const ready = scope.isCurrent() && result?.key === scope.key && !loading && !loadFailed;
+  const queryScope = actor
+    ? { context: 'account' as const, ownerId: actor, accountId: actor, revision: profileRevision }
+    : null;
+  const mutation = useServerMutation<Source, NonNullable<typeof capture.current>>({
+    mutationKey: queryScope ? queryKeys.preferences.detail(queryScope, options.family) : null,
+    isCurrent: scope.isCurrent,
+    invalidate: queryScope ? [queryKeys.preferences.all(queryScope)] : [],
+    successMessage: options.successMessage,
+    errorMessage: (failure) =>
+      failure instanceof PreferenceWriteError && failure.outcome === 'rejected'
+        ? copy('rejectedToast')
+        : failure instanceof DiscardedServerMutation ||
+            (failure instanceof PreferenceWriteError && failure.outcome === 'denied')
+          ? undefined
+          : copy('uncertainToast'),
+    write: async (held) => {
+      if (!scope.owns(options.family) || capture.current !== held)
+        throw new DiscardedServerMutation();
+      const response = await fetch(options.path, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(options.body(held.values)),
+      });
+      if (!scope.owns(options.family) || capture.current !== held)
+        throw new DiscardedServerMutation();
+      const body: unknown = await response.json().catch(() => null);
+      if (!scope.owns(options.family) || capture.current !== held)
+        throw new DiscardedServerMutation();
+      if (accountWriteDenied(response.status, body) || response.status === 404) {
+        scope.deny();
+        throw new PreferenceWriteError('denied');
+      }
+      const receipt = response.status === 200 ? options.parse(body) : null;
+      if (receipt && options.confirmed(receipt, held.values)) return receipt;
+      throw new PreferenceWriteError(
+        accountWriteRejected(response.status, body) ? 'rejected' : 'uncertain'
+      );
+    },
+  });
   async function read(signal?: AbortSignal): Promise<Source | null> {
     const attempt = ++sequence.current;
     setLoading(true);
@@ -206,34 +257,16 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
         const held = { key: scope.key, values, checked: false };
         capture.current = held;
         try {
-          const response = await fetch(options.path, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(options.body(values)),
-          });
-          if (!scope.owns(options.family) || capture.current !== held) return;
-          const body: unknown = await response.json().catch(() => null);
-          if (!scope.owns(options.family) || capture.current !== held) return;
-          if (accountWriteDenied(response.status, body) || response.status === 404) {
-            scope.deny();
-            return;
-          }
-          const receipt = response.status === 200 ? options.parse(body) : null;
-          if (receipt && options.confirmed(receipt, values)) {
-            accept(receipt);
-            return;
-          }
-          if (accountWriteRejected(response.status, body)) {
-            capture.current = null;
-            setError(copy('error'));
-            scope.release(options.family);
-            return;
-          }
-          setUncertain(true);
-          setError(copy('uncertain'));
-        } catch {
+          const receipt = await mutation.mutateAsync(held);
+          if (scope.owns(options.family) && capture.current === held) accept(receipt);
+        } catch (failure) {
           if (scope.owns(options.family) && capture.current === held) {
+            if (failure instanceof PreferenceWriteError && failure.outcome === 'rejected') {
+              capture.current = null;
+              setError(copy('error'));
+              scope.release(options.family);
+              return;
+            }
             setUncertain(true);
             setError(copy('uncertain'));
           }

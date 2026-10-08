@@ -1,5 +1,8 @@
 import type { Locale } from './app.js';
 export const en: Record<string, string> = {
+  savedToast: 'Settings saved.',
+  rejectedToast: 'Save rejected.',
+  uncertainToast: 'Save could not be confirmed.',
   loading: 'Loading…',
   channelInvalid: 'Choose an available notification channel.',
   consentInvalid: 'Choose whether to receive marketing messages.',
@@ -16,6 +19,9 @@ export const en: Record<string, string> = {
   forbidden: 'These settings are no longer available. Reload the page after checking your access.',
 };
 export const fa: Record<string, string> = {
+  savedToast: 'تنظیمات ذخیره شد.',
+  rejectedToast: 'ذخیره رد شد.',
+  uncertainToast: 'ذخیره تأیید نشد.',
   loading: 'در حال بارگذاری…',
   channelInvalid: 'یک کانال اعلان در دسترس انتخاب کنید.',
   consentInvalid: 'انتخاب کنید که پیام‌های بازاریابی را دریافت کنید یا نه.',

@@ -69,6 +69,7 @@ export const queryKeys = {
   dashboard: resourceKeys('dashboard'),
   saving: resourceKeys('saving'),
   solar: resourceKeys('solar'),
+  preferences: resourceKeys('preferences'),
   wallet: {
     ...walletKeys,
     balance: (scope: ServerQueryScope): ServerQueryKey => [...walletKeys.all(scope), 'balance'],

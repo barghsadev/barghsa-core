@@ -199,6 +199,7 @@ function SettingsTimezonePage() {
   const copy = (key: string) => tPreferenceSettingsForms(key, locale);
   const editor = usePreferenceSettingsForm<TimezoneValues, TimezoneValues>(scope, locale, {
     family: 'timezone',
+    successMessage: copy('savedToast'),
     path: '/api/user/settings/timezone',
     initial: { timezone: '' },
     parse: timezoneSettings,

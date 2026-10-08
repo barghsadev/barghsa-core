@@ -50,6 +50,7 @@ function SettingsIndexPage() {
     locale,
     {
       family: 'notifications',
+      successMessage: copy('savedToast'),
       path: '/api/user/settings/notifications',
       initial: { IN_APP: true, EMAIL: false, SMS: false },
       parse: notificationSettings,
@@ -62,6 +63,7 @@ function SettingsIndexPage() {
   );
   const marketing = usePreferenceSettingsForm<MarketingValues, MarketingSettings>(scope, locale, {
     family: 'marketing',
+    successMessage: copy('savedToast'),
     path: '/api/user/settings/marketing-consent',
     initial: { email: false, sms: false },
     parse: marketingSettings,

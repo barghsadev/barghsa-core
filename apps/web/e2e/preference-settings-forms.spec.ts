@@ -210,6 +210,11 @@ for (const locale of ['en', 'fa'] as const) {
     expect(state.writes).toHaveLength(1);
     expect(state.writes[0]!.body).toEqual({ channels: ['IN_APP'] });
     expect(state.writes[0]!.csrf).toBe('preference-current');
+    await expect(
+      page
+        .locator('[data-sonner-toast][data-type="error"]')
+        .filter({ hasText: copy('rejectedToast', locale) })
+    ).toHaveCount(1);
     await expect(notifications.locator('#notification-EMAIL')).toHaveAttribute(
       'aria-checked',
       'false'
@@ -227,6 +232,12 @@ for (const locale of ['en', 'fa'] as const) {
     state.held = null;
     await held.route.fulfill({ json: { ok: true, message: 'PRIVATE-SERVER-TEXT' } });
     await expect(action(page, locale, 'confirm')).toBeEnabled();
+    await expect(
+      page
+        .locator('[data-sonner-toast][data-type="error"]')
+        .filter({ hasText: copy('uncertainToast', locale) })
+    ).toHaveCount(1);
+    await expect(page.locator('[data-sonner-toast][data-type="success"]')).toHaveCount(0);
     await expect(marketSave).toBeDisabled();
     await action(page, locale, 'confirm').click();
     await expect(save).toBeEnabled();
@@ -237,6 +248,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(marketing.locator('#marketing-email')).toBeEnabled();
     expect(state.writes).toHaveLength(3);
     expect(state.writes[2]!.body).toEqual({ email: true, sms: false });
+    await expect(
+      page
+        .locator('[data-sonner-toast][data-type="success"]')
+        .filter({ hasText: copy('savedToast', locale) })
+    ).toHaveCount(1);
     await expect(marketing.locator('..')).not.toContainText('settings.marketing.');
     await expect(marketing.locator('..')).not.toContainText('{date}');
     await expect(notifications.locator('#notification-EMAIL')).toHaveAttribute(

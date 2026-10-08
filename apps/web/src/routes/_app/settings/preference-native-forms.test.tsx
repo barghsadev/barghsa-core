@@ -9,6 +9,8 @@ import { t } from '@barghsa/i18n/app';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { shellText } from '@barghsa/i18n/shell';
 import { tPreferenceSettingsForms as copy } from '@barghsa/i18n/preference-settings-forms';
+import { QueryProvider } from '../../../providers/QueryProvider.js';
+import { connectToast, toast } from '../../../lib/toast-api.js';
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({
     options,
@@ -32,6 +34,7 @@ afterEach(async () => {
   host.remove();
   vi.unstubAllGlobals();
   document.documentElement.lang = 'fa';
+  toast.dismiss();
 });
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -98,11 +101,13 @@ async function mount(timezone = false, actor = 'user') {
   const Page = (timezone ? Timezone : Preferences).options.component as ComponentType;
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <AnalyticsConsentProvider area="customer">
-          <Page />
-        </AnalyticsConsentProvider>
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value={actor}>
+          <AnalyticsConsentProvider area="customer">
+            <Page />
+          </AnalyticsConsentProvider>
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
 }
@@ -316,4 +321,34 @@ it('keeps the synchronous read owner when a prior restart control is dispatched 
   );
   await act(async () => held.resolve(Response.json({ timezone: 'Asia/Tehran' })));
   expect(state.writes).toHaveLength(1);
+});
+
+it('toasts only a confirmed preference save and labels a lost result without claiming success', async () => {
+  const state = fixture(),
+    success = vi.fn(),
+    error = vi.fn();
+  toast.dismiss();
+  const disconnect = connectToast({ success, error, dismiss: vi.fn() });
+  try {
+    await mount(true);
+    await zone('Europe/Istanbul');
+    state.override = (_path, body) => {
+      state.timezone = body.timezone as string;
+      return Response.json({ message: 'PRIVATE-UNKNOWN-RESULT' });
+    };
+    await submit('timezone');
+    expect(success).not.toHaveBeenCalled();
+    expect(error).toHaveBeenCalledExactlyOnceWith(copy('uncertainToast', 'en'), undefined);
+    expect(host.textContent).toContain(copy('uncertain', 'en'));
+    await click('confirm');
+    expect(state.writes).toHaveLength(1);
+    expect(host.textContent).toContain(timezoneText('success', 'en'));
+    await zone('Asia/Tehran');
+    state.override = undefined;
+    await submit('timezone');
+    expect(success).toHaveBeenCalledExactlyOnceWith(copy('savedToast', 'en'), undefined);
+    expect(state.writes).toHaveLength(2);
+  } finally {
+    disconnect();
+  }
 });
