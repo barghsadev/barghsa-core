@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 480 | Accepted with unchanged source bindings. |
+| done | 482 | Accepted with unchanged source bindings. |
 | verify | 808 | Existing work may be complete; inspect evidence before building. |
-| partial | 73 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,11 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Removeoriginal-fileinlineembeds fromgenericDocumentDetail downloadpane. RetainboundedderivedFilePreview andexplicitoriginaldownloadlink/nativeviewerzoom, currentreviewmetadata/history/versionchain/permission/draftcontrols. VerifyaffectedFA/EN/UI journeys andrenewonlymatching source evidence; ownerroute/cache/retention/globalstaff/upload-policy decisions remainopen.
+Inspect versioned retention, holds, approved destruction and multipart/orphan cleanup together. Reuse matching real PG/MinIO/document/browser evidence from the current batches; build only demonstrated gaps. Financial physical deletion policy and live operational receipts remain open. No physical production actions authorized.
 
-- `05-notifications-documents-ai.md#T-05.11.04`: Document review workflow
-- `05-notifications-documents-ai.md#T-05.11.07`: Document admin/staff UI
-- `05-notifications-documents-ai.md#T-05.13.04`: Safe preview derivative endpoint
+- `05-notifications-documents-ai.md#T-05.14.01`: Retention policy configuration
+- `05-notifications-documents-ai.md#T-05.14.02`: Legal hold
+- `05-notifications-documents-ai.md#T-05.14.03`: Destruction job
+- `05-notifications-documents-ai.md#T-05.15.01`: Multipart upload API
+- `05-notifications-documents-ai.md#T-05.15.02`: Orphan detection & cleanup
 
 ## v0.2.0: Complete customer journeys
 
@@ -583,10 +585,10 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.10.05` | done | Recorded batch work | Placeholder conflict detection & validation |
 | `05-notifications-documents-ai.md#T-05.11.02` | done | Recorded batch work | Upload pipeline |
 | `05-notifications-documents-ai.md#T-05.11.03` | done | Recorded batch work | Document scanning integration |
-| `05-notifications-documents-ai.md#T-05.11.04` | partial | Recorded batch work | Document review workflow |
+| `05-notifications-documents-ai.md#T-05.11.04` | done | Recorded batch work | Document review workflow |
 | `05-notifications-documents-ai.md#T-05.11.05` | done | Recorded batch work | Document supersession & immutability |
 | `05-notifications-documents-ai.md#T-05.11.06` | partial | Recorded batch work | Soft delete & hard delete |
-| `05-notifications-documents-ai.md#T-05.11.07` | partial | Recorded batch work | Document admin/staff UI |
+| `05-notifications-documents-ai.md#T-05.11.07` | done | Recorded batch work | Document admin/staff UI |
 | `05-notifications-documents-ai.md#T-05.12.01` | done | Recorded batch work | File validation service |
 | `05-notifications-documents-ai.md#T-05.12.02` | partial | Recorded batch work | Category & limit configuration |
 | `05-notifications-documents-ai.md#T-05.12.03` | partial | Recorded batch work | Rejection handling |

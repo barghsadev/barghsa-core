@@ -306,26 +306,6 @@ export function DocumentDetail({
               >
                 {word('openFile')}
               </a>
-              {document.detectedMime &&
-              ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(
-                document.detectedMime
-              ) ? (
-                <img
-                  src={download}
-                  alt={document.originalName}
-                  referrerPolicy="no-referrer"
-                  className="max-h-[32rem] max-w-full object-contain"
-                />
-              ) : document.detectedMime === 'application/pdf' ? (
-                <iframe
-                  src={download}
-                  title={word('preview')}
-                  referrerPolicy="no-referrer"
-                  className="h-[32rem] w-full rounded-lg border"
-                />
-              ) : (
-                <p>{word('previewUnavailable')}</p>
-              )}
             </div>
           ) : null}
           {staff && actions.length ? (

@@ -1,6 +1,7 @@
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/documents';
+import { readFileSync } from 'node:fs';
 
 const PROFILE = '11111111-1111-4111-8111-111111111111';
 const ID = '22222222-2222-4222-8222-222222222222';
@@ -80,6 +81,24 @@ for (const locale of ['en', 'fa'] as const) {
       current = { ...current, state: 'Approved', revision: 5 };
       return route.fulfill({ json: current });
     });
+    const original = 'https://files.test/original-review.pdf';
+    let originalReads = 0;
+    await page.route(original, (route) => {
+      originalReads++;
+      return route.fulfill({ contentType: 'application/pdf', body: '%PDF-1.7' });
+    });
+    await page.route(`**/api/admin/documents/${ID}/download`, (route) =>
+      route.fulfill({ json: { url: original, expiresIn: 300 } })
+    );
+    await page.route(`**/api/admin/documents/${ID}/preview`, (route) =>
+      route.fulfill({ json: { url: 'https://files.test/review-first-page.png', expiresIn: 300 } })
+    );
+    await page.route('https://files.test/review-first-page.png', (route) =>
+      route.fulfill({
+        contentType: 'image/png',
+        body: readFileSync(new URL('./fixtures/first-page-proof.png', import.meta.url)),
+      })
+    );
     await page.route('**/api/auth/step-up', (route) => {
       expect(route.request().postDataJSON()).toEqual({ password: 'Test-password' });
       verified = true;
@@ -88,6 +107,24 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/documents');
     await page.getByRole('button', { name: 'review.pdf', exact: true }).click();
     const detail = page.getByRole('region', { name: words.details });
+    await detail.getByRole('button', { name: words.download, exact: true }).click();
+    const link = detail.getByRole('link', { name: words.openFile, exact: true });
+    await expect(link).toHaveAttribute('href', original);
+    await expect(link).toHaveAttribute('referrerpolicy', 'no-referrer');
+    await expect(detail.locator('iframe, img, embed, object')).toHaveCount(0);
+    expect(originalReads).toBe(0);
+    await detail.getByRole('button', { name: words.preview, exact: true }).click();
+    await expect(detail.locator('img')).toHaveAttribute(
+      'src',
+      'https://files.test/review-first-page.png'
+    );
+    await expect(detail.locator('iframe, embed, object')).toHaveCount(0);
+    expect(originalReads).toBe(0);
+    if (locale === 'fa')
+      await page.screenshot({
+        path: '/Users/majid/.local/state/barghsa-manual-batches/safe-document-detail-preview/details-derived-fa.png',
+        fullPage: true,
+      });
     await detail.getByRole('button', { name: words.approve, exact: true }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: confirm, exact: true }).click();

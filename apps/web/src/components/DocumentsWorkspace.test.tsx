@@ -588,17 +588,19 @@ it('shows retained history, a safe image preview and replacement navigation', as
     vi.fn(async (url: string) =>
       url.endsWith('/download')
         ? response({ url: 'https://storage.test/verified.png' })
-        : response({
-            ...document,
-            history: [
-              {
-                id: 'event',
-                state: 'Available',
-                createdAt: document.createdAt,
-                reason: 'Verified upload',
-              },
-            ],
-          })
+        : url.endsWith('/preview')
+          ? response({ url: 'https://storage.test/previews/derived.png' })
+          : response({
+              ...document,
+              history: [
+                {
+                  id: 'event',
+                  state: 'Available',
+                  createdAt: document.createdAt,
+                  reason: 'Verified upload',
+                },
+              ],
+            })
     )
   );
   await render(
@@ -615,12 +617,45 @@ it('shows retained history, a safe image preview and replacement navigation', as
   await click('Previous document');
   expect(previous).toHaveBeenCalledWith('previous');
   await click('Get download link');
-  expect(container.querySelector('img')?.getAttribute('src')).toBe(
+  expect(container.querySelector('img, iframe')).toBeNull();
+  expect(container.querySelector('a')?.getAttribute('href')).toBe(
     'https://storage.test/verified.png'
+  );
+  await click('Preview');
+  expect(container.querySelector('img')?.getAttribute('src')).toBe(
+    'https://storage.test/previews/derived.png'
   );
   expect(container.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
   await click('Replace document');
   expect(replace).toHaveBeenCalledWith(expect.objectContaining({ id: DOCUMENT }));
+});
+
+it('keeps original PDF bytes out of inline frames while retaining the explicit protected download link', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) =>
+      url.endsWith('/download')
+        ? response({ url: 'https://storage.test/original.pdf' })
+        : response({ ...row({ detectedMime: 'application/pdf' }), history: [] })
+    )
+  );
+  await render(
+    <DocumentDetail
+      id={DOCUMENT}
+      staff
+      onClose={vi.fn()}
+      onChanged={vi.fn()}
+      onReplace={vi.fn()}
+      onPrevious={vi.fn()}
+    />
+  );
+  await click('Get download link');
+  expect(container.querySelector('iframe, img, embed, object')).toBeNull();
+  const link = container.querySelector('a');
+  expect(link?.getAttribute('href')).toBe('https://storage.test/original.pdf');
+  expect(link?.getAttribute('target')).toBe('_blank');
+  expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
+  expect(link?.getAttribute('referrerpolicy')).toBe('no-referrer');
 });
 
 it.each(['Quarantined', 'Superseded'] as const)(
