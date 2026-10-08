@@ -1,5 +1,7 @@
 import { ListPage, ListToolbar } from '@barghsa/ui';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { Link } from '@tanstack/react-router';
 import { Loader2Icon, ReceiptText } from 'lucide-react';
 import {
@@ -81,6 +83,10 @@ function ReceiptHistory({
   onClearFilters,
   onRemoveFilter,
 }: BankReceiptsPageProps & { scope: string; profileRevision: number }) {
+  const actor = useAccountUser();
+  const reader = useId();
+  const client = useQueryClient();
+  const readSequence = useRef(0);
   const statusesKey = statuses.join(',');
   const filterDraft = useHistoryFilterDraft(
     { query, statuses, dateRange, amountRange },
@@ -117,14 +123,46 @@ function ReceiptHistory({
   const accessDenied = (error: unknown) =>
     error instanceof InvoiceRequestError && [401, 403].includes(error.status);
 
-  async function readPage(request: AbortController, next?: CustomerBankReceiptPage['nextCursor']) {
-    const response = await fetch('/api/profiles', {
-      credentials: 'include',
-      signal: request.signal,
-    });
+  async function queryRead<T>(
+    queryKey: ServerQueryKey,
+    request: AbortController,
+    read: (signal: AbortSignal) => Promise<T>
+  ): Promise<T> {
     if (!fresh(request)) throw new Error('Obsolete receipt read');
-    if (!response.ok) throw new InvoiceRequestError(response.status, 'Could not load profiles');
-    const profile: unknown = await response.json();
+    const abort = () => void client.cancelQueries({ queryKey, exact: true });
+    request.signal.addEventListener('abort', abort, { once: true });
+    try {
+      return await client.fetchQuery({
+        queryKey,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: ({ signal }) => read(signal),
+      });
+    } finally {
+      request.signal.removeEventListener('abort', abort);
+    }
+  }
+
+  async function readPage(request: AbortController, next?: CustomerBankReceiptPage['nextCursor']) {
+    const attempt = ++readSequence.current;
+    const authorityKey = queryKeys.profiles.authority(
+      {
+        context: 'account',
+        ownerId: actor?.trim() ? actor : reader,
+        accountId: actor,
+        revision: profileRevision,
+      },
+      JSON.stringify([reader, scope, next, attempt])
+    );
+    const profile = await queryRead(authorityKey, request, async (signal) => {
+      const response = await fetch('/api/profiles', { credentials: 'include', signal });
+      if (!fresh(request) || signal.aborted) throw new Error('Obsolete receipt read');
+      if (!response.ok) throw new InvoiceRequestError(response.status, 'Could not load profiles');
+      const profile: unknown = await response.json();
+      if (!fresh(request) || signal.aborted) throw new Error('Obsolete receipt read');
+      return profile;
+    });
     if (!fresh(request)) throw new Error('Obsolete receipt read');
     if (
       !profile ||
@@ -145,27 +183,36 @@ function ReceiptHistory({
     }
     owner.current = { scope, profile: profileId };
     if (!profileId) return { items: [], nextCursor: null };
-    const page = await fetchBankReceiptPage({
-      statuses,
-      ...query,
-      ...dateRange,
-      ...amountRange,
-      ...(next ? { cursor: next } : {}),
-      signal: request.signal,
+    const params = new URLSearchParams({ reader, scope });
+    if (next) params.set('cursor', JSON.stringify([next.beforeAt, next.beforeId]));
+    const pageKey = queryKeys.invoices.list(
+      { context: 'customer', ownerId: profileId, accountId: actor, revision: profileRevision },
+      params,
+      attempt
+    );
+    return queryRead(pageKey, request, async (signal) => {
+      const page = await fetchBankReceiptPage({
+        statuses,
+        ...query,
+        ...dateRange,
+        ...amountRange,
+        ...(next ? { cursor: next } : {}),
+        signal,
+      });
+      if (!fresh(request)) throw new Error('Obsolete receipt read');
+      if (
+        !Array.isArray(page.items) ||
+        page.items.some((item) => !item || typeof item.receiptId !== 'string' || !item.receiptId) ||
+        (page.nextCursor !== null &&
+          (!page.nextCursor ||
+            typeof page.nextCursor.beforeAt !== 'string' ||
+            !page.nextCursor.beforeAt ||
+            typeof page.nextCursor.beforeId !== 'string' ||
+            !page.nextCursor.beforeId))
+      )
+        throw new Error('Invalid receipt page');
+      return page;
     });
-    if (!fresh(request)) throw new Error('Obsolete receipt read');
-    if (
-      !Array.isArray(page.items) ||
-      page.items.some((item) => !item || typeof item.receiptId !== 'string' || !item.receiptId) ||
-      (page.nextCursor !== null &&
-        (!page.nextCursor ||
-          typeof page.nextCursor.beforeAt !== 'string' ||
-          !page.nextCursor.beforeAt ||
-          typeof page.nextCursor.beforeId !== 'string' ||
-          !page.nextCursor.beforeId))
-    )
-      throw new Error('Invalid receipt page');
-    return page;
   }
   const label = (key: string) => t(`invoices.receipts.${key}`, locale);
   const dateFormatter = useMemo(
