@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 551 | Accepted with unchanged source bindings. |
-| verify | 737 | Existing work may be complete; inspect evidence before building. |
+| done | 552 | Accepted with unchanged source bindings. |
+| verify | 736 | Existing work may be complete; inspect evidence before building. |
 | partial | 74 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,9 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing offset/cursor Pagination and actual callers. Build only missing compound controls/count/page-size/ellipsis criteria; review once and pass targeted RTL/mobile/keyboard tests. Identity/loading component adoption remains explicitly partial and must close before release acceptance. Preserve earlier provider/policy/live webhook gates.
+Inspect current fetch/cache/identity/cancellation boundaries before introducing the required TanStack Query foundation. Preserve manual financial refresh, profile/session isolation, cancellation, error/retry behavior and fixed budgets. Group provider/key/hooks/mutations/devtools work coherently; verify affected callers and record actual adoption remaining. Earlier identity/loading integration and external release gates remain open.
 
-- `07-ui-ux-design.md#T-07.01.03.21`: — Pagination compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination.
+- `07-ui-ux-design.md#T-07.01.04.01`: Install `@tanstack/react-query` and configure `QueryClient` in the app root with production defaults: `staleTime: 30_000` (30s for non-financial reads), `gcTime: 5 * 60_000` (5 min cache), `retry: 2` with exponential backoff, `refetchOnWindowFocus: true` for list pages, `refetchOnMount: true`. Create `QueryProvider` wrapper component.
+- `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
+- `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
+- `07-ui-ux-design.md#T-07.01.04.04`: Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts.
+- `07-ui-ux-design.md#T-07.01.04.05`: Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action.
+- `07-ui-ux-design.md#T-07.01.04.06`: Configure `@tanstack/react-query-devtools` in development mode only. Never expose query cache, stale data, or retry attempts in production. Devtools toggle bound to `process.env.NODE_ENV`.
 
 ## v0.2.0: Complete customer journeys
 
@@ -674,7 +679,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.18` | partial | Recorded batch work | Avatar — image fallback to initials (extracted from user name). Sizes: `xs` (24px) through `xl` (96px). Status ring (online/offline/busy). Used in profile switcher, user menu, agent list. |
 | `07-ui-ux-design.md#T-07.01.03.19` | partial | Recorded batch work | Skeleton — shimmer loading placeholders. Variants: `text` (single line, multi-line), `card`, `avatar` (circle), `table-row`, `chart`. Used on every list, detail, and dashboard page. |
 | `07-ui-ux-design.md#T-07.01.03.20` | partial | Recorded batch work | Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections. |
-| `07-ui-ux-design.md#T-07.01.03.21` | verify | Inventory needed | — Pagination compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination. |
+| `07-ui-ux-design.md#T-07.01.03.21` | done | Recorded batch work | — Pagination compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination. |
 | `07-ui-ux-design.md#T-07.01.04.01` | verify | Inventory needed | Install `@tanstack/react-query` and configure `QueryClient` in the app root with production defaults: `staleTime: 30_000` (30s for non-financial reads), `gcTime: 5 * 60_000` (5 min cache), `retry: 2` with exponential backoff, `refetchOnWindowFocus: true` for list pages, `refetchOnMount: true`. Create `QueryProvider` wrapper component. |
 | `07-ui-ux-design.md#T-07.01.04.02` | verify | Inventory needed | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |
 | `07-ui-ux-design.md#T-07.01.04.03` | verify | Inventory needed | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. |

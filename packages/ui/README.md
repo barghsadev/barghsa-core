@@ -22,6 +22,8 @@ Use the shared `DirectionProvider` around headless widgets so portal placement f
 
 `SkeletonText` accepts a line count; `SkeletonCard`, `SkeletonAvatar` and `SkeletonChart` provide common shapes. Put `SkeletonTableRow` inside a native table body and set its column count. Place loading shapes inside an owner-labelled loading status. The placeholders are decorative and stop shimmering under reduced motion. Existing `Skeleton` and page loading states retain their original defaults.
 
+Compose `ListPage.Pagination` with `PaginationPageSize` and `PaginationSummary`. The page-size selector offers 10/20/50/100 with a required localized label and optional number formatter; its owner resets the page or cursor after accepting a size change. Offset paging supplies page numbers and ellipses. Cursor paging supplies next and optional previous callbacks from the owner's accepted cursor history, including a usable previous control on the final batch. Disable controls while a request is pending. Summary children contain localized, confirmed ranges and totals, such as "Showing 1–20 of 154"; omit an unknown cursor total. These components never fetch data or invent cursors.
+
 The production-browser runner also tests the separately built catalogue:
 
 ```sh
