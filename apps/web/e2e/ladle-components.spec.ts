@@ -143,6 +143,278 @@ for (const story of Object.keys(meta.stories)) {
 
 for (const rtl of [false, true]) {
   for (const theme of ['light', 'dark']) {
+    test('overlay dialog options ' + (rtl ? 'fa' : 'en') + ' ' + theme, async ({ page }) => {
+      await page.setViewportSize(rtl ? { width: 390, height: 844 } : { width: 1280, height: 960 });
+      await page.goto(
+        origin + '/?story=overlays--dialog-options&rtl=' + rtl + '&theme=' + theme + '&mode=preview'
+      );
+      const trigger = page.getByRole('button', {
+        name: rtl ? 'باز کردن گزینه‌ها' : 'Open options',
+        exact: true,
+      });
+      const choice = page.getByLabel(rtl ? 'اندازه پنجره' : 'Dialog size', { exact: true });
+      for (const size of ['sm', 'default', 'lg', 'xl', 'fullscreen']) {
+        await choice.selectOption(size);
+        await trigger.press('Enter');
+        const dialog = page.getByRole('dialog');
+        await expect(dialog).toBeVisible();
+        await expect(dialog).toHaveCSS('opacity', '1');
+        await expect
+          .poll(() =>
+            dialog.evaluate((node) =>
+              node
+                .getAnimations()
+                .every((animation) => !animation.pending && animation.playState !== 'running')
+            )
+          )
+          .toBe(true);
+        await expect(dialog).toHaveAttribute('aria-labelledby', /\S+/);
+        await expect(dialog).toHaveAttribute('aria-describedby', /\S+/);
+        const rect = await dialog.boundingBox();
+        expect(rect!.width).toBe(
+          size === 'fullscreen'
+            ? rtl
+              ? 390
+              : 1280
+            : rtl
+              ? 358
+              : { sm: 320, default: 384, lg: 672, xl: 896 }[size as 'sm' | 'default' | 'lg' | 'xl']
+        );
+        if (size === 'fullscreen') {
+          expect(rect!.height).toBe(rtl ? 844 : 960);
+          expect(rect!.x).toBe(0);
+          expect(rect!.y).toBe(0);
+        } else {
+          await page.locator('[data-slot=dialog-overlay]').click({ position: { x: 2, y: 2 } });
+          await expect(dialog).toBeVisible();
+        }
+        await dialog.getByRole('textbox', { name: rtl ? 'یادداشت' : 'Notes', exact: true }).focus();
+        for (let n = 0; n < 8; n++) {
+          await page.keyboard.press(n < 4 ? 'Tab' : 'Shift+Tab');
+          await expect
+            .poll(() => dialog.evaluate((node) => node.contains(document.activeElement)))
+            .toBe(true);
+        }
+        expect(
+          (
+            await new AxeBuilder({ page })
+              .include('[data-slot=dialog-content]')
+              .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+              .analyze()
+          ).violations
+        ).toEqual([]);
+        await page.keyboard.press('Escape');
+        await expect(dialog).toHaveCount(0);
+        await expect(trigger).toBeFocused();
+      }
+      await choice.selectOption('default');
+      await page
+        .getByRole('checkbox', { name: rtl ? 'نمایش دکمه بستن' : 'Show close button', exact: true })
+        .uncheck();
+      await trigger.press('Enter');
+      await expect(
+        page.getByRole('button', { name: rtl ? 'بستن' : 'Close', exact: true })
+      ).toHaveCount(0);
+      await page
+        .getByRole('button', { name: rtl ? 'انصراف' : 'Cancel', exact: true })
+        .press('Enter');
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await page
+        .getByRole('checkbox', {
+          name: rtl ? 'جلوگیری از بستن با کلیک بیرون' : 'Prevent outside dismissal',
+          exact: true,
+        })
+        .uncheck();
+      await trigger.press('Enter');
+      await expect(page.getByRole('dialog')).toHaveCSS('opacity', '1');
+      await page.locator('[data-slot=dialog-overlay]').click({ position: { x: 2, y: 2 } });
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+    });
+
+    test('overlay sheet options ' + (rtl ? 'fa' : 'en') + ' ' + theme, async ({ page }) => {
+      await page.setViewportSize(rtl ? { width: 390, height: 844 } : { width: 1280, height: 960 });
+      await page.goto(
+        origin + '/?story=overlays--sheet-options&rtl=' + rtl + '&theme=' + theme + '&mode=preview'
+      );
+      const check = page.getByRole('checkbox', {
+        name: rtl ? 'محو کردن پس‌زمینه' : 'Blur backdrop',
+        exact: true,
+      });
+      for (const blur of [true, false]) {
+        await check.setChecked(blur);
+        for (const side of ['left', 'right', 'top', 'bottom']) {
+          const trigger = page.getByRole('button', { name: side, exact: true });
+          await trigger.press('Enter');
+          const dialog = page.getByRole('dialog');
+          await expect(dialog).toHaveCSS('opacity', '1');
+          const rectangle = await dialog.boundingBox(),
+            width = rtl ? 390 : 1280,
+            height = rtl ? 844 : 960;
+          if (side === 'left' || side === 'right') {
+            expect(rectangle!.height).toBe(height);
+            expect(rectangle!.width).toBe(rtl ? 292.5 : 384);
+            expect(rectangle!.x).toBe(side === 'left' ? 0 : width - rectangle!.width);
+          } else {
+            expect(rectangle!.width).toBe(width);
+            expect(rectangle!.y).toBe(side === 'top' ? 0 : height - rectangle!.height);
+          }
+          const filter = await page
+            .locator('[data-slot=sheet-overlay]')
+            .evaluate((node) => getComputedStyle(node).backdropFilter);
+          if (blur) expect(filter).toContain('blur(');
+          else expect(filter).toBe('none');
+          expect(
+            (
+              await new AxeBuilder({ page })
+                .include('[data-slot=sheet-content]')
+                .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+                .analyze()
+            ).violations
+          ).toEqual([]);
+          await page.keyboard.press('Escape');
+          await expect(dialog).toHaveCount(0);
+          await expect(trigger).toBeFocused();
+        }
+      }
+    });
+
+    test(
+      'overlay popover placement and menu state ' + (rtl ? 'fa' : 'en') + ' ' + theme,
+      async ({ page }, info) => {
+        await page.setViewportSize(
+          rtl ? { width: 390, height: 844 } : { width: 1280, height: 960 }
+        );
+        await page.goto(
+          origin +
+            '/?story=overlays--popover-options&rtl=' +
+            rtl +
+            '&theme=' +
+            theme +
+            '&mode=preview'
+        );
+        const trigger = page.getByRole('button', {
+          name: rtl ? 'نمایش راهنما' : 'Show guidance',
+          exact: true,
+        });
+        for (const side of ['top', 'bottom', 'left', 'right'])
+          for (const align of ['start', 'center', 'end']) {
+            await page.getByLabel(rtl ? 'جهت' : 'Side', { exact: true }).selectOption(side);
+            await page.getByLabel(rtl ? 'تراز' : 'Alignment', { exact: true }).selectOption(align);
+            const gaps: number[] = [];
+            for (const offset of ['0', '16']) {
+              await page.getByLabel(rtl ? 'فاصله' : 'Offset', { exact: true }).selectOption(offset);
+              await trigger.press('Enter');
+              const popup = page.locator('[data-slot=popover-content]');
+              await expect(popup).toHaveCSS('opacity', '1');
+              await expect
+                .poll(() =>
+                  popup.evaluate((node) =>
+                    node
+                      .getAnimations()
+                      .every((animation) => !animation.pending && animation.playState !== 'running')
+                  )
+                )
+                .toBe(true);
+              await expect(popup).toHaveAttribute('data-side', side);
+              await expect(popup).toHaveAttribute('data-align', align);
+              await expect(popup.locator('[data-slot=popover-arrow]')).toHaveAttribute(
+                'aria-hidden',
+                'true'
+              );
+              await expect(
+                popup.getByRole('link', {
+                  name: rtl ? 'پیوند راهنما' : 'Guidance link',
+                  exact: true,
+                })
+              ).toBeVisible();
+              const a = (await trigger.boundingBox())!,
+                b = (await popup.boundingBox())!;
+              const arrow = popup.locator('[data-slot=popover-arrow]');
+              await expect(arrow).toBeVisible();
+              const point = (await arrow.boundingBox())!;
+              const edge =
+                side === 'top'
+                  ? b.y + b.height
+                  : side === 'bottom'
+                    ? b.y
+                    : side === 'left'
+                      ? b.x + b.width
+                      : b.x;
+              const start = side === 'top' || side === 'bottom' ? point.y : point.x;
+              const extent = side === 'top' || side === 'bottom' ? point.height : point.width;
+              expect(start).toBeLessThan(edge);
+              expect(start + extent).toBeGreaterThan(edge);
+              gaps.push(
+                side === 'top'
+                  ? a.y - b.y - b.height
+                  : side === 'bottom'
+                    ? b.y - a.y - a.height
+                    : side === 'left'
+                      ? a.x - b.x - b.width
+                      : b.x - a.x - a.width
+              );
+              expect(
+                await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)
+              ).toBe(true);
+              if (offset === '16')
+                expect(
+                  (
+                    await new AxeBuilder({ page })
+                      .include('[data-slot=popover-content]')
+                      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+                      .analyze()
+                  ).violations
+                ).toEqual([]);
+              if (
+                side === 'bottom' &&
+                align === 'center' &&
+                offset === '16' &&
+                ((!rtl && theme === 'light') || (rtl && theme === 'dark'))
+              )
+                await page.screenshot({
+                  path: info.outputPath('overlay-' + (rtl ? 'fa' : 'en') + '.png'),
+                  fullPage: true,
+                });
+              await page.keyboard.press('Escape');
+              await expect(popup).toHaveCount(0);
+              await expect(trigger).toBeFocused();
+            }
+            expect(gaps[1]! - gaps[0]!).toBeCloseTo(16, 1);
+          }
+        await page.goto(
+          origin + '/?story=overlays--menus&rtl=' + rtl + '&theme=' + theme + '&mode=preview'
+        );
+        const menuTrigger = page.getByRole('button', {
+          name: rtl ? 'اقدام‌ها' : 'Actions',
+          exact: true,
+        });
+        await menuTrigger.press('Enter');
+        await expect(
+          page.getByRole('menuitem', { name: rtl ? 'غیرفعال' : 'Disabled', exact: true })
+        ).toHaveAttribute('aria-disabled', 'true');
+        await expect(page.getByRole('separator')).toBeVisible();
+        await expect(page.locator('[data-slot=dropdown-menu-shortcut]')).toHaveText('⌘V');
+        await page
+          .getByRole('menuitemradio', { name: rtl ? 'گزینه دو' : 'Option two', exact: true })
+          .press('Enter');
+        await page.keyboard.press('Escape');
+        await menuTrigger.press('Enter');
+        await expect(
+          page.getByRole('menuitemradio', { name: rtl ? 'گزینه دو' : 'Option two', exact: true })
+        ).toBeChecked();
+        const more = page.getByRole('menuitem', { name: rtl ? 'بیشتر' : 'More', exact: true });
+        await more.focus();
+        await more.press(rtl ? 'ArrowLeft' : 'ArrowRight');
+        await expect(
+          page.getByRole('menuitem', { name: rtl ? 'زیرگزینه' : 'Nested option', exact: true })
+        ).toBeVisible();
+        await page.keyboard.press('Escape');
+        await expect(more).toBeFocused();
+        await page.keyboard.press('Escape');
+        await expect(menuTrigger).toBeFocused();
+      }
+    );
     test('primitive interactions ' + (rtl ? 'fa' : 'en') + ' ' + theme, async ({ page }, info) => {
       await page.setViewportSize(rtl ? { width: 390, height: 844 } : { width: 1280, height: 960 });
       const visit = (story: string) =>

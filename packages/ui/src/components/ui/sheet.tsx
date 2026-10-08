@@ -21,12 +21,17 @@ function SheetPortal({ ...props }: SheetPrimitive.Portal.Props) {
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
-function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
+function SheetOverlay({
+  className,
+  blur = true,
+  ...props
+}: SheetPrimitive.Backdrop.Props & { blur?: boolean }) {
   return (
     <SheetPrimitive.Backdrop
       data-slot="sheet-overlay"
       className={cn(
-        'fixed inset-0 z-50 bg-black/10 transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-backdrop-filter:backdrop-blur-xs',
+        'fixed inset-0 z-50 bg-black/10 transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0',
+        blur && 'supports-backdrop-filter:backdrop-blur-xs',
         className
       )}
       {...props}
@@ -40,15 +45,17 @@ function SheetContent({
   side = 'right',
   showCloseButton = true,
   closeLabel = 'Close',
+  backdropBlur = true,
   ...props
 }: SheetPrimitive.Popup.Props & {
   side?: 'top' | 'right' | 'bottom' | 'left';
   showCloseButton?: boolean;
   closeLabel?: string;
+  backdropBlur?: boolean;
 }) {
   return (
     <SheetPortal>
-      <SheetOverlay />
+      <SheetOverlay blur={backdropBlur} />
       <SheetPrimitive.Popup
         data-slot="sheet-content"
         data-side={side}

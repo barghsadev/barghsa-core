@@ -44,6 +44,19 @@ function PopoverContent({
   );
 }
 
+function PopoverArrow({ className, ...props }: PopoverPrimitive.Arrow.Props) {
+  return (
+    <PopoverPrimitive.Arrow
+      data-slot="popover-arrow"
+      className={cn(
+        'size-2 rotate-45 bg-popover data-[side=bottom]:-top-1 data-[side=top]:-bottom-1 data-[side=left]:-right-1 data-[side=right]:-left-1 data-[side=inline-start]:-end-1 data-[side=inline-end]:-start-1 data-uncentered:invisible',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
 function PopoverHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -74,4 +87,12 @@ function PopoverDescription({ className, ...props }: PopoverPrimitive.Descriptio
   );
 }
 
-export { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigger };
+export {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+  PopoverArrow,
+};

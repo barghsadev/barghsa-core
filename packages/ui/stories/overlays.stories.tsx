@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, type ComponentProps } from 'react';
 import type { Story } from '@ladle/react';
 import { Toaster } from '../src/components/ui/sonner';
 import { toast } from 'sonner';
@@ -53,6 +53,154 @@ export const Sheets: Story = () => {
           </UI.SheetContent>
         </UI.Sheet>
       ))}
+    </div>
+  );
+};
+
+export const DialogOptions: Story = () => {
+  const text = useStoryText();
+  const [open, setOpen] = useState(false);
+  const [size, setSize] =
+    useState<NonNullable<ComponentProps<typeof UI.DialogContent>['size']>>('default');
+  const [protect, setProtect] = useState(true);
+  const [closeButton, setCloseButton] = useState(true);
+  return (
+    <div className="max-w-md space-y-4">
+      <UI.Label htmlFor="dialog-size">{text('اندازه پنجره', 'Dialog size')}</UI.Label>
+      <UI.NativeSelect
+        id="dialog-size"
+        value={size}
+        onChange={(e) => setSize(e.target.value as typeof size)}
+      >
+        {(['sm', 'default', 'lg', 'xl', 'fullscreen'] as const).map((value) => (
+          <UI.NativeSelectOption key={value}>{value}</UI.NativeSelectOption>
+        ))}
+      </UI.NativeSelect>
+      <label className="flex items-center gap-2">
+        <input type="checkbox" checked={protect} onChange={(e) => setProtect(e.target.checked)} />
+        {text('جلوگیری از بستن با کلیک بیرون', 'Prevent outside dismissal')}
+      </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={closeButton}
+          onChange={(e) => setCloseButton(e.target.checked)}
+        />
+        {text('نمایش دکمه بستن', 'Show close button')}
+      </label>
+      <UI.Dialog open={open} onOpenChange={setOpen} preventCloseOnOverlayClick={protect}>
+        <UI.DialogTrigger render={<UI.Button />}>
+          {text('باز کردن گزینه‌ها', 'Open options')}
+        </UI.DialogTrigger>
+        <UI.DialogContent
+          size={size}
+          showCloseButton={closeButton}
+          closeLabel={text('بستن', 'Close')}
+        >
+          <UI.DialogHeader>
+            <UI.DialogTitle>{text('فرم نمونه', 'Sample form')}</UI.DialogTitle>
+            <UI.DialogDescription>
+              {text('این فرم درخواست سروری ندارد.', 'This form makes no server requests.')}
+            </UI.DialogDescription>
+          </UI.DialogHeader>
+          <UI.Label htmlFor="modal-notes">{text('یادداشت', 'Notes')}</UI.Label>
+          <UI.Input id="modal-notes" />
+          <UI.DialogFooter>
+            <UI.DialogClose render={<UI.Button variant="outline" />}>
+              {text('انصراف', 'Cancel')}
+            </UI.DialogClose>
+          </UI.DialogFooter>
+        </UI.DialogContent>
+      </UI.Dialog>
+    </div>
+  );
+};
+
+export const SheetOptions: Story = () => {
+  const text = useStoryText();
+  const [blur, setBlur] = useState(true);
+  return (
+    <div className="space-y-5">
+      <label className="flex items-center gap-2">
+        <input type="checkbox" checked={blur} onChange={(e) => setBlur(e.target.checked)} />
+        {text('محو کردن پس‌زمینه', 'Blur backdrop')}
+      </label>
+      <div className="flex flex-wrap gap-3">
+        {(['left', 'right', 'top', 'bottom'] as const).map((side) => (
+          <UI.Sheet key={side}>
+            <UI.SheetTrigger render={<UI.Button variant="outline" />}>{side}</UI.SheetTrigger>
+            <UI.SheetContent side={side} backdropBlur={blur} closeLabel={text('بستن', 'Close')}>
+              <UI.SheetHeader>
+                <UI.SheetTitle>{text('پنل نمونه', 'Sample panel')}</UI.SheetTitle>
+                <UI.SheetDescription>
+                  {text('گزینه‌های نمایش پنل', 'Panel display options')}
+                </UI.SheetDescription>
+              </UI.SheetHeader>
+              <UI.SheetFooter>
+                <UI.SheetClose render={<UI.Button />}>
+                  {text('بستن پنل', 'Close panel')}
+                </UI.SheetClose>
+              </UI.SheetFooter>
+            </UI.SheetContent>
+          </UI.Sheet>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const PopoverOptions: Story = () => {
+  const text = useStoryText();
+  const [open, setOpen] = useState(false);
+  const [side, setSide] = useState<'top' | 'bottom' | 'left' | 'right'>('bottom');
+  const [align, setAlign] = useState<'start' | 'center' | 'end'>('center');
+  const [offset, setOffset] = useState(16);
+  return (
+    <div className="space-y-4">
+      <UI.Label htmlFor="popover-side">{text('جهت', 'Side')}</UI.Label>
+      <UI.NativeSelect
+        id="popover-side"
+        value={side}
+        onChange={(e) => setSide(e.target.value as typeof side)}
+      >
+        {(['top', 'bottom', 'left', 'right'] as const).map((value) => (
+          <UI.NativeSelectOption key={value}>{value}</UI.NativeSelectOption>
+        ))}
+      </UI.NativeSelect>
+      <UI.Label htmlFor="popover-align">{text('تراز', 'Alignment')}</UI.Label>
+      <UI.NativeSelect
+        id="popover-align"
+        value={align}
+        onChange={(e) => setAlign(e.target.value as typeof align)}
+      >
+        {(['start', 'center', 'end'] as const).map((value) => (
+          <UI.NativeSelectOption key={value}>{value}</UI.NativeSelectOption>
+        ))}
+      </UI.NativeSelect>
+      <UI.Label htmlFor="popover-offset">{text('فاصله', 'Offset')}</UI.Label>
+      <UI.NativeSelect
+        id="popover-offset"
+        value={offset}
+        onChange={(e) => setOffset(Number(e.target.value))}
+      >
+        <UI.NativeSelectOption value={0}>0</UI.NativeSelectOption>
+        <UI.NativeSelectOption value={16}>16</UI.NativeSelectOption>
+      </UI.NativeSelect>
+      <div className="flex min-h-96 items-center justify-center">
+        <UI.Popover open={open} onOpenChange={setOpen}>
+          <UI.PopoverTrigger render={<UI.Button />}>
+            {text('نمایش راهنما', 'Show guidance')}
+          </UI.PopoverTrigger>
+          <UI.PopoverContent side={side} align={align} sideOffset={offset} className="w-28">
+            <UI.PopoverTitle>{text('راهنما', 'Guidance')}</UI.PopoverTitle>
+            <UI.PopoverDescription>{text('داده نمونه', 'Sample data')}</UI.PopoverDescription>
+            <a href="#guidance" className="underline">
+              {text('پیوند راهنما', 'Guidance link')}
+            </a>
+            <UI.PopoverArrow />
+          </UI.PopoverContent>
+        </UI.Popover>
+      </div>
     </div>
   );
 };
