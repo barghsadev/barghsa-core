@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 470 | Accepted with unchanged source bindings. |
-| verify | 826 | Existing work may be complete; inspect evidence before building. |
+| done | 475 | Accepted with unchanged source bindings. |
+| verify | 821 | Existing work may be complete; inspect evidence before building. |
 | partial | 65 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,13 +39,21 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing versioned document-template catalogue, file extraction/replacement, admin UI andplaceholder conflict handling together. Reuse existing document/auth/provider evidence andbuildonly demonstrated gaps.
+Inspect current document upload/scan/review/supersession/soft removal, file validation andauthorizedsigned/privatepreview access together. Reuse current storage/template/contract evidence andactualmatched journeychecks; buildonly demonstratedgaps. Keep configuredlive scanner/retention/destruction operations separate.
 
-- `05-notifications-documents-ai.md#T-05.10.01`: Document template entity
-- `05-notifications-documents-ai.md#T-05.10.02`: Template file upload & placeholder extraction
-- `05-notifications-documents-ai.md#T-05.10.03`: Template admin UI
-- `05-notifications-documents-ai.md#T-05.10.04`: Placeholder re-extraction on file changes
-- `05-notifications-documents-ai.md#T-05.10.05`: Placeholder conflict detection & validation
+- `05-notifications-documents-ai.md#T-05.11.02`: Upload pipeline
+- `05-notifications-documents-ai.md#T-05.11.03`: Document scanning integration
+- `05-notifications-documents-ai.md#T-05.11.04`: Document review workflow
+- `05-notifications-documents-ai.md#T-05.11.05`: Document supersession & immutability
+- `05-notifications-documents-ai.md#T-05.11.06`: Soft delete & hard delete
+- `05-notifications-documents-ai.md#T-05.11.07`: Document admin/staff UI
+- `05-notifications-documents-ai.md#T-05.12.01`: File validation service
+- `05-notifications-documents-ai.md#T-05.12.02`: Category & limit configuration
+- `05-notifications-documents-ai.md#T-05.12.03`: Rejection handling
+- `05-notifications-documents-ai.md#T-05.13.01`: Signed URL generation API
+- `05-notifications-documents-ai.md#T-05.13.02`: Access control middleware
+- `05-notifications-documents-ai.md#T-05.13.03`: Download access logging
+- `05-notifications-documents-ai.md#T-05.13.04`: Safe preview derivative endpoint
 
 ## v0.2.0: Complete customer journeys
 
@@ -578,11 +586,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.09.02` | done | Recorded batch work | S3 adapter |
 | `05-notifications-documents-ai.md#T-05.09.03` | partial | Recorded batch work | Storage config entity & admin UI |
 | `05-notifications-documents-ai.md#T-05.09.04` | done | Recorded batch work | Preview derivative generation |
-| `05-notifications-documents-ai.md#T-05.10.01` | verify | Recorded batch work | Document template entity |
-| `05-notifications-documents-ai.md#T-05.10.02` | verify | Inventory needed | Template file upload & placeholder extraction |
-| `05-notifications-documents-ai.md#T-05.10.03` | verify | Recorded batch work | Template admin UI |
-| `05-notifications-documents-ai.md#T-05.10.04` | verify | Inventory needed | Placeholder re-extraction on file changes |
-| `05-notifications-documents-ai.md#T-05.10.05` | verify | Recorded batch work | Placeholder conflict detection & validation |
+| `05-notifications-documents-ai.md#T-05.10.01` | done | Recorded batch work | Document template entity |
+| `05-notifications-documents-ai.md#T-05.10.02` | done | Recorded batch work | Template file upload & placeholder extraction |
+| `05-notifications-documents-ai.md#T-05.10.03` | done | Recorded batch work | Template admin UI |
+| `05-notifications-documents-ai.md#T-05.10.04` | done | Recorded batch work | Placeholder re-extraction on file changes |
+| `05-notifications-documents-ai.md#T-05.10.05` | done | Recorded batch work | Placeholder conflict detection & validation |
 | `05-notifications-documents-ai.md#T-05.11.02` | verify | Inventory needed | Upload pipeline |
 | `05-notifications-documents-ai.md#T-05.11.03` | verify | Recorded batch work | Document scanning integration |
 | `05-notifications-documents-ai.md#T-05.11.04` | verify | Recorded batch work | Document review workflow |
