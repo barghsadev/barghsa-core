@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 500 | Accepted with unchanged source bindings. |
-| verify | 790 | Existing work may be complete; inspect evidence before building. |
-| partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 504 | Accepted with unchanged source bindings. |
+| verify | 785 | Existing work may be complete; inspect evidence before building. |
+| partial | 72 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,15 +39,22 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing AI agents, direct/group relations and five slot assignments together. Reconcile earlier partial acceptance against current model/knowledge/policy implementations; build only demonstrated CRUD/authority/slot gaps.
+Inspect existing admin/customer chat, isolation/redaction/audit, inference worker/budget/queue/health and actual external slot consumers together. Reuse current model/policy/agent/UI receipts; build demonstrated missing runtime boundaries. Keep owner representation decisions pending.
 
-- `02-auth-users-admin.md#T-09.11.04`: AI agent management
+- `05-notifications-documents-ai.md#T-05.21.01`: Test chat API
+- `05-notifications-documents-ai.md#T-05.21.02`: Test chat UI
+- `05-notifications-documents-ai.md#T-05.21.03`: Rate limiting for test
+- `05-notifications-documents-ai.md#T-05.22.01`: AuthZ for AI actions
+- `05-notifications-documents-ai.md#T-05.22.02`: Trusted-UI confirmation for writes
+- `05-notifications-documents-ai.md#T-05.22.03`: AI audit logging
+- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
+- `05-notifications-documents-ai.md#T-05.22.05`: Sensitive value redaction
+- `05-notifications-documents-ai.md#T-05.22.06`: Source attribution in answers
+- `05-notifications-documents-ai.md#T-05.23.01`: AI worker process isolation
+- `05-notifications-documents-ai.md#T-05.23.02`: Per-model token/cost budget
+- `05-notifications-documents-ai.md#T-05.23.03`: AI request queue & concurrency limit
+- `05-notifications-documents-ai.md#T-05.23.04`: Health endpoint isolation
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
-- `05-notifications-documents-ai.md#T-05.19.01`: Agent entity & CRUD
-- `05-notifications-documents-ai.md#T-05.19.02`: Agent CRUD API
-- `05-notifications-documents-ai.md#T-05.19.03`: Agent admin UI
-- `05-notifications-documents-ai.md#T-05.20.01`: Agent slot entity & configuration
-- `05-notifications-documents-ai.md#T-05.20.02`: Slot assignment admin UI
 
 ## v0.2.0: Complete customer journeys
 
@@ -535,7 +542,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.11.01` | done | Earlier acceptance_verified | AI model management |
 | `02-auth-users-admin.md#T-09.11.02` | done | Earlier partial | Knowledge base management |
 | `02-auth-users-admin.md#T-09.11.03` | done | Earlier acceptance_verified | Policy management |
-| `02-auth-users-admin.md#T-09.11.04` | partial | Earlier partial | AI agent management |
+| `02-auth-users-admin.md#T-09.11.04` | done | Earlier partial | AI agent management |
 | `02-auth-users-admin.md#T-09.11.05` | partial | Earlier partial | Agent slot assignment |
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
 | `05-notifications-documents-ai.md#T-05.01.02` | partial | Earlier acceptance_verified | Durable outbox table & write pipeline |
@@ -614,11 +621,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.18.01` | done | Recorded batch work | Policy entity & CRUD |
 | `05-notifications-documents-ai.md#T-05.18.02` | done | Recorded batch work | Policy Groups |
 | `05-notifications-documents-ai.md#T-05.18.03` | done | Recorded batch work | Policy evaluation engine |
-| `05-notifications-documents-ai.md#T-05.19.01` | verify | Recorded batch work | Agent entity & CRUD |
-| `05-notifications-documents-ai.md#T-05.19.02` | verify | Recorded batch work | Agent CRUD API |
-| `05-notifications-documents-ai.md#T-05.19.03` | verify | Recorded batch work | Agent admin UI |
-| `05-notifications-documents-ai.md#T-05.20.01` | verify | Inventory needed | Agent slot entity & configuration |
-| `05-notifications-documents-ai.md#T-05.20.02` | verify | Recorded batch work | Slot assignment admin UI |
+| `05-notifications-documents-ai.md#T-05.19.01` | done | Recorded batch work | Agent entity & CRUD |
+| `05-notifications-documents-ai.md#T-05.19.02` | partial | Recorded batch work | Agent CRUD API |
+| `05-notifications-documents-ai.md#T-05.19.03` | done | Recorded batch work | Agent admin UI |
+| `05-notifications-documents-ai.md#T-05.20.01` | partial | Recorded batch work | Agent slot entity & configuration |
+| `05-notifications-documents-ai.md#T-05.20.02` | done | Recorded batch work | Slot assignment admin UI |
 | `05-notifications-documents-ai.md#T-05.21.01` | verify | Recorded batch work | Test chat API |
 | `05-notifications-documents-ai.md#T-05.21.02` | verify | Recorded batch work | Test chat UI |
 | `05-notifications-documents-ai.md#T-05.21.03` | verify | Recorded batch work | Rate limiting for test |
