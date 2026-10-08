@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect and complete private linked-profile Telegram knowledge assistant using owner-approved barghsa_dev_bot. Read protected token configuration/current webhook ownership without exposing secrets. Implement authenticated one-use linking, current account/profile/membership/slot/source checks, read-only knowledge answers, durable update/reply idempotency and explicit separation from release announcements. Preserve live webhook/deployment receipt gates until an accepted release.
+Continue private Telegram assistant from the accepted protocol: add authenticated one-use profile/account linking, durable update/reply ownership and current authority/slot/source checks with actual settings integration. Inspect current code first. Keep the existing unknown-owner ngrok webhook untouched; record configured webhook/live delivery as later accepted-release gates.
 
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
