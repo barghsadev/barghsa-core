@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -45,15 +46,19 @@ it('keeps the authoritative empty signed-copy error after native blur, companion
   try {
     await act(async () =>
       root.render(
-        <AccountUserProvider value={actor}>
-          <ContractSignaturePanel
-            id={contractId}
-            versionId={versionId}
-            profileId={profileId}
-            staff={false}
-            onChanged={() => {}}
-          />
-        </AccountUserProvider>
+        <QueryProvider>
+          {
+            <AccountUserProvider value={actor}>
+              <ContractSignaturePanel
+                id={contractId}
+                versionId={versionId}
+                profileId={profileId}
+                staff={false}
+                onChanged={() => {}}
+              />
+            </AccountUserProvider>
+          }
+        </QueryProvider>
       )
     );
     const select = host.querySelector<HTMLSelectElement>('#signature-signed')!,

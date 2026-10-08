@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query';
+import { notifyManager, QueryClient } from '@tanstack/react-query';
 
 export class ServerQueryError extends Error {
   constructor(public readonly status: number) {
@@ -19,6 +19,7 @@ export const financialQueryResources = [
 ] as const;
 
 export function createServerQueryClient() {
+  notifyManager.setScheduler(queueMicrotask);
   const client = new QueryClient({
     defaultOptions: {
       queries: {

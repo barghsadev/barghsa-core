@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -47,9 +48,13 @@ const offered = [
 const render = async (locale: 'fa' | 'en' = 'en') =>
   act(async () =>
     root.render(
-      <AdminSettingsLayout groups={offered} locale={locale}>
-        <h1>Existing page</h1>
-      </AdminSettingsLayout>
+      <QueryProvider>
+        {
+          <AdminSettingsLayout groups={offered} locale={locale}>
+            <h1>Existing page</h1>
+          </AdminSettingsLayout>
+        }
+      </QueryProvider>
     )
   );
 it('groups only offered configuration links, preserving route labels and icons', () => {

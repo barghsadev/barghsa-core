@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -32,9 +33,13 @@ afterEach(async () => {
 async function render(onCompleted = vi.fn()) {
   await act(async () =>
     root.render(
-      <AccountUserProvider value="staff/opaque">
-        <ProfileClosureReview ticketId={ticketId} locale="en" onCompleted={onCompleted} />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="staff/opaque">
+            <ProfileClosureReview ticketId={ticketId} locale="en" onCompleted={onCompleted} />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   return onCompleted;
@@ -145,14 +150,18 @@ it('claims the ticket before manual preview reads and rejects simultaneous closu
   vi.stubGlobal('fetch', fetcher);
   await act(async () =>
     root.render(
-      <AccountUserProvider value="staff/opaque">
-        <ProfileClosureReview
-          ticketId={ticketId}
-          locale="en"
-          onCompleted={vi.fn()}
-          coordination={coordination}
-        />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="staff/opaque">
+            <ProfileClosureReview
+              ticketId={ticketId}
+              locale="en"
+              onCompleted={vi.fn()}
+              coordination={coordination}
+            />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await act(async () => {
@@ -197,14 +206,18 @@ it.each([401, 422])(
     vi.stubGlobal('fetch', fetcher);
     await act(async () =>
       root.render(
-        <AccountUserProvider value="staff/opaque">
-          <ProfileClosureReview
-            ticketId={ticketId}
-            locale="en"
-            onCompleted={vi.fn()}
-            coordination={coordination}
-          />
-        </AccountUserProvider>
+        <QueryProvider>
+          {
+            <AccountUserProvider value="staff/opaque">
+              <ProfileClosureReview
+                ticketId={ticketId}
+                locale="en"
+                onCompleted={vi.fn()}
+                coordination={coordination}
+              />
+            </AccountUserProvider>
+          }
+        </QueryProvider>
       )
     );
     await act(async () => {
@@ -328,15 +341,19 @@ it('retains closure ownership after a malformed completion and retries the origi
   const completed = vi.fn();
   const mount = (locale: 'en' | 'fa') =>
     root.render(
-      <AccountUserProvider value="staff/opaque">
-        <ProfileClosureReview
-          ticketId={ticketId}
-          locale={locale}
-          onCompleted={completed}
-          coordination={coordination}
-          disabled={!!owner}
-        />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="staff/opaque">
+            <ProfileClosureReview
+              ticketId={ticketId}
+              locale={locale}
+              onCompleted={completed}
+              coordination={coordination}
+              disabled={!!owner}
+            />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     );
   await act(async () => mount('en'));
   await fillApproval();
@@ -407,9 +424,13 @@ it('discards a late staff preview after an account change', async () => {
   const old = finish;
   await act(async () =>
     root.render(
-      <AccountUserProvider value="other/staff">
-        <ProfileClosureReview ticketId={ticketId} locale="en" onCompleted={vi.fn()} />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="other/staff">
+            <ProfileClosureReview ticketId={ticketId} locale="en" onCompleted={vi.fn()} />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await act(async () => old(Response.json(basePreview)));
@@ -457,9 +478,13 @@ it('replays an unresolved closure through the actual reactive ticket coordinator
   }
   await act(async () =>
     root.render(
-      <AccountUserProvider value="staff/opaque">
-        <Parent />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="staff/opaque">
+            <Parent />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await fillApproval();

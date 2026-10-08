@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it } from 'vitest';
@@ -22,9 +23,13 @@ it('clears the old menu immediately on a profile change and rejects a response s
   try {
     await act(async () =>
       root.render(
-        <NavigationProvider configuration={configuration} revision={start}>
-          <View />
-        </NavigationProvider>
+        <QueryProvider>
+          {
+            <NavigationProvider configuration={configuration} revision={start}>
+              <View />
+            </NavigationProvider>
+          }
+        </QueryProvider>
       )
     );
     expect(container.textContent).toBe('/wallet');
@@ -32,20 +37,28 @@ it('clears the old menu immediately on a profile change and rejects a response s
     expect(container.textContent).toBe('Unavailable');
     await act(async () =>
       root.render(
-        <NavigationProvider configuration={{ ...configuration }} revision={start}>
-          <View />
-        </NavigationProvider>
+        <QueryProvider>
+          {
+            <NavigationProvider configuration={{ ...configuration }} revision={start}>
+              <View />
+            </NavigationProvider>
+          }
+        </QueryProvider>
       )
     );
     expect(container.textContent).toBe('Unavailable');
     await act(async () =>
       root.render(
-        <NavigationProvider
-          configuration={{ ...configuration, profileId: 'second', paths: ['/contracts'] }}
-          revision={getProfileContextRevision()}
-        >
-          <View />
-        </NavigationProvider>
+        <QueryProvider>
+          {
+            <NavigationProvider
+              configuration={{ ...configuration, profileId: 'second', paths: ['/contracts'] }}
+              revision={getProfileContextRevision()}
+            >
+              <View />
+            </NavigationProvider>
+          }
+        </QueryProvider>
       )
     );
     expect(container.textContent).toBe('/contracts');

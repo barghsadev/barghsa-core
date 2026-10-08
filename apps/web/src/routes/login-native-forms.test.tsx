@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -79,7 +80,7 @@ function fixture() {
 }
 async function mount() {
   const Page = LoginRoute.options.component as ComponentType;
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
 }
 async function fill(selector: string, value: string, blur = false) {
   const input = host.querySelector<HTMLInputElement>(selector)!;
@@ -363,7 +364,7 @@ it('ignores credential results after unmount', async () => {
   await mount();
   await credentials();
   await submit();
-  await act(async () => root.render(null));
+  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
   await act(async () => pending.resolve(Response.json(session)));
   expect(routing.navigate).not.toHaveBeenCalled();
 });
@@ -420,7 +421,7 @@ it('cancels its owned OTP expiry redirect when the page unmounts', async () => {
     state.override = () => Response.json({ error: 'AUTH:OTP:EXPIRED' }, { status: 401 });
     await fill('input[inputmode="numeric"]', '123456');
     await submit();
-    await act(async () => root.render(null));
+    await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
     await act(async () => vi.advanceTimersByTimeAsync(500));
     expect(host.textContent).toBe('');
     expect(routing.navigate).not.toHaveBeenCalled();

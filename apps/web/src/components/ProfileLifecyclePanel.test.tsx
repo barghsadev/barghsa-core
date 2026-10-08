@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -31,9 +32,13 @@ afterEach(async () => {
 async function render() {
   await act(async () =>
     root.render(
-      <AccountUserProvider value="owner/opaque">
-        <ProfileLifecyclePanel />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="owner/opaque">
+            <ProfileLifecyclePanel />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await act(async () => {
@@ -257,9 +262,13 @@ it('discards a late preview and retired controls when the current account change
   const old = finish;
   await act(async () =>
     root.render(
-      <AccountUserProvider value="another/opaque">
-        <ProfileLifecyclePanel />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="another/opaque">
+            <ProfileLifecyclePanel />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await act(async () => old(Response.json(preview)));

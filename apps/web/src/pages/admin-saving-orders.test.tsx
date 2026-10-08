@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -72,7 +73,7 @@ it('loads older review orders and keeps fulfillment separate', async () => {
     await act(async () => button?.click());
   };
   try {
-    await act(async () => root.render(<AdminSavingOrdersPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminSavingOrdersPage />}</QueryProvider>));
     expect(container.textContent).toContain('first-review');
     await click('More orders');
     expect(container.textContent).toContain('first-review');
@@ -192,7 +193,7 @@ it('shows the locked saving decision and submits its exact review hash', async (
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminSavingOrdersPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminSavingOrdersPage />}</QueryProvider>));
     const item = [...container.querySelectorAll('button')].find((button) =>
       button.textContent?.includes('Buyer Company')
     );
@@ -339,7 +340,7 @@ it('previews a fulfillment transition and submits its exact review hash', async 
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminSavingOrdersPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminSavingOrdersPage />}</QueryProvider>));
     const item = [...container.querySelectorAll('button')].find((button) =>
       button.textContent?.includes('Buyer Company')
     );
@@ -606,7 +607,7 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminSavingOrdersPage />));
+    await act(async () => root.render(<QueryProvider>{<AdminSavingOrdersPage />}</QueryProvider>));
     const item = [...container.querySelectorAll('button')].find((button) =>
       button.textContent?.includes('Buyer Company')
     );

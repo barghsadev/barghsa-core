@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -28,7 +29,9 @@ it('keeps native touched reason feedback and first-error focus after companion e
   try {
     await act(async () =>
       root.render(
-        <DraftForm existing={{ contract, version }} amendment={false} onSaved={vi.fn()} />
+        <QueryProvider>
+          {<DraftForm existing={{ contract, version }} amendment={false} onSaved={vi.fn()} />}
+        </QueryProvider>
       )
     );
     const reason = host.querySelector<HTMLTextAreaElement>('#contract-draft-changeDescription')!,

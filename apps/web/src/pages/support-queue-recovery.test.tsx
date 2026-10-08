@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -43,9 +44,13 @@ async function mount(Page: ComponentType) {
   const root = createRoot(host);
   await act(async () =>
     root.render(
-      <AccountUserProvider value={Page === StaffTicketsPage ? 'staff' : 'customer'}>
-        <Page />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={Page === StaffTicketsPage ? 'staff' : 'customer'}>
+            <Page />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   return {

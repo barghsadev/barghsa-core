@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -39,16 +40,16 @@ afterEach(async () => {
   localStorage.clear();
 });
 it('provides account-bound preferences to admin children and restores them after remount', async () => {
-  await act(async () => root.render(<AdminContextLayout />));
+  await act(async () => root.render(<QueryProvider>{<AdminContextLayout />}</QueryProvider>));
   await act(async () => host.querySelector<HTMLButtonElement>('button')!.click());
   expect(localStorage.getItem('barghsa.list-view:finance:staff-invoice-receipts-history')).toBe(
     'table'
   );
-  await act(async () => root.render(null));
-  await act(async () => root.render(<AdminContextLayout />));
+  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+  await act(async () => root.render(<QueryProvider>{<AdminContextLayout />}</QueryProvider>));
   expect(host.querySelector('output')!.textContent).toBe('table');
   context.userId = 'another-staff';
-  await act(async () => root.render(<AdminContextLayout />));
+  await act(async () => root.render(<QueryProvider>{<AdminContextLayout />}</QueryProvider>));
   expect(host.querySelector('output')!.textContent).toBe('card');
   expect(
     localStorage.getItem('barghsa.list-view:another-staff:staff-invoice-receipts-history')
@@ -56,7 +57,7 @@ it('provides account-bound preferences to admin children and restores them after
 });
 it('does not write a shared preference when the session lacks an account identity', async () => {
   context.userId = null;
-  await act(async () => root.render(<AdminContextLayout />));
+  await act(async () => root.render(<QueryProvider>{<AdminContextLayout />}</QueryProvider>));
   await act(async () => host.querySelector<HTMLButtonElement>('button')!.click());
   expect(host.querySelector('output')!.textContent).toBe('table');
   expect(localStorage.length).toBe(0);

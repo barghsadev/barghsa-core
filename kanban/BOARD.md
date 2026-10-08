@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue remaining server-state read/list/detail and mutation owners, including exact-record review and eligible low-risk optimism. Operational queue lists and prior catalogue/customer/preference scope are accepted. Preserve fresh authoritative reads, captured commands, no automatic write replay, owner isolation and financial/manual policy.
+Continue remaining shared/specialized catalogue/provider/geography/gift and other list/detail/read owners, exact-record review and remaining mutations with eligible low-risk optimism. Shared async readers, operational lists, catalogue detail and prior customer/preference scope are accepted. Preserve fresh owned reads, financial/manual policy, captured commands and no automatic write replay.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.

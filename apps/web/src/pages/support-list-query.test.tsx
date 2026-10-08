@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -93,7 +94,7 @@ async function mount(
   const host = document.createElement('div');
   document.body.append(host);
   const root = createRoot(host);
-  await act(async () => root.render(<Harness />));
+  await act(async () => root.render(<QueryProvider>{<Harness />}</QueryProvider>));
   return {
     host,
     raw: () => current,

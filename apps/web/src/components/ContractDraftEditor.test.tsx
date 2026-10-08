@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -143,7 +144,11 @@ async function field(label: string, value: string) {
   });
 }
 async function render(existing?: { contract: ContractDetailData; version: ContractVersion }) {
-  await act(async () => root.render(<ContractDraftEditor existing={existing} onSaved={onSaved} />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<ContractDraftEditor existing={existing} onSaved={onSaved} />}</QueryProvider>
+    )
+  );
   await click(words()[existing ? 'draftEdit' : 'draftCreate']);
   await vi.waitFor(() => expect(container.querySelector('form')).not.toBeNull());
 }
@@ -238,11 +243,15 @@ it.each(['en', 'fa'] as const)(
     harness.locale = locale;
     await act(async () =>
       root.render(
-        <ContractDraftEditor
-          existing={{ contract: { ...contract, state: 'Active' }, version }}
-          amendment
-          onSaved={onSaved}
-        />
+        <QueryProvider>
+          {
+            <ContractDraftEditor
+              existing={{ contract: { ...contract, state: 'Active' }, version }}
+              amendment
+              onSaved={onSaved}
+            />
+          }
+        </QueryProvider>
       )
     );
     await click(words().amendmentCreate);

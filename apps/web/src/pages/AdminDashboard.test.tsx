@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -97,7 +98,7 @@ describe('AdminDashboard staff widgets', () => {
       })
     );
 
-    await act(async () => root.render(<AdminDashboard />));
+    await act(async () => root.render(<QueryProvider>{<AdminDashboard />}</QueryProvider>));
     await flush();
 
     const widget = container.querySelector('[role="region"]');
@@ -148,7 +149,7 @@ describe('AdminDashboard staff widgets', () => {
     );
 
     await act(async () => {
-      root.render(<AdminDashboard />);
+      root.render(<QueryProvider>{<AdminDashboard />}</QueryProvider>);
     });
     await flush();
 
@@ -208,7 +209,7 @@ describe('AdminDashboard staff widgets', () => {
     );
 
     await act(async () => {
-      root.render(<AdminDashboard />);
+      root.render(<QueryProvider>{<AdminDashboard />}</QueryProvider>);
     });
     await flush();
 
@@ -244,7 +245,7 @@ describe('AdminDashboard staff widgets', () => {
     );
 
     await act(async () => {
-      root.render(<AdminDashboard />);
+      root.render(<QueryProvider>{<AdminDashboard />}</QueryProvider>);
     });
     await flush();
 
@@ -271,7 +272,7 @@ it('shows a retryable failure instead of claiming a stale zero chargeback count 
     )
   );
   try {
-    await act(async () => root.render(<AdminDashboard />));
+    await act(async () => root.render(<QueryProvider>{<AdminDashboard />}</QueryProvider>));
     expect(container.textContent).toContain('No unresolved chargebacks.');
     status = 503;
     await act(async () => vi.advanceTimersByTime(30_000));

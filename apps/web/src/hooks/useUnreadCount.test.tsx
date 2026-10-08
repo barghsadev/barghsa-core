@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -31,9 +32,13 @@ beforeEach(async () => {
   root = createRoot(host);
   await act(async () =>
     root.render(
-      <StrictMode>
-        <Consumer />
-      </StrictMode>
+      <QueryProvider>
+        {
+          <StrictMode>
+            <Consumer />
+          </StrictMode>
+        }
+      </QueryProvider>
     )
   );
 });
@@ -68,7 +73,7 @@ it('keeps optimistic reads stable until completion and resumes polling afterward
 it('does not overlap slow polls and cleans up after unmount', async () => {
   await act(async () => vi.advanceTimersByTime(90000));
   expect(requests).toHaveLength(1);
-  await act(async () => root.render(null));
+  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
   await reply(5);
   await act(async () => vi.advanceTimersByTime(60000));
   expect(requests).toHaveLength(0);
@@ -84,9 +89,13 @@ it('denied counts clear the badge and disabled polling cannot revive it', async 
   enabled = false;
   await act(async () =>
     root.render(
-      <StrictMode>
-        <Consumer />
-      </StrictMode>
+      <QueryProvider>
+        {
+          <StrictMode>
+            <Consumer />
+          </StrictMode>
+        }
+      </QueryProvider>
     )
   );
   await act(async () => vi.advanceTimersByTime(90000));
@@ -96,9 +105,13 @@ it('a disabled surface ignores an already pending poll without notifying a new s
   enabled = false;
   await act(async () =>
     root.render(
-      <StrictMode>
-        <Consumer />
-      </StrictMode>
+      <QueryProvider>
+        {
+          <StrictMode>
+            <Consumer />
+          </StrictMode>
+        }
+      </QueryProvider>
     )
   );
   await reply(8);

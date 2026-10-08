@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -38,18 +39,22 @@ async function render({
 } = {}) {
   await act(async () =>
     root.render(
-      <TicketQueueRecords
-        items={items}
-        view={view}
-        locale={locale}
-        staff={staff}
-        busy={busy}
-        selectedId={ticket.id}
-        assignees={supportPeople}
-        responseTargetHours={24}
-        formatDate={(value) => `Account time: ${value}`}
-        onSelect={onSelect}
-      />
+      <QueryProvider>
+        {
+          <TicketQueueRecords
+            items={items}
+            view={view}
+            locale={locale}
+            staff={staff}
+            busy={busy}
+            selectedId={ticket.id}
+            assignees={supportPeople}
+            responseTargetHours={24}
+            formatDate={(value) => `Account time: ${value}`}
+            onSelect={onSelect}
+          />
+        }
+      </QueryProvider>
     )
   );
 }

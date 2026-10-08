@@ -1,3 +1,4 @@
+import { QueryProvider } from '../../../test/query-provider.js';
 import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -77,9 +78,13 @@ async function mount(surface: 'profile' | 'addresses', actor = 'owner') {
     .component as ComponentType;
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <Page />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <Page />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
 }
@@ -498,9 +503,13 @@ it.each(['none', 'different'] as const)(
     );
     await act(async () =>
       root.render(
-        <AccountUserProvider value="owner">
-          <Probe />
-        </AccountUserProvider>
+        <QueryProvider>
+          {
+            <AccountUserProvider value="owner">
+              <Probe />
+            </AccountUserProvider>
+          }
+        </QueryProvider>
       )
     );
     await act(async () => {

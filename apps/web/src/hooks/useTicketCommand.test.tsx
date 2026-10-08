@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -26,7 +27,9 @@ it('withdraws captured private work on current grant loss and fences a late rece
   document.body.append(host);
   const root = createRoot(host);
   try {
-    await act(async () => root.render(<Harness scope="actor/profile/ticket" granted />));
+    await act(async () =>
+      root.render(<QueryProvider>{<Harness scope="actor/profile/ticket" granted />}</QueryProvider>)
+    );
     const previous = command.coordination;
     let pending!: Promise<boolean>;
     await act(async () => {
@@ -42,10 +45,16 @@ it('withdraws captured private work on current grant loss and fences a late rece
       });
     });
     expect(fetcher).toHaveBeenCalledOnce();
-    await act(async () => root.render(<Harness scope="actor/profile/ticket" granted={false} />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>{<Harness scope="actor/profile/ticket" granted={false} />}</QueryProvider>
+      )
+    );
     expect(denied).toHaveBeenCalledOnce();
     expect(command.locked).toBeNull();
-    await act(async () => root.render(<Harness scope="fresh/profile/ticket" granted />));
+    await act(async () =>
+      root.render(<QueryProvider>{<Harness scope="fresh/profile/ticket" granted />}</QueryProvider>)
+    );
     await act(async () => {
       expect(command.coordination.claim('reply-public')).toBe(true);
       previous.release('reply-public');

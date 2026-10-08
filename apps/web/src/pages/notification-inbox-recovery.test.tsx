@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -23,7 +24,11 @@ afterEach(async () => {
 });
 const reply = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status });
 const render = async (context: 'customer' | 'staff' = 'customer') => {
-  await act(async () => root.render(<NotificationCenterPage operatingContext={context} />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<NotificationCenterPage operatingContext={context} />}</QueryProvider>
+    )
+  );
 };
 async function click(text: string) {
   const node = [...host.querySelectorAll<HTMLButtonElement>('button')].find((n) =>
@@ -193,10 +198,14 @@ it.each(['customer', 'staff'] as const)(
     arrange(() => reply(page(), denied ? 403 : 200));
     await act(async () =>
       root.render(
-        <>
-          <NotificationCenterPage />
-          <NotificationCenterPage operatingContext={otherContext} />
-        </>
+        <QueryProvider>
+          {
+            <>
+              <NotificationCenterPage />
+              <NotificationCenterPage operatingContext={otherContext} />
+            </>
+          }
+        </QueryProvider>
       )
     );
     expect(host.querySelectorAll('ul')).toHaveLength(2);

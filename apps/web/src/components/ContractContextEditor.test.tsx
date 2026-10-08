@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -124,17 +125,21 @@ async function change(id: string, value: string) {
 async function render(extra: Partial<ContractActivationData> = {}) {
   await act(async () =>
     root.render(
-      <ContractContextEditor
-        context={{ ...context, ...extra }}
-        version={version}
-        source={{
-          id: context.contractId,
-          profileId: PROFILE,
-          serviceType: 'solar',
-          state: extra.state === 'ChangesRequested' ? 'ChangesRequested' : 'Draft',
-        }}
-        onChanged={onChanged}
-      />
+      <QueryProvider>
+        {
+          <ContractContextEditor
+            context={{ ...context, ...extra }}
+            version={version}
+            source={{
+              id: context.contractId,
+              profileId: PROFILE,
+              serviceType: 'solar',
+              state: extra.state === 'ChangesRequested' ? 'ChangesRequested' : 'Draft',
+            }}
+            onChanged={onChanged}
+          />
+        }
+      </QueryProvider>
     )
   );
   await click((harness.locale === 'fa' ? fa : en).editContext);

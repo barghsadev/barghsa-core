@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -69,7 +70,7 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 async function render(node: ReactNode) {
-  await act(async () => root.render(node));
+  await act(async () => root.render(<QueryProvider>{node}</QueryProvider>));
 }
 async function click(text: string) {
   await act(async () => {

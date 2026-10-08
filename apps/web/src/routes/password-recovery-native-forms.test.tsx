@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -81,7 +82,7 @@ function fixture() {
 }
 async function mount() {
   const Page = Route.options.component as ComponentType;
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
 }
 async function fill(selector: string, value: string) {
   const input = host.querySelector<HTMLInputElement>(selector)!;
@@ -259,7 +260,7 @@ it('fences an unmounted pending verification result without navigating or touchi
   await request();
   state.override = () => held.promise;
   await verify();
-  await act(async () => root.render(<p>Another page</p>));
+  await act(async () => root.render(<QueryProvider>{<p>Another page</p>}</QueryProvider>));
   await act(async () => held.resolve(Response.json(grant())));
   expect(host.textContent).toBe('Another page');
   expect(navigation).not.toHaveBeenCalled();

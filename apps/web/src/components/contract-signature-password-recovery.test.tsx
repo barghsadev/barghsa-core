@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -60,15 +61,19 @@ it('actual password step-up and unknown recovery resend the same immutable comma
   try {
     await act(async () =>
       root.render(
-        <AccountUserProvider value={actor}>
-          <ContractSignaturePanel
-            id={contractId}
-            versionId={versionId}
-            profileId={profileId}
-            staff
-            onChanged={changed}
-          />
-        </AccountUserProvider>
+        <QueryProvider>
+          {
+            <AccountUserProvider value={actor}>
+              <ContractSignaturePanel
+                id={contractId}
+                versionId={versionId}
+                profileId={profileId}
+                staff
+                onChanged={changed}
+              />
+            </AccountUserProvider>
+          }
+        </QueryProvider>
       )
     );
     const select = host.querySelector<HTMLSelectElement>('#signature-signed')!;

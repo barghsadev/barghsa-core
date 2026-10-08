@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -30,9 +31,13 @@ function Panel() {
 async function mount(actor = 'test-user') {
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <Panel />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <Panel />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
 }

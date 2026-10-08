@@ -2,8 +2,8 @@ import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type RefObject } from 'react';
-import { t } from '@barghsa/i18n/admin-ui';
-import { t as appText } from '@barghsa/i18n/app';
+import { adminText as t } from '@barghsa/i18n/electricity-price-forms';
+import { t as appText } from '@barghsa/i18n/electricity-price-forms';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   Button,

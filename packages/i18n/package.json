@@ -373,6 +373,11 @@
       "types": "./dist/workspace-admin.d.ts",
       "import": "./dist/workspace-admin.js",
       "default": "./dist/workspace-admin.js"
+    },
+    "./electricity-price-forms": {
+      "types": "./dist/electricity-price-forms.d.ts",
+      "import": "./dist/electricity-price-forms.js",
+      "default": "./dist/electricity-price-forms.js"
     }
   },
   "scripts": {

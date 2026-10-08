@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -100,13 +101,17 @@ afterEach(async () => {
 async function render(staff = false) {
   await act(async () =>
     root.render(
-      <ContractCancellationRequestPanel
-        id="contract"
-        versionId="version"
-        staff={staff}
-        onChanged={changed}
-        onReview={review}
-      />
+      <QueryProvider>
+        {
+          <ContractCancellationRequestPanel
+            id="contract"
+            versionId="version"
+            staff={staff}
+            onChanged={changed}
+            onReview={review}
+          />
+        }
+      </QueryProvider>
     )
   );
 }
@@ -239,7 +244,9 @@ it('hides the staff panel when no request exists', async () => {
 });
 it('paginates the queue without duplicates and opens the selected contract', async () => {
   request.mockResolvedValueOnce({ requests: [pending()], nextBefore: 'cursor/request' });
-  await act(async () => root.render(<ContractCancellationRequestQueue />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ContractCancellationRequestQueue />}</QueryProvider>)
+  );
   request.mockResolvedValueOnce({
     requests: [
       pending(),
@@ -259,12 +266,16 @@ it('paginates the queue without duplicates and opens the selected contract', asy
 });
 it('hides the queue after permission denial', async () => {
   request.mockRejectedValue(new DocumentRequestError(403, null));
-  await act(async () => root.render(<ContractCancellationRequestQueue />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ContractCancellationRequestQueue />}</QueryProvider>)
+  );
   expect(container.textContent).toBe('');
 });
 it('recovers a queue load error', async () => {
   request.mockRejectedValueOnce(new Error('offline'));
-  await act(async () => root.render(<ContractCancellationRequestQueue />));
+  await act(async () =>
+    root.render(<QueryProvider>{<ContractCancellationRequestQueue />}</QueryProvider>)
+  );
   expect(container.textContent).toContain(en.cancellationRequestQueueError);
   request.mockResolvedValue({ requests: [], nextBefore: null });
   await click(en.refresh);
@@ -377,13 +388,17 @@ it('discards the old draft and ignores its command after a version change', asyn
   const success = h.success!;
   await act(async () =>
     root.render(
-      <ContractCancellationRequestPanel
-        id="contract"
-        versionId="new-version"
-        staff={false}
-        onChanged={changed}
-        onReview={review}
-      />
+      <QueryProvider>
+        {
+          <ContractCancellationRequestPanel
+            id="contract"
+            versionId="new-version"
+            staff={false}
+            onChanged={changed}
+            onReview={review}
+          />
+        }
+      </QueryProvider>
     )
   );
   await act(async () => success(pending()));

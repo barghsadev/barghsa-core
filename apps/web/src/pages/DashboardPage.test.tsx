@@ -2,7 +2,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { DashboardPage } from './DashboardPage.js';
-import { QueryProvider } from '../providers/QueryProvider.js';
+import { QueryProvider } from '../test/query-provider.js';
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,

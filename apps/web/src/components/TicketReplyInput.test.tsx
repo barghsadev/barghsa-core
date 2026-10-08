@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -19,18 +20,22 @@ afterEach(async () => {
 async function selectAndPreview(bodyChange = vi.fn()) {
   await act(async () =>
     root.render(
-      <TicketReplyInput
-        ticketId="ticket"
-        profileId={null}
-        locale="fa"
-        staff={false}
-        busy={false}
-        body="private draft"
-        onBodyChange={bodyChange}
-        internal={false}
-        onInternalChange={vi.fn()}
-        onSubmit={vi.fn()}
-      />
+      <QueryProvider>
+        {
+          <TicketReplyInput
+            ticketId="ticket"
+            profileId={null}
+            locale="fa"
+            staff={false}
+            busy={false}
+            body="private draft"
+            onBodyChange={bodyChange}
+            internal={false}
+            onInternalChange={vi.fn()}
+            onSubmit={vi.fn()}
+          />
+        }
+      </QueryProvider>
     )
   );
   const input = host.querySelector('input[type=file]')!;

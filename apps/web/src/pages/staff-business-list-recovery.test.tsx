@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -78,7 +79,7 @@ async function mount(Page: ComponentType) {
   const container = document.createElement('div');
   document.body.append(container);
   const root = createRoot(container);
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
   return {
     container,
     close: async () => {
@@ -104,6 +105,7 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
       vi.fn(async (url: string) => {
         if (url.endsWith('/settings/timezone')) return Response.json({ timezone: 'UTC' });
         if (url.endsWith('/teams')) return Response.json({ teams: [] });
+        if (url.endsWith('/wallet-balance')) return new Response('{}', { status: 403 });
         if (url.endsWith(`/${firstWork}`)) {
           detailReads++;
           return Response.json(name === 'consultation' ? { request: row(), history: [] } : row());
@@ -159,6 +161,7 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
       vi.fn(async (url: string) => {
         if (url.endsWith('/settings/timezone')) return Response.json({ timezone: 'UTC' });
         if (url.endsWith('/teams')) return Response.json({ teams: [] });
+        if (url.endsWith('/wallet-balance')) return new Response('{}', { status: 403 });
         if (url.endsWith(`/${firstWork}`)) {
           detailReads++;
           return fail

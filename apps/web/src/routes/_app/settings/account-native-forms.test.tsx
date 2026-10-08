@@ -1,3 +1,4 @@
+import { QueryProvider } from '../../../test/query-provider.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -79,9 +80,13 @@ function fixture(contact: 'email' | 'mobile' = 'mobile') {
 async function mount(actor = 'user') {
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <Page />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <Page />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
 }

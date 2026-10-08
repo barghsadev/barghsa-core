@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, StrictMode, useState, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -146,7 +147,11 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 async function render(node: ReactNode, who = actor) {
-  await act(async () => root.render(<AccountUserProvider value={who}>{node}</AccountUserProvider>));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<AccountUserProvider value={who}>{node}</AccountUserProvider>}</QueryProvider>
+    )
+  );
 }
 const panel = (staff = false, onDenied = vi.fn()) => (
   <ContractSignaturePanel

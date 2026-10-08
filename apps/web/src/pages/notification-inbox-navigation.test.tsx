@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -57,7 +58,9 @@ for (const context of ['customer', 'staff'] as const) {
           : Response.json({ ...page(), next_cursor: cursor });
       })
     );
-    await act(async () => root.render(<Bound context={context} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<Bound context={context} />}</QueryProvider>)
+    );
     await click('Load more');
     expect(host.textContent).toContain('Current notice');
     fail = false;
@@ -100,7 +103,9 @@ for (const context of ['customer', 'staff'] as const) {
             )
       )
     );
-    await act(async () => root.render(<Bound context={context} />));
+    await act(async () =>
+      root.render(<QueryProvider>{<Bound context={context} />}</QueryProvider>)
+    );
     await click('Linked notice');
     await act(async () => navigate({ cursor }));
     await act(async () => finish(Response.json({ unread_count: 0 })));
@@ -122,7 +127,7 @@ it('refreshing a restored page retains accepted rows on failure but returns its 
         : Response.json(page(url.searchParams.has('cursor') ? 'Older notice' : 'Current notice'));
     })
   );
-  await act(async () => root.render(<Bound />));
+  await act(async () => root.render(<QueryProvider>{<Bound />}</QueryProvider>));
   await act(async () => navigate({ cursor }));
   expect(host.textContent).toContain('Older notice');
   fail = true;
@@ -146,7 +151,7 @@ it('keeps Load more visible and disabled during its pending read', async () => {
         : Promise.resolve(Response.json({ ...page(), next_cursor: cursor }))
     )
   );
-  await act(async () => root.render(<Bound />));
+  await act(async () => root.render(<QueryProvider>{<Bound />}</QueryProvider>));
   await click('Load more');
   const more = [...host.querySelectorAll('button')].find((b) =>
     b.textContent?.includes('Load more')

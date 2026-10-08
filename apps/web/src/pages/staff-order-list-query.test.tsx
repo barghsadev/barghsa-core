@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -105,7 +106,7 @@ for (const item of cases) {
     const container = document.createElement('div');
     document.body.append(container);
     const root = createRoot(container);
-    await act(async () => root.render(<Harness />));
+    await act(async () => root.render(<QueryProvider>{<Harness />}</QueryProvider>));
     return {
       container,
       move: async (value: Record<string, unknown>) => act(async () => move(value)),
@@ -122,6 +123,7 @@ for (const item of cases) {
       'fetch',
       vi.fn(async (url: string) => {
         if (url.endsWith('/settings/timezone')) return Response.json({ timezone: 'UTC' });
+        if (url.endsWith('/wallet-balance')) return new Response('{}', { status: 403 });
         reads.push(url);
         if (
           new URL(url, 'http://localhost').pathname.endsWith(firstWork) ||
@@ -178,6 +180,7 @@ for (const item of cases) {
       'fetch',
       vi.fn(async (url: string) => {
         if (url.endsWith('/settings/timezone')) return Response.json({ timezone: 'UTC' });
+        if (url.endsWith('/wallet-balance')) return new Response('{}', { status: 403 });
         if (url.endsWith('/financial-review') || url.endsWith('/review'))
           return new Promise<Response>((resolve) => {
             finish = resolve;
@@ -215,6 +218,7 @@ for (const item of cases) {
         'fetch',
         vi.fn(async (url: string) => {
           if (url.endsWith('/settings/timezone')) return Response.json({ timezone: 'UTC' });
+          if (url.endsWith('/wallet-balance')) return new Response('{}', { status: 403 });
           if (new URL(url, 'http://localhost').pathname.endsWith(firstWork))
             return Response.json(item.row());
           if (denied) return new Response('{}', { status });

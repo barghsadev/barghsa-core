@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -60,7 +61,7 @@ async function renderCounts(value: unknown) {
       };
     })
   );
-  await act(async () => root.render(<AdminBusinessWorkCounts />));
+  await act(async () => root.render(<QueryProvider>{<AdminBusinessWorkCounts />}</QueryProvider>));
   await act(async () => {
     await Promise.resolve();
     await Promise.resolve();
@@ -172,7 +173,7 @@ it('retries failed work independently and rejects malformed counts instead of in
     );
   });
   vi.stubGlobal('fetch', fetcher);
-  await act(async () => root.render(<AdminBusinessWorkCounts />));
+  await act(async () => root.render(<QueryProvider>{<AdminBusinessWorkCounts />}</QueryProvider>));
   expect(container.querySelector('a[href="/admin/tickets?status=active"]')?.textContent).toContain(
     '3'
   );

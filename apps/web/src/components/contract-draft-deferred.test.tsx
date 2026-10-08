@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -138,9 +139,13 @@ it('loads only after opening, cancels a held load and seeds the current source w
     saved = vi.fn();
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <ContractDraftEditor existing={first} onSaved={saved} />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <ContractDraftEditor existing={first} onSaved={saved} />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   expect(harness.release).toBeNull();
@@ -154,9 +159,13 @@ it('loads only after opening, cancels a held load and seeds the current source w
   };
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <ContractDraftEditor existing={fresh} onSaved={saved} />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <ContractDraftEditor existing={fresh} onSaved={saved} />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   // The material source key remounts the editor closed; cancel its new held load explicitly.
@@ -182,9 +191,13 @@ it('shows a load error and retries without changing the current amendment source
     saved = vi.fn();
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <ContractDraftEditor existing={source} amendment onSaved={saved} />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <ContractDraftEditor existing={source} amendment onSaved={saved} />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await click(en.amendmentCreate);
@@ -230,9 +243,13 @@ it('keeps the real deferred authoring draft behind the synchronous workspace sib
   );
   await act(async () =>
     root.render(
-      <AccountUserProvider value="reviewer">
-        <ContractsWorkspace staff />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value="reviewer">
+            <ContractsWorkspace staff />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await vi.waitFor(() => expect(host.textContent).toContain('Claim signature owner'));
@@ -293,9 +310,13 @@ it('blocks an opened local amendment and retained legacy callbacks while an orig
   vi.stubGlobal('fetch', fetcher);
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <ContractDetail id={contractId} staff onClose={() => {}} onChanged={changed} />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <ContractDetail id={contractId} staff onClose={() => {}} onChanged={changed} />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
   await vi.waitFor(() => expect(host.querySelector('#signature-original')).not.toBeNull());

@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -84,7 +85,7 @@ function fixture() {
 }
 async function mount(verify = false) {
   const Page = (verify ? VerifyRoute : RegisterRoute).options.component as ComponentType;
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
 }
 async function fill(selector: string, value: string, blur = false) {
   const input = host.querySelector<HTMLInputElement>(selector)!;
@@ -299,7 +300,7 @@ it('fences an unmounted pending registration callback', async () => {
   await draft();
   state.override = () => pending.promise;
   await submit();
-  await act(async () => root.render(<p>Another page</p>));
+  await act(async () => root.render(<QueryProvider>{<p>Another page</p>}</QueryProvider>));
   await act(async () => pending.resolve(Response.json({ challengeId: id })));
   expect(routing.navigate).not.toHaveBeenCalled();
   expect(host.textContent).toBe('Another page');

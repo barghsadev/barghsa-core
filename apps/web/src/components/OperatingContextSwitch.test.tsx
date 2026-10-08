@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -30,7 +31,11 @@ it('shows the current mode and submits a deliberate credential rotation', async 
     )
     .mockResolvedValueOnce(new Response(null, { status: 403 }));
   vi.stubGlobal('fetch', fetchMock);
-  await act(async () => root.render(<OperatingContextSwitch area="admin" locale="en" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<OperatingContextSwitch area="admin" locale="en" />}</QueryProvider>
+    )
+  );
   expect(container.textContent).toContain('Staff mode');
   const button = container.querySelector<HTMLButtonElement>('[aria-label="Switch to customer"]');
   expect(button).not.toBeNull();
@@ -54,7 +59,11 @@ it('keeps the context visible without offering staff authority to a customer', a
         )
       )
   );
-  await act(async () => root.render(<OperatingContextSwitch area="dashboard" locale="en" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>{<OperatingContextSwitch area="dashboard" locale="en" />}</QueryProvider>
+    )
+  );
   expect(container.textContent).toContain('Customer mode');
   expect(container.querySelector('[aria-label="Switch to staff"]')).toBeNull();
 });
@@ -64,11 +73,15 @@ it('uses an already validated account result instead of issuing a duplicate iden
   vi.stubGlobal('fetch', fetchMock);
   await act(async () =>
     root.render(
-      <OperatingContextSwitch
-        area="admin"
-        locale="en"
-        session={{ isStaff: true, operatingContext: 'staff', canSwitchContext: true }}
-      />
+      <QueryProvider>
+        {
+          <OperatingContextSwitch
+            area="admin"
+            locale="en"
+            session={{ isStaff: true, operatingContext: 'staff', canSwitchContext: true }}
+          />
+        }
+      </QueryProvider>
     )
   );
   expect(container.querySelector('[aria-label="Switch to customer"]')).toBeTruthy();

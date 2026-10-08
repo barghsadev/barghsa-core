@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -31,21 +32,25 @@ afterEach(async () => {
 async function render(busy = false) {
   await act(async () =>
     root.render(
-      <TicketReplyInput
-        ticketId="ticket"
-        profileId={null}
-        locale="en"
-        staff={false}
-        busy={busy}
-        body=" Retained reply "
-        onBodyChange={bodyChange}
-        internal={false}
-        onInternalChange={() => {}}
-        onSubmit={async (prepare) => {
-          payloads.push(await prepare());
-          return false;
-        }}
-      />
+      <QueryProvider>
+        {
+          <TicketReplyInput
+            ticketId="ticket"
+            profileId={null}
+            locale="en"
+            staff={false}
+            busy={busy}
+            body=" Retained reply "
+            onBodyChange={bodyChange}
+            internal={false}
+            onInternalChange={() => {}}
+            onSubmit={async (prepare) => {
+              payloads.push(await prepare());
+              return false;
+            }}
+          />
+        }
+      </QueryProvider>
     )
   );
 }
@@ -144,7 +149,7 @@ it('a later accepted original reply clears its owning public branch while preser
       />
     );
   }
-  await act(async () => root.render(<Harness />));
+  await act(async () => root.render(<QueryProvider>{<Harness />}</QueryProvider>));
   await choose([first]);
   const toggle = host.querySelector<HTMLInputElement>('input[type=checkbox]')!;
   await act(async () => toggle.click());

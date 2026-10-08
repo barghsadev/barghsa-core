@@ -1,3 +1,4 @@
+import { QueryProvider } from '../../../test/query-provider.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -122,9 +123,13 @@ async function mount(actor = 'opaque:security/user') {
   const Page = Route.options.component as ComponentType;
   await act(async () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <Page />
-      </AccountUserProvider>
+      <QueryProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <Page />
+          </AccountUserProvider>
+        }
+      </QueryProvider>
     )
   );
 }
