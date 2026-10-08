@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAccountUser } from './useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useServerDetailQuery } from './useServerQuery.js';
 import { ProviderRequestError } from '../lib/email-providers-api.js';
 import type { useCatalogueScope } from './useCatalogueResource.js';
 
@@ -8,47 +13,65 @@ export function useProviderCatalogue<T>(
   load: (signal: AbortSignal) => Promise<T>
 ) {
   const { live, version, denied, deny } = scope;
-  const request = useRef<AbortController | null>(null);
+  const reader = useId();
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const client = useQueryClient();
+  const loader = useRef({ load, revision: 0 });
+  if (loader.current.load !== load)
+    loader.current = { load, revision: loader.current.revision + 1 };
+  const queryKey = queryKeys.catalogue.detail(
+    { context: 'staff', ownerId: scope.identity, accountId, revision: profileRevision },
+    JSON.stringify([reader, version, loader.current.revision])
+  );
+  const key = JSON.stringify(queryKey);
+  const latest = useRef(key);
+  latest.current = key;
   const [result, setResult] = useState<{
-    version: number;
+    key: string;
     data: T | null;
     loading: boolean;
     error: boolean;
   } | null>(null);
-  const refresh = useCallback(async () => {
-    request.current?.abort();
-    if (denied) return;
-    const controller = new AbortController();
-    request.current = controller;
-    const current = () => !controller.signal.aborted && live.current === version;
-    setResult((previous) => ({
-      version,
-      data: previous?.version === version ? previous.data : null,
-      loading: true,
-      error: false,
-    }));
-    try {
-      const data = await load(controller.signal);
-      if (current()) setResult({ version, data, loading: false, error: false });
-    } catch (error) {
-      if (!current()) return;
-      if (error instanceof ProviderRequestError && error.denied) {
-        deny();
-        return;
-      }
+  const query = useServerDetailQuery<{ value: T }>({
+    queryKey: denied ? null : queryKey,
+    manual: true,
+    read: async (signal) => {
+      const current = () => !signal.aborted && live.current === version && latest.current === key;
       setResult((previous) => ({
-        version,
-        data: previous?.version === version ? previous.data : null,
-        loading: false,
-        error: true,
+        key,
+        data: previous?.key === key ? previous.data : null,
+        loading: true,
+        error: false,
       }));
-    }
-  }, [denied, live, version, deny, load]);
-  useEffect(() => {
-    void refresh();
-    return () => request.current?.abort();
-  }, [refresh]);
-  const accepted = !denied && result?.version === version ? result : null;
+      try {
+        const data = await load(signal);
+        if (current()) setResult({ key, data, loading: false, error: false });
+        return { value: data };
+      } catch (error) {
+        if (current()) {
+          if (error instanceof ProviderRequestError && error.denied) deny();
+          else
+            setResult((previous) => ({
+              key,
+              data: previous?.key === key ? previous.data : null,
+              loading: false,
+              error: true,
+            }));
+        }
+        throw error;
+      }
+    },
+  });
+  const refetch = query.refetch;
+  const refresh = useCallback(async () => {
+    if (denied || live.current !== version || latest.current !== key) return;
+    // Explicit refresh replaces a pending read, including an initial request without cached data.
+    await client.cancelQueries({ queryKey: JSON.parse(key), exact: true });
+    if (denied || live.current !== version || latest.current !== key) return;
+    await refetch();
+  }, [denied, live, version, key, client, refetch]);
+  const accepted = !denied && result?.key === key ? result : null;
   return {
     data: accepted?.data ?? null,
     loading: !denied && (accepted?.loading ?? true),
