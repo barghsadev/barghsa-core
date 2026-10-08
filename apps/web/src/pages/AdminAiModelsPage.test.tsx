@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -53,7 +54,13 @@ afterEach(async () => {
 });
 
 it('shows test evidence and prepares an enabled-state write', async () => {
-  await act(async () => root.render(<AdminAiModelsPage />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <AdminAiModelsPage />
+      </QueryComponentProvider>
+    )
+  );
   expect(container.textContent).toContain('125 ms');
   expect(container.textContent).toContain('Disabled');
   const enable = [...container.querySelectorAll('button')].find(
@@ -85,7 +92,13 @@ it('separates an open runtime circuit from the last connection-test result', asy
         )
     )
   );
-  await act(async () => root.render(<AdminAiModelsPage />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <AdminAiModelsPage />
+      </QueryComponentProvider>
+    )
+  );
   expect(container.textContent).toContain('Reachable');
   expect(container.textContent).toContain('Model connection temporarily paused');
   expect(container.textContent).toContain('Next recovery check: 2026-09-29T10:00:00Z');
@@ -99,7 +112,13 @@ it('keeps untested models inactive and includes request settings when editing', 
         new Response(JSON.stringify([{ ...model, status: 'unknown', lastTestLatencyMs: null }]))
     )
   );
-  await act(async () => root.render(<AdminAiModelsPage />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <AdminAiModelsPage />
+      </QueryComponentProvider>
+    )
+  );
   const enable = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === 'Enable'
   );
@@ -122,7 +141,13 @@ it('keeps untested models inactive and includes request settings when editing', 
 });
 
 it('names dependent agents in a blocked deletion', async () => {
-  await act(async () => root.render(<AdminAiModelsPage />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <AdminAiModelsPage />
+      </QueryComponentProvider>
+    )
+  );
   const remove = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === 'Delete'
   );

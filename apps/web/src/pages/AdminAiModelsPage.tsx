@@ -1,7 +1,20 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { AiModelRecordTable } from '../components/AiModelRecordTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useEffect, useState, useRef, useCallback, lazy, Suspense, type FormEvent } from 'react';
+import {
+  useEffect,
+  useState,
+  useRef,
+  useId,
+  useCallback,
+  lazy,
+  Suspense,
+  type FormEvent,
+} from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label, ListPage } from '@barghsa/ui';
 import type { TeamAction } from '../components/TeamActionDialog.js';
@@ -37,6 +50,26 @@ import {
   matchesBudgetReceipt,
 } from '../lib/ai-model-form.js';
 export default function AdminAiModelsPage() {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return (
+    <OwnedAiModelsPage
+      key={JSON.stringify([actor, contextRevision])}
+      actor={actor}
+      contextRevision={contextRevision}
+    />
+  );
+}
+
+function OwnedAiModelsPage({
+  actor,
+  contextRevision,
+}: {
+  actor: string | null;
+  contextRevision: number;
+}) {
+  const client = useQueryClient();
+  const reader = useId();
   const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.aiModels.${key}`, locale);
@@ -174,11 +207,35 @@ export default function AdminAiModelsPage() {
   );
   useEffect(() => {
     const controller = new AbortController();
+    const key = queryKeys.catalogue.detail(
+      {
+        context: 'staff',
+        ownerId: actor ?? 'current-account',
+        accountId: actor,
+        revision: contextRevision,
+      },
+      JSON.stringify([reader, 'ai-models', revision])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
     setLoading(true);
     setError(false);
     void (async () => {
       try {
-        const response = await fetch('/api/admin/ai-models', { signal: controller.signal });
+        const response = await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const response = await fetch('/api/admin/ai-models', { signal });
+            return {
+              status: response.status,
+              ok: response.ok,
+              value: response.ok ? await response.json() : null,
+            };
+          },
+        });
         if (controller.signal.aborted) return;
         if (response.status === 401 || response.status === 403) {
           clearWork();
@@ -188,7 +245,7 @@ export default function AdminAiModelsPage() {
           return;
         }
         if (!response.ok) throw new Error('Unavailable');
-        const rows: unknown = await response.json();
+        const rows: unknown = response.value;
         if (controller.signal.aborted) return;
         if (!validModels(rows)) throw new Error('Invalid models');
         const { draft: editing, budgetDraft: budget } = currentWork.current;
@@ -219,8 +276,11 @@ export default function AdminAiModelsPage() {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
-    return () => controller.abort();
-  }, [revision]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [revision, actor, contextRevision, client, reader]);
   const unavailable = loading || error || denied;
   const disabled = unavailable || changed || uncertain;
   const busy = modelForm.pending || budgetForm.pending || !!action;

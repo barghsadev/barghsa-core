@@ -1,3 +1,6 @@
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { refreshProfileContext } from '../lib/profile-context.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -79,7 +82,13 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function mount() {
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <Page />
+      </QueryComponentProvider>
+    )
+  );
 }
 async function click(text: string) {
   const b = [...host.querySelectorAll<HTMLButtonElement>('button')].find(
@@ -205,3 +214,85 @@ for (const domain of ['model', 'budget'] as const) {
     expect(host.textContent).not.toContain('Settings saved');
   });
 }
+
+async function mountScoped(actor: string, visible = true) {
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <AccountUserProvider value={actor}>{visible ? <Page /> : null}</AccountUserProvider>
+      </QueryComponentProvider>
+    )
+  );
+}
+it('model catalogue reads stay manual and cancel when only the page unmounts', async () => {
+  let signal!: AbortSignal;
+  const fetcher = vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
+    if (String(url) !== '/api/admin/ai-models') return Promise.resolve(Response.json({}));
+    signal = init!.signal as AbortSignal;
+    return new Promise<Response>(() => {});
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await mountScoped('staff-a');
+  expect(signal.aborted).toBe(false);
+  const count = fetcher.mock.calls.filter(([url]) => String(url) === '/api/admin/ai-models').length;
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+  });
+  expect(fetcher.mock.calls.filter(([url]) => String(url) === '/api/admin/ai-models')).toHaveLength(
+    count
+  );
+  await mountScoped('staff-a', false);
+  expect(signal.aborted).toBe(true);
+});
+it('model account replacement cancels body consumption and refuses private late data', async () => {
+  let pending = true;
+  let signal!: AbortSignal, finish!: (value: unknown) => void;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      if (String(url) !== '/api/admin/ai-models') return Response.json({});
+      if (!pending) return Response.json([{ ...aiModel, title: 'New staff model' }]);
+      signal = init!.signal as AbortSignal;
+      const response = Response.json([aiModel]);
+      response.json = () =>
+        new Promise((done) => {
+          finish = done;
+        });
+      return response;
+    })
+  );
+  await mountScoped('staff-a');
+  pending = false;
+  await mountScoped('staff-b');
+  expect(signal.aborted).toBe(true);
+  expect(host.textContent).toContain('New staff model');
+  await act(async () => finish([{ ...aiModel, title: 'Old private model' }]));
+  expect(host.textContent).not.toContain('Old private model');
+  expect(host.textContent).toContain('New staff model');
+});
+it('model context replacement withdraws private token, budget draft and frozen command', async () => {
+  await mountScoped('staff-a');
+  await click('Add model');
+  const token = host.querySelector<HTMLInputElement>('#ai-model-token')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      token,
+      'private-draft-token'
+    );
+    token.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await click('Configure budget');
+  await fill('budget', '99');
+  await click('Test connection');
+  await vi.waitFor(() => expect(harness.action).not.toBeNull());
+  const oldSuccess = harness.success!;
+  await act(async () => refreshProfileContext());
+  expect(host.querySelector('#ai-model-token')).toBeNull();
+  expect(host.querySelector('#ai-model-monthlyCostUsd')).toBeNull();
+  expect(host.querySelector('[role=dialog]')).toBeNull();
+  await act(async () =>
+    oldSuccess({ test: { ok: true, responsePreview: 'Old private completion' } })
+  );
+  expect(host.textContent).not.toContain('Old private completion');
+});

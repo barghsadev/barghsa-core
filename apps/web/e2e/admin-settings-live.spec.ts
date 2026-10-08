@@ -1,3 +1,4 @@
+import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import type { APIRequestContext, Route } from '@playwright/test';
@@ -1091,15 +1092,13 @@ for (const locale of ['en', 'fa'])
 
 for (const locale of ['en', 'fa'])
   test(`AI model UI persists through the migrated API (${locale})`, async ({ page }) => {
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    const modelWrites: string[] = [];
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
         url = new URL(request.url());
+      if (url.pathname.startsWith('/api/admin/ai-models/') && request.method() === 'PUT')
+        modelWrites.push(url.pathname);
       await forwardLiveRequest(route, {
         url: `${http.base}${url.pathname}${url.search}`,
         headers: {
@@ -1134,7 +1133,10 @@ for (const locale of ['en', 'fa'])
       .fill('browser-test-private-token');
     await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
     await confirm();
-    const card = page.getByRole('row', { name: title, exact: true });
+    const card = page
+      .getByRole('row')
+      .or(page.getByRole('listitem'))
+      .filter({ has: page.getByRole('heading', { name: title, exact: true }) });
     await expect(card).toBeVisible();
     await expect(card).not.toContainText('browser-test-private-token');
     await card.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
@@ -1142,18 +1144,38 @@ for (const locale of ['en', 'fa'])
     await page
       .getByLabel(fa ? 'نشانی پایه' : 'Base URL', { exact: true })
       .fill('http://127.0.0.1:2/v1');
+    const beforeInvalidSave = modelWrites.length;
     await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-      .click();
-    await expect(page.getByRole('dialog').getByRole('alert')).toContainText(
-      fa ? 'دوباره وارد' : 'Re-enter'
+    await expect(page.locator('#ai-model-token-choice')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.locator('#admin-content')).toContainText(
+      aiModelFormText('tokenChoice', locale)
     );
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
-      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(modelWrites).toHaveLength(beforeInvalidSave);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    const catalogueResponse = await page.request.get(`${http.base}/api/admin/ai-models`, {
+      headers,
+    });
+    expect(catalogueResponse.status()).toBe(200);
+    const stored = (await catalogueResponse.json()).find(
+      (model: { title: string }) => model.title === title
+    );
+    expect(stored.baseUrl).toBe('http://127.0.0.1:1/v1');
+    const unsafeDestination = await page.request.put(
+      `${http.base}/api/admin/ai-models/${stored.id}`,
+      {
+        headers,
+        data: { baseUrl: 'http://127.0.0.1:2/v1' },
+      }
+    );
+    expect(unsafeDestination.status()).toBe(400);
+    const refused = await unsafeDestination.json();
+    expect(refused.error.code).toBe('AI_MODEL_TOKEN_REENTRY_REQUIRED');
+    expect(refused.error.message).toBe('Invalid input value');
     await page
       .getByLabel(fa ? 'تغییر کلید' : 'Token change', { exact: true })
       .selectOption('clear');
