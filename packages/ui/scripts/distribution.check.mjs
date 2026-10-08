@@ -9,6 +9,48 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 const require = createRequire(import.meta.url);
+test('a Button-only ESM consumer drops Dialog and DatePicker code', async () => {
+  const { build } = createRequire(require.resolve('tsup'))('esbuild');
+  const result = await build({
+    stdin: {
+      contents: "export { Button } from '@barghsa/ui';",
+      resolveDir: fileURLToPath(new URL('../', import.meta.url)),
+      sourcefile: 'button-consumer.js',
+    },
+    bundle: true,
+    format: 'esm',
+    platform: 'browser',
+    write: false,
+    metafile: true,
+    sourcemap: 'external',
+    outfile: '/virtual/button-consumer.js',
+    minify: true,
+    external: ['react', 'react-dom', 'react/jsx-runtime'],
+  });
+  const retained = Object.values(result.metafile.outputs).flatMap((output) =>
+    Object.entries(output.inputs)
+      .filter(([, input]) => input.bytesInOutput > 0)
+      .map(([path]) => path)
+  );
+  const mappedSources = JSON.parse(
+    result.outputFiles.find((file) => file.path.endsWith('.map')).text
+  ).sources;
+  assert.ok(mappedSources.some((path) => path.includes('components/ui/button')));
+  assert.equal(
+    mappedSources.some((path) => /components\/(ui\/dialog|base-ui\/date-picker)/.test(path)),
+    false
+  );
+  assert.equal(
+    retained.some((path) => /components\/(ui\/dialog|base-ui\/date-picker)/.test(path)),
+    false
+  );
+  assert.equal(
+    retained.some((path) =>
+      /node_modules\/(?:date-fns|date-fns-jalali|react-day-picker)(?:\/|$)/.test(path)
+    ),
+    false
+  );
+});
 for (const path of [
   '@barghsa/ui',
   '@barghsa/ui/direction-provider',

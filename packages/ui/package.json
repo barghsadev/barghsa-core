@@ -51,7 +51,11 @@
     "dev": "tsup --watch",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "stories": "ladle serve",
+    "stories:build": "ladle build",
+    "stories:preview": "ladle preview",
+    "stories:typecheck": "tsc -p tsconfig.stories.json --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
@@ -79,6 +83,7 @@
   },
   "devDependencies": {
     "@barghsa/tsconfig": "workspace:*",
+    "@ladle/react": "5.1.1",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "tsup": "8.5.1",

@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 516 | Accepted with unchanged source bindings. |
-| verify | 768 | Existing work may be complete; inspect evidence before building. |
-| partial | 79 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 519 | Accepted with unchanged source bindings. |
+| verify | 762 | Existing work may be complete; inspect evidence before building. |
+| partial | 82 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,10 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing linked-account Telegram requirements and implementation before building. Identify safe profile linkage, provider configuration and operational prerequisites; preserve release-only bot scope and continue independent authorized preparation if external configuration is missing.
+Inspect existing Button, Input, Label, Card and Badge against exact primitive requirements. Reuse current catalogue and matching checks; implement only demonstrated gaps, preserve the pending headless preset/polymorphism decision, and extend targeted examples/interaction evidence. Earlier release publication remains dependency-gated.
 
-- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
-- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
+- `07-ui-ux-design.md#T-07.01.02.01`: Button — variants: `default` (primary brand), `secondary`, `destructive` (danger red), `outline`, `ghost`, `link`. Sizes: `xs`, `sm`, `default`, `lg`, `xl` (full-width responsive). States: loading (spinner icon + disabled), disabled (reduced opacity + no events), active (press animation). Support `asChild` from Radix for polymorphic rendering (buttons as anchors or router Links).
+- `07-ui-ux-design.md#T-07.01.02.02`: Input — variants: `default`, `error` (red border + error icon), `success` (green check). Sizes matching Button. States: disabled, read-only, focused (ring). Supporting elements: leading icon slot, trailing icon slot (for password visibility toggle, clear button), helper text below, error message below. Prefix/suffix text (e.g. IRR currency prefix, kWh suffix).
+- `07-ui-ux-design.md#T-07.01.02.03`: Label — association with input via `htmlFor`. Required indicator (red asterisk). Optional muted text. Disabled label styling when associated input is disabled.
+- `07-ui-ux-design.md#T-07.01.02.04`: Card — variants: `default` (bordered, shadow-sm), `interactive` (hover elevation + cursor-pointer), `flat` (no border, subtle bg), `widget` (dashboard card with icon header). Subcomponents: CardHeader, CardTitle, CardDescription, CardContent, CardFooter.
+- `07-ui-ux-design.md#T-07.01.02.05`: Badge — variants: `default` (neutral), `secondary`, `destructive`, `outline`, `success` (green), `warning` (amber), `info` (blue), `purple` (premium). Sizes: `sm`, `default`, `lg`. Dot mode (colored dot without text background). Used for status indicators throughout the app.
 
 ## v0.2.0: Complete customer journeys
 
@@ -642,14 +645,14 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `release-readiness#R-04.02` | todo | Inventory needed | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | partial | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | verify | Earlier acceptance_verified | Theme application |
-| `07-ui-ux-design.md#T-07.01.01.01` | verify | Earlier acceptance_verified | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. |
+| `07-ui-ux-design.md#T-07.01.01.01` | done | Earlier acceptance_verified | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. |
 | `07-ui-ux-design.md#T-07.01.01.02` | partial | Earlier partial | Install and configure shadcn/ui CLI: set `style: "new-york"`, `baseColor: "zinc"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). |
 | `07-ui-ux-design.md#T-07.01.01.03` | partial | Earlier partial | Install and configure Base UI (by MUI — `@mui/base` / `@mui/base-ui`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable). |
-| `07-ui-ux-design.md#T-07.01.01.04` | verify | Inventory needed | Configure `cva` (class-variance-authority) or `tailwind-variants` for all components: define `buttonVariants`, `inputVariants`, `cardVariants`, `badgeVariants` as exportable variant objects. |
-| `07-ui-ux-design.md#T-07.01.01.05` | verify | Inventory needed | Set up Storybook or Ladle in `packages/ui` for visual component documentation. Add stories for each component showing all variants, RTL mode, dark mode, and interactive states. |
-| `07-ui-ux-design.md#T-07.01.01.06` | verify | Inventory needed | Create a `packages/ui/src/index.ts` barrel export. Verify tree-shaking: importing only Button should not pull in Dialog or DatePicker. |
-| `07-ui-ux-design.md#T-07.01.01.07` | verify | Inventory needed | Verify all shadcn/ui components render correctly in RTL mode. Patch any component that uses hardcoded `left`/`right` margins or assumes LTR direction. |
-| `07-ui-ux-design.md#T-07.01.01.08` | verify | Inventory needed | Verify all Base UI components respect the theme's CSS custom properties and dark mode. Fix any hardcoded colors in vendor components. |
+| `07-ui-ux-design.md#T-07.01.01.04` | done | Recorded batch work | Configure `cva` (class-variance-authority) or `tailwind-variants` for all components: define `buttonVariants`, `inputVariants`, `cardVariants`, `badgeVariants` as exportable variant objects. |
+| `07-ui-ux-design.md#T-07.01.01.05` | partial | Recorded batch work | Set up Storybook or Ladle in `packages/ui` for visual component documentation. Add stories for each component showing all variants, RTL mode, dark mode, and interactive states. |
+| `07-ui-ux-design.md#T-07.01.01.06` | done | Recorded batch work | Create a `packages/ui/src/index.ts` barrel export. Verify tree-shaking: importing only Button should not pull in Dialog or DatePicker. |
+| `07-ui-ux-design.md#T-07.01.01.07` | partial | Recorded batch work | Verify all shadcn/ui components render correctly in RTL mode. Patch any component that uses hardcoded `left`/`right` margins or assumes LTR direction. |
+| `07-ui-ux-design.md#T-07.01.01.08` | partial | Recorded batch work | Verify all Base UI components respect the theme's CSS custom properties and dark mode. Fix any hardcoded colors in vendor components. |
 | `07-ui-ux-design.md#T-07.01.02.01` | verify | Inventory needed | Button — variants: `default` (primary brand), `secondary`, `destructive` (danger red), `outline`, `ghost`, `link`. Sizes: `xs`, `sm`, `default`, `lg`, `xl` (full-width responsive). States: loading (spinner icon + disabled), disabled (reduced opacity + no events), active (press animation). Support `asChild` from Radix for polymorphic rendering (buttons as anchors or router Links). |
 | `07-ui-ux-design.md#T-07.01.02.02` | verify | Inventory needed | Input — variants: `default`, `error` (red border + error icon), `success` (green check). Sizes matching Button. States: disabled, read-only, focused (ring). Supporting elements: leading icon slot, trailing icon slot (for password visibility toggle, clear button), helper text below, error message below. Prefix/suffix text (e.g. IRR currency prefix, kWh suffix). |
 | `07-ui-ux-design.md#T-07.01.02.03` | verify | Inventory needed | Label — association with input via `htmlFor`. Required indicator (red asterisk). Optional muted text. Disabled label styling when associated input is disabled. |
