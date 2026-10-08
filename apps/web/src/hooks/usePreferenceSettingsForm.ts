@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from './useServerQuery.js';
 import { useZodForm, type DefaultValues, type FieldValues } from '@barghsa/ui/form';
 import type { $ZodType } from 'zod/v4/core';
 import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
@@ -94,6 +96,12 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
   const copy = (key: string) => tPreferenceSettingsForms(key, locale);
   const actor = useAccountUser(),
     profileRevision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
+  const readSequence = useRef(0);
+  const epoch = useRef({ key: scope.key, value: 0 });
+  if (epoch.current.key !== scope.key)
+    epoch.current = { key: scope.key, value: epoch.current.value + 1 };
   const source = useRef<Source | null>(null),
     sequence = useRef(0),
     checking = useRef(false);
@@ -171,34 +179,74 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
       );
     },
   });
-  async function read(signal?: AbortSignal): Promise<Source | null> {
+  async function load(signal: AbortSignal) {
     const attempt = ++sequence.current;
     setLoading(true);
     setLoadFailed(false);
     try {
       const response = await fetch(options.path, {
         credentials: 'include',
-        ...(signal ? { signal } : {}),
+        signal,
       });
-      if (!scope.isCurrent() || signal?.aborted || sequence.current !== attempt) return null;
+      if (!scope.isCurrent() || signal?.aborted || sequence.current !== attempt)
+        return { value: null, attempt };
       if ([401, 403].includes(response.status)) {
         scope.deny();
-        return null;
+        return { value: null, attempt };
       }
       if (!response.ok) throw new Error('Settings unavailable');
       const value = options.parse(await response.json());
-      if (!scope.isCurrent() || signal?.aborted || sequence.current !== attempt) return null;
+      if (!scope.isCurrent() || signal?.aborted || sequence.current !== attempt)
+        return { value: null, attempt };
       if (!value) throw new Error('Invalid settings');
       if (!source.current) form.reset(options.values(value));
       source.current = value;
       setResult({ key: scope.key, value });
-      return value;
+      return { value, attempt };
     } catch {
       if (scope.isCurrent() && !signal?.aborted && sequence.current === attempt)
         setLoadFailed(true);
-      return null;
+      return { value: null, attempt };
     } finally {
       if (scope.isCurrent() && !signal?.aborted && sequence.current === attempt) setLoading(false);
+    }
+  }
+  const queryKey = queryScope
+    ? queryKeys.preferences.detail(
+        queryScope,
+        JSON.stringify([reader, options.family, options.path, epoch.current.value])
+      )
+    : null;
+  const query = useServerDetailQuery({
+    queryKey: scope.denied ? null : queryKey,
+    // This form owns when a read may run, including uncertain-write recovery.
+    // Prefix invalidation must not initiate a companion read while a command is settling.
+    enabled: false,
+    manual: true,
+    read: load,
+  });
+  async function read(signal?: AbortSignal): Promise<Source | null> {
+    if (!queryKey || !scope.isCurrent() || signal?.aborted) return null;
+    const request = ++readSequence.current;
+    const baseline = sequence.current;
+    const current = () => scope.isCurrent() && !signal?.aborted && readSequence.current === request;
+    await client.cancelQueries({ queryKey, exact: true });
+    if (!current() || sequence.current !== baseline) return null;
+    const abort = () => {
+      if (scope.isCurrent() && readSequence.current === request)
+        void client.cancelQueries({ queryKey, exact: true });
+    };
+    signal?.addEventListener('abort', abort, { once: true });
+    try {
+      const result = await query.refetch();
+      return current() &&
+        result.data &&
+        result.data.attempt > baseline &&
+        result.data.attempt === sequence.current
+        ? result.data.value
+        : null;
+    } finally {
+      signal?.removeEventListener('abort', abort);
     }
   }
   const activeScope = useRef(scope);

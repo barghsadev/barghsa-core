@@ -352,3 +352,70 @@ it('toasts only a confirmed preference save and labels a lost result without cla
     disconnect();
   }
 });
+
+it('keeps owned reads manual on focus, reconnect and a confirmed companion save', async () => {
+  const state = fixture();
+  await mount();
+  await toggle('marketing-email');
+  const before = state.reads.length;
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(state.reads).toHaveLength(before);
+  await submit('notifications');
+  expect(state.writes).toHaveLength(1);
+  expect(state.reads).toHaveLength(before);
+  expect(host.querySelector('#marketing-email')?.getAttribute('aria-checked')).toBe('true');
+});
+
+it('cancels retired actor reads and refuses a late denial without retiring the new preference', async () => {
+  const state = fixture(),
+    held = deferred<Response>();
+  state.readOverride = () => held.promise;
+  await mount(true);
+  const oldRead = vi
+    .mocked(fetch)
+    .mock.calls.find(([path]) => path === '/api/user/settings/timezone')!;
+  const signal = oldRead[1]?.signal;
+  expect(signal).toBeInstanceOf(AbortSignal);
+  state.readOverride = undefined;
+  state.timezone = 'Europe/Istanbul';
+  await mount(true, 'replacement-user');
+  expect(signal?.aborted).toBe(true);
+  await act(async () => held.resolve(Response.json({}, { status: 403 })));
+  expect(host.querySelector<HTMLSelectElement>('#settings-timezone')!.value).toBe(
+    'Europe/Istanbul'
+  );
+  expect(host.textContent).not.toContain(copy('forbidden', 'en'));
+  expect(state.writes).toHaveLength(0);
+});
+
+it('gives each explicit refresh a new abortable read and aborts it on unmount', async () => {
+  const state = fixture();
+  await mount(true);
+  await zone('Europe/Istanbul');
+  await click('refresh');
+  const before = state.reads.length,
+    held = deferred<Response>();
+  state.readOverride = () => held.promise;
+  await click('refresh');
+  expect(state.reads).toHaveLength(before + 1);
+  expect(form('timezone').querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(
+    true
+  );
+  const requests = vi
+    .mocked(fetch)
+    .mock.calls.filter(([path]) => path === '/api/user/settings/timezone');
+  expect(requests).toHaveLength(3);
+  const signals = requests.map((request) => request[1]?.signal);
+  expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+  expect(new Set(signals).size).toBe(3);
+  await act(async () => root.unmount());
+  root = createRoot(host);
+  expect(signals.at(-1)?.aborted).toBe(true);
+  await act(async () => held.resolve(Response.json({ timezone: 'Asia/Tehran' })));
+  expect(state.writes).toHaveLength(0);
+  expect(host.textContent).toBe('');
+});
