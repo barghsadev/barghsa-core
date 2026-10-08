@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 482 | Accepted with unchanged source bindings. |
-| verify | 808 | Existing work may be complete; inspect evidence before building. |
-| partial | 71 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 486 | Accepted with unchanged source bindings. |
+| verify | 803 | Existing work may be complete; inspect evidence before building. |
+| partial | 72 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 9 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,13 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect versioned retention, holds, approved destruction and multipart/orphan cleanup together. Reuse matching real PG/MinIO/document/browser evidence from the current batches; build only demonstrated gaps. Financial physical deletion policy and live operational receipts remain open. No physical production actions authorized.
+Inspect existing AI model catalogue, encrypted credentials, capability validation, durable connection tests, admin UI and circuit integration together. Reuse current provider/authority evidence; build only demonstrated gaps. Live model/provider and pending shared provider-pause policy remain separate.
 
-- `05-notifications-documents-ai.md#T-05.14.01`: Retention policy configuration
-- `05-notifications-documents-ai.md#T-05.14.02`: Legal hold
-- `05-notifications-documents-ai.md#T-05.14.03`: Destruction job
-- `05-notifications-documents-ai.md#T-05.15.01`: Multipart upload API
-- `05-notifications-documents-ai.md#T-05.15.02`: Orphan detection & cleanup
+- `02-auth-users-admin.md#T-09.11.01`: AI model management
+- `05-notifications-documents-ai.md#T-05.16.01`: AI model entity & CRUD
+- `05-notifications-documents-ai.md#T-05.16.02`: AI model test
+- `05-notifications-documents-ai.md#T-05.16.03`: Model admin UI
+- `05-notifications-documents-ai.md#T-05.16.04`: AI model circuit breaker integration
 
 ## v0.2.0: Complete customer journeys
 
@@ -596,11 +596,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.13.02` | partial | Recorded batch work | Access control middleware |
 | `05-notifications-documents-ai.md#T-05.13.03` | done | Recorded batch work | Download access logging |
 | `05-notifications-documents-ai.md#T-05.13.04` | partial | Recorded batch work | Safe preview derivative endpoint |
-| `05-notifications-documents-ai.md#T-05.14.01` | verify | Recorded batch work | Retention policy configuration |
-| `05-notifications-documents-ai.md#T-05.14.02` | verify | Recorded batch work | Legal hold |
-| `05-notifications-documents-ai.md#T-05.14.03` | verify | Recorded batch work | Destruction job |
-| `05-notifications-documents-ai.md#T-05.15.01` | verify | Recorded batch work | Multipart upload API |
-| `05-notifications-documents-ai.md#T-05.15.02` | verify | Recorded batch work | Orphan detection & cleanup |
+| `05-notifications-documents-ai.md#T-05.14.01` | done | Recorded batch work | Retention policy configuration |
+| `05-notifications-documents-ai.md#T-05.14.02` | done | Recorded batch work | Legal hold |
+| `05-notifications-documents-ai.md#T-05.14.03` | partial | Recorded batch work | Destruction job |
+| `05-notifications-documents-ai.md#T-05.15.01` | done | Recorded batch work | Multipart upload API |
+| `05-notifications-documents-ai.md#T-05.15.02` | done | Recorded batch work | Orphan detection & cleanup |
 | `05-notifications-documents-ai.md#T-05.16.01` | verify | Recorded batch work | AI model entity & CRUD |
 | `05-notifications-documents-ai.md#T-05.16.02` | verify | Recorded batch work | AI model test |
 | `05-notifications-documents-ai.md#T-05.16.03` | verify | Recorded batch work | Model admin UI |

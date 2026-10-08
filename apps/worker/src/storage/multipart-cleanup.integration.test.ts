@@ -147,3 +147,87 @@ it('does not abort a session already completed in the database', async () => {
   ).toHaveLength(0);
   await provider.abortMultipartUpload(key, providerId);
 });
+
+it('uses provider continuation markers after filtered pages and refuses a cycle without claiming cleanup', async () => {
+  const before = (
+    await pool.query("SELECT value FROM app_config WHERE key='storage.multipart_cleanup_cursor'")
+  ).rows[0]?.value;
+  const list = vi.fn().mockResolvedValue({
+    uploads: [],
+    isTruncated: true,
+    nextKeyMarker: 'filtered-key',
+    nextUploadIdMarker: 'filtered-id',
+  });
+  const abort = vi.fn();
+  const storage = {
+    listMultipartUploads: list,
+    abortMultipartUpload: abort,
+  } as unknown as StorageProvider;
+  await expect(cleanupMultipartOrphans(pool, storage)).rejects.toThrow('did not advance');
+  expect(list).toHaveBeenCalledTimes(2);
+  expect(list.mock.calls[1]).toEqual(['', 100, 'filtered-key', 'filtered-id']);
+  expect(abort).not.toHaveBeenCalled();
+  expect(
+    (await pool.query("SELECT value FROM app_config WHERE key='storage.multipart_cleanup_cursor'"))
+      .rows[0]?.value
+  ).toEqual(before);
+  list.mockReset().mockResolvedValue({ uploads: [], isTruncated: false });
+  expect(await cleanupMultipartOrphans(pool, storage)).toEqual({
+    scanned: 0,
+    aborted: 0,
+    failed: 0,
+    busy: false,
+  });
+});
+
+it('advances to the actual provider marker rather than the last normalized upload', async () => {
+  const recent = { key: 'normalized-key', uploadId: 'normalized-id', initiatedAt: new Date() };
+  const list = vi
+    .fn()
+    .mockResolvedValueOnce({
+      uploads: [recent],
+      isTruncated: true,
+      nextKeyMarker: 'last-provider-key',
+      nextUploadIdMarker: 'last-provider-id',
+    })
+    .mockResolvedValueOnce({ uploads: [], isTruncated: false });
+  const abort = vi.fn();
+  const storage = {
+    listMultipartUploads: list,
+    abortMultipartUpload: abort,
+  } as unknown as StorageProvider;
+  expect(await cleanupMultipartOrphans(pool, storage)).toMatchObject({
+    scanned: 1,
+    aborted: 0,
+    failed: 0,
+  });
+  expect(list.mock.calls[1]).toEqual(['', 100, 'last-provider-key', 'last-provider-id']);
+  expect(abort).not.toHaveBeenCalled();
+});
+
+it('bounds advancing empty pages and checkpoints the provider cursor for the next run', async () => {
+  let page = 0;
+  const list = vi.fn(async () => ({
+    uploads: [],
+    isTruncated: true,
+    nextKeyMarker: `key-${++page}`,
+    nextUploadIdMarker: `id-${page}`,
+  }));
+  const abort = vi.fn();
+  const storage = {
+    listMultipartUploads: list,
+    abortMultipartUpload: abort,
+  } as unknown as StorageProvider;
+  expect(await cleanupMultipartOrphans(pool, storage)).toEqual({
+    scanned: 0,
+    aborted: 0,
+    failed: 0,
+    busy: false,
+  });
+  expect(list).toHaveBeenCalledTimes(5);
+  expect(abort).not.toHaveBeenCalled();
+  expect(
+    (await pool.query("SELECT value FROM app_config WHERE key='storage.multipart_cleanup_cursor'"))
+      .rows[0]?.value
+  ).toEqual({ keyMarker: 'key-5', uploadIdMarker: 'id-5' });
+});

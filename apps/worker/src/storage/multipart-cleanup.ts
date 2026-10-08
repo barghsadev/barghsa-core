@@ -41,9 +41,15 @@ export async function cleanupMultipartOrphans(
     ).rows[0]?.value;
     let keyMarker = stored?.keyMarker;
     let uploadIdMarker = stored?.uploadIdMarker;
+    const seenCursors = new Set([JSON.stringify([keyMarker, uploadIdMarker])]);
     const result = { scanned: 0, aborted: 0, failed: 0, busy: false };
     let reachedEnd = false;
-    while (result.scanned < scanLimit && result.aborted + result.failed < abortLimit) {
+    let pages = 0;
+    while (
+      result.scanned < scanLimit &&
+      result.aborted + result.failed < abortLimit &&
+      pages++ < Math.ceil(scanLimit / pageSize)
+    ) {
       const page = await storage.listMultipartUploads('', pageSize, keyMarker, uploadIdMarker);
       for (const upload of page.uploads) {
         keyMarker = upload.key;
@@ -115,10 +121,12 @@ export async function cleanupMultipartOrphans(
       }
       if (!page.nextKeyMarker || !page.nextUploadIdMarker)
         throw new Error('Multipart upload listing did not provide a continuation cursor');
-      if (page.uploads.length === 0) {
-        keyMarker = page.nextKeyMarker;
-        uploadIdMarker = page.nextUploadIdMarker;
-      }
+      const nextCursor = JSON.stringify([page.nextKeyMarker, page.nextUploadIdMarker]);
+      if (seenCursors.has(nextCursor))
+        throw new Error('Multipart upload listing did not advance its continuation cursor');
+      seenCursors.add(nextCursor);
+      keyMarker = page.nextKeyMarker;
+      uploadIdMarker = page.nextUploadIdMarker;
     }
     await client.query(
       `INSERT INTO app_config(key,value,version) VALUES($1,$2::jsonb,1)
