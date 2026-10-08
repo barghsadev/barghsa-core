@@ -10,13 +10,13 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 528 | Accepted with unchanged source bindings. |
+| done | 539 | Accepted with unchanged source bindings. |
 | verify | 753 | Existing work may be complete; inspect evidence before building. |
-| partial | 82 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 70 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
-| superseded | 1 | Explicit approved scope disposition. |
+| superseded | 2 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
 
@@ -39,22 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile explicitly approved existing storage/upload/access, AI model/slot/budget and dedicated queue representations with their actual source-bound requirements. Record approved read-only launch scope and deferred business tools/writes explicitly; inspect final implementation and remaining criteria before marking tasks done. Keep live providers, pending cadence and Telegram linkage gates separate.
+Inspect and complete private linked-profile Telegram knowledge assistant using owner-approved barghsa_dev_bot. Read protected token configuration/current webhook ownership without exposing secrets. Implement authenticated one-use linking, current account/profile/membership/slot/source checks, read-only knowledge answers, durable update/reply idempotency and explicit separation from release announcements. Preserve live webhook/deployment receipt gates until an accepted release.
 
-- `05-notifications-documents-ai.md#T-05.09.03`: Storage config entity & admin UI
-- `05-notifications-documents-ai.md#T-05.13.01`: Signed URL generation API
-- `05-notifications-documents-ai.md#T-05.13.04`: Safe preview derivative endpoint
-- `05-notifications-documents-ai.md#T-05.12.02`: Category & limit configuration
-- `05-notifications-documents-ai.md#T-05.12.03`: Rejection handling
-- `05-notifications-documents-ai.md#T-05.13.02`: Access control middleware
-- `05-notifications-documents-ai.md#T-05.19.02`: Agent CRUD API
-- `05-notifications-documents-ai.md#T-05.20.01`: Agent slot entity & configuration
-- `05-notifications-documents-ai.md#T-05.22.01`: AuthZ for AI actions
-- `05-notifications-documents-ai.md#T-05.22.02`: Trusted-UI confirmation for writes
+- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
-- `05-notifications-documents-ai.md#T-05.23.02`: Per-model token/cost budget
-- `05-notifications-documents-ai.md#T-05.24.02`: JobService submit & process
-- `05-notifications-documents-ai.md#T-05.24.04`: JobProgress UI component
 
 ## v0.2.0: Complete customer journeys
 
@@ -599,12 +587,12 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.11.06` | done | Recorded batch work | Soft delete & hard delete |
 | `05-notifications-documents-ai.md#T-05.11.07` | done | Recorded batch work | Document admin/staff UI |
 | `05-notifications-documents-ai.md#T-05.12.01` | done | Recorded batch work | File validation service |
-| `05-notifications-documents-ai.md#T-05.12.02` | partial | Recorded batch work | Category & limit configuration |
-| `05-notifications-documents-ai.md#T-05.12.03` | partial | Recorded batch work | Rejection handling |
-| `05-notifications-documents-ai.md#T-05.13.01` | partial | Recorded batch work | Signed URL generation API |
-| `05-notifications-documents-ai.md#T-05.13.02` | partial | Recorded batch work | Access control middleware |
+| `05-notifications-documents-ai.md#T-05.12.02` | done | Recorded batch work | Category & limit configuration |
+| `05-notifications-documents-ai.md#T-05.12.03` | done | Recorded batch work | Rejection handling |
+| `05-notifications-documents-ai.md#T-05.13.01` | done | Recorded batch work | Signed URL generation API |
+| `05-notifications-documents-ai.md#T-05.13.02` | done | Recorded batch work | Access control middleware |
 | `05-notifications-documents-ai.md#T-05.13.03` | done | Recorded batch work | Download access logging |
-| `05-notifications-documents-ai.md#T-05.13.04` | partial | Recorded batch work | Safe preview derivative endpoint |
+| `05-notifications-documents-ai.md#T-05.13.04` | done | Recorded batch work | Safe preview derivative endpoint |
 | `05-notifications-documents-ai.md#T-05.14.01` | done | Recorded batch work | Retention policy configuration |
 | `05-notifications-documents-ai.md#T-05.14.02` | done | Recorded batch work | Legal hold |
 | `05-notifications-documents-ai.md#T-05.14.03` | partial | Recorded batch work | Destruction job |
@@ -622,27 +610,27 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.18.02` | done | Recorded batch work | Policy Groups |
 | `05-notifications-documents-ai.md#T-05.18.03` | done | Recorded batch work | Policy evaluation engine |
 | `05-notifications-documents-ai.md#T-05.19.01` | done | Recorded batch work | Agent entity & CRUD |
-| `05-notifications-documents-ai.md#T-05.19.02` | partial | Recorded batch work | Agent CRUD API |
+| `05-notifications-documents-ai.md#T-05.19.02` | done | Recorded batch work | Agent CRUD API |
 | `05-notifications-documents-ai.md#T-05.19.03` | done | Recorded batch work | Agent admin UI |
-| `05-notifications-documents-ai.md#T-05.20.01` | partial | Recorded batch work | Agent slot entity & configuration |
+| `05-notifications-documents-ai.md#T-05.20.01` | done | Recorded batch work | Agent slot entity & configuration |
 | `05-notifications-documents-ai.md#T-05.20.02` | done | Recorded batch work | Slot assignment admin UI |
 | `05-notifications-documents-ai.md#T-05.21.01` | done | Recorded batch work | Test chat API |
 | `05-notifications-documents-ai.md#T-05.21.02` | done | Recorded batch work | Test chat UI |
 | `05-notifications-documents-ai.md#T-05.21.03` | done | Recorded batch work | Rate limiting for test |
-| `05-notifications-documents-ai.md#T-05.22.01` | partial | Recorded batch work | AuthZ for AI actions |
-| `05-notifications-documents-ai.md#T-05.22.02` | partial | Recorded batch work | Trusted-UI confirmation for writes |
+| `05-notifications-documents-ai.md#T-05.22.01` | done | Recorded batch work | AuthZ for AI actions |
+| `05-notifications-documents-ai.md#T-05.22.02` | superseded | Recorded batch work | Trusted-UI confirmation for writes |
 | `05-notifications-documents-ai.md#T-05.22.03` | done | Recorded batch work | AI audit logging |
 | `05-notifications-documents-ai.md#T-05.22.04` | partial | Recorded batch work | Data isolation per slot |
 | `05-notifications-documents-ai.md#T-05.22.05` | done | Recorded batch work | Sensitive value redaction |
 | `05-notifications-documents-ai.md#T-05.22.06` | done | Recorded batch work | Source attribution in answers |
 | `05-notifications-documents-ai.md#T-05.23.01` | done | Recorded batch work | AI worker process isolation |
-| `05-notifications-documents-ai.md#T-05.23.02` | partial | Recorded batch work | Per-model token/cost budget |
+| `05-notifications-documents-ai.md#T-05.23.02` | done | Recorded batch work | Per-model token/cost budget |
 | `05-notifications-documents-ai.md#T-05.23.03` | done | Recorded batch work | AI request queue & concurrency limit |
 | `05-notifications-documents-ai.md#T-05.23.04` | done | Recorded batch work | Health endpoint isolation |
 | `05-notifications-documents-ai.md#T-05.24.01` | done | Recorded batch work | Jobs table & entity |
-| `05-notifications-documents-ai.md#T-05.24.02` | partial | Recorded batch work | JobService submit & process |
+| `05-notifications-documents-ai.md#T-05.24.02` | done | Recorded batch work | JobService submit & process |
 | `05-notifications-documents-ai.md#T-05.24.03` | done | Recorded batch work | Job status & result API |
-| `05-notifications-documents-ai.md#T-05.24.04` | partial | Recorded batch work | JobProgress UI component |
+| `05-notifications-documents-ai.md#T-05.24.04` | done | Recorded batch work | JobProgress UI component |
 
 ## v0.5.0: Usable and accessible product
 

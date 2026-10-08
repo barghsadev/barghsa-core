@@ -282,7 +282,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | **T-05.09.02 — S3 adapter** | L | P0 |
 | Integrate `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner`. Config: `endpoint`, `region`, `bucket`, `credentials.accessKeyId`, `credentials.secretAccessKey`, `forcePathStyle`, `publicEndpoint` (for presigned URLs). `upload`: use `PutObjectCommand` with `ContentType` and `ContentLength`. `getSignedUrl`: `GetObjectCommand` with expiry (default 15min, max 1hr for security). Multipart: `CreateMultipartUploadCommand`, `UploadPartCommand`, `CompleteMultipartUploadCommand`, `AbortMultipartUploadCommand`. | | |
 | **T-05.09.03 — Storage config entity & admin UI** | M | P1 |
-| `storage_provider_configs` table: same lifecycle as notification providers (draft/active/superseded). Config fields: `endpoint`, `region`, `bucket`, `access_key_id`, `secret_access_key` (encrypted), `force_path_style`, `public_endpoint`. Test button: upload a small test object, generate URL, download and verify content. Secrets: encrypted, masked, write-only. | | |
+| Versioned `app_config.storage.active` stores endpoint, region, bucket, access key, encrypted secret, path-style and public endpoint settings. Saves require current authority and step-up, probe candidate upload/signed-download bytes, reject stale versions and prohibit location changes while object records exist. Audit records prior/new versions. Test button performs the same bounded content probe. Secrets remain encrypted, masked and write-only. Owner approved the current versioned design on 2026-10-08; separate draft/active/superseded storage-provider rows are not required for launch. Live configured storage receipts remain an operational gate. | | |
 | **T-05.09.04 — Preview derivative generation** | M | P2 |
 | For documents that require inline preview (PDF thumbnails, image previews): generate derived objects (e.g. first-page PNG, resized JPEG) stored under a `_previews/` prefix in S3. Create endpoint that returns the preview URL. Preview is never user-writable, never modifies source. Cache preview derivatives with TTL; invalidate when source document is replaced or removed. | | |
 
@@ -355,7 +355,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 **Description:** Enforce file type validation (extension + MIME detection), size limits, and category-based file type restrictions.
 
 **Acceptance Criteria:**
-- Three categories with default limits: Documents 25MB, Images 15MB, Video 250MB
+- Versioned document/image/video byte limits are intersected with deployment caps: document 10 MiB, image 20 MiB, video 100 MiB; effective policies may be narrower (owner approved current upload policy design, 2026-10-08)
 - Validation: extension allow-list + detected MIME (must match)
 - Reject executables, mismatched extension/MIME, unsafe types
 - Admin configurable formats and limits within deployment-safe boundaries
@@ -367,9 +367,9 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | **T-05.12.01 — File validation service** | M | P0 |
 | Validation logic: 1. Check extension against allow-list per category. 2. Detect MIME from file header (magic bytes) using `file-type` or `mime` library. 3. Reject if extension doesn't match detected MIME. 4. Reject executables (`application/x-msdownload`, `application/x-elf`, etc.). 5. Check size against category limit. 6. Compute SHA-256 checksum. Return validation result (pass/fail + reason). | | |
 | **T-05.12.02 — Category & limit configuration** | M | P1 |
-| `file_categories` DB seed: documents (`pdf`, `doc`, `docx`, `xls`, `xlsx`, `txt`, `csv`, `rtf`), images (`jpg`, `jpeg`, `png`, `webp`), video (`mp4`, `mov`, `webm`). `file_limits` table: `category`, `max_size_mb`, `allowed_extensions` (JSONB). Admin editable within hard-coded safety cap (500MB max for video). | | |
+| Versioned `upload_policies` rows use `document`, `image`, `video` keys, extension arrays, whole-byte limits and non-overlapping effective intervals. Admin editing preserves history and intersects deployment formats/limits; the overall policy maximum is 100 MiB and each category has its own deployment cap. Required formats remain documents (`pdf`, `doc`, `docx`, `xls`, `xlsx`, `txt`, `csv`, `rtf`), images (`jpg`, `jpeg`, `png`, `webp`) and video (`mp4`, `mov`, `webm`). Owner approved this existing design on 2026-10-08; separate category/limit tables and a 500 MiB video cap are not launch requirements. | | |
 | **T-05.12.03 — Rejection handling** | S | P1 |
-| Validation failure → reject upload before presigned URL is issued (saves bandwidth). Return specific, safe error: "PDF files up to 25MB are accepted" or "File type .exe is not supported". If client uploads a different file than authorized → presigned URL's upload validation rejects. | | |
+| Reject disallowed declared extension, MIME and size before issuing a presigned upload URL; return safe format/limit feedback from the effective category policy. Uploaded bytes remain untrusted in a reserved staging object. Before sealing or trusted use, verify actual content, canonical MIME, size and SHA-256; forged or mismatched bytes are refused. Owner approved this two-stage boundary on 2026-10-08; provider PUT is not claimed to validate all file contents. | | |
 
 ---
 
@@ -379,23 +379,23 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 
 **Acceptance Criteria:**
 - All objects private by default; no public bucket
-- Access via short-lived signed URLs (default 15 min, max 1 hr)
+- Generic document access uses 300-second signed URLs and private no-store responses; storage facade defaults remain independently bounded
 - Backend verifies user has access to the related business record before issuing URL
 - Download permission follows least privilege
-- Staff access: requires permission + record ownership scope
+- Customer access requires the current active profile/business ownership; staff access requires current session and an explicit module-wide read grant, which may span profiles (owner approved, 2026-10-08)
 - Signed contract documents: read-only, no deletion/modification
-- CDN-safe caching headers for public/immutable derived files (previews)
+- Derived preview access remains private and no-store, with current authority/state/source checks even on internal cache hits (owner approved, 2026-10-08)
 
 | Task | Complexity | Priority |
 |---|---|---|
 | **T-05.13.01 — Signed URL generation API** | M | P0 |
-| `POST /api/v1/files/:id/download-url` → backend checks: does user have access to the business record this document is linked to? Is document in a state that allows download (Available, Approved, Superseded)? Is document under legal hold or retention? → issue presigned URL (GET, 15min TTL). Audit the access in document_access_log. | | |
+| Existing `/api/documents/...` and `/api/admin/documents/...` download routes recheck current session, profile/business permission and readable state before issuing a 300-second signed GET URL with a private no-store API response. Append successful URL issuance and server request metadata to `document_access_log` atomically; denial, signing or log failure returns no URL. Hold/retention preserves bytes and does not itself grant read access. Owner approved current routes and privacy settings on 2026-10-08; URL issuance is not proof of a later object fetch. | | |
 | **T-05.13.02 — Access control middleware** | M | P0 |
-| Permission model: document access scoped by business record ownership. For documents linked to contract → only profile that owns contract (and assigned staff with contract-read permission) can download. For standalone documents → only uploader's profile and staff with document-read permission. Middleware resolves business_record_type + business_record_id → runs appropriate policy check. | | |
+| Customer reads resolve the business record and require current active-profile membership/permission, rejecting cross-profile access and authority changes. Staff reads retain explicit global/module grants (`contracts:read`, `invoices:read`, `orders:read`, `legal:read`, including the supported saving-contract fallback) and current session checks. These grants may span records without an assignment requirement. Owner approved this staff scope on 2026-10-08; customer isolation and write/step-up boundaries remain mandatory. | | |
 | **T-05.13.03 — Download access logging** | M | P1 |
 | `document_access_log` table: `id`, `document_id`, `accessed_by`, `accessed_by_type`, `action` (download/view), `ip_address`, `user_agent`, `created_at`. Append-only. | | |
 | **T-05.13.04 — Safe preview derivative endpoint** | M | P2 |
-| Create `GET /api/v1/files/:id/preview` endpoint that returns a generated preview (PDF page-to-image thumbnail, image resized variant) via signed URL. Preview is always read-only, derived from the source document, and never user-writable. Backend generates derivatives using T-05.09.04 infrastructure. Cache preview URLs with CDN-safe headers for immutability. | | |
+| Existing customer/admin document preview routes return an authorized 300-second signed URL for a bounded first-page PDF PNG or resized image derivative, with private no-store responses. Derivatives are read-only, source/hash-bound and never user-writable; current authority, readable state and source availability are rechecked on cache hits. Inline UI renders derivatives; original bytes remain available through the protected download link. Owner approved current routes and privacy settings on 2026-10-08; CDN caching is not required. | | |
 
 ---
 
@@ -531,7 +531,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | **T-05.19.01 — Agent entity & CRUD** | M | P0 |
 | `ai_agents` table: `id`, `title`, `description`, `model_id` (FK), `system_prompt` (text), `temperature` (nullable float, overrides model default), `max_tokens` (nullable int), `link_mode` (any_kb | all_kbs), `is_enabled`, `created_by`, `created_at`, `updated_at`. Many-to-many junction tables: `agent_kbs`, `agent_kb_groups`, `agent_policies`, `agent_policy_groups`. | | |
 | **T-05.19.02 — Agent CRUD API** | S | P0 |
-| Standard CRUD endpoints. On create: validate model exists and is enabled, validate KBs/policies exist. On delete: check if agent is assigned to any slot; if yes, block with error listing assignments. | | |
+| Standard CRUD endpoints validate model and KB/policy/group references on every create/update. Inactive drafts may reference an untested or disabled model; active creation, activation and inference require an enabled model with a successful test. Deletion blocks assigned agents and lists their slots. Current session, step-up, transactional audit and relation race checks remain. Owner approved safe inactive drafts on 2026-10-08. | | |
 | **T-05.19.03 — Agent admin UI** | L | P1 |
 | Admin agent management page: list agents with status, model, linked KB/policy count. Create/edit: select model from dropdown, multi-select KBs/KB groups, multi-select policies/policy groups, edit system prompt (textarea with syntax highlighting), configure temperature/max_tokens overrides. Validation feedback. | | |
 
@@ -551,7 +551,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | Task | Complexity | Priority |
 |---|---|---|
 | **T-05.20.01 — Agent slot entity & configuration** | M | P0 |
-| `agent_slots` table: `id`, `slug` (unique, e.g. `individual-chatbot`), `title` (i18n key), `description`, `current_agent_id` (nullable FK), `updated_by`, `updated_at`. Seeded with 5 default slots. | | |
+| `ai_agent_slots` uses five stable underscore slot keys as the primary key, a nullable `agent_id` foreign key, `updated_by` and `updated_at`. Labels are localized in the UI; there is no stored description. Assign/clear operations preserve audited prior/current mapping, existing-agent validation, shared-agent warnings and immediate runtime resolution. Owner approved this representation on 2026-10-08; UUID/hyphenated slug/stored i18n title/description migration is not required. | | |
 | **T-05.20.02 — Slot assignment admin UI** | S | P1 |
 | Admin AI Orchestration page → "Agent Slots" tab. Table: slot name, currently assigned agent, last changed. Dropdown to select agent (or "None — disabled"). Save updates audit entry. | | |
 
@@ -582,16 +582,16 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 
 ### Story T-05.22: AI Assistant Safety
 
-**Description:** Enforce safety controls for the AI assistant: backend authorization, trusted-UI confirmation, audit logging, and data isolation.
+**Description:** Launch a read-only assistant that answers from published authorized knowledge with backend authorization, audit logging and slot/profile isolation. Owner approved this launch scope on 2026-10-08; profile-data tools, business tool execution, AI-proposed writes and trusted-UI approval cards are explicitly deferred.
 
 **Acceptance Criteria:**
-- AI operates only as authenticated user in selected profile
-- Tool permissions enforced by backend authorization, never prompt instructions
-- Read-only queries may run directly
-- Write actions: structured preview required before execution
-- Financial transactions, order submission, contract acceptance/signature, refunds, identity/role changes, destructive actions: require explicit confirmation in trusted UI
-- AI cannot confirm its own proposed action
-- Every tool call, auth decision, input, outcome, correlation ID audited
+- Authenticated customer/staff knowledge answers require current authority and selected-profile/context checks; the anonymous website slot is limited to published public knowledge
+- Launch inference has no business tools or profile-data actions; prompt text cannot grant authority or enable deferred tools
+- Published knowledge retrieval may run within backend-enforced slot/audience and current-source limits
+- AI-proposed writes and structured approval previews are deferred and absent from launch
+- Any future business tools/writes require separate acceptance of direct-action authorization and trusted-UI confirmation before activation; launch AI executes no financial/order/contract/refund/identity/destructive action
+- Future AI cannot confirm its own proposed action; no write-confirmation channel exists at launch
+- Current inference authorization, redacted input/outcome, slot/session/profile context and correlation evidence remain audited; deferred tool calls are not claimed implemented
 - Knowledge answers distinguish source-backed facts from generated guidance
 - Sensitive values redacted from prompts, logs, analytics
 - Data isolation: each chatbot slot has its own context window based on profile type
@@ -599,13 +599,13 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | Task | Complexity | Priority |
 |---|---|---|
 | **T-05.22.01 — AuthZ for AI actions** | L | P0 |
-| Every AI tool call goes through same authorization policy as direct UI action. Backend middleware: resolve tool → required permission → check active user role + profile access. Deny if not authorized. Safe error: "You don't have permission to perform this action." Audit the denial. | | |
+| Launch knowledge inference checks current account/session and customer active-profile or staff permission/context before and after provider work, rejects changed scope, restricts slot/audience and revalidates sources. Denials use safe errors and redacted audit records. There is no business-tool registry or profile-data tool execution. Owner approved read-only launch on 2026-10-08; tool-to-direct-action authorization middleware is explicitly deferred and must be accepted before future tools are enabled. | | |
 | **T-05.22.02 — Trusted-UI confirmation for writes** | L | P0 |
-| For write actions: AI presents preview card in trusted UI (not in chat). Card shows: action type, parameters, consequences. User confirms or rejects in trusted UI (not via typing). AI cannot programmatically confirm. Audit: preview shown, user decision, decision timestamp. | | |
+| Explicitly deferred from first launch by owner on 2026-10-08. Future AI-proposed writes require a trusted-UI preview with exact parameters/consequences, a user-only confirm/reject decision and timestamps/audit; AI cannot confirm through chat or programmatically. Launch remains knowledge-only and executes no business writes. Existing ordinary CRUD confirmation dialogs do not satisfy or certify this future feature. | | |
 | **T-05.22.03 — AI audit logging** | M | P0 |
 | `ai_audit_log` table: `id`, `session_id`, `user_id`, `profile_id`, `agent_slot`, `tool_name`, `input` (redacted), `output` (redacted), `authorization_result`, `confirmation_required` (bool), `confirmation_result`, `correlation_id`, `token_usage`, `latency_ms`, `created_at`. Append-only, immutable. | | |
 | **T-05.22.04 — Data isolation per slot** | M | P1 |
-| Individual Chatbot: sees only the individual profile's data. Legal Entity Chatbot: sees only the active legal profile's data. Staff Chatbot: sees data the staff member's roles authorize. Website Chatbot: anonymous, limited to public KBs. Telegram Chatbot: profile-bound via linked Telegram account. Data scope enforced in KB retrieval and tool execution. | | |
+| Launch Individual/Legal customer questions are scoped to current account, selected profile, session and assigned slot; retrieval includes only published authorized knowledge. Staff questions require current AI permission and use curated staff/public knowledge. Website questions are anonymous and public-only. Telegram questions must use a private linked account/profile and the Telegram slot, isolated from release announcements. Current and cached results recheck authority, assignment and source eligibility. Owner approved knowledge-only scope on 2026-10-08; business profile-data tools and tool execution are explicitly deferred. Telegram consumer/linkage receipts remain mandatory. | | |
 | **T-05.22.05 — Sensitive value redaction** | M | P1 |
 | Before sending to AI model: redact sensitive values (passwords, tokens, national IDs, bank details, API keys) from context. Use pattern-based detection + allow-list. Never send raw secrets in prompts. Redacted logs: replace with `[REDACTED]` and keep category. | | |
 | **T-05.22.06 — Source attribution in answers** | L | P1 |
@@ -630,7 +630,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 | **T-05.23.01 — AI worker process isolation** | L | P0 |
 | Create a dedicated NestJS worker process (or sidecar) for AI inference that runs independently from core API workers. The AI process shares the database but has its own HTTP server on a separate port for internal routing. Core API proxies AI requests to this process via internal HTTP or message queue. Deploy separately so AI process restart does not affect core API availability. | | |
 | **T-05.23.02 — Per-model token/cost budget** | M | P1 |
-| `ai_model_budgets` table: `model_id` (FK), `budget_type` (tokens/month | cost/month), `budget_limit`, `current_usage`, `reset_at`. On each inference: increment usage counter. If budget exceeded: reject with `BudgetExhaustedError`. Admin-configurable per model. Alert ops when usage reaches 80% of budget. Monthly reset cron job. | | |
+| `ai_model_budgets` retains simultaneous optional monthly token and USD cost limits, separate input/output token counters, exact integer micro-USD pricing/usage and a UTC month start. Inference serializes the budget row, conservatively checks capacity before the provider, atomically charges actual usage (bounded fallback if unavailable), safely rejects exhaustion and alerts authorized operators at 80%. Counters/alert reset lazily at the next inference in a new UTC month. Owner approved dual limits and lazy reset on 2026-10-08; a single typed budget or reset cron is not required. | | |
 | **T-05.23.03 — AI request queue & concurrency limit** | M | P1 |
 | Implement an in-process or Redis-backed queue for AI inference requests. Global max concurrency (configurable, default 10). When concurrency limit reached: queue requests with FIFO ordering. Queue timeout (default 30s): if request not processed within timeout, reject with `AIBusyError`. Expose queue depth metric. Queue does not consume core API worker threads. | | |
 | **T-05.23.04 — Health endpoint isolation** | M | P1 |
@@ -640,7 +640,7 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 
 ### Story T-05.24: Async Job Framework
 
-**Description:** Provide a generic async job framework for long-running operations (document generation, exports, media processing). Any operation exceeding 5s must use this pattern.
+**Description:** Provide generic async jobs for profile exports and future document/media operations. Existing durable document, knowledge-processing and model-test queues retain their dedicated status flows (owner approved, 2026-10-08). Long-running work remains asynchronous; a universal migration to one generic job ID/component is not required.
 
 **Acceptance Criteria:**
 - Job entity with type, status, progress percentage, result URL, error message
@@ -648,18 +648,18 @@ This epic covers three interrelated domains that provide cross-cutting platform 
 - `GET /api/jobs/:id/status` endpoint returns current state and progress
 - `GET /api/jobs/:id/result` returns completed output or redirects to result URL
 - Browser `<JobProgress>` component polls for status and shows progress bar
-- Pattern documented: any backend operation taking > 5s returns a job ID instead of blocking the HTTP request
+- Generic job submit/status/progress is used by profile exports and future registered operations; existing dedicated durable queues keep their own operation IDs/status UI without blocking long-running work
 
 | Task | Complexity | Priority |
 |---|---|---|
 | **T-05.24.01 — Jobs table & entity** | M | P0 |
 | `async_jobs` table: `id` (UUIDv7), `type` (string, e.g. `document-generation`, `export-csv`), `status` (queued/processing/completed/failed), `progress_pct` (integer 0–100), `payload` (JSONB), `result_url` (nullable), `error_message` (nullable), `created_by`, `created_at`, `started_at`, `completed_at`. Index on `(status, created_at)`. | | |
 | **T-05.24.02 — JobService submit & process** | M | P0 |
-| `JobService.submit(type, payload)` → inserts job with status=queued, returns job ID. Worker picks queued jobs, transitions to processing, executes the handler, sets completed/failed with result. Handlers registered by type via `JobHandlerRegistry`. Error handling: failed jobs record error message, can be retried. | | |
+| `JobService.submit(type, payload)` inserts a queued UUIDv7 job and returns its ID. Registered generic workers process profile exports and future operations with lease fencing, progress/results, capped retries and audit. Existing dedicated document, knowledge and model-test queues keep their tested handlers/status flows. Owner approved this scope on 2026-10-08; no universal migration of every operation over five seconds is required. | | |
 | **T-05.24.03 — Job status & result API** | S | P0 |
 | `GET /api/jobs/:id` → `{id, type, status, progress_pct, created_at, result_url, error_message}`. `GET /api/jobs/:id/result` → if completed and has result_url, redirect (302). If still processing, return 202 with current status. | | |
 | **T-05.24.04 — JobProgress UI component** | S | P1 |
-| Shared React component: accepts a job ID, polls `/api/jobs/:id` every 2s, renders progress bar with percentage, status text, and estimated time remaining. On completion: shows download/open link if result_url present. On failure: shows error with retry button. Used by document generation, export, and media processing UIs. | | |
+| Shared `JobProgress` accepts a generic job ID, polls every two seconds while queued/processing and shows percentage/status with an operation-supplied remaining duration or an honest unavailable label. Completion links to the owned result; failure exposes safe retry/recovery controls. Profile export is the actual launch integration; future generic document/media handlers use this component, while existing dedicated queues retain their own progress/status UI. Owner approved this scope on 2026-10-08. | | |
 
 ---
 
