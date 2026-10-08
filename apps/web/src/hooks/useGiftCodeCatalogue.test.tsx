@@ -1,8 +1,9 @@
 import { QueryProvider } from '../test/query-provider.js';
-import { act, useState } from 'react';
+import { act, useCallback, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { useGiftCodeCatalogue } from './useGiftCodeCatalogue.js';
+import { AccountUserProvider } from './useAccountUser.js';
 import { useCatalogueScope } from './useCatalogueResource.js';
 import { useListQuery } from './useListQuery.js';
 import { giftFilter, giftListSearch, giftQueryOptions } from '../lib/gift-list-query.js';
@@ -152,4 +153,108 @@ it('standalone consumers keep appended pages and explicit refresh returns to the
   await act(async () => result.current.retry());
   await waitFor(() => expect(result.current.rows).toHaveLength(1));
   expect(fetch.mock.calls[2]![0]).toBe('/api/admin/promotions/gift-codes?limit=50');
+});
+it('confirmed receipts supersede delayed read failures without replaying writes or auto-fetching', async () => {
+  let settle!: (value: Response) => void;
+  const fetch = vi
+    .fn()
+    .mockResolvedValueOnce(response([giftCode()]))
+    .mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          settle = resolve;
+        })
+    )
+    .mockResolvedValueOnce(response([{ ...giftCode(), status: 'inactive' }]));
+  vi.stubGlobal('fetch', fetch);
+  const { result } = await mount();
+  await waitFor(() => expect(result.current.catalogue.rows).toHaveLength(1));
+  await act(async () => result.current.catalogue.retry());
+  const signal = fetch.mock.calls[1]![1].signal as AbortSignal;
+  await act(async () => result.current.catalogue.accept({ ...giftCode(), status: 'inactive' }));
+  await act(async () => settle(response({}, 403)));
+  expect(result.current.scope.denied).toBe(false);
+  expect(result.current.catalogue.rows?.[0]?.status).toBe('inactive');
+  window.dispatchEvent(new Event('focus'));
+  window.dispatchEvent(new Event('online'));
+  await act(async () => {});
+  expect(fetch).toHaveBeenCalledTimes(2);
+  await act(async () => result.current.catalogue.retry());
+  await waitFor(() => expect(result.current.catalogue.pending).toBe(false));
+  expect(result.current.catalogue.rows?.[0]?.status).toBe('inactive');
+  expect(fetch).toHaveBeenCalledTimes(3);
+  // A new owner read uses a distinct key; completed transport cancellation is not required.
+  expect(signal).toBeInstanceOf(AbortSignal);
+});
+it('disabling a catalogue cancels its pending page and cannot publish a delayed result', async () => {
+  let settle!: (value: Response) => void;
+  const fetch = vi.fn().mockImplementation(
+    () =>
+      new Promise<Response>((resolve) => {
+        settle = resolve;
+      })
+  );
+  vi.stubGlobal('fetch', fetch);
+  const { result } = await mountHook(() => {
+    const [enabled, setEnabled] = useState(true);
+    const scope = useCatalogueScope(useCallback(() => {}, []));
+    return { catalogue: useGiftCodeCatalogue(scope, '', enabled), setEnabled };
+  });
+  const signal = fetch.mock.calls[0]![1].signal as AbortSignal;
+  await act(async () => result.current.setEnabled(false));
+  expect(signal.aborted).toBe(true);
+  expect(result.current.catalogue.rows).toBeNull();
+  await act(async () => settle(response(first)));
+  expect(result.current.catalogue.rows).toBeNull();
+  expect(result.current.catalogue.pending).toBe(false);
+});
+it('account replacement withdraws accepted rows while the new read is pending and ignores old denial', async () => {
+  const host = document.createElement('div'),
+    root = createRoot(host);
+  roots.push({ root, host });
+  let catalogue!: ReturnType<typeof useGiftCodeCatalogue>;
+  let old!: (value: Response) => void, next!: (value: Response) => void;
+  const denied = vi.fn();
+  const fetch = vi
+    .fn()
+    .mockResolvedValueOnce(response([giftCode()]))
+    .mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          old = resolve;
+        })
+    )
+    .mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          next = resolve;
+        })
+    );
+  vi.stubGlobal('fetch', fetch);
+  function Probe() {
+    catalogue = useGiftCodeCatalogue(useCatalogueScope(denied), '', true);
+    return <p>{catalogue.rows?.[0]?.code ?? 'unavailable'}</p>;
+  }
+  const render = (account: string) =>
+    root.render(
+      <QueryProvider>
+        <AccountUserProvider value={account}>
+          <Probe />
+        </AccountUserProvider>
+      </QueryProvider>
+    );
+  await act(async () => render('a'));
+  expect(catalogue.rows).toHaveLength(1);
+  await act(async () => catalogue.retry());
+  const oldSignal = fetch.mock.calls[1]![1].signal as AbortSignal;
+  await act(async () => render('b'));
+  expect(catalogue.rows).toBeNull();
+  expect(host.textContent).toBe('unavailable');
+  expect(catalogue.pending).toBe(true);
+  expect(oldSignal.aborted).toBe(true);
+  await act(async () => old(response({}, 403)));
+  expect(denied).not.toHaveBeenCalled();
+  expect(catalogue.rows).toBeNull();
+  await act(async () => next(response([giftCode(99)])));
+  expect(catalogue.rows?.map((row) => row.id)).toEqual([giftCode(99).id]);
 });
