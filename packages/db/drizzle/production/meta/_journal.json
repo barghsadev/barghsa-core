@@ -1352,6 +1352,13 @@
       "when": 1791437516832,
       "tag": "0272_permanent_document_retention",
       "breakpoints": true
+    },
+    {
+      "idx": 273,
+      "version": "7",
+      "when": 1791438951655,
+      "tag": "0273_telegram_profile_linkage",
+      "breakpoints": true
     }
   ]
 }

@@ -353,6 +353,11 @@
       "types": "./dist/profile-lifecycle-forms.d.ts",
       "import": "./dist/profile-lifecycle-forms.js",
       "default": "./dist/profile-lifecycle-forms.js"
+    },
+    "./telegram": {
+      "types": "./dist/telegram.d.ts",
+      "import": "./dist/telegram.js",
+      "default": "./dist/telegram.js"
     }
   },
   "scripts": {

@@ -106,6 +106,24 @@ set both `BARGHSA_TELEGRAM_BOT_TOKEN` and `BARGHSA_TELEGRAM_CHAT_ID` in the depl
 environment. Credentials are never included in release metadata or messages.
 Deployment verifies the destination is a channel before building images.
 
+Customer-linked Telegram uses the owner-approved `@barghsa_dev_bot` identity,
+with private positive chat IDs only. Release Radar remains a separate channel
+destination. Provision `CUSTOMER_TELEGRAM_BOT_TOKEN` and a random 32–256 character
+`CUSTOMER_TELEGRAM_WEBHOOK_SECRET` (letters, digits, `_`, `-`) privately in the
+root-only `/etc/barghsa/staging/runtime.env`. The existing release config supplies
+the bot token; it does not supply the customer webhook secret. The product stays
+unavailable without both credentials and successful bot identity verification.
+
+The authenticated callback is `POST /api/telegram/webhook`, with Telegram's
+`X-Telegram-Bot-Api-Secret-Token` header. Before configuring that callback, identify
+the owner of the currently active webhook and arrange its handoff. Do not overwrite
+or delete an unrelated webhook, poll `getUpdates`, or restart retired automation.
+No deployment script changes the webhook automatically. After an accepted release,
+verify the actual callback, a fresh customer/session/profile link, private reply,
+root-version footer and the persisted exact Telegram message receipt. Unknown
+outbound delivery is terminal and must never be automatically resent. Production
+activation remains subject to explicit production authorization.
+
 Confirmed message receipts live outside the checkout under
 `~/.local/state/barghsa-staging-releases`, overridable by
 `BARGHSA_RELEASE_STATE_DIR`. Repeating a confirmed notification does not send

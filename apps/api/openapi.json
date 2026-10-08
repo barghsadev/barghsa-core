@@ -34086,6 +34086,92 @@
         ]
       }
     },
+    "/api/telegram/link": {
+      "delete": {
+        "operationId": "TelegramLinksController_revoke",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Customer · Telegram account link"
+        ]
+      },
+      "get": {
+        "operationId": "TelegramLinksController_status",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Customer · Telegram account link"
+        ]
+      },
+      "post": {
+        "operationId": "TelegramLinksController_create",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Customer · Telegram account link"
+        ]
+      }
+    },
+    "/api/telegram/link/confirm": {
+      "post": {
+        "operationId": "TelegramLinksController_confirm",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Customer · Telegram account link"
+        ]
+      }
+    },
+    "/api/telegram/webhook": {
+      "post": {
+        "operationId": "TelegramWebhookController_receive",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Telegram · authenticated provider callback"
+        ]
+      }
+    },
     "/api/tickets": {
       "get": {
         "operationId": "TicketsController_listTickets",

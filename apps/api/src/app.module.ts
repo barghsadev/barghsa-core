@@ -38,6 +38,7 @@ import { WalletModule } from './wallet/index.js';
 import { InvoiceModule } from './invoice/index.js';
 import { PublicModule } from './public/public.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
+import { TelegramModule } from './telegram/telegram.module.js';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { JobsModule } from './jobs/jobs.module.js';
     DocumentModule,
     PublicModule,
     JobsModule,
+    TelegramModule,
   ],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],

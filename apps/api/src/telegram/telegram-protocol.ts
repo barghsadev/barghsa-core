@@ -1,4 +1,4 @@
-import { createHash, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 
 const MAX_ID = 2 ** 52 - 1;
 const validId = (value: unknown): value is number =>
@@ -9,6 +9,17 @@ const record = (value: unknown): Record<string, unknown> | null =>
     : null;
 
 export const TELEGRAM_BOT_USERNAME = 'barghsa_dev_bot';
+
+/** Reconstruct a short-lived private-chat code without storing the code or bearer token. */
+export function telegramConfirmationCode(secret: string, intentId: string, telegramUserId: string) {
+  if (!/^[A-Za-z0-9_-]{32,256}$/.test(secret)) throw new Error('TELEGRAM_CONFIG_INVALID');
+  const value =
+    createHmac('sha256', secret)
+      .update(`barghsa:telegram-link:v1:${intentId}:${telegramUserId}`)
+      .digest()
+      .readUInt32BE(0) % 1_000_000;
+  return String(value).padStart(6, '0');
+}
 
 export interface PrivateTelegramUpdate {
   updateId: number;

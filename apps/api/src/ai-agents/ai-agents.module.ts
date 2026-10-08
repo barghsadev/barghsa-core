@@ -42,6 +42,6 @@ import { AiStatelessKnowledgeService } from './ai-stateless-knowledge.service.js
     AiKnowledgeChatService,
     AiStatelessKnowledgeService,
   ],
-  exports: [AiAgentsService, AgentSlotsService],
+  exports: [AiAgentsService, AgentSlotsService, AiStatelessKnowledgeService],
 })
 export class AiAgentsModule {}

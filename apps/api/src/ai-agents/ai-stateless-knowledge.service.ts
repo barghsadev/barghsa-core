@@ -7,10 +7,14 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { requireRouteOperatingContext } from '../session/operating-context.js';
 
-type Slot = 'website_chatbot' | 'staff_chatbot';
+type Slot = 'website_chatbot' | 'staff_chatbot' | 'telegram_chatbot';
 type Session = { sessionId: string; userId: string; csrfToken: string };
 const audiencesFor = (slot: Slot) =>
-  slot === 'website_chatbot' ? ['public'] : ['staff', 'public'];
+  slot === 'website_chatbot'
+    ? ['public']
+    : slot === 'staff_chatbot'
+      ? ['staff', 'public']
+      : ['customer', 'public'];
 
 function fail(status: number, code: string, retryAfterMs?: number): never {
   throw new HttpException(
@@ -46,15 +50,48 @@ export class AiStatelessKnowledgeService {
     return this.askSlot(message, actorKey, 'website_chatbot', null);
   }
 
+  async askTelegram(
+    message: string,
+    userId: string,
+    profileId: string,
+    authority: () => Promise<void>
+  ) {
+    await authority();
+    const result = await this.askSlot(
+      message,
+      userId,
+      'telegram_chatbot',
+      null,
+      userId + ':' + profileId
+    );
+    await authority();
+    return result;
+  }
+
+  async verifyTelegramSources(agentId: string, ids: string[]) {
+    if ((await this.agent('telegram_chatbot')) !== agentId || !ids.length) return false;
+    const current = await getDbPool().query(
+      `SELECT k.id FROM knowledge_bases k WHERE k.id=ANY($1::uuid[]) AND k.audience IN ('customer','public')
+       AND k.is_enabled=true AND k.content_state='ready'
+       AND (EXISTS(SELECT 1 FROM ai_agent_kbs ak WHERE ak.agent_id=$2 AND ak.kb_id=k.id)
+         OR EXISTS(SELECT 1 FROM ai_agent_kb_groups ag JOIN kb_group_members gm ON gm.group_id=ag.group_id
+           WHERE ag.agent_id=$2 AND gm.kb_id=k.id))`,
+      [[...new Set(ids)], agentId]
+    );
+    return current.rows.length === new Set(ids).size;
+  }
+
   private async askSlot(
     message: string,
     actorKey: string,
     slotKey: Slot,
-    sessionId: string | null
+    sessionId: string | null,
+    quotaKey = actorKey
   ): Promise<{
     answer: KnowledgeAnswer;
     tokenUsage: TestChatResponse['tokenUsage'];
     latencyMs: number;
+    agentId: string;
   }> {
     // Limit public work to two requests per API process; no additional DB lease spans this request.
     const publicQuestion = slotKey === 'website_chatbot';
@@ -66,7 +103,13 @@ export class AiStatelessKnowledgeService {
       if (!agentId) fail(409, 'AI_WEBSITE_UNAVAILABLE');
       const quota = await getDbPool().query<{ count: number; reset_ms: string }>(
         'SELECT count,reset_ms FROM rate_limit_rolling(true,$1,60000,5,true)',
-        [(publicQuestion ? 'ai:website:' : 'ai:staff:') + actorKey]
+        [
+          (publicQuestion
+            ? 'ai:website:'
+            : slotKey === 'staff_chatbot'
+              ? 'ai:staff:'
+              : 'ai:telegram:') + quotaKey,
+        ]
       );
       const count = Number(quota.rows[0]!.count);
       if (count > 5)
@@ -92,6 +135,7 @@ export class AiStatelessKnowledgeService {
       );
       if (!ids.length || current.rows.length !== ids.length) fail(409, 'AI_WEBSITE_SOURCE_CHANGED');
       return {
+        agentId,
         answer: {
           reply: generated.reply.slice(0, 8_000),
           sources: generated.sources,

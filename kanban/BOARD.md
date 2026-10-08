@@ -39,10 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue private Telegram assistant from the accepted protocol: add authenticated one-use profile/account linking, durable update/reply ownership and current authority/slot/source checks with actual settings integration. Inspect current code first. Keep the existing unknown-owner ngrok webhook untouched; record configured webhook/live delivery as later accepted-release gates.
+Inspect and accept the existing Tooltip, Select/Combobox and Tabs implementation, building only demonstrated interaction gaps. Renew affected callers, RTL/dark/mobile/accessibility and bundle evidence in one coherent batch. Earlier live provider/webhook and owner decisions remain pending; this independent build does not release a later milestone ahead of dependencies.
 
-- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
-- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
+- `07-ui-ux-design.md#T-07.01.03.05`: Tooltip — delay show/hide, placement, rich content (HTML, links), disabled trigger handling.
+- `07-ui-ux-design.md#T-07.01.03.06`: Select (native & custom) — native `<select>` fallback for mobile. Custom Select with search/filter, grouped options, multi-select with chips/tags, clearable.
+- `07-ui-ux-design.md#T-07.01.03.07`: Command Palette / Combobox — searchable list with keyboard navigation (arrow keys, typeahead). Used for searchable dropdowns (city selector, product selector, agent selector).
+- `07-ui-ux-design.md#T-07.01.03.08`: Tabs — variants: `underline` (default), `pills`, `boxed`. Orientation: horizontal, vertical. Controlled/uncontrolled. Responsive: horizontal scroll on mobile with overflow buttons.
 
 ## v0.2.0: Complete customer journeys
 

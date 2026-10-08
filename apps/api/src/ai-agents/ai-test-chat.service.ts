@@ -224,7 +224,12 @@ export class AiTestChatService {
   /** Shared inference path; callers establish the fixed slot and its authorized scope. */
   async answerForKnowledgeSlot(input: {
     agentId: string;
-    slotKey: 'individual_chatbot' | 'legal_entity_chatbot' | 'website_chatbot' | 'staff_chatbot';
+    slotKey:
+      | 'individual_chatbot'
+      | 'legal_entity_chatbot'
+      | 'website_chatbot'
+      | 'staff_chatbot'
+      | 'telegram_chatbot';
     message: string;
     sessionId: string | null;
     userId: string;

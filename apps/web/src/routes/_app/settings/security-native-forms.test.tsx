@@ -70,6 +70,16 @@ function fixture() {
     'fetch',
     vi.fn(async (path: string, init?: RequestInit) => {
       const method = init?.method ?? 'GET';
+      // This ledger asserts the existing session/device flow. The new independent panel
+      // receives a valid unavailable status, rather than the unrelated sessions array.
+      if (path === '/api/telegram/link' && method === 'GET')
+        return Response.json({
+          available: false,
+          profileId: '0199f111-1111-7111-8111-111111111111',
+          link: null,
+          intent: null,
+          latestDelivery: null,
+        });
       state.requests.push({
         path,
         method,

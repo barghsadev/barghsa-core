@@ -1,5 +1,5 @@
 import { useAccountTime } from '../../../hooks/useAccountTime.js';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { createFileRoute } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
@@ -15,6 +15,7 @@ import type {
   SecuritySession as SessionItem,
   SecurityOperation,
 } from '../../../lib/security-settings-form.js';
+const TelegramLinkPanel = lazy(() => import('../../../components/TelegramLinkPanel.js'));
 export const Route = createFileRoute('/_app/settings/security')({
   component: SettingsSecurityPage,
 });
@@ -177,6 +178,9 @@ function SettingsSecurityPage() {
           >
             {time.notice}
           </div>
+          <Suspense fallback={null}>
+            <TelegramLinkPanel scope={scope} />
+          </Suspense>
           {confirmed && (
             <p role="status" className="text-sm text-primary">
               {text('confirmed')}

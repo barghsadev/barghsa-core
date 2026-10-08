@@ -3,9 +3,25 @@ import {
   privateTelegramUpdate,
   TelegramClient,
   validTelegramWebhookSecret,
+  telegramConfirmationCode,
 } from './telegram-protocol';
 
 const token = '8703508822:fixture_secret_not_a_live_bot_token';
+it('binds confirmation codes to the protected secret, intent and private identity', () => {
+  const secret = 's'.repeat(48),
+    intent = '0199f111-1111-7111-8111-111111111111';
+  const code = telegramConfirmationCode(secret, intent, '123');
+  expect(code).toMatch(/^\d{6}$/);
+  expect(telegramConfirmationCode(secret, intent, '123')).toBe(code);
+  expect(
+    new Set([
+      code,
+      telegramConfirmationCode('t'.repeat(48), intent, '123'),
+      telegramConfirmationCode(secret, intent + 'x', '123'),
+      telegramConfirmationCode(secret, intent, '124'),
+    ]).size
+  ).toBe(4);
+});
 const message = {
   message_id: 7,
   from: { id: 1234567890123, is_bot: false },
