@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 import { Button, Input, NativeSelect, Textarea } from '@barghsa/ui';
 import {
   Form,
@@ -61,6 +65,9 @@ export function TicketIntakeForm({
 }) {
   const copy = (key: string) => tTicketForms(key, locale),
     text = (key: string) => t('tickets.' + key, locale);
+  const reader = useId();
+  const client = useQueryClient();
+  const profileRevision = useProfileContextRevision();
   const current = useRef(scope);
   current.current = scope;
   const alive = useRef(true),
@@ -109,6 +116,35 @@ export function TicketIntakeForm({
       offered.current = null;
     };
   }, []);
+  const optionsQueryKey =
+    open && actor
+      ? queryKeys.catalogue.detail(
+          {
+            context: 'account',
+            ownerId: profileId || actor,
+            accountId: actor,
+            revision: profileRevision,
+          },
+          JSON.stringify([reader, scope, 'ticket-intake-options', profileId, recordPage, version])
+        )
+      : null;
+  const optionsQuery = useServerDetailQuery<{ status: number; value: unknown }>({
+    queryKey: optionsQueryKey,
+    enabled: false,
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(
+        '/api/tickets/options' +
+          (profileId
+            ? '?profileId=' + encodeURIComponent(profileId) + '&recordPage=' + recordPage
+            : ''),
+        { credentials: 'include', signal }
+      );
+      if ([401, 403].includes(response.status)) return { status: response.status, value: null };
+      if (!response.ok) throw new Error('error');
+      return { status: response.status, value: (await response.json()) as unknown };
+    },
+  });
   useEffect(() => {
     if (!open || !actor) return;
     const controller = new AbortController(),
@@ -117,20 +153,16 @@ export function TicketIntakeForm({
     setError('');
     setOptions(null);
     offered.current = null;
-    void fetch(
-      '/api/tickets/options' +
-        (profileId
-          ? '?profileId=' + encodeURIComponent(profileId) + '&recordPage=' + recordPage
-          : ''),
-      { credentials: 'include', signal: controller.signal }
-    )
-      .then(async (response) => {
-        if ([401, 403].includes(response.status)) {
+    void optionsQuery
+      .refetch()
+      .then((reply) => {
+        if (controller.signal.aborted || current.current !== token) return;
+        if (!reply.isSuccess || !reply.data) throw new Error('error');
+        if ([401, 403].includes(reply.data.status)) {
           if (!controller.signal.aborted && current.current === token) coordination.denied();
           throw new Error('forbidden');
         }
-        if (!response.ok) throw new Error('error');
-        const parsed = ticketOptions(await response.json());
+        const parsed = ticketOptions(reply.data.value);
         if (!parsed) throw new Error('error');
         if (!controller.signal.aborted && alive.current && current.current === token) {
           offered.current = parsed;
@@ -144,8 +176,11 @@ export function TicketIntakeForm({
       .finally(() => {
         if (!controller.signal.aborted && current.current === token) setLoading(false);
       });
-    return () => controller.abort();
-  }, [open, actor, scope, profileId, recordPage, version]);
+    return () => {
+      controller.abort();
+      if (optionsQueryKey) void client.cancelQueries({ queryKey: optionsQueryKey, exact: true });
+    };
+  }, [open, actor, scope, profileId, recordPage, version, profileRevision]);
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!actor || !open || loading || !offered.current || !coordination.claim('intake')) return;

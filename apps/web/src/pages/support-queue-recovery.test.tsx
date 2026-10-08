@@ -611,3 +611,68 @@ it('cancels pending staff assignment lookups when their owner unmounts', async (
     finish[1]!(Response.json(supportTeams));
   });
 });
+
+it('keeps intake option reads manual and cancels their transport on unmount', async () => {
+  const signals: AbortSignal[] = [];
+  let finish!: (response: Response) => void;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/options')) {
+        signals.push(init?.signal as AbortSignal);
+        return new Promise<Response>((resolve) => {
+          finish = resolve;
+        });
+      }
+      return Response.json(data(url));
+    })
+  );
+  const { host, close } = await mount(CustomerTicketsPage);
+  await act(async () => button(host, 'Create ticket').click());
+  expect(signals).toHaveLength(1);
+  expect(signals[0]).toBeInstanceOf(AbortSignal);
+  expect(signals[0]!.aborted).toBe(false);
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(signals).toHaveLength(1);
+  await close();
+  expect(signals[0]!.aborted).toBe(true);
+  await act(async () => finish(Response.json({ profiles: [], records: [] })));
+});
+
+it('rejects malformed fresh profile options and preserves intake drafts through recovery', async () => {
+  const profile = '11111111-1111-4111-8111-111111111111';
+  let malformed = false;
+  const calls: string[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => {
+      calls.push(url);
+      if (url.startsWith('/api/tickets/options'))
+        return Response.json(
+          malformed ? null : { profiles: [{ id: profile, title: 'Profile' }], records: [] }
+        );
+      return Response.json(data(url));
+    })
+  );
+  const { host, close } = await mount(CustomerTicketsPage);
+  try {
+    await act(async () => button(host, 'Create ticket').click());
+    await change(host, '#ticket-subject', 'Preserved draft');
+    expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(false);
+    malformed = true;
+    await change(host, '#ticket-profile', profile);
+    expect(calls.at(-1)).toBe('/api/tickets/options?profileId=' + profile + '&recordPage=1');
+    expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(true);
+    malformed = false;
+    await act(async () => button(host, 'Retry').click());
+    expect(host.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBe(false);
+    expect(host.querySelector<HTMLInputElement>('#ticket-subject')!.value).toBe('Preserved draft');
+    expect(host.querySelector<HTMLSelectElement>('#ticket-profile')!.value).toBe(profile);
+  } finally {
+    await close();
+  }
+});
