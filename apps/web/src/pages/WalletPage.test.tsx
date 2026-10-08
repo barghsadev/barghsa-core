@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -81,7 +82,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
         return jsonResponse({
-          balance: 1_500_000,
+          balance: '1500000',
           currency: 'IRR',
           onlineTopUpLimit: 2_000_000_000,
         });
@@ -108,7 +109,11 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
 
   async function renderPage(returnInvoiceId?: string) {
     await act(async () => {
-      root.render(<WalletPage returnInvoiceId={returnInvoiceId} />);
+      root.render(
+        <QueryProvider>
+          <WalletPage returnInvoiceId={returnInvoiceId} />
+        </QueryProvider>
+      );
     });
     for (let i = 0; i < 10; i++) {
       await flushFetches();
@@ -219,7 +224,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
         return jsonResponse({
-          balance: 0,
+          balance: '0',
           currency: 'IRR',
           onlineTopUpLimit: 2_000_000_000,
           configVersion: 0,
@@ -261,7 +266,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
         return jsonResponse({
-          balance: 0,
+          balance: '0',
           currency: 'IRR',
           onlineTopUpLimit: 50_000,
           configVersion: 2,
@@ -299,7 +304,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         return jsonResponse({ activeProfileId: PROFILE_ID });
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
-        return jsonResponse({ balance: 0, currency: 'IRR' });
+        return jsonResponse({ balance: '0', currency: 'IRR' });
       }
       return jsonResponse({}, 404);
     });
@@ -338,7 +343,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
         return jsonResponse({
-          balance: 0,
+          balance: '0',
           currency: 'IRR',
           onlineTopUpLimit: 0,
           configVersion: 3,
@@ -366,7 +371,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
         return jsonResponse({
-          balance: 0,
+          balance: '0',
           currency: 'IRR',
           onlineTopUpLimit: 2_000_000_000,
           configVersion: 0,
@@ -539,7 +544,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
           );
         }
         if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
-          return jsonResponse({ balance: 1_500_000, currency: 'IRR' });
+          return jsonResponse({ balance: '1500000', currency: 'IRR' });
         }
         if (url.endsWith('/api/upload/presigned-url') && method === 'POST') {
           return jsonResponse({

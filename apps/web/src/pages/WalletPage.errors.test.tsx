@@ -1,3 +1,5 @@
+import { QueryProvider, QueryComponentProvider } from '../test/query-provider.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { act } from 'react';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import { createRoot, type Root } from 'react-dom/client';
@@ -99,7 +101,13 @@ afterEach(async () => {
 });
 const element = <T extends Element>(id: string) => host.querySelector<T>(`[data-testid="${id}"]`)!;
 async function render() {
-  await act(async () => root.render(<WalletPage />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <WalletPage />
+      </QueryProvider>
+    )
+  );
 }
 async function input(id: string, value: string) {
   await act(async () => {
@@ -422,5 +430,107 @@ it('does not open an obsolete online review after the active profile changes', a
   await act(async () => finish(json(review)));
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(element<HTMLInputElement>('wallet-amount').value).toBe('');
+  expect(post).not.toHaveBeenCalled();
+});
+
+it('rejects numeric wallet money before rendering or enabling financial commands', async () => {
+  wallet.mockResolvedValue(
+    json(JSON.parse('{"balance":9007199254740993,"currency":"IRR","onlineTopUpLimit":1000}'))
+  );
+  await render();
+  expect(host.querySelector('[data-testid=wallet-balance]')).toBeNull();
+  expect(host.querySelector('[data-testid=wallet-amount]')).toBeNull();
+  expect(host.querySelector('[data-testid=wallet-error]')).not.toBeNull();
+  expect(post).not.toHaveBeenCalled();
+});
+
+it('keeps failed wallet reads manual and cancels the explicit retry balance transport on unmount', async () => {
+  profiles.mockResolvedValueOnce(json({}, 503));
+  let signal!: AbortSignal, finish!: (value: ReturnType<typeof json>) => void;
+  wallet.mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  const originalFetch = globalThis.fetch;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input) === '/api/wallet/' + PROFILE_ID) signal = init?.signal as AbortSignal;
+      return originalFetch(input, init);
+    })
+  );
+  await render();
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(profiles).toHaveBeenCalledTimes(1);
+  const retry = [...host.querySelectorAll('button')].find(
+    (button) => button.textContent === 'Try again'
+  )!;
+  expect(retry).toBeDefined();
+  await act(async () => retry.click());
+  expect(profiles).toHaveBeenCalledTimes(2);
+  expect(signal).toBeInstanceOf(AbortSignal);
+  expect(signal.aborted).toBe(false);
+  await act(async () => root.unmount());
+  expect(signal.aborted).toBe(true);
+  await act(async () => finish(json({ balance: '100', currency: 'IRR', onlineTopUpLimit: 1000 })));
+  expect(host.textContent).toBe('');
+  expect(post).not.toHaveBeenCalled();
+});
+
+it('abandons old account authority before loading a wallet for its late profile', async () => {
+  let signal!: AbortSignal, finish!: (value: ReturnType<typeof json>) => void;
+  profiles.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  const originalFetch = globalThis.fetch;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input) === '/api/profiles' && profiles.mock.calls.length === 0)
+        signal = init?.signal as AbortSignal;
+      return originalFetch(input, init);
+    })
+  );
+  const actor = async (id: string) =>
+    act(async () =>
+      root.render(
+        <QueryComponentProvider>
+          <AccountUserProvider value={id}>
+            <WalletPage />
+          </AccountUserProvider>
+        </QueryComponentProvider>
+      )
+    );
+  await actor('buyer');
+  expect(signal.aborted).toBe(false);
+  await actor('other-buyer');
+  expect(signal.aborted).toBe(true);
+  await act(async () => finish(json({ activeProfileId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' })));
+  expect(element('wallet-balance').textContent).toContain('100');
+  expect(profiles).toHaveBeenCalledTimes(2);
+  expect(
+    vi
+      .mocked(globalThis.fetch)
+      .mock.calls.some(([url]) => String(url).includes('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'))
+  ).toBe(false);
+  expect(post).not.toHaveBeenCalled();
+});
+
+it('withdraws wallet command controls after current balance authority is denied', async () => {
+  wallet.mockResolvedValue(json({}, 403));
+  await render();
+  expect(host.querySelector('[data-testid=wallet-balance]')).toBeNull();
+  expect(host.querySelector('[data-testid=wallet-amount]')).toBeNull();
+  expect(host.querySelector('[data-testid=wallet-receipt-form]')).toBeNull();
+  expect(host.querySelector('[data-testid=wallet-error]')).not.toBeNull();
   expect(post).not.toHaveBeenCalled();
 });

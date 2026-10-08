@@ -78,6 +78,14 @@ function financialReview(
 
 test('wallet gateway return restores only the invoice bound to its top-up', async ({ page }) => {
   await shell(page, 'en', false, '100000', () => '0');
+  await page.route(`**/api/wallet/${profileId}`, (route) =>
+    route.fulfill({
+      json: { balance: '0', currency: 'IRR', onlineTopUpLimit: 0, configVersion: 1 },
+    })
+  );
+  await page.route(`**/api/wallet/${profileId}/transactions?*`, (route) =>
+    route.fulfill({ json: { transactions: [], nextCursor: null } })
+  );
   await page.goto('/wallet');
   await expect(
     page.getByRole('heading', { name: t('wallet.history.title', 'en'), exact: true })

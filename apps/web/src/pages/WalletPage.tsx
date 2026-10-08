@@ -1,4 +1,7 @@
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { Alert, AlertDescription } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
 import { Loader2 } from 'lucide-react';
@@ -10,7 +13,7 @@ import { TransactionList } from '../components/WalletTransactionList.js';
 import { Currency } from '../components/Currency.js';
 import type { WalletPaymentReturn } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/workspace';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
@@ -43,8 +46,8 @@ const BankReceiptTopUpReviewDialog = lazy(
 
 interface WalletBalance {
   balance: string;
-  postedBalance?: number;
-  reservedBalance?: number;
+  postedBalance?: string;
+  reservedBalance?: string;
   currency: string;
   onlineTopUpLimit?: number;
   configVersion?: number;
@@ -87,9 +90,16 @@ interface WalletPageProps {
 }
 export function WalletPage(props: WalletPageProps = {}) {
   const revision = useProfileContextRevision();
-  return <CustomerWalletPage key={revision} {...props} />;
+  const actor = useAccountUser();
+  return <CustomerWalletPage key={JSON.stringify([actor, revision])} {...props} />;
 }
 function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: WalletPageProps) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const reader = useId();
+  const client = useQueryClient();
+  const loadSequence = useRef(0);
+  const loadRequest = useRef<AbortController | null>(null);
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
   const maintenance = useMaintenance('wallet_topup');
@@ -131,6 +141,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     mounted.current = true;
     return () => {
       mounted.current = false;
+      loadRequest.current?.abort();
     };
   }, []);
   const [submitting, setSubmitting] = useState(false);
@@ -167,40 +178,117 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const receiptTomanPreview = receiptAmountIrR === null ? null : receiptAmountIrR / 10n;
 
   const load = useCallback(async () => {
+    loadRequest.current?.abort();
+    const controller = new AbortController();
+    loadRequest.current = controller;
+    const attempt = JSON.stringify([reader, ++loadSequence.current]);
+    const current = () =>
+      mounted.current && loadRequest.current === controller && !controller.signal.aborted;
+    const read = async (key: ServerQueryKey, path: string) => {
+      if (!current()) throw new Error('Abandoned wallet read');
+      const abort = () => void client.cancelQueries({ queryKey: key, exact: true });
+      controller.signal.addEventListener('abort', abort, { once: true });
+      try {
+        return await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const response = await fetch(path, { credentials: 'include', signal });
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          },
+        });
+      } finally {
+        controller.signal.removeEventListener('abort', abort);
+      }
+    };
+    const withdraw = () => {
+      setWallet(null);
+      setProfileId(null);
+      setOnlineReview(null);
+      setReceiptReview(null);
+    };
     setLoading(true);
     setError(null);
     try {
-      const profileRes = await fetch('/api/profiles', { credentials: 'include' });
-      if (!mounted.current) return;
+      const profileRes = await read(
+        queryKeys.profiles.authority(
+          {
+            context: 'account',
+            ownerId: actor?.trim() ? actor : reader,
+            accountId: actor,
+            revision: profileRevision,
+          },
+          attempt
+        ),
+        '/api/profiles'
+      );
+      if (!current()) return;
       if (!profileRes.ok) {
+        if ([401, 403, 404].includes(profileRes.status)) withdraw();
         setError('load');
         return;
       }
-      const profileData: { activeProfileId: string | null } = await profileRes.json();
-      if (!mounted.current) return;
+      const profileData = profileRes.data as { activeProfileId: string | null } | null;
+      if (
+        !profileData ||
+        (profileData.activeProfileId !== null &&
+          (typeof profileData.activeProfileId !== 'string' || !profileData.activeProfileId.trim()))
+      ) {
+        withdraw();
+        throw new Error('Invalid wallet profile');
+      }
       if (!profileData.activeProfileId) {
         setError('no-profile');
         setProfileId(null);
+        setWallet(null);
         return;
       }
       setProfileId(profileData.activeProfileId);
-
-      const walletRes = await fetch(`/api/wallet/${profileData.activeProfileId}`, {
-        credentials: 'include',
-      });
-      if (!mounted.current) return;
+      const walletRes = await read(
+        queryKeys.wallet.balance(
+          {
+            context: 'customer',
+            ownerId: profileData.activeProfileId,
+            accountId: actor,
+            revision: profileRevision,
+          },
+          attempt
+        ),
+        `/api/wallet/${profileData.activeProfileId}`
+      );
+      if (!current()) return;
       if (!walletRes.ok) {
+        if ([401, 403, 404].includes(walletRes.status)) withdraw();
         setError('load');
         return;
       }
-      const walletData: WalletBalance = await walletRes.json();
-      if (mounted.current) setWallet(walletData);
+      const walletData = walletRes.data as WalletBalance | null;
+      if (
+        !walletData ||
+        typeof walletData.balance !== 'string' ||
+        !/^[0-9]+$/.test(walletData.balance) ||
+        typeof walletData.currency !== 'string' ||
+        !walletData.currency.trim()
+      ) {
+        withdraw();
+        throw new Error('Invalid wallet balance');
+      }
+      setWallet(walletData);
     } catch {
-      if (mounted.current) setError('load');
+      if (current()) setError('load');
     } finally {
-      if (mounted.current) setLoading(false);
+      if (current()) {
+        setLoading(false);
+        loadRequest.current = null;
+      }
     }
-  }, []);
+  }, [actor, profileRevision, reader, client]);
 
   useEffect(() => {
     void load();
