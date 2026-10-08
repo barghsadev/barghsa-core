@@ -105,6 +105,9 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
         }
       );
       await page.goto(path);
+      // The root guard, switcher and lazy default-profile dialog own startup reads.
+      // Consultation also owns its profile read; settle these before retry counters.
+      await expect.poll(() => profileReads).toBe(kind === 'consultation' ? 4 : 3);
       const main = page.getByRole('main');
       await expect(main.getByRole('heading', { level: 1 })).toBeVisible();
       if (profileFail) {

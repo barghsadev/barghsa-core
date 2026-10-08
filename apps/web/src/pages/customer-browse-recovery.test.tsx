@@ -157,9 +157,16 @@ it('profile retry exposes history even when products fail, and product retry rel
   let profileFail = true,
     productFail = true;
   const calls: string[] = [];
+  const allCalls: string[] = [];
+  let walletReads = 0;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) => {
+      allCalls.push(url);
+      if (url.startsWith('/api/wallet/')) {
+        walletReads++;
+        return new Response('{}', { status: 403 });
+      }
       calls.push(url);
       return (url === '/api/profiles' && profileFail) || (url.includes('/products?') && productFail)
         ? new Response('{}', { status: 503 })
@@ -174,10 +181,16 @@ it('profile retry exposes history even when products fail, and product retry rel
     expect(host.textContent).toContain('Available consultations could not be loaded.');
     expect(host.textContent).toContain('Previous consultation');
     const reads = calls.length;
+    const allReads = allCalls.length;
     productFail = false;
     await act(async () => button(host, 'Try again').click());
     expect(calls.slice(reads)).toEqual([
       `/api/consultations/products?profileId=${browseProfileId}`,
+    ]);
+    expect(walletReads).toBe(1);
+    expect(allCalls.slice(allReads)).toEqual([
+      `/api/consultations/products?profileId=${browseProfileId}`,
+      `/api/wallet/${browseProfileId}`,
     ]);
     expect(host.textContent).toContain('Generation consultation');
     expect(host.textContent).toContain('Previous consultation');

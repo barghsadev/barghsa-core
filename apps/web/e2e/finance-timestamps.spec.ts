@@ -18,6 +18,7 @@ async function shell(page: Page, locale: string, staff = false) {
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
       json: {
+        userId: 'timestamp-account',
         isStaff: staff,
         operatingContext: staff ? 'staff' : 'customer',
         canSwitchContext: staff,
@@ -37,6 +38,9 @@ async function shell(page: Page, locale: string, staff = false) {
         hasDefault: true,
       },
     })
+  );
+  await page.route('**/api/profiles/verification-status', (route) =>
+    route.fulfill({ json: { activeProfileId: id } })
   );
   await page.route('**/api/invitations/pending', (route) =>
     route.fulfill({ json: { invitations: [] } })

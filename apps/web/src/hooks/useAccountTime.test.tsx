@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -31,7 +32,13 @@ it('shows no guessed time on failure, then retries the saved account timezone', 
     .mockResolvedValueOnce(new Response('{}', { status: 503 }))
     .mockResolvedValueOnce(new Response(JSON.stringify({ timezone: 'America/Los_Angeles' })));
   vi.stubGlobal('fetch', request);
-  await act(async () => root.render(<Screen />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Screen />
+      </QueryProvider>
+    )
+  );
   expect(host.querySelector('[role=alert]')).not.toBeNull();
   expect(host.querySelector('time')!.textContent).toBe('Time unavailable');
   await act(async () => host.querySelector('button')!.click());
@@ -48,7 +55,13 @@ it('refreshes dates after the account timezone changes', async () => {
       .mockResolvedValueOnce(new Response(JSON.stringify({ timezone: 'America/Los_Angeles' })))
       .mockResolvedValueOnce(new Response(JSON.stringify({ timezone: 'Asia/Tokyo' })))
   );
-  await act(async () => root.render(<Screen />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Screen />
+      </QueryProvider>
+    )
+  );
   await act(async () => {
     window.dispatchEvent(new Event('barghsa:timezone-changed'));
   });
@@ -60,7 +73,13 @@ it('honors an embedded panel locale without changing its account timezone', asyn
     'fetch',
     vi.fn().mockResolvedValue(new Response(JSON.stringify({ timezone: 'America/Los_Angeles' })))
   );
-  await act(async () => root.render(<Screen locale="fa" />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Screen locale="fa" />
+      </QueryProvider>
+    )
+  );
   expect(host.querySelector('time')!.textContent).toBe(
     new Intl.DateTimeFormat('fa', {
       timeZone: 'America/Los_Angeles',
