@@ -3,6 +3,7 @@ import { useZodForm, useWatch } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { useAccountUser } from './useAccountUser.js';
+import { useOwnedProfileRead } from './useOwnedProfileRead.js';
 import { useGeographyOptions } from './useGeographyOptions.js';
 import { useSettingsCommand } from './useSettingsCommand.js';
 import { useSettingsFormFeedback } from './useSettingsFormFeedback.js';
@@ -130,18 +131,12 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
       command.coordination.isCurrent()
     );
   }
-  async function privateRead(path: string, token: string) {
-    const response = await fetch(path, { credentials: 'include' });
-    if (!permitted(token)) throw new Error('Obsolete address read');
-    if ([401, 403, 404].includes(response.status)) {
-      command.coordination.denied();
-      throw new Error('Address unavailable');
-    }
-    if (!response.ok) throw new Error('Address read failed');
-    const value: unknown = await response.json();
-    if (!permitted(token)) throw new Error('Obsolete address read');
-    return value;
-  }
+  const privateRead = useOwnedProfileRead(
+    identity,
+    actor ? { context: 'account', ownerId: actor, accountId: actor, revision } : null,
+    permitted,
+    () => command.coordination.denied()
+  );
   async function readAddresses(id: string, token: string) {
     const rows = settingsAddresses(
       await privateRead('/api/profiles/' + id + '/addresses', token),

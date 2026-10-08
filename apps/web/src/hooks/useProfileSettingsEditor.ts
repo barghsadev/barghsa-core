@@ -3,6 +3,7 @@ import { useZodForm, type FieldPath } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/crm';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { useAccountUser } from './useAccountUser.js';
+import { useOwnedProfileRead } from './useOwnedProfileRead.js';
 import { useGeographyOptions } from './useGeographyOptions.js';
 import { useSettingsCommand } from './useSettingsCommand.js';
 import { useSettingsFormFeedback } from './useSettingsFormFeedback.js';
@@ -149,18 +150,12 @@ export function useProfileSettingsEditor(locale: Locale) {
   function documentsDenied(profileId: string) {
     if (permitted(identity) && accepted.current?.id === profileId) command.coordination.denied();
   }
-  async function privateRead(path: string, token: string) {
-    const response = await fetch(path, { credentials: 'include' });
-    if (!permitted(token)) throw new Error('Obsolete profile read');
-    if ([401, 403, 404].includes(response.status)) {
-      command.coordination.denied();
-      throw new Error('Profile unavailable');
-    }
-    if (!response.ok) throw new Error('Profile read failed');
-    const value: unknown = await response.json();
-    if (!permitted(token)) throw new Error('Obsolete profile read');
-    return value;
-  }
+  const privateRead = useOwnedProfileRead(
+    identity,
+    actor ? { context: 'account', ownerId: actor, accountId: actor, revision } : null,
+    permitted,
+    () => command.coordination.denied()
+  );
   async function readDetail(id: string, token: string) {
     const parsed = settingsProfile(await privateRead('/api/profiles/' + id, token), id);
     if (!parsed) throw new Error('Invalid profile detail');
