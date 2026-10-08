@@ -4,6 +4,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { AccountUserProvider } from './useAccountUser.js';
 import { useCustomerServiceHistory } from './useCustomerServiceHistory.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
+import { QueryProvider } from '../providers/QueryProvider.js';
 const first = '89000000-0000-4000-8000-000000000001',
   second = '89000000-0000-4000-8000-000000000003';
 const profileA = '89000000-0000-4000-8000-000000000002',
@@ -15,6 +16,7 @@ let root: Root | undefined, host: HTMLDivElement;
 let history!: ReturnType<typeof useCustomerServiceHistory<{ id: string }>>;
 function Harness({ query = 'q=saved&statuses=submitted' }: { query?: string }) {
   history = useCustomerServiceHistory({
+    resource: 'orders',
     endpoint: '/api/orders',
     query,
     itemsKey: 'orders',
@@ -40,9 +42,11 @@ async function start(fetchMock: ReturnType<typeof vi.fn>) {
   root = createRoot(host);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="account-a">
-        <Harness />
-      </AccountUserProvider>
+      <QueryProvider>
+        <AccountUserProvider value="account-a">
+          <Harness />
+        </AccountUserProvider>
+      </QueryProvider>
     )
   );
 }
@@ -84,9 +88,11 @@ it.each(['account', 'profile'] as const)(
     await act(async () => {
       if (mode === 'account')
         root!.render(
-          <AccountUserProvider value="account-b">
-            <Harness />
-          </AccountUserProvider>
+          <QueryProvider>
+            <AccountUserProvider value="account-b">
+              <Harness />
+            </AccountUserProvider>
+          </QueryProvider>
         );
       else refreshProfileContext();
     });
@@ -180,7 +186,7 @@ it('clears a missing profile after pagination and preserves query criteria when 
   expect(urls.at(-1)!.searchParams.has('before')).toBe(false);
 });
 
-it.each(['transient', 'malformed'] as const)(
+it.each(['transient', 'malformed', 'whitespace'] as const)(
   'retains accepted history and the exact cursor on a %s profile read',
   async (mode) => {
     let fail = false;
@@ -193,7 +199,7 @@ it.each(['transient', 'malformed'] as const)(
           return fail
             ? mode === 'transient'
               ? Response.json({}, { status: 503 })
-              : Response.json({ activeProfileId: [profileA] })
+              : Response.json({ activeProfileId: mode === 'whitespace' ? '   ' : [profileA] })
             : Response.json({ activeProfileId: profileA });
         return url.searchParams.has('before') ? reply(second, null) : reply();
       })
@@ -210,3 +216,102 @@ it.each(['transient', 'malformed'] as const)(
     expect(urls.at(-1)!.searchParams.get('before')).toBe(first);
   }
 );
+
+it.each([401, 403])(
+  'clears accepted rows on history denial %s and restarts with a fresh first page',
+  async (status) => {
+    let failMore = true;
+    const urls: URL[] = [];
+    await start(
+      vi.fn(async (input: string) => {
+        const url = new URL(input, 'http://localhost');
+        urls.push(url);
+        if (url.pathname === '/api/profiles') return Response.json({ activeProfileId: profileA });
+        return url.searchParams.has('before') && failMore ? Response.json({}, { status }) : reply();
+      })
+    );
+    await settled(() => expect(host.textContent).toContain(first));
+    await act(async () => history.loadMore());
+    await settled(() => expect(history.error).toBe('denied'));
+    expect(history.items).toEqual([]);
+    expect(history.nextBefore).toBeNull();
+    failMore = false;
+    await act(async () => history.retry());
+    await settled(() => expect(host.textContent).toContain(first));
+    expect(history.error).toBeNull();
+    expect(urls.at(-1)!.searchParams.has('before')).toBe(false);
+    expect(urls.filter((url) => url.pathname === '/api/orders')).toHaveLength(3);
+  }
+);
+
+it('deduplicates two readers and keeps a shared pending read alive when one changes filters', async () => {
+  const held = deferred(),
+    more = deferred();
+  const requests: { url: URL; signal: AbortSignal }[] = [];
+  const readers = new Map<string, ReturnType<typeof useCustomerServiceHistory<{ id: string }>>>();
+  function Reader({ name, query }: { name: string; query: string }) {
+    const value = useCustomerServiceHistory({
+      resource: 'orders',
+      endpoint: '/api/orders',
+      query,
+      itemsKey: 'orders',
+      identify,
+    });
+    readers.set(name, value);
+    return (
+      <span id={name}>
+        {value.items.map((row) => row.id).join(',')}|{value.error}
+      </span>
+    );
+  }
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: string, options: RequestInit) => {
+      const url = new URL(input, 'http://localhost');
+      if (url.pathname === '/api/profiles') return Response.json({ activeProfileId: profileA });
+      requests.push({ url, signal: options.signal as AbortSignal });
+      return url.searchParams.has('before')
+        ? more.promise
+        : url.searchParams.get('q') === 'saved'
+          ? held.promise
+          : reply(second, null);
+    })
+  );
+  host = document.createElement('div');
+  document.body.append(host);
+  root = createRoot(host);
+  const render = (firstQuery: string, secondReader = true) =>
+    act(async () =>
+      root!.render(
+        <QueryProvider>
+          <AccountUserProvider value="account-a">
+            <div>
+              <Reader name="reader-a" query={firstQuery} />
+              {secondReader && <Reader name="reader-b" query="q=saved" />}
+            </div>
+          </AccountUserProvider>
+        </QueryProvider>
+      )
+    );
+  await render('q=saved');
+  await settled(() => expect(requests).toHaveLength(1));
+  await render('q=other');
+  await settled(() => expect(host.querySelector('#reader-a')?.textContent).toContain(second));
+  expect(requests[0]!.signal.aborted).toBe(false);
+  await act(async () => held.resolve(reply()));
+  await settled(() => expect(host.querySelector('#reader-b')?.textContent).toContain(first));
+  expect(host.querySelector('#reader-a')?.textContent).not.toContain(first);
+  expect(requests.filter((request) => request.url.searchParams.get('q') === 'saved')).toHaveLength(
+    1
+  );
+  await act(async () => readers.get('reader-b')!.loadMore());
+  await settled(() =>
+    expect(requests.some((request) => request.url.searchParams.has('before'))).toBe(true)
+  );
+  const pending = requests.find((request) => request.url.searchParams.has('before'))!;
+  await render('q=other', false);
+  expect(pending.signal.aborted).toBe(true);
+  await act(async () => more.resolve(reply(second, null)));
+  expect(host.querySelector('#reader-a')?.textContent).toContain(second);
+});

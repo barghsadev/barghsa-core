@@ -91,6 +91,7 @@ export function SavingOrdersPage({
   if (query.q) params.set('q', query.q);
   if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
   const history = useCustomerServiceHistory<SavingOrderRow>({
+    resource: 'saving',
     endpoint: '/api/saving/orders',
     profileEndpoint: '/api/profiles',
     query: params.toString(),

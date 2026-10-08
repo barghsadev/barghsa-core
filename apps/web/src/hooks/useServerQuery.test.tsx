@@ -26,6 +26,7 @@ it('separates owners and contexts, canonicalizes filters, and retains rows only 
     { ...scope, ownerId: 'profile-b' },
     { ...scope, revision: 2 },
     { ...scope, context: 'staff' as const },
+    { ...scope, accountId: 'different-account' },
   ])
     expect(
       sameServerList(
@@ -46,6 +47,21 @@ it('separates owners and contexts, canonicalizes filters, and retains rows only 
     )
   ).toBe(false);
   expect(queryKeys.wallet.balance(scope)).not.toEqual(queryKeys.wallet.detail(scope, 'dashboard'));
+  expect(
+    sameServerList(
+      first,
+      queryKeys.invoices.list(scope, new URLSearchParams('offset=0&status=unpaid&limit=25'), 1)
+    )
+  ).toBe(true);
+  expect(
+    queryKeys.invoices.list(scope, new URLSearchParams('offset=0&status=unpaid&limit=25'), 1)
+  ).not.toEqual(first);
+  expect(
+    sameServerList(
+      queryKeys.orders.list(scope, new URLSearchParams('before=a&q=saved')),
+      queryKeys.orders.list(scope, new URLSearchParams('q=saved&before=b'))
+    )
+  ).toBe(true);
   expect(() => queryKeys.profiles.all({ ...scope, ownerId: '' })).toThrow(
     'Query owner is required'
   );
@@ -148,6 +164,64 @@ it('forces financial reads to stay manual even under an aggressive caller client
     host.remove();
     focusManager.setFocused(undefined);
     vi.useRealTimers();
+    vi.unstubAllGlobals();
+  }
+});
+
+it('does not request a dependent list until its validated owner key exists', async () => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const host = document.createElement('div');
+  document.body.append(host);
+  const root = createRoot(host),
+    read = vi.fn(async () => 'owned rows');
+  function Reader({ ready }: { ready: boolean }) {
+    const query = useServerListQuery({
+      queryKey: ready
+        ? queryKeys.invoices.list(
+            {
+              context: 'customer',
+              ownerId: 'confirmed-profile',
+              accountId: 'account-a',
+              revision: 0,
+            },
+            new URLSearchParams()
+          )
+        : null,
+      read,
+    });
+    return <span>{query.data ?? 'waiting for owner'}</span>;
+  }
+  try {
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Reader ready={false} />
+        </QueryProvider>
+      )
+    );
+    expect(read).not.toHaveBeenCalled();
+    expect(host.textContent).toBe('waiting for owner');
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Reader ready />
+        </QueryProvider>
+      )
+    );
+    await vi.waitFor(() => expect(host.textContent).toBe('owned rows'));
+    expect(read).toHaveBeenCalledTimes(1);
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Reader ready={false} />
+        </QueryProvider>
+      )
+    );
+    expect(host.textContent).toBe('waiting for owner');
+    expect(read).toHaveBeenCalledTimes(1);
+  } finally {
+    await act(async () => root.unmount());
+    host.remove();
     vi.unstubAllGlobals();
   }
 });

@@ -86,6 +86,7 @@ export function SolarRequestsPage({
   if (query.q) params.set('q', query.q);
   if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
   const history = useCustomerServiceHistory<RequestRow>({
+    resource: 'solar',
     endpoint: '/api/solar/requests',
     profileEndpoint: '/api/profiles',
     query: params.toString(),

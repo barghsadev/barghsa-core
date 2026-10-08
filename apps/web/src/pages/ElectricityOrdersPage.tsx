@@ -141,6 +141,7 @@ export function ElectricityOrdersPage({
   if (query.q) params.set('q', query.q);
   if (query.sort !== DEFAULT_HISTORY_SORT) params.set('sort', query.sort);
   const history = useCustomerServiceHistory<ListedOrder>({
+    resource: 'orders',
     endpoint: '/api/electricity/orders',
     profileEndpoint: '/api/profiles/verification-status',
     query: params.toString(),

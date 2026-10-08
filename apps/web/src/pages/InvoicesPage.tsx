@@ -111,6 +111,7 @@ export function InvoicesPage({
     if (value && !(key === 'sort' && value === DEFAULT_INVOICE_LIST_SORT)) params.set(key, value);
   }
   const history = useCustomerServiceHistory<CustomerInvoiceListItem>({
+    resource: 'invoices',
     endpoint: '/api/invoices',
     implicitProfile: true,
     query: params.toString(),

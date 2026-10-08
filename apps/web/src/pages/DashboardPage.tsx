@@ -29,6 +29,7 @@ import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 
 interface DashboardContext {
   profile: { id: string; name: string };
@@ -39,7 +40,8 @@ type WidgetKey = 'wallet' | 'status' | 'invoices' | 'orders' | 'contracts';
 
 function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
   const revision = useProfileContextRevision();
-  const scope = { context: 'customer' as const, ownerId: profileId, revision };
+  const accountId = useAccountUser();
+  const scope = { context: 'customer' as const, ownerId: profileId, revision, accountId };
   const resource = useServerDetailQuery<{ profileId: string; data: T }>({
     queryKey:
       widget === 'status'
