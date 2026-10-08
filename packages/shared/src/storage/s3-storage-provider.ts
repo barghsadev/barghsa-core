@@ -4,6 +4,9 @@ import {
   PutObjectCommand,
   GetObjectCommand,
   DeleteObjectCommand,
+  DeleteObjectsCommand,
+  CopyObjectCommand,
+  HeadObjectCommand,
   PutObjectCommandInput,
   ListObjectsV2Command,
   ListObjectsV2CommandInput,
@@ -21,9 +24,12 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Upload } from '@aws-sdk/lib-storage';
 import { NoSuchKey } from '@aws-sdk/client-s3';
+import { Readable } from 'node:stream';
+import type { ReadableStream as NodeReadableStream } from 'node:stream/web';
 
 import type {
-  StorageProvider,
+  IFileStorageProvider,
+  StorageUploadReceipt,
   StorageObject,
   StorageObjectSummary,
   StorageMetadata,
@@ -32,7 +38,11 @@ import type {
   MultipartPart,
   MultipartUploadSummary,
 } from './storage-provider.js';
-import { StorageObjectNotFound, StorageProviderError } from './storage-provider.js';
+import {
+  StorageObjectNotFound,
+  StorageProviderError,
+  StorageBatchDeleteError,
+} from './storage-provider.js';
 
 // ---------------------------------------------------------------------------
 // S3-specific config
@@ -75,7 +85,7 @@ const DEFAULT_MAX_KEYS = 100;
  * Works with AWS S3, MinIO, DigitalOcean Spaces, and any S3-compatible API.
  * Uses `@aws-sdk/client-s3` for all operations.
  */
-export class S3StorageProvider implements StorageProvider {
+export class S3StorageProvider implements IFileStorageProvider {
   private readonly client: S3Client;
   private readonly bucket: string;
   private readonly prefix: string;
@@ -111,6 +121,150 @@ export class S3StorageProvider implements StorageProvider {
 
   destroy(): void {
     this.client.destroy();
+  }
+
+  async upload(
+    stream: Readable | ReadableStream<Uint8Array>,
+    key: string,
+    mime: string,
+    size: number
+  ): Promise<StorageUploadReceipt> {
+    if (!Number.isSafeInteger(size) || size < 0 || !mime || !key)
+      throw new StorageProviderError('Invalid upload key, MIME or declared size');
+    const source = stream instanceof Readable ? Readable.toWeb(stream) : stream;
+    let bytes = 0;
+    const body = source.pipeThrough(
+      new TransformStream<Uint8Array, Uint8Array>({
+        transform(chunk, controller) {
+          const data = typeof chunk === 'string' ? Buffer.from(chunk) : chunk;
+          if (!(data instanceof Uint8Array)) throw new StorageProviderError('Invalid upload chunk');
+          bytes += data.byteLength;
+          if (bytes > size) throw new StorageProviderError('Upload exceeds declared size');
+          controller.enqueue(data);
+        },
+        flush() {
+          if (bytes !== size) throw new StorageProviderError('Upload differs from declared size');
+        },
+      })
+    );
+    try {
+      const result = await new Upload({
+        client: this.client,
+        params: {
+          Bucket: this.bucket,
+          Key: this.resolveKey(key),
+          Body: body,
+          ContentType: mime,
+          ContentLength: size,
+        },
+        queueSize: 1,
+        partSize: 5 * 1024 * 1024,
+        leavePartsOnError: false,
+      }).done();
+      if (!result.ETag) throw new StorageProviderError('Upload receipt has no ETag');
+      return { key, etag: result.ETag };
+    } catch (error) {
+      throw new StorageProviderError('File upload was not confirmed', error);
+    }
+  }
+
+  async download(key: string): Promise<Readable> {
+    const object = await this.getObject(key);
+    return Readable.fromWeb(object.body as NodeReadableStream<Uint8Array>);
+  }
+
+  async getSignedUrl(key: string, operation: 'upload' | 'download', expiresIn?: number) {
+    if (operation === 'upload')
+      return {
+        url: await this.presignedPutUrl(key, expiresIn),
+        method: 'PUT' as const,
+        headers: { 'If-None-Match': '*' },
+      };
+    if (operation === 'download')
+      return {
+        url: await this.presignedGetUrl(key, expiresIn),
+        method: 'GET' as const,
+        headers: {} as Record<string, string>,
+      };
+    throw new StorageProviderError('Unsupported signed URL operation');
+  }
+
+  delete(key: string): Promise<void> {
+    return this.deleteObject(key);
+  }
+
+  async copy(sourceKey: string, destKey: string): Promise<void> {
+    if (!sourceKey || !destKey || sourceKey === destKey)
+      throw new StorageProviderError('Copy requires distinct nonempty keys');
+    const result = await this.client.send(
+      new CopyObjectCommand({
+        Bucket: this.bucket,
+        Key: this.resolveKey(destKey),
+        CopySource: `${this.bucket}/${this.resolveKey(sourceKey)}`
+          .split('/')
+          .map(encodeURIComponent)
+          .join('/'),
+      })
+    );
+    if (!result.CopyObjectResult?.ETag)
+      throw new StorageProviderError('Copy receipt was not confirmed');
+  }
+
+  async objectExists(key: string): Promise<boolean> {
+    if (!key) throw new StorageProviderError('Object existence requires a nonempty key');
+    try {
+      await this.client.send(
+        new HeadObjectCommand({ Bucket: this.bucket, Key: this.resolveKey(key) })
+      );
+      return true;
+    } catch (error) {
+      if (
+        ((error as { name?: string }).name !== 'NoSuchBucket' &&
+          (error as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode ===
+            404) ||
+        ['NotFound', 'NoSuchKey'].includes((error as { name?: string }).name ?? '')
+      )
+        return false;
+      throw new StorageProviderError('Object existence could not be determined', error);
+    }
+  }
+
+  async deleteObjects(keys: string[]): Promise<void> {
+    const keysToDelete = [...new Set(keys)];
+    if (keysToDelete.some((key) => !key))
+      throw new StorageProviderError('Delete requires nonempty keys');
+    const deleted: string[] = [];
+    for (let offset = 0; offset < keysToDelete.length; offset += 1000) {
+      const batch = keysToDelete.slice(offset, offset + 1000);
+      let result;
+      try {
+        result = await this.client.send(
+          new DeleteObjectsCommand({
+            Bucket: this.bucket,
+            Delete: { Objects: batch.map((key) => ({ Key: this.resolveKey(key) })), Quiet: false },
+          })
+        );
+      } catch (error) {
+        throw new StorageBatchDeleteError(deleted, [], keysToDelete.slice(offset), error);
+      }
+      const confirmed = new Set((result.Deleted ?? []).map((entry) => entry.Key));
+      const errors = new Map(
+        (result.Errors ?? []).map((entry) => [entry.Key, entry.Code ?? 'Unknown'])
+      );
+      const failed: { key: string; code: string }[] = [];
+      const unconfirmed: string[] = [];
+      for (const key of batch) {
+        const resolved = this.resolveKey(key);
+        if (errors.has(resolved)) failed.push({ key, code: errors.get(resolved)! });
+        else if (confirmed.has(resolved)) deleted.push(key);
+        else unconfirmed.push(key);
+      }
+      if (failed.length || unconfirmed.length)
+        throw new StorageBatchDeleteError(deleted, failed, [
+          ...unconfirmed,
+          ...keysToDelete.slice(offset + batch.length),
+        ]);
+    }
   }
 
   async createMultipartUpload(key: string, contentType: string): Promise<string> {
@@ -386,6 +540,14 @@ export class S3StorageProvider implements StorageProvider {
       Key: resolvedKey,
       Body: body,
       ContentType: contentType,
+      ContentLength:
+        typeof body === 'string'
+          ? Buffer.byteLength(body)
+          : body instanceof Uint8Array
+            ? body.byteLength
+            : body instanceof Blob
+              ? body.size
+              : undefined,
       Metadata: metadata,
     };
 

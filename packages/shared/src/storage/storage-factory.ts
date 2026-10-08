@@ -1,4 +1,4 @@
-import type { StorageProvider, Logger } from './storage-provider.js';
+import type { IFileStorageProvider, Logger } from './storage-provider.js';
 import { S3StorageProvider, type S3StorageProviderConfig } from './s3-storage-provider.js';
 
 /**
@@ -30,7 +30,7 @@ export type StorageProviderFactoryConfig = S3StorageProviderConfig & { type?: 's
 export function createStorageProvider(
   config: StorageProviderFactoryConfig,
   logger?: Logger
-): StorageProvider {
+): IFileStorageProvider {
   if (config.type !== undefined && config.type !== 's3') {
     throw new Error(`Unknown storage provider type: "${config.type}". Supported: "s3".`);
   }

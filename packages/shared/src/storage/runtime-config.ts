@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { encryptAuthDelivery, decryptAuthDelivery } from '../auth-delivery/crypto.js';
 import { createStorageProvider } from './storage-factory.js';
-import type { StorageProvider } from './storage-provider.js';
+import type { IFileStorageProvider } from './storage-provider.js';
 
 export const STORAGE_CONFIG_KEY = 'storage.active';
 const endpoint = z
@@ -100,7 +100,7 @@ export function configuredStorageProviders(
 export function runtimeStorageProvider(
   load: () => Promise<unknown | null>,
   unavailable: () => Error = () => new Error('Storage configuration is unavailable')
-): StorageProvider {
+): IFileStorageProvider {
   let closed = false;
   let cachedKey = '';
   let cached: ReturnType<typeof configuredStorageProviders> | undefined;
@@ -184,6 +184,13 @@ export function runtimeStorageProvider(
       return provider.listMultipartUploads(prefix, maxUploads, keyMarker, uploadIdMarker);
     },
     putObject: async (...args) => (await current()).internal.putObject(...args),
+    upload: async (...args) => (await current()).internal.upload(...args),
+    download: async (...args) => (await current()).internal.download(...args),
+    copy: async (...args) => (await current()).internal.copy(...args),
+    delete: async (...args) => (await current()).internal.delete(...args),
+    deleteObjects: async (...args) => (await current()).internal.deleteObjects(...args),
+    objectExists: async (...args) => (await current()).internal.objectExists(...args),
+    getSignedUrl: async (...args) => (await current()).browser.getSignedUrl(...args),
     getObject: async (...args) => (await current()).internal.getObject(...args),
     deleteObject: async (...args) => (await current()).internal.deleteObject(...args),
     listObjects: async (...args) => (await current()).internal.listObjects(...args),

@@ -12,6 +12,34 @@
 /** Arbitrary user-defined metadata stored alongside an object. */
 export type StorageMetadata = Record<string, string>;
 
+export interface StorageUploadReceipt {
+  key: string;
+  etag: string;
+}
+
+/** Complete file operations; the legacy object facade remains compatible. */
+export interface IFileStorageProvider extends StorageProvider {
+  upload(
+    stream: import('node:stream').Readable | ReadableStream<Uint8Array>,
+    key: string,
+    mime: string,
+    size: number
+  ): Promise<StorageUploadReceipt>;
+  download(key: string): Promise<import('node:stream').Readable>;
+  getSignedUrl(
+    key: string,
+    operation: 'upload' | 'download',
+    expiresIn?: number
+  ): Promise<{ url: string; method: 'PUT' | 'GET'; headers: Record<string, string> }>;
+  /** Trusted low-level operations; callers retain domain authorization/hold checks.
+   * Logical deletion never removes historical versions. Copy uses S3's single-object limit.
+   */
+  delete(key: string): Promise<void>;
+  copy(sourceKey: string, destKey: string): Promise<void>;
+  deleteObjects(keys: string[]): Promise<void>;
+  objectExists(key: string): Promise<boolean>;
+}
+
 /** Result of a `listObjects` call. */
 export interface StorageObjectSummary {
   key: string;
@@ -206,5 +234,18 @@ export class StorageProviderError extends Error {
   ) {
     super(message);
     this.name = 'StorageProviderError';
+  }
+}
+
+/** Preserve confirmed and uncertain outcomes; do not blindly replay a partial batch. */
+export class StorageBatchDeleteError extends StorageProviderError {
+  constructor(
+    public readonly deletedKeys: string[],
+    public readonly failedKeys: { key: string; code: string }[],
+    public readonly unconfirmedKeys: string[],
+    cause?: unknown
+  ) {
+    super('Storage batch deletion was not fully confirmed', cause);
+    this.name = 'StorageBatchDeleteError';
   }
 }

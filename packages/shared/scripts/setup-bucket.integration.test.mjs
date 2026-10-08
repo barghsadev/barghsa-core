@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
+import { Readable } from 'node:stream';
 import { setTimeout as delay } from 'node:timers/promises';
 import { test } from 'node:test';
 import {
@@ -10,12 +11,14 @@ import {
   GetBucketLifecycleConfigurationCommand,
   PutBucketLifecycleConfigurationCommand,
   PutObjectCommand,
+  GetObjectCommand,
   GetObjectTaggingCommand,
   ListObjectVersionsCommand,
   ListMultipartUploadsCommand,
 } from '@aws-sdk/client-s3';
 import { S3StorageProvider } from '../dist/storage/s3-storage-provider.js';
 import { setupBucket } from '../dist/storage/setup-bucket.js';
+import { encryptStorageSecret, runtimeStorageProvider } from '../dist/storage/runtime-config.js';
 
 // Isolated synthetic bucket. No ambient AWS credentials or persistent Docker volume.
 test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
@@ -328,6 +331,194 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
           assert.ok(!page.items[0].key.startsWith('provider/'));
           await provider.deleteObject('direct.txt');
           await assert.rejects(provider.getObject('direct.txt'), { name: 'StorageObjectNotFound' });
+        }
+      );
+      await t.test(
+        'complete file facade preserves exact bytes, receipts, signed headers and current runtime routing',
+        async () => {
+          const previous = process.env.STORAGE_CONFIG_ENCRYPTION_KEY;
+          process.env.STORAGE_CONFIG_ENCRYPTION_KEY = randomUUID();
+          const runtime = runtimeStorageProvider(async () => ({
+            endpoint,
+            privateEndpointUrl: endpoint,
+            publicEndpointUrl: endpoint,
+            region: 'us-east-1',
+            bucket: Bucket,
+            accessKeyId: credentials.accessKeyId,
+            forcePathStyle: true,
+            encryptedSecret: encryptStorageSecret(credentials.secretAccessKey),
+          }));
+          try {
+            const key = 'facade/فایل #?%.bin';
+            const bytes = Buffer.alloc(6 * 1024 * 1024 + 123, 37);
+            const receipt = await runtime.upload(
+              Readable.from([bytes]),
+              key,
+              'application/octet-stream',
+              bytes.length
+            );
+            assert.equal(receipt.key, key);
+            assert.ok(receipt.etag);
+            assert.deepEqual(
+              Buffer.from(
+                await new Response(Readable.toWeb(await runtime.download(key))).arrayBuffer()
+              ),
+              bytes
+            );
+            assert.equal(await runtime.objectExists(key), true);
+            await runtime.copy(key, 'facade/copy.bin');
+            assert.deepEqual(
+              Buffer.from(
+                await new Response(
+                  Readable.toWeb(await runtime.download('facade/copy.bin'))
+                ).arrayBuffer()
+              ),
+              bytes
+            );
+            const download = await runtime.getSignedUrl('facade/copy.bin', 'download', 60);
+            assert.equal(download.method, 'GET');
+            assert.deepEqual(Buffer.from(await (await fetch(download.url)).arrayBuffer()), bytes);
+            const upload = await runtime.getSignedUrl('facade/signed.txt', 'upload', 60);
+            assert.equal(
+              (
+                await fetch(upload.url, {
+                  method: upload.method,
+                  headers: upload.headers,
+                  body: 'original',
+                })
+              ).status,
+              200
+            );
+            assert.equal(
+              (
+                await fetch(upload.url, {
+                  method: upload.method,
+                  headers: upload.headers,
+                  body: 'changed',
+                })
+              ).status,
+              412
+            );
+            await runtime.deleteObjects([key, 'facade/copy.bin', 'facade/missing.bin']);
+            assert.equal(await runtime.objectExists(key), false);
+            assert.equal(await runtime.objectExists('facade/copy.bin'), false);
+            await runtime.delete('facade/signed.txt');
+            assert.equal(await runtime.objectExists('facade/signed.txt'), false);
+            runtime.destroy();
+            await assert.rejects(runtime.objectExists(key), /configuration is unavailable/);
+          } finally {
+            runtime.destroy();
+            if (previous === undefined) delete process.env.STORAGE_CONFIG_ENCRYPTION_KEY;
+            else process.env.STORAGE_CONFIG_ENCRYPTION_KEY = previous;
+          }
+        }
+      );
+      for (const delta of [-1, 1]) {
+        await t.test(
+          `declared multipart size mismatch ${delta} aborts all unfinished parts without publishing bytes`,
+          async () => {
+            const key = `size-mismatch-${delta}.bin`;
+            let finishPart;
+            const firstPart = new Promise((resolve) => {
+              finishPart = resolve;
+            });
+            const commands = [];
+            const send = provider.client.send.bind(provider.client);
+            const tracked = t.mock.method(provider.client, 'send', async (command, ...args) => {
+              commands.push(command.constructor.name);
+              const result = await send(command, ...args);
+              if (command.constructor.name === 'UploadPartCommand') finishPart();
+              return result;
+            });
+            let started = false;
+            const size = 6 * 1024 * 1024 + 1;
+            const body = new ReadableStream({
+              async pull(controller) {
+                if (!started) {
+                  started = true;
+                  controller.enqueue(Buffer.alloc(5 * 1024 * 1024 + 1, 42));
+                } else {
+                  let timeout;
+                  try {
+                    await Promise.race([
+                      firstPart,
+                      new Promise((_, reject) => {
+                        timeout = setTimeout(
+                          () => reject(new Error('first multipart part was not sent')),
+                          5000
+                        );
+                      }),
+                    ]);
+                  } finally {
+                    clearTimeout(timeout);
+                  }
+                  controller.enqueue(Buffer.alloc(1024 * 1024, 42));
+                  controller.close();
+                }
+              },
+            });
+            try {
+              await assert.rejects(
+                provider.upload(body, key, 'application/octet-stream', size + delta),
+                /not confirmed/
+              );
+              for (const name of [
+                'CreateMultipartUploadCommand',
+                'UploadPartCommand',
+                'AbortMultipartUploadCommand',
+              ])
+                assert.ok(commands.includes(name), name);
+              assert.ok(!commands.includes('CompleteMultipartUploadCommand'));
+            } finally {
+              tracked.mock.restore();
+            }
+            assert.equal(await provider.objectExists(key), false);
+            const result = await client.send(
+              new ListMultipartUploadsCommand({ Bucket, Prefix: `provider/${key}` })
+            );
+            assert.equal(result.Uploads?.length ?? 0, 0);
+          }
+        );
+      }
+      await t.test(
+        'copy retains hold tags and logical batch delete preserves held historical versions',
+        async () => {
+          const key = 'provider/ops/held.txt';
+          const original = await client.send(
+            new PutObjectCommand({
+              Bucket,
+              Key: key,
+              Body: 'held source',
+              Tagging: 'legal-hold=true',
+            })
+          );
+          await provider.copy('ops/held.txt', 'ops/copied.txt');
+          assert.deepEqual(
+            (
+              await client.send(
+                new GetObjectTaggingCommand({ Bucket, Key: 'provider/ops/copied.txt' })
+              )
+            ).TagSet,
+            [{ Key: 'legal-hold', Value: 'true' }]
+          );
+          await provider.deleteObjects(['ops/held.txt', 'ops/copied.txt']);
+          assert.equal(await provider.objectExists('ops/held.txt'), false);
+          const history = await client.send(new ListObjectVersionsCommand({ Bucket, Prefix: key }));
+          assert.ok(
+            history.Versions.some((v) => v.Key === key && v.VersionId === original.VersionId)
+          );
+          const retained = await client.send(
+            new GetObjectCommand({ Bucket, Key: key, VersionId: original.VersionId })
+          );
+          assert.equal(await retained.Body.transformToString(), 'held source');
+          assert.deepEqual(
+            (
+              await client.send(
+                new GetObjectTaggingCommand({ Bucket, Key: key, VersionId: original.VersionId })
+              )
+            ).TagSet,
+            [{ Key: 'legal-hold', Value: 'true' }]
+          );
         }
       );
     } finally {

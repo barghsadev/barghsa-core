@@ -1,5 +1,7 @@
 export type {
   StorageProvider,
+  IFileStorageProvider,
+  StorageUploadReceipt,
   StorageObject,
   StorageObjectSummary,
   StorageMetadata,
@@ -7,7 +9,11 @@ export type {
   MultipartPart,
   MultipartUploadSummary,
 } from './storage-provider.js';
-export { StorageObjectNotFound, StorageProviderError } from './storage-provider.js';
+export {
+  StorageObjectNotFound,
+  StorageProviderError,
+  StorageBatchDeleteError,
+} from './storage-provider.js';
 
 export type { S3StorageProviderConfig } from './s3-storage-provider.js';
 export { S3StorageProvider } from './s3-storage-provider.js';
