@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from './useServerQuery.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useZodForm } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { tAccountSettingsForms } from '@barghsa/i18n/account-settings-forms';
@@ -30,6 +34,19 @@ type Capture = { command: AccountCommand; previousUsername: string; checked: boo
 export function useAccountSettingsEditor(locale: Locale) {
   const actor = useAccountUser(),
     copy = (key: string) => tAccountSettingsForms(key, locale);
+  const reader = useId();
+  const revision = useProfileContextRevision();
+  const client = useQueryClient();
+  const readSequence = useRef(0);
+  const queryKey = actor
+    ? queryKeys.profiles.authority(
+        { context: 'account', ownerId: actor, accountId: actor, revision },
+        JSON.stringify([reader, 'account-settings'])
+      )
+    : null;
+  const queryIdentity = JSON.stringify(queryKey);
+  const latestQuery = useRef(queryIdentity);
+  latestQuery.current = queryIdentity;
   const current = useRef(actor);
   current.current = actor;
   const alive = useRef(true),
@@ -149,23 +166,55 @@ export function useAccountSettingsEditor(locale: Locale) {
       setLocked(false);
     }
   }
-  async function readUser(token: string): Promise<AccountSettingsUser> {
-    const response = await fetch('/api/auth/user', { credentials: 'include' });
-    if (!permitted(token)) throw new Error('Obsolete account read');
+  async function loadUser(signal: AbortSignal) {
+    const token = actor!;
+    const attempt = ++readSequence.current;
+    const currentRead = () =>
+      permitted(token) &&
+      !signal.aborted &&
+      latestQuery.current === queryIdentity &&
+      readSequence.current === attempt;
+    const response = await fetch('/api/auth/user', { credentials: 'include', signal });
+    if (!currentRead()) throw new Error('Obsolete account read');
     if ([401, 403].includes(response.status)) {
       withdraw();
       throw new Error('Account unavailable');
     }
     if (!response.ok) throw new Error('Account read failed');
     const value: unknown = await response.json();
-    if (!permitted(token)) throw new Error('Obsolete account read');
+    if (!currentRead()) throw new Error('Obsolete account read');
     if (value && typeof value === 'object' && 'userId' in value && value.userId !== token) {
       withdraw();
       throw new Error('Account changed');
     }
     const parsed = accountSettingsUser(value, token);
     if (!parsed) throw new Error('Invalid account receipt');
-    return parsed;
+    return { value: parsed, attempt };
+  }
+  const accountQuery = useServerDetailQuery({
+    queryKey,
+    enabled: false,
+    manual: true,
+    read: loadUser,
+  });
+  async function readUser(token: string): Promise<AccountSettingsUser> {
+    const currentRead = () =>
+      token === actor && permitted(token) && latestQuery.current === queryIdentity;
+    if (!queryKey || !currentRead()) throw new Error('Obsolete account read');
+    const baseline = readSequence.current;
+    await client.cancelQueries({ queryKey, exact: true });
+    if (!currentRead() || readSequence.current !== baseline)
+      throw new Error('Obsolete account read');
+    const result = await accountQuery.refetch();
+    if (
+      !currentRead() ||
+      result.isError ||
+      !result.data ||
+      result.data.attempt <= baseline ||
+      result.data.attempt !== readSequence.current
+    )
+      throw new Error('Account read did not confirm a current source');
+    return result.data.value;
   }
   function acceptUser(next: AccountSettingsUser) {
     source.current = next;

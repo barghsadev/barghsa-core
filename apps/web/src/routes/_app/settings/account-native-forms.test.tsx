@@ -349,3 +349,82 @@ it('retains both unsent drafts through a same-actor transient refresh and lets t
   expect(host.querySelector<HTMLInputElement>('#new-contact')?.value).toBe(' 09120000003 ');
   expect(state.writes).toHaveLength(0);
 });
+
+it('keeps account reads manual and makes each explicit refresh a fresh abortable request', async () => {
+  const state = fixture();
+  await mount();
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(state.readCount).toBe(1);
+  await click(copy('refresh', 'en'));
+  expect(state.readCount).toBe(2);
+  const requests = vi.mocked(fetch).mock.calls;
+  expect(requests.every((request) => request[1]?.credentials === 'include')).toBe(true);
+  const signals = requests.map((request) => request[1]?.signal);
+  expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
+  expect(new Set(signals).size).toBe(2);
+  expect(state.writes).toHaveLength(0);
+});
+
+it('cancels old-account reads and refuses their late authorization denial', async () => {
+  const state = fixture(),
+    held = deferred<Response>();
+  let signal: AbortSignal | null | undefined;
+  vi.mocked(fetch).mockImplementationOnce(async (_path, init) => {
+    signal = init?.signal;
+    return held.promise;
+  });
+  await mount();
+  state.user = { ...state.user, userId: 'new-user', username: 'replacement@example.test' };
+  await mount('new-user');
+  expect(signal?.aborted).toBe(true);
+  await act(async () => held.resolve(Response.json({}, { status: 401 })));
+  expect(
+    host.querySelector('[aria-labelledby="username-section-title"] p[dir="ltr"]')?.textContent
+  ).toBe('rep...est');
+  expect(host.textContent).not.toContain(copy('forbidden', 'en'));
+  expect(state.writes).toHaveLength(0);
+});
+
+it('aborts the owned refresh on unmount without publishing a late source', async () => {
+  const state = fixture(),
+    held = deferred<Response>();
+  await mount();
+  let signal: AbortSignal | null | undefined;
+  vi.mocked(fetch).mockImplementationOnce(async (_path, init) => {
+    signal = init?.signal;
+    return held.promise;
+  });
+  await click(copy('refresh', 'en'));
+  expect(signal?.aborted).toBe(false);
+  await act(async () => root.unmount());
+  root = createRoot(host);
+  expect(signal?.aborted).toBe(true);
+  await act(async () => held.resolve(Response.json(state.user)));
+  expect(host.textContent).toBe('');
+  expect(state.writes).toHaveLength(0);
+});
+
+it('cannot certify cached account data or offer restart when a fresh confirmation fails', async () => {
+  const state = fixture();
+  await mount();
+  await pair();
+  state.override = () => Response.json({}, { status: 503 });
+  await submit('username');
+  state.readStatus = 503;
+  await click(copy('confirm', 'en'));
+  expect(host.textContent).toContain(copy('uncertain', 'en'));
+  expect(
+    Array.from(host.querySelectorAll('button')).some(
+      (button) => button.textContent === copy('restart', 'en')
+    )
+  ).toBe(false);
+  expect(state.writes).toHaveLength(2);
+  state.readStatus = 200;
+  await click(copy('confirm', 'en'));
+  expect(button(host, copy('restart', 'en'))).toBeDefined();
+  expect(state.writes).toHaveLength(2);
+});
