@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -48,9 +49,13 @@ it('retains the paid1000 linked error after native reason blur starts an ordinar
   try {
     await act(async () =>
       root.render(
-        <AccountUserProvider value="reviewer">
-          <AdminConsultationsPage />
-        </AccountUserProvider>
+        <QueryComponentProvider>
+          {
+            <AccountUserProvider value="reviewer">
+              <AdminConsultationsPage />
+            </AccountUserProvider>
+          }
+        </QueryComponentProvider>
       )
     );
     await act(async () =>

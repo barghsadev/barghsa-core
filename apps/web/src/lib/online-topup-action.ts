@@ -60,7 +60,11 @@ function safeGatewayRedirectUrl(raw: string): boolean {
 export async function loadOnlineTopUpReview(
   profileId: string,
   amountIrR: number,
-  idempotencyKey: string
+  idempotencyKey: string,
+  read: (
+    path: string,
+    options: RequestInit
+  ) => Promise<Pick<Response, 'ok' | 'status' | 'json'>> = fetch
 ): Promise<
   | ErrorResult
   | {
@@ -68,7 +72,7 @@ export async function loadOnlineTopUpReview(
       review: OnlineTopUpReview;
     }
 > {
-  const response = await fetch(`/api/wallet/${profileId}/top-ups/review`, {
+  const response = await read(`/api/wallet/${profileId}/top-ups/review`, {
     method: 'POST',
     credentials: 'include',
     headers: withCsrf({ Accept: 'application/json', 'Content-Type': 'application/json' }),

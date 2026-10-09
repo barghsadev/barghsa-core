@@ -1,3 +1,4 @@
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -289,6 +290,11 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     loadedDetail?.request.id === selectedId && detailScope.current === workScope
       ? loadedDetail
       : null;
+  const readFinancial = useOwnedFinancialRead(
+    readActor,
+    readProfileRevision,
+    JSON.stringify([workScope, detail?.request])
+  );
   const work = useRef({ scope: workScope, generation: 0 });
   if (work.current.scope !== workScope)
     work.current = { scope: workScope, generation: work.current.generation + 1 };
@@ -890,14 +896,15 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
         const terms = consultationFeeTerms(draft, capturedSource, capturedZone);
         if (!terms) return;
         try {
-          const response = await fetch(
+          const response = await readFinancial(
             `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}/${paid ? 'paid-fee-review' : 'fee-review'}`,
             {
               method: 'POST',
               credentials: 'include',
               headers: withCsrf({ 'Content-Type': 'application/json' }),
               body: JSON.stringify(terms),
-            }
+            },
+            true
           );
           const value = await response.json().catch(() => null);
           if (
@@ -1069,14 +1076,15 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     setReviewLoading(true);
     setError(false);
     try {
-      const response = await fetch(
+      const response = await readFinancial(
         `/api/admin/consultations/requests/${encodeURIComponent(source.id)}/paid-resolution-review`,
         {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ action: intent, reason }),
-        }
+        },
+        true
       );
       const value = await response.json().catch(() => null);
       if (

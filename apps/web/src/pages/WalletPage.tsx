@@ -1,3 +1,4 @@
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
@@ -107,6 +108,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const isRtl = locale === 'fa';
 
   const [profileId, setProfileId] = useState<string | null>(null);
+  const readFinancial = useOwnedFinancialRead(actor, profileRevision, JSON.stringify([profileId]));
   const [wallet, setWallet] = useState<WalletBalance | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<PageError | null>(null);
@@ -310,7 +312,12 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     try {
       const { loadOnlineTopUpReview } = await import('../lib/online-topup-action.js');
       if (!current()) return;
-      const result = await loadOnlineTopUpReview(profileId, Number(values.amount), idempotencyKey);
+      const result = await loadOnlineTopUpReview(
+        profileId,
+        Number(values.amount),
+        idempotencyKey,
+        (path, init) => readFinancial(path, init, true, {})
+      );
       if (!current()) return;
       if (result.kind === 'error') handleOnlineTopUpError(result);
       else setOnlineReview(result.review);
@@ -415,18 +422,21 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       const { loadBankReceiptTopUpReview } = await import('../lib/bank-receipt-topup-action.js');
       if (!current()) return;
       const bankName = parseBankReceiptBankName(values.bankName);
-      const result = await loadBankReceiptTopUpReview({
-        profileId,
-        amountIrR: parseBankReceiptTopUpAmountIrR(
-          normalizeIrrAmountDigits(values.amount)
-        )!.toString(),
-        paymentDate: values.paymentDate,
-        payerReference: values.payerReference.trim(),
-        attachmentKey,
-        customerNote: values.customerNote.trim() || null,
-        ...(bankName ? { bankName } : {}),
-        idempotencyKey: receiptIdempotencyKey,
-      });
+      const result = await loadBankReceiptTopUpReview(
+        {
+          profileId,
+          amountIrR: parseBankReceiptTopUpAmountIrR(
+            normalizeIrrAmountDigits(values.amount)
+          )!.toString(),
+          paymentDate: values.paymentDate,
+          payerReference: values.payerReference.trim(),
+          attachmentKey,
+          customerNote: values.customerNote.trim() || null,
+          ...(bankName ? { bankName } : {}),
+          idempotencyKey: receiptIdempotencyKey,
+        },
+        (path, init) => readFinancial(path, init, true, {})
+      );
       if (!current()) return;
       if (result.kind === 'error') {
         const next = mapReceiptSubmitError(result.status);

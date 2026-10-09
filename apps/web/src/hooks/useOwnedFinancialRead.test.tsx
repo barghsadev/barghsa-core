@@ -5,6 +5,12 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useOwnedFinancialRead } from './useOwnedFinancialRead.js';
 const targets = [
   '/api/invoices/invoice-one/wallet-payment',
+  '/api/admin/consultations/requests/request-one/fee-review',
+  '/api/admin/consultations/requests/request-one/paid-fee-review',
+  '/api/admin/consultations/requests/request-one/paid-resolution-review',
+  '/api/wallet/profile-one/top-ups/review',
+  '/api/wallet/profile-one/bank-receipt-top-ups/review',
+  '/api/saving/orders/order-one/change-quote',
   '/api/staff/saving/orders/order-one/financial-review',
   '/api/staff/saving/orders/order-one/amend-hardware-review',
   '/api/staff/saving/orders/order-one/cancel-hardware-upgrade-review',
@@ -23,19 +29,21 @@ let host: HTMLDivElement,
   signal: AbortSignal,
   finish: (value: unknown) => void,
   first: boolean,
-  call: (path: string, init: RequestInit, decode: boolean) => Promise<unknown>;
+  call: ReturnType<typeof useOwnedFinancialRead>;
 function Probe({
   path,
   actor,
   revision,
   scope,
+  profile = 'profile-one',
 }: {
   path: string;
   actor: string;
   revision: number;
   scope: string;
+  profile?: string;
 }) {
-  const read = useOwnedFinancialRead(actor, revision, scope),
+  const read = useOwnedFinancialRead(actor, revision, scope, profile),
     [shown, setShown] = useState('');
   useEffect(() => {
     const controller = new AbortController();
@@ -101,19 +109,28 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 for (const path of targets)
-  it.each(['unmount', 'actor', 'revision', 'source'])(
+  it.each(['unmount', 'actor', 'revision', 'source', 'profile'])(
     `owns complete financial ${path} JSON through %s`,
     async (change) => {
       const render = async (
         present = true,
         actor = 'account-one',
         revision = 0,
-        scope = 'original-source'
+        scope = 'original-source',
+        profile = 'profile-one'
       ) =>
         act(async () =>
           root.render(
             <QueryComponentProvider>
-              {present && <Probe path={path} actor={actor} revision={revision} scope={scope} />}
+              {present && (
+                <Probe
+                  path={path}
+                  actor={actor}
+                  revision={revision}
+                  scope={scope}
+                  profile={profile}
+                />
+              )}
             </QueryComponentProvider>
           )
         );
@@ -130,7 +147,8 @@ for (const path of targets)
       if (change === 'unmount') await render(false);
       else if (change === 'actor') await render(true, 'account-two');
       else if (change === 'revision') await render(true, 'account-one', 1);
-      else await render(true, 'account-one', 0, 'replacement-source');
+      else if (change === 'source') await render(true, 'account-one', 0, 'replacement-source');
+      else await render(true, 'account-one', 0, 'original-source', 'profile-two');
       expect(oldSignal.aborted).toBe(true);
       await act(async () => oldFinish({ text: 'obsolete-private-review' }));
       expect(host.textContent).not.toContain('obsolete-private');
@@ -139,6 +157,12 @@ for (const path of targets)
   );
 it.each([
   ['/api/invoices/invoice-one/wallet-payment', 'POST'],
+  ['/api/admin/consultations/requests/request-one/fee', 'POST'],
+  ['/api/admin/consultations/requests/request-one/paid-fee', 'POST'],
+  ['/api/admin/consultations/requests/request-one/paid-cancel', 'POST'],
+  ['/api/wallet/profile-one/top-ups', 'POST'],
+  ['/api/wallet/profile-one/bank-receipt-top-ups', 'POST'],
+  ['/api/saving/orders/order-one/change', 'POST'],
   ['/api/staff/saving/orders/order-one/approve', 'POST'],
   ['/api/staff/saving/orders/order-one/amend-hardware', 'POST'],
   ['/api/staff/saving/orders/order-one/cancel-hardware-upgrade', 'POST'],
@@ -168,7 +192,11 @@ it.each([401, 403, 404])(
     );
     const json = vi.fn(async () => ({ text: 'private denied bytes' }));
     vi.mocked(fetch).mockResolvedValue({ ok: false, status, json } as unknown as Response);
-    const result = (await call(targets[1]!, { method: 'POST', headers, body }, true)) as {
+    const result = (await call(
+      '/api/staff/saving/orders/order-one/financial-review',
+      { method: 'POST', headers, body },
+      true
+    )) as {
       status: number;
     };
     expect(result.status).toBe(status);
@@ -187,7 +215,11 @@ it('preserves solar error JSON and tolerates malformed preview JSON', async () =
     throw Error('Invalid JSON');
   });
   vi.mocked(fetch).mockResolvedValue({ ok: false, status: 400, json } as unknown as Response);
-  const packet = (await call(targets[6]!, { method: 'POST', headers, body }, true)) as {
+  const packet = (await call(
+    '/api/admin/solar/requests/request-one/create-contract/review',
+    { method: 'POST', headers, body },
+    true
+  )) as {
     json: () => Promise<unknown>;
   };
   expect(await packet.json()).toBeNull();
@@ -210,4 +242,24 @@ it('preserves strict wallet success JSON and refuses GET bodies', async () => {
   vi.mocked(fetch).mockClear();
   await expect(call(targets[0]!, { body: '' }, false)).rejects.toThrow('Invalid financial read');
   expect(fetch).not.toHaveBeenCalled();
+});
+
+it.each([
+  '/api/wallet/profile-one/top-ups/review',
+  '/api/wallet/profile-one/bank-receipt-top-ups/review',
+])('retains the native empty-object JSON fallback for %s', async (path) => {
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <Capture />
+      </QueryComponentProvider>
+    )
+  );
+  const json = vi.fn(async () => {
+    throw Error('Invalid JSON');
+  });
+  vi.mocked(fetch).mockResolvedValue({ ok: false, status: 400, json } as unknown as Response);
+  const packet = await call(path, { method: 'POST', headers, body }, true, {});
+  expect(await packet.json()).toEqual({});
+  expect(json).toHaveBeenCalledOnce();
 });

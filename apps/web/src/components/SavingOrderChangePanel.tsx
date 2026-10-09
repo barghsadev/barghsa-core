@@ -1,3 +1,4 @@
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from './OrderWalletBalance.js';
@@ -84,6 +85,14 @@ export function SavingOrderChangePanel(props: Props) {
   return <ChangeWorkspace key={scope} {...props} scope={scope} currentScope={currentScope} />;
 }
 function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject<string> }) {
+  const readActor = useAccountUser();
+  const readRevision = useProfileContextRevision();
+  const readFinancial = useOwnedFinancialRead(
+    readActor,
+    readRevision,
+    props.scope,
+    props.profileId
+  );
   const client = useQueryClient();
   const reader = useId();
   const actor = useAccountUser();
@@ -272,12 +281,16 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
           return;
         const address = addresses.find((item) => item.id === draft.installationAddressId);
         if (!address) return;
-        const response = await fetch(`/api/saving/orders/${props.orderId}/change-quote`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(draft),
-        });
+        const response = await readFinancial(
+          `/api/saving/orders/${props.orderId}/change-quote`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(draft),
+          },
+          true
+        );
         const value = await response.json().catch(() => null);
         if (!active() || version !== generation.current) return;
         if ([401, 403, 404].includes(response.status)) {

@@ -17,9 +17,13 @@ export type BankReceiptTopUpActionResult<T> =
   { kind: 'success'; value: T } | { kind: 'error'; status: number; fields?: unknown[] };
 
 export async function loadBankReceiptTopUpReview(
-  details: BankReceiptTopUpDetails
+  details: BankReceiptTopUpDetails,
+  read: (
+    path: string,
+    options: RequestInit
+  ) => Promise<Pick<Response, 'ok' | 'status' | 'json'>> = fetch
 ): Promise<BankReceiptTopUpActionResult<BankReceiptTopUpReview>> {
-  const response = await fetch(`/api/wallet/${details.profileId}/bank-receipt-top-ups/review`, {
+  const response = await read(`/api/wallet/${details.profileId}/bank-receipt-top-ups/review`, {
     method: 'POST',
     credentials: 'include',
     headers: withCsrf({ Accept: 'application/json', 'Content-Type': 'application/json' }),

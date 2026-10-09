@@ -3,8 +3,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 
 /** Native wallet quotes and readonly saving/solar previews; never financial commands. */
-export function useOwnedFinancialRead(actor: string | null, revision: number, readScope: string) {
-  const identity = JSON.stringify([actor, revision, readScope]);
+export function useOwnedFinancialRead(
+  actor: string | null,
+  revision: number,
+  readScope: string,
+  profileId?: string
+) {
+  const identity = JSON.stringify([actor, revision, readScope, profileId]);
   const client = useQueryClient();
   const reader = useId();
   const latest = useRef(identity);
@@ -22,7 +27,12 @@ export function useOwnedFinancialRead(actor: string | null, revision: number, re
     };
   }, [client, identity]);
   return useCallback(
-    async (path: string, options: RequestInit = {}, decodeErrors = false) => {
+    async (
+      path: string,
+      options: RequestInit = {},
+      decodeErrors = false,
+      invalidJson: unknown = null
+    ) => {
       const url = new URL(path, 'http://barghsa.local');
       const wallet = /^\/api\/invoices\/[^/?]+\/wallet-payment$/.test(url.pathname);
       const saving =
@@ -32,26 +42,46 @@ export function useOwnedFinancialRead(actor: string | null, revision: number, re
       const solar = /^\/api\/admin\/solar\/requests\/[^/?]+\/create-contract\/review$/.test(
         url.pathname
       );
+      const consultation =
+        /^\/api\/admin\/consultations\/requests\/[^/?]+\/(?:fee-review|paid-fee-review|paid-resolution-review)$/.test(
+          url.pathname
+        );
+      const topup = /^\/api\/wallet\/([^/?]+)\/(?:top-ups|bank-receipt-top-ups)\/review$/.exec(
+        url.pathname
+      );
+      const savingCustomer = /^\/api\/saving\/orders\/[^/?]+\/change-quote$/.test(url.pathname);
       const method = options.method ?? 'GET';
       if (
         !path.startsWith('/api/') ||
         !(wallet
           ? method === 'GET' && options.body === undefined
-          : (saving || solar) && method === 'POST')
+          : (saving || solar || consultation || topup || savingCustomer) && method === 'POST')
       )
         throw new Error('Invalid financial read');
       const external = options.signal;
       const authority = {
-        context: wallet ? ('account' as const) : ('staff' as const),
-        ownerId: actor ?? 'account-session',
+        context: wallet
+          ? ('account' as const)
+          : topup || savingCustomer
+            ? ('customer' as const)
+            : ('staff' as const),
+        ownerId: topup
+          ? topup[1]!
+          : savingCustomer
+            ? (profileId ?? actor ?? 'account-session')
+            : (actor ?? 'account-session'),
         accountId: actor,
         revision,
       };
       const key = wallet
         ? queryKeys.invoices.detail(authority, path)
-        : saving
+        : saving || savingCustomer
           ? queryKeys.saving.detail(authority, path)
-          : queryKeys.solar.detail(authority, path);
+          : consultation
+            ? queryKeys.consultations.detail(authority, path)
+            : topup
+              ? queryKeys.wallet.detail(authority, path)
+              : queryKeys.solar.detail(authority, path);
       const controller = new AbortController();
       const queryKey: ServerQueryKey = [...key, JSON.stringify([reader, path, ++sequence.current])];
       const cancel = () => void client.cancelQueries({ queryKey, exact: true });
@@ -79,7 +109,7 @@ export function useOwnedFinancialRead(actor: string | null, revision: number, re
               response.ok ||
               (decodeErrors && (!saving || ![401, 403, 404].includes(response.status)))
                 ? decodeErrors
-                  ? ((await response.json().catch(() => null)) as unknown)
+                  ? ((await response.json().catch(() => invalidJson)) as unknown)
                   : ((await response.json()) as unknown)
                 : null;
             if (!current() || signal.aborted) throw new Error('Obsolete financial read');
@@ -94,6 +124,6 @@ export function useOwnedFinancialRead(actor: string | null, revision: number, re
         requests.current.delete(controller);
       }
     },
-    [client, identity, reader, actor, revision]
+    [client, identity, reader, actor, revision, profileId]
   );
 }
