@@ -1,3 +1,6 @@
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { Button, Input } from '@barghsa/ui';
 import {
@@ -50,7 +53,16 @@ function initialIntent(order: SavingOperationSource): SavingOperationIntent {
         action: 'complete',
       };
 }
-export function SavingStaffOperationForm({
+export function SavingStaffOperationForm(
+  props: Parameters<typeof OwnedSavingStaffOperationForm>[0]
+) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  return (
+    <OwnedSavingStaffOperationForm key={JSON.stringify([actor, profileRevision])} {...props} />
+  );
+}
+function OwnedSavingStaffOperationForm({
   order,
   draft,
   onDraft,
@@ -77,6 +89,13 @@ export function SavingStaffOperationForm({
   prerequisites: (stage: SavingOperationStage) => string[];
   summary: (review: SavingOperationReview) => ReactNode;
 }) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readFinancial = useOwnedFinancialRead(
+    actor,
+    profileRevision,
+    JSON.stringify([scope, order])
+  );
   const locale = useLocale();
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
   const formCopy = (key: string) => tSavingOperations(key, locale);
@@ -252,7 +271,7 @@ export function SavingStaffOperationForm({
         const path = `/api/staff/saving/orders/${encodeURIComponent(order.id)}`;
         const body = savingOperationPreviewBody(currentIntent, values);
         try {
-          const response = await fetch(
+          const response = await readFinancial(
             currentIntent.kind === 'decision'
               ? `${path}/financial-review`
               : `${path}/stages/${currentIntent.stage}/${currentIntent.action}/review`,
@@ -261,7 +280,8 @@ export function SavingStaffOperationForm({
               credentials: 'include',
               headers: withCsrf({ 'Content-Type': 'application/json' }),
               body: JSON.stringify(body),
-            }
+            },
+            true
           );
           if (!authorized()) return;
           if (response.status === 401 || response.status === 403) {

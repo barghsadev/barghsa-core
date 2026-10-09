@@ -1,3 +1,4 @@
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -90,6 +91,7 @@ function OwnedSolarContractForm({
   const fieldCopy = (key: string) => tSolarContract(key, locale);
   const contractCopy = (key: string) => contractText(key, locale);
   const scopeKey = JSON.stringify([actor, requestId, profileId, sourceScope]);
+  const readFinancial = useOwnedFinancialRead(actor, profileRevision, scopeKey);
   const scope = useRef(scopeKey),
     generation = useRef(0),
     owner = useRef<object>({});
@@ -339,12 +341,16 @@ function OwnedSolarContractForm({
           return;
         const body = solarContractBody(values, profileId, crypto.randomUUID());
         const path = `/api/admin/solar/requests/${encodeURIComponent(requestId)}/create-contract`;
-        const response = await fetch(path + '/review', {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(body),
-        });
+        const response = await readFinancial(
+          path + '/review',
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(body),
+          },
+          true
+        );
         const value: unknown = await response.json().catch(() => null);
         if (scope.current !== scopeKey || token !== generation.current) return;
         if ([401, 403, 404].includes(response.status)) {

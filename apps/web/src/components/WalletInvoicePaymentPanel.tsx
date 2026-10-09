@@ -1,3 +1,6 @@
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
 import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
@@ -47,7 +50,19 @@ function quoteFrom(value: unknown, invoiceId: string): Quote {
   return { ...q, review } as Quote;
 }
 
-export function WalletInvoicePaymentPanel({
+export function WalletInvoicePaymentPanel(
+  props: Parameters<typeof OwnedWalletInvoicePaymentPanel>[0]
+) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  return (
+    <OwnedWalletInvoicePaymentPanel
+      key={JSON.stringify([actor, profileRevision, props.invoiceId])}
+      {...props}
+    />
+  );
+}
+function OwnedWalletInvoicePaymentPanel({
   invoiceId,
   eligible,
   onRefreshDetails,
@@ -56,6 +71,13 @@ export function WalletInvoicePaymentPanel({
   eligible: boolean;
   onRefreshDetails: () => Promise<void>;
 }) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readFinancial = useOwnedFinancialRead(
+    actor,
+    profileRevision,
+    JSON.stringify([invoiceId, eligible])
+  );
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
@@ -99,7 +121,7 @@ export function WalletInvoicePaymentPanel({
     setQuote(null);
     setError(false);
     setHidden(false);
-    void fetch(`/api/invoices/${invoiceId}/wallet-payment`, { signal: abort.signal })
+    void readFinancial(`/api/invoices/${invoiceId}/wallet-payment`, { signal: abort.signal })
       .then(async (response) => {
         if (response.status === 403 || response.status === 404) {
           if (!abort.signal.aborted) setHidden(true);
@@ -125,7 +147,7 @@ export function WalletInvoicePaymentPanel({
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [invoiceId, eligible, revision]);
+  }, [invoiceId, eligible, revision, readFinancial]);
 
   async function refreshDetails() {
     try {

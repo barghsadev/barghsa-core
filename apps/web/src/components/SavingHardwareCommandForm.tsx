@@ -1,3 +1,6 @@
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { Button, Input, FinancialReviewSummary } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
@@ -43,7 +46,16 @@ interface SavingHardwareCommand {
   owner: SavingHardwareOwner;
   rejected: boolean;
 }
-export function SavingHardwareCommandForm({
+export function SavingHardwareCommandForm(
+  props: Parameters<typeof OwnedSavingHardwareCommandForm>[0]
+) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  return (
+    <OwnedSavingHardwareCommandForm key={JSON.stringify([actor, profileRevision])} {...props} />
+  );
+}
+function OwnedSavingHardwareCommandForm({
   order,
   upgrade,
   owner,
@@ -72,6 +84,13 @@ export function SavingHardwareCommandForm({
   onSuccess: () => void;
   onWithdraw: (reason: 'forbidden' | 'missing') => void;
 }) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readFinancial = useOwnedFinancialRead(
+    actor,
+    profileRevision,
+    JSON.stringify([scope, baseScope, order, upgrade])
+  );
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
@@ -266,14 +285,15 @@ export function SavingHardwareCommandForm({
               reason: draft.reason.trim(),
             };
         try {
-          const response = await fetch(
+          const response = await readFinancial(
             `/api/staff/saving/orders/${encodeURIComponent(order.id)}/${cancellation ? 'cancel-hardware-upgrade-review' : 'amend-hardware-review'}`,
             {
               method: 'POST',
               credentials: 'include',
               headers: withCsrf({ 'Content-Type': 'application/json' }),
               body: JSON.stringify(body),
-            }
+            },
+            true
           );
           if (!authorized()) return;
           if ([401, 403].includes(response.status)) {
