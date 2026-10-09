@@ -1,3 +1,6 @@
+import { useOwnedGateRead } from '../hooks/useOwnedGateRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { telegramText } from '@barghsa/i18n/telegram';
@@ -17,6 +20,9 @@ import {
 type Scope = ReturnType<typeof usePreferenceSettingsOwner>;
 type Action = 'create' | 'confirm' | 'revoke';
 export default function TelegramLinkPanel({ scope }: { scope: Scope }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readGate = useOwnedGateRead(JSON.stringify([scope.key, scope.denied]), actor, revision);
   const locale = useLocale(),
     id = useId();
   const copy = (key: Parameters<typeof telegramText>[0]) => telegramText(key, locale);
@@ -38,7 +44,7 @@ export default function TelegramLinkPanel({ scope }: { scope: Scope }) {
   async function read(signal?: AbortSignal) {
     const attempt = ++sequence.current;
     try {
-      const response = await fetch('/api/telegram/link', {
+      const response = await readGate('/api/telegram/link', {
         credentials: 'include',
         ...(signal ? { signal } : {}),
       });

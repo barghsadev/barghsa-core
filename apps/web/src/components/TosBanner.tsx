@@ -1,3 +1,6 @@
+import { useOwnedGateRead } from '../hooks/useOwnedGateRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useRouterState } from '@tanstack/react-router';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
@@ -47,8 +50,19 @@ interface TosBannerProps {
  * Support and legal-record routes retain manual review without an automatic modal.
  * Status failures offer a non-blocking retry; navigation checks status again.
  */
-export function TosBanner({ locale = 'fa' }: TosBannerProps) {
+export function TosBanner(props: TosBannerProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedTosBanner key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const readStatus = useOwnedGateRead(JSON.stringify([actor, revision, pathname]), actor, revision);
+  const readReview = useOwnedGateRead(JSON.stringify([actor, revision, locale]), actor, revision);
+  const statusController = useRef<AbortController | null>(null);
+  const reviewController = useRef<AbortController | null>(null);
   const automaticReviewAllowed =
     !/^(?:\/(?:auth|account-recovery|support|tickets|terms|invoices|contracts)|\/admin\/(?:tickets|invoices))(?:\/|$)/.test(
       pathname
@@ -74,10 +88,13 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   // ── Check TOS acceptance status ─────────────────────────────────
 
   const checkTosStatus = useCallback(async () => {
+    statusController.current?.abort();
+    const controller = new AbortController();
+    statusController.current = controller;
     const request = ++statusRequest.current;
     setChecking(true);
     try {
-      const response = await fetch('/api/auth/user');
+      const response = await readStatus('/api/auth/user', { signal: controller.signal });
       if (request !== statusRequest.current) return null;
       if (response.status === 401) {
         setRequiresAcceptance(false);
@@ -109,11 +126,12 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     } finally {
       if (request === statusRequest.current) setChecking(false);
     }
-  }, []);
+  }, [readStatus]);
 
   useEffect(() => {
     void checkTosStatus();
     return () => {
+      statusController.current?.abort();
       statusRequest.current++;
     };
   }, [checkTosStatus, pathname]);
@@ -121,6 +139,9 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   // ── Fetch current TOS content for modal ─────────────────────────
 
   const openReviewModal = useCallback(async () => {
+    reviewController.current?.abort();
+    const controller = new AbortController();
+    reviewController.current = controller;
     const request = ++reviewRequest.current;
     setShowModal(true);
     setLoadingTos(true);
@@ -129,7 +150,9 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     setError(null);
 
     try {
-      const response = await fetch(`/api/tos/current?locale=${locale}`);
+      const response = await readReview(`/api/tos/current?locale=${locale}`, {
+        signal: controller.signal,
+      });
       if (request !== reviewRequest.current) return;
       if (!response.ok) {
         setError(t('tos.page.error', locale));
@@ -156,7 +179,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     } finally {
       if (request === reviewRequest.current) setLoadingTos(false);
     }
-  }, [locale]);
+  }, [locale, readReview]);
 
   useEffect(() => {
     let cancelled = false;
@@ -184,6 +207,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
 
   useEffect(() => {
     if (!automaticReviewAllowed) {
+      reviewController.current?.abort();
       reviewRequest.current++;
       setShowModal(false);
       setLoadingTos(false);
@@ -191,9 +215,10 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   }, [automaticReviewAllowed]);
   useEffect(
     () => () => {
+      reviewController.current?.abort();
       reviewRequest.current++;
     },
-    []
+    [readReview]
   );
 
   // ── Accept TOS ──────────────────────────────────────────────────
@@ -230,6 +255,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
         return;
       }
 
+      statusController.current?.abort();
       statusRequest.current++;
       setChecking(false);
       setStatusFailed(false);
@@ -294,6 +320,11 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
       <Dialog
         open={showModal}
         onOpenChange={(open) => {
+          if (!open) {
+            reviewController.current?.abort();
+            reviewRequest.current++;
+            setLoadingTos(false);
+          }
           if (!open && !accepted) {
             setDismissedAutoModal(true);
           }
