@@ -1,10 +1,12 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useId, useRef, useState } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary, DependentSelect } from '@barghsa/ui';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../components/GeographyLoadError.js';
@@ -107,6 +109,14 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
 const LeaveDialog = lazy(() => import('../components/WizardLeaveDialog.js'));
 
 export function SavingsOrderPage() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedSavingsOrderPage key={JSON.stringify([actor, revision])} />;
+}
+function OwnedSavingsOrderPage() {
+  const client = useQueryClient();
+  const reader = useId();
+  const walletReadSequence = useRef(0);
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const navigate = useNavigate();
@@ -530,17 +540,42 @@ export function SavingsOrderPage() {
   useEffect(() => {
     if (step !== 6 || !profileId) return;
     const controller = new AbortController();
-    void fetch(`/api/wallet/${profileId}`, { credentials: 'include', signal: controller.signal })
-      .then(
-        (response) => response.json() as Promise<{ balance?: string; availableBalance?: string }>
-      )
-      .then((result) => {
-        if (!controller.signal.aborted)
-          setWalletBalance(result.availableBalance ?? result.balance ?? null);
+    const key = queryKeys.wallet.balance(
+      { context: 'customer', ownerId: profileId, accountId: actorId, revision: contextRevision },
+      JSON.stringify([reader, 'saving-funding-preview', ++walletReadSequence.current])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    setWalletBalance(null);
+    void client
+      .fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(`/api/wallet/${profileId}`, {
+            credentials: 'include',
+            signal,
+          });
+          if (!response.ok) throw new Error('Wallet unavailable');
+          return response.json() as Promise<{ balance?: unknown; availableBalance?: unknown }>;
+        },
       })
-      .catch(() => {});
-    return () => controller.abort();
-  }, [step, profileId]);
+      .then((result) => {
+        const balance = result?.availableBalance ?? result?.balance;
+        if (typeof balance !== 'string' || !/^[0-9]+$/.test(balance))
+          throw new Error('Invalid wallet balance');
+        if (!controller.signal.aborted) setWalletBalance(balance);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setWalletBalance(null);
+      });
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [step, profileId, actorId, contextRevision, client, reader]);
 
   const canNext =
     step === 1

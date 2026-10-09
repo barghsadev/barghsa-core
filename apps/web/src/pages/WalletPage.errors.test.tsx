@@ -534,3 +534,60 @@ it('withdraws wallet command controls after current balance authority is denied'
   expect(host.querySelector('[data-testid=wallet-error]')).not.toBeNull();
   expect(post).not.toHaveBeenCalled();
 });
+
+it.each([9007199254740992, '9007199254740993123456'])(
+  'validates the post-receipt balance without replaying a committed registration (%s)',
+  async (balance) => {
+    post.mockResolvedValue(
+      json({ transactionId: 'receipt-1', state: 'Pending', amount: '250' }, 201)
+    );
+    await render();
+    await receiptFields();
+    wallet.mockResolvedValue(json({ balance, currency: 'IRR' }));
+    await submit(true);
+    await confirmReceipt();
+    expect(element('wallet-receipt-success').textContent).toContain('pending finance confirmation');
+    if (typeof balance === 'number') {
+      expect(element('wallet-balance')).toBeNull();
+      expect(element('wallet-error')).not.toBeNull();
+    } else expect(element('wallet-balance').textContent).toContain('9,007,199,254,740,993,123,456');
+    expect(post).toHaveBeenCalledTimes(1);
+  }
+);
+
+it('cancels post-receipt response bytes when the page leaves its stable query provider', async () => {
+  post.mockResolvedValue(
+    json({ transactionId: 'receipt-1', state: 'Pending', amount: '250' }, 201)
+  );
+  await render();
+  await receiptFields();
+  let finish!: (value: unknown) => void;
+  let signal!: AbortSignal;
+  const original = vi.mocked(fetch).getMockImplementation()!;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input) === `/api/wallet/${PROFILE_ID}`) {
+        signal = init!.signal as AbortSignal;
+        return {
+          ok: true,
+          status: 200,
+          json: () =>
+            new Promise((resolve) => {
+              finish = resolve;
+            }),
+        };
+      }
+      return original(input, init);
+    })
+  );
+  await submit(true);
+  await confirmReceipt();
+  expect(signal.aborted).toBe(false);
+  expect(element('wallet-receipt-success')).not.toBeNull();
+  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+  expect(signal.aborted).toBe(true);
+  await act(async () => finish({ balance: '9007199254740993123456', currency: 'IRR' }));
+  expect(host.textContent).toBe('');
+  expect(post).toHaveBeenCalledTimes(1);
+});

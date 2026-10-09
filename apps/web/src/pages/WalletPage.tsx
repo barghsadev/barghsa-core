@@ -475,12 +475,71 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       receipt.form.reset({ ...receipt.form.getValues(), file: null });
       setReceiptUploaded(null);
       if (receiptFileInput.current) receiptFileInput.current.value = '';
-      const walletRes = await fetch(`/api/wallet/${receiptReview.data.profileId}`, {
-        credentials: 'include',
-      });
-      if (current() && walletRes.ok) {
-        const nextWallet = (await walletRes.json()) as WalletBalance;
-        if (current()) setWallet(nextWallet);
+      loadRequest.current?.abort();
+      const refresh = new AbortController();
+      loadRequest.current = refresh;
+      const ownsRead = () =>
+        mounted.current && loadRequest.current === refresh && !refresh.signal.aborted;
+      const key = queryKeys.wallet.balance(
+        {
+          context: 'customer',
+          ownerId: receiptReview.data.profileId,
+          accountId: actor,
+          revision: profileRevision,
+        },
+        JSON.stringify([reader, 'receipt-confirmation', ++loadSequence.current])
+      );
+      const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+      refresh.signal.addEventListener('abort', cancel, { once: true });
+      try {
+        const walletRes = await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const response = await fetch(`/api/wallet/${receiptReview.data.profileId}`, {
+              credentials: 'include',
+              signal,
+            });
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          },
+        });
+        if (!current() || !ownsRead()) return;
+        if (!walletRes.ok) {
+          if ([401, 403, 404].includes(walletRes.status)) {
+            setWallet(null);
+            setProfileId(null);
+            setOnlineReview(null);
+          }
+          setError('load');
+          return;
+        }
+        const nextWallet = walletRes.data as WalletBalance | null;
+        if (
+          !nextWallet ||
+          typeof nextWallet.balance !== 'string' ||
+          !/^[0-9]+$/.test(nextWallet.balance) ||
+          typeof nextWallet.currency !== 'string' ||
+          !nextWallet.currency.trim()
+        ) {
+          setWallet(null);
+          setError('load');
+          return;
+        }
+        setWallet(nextWallet);
+      } catch {
+        if (current() && ownsRead()) setError('load');
+      } finally {
+        refresh.signal.removeEventListener('abort', cancel);
+        if (mounted.current && loadRequest.current === refresh) {
+          setLoading(false);
+          loadRequest.current = null;
+        }
       }
     } catch {
       if (current()) {

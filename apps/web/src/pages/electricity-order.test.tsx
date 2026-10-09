@@ -470,3 +470,61 @@ it('ignores a draft acknowledgement after the order form has unmounted', async (
   expect(window.location.search).toBe('?step=2');
   expect(navigate).not.toHaveBeenCalled();
 });
+
+async function openFundingReview() {
+  await mount();
+  await fill('electricity-period-type', 'weekly');
+  await fill('electricity-period', 'next_week');
+  await advance();
+  await fill('electricity-kwh', '10');
+  await settlePreview();
+  await advance();
+  await advance();
+  await advance();
+}
+it.each([9007199254740992, '9007199254740993123456'])(
+  'electricity funding preview preserves decimal-string money and refuses numeric JSON %s',
+  async (balance) => {
+    const previous = fetchMock.getMockImplementation()!;
+    fetchMock.mockImplementation((url, init) =>
+      String(url) === `/api/wallet/${profileId}`
+        ? Promise.resolve(response({ balance, currency: 'IRR' }))
+        : previous(url, init)
+    );
+    await openFundingReview();
+    if (typeof balance === 'number')
+      expect(container.textContent).toContain(t('electricity.order.walletUnavailable', 'en'));
+    else expect(container.textContent).toContain(balance);
+    expect(orderCalls()).toHaveLength(0);
+  }
+);
+it('electricity funding preview cancels pending wallet bytes on unmount without submitting an order', async () => {
+  const previous = fetchMock.getMockImplementation()!;
+  let signal!: AbortSignal, finish!: (value: unknown) => void;
+  fetchMock.mockImplementation(async (url, init) => {
+    if (String(url) !== `/api/wallet/${profileId}`) return previous(url, init);
+    signal = init!.signal as AbortSignal;
+    const result = response({});
+    result.json = () =>
+      new Promise((done) => {
+        finish = done;
+      });
+    return result;
+  });
+  await openFundingReview();
+  expect(signal.aborted).toBe(false);
+  const before = fetchMock.mock.calls.filter(
+    ([url]) => String(url) === `/api/wallet/${profileId}`
+  ).length;
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+  });
+  expect(
+    fetchMock.mock.calls.filter(([url]) => String(url) === `/api/wallet/${profileId}`)
+  ).toHaveLength(before);
+  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+  expect(signal.aborted).toBe(true);
+  await act(async () => finish({ balance: '999999999999999999', currency: 'IRR' }));
+  expect(orderCalls()).toHaveLength(0);
+});
