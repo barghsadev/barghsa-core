@@ -1,3 +1,5 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -56,6 +58,7 @@ interface DocumentUploadProps {
 export function DocumentUpload(props: DocumentUploadProps) {
   const revision = useProfileContextRevision(),
     association = props.association;
+  const actor = useAccountUser();
   const scope = JSON.stringify([
     props.staff,
     props.profileId,
@@ -67,6 +70,7 @@ export function DocumentUpload(props: DocumentUploadProps) {
     association?.businessRecordType === 'contract' ? association.contractRole : null,
     props.imageOnly,
     revision,
+    actor,
   ]);
   return <UploadForm key={scope} {...props} />;
 }
@@ -102,6 +106,15 @@ function UploadForm({
     replacement?.category ??
     (association?.businessRecordType === 'contract' ? 'contract' : category);
   const policy = policyState?.category === effectiveCategory ? policyState.value : null;
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    staff,
+    profileId,
+    JSON.stringify([effectiveCategory, imageOnly])
+  );
   const controller = useRef<AbortController | null>(null),
     mounted = useRef(false),
     busy = useRef(false);
@@ -125,7 +138,7 @@ function UploadForm({
     const read = new AbortController();
     setPolicyError(false);
     setPolicyState(null);
-    void documentRequest<unknown>(`/api/upload/policy/${encodeURIComponent(effectiveCategory)}`, {
+    void readDocument<unknown>(`/api/upload/policy/${encodeURIComponent(effectiveCategory)}`, {
       signal: read.signal,
     })
       .then((raw) => {
@@ -157,7 +170,7 @@ function UploadForm({
         setPolicyError(true);
       });
     return () => read.abort();
-  }, [effectiveCategory, policyRetry, imageOnly]);
+  }, [effectiveCategory, policyRetry, imageOnly, readDocument]);
   function submit(event: FormEvent) {
     event.preventDefault();
     if (!file || !policy || validateUploadFiles([file], policy, 1)) return;

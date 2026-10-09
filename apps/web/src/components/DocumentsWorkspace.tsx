@@ -1,3 +1,5 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from 'react';
 import {
   Alert,
@@ -36,7 +38,6 @@ import {
   documentBase,
   DocumentRequestError,
   documentKinds,
-  documentRequest,
   documentStates,
   type BusinessDocument,
   type DocumentKind,
@@ -61,9 +62,15 @@ export function DocumentsWorkspace({
   queries?: RecordListQuery | undefined;
 }) {
   const revision = useProfileContextRevision();
-  return <Workspace key={`${staff}:${revision}`} staff={staff} queries={queries} />;
+  const actor = useAccountUser();
+  return (
+    <Workspace key={JSON.stringify([staff, revision, actor])} staff={staff} queries={queries} />
+  );
 }
 function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQuery | undefined }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(actor, revision, staff, undefined, 'document-profiles');
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const [activeProfile, setActiveProfile] = useState<string | null>(null);
@@ -98,7 +105,7 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
     if (staff) return;
     const controller = new AbortController();
     setProfileError(false);
-    void documentRequest<{ activeProfileId: string | null }>('/api/profiles', {
+    void readDocument<{ activeProfileId: string | null }>('/api/profiles', {
       signal: controller.signal,
     })
       .then((data) => {
@@ -111,7 +118,7 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
         if (!controller.signal.aborted) setProfileError(true);
       });
     return () => controller.abort();
-  }, [staff, profileRetry]);
+  }, [staff, profileRetry, readDocument]);
   function apply(event: FormEvent) {
     event.preventDefault();
     if (
@@ -263,7 +270,11 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
 }
 export function DocumentResults(props: ComponentProps<typeof Results>) {
   const { staff, profileId, filters, association } = props;
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
   const scope = JSON.stringify([
+    actor,
+    revision,
     staff,
     profileId,
     filters.kind,
@@ -366,12 +377,29 @@ function Results({
   if (filters.businessRecordId) params.set('businessRecordId', filters.businessRecordId);
   if (cursor) params.set('before', cursor);
   const path = `${documentBase(staff)}?${params}`;
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    staff,
+    profileId,
+    JSON.stringify([
+      filters.kind,
+      filters.state,
+      filters.category,
+      filters.query.trim(),
+      filters.businessRecordId,
+      filters.contractVersionId,
+      association,
+    ])
+  );
   useEffect(() => {
     const controller = new AbortController();
     listRequest.current = controller;
     setLoading(true);
     setError(false);
-    void documentRequest<DocumentPage>(path, {
+    void readDocument<DocumentPage>(path, {
       signal: controller.signal,
     })
       .then((page) => {
@@ -413,7 +441,7 @@ function Results({
       controller.abort();
       if (listRequest.current === controller) listRequest.current = null;
     };
-  }, [path, refresh, urlRows.acceptPage]);
+  }, [path, refresh, urlRows.acceptPage, readDocument]);
   function reload() {
     if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });
     else setCursor(null);

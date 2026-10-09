@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -65,13 +66,17 @@ afterEach(async () => {
 async function render(profileId = documentProfileId) {
   await act(async () =>
     root.render(
-      <DocumentUpload
-        staff={false}
-        profileId={profileId}
-        replacement={null}
-        onClose={closed}
-        onUploaded={uploaded}
-      />
+      <QueryComponentProvider>
+        {
+          <DocumentUpload
+            staff={false}
+            profileId={profileId}
+            replacement={null}
+            onClose={closed}
+            onUploaded={uploaded}
+          />
+        }
+      </QueryComponentProvider>
     )
   );
 }

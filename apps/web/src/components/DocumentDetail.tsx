@@ -1,3 +1,5 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
@@ -10,6 +12,7 @@ import {
   Timeline,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -20,14 +23,23 @@ import { FilePreview } from './FilePreview.js';
 import {
   documentBase,
   isQuarantinedDocument,
-  documentRequest,
   documentUrl,
   type BusinessDocument,
   type DocumentAction,
   type DocumentDetail as Detail,
 } from '../lib/documents.js';
 
-export function DocumentDetail({
+export function DocumentDetail(props: Parameters<typeof OwnedDocumentDetail>[0]) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedDocumentDetail
+      key={JSON.stringify([actor, revision, props.id, props.staff])}
+      {...props}
+    />
+  );
+}
+function OwnedDocumentDetail({
   id,
   staff,
   onClose,
@@ -51,6 +63,15 @@ export function DocumentDetail({
   showRetention?: boolean;
 }) {
   const locale = useLocale();
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    staff,
+    undefined,
+    JSON.stringify([id, staff])
+  );
   const word = (key: string) => documentText(key, locale);
   const time = useAccountTime();
   const numbers = useNumberFormatting(locale);
@@ -65,18 +86,22 @@ export function DocumentDetail({
   const [previewing, setPreviewing] = useState(false);
   const [previewError, setPreviewError] = useState(false);
   const previewController = useRef<AbortController | null>(null);
+  const downloadController = useRef<AbortController | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
     previewController.current?.abort();
+    downloadController.current?.abort();
+    setDownloading(false);
+    setDownloadError(false);
     setDocument(null);
     setDownload(null);
     setPreview(null);
     setPreviewing(false);
     setPreviewError(false);
     setError(false);
-    void documentRequest<Detail>(`${documentBase(staff)}/${encodeURIComponent(id)}`, {
+    void readDocument<Detail>(`${documentBase(staff)}/${encodeURIComponent(id)}`, {
       signal: controller.signal,
     })
       .then((data) => {
@@ -88,21 +113,26 @@ export function DocumentDetail({
     return () => {
       controller.abort();
       previewController.current?.abort();
+      downloadController.current?.abort();
     };
-  }, [id, staff, reload]);
+  }, [id, staff, reload, readDocument]);
 
   async function getDownload() {
+    downloadController.current?.abort();
+    const controller = new AbortController();
+    downloadController.current = controller;
     setDownloading(true);
     setDownloadError(false);
     try {
-      const data = await documentRequest<{ url: string }>(
-        `${documentBase(staff)}/${encodeURIComponent(id)}/download`
+      const data = await readDocument<{ url: string }>(
+        `${documentBase(staff)}/${encodeURIComponent(id)}/download`,
+        { signal: controller.signal }
       );
-      setDownload(documentUrl(data.url));
+      if (!controller.signal.aborted) setDownload(documentUrl(data.url));
     } catch {
-      setDownloadError(true);
+      if (!controller.signal.aborted) setDownloadError(true);
     } finally {
-      setDownloading(false);
+      if (!controller.signal.aborted) setDownloading(false);
     }
   }
   async function getPreview() {
@@ -111,7 +141,7 @@ export function DocumentDetail({
     setPreviewing(true);
     setPreviewError(false);
     try {
-      const data = await documentRequest<{ url: string }>(
+      const data = await readDocument<{ url: string }>(
         `${documentBase(staff)}/${encodeURIComponent(id)}/preview`,
         { signal: controller.signal }
       );
