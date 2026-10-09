@@ -1,9 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { SavingFulfillmentHistory } from '../components/SavingFulfillmentProgress.js';
 import type { SavingFulfillmentEvent } from '../lib/saving-fulfillment.js';
 import { ListPage } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
@@ -163,6 +165,9 @@ function reviewPriceLines(snapshot: Record<string, unknown>) {
 }
 
 export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrderListQuery } = {}) {
+  const client = useQueryClient();
+  const reader = useId();
+  const readSequence = useRef(0);
   const locale = useLocale();
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -326,10 +331,39 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
     setState('loading');
     const params = new URLSearchParams({ lane });
     if (after) params.set('after', after);
-    void fetch(`/api/staff/saving/orders?${params}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    const key = queryKeys.saving.list(
+      {
+        context: 'staff',
+        ownerId: actor ?? 'staff-session',
+        accountId: actor,
+        revision: profileRevision,
+      },
+      params,
+      ++readSequence.current
+    );
+    const queryKey = [...key, reader, 'staff-queue'] as const;
+    const cancel = () => void client.cancelQueries({ queryKey, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    void client
+      .fetchQuery({
+        queryKey,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(`/api/staff/saving/orders?${params}`, {
+            credentials: 'include',
+            signal,
+          });
+          return {
+            ok: response.ok,
+            status: response.status,
+            data: response.ok
+              ? ((await response.json()) as { orders: Order[]; nextAfter: string | null })
+              : null,
+          };
+        },
+      })
       .then(async (response) => {
         if (!fresh()) return null;
         if (response.status === 401 || response.status === 403) {
@@ -342,7 +376,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
           return null;
         }
         if (!response.ok) throw new Error('queue');
-        return response.json() as Promise<{ orders: Order[]; nextAfter: string | null }>;
+        return response.data;
       })
       .then((value) => {
         if (fresh() && value) {
@@ -371,8 +405,11 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
       .catch(() => {
         if (fresh()) setState('error');
       });
-    return () => controller.abort();
-  }, [after, lane, revision, listRevision, actor, profileRevision]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [after, lane, revision, listRevision, actor, profileRevision, client, reader]);
 
   useEffect(() => {
     setNote('');
@@ -393,10 +430,35 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
       epoch === readEpoch.current &&
       currentScope.current === sourceScope;
     setDetail(null);
-    void fetch(`/api/staff/saving/orders/${encodeURIComponent(selected)}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    const key = queryKeys.saving.detail(
+      {
+        context: 'staff',
+        ownerId: actor ?? 'staff-session',
+        accountId: actor,
+        revision: profileRevision,
+      },
+      JSON.stringify([selected, lane, reader, ++readSequence.current])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    void client
+      .fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(`/api/staff/saving/orders/${encodeURIComponent(selected)}`, {
+            credentials: 'include',
+            signal,
+          });
+          return {
+            ok: response.ok,
+            status: response.status,
+            data: response.ok ? ((await response.json()) as Detail) : null,
+          };
+        },
+      })
       .then(async (response) => {
         if (!fresh()) return null;
         if (response.status === 401 || response.status === 403) {
@@ -408,7 +470,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
           return null;
         }
         if (!response.ok) throw new Error('detail');
-        return response.json() as Promise<Detail>;
+        return response.data;
       })
       .then((value) => {
         if (fresh() && value) {
@@ -420,8 +482,11 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
       .catch(() => {
         if (fresh()) setDetailError(true);
       });
-    return () => controller.abort();
-  }, [sourceScope, revision, detailRevision]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [sourceScope, revision, detailRevision, client, reader, actor, profileRevision]);
 
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>

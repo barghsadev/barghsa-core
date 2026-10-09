@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useLayoutEffect, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -144,11 +145,11 @@ async function render(fetchMock: ReturnType<typeof vi.fn>, patch: Partial<Contex
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
-  await act(async () => root!.render(tree()));
+  await act(async () => root!.render(<QueryComponentProvider>{tree()}</QueryComponentProvider>));
 }
 async function change(patch: Partial<Context>) {
   context = { ...context, ...patch };
-  await act(async () => root!.render(tree()));
+  await act(async () => root!.render(<QueryComponentProvider>{tree()}</QueryComponentProvider>));
 }
 async function settled(check: () => void) {
   await vi.waitFor(async () => {

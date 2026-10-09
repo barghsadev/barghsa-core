@@ -1,5 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from './OrderWalletBalance.js';
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import {
@@ -82,6 +84,11 @@ export function SavingOrderChangePanel(props: Props) {
   return <ChangeWorkspace key={scope} {...props} scope={scope} currentScope={currentScope} />;
 }
 function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject<string> }) {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const querySequence = useRef(0);
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
@@ -166,21 +173,54 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
     setStatus('loading');
     setQuote(null);
     const fresh = () => active() && version === readGeneration.current;
+    const authority = {
+      context: 'customer' as const,
+      ownerId: props.profileId,
+      accountId: actor,
+      revision: profileRevision,
+    };
+    const attempt = ++querySequence.current;
+    const keys = [
+      queryKeys.catalogue.detail(
+        authority,
+        JSON.stringify([reader, props.scope, 'change-plans', attempt])
+      ),
+      queryKeys.profiles.list(
+        authority,
+        new URLSearchParams({ reader, scope: props.scope, owner: 'saving-change-addresses' }),
+        attempt
+      ),
+    ];
+    const cancel = () => {
+      for (const queryKey of keys) void client.cancelQueries({ queryKey, exact: true });
+    };
+    controller.signal.addEventListener('abort', cancel, { once: true });
     try {
-      const responses = await Promise.all([
-        fetch('/api/saving/plans', { credentials: 'include', signal: controller.signal }),
-        fetch(`/api/profiles/${props.profileId}/addresses`, {
-          credentials: 'include',
-          signal: controller.signal,
-        }),
-      ]);
+      const responses = await Promise.all(
+        ['/api/saving/plans', `/api/profiles/${props.profileId}/addresses`].map((path, index) =>
+          client.fetchQuery({
+            queryKey: keys[index]!,
+            staleTime: 0,
+            gcTime: 0,
+            retry: false,
+            queryFn: async ({ signal }) => {
+              const response = await fetch(path, { credentials: 'include', signal });
+              return {
+                ok: response.ok,
+                status: response.status,
+                data: response.ok ? ((await response.json()) as unknown) : null,
+              };
+            },
+          })
+        )
+      );
       if (!fresh()) return;
       if (responses.some((response) => [401, 403, 404].includes(response.status))) {
         withdraw(responses.some((response) => response.status === 404) ? 'missing' : 'forbidden');
         return;
       }
       if (responses.some((response) => !response.ok)) throw new Error('load');
-      const [plans, saved] = await Promise.all(responses.map((response) => response.json()));
+      const [plans, saved] = responses.map((response) => response.data);
       if (!fresh()) return;
       const options = savingChangeOptions(plans, saved, props.planId, props.profileId);
       if (!options) throw new Error('load');
@@ -189,6 +229,8 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
       setStatus('ready');
     } catch {
       if (fresh()) setStatus('error');
+    } finally {
+      controller.signal.removeEventListener('abort', cancel);
     }
   }
   useEffect(() => {

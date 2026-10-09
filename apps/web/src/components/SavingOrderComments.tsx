@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Button, Textarea } from '@barghsa/ui';
 import {
   Form,
@@ -89,6 +91,10 @@ function CommentWorkspace({
   scope: string;
   currentScope: RefObject<string>;
 }) {
+  const client = useQueryClient();
+  const reader = useId();
+  const profileRevision = useProfileContextRevision();
+  const querySequence = useRef(0);
   const locale = useLocale();
   const copy = (key: string) =>
     kind === 'saving' ? tSaving(key, locale) : t(`electricity.comments.${key}`, locale);
@@ -176,10 +182,37 @@ function CommentWorkspace({
     setError(null);
     const fresh = () =>
       active() && !controller.signal.aborted && request === readGeneration.current;
-    void fetch(cursor ? `${base}?before=${encodeURIComponent(cursor)}` : base, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    const key = queryKeys.orders.list(
+      {
+        context: staff ? 'staff' : 'customer',
+        ownerId: orderId,
+        accountId: actor,
+        revision: profileRevision,
+      },
+      new URLSearchParams({ base, scope, before: cursor ?? '' }),
+      ++querySequence.current
+    );
+    const queryKey = [...key, reader, 'comments'] as const;
+    const cancel = () => void client.cancelQueries({ queryKey, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    void client
+      .fetchQuery({
+        queryKey,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(
+            cursor ? `${base}?before=${encodeURIComponent(cursor)}` : base,
+            { credentials: 'include', signal }
+          );
+          return {
+            ok: response.ok,
+            status: response.status,
+            data: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
+      })
       .then(async (response) => {
         if (!fresh()) return;
         if ([401, 403].includes(response.status)) {
@@ -191,7 +224,7 @@ function CommentWorkspace({
           return;
         }
         if (!response.ok) throw new Error('comments');
-        const value: unknown = await response.json();
+        const value: unknown = response.data;
         if (!fresh()) return;
         const page = parseCommentPage(value, kind, orderId, staff);
         if (!page) throw new Error('comments');
@@ -213,8 +246,11 @@ function CommentWorkspace({
           setLoading(false);
         }
       });
-    return () => controller.abort();
-  }, [base, cursor, revision, scope]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [base, cursor, revision, scope, client, actor, orderId, staff, profileRevision, reader]);
   function reload() {
     if (!active() || locked() || reading.current || denied.current) return;
     if (error !== 'load') setCursor(null);
