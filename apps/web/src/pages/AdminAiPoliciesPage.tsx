@@ -1,3 +1,6 @@
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useCatalogueConfirmationRead } from '../hooks/useCatalogueConfirmationRead.js';
 import { validCatalogueCount, validCataloguePriority } from '../lib/knowledge-documents.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { CatalogueRelationEditor } from '../components/CatalogueRelationEditor.js';
@@ -110,15 +113,21 @@ function draftFor(row?: Entry): Draft {
     windowSeconds: typeof rules.windowSeconds === 'number' ? String(rules.windowSeconds) : '60',
   };
 }
-export default function AdminAiPoliciesPage({
-  initialKind = 'policies',
-  onKindChange,
-  focusCategory = false,
-}: {
+type CataloguePageProps = {
   initialKind?: PolicyCatalogueKind;
   focusCategory?: boolean;
   onKindChange?: (value: PolicyCatalogueKind) => void;
-} = {}) {
+};
+export default function AdminAiPoliciesPage(props: CataloguePageProps = {}) {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return <OwnedAiPoliciesPage key={JSON.stringify([actor, contextRevision])} {...props} />;
+}
+function OwnedAiPoliciesPage({
+  initialKind = 'policies',
+  onKindChange,
+  focusCategory = false,
+}: CataloguePageProps = {}) {
   const locale = useLocale(),
     label = (key: string) => t(`admin.policies.${key}`, locale);
   const numbers = useNumberFormatting(locale);
@@ -219,6 +228,7 @@ export default function AdminAiPoliciesPage({
     onPendingChange(false);
   }, [clearSelection, setAction, setDraft, form.setValidationPending, onPendingChange]);
   const scope = useCatalogueScope(clearWork);
+  const confirmationRead = useCatalogueConfirmationRead(scope);
   const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
   const choices = useCatalogueResource(
     scope,
@@ -1220,16 +1230,16 @@ export default function AdminAiPoliciesPage({
             if (actionRef.current !== command) return;
             const operation = operationCapture.current;
             if (operation) {
-              const response = await fetch(`/api/admin/policy-groups/${operation.groupId}`, {
-                credentials: 'include',
-              });
+              const response = await confirmationRead(
+                `/api/admin/policy-groups/${operation.groupId}`
+              );
               if (actionRef.current !== command) return;
               if (response.status === 401 || response.status === 403) {
                 scope.deny();
                 return;
               }
               if (response.status !== 200) throw new Error('Unconfirmed group membership');
-              const fresh: unknown = await response.json();
+              const fresh: unknown = response.value;
               if (actionRef.current !== command) return;
               if (!validateDetail(fresh) || !matchesMembership(fresh, operation))
                 throw new Error('Unconfirmed group membership');

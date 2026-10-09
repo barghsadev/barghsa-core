@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-08T23:56:26.610764+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-09T00:04:00.324081+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue AI policy/knowledge post-write group/document confirmation reads and remaining customer/staff/financial read owners, then mutation owners with eligible low-risk optimism. AI-model/agent catalogue and prior CRM/service readers are accepted. Whole UI/operational milestone gates remain separate. Preserve unfinished consultation work, exact money, permission/profile isolation, captured commands and validated receipts.
+Continue remaining customer/staff/financial and AI display read owners, then mutation owners with eligible low-risk optimism. AI model/agent catalogues, policy/knowledge confirmation and prior CRM/service readers are accepted. Whole UI/operational milestone gates remain separate. Preserve unfinished consultation work, exact money, permission/profile isolation, captured commands and validated receipts.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.

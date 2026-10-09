@@ -1,3 +1,6 @@
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useCatalogueConfirmationRead } from '../hooks/useCatalogueConfirmationRead.js';
 import {
   matchesKnowledgeDocumentReceipt,
   matchesKnowledgeDocuments,
@@ -160,15 +163,21 @@ function draftFor(entry?: Entry): Draft {
     vectorEmbeddingModel: entry?.vectorEmbeddingModel ?? '',
   };
 }
-export default function AdminKnowledgeBasesPage({
-  initialKind = 'knowledge-bases',
-  onKindChange,
-  focusCategory = false,
-}: {
+type CataloguePageProps = {
   initialKind?: KnowledgeCatalogueKind;
   focusCategory?: boolean;
   onKindChange?: (value: KnowledgeCatalogueKind) => void;
-} = {}) {
+};
+export default function AdminKnowledgeBasesPage(props: CataloguePageProps = {}) {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return <OwnedKnowledgeBasesPage key={JSON.stringify([actor, contextRevision])} {...props} />;
+}
+function OwnedKnowledgeBasesPage({
+  initialKind = 'knowledge-bases',
+  onKindChange,
+  focusCategory = false,
+}: CataloguePageProps = {}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.kb.${key}`, locale);
@@ -286,6 +295,7 @@ export default function AdminKnowledgeBasesPage({
     onPendingChange(false);
   }, [clearDetail, setAction, setDraft, form.setValidationPending, onPendingChange]);
   const scope = useCatalogueScope(clearWork);
+  const confirmationRead = useCatalogueConfirmationRead(scope);
   const list = useCatalogueResource(scope, `/api/admin/${kind}`, validEntries);
   const choices = useCatalogueResource(
     scope,
@@ -1379,16 +1389,14 @@ export default function AdminKnowledgeBasesPage({
             if (actionRef.current !== command) return;
             const operation = operationCapture.current;
             if (operation) {
-              const response = await fetch(`/api/admin/kb-groups/${operation.groupId}`, {
-                credentials: 'include',
-              });
+              const response = await confirmationRead(`/api/admin/kb-groups/${operation.groupId}`);
               if (actionRef.current !== command) return;
               if (response.status === 401 || response.status === 403) {
                 scope.deny();
                 return;
               }
               if (response.status !== 200) throw new Error('Unconfirmed group membership');
-              const fresh: unknown = await response.json();
+              const fresh: unknown = response.value;
               if (actionRef.current !== command) return;
               if (!validateDetail(fresh) || !matchesMembership(fresh, operation))
                 throw new Error('Unconfirmed group membership');
@@ -1409,16 +1417,16 @@ export default function AdminKnowledgeBasesPage({
                   throw new Error('Unconfirmed document attachment');
                 document.documentId = value.id;
               }
-              const response = await fetch(`/api/admin/knowledge-bases/${document.kbId}`, {
-                credentials: 'include',
-              });
+              const response = await confirmationRead(
+                `/api/admin/knowledge-bases/${document.kbId}`
+              );
               if (actionRef.current !== command) return;
               if (response.status === 401 || response.status === 403) {
                 scope.deny();
                 return;
               }
               if (response.status !== 200) throw new Error('Unconfirmed document catalogue');
-              const fresh: unknown = await response.json();
+              const fresh: unknown = response.value;
               if (actionRef.current !== command) return;
               if (!validateDetail(fresh) || !matchesKnowledgeDocuments(fresh, document))
                 throw new Error('Unconfirmed document catalogue');
