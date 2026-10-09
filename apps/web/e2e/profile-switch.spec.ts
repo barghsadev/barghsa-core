@@ -545,3 +545,22 @@ test('late old-profile responses cannot overwrite the switched page or notificat
     releaseOld();
   }
 });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`a current empty profile directory opens onboarding without switching context (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    await shell(page);
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({ json: { profiles: [], hasDefault: false, activeProfileId: null } })
+    );
+    const posts: string[] = [];
+    page.on('request', (request) => {
+      if (request.method() === 'POST') posts.push(request.url());
+    });
+    await page.goto('/dashboard');
+    await expect(page).toHaveURL(/\/onboarding$/);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(posts).toEqual([]);
+  });

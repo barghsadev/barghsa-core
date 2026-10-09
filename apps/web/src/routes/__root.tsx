@@ -17,6 +17,11 @@ const VerificationBanner = lazy(() =>
     default: module.VerificationBanner,
   }))
 );
+const ProfileAvailabilityGuard = lazy(() =>
+  import('../components/ProfileAvailabilityGuard.js').then((module) => ({
+    default: module.ProfileAvailabilityGuard,
+  }))
+);
 const DefaultProfileModal = lazy(() =>
   import('../components/DefaultProfileModal.js').then((module) => ({
     default: module.DefaultProfileModal,
@@ -68,66 +73,6 @@ function needsProfile(pathname: string, isStaff: boolean): boolean {
   );
 }
 
-/**
- * Client-side profile check (T-03.01.01).
- *
- * After authentication, checks if the user has at least one profile.
- * Re-evaluates on every navigation so the guard catches post-onboarding
- * returns (user creates a profile in /onboarding, then navigates back).
- *
- * Routes the three cases:
- *
- * 1. No profiles → redirect to /onboarding
- * 2. Available profiles with no active context → let the user select one
- * 3. Multiple → proceed (selector shown in a separate component if needed)
- */
-async function runProfileCheck(
-  pathname: string,
-  isStaff: boolean,
-  router: ReturnType<typeof useRouter>,
-  signal: AbortSignal
-): Promise<void> {
-  // Skip auth routes and onboarding
-  if (!needsProfile(pathname, isStaff)) return;
-  // App routes block rendering in their beforeLoad guard; do not repeat that request here.
-  if (pathname === '/app' || pathname.startsWith('/app/')) return;
-
-  try {
-    const response = await fetch('/api/profiles', {
-      method: 'GET',
-      signal,
-      credentials: 'include',
-      headers: { Accept: 'application/json' },
-    });
-
-    // Not authenticated — no redirect needed
-    if (response.status === 401) return;
-    if (!response.ok) {
-      console.warn('[profile guard] non-401 response', response.status);
-      return;
-    }
-
-    const data: {
-      profiles: Array<{ id: string; isDefault: boolean }>;
-      hasDefault: boolean;
-      activeProfileId: string | null;
-    } = await response.json();
-
-    // No profiles — redirect to onboarding
-    if (signal.aborted) return;
-    if (data.profiles.length === 0) {
-      router.navigate({ to: '/onboarding', replace: true });
-      return;
-    }
-
-    // An unavailable explicit context must be selected again by the user.
-    // Profile creation already establishes the initial default on the server.
-    // Multiple profiles — proceed normally
-  } catch (error) {
-    if (!signal.aborted) console.warn('[profile guard] network error', error);
-  }
-}
-
 function RootComponent() {
   const profileRevision = useProfileContextRevision();
   const router = useRouter();
@@ -154,12 +99,6 @@ function RootComponent() {
     pathname !== '/admin' &&
     !pathname.startsWith('/admin/');
 
-  useEffect(() => {
-    const controller = new AbortController();
-    void runProfileCheck(pathname, isStaff, router, controller.signal);
-    return () => controller.abort();
-  }, [pathname, isStaff, router, profileRevision]);
-
   return (
     <UiDirectionProvider>
       <BrandThemeProvider key={profileRevision}>
@@ -170,6 +109,11 @@ function RootComponent() {
         )}
         {needsProfile(pathname, isStaff) && (
           <Suspense fallback={null}>
+            <ProfileAvailabilityGuard
+              accountId={accountId}
+              pathname={pathname}
+              revision={profileRevision}
+            />
             <DefaultProfileModal accountId={accountId} />
           </Suspense>
         )}
