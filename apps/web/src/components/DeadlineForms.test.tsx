@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -68,13 +69,19 @@ async function clickReload() {
   await vi.waitFor(() => expect(button.disabled).toBe(false));
 }
 async function deadline() {
-  await act(async () => root.render(<InvoiceDueAtPanel selection={null} />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>{<InvoiceDueAtPanel selection={null} />}</QueryComponentProvider>
+    )
+  );
   await fill('invoice-id', invoiceId);
   await submit('invoice-id');
   await vi.waitFor(() => expect(input('due-at')?.value).toBe('2026-09-12T13:30'));
 }
 async function period() {
-  await act(async () => root.render(<ServiceDuePeriodPanel />));
+  await act(async () =>
+    root.render(<QueryComponentProvider>{<ServiceDuePeriodPanel />}</QueryComponentProvider>)
+  );
   await vi.waitFor(() => expect(input('due-period-days')?.value).toBe('7'));
 }
 async function settled() {
@@ -115,7 +122,11 @@ afterEach(async () => {
 
 describe('invoice deadline form ownership', () => {
   it('focuses invalid lookup without a read or losing raw text', async () => {
-    await act(async () => root.render(<InvoiceDueAtPanel selection={null} />));
+    await act(async () =>
+      root.render(
+        <QueryComponentProvider>{<InvoiceDueAtPanel selection={null} />}</QueryComponentProvider>
+      )
+    );
     await fill('invoice-id', ' raw bad ');
     await submit('invoice-id');
     await settled();
@@ -225,7 +236,11 @@ describe('invoice deadline form ownership', () => {
     await submit('due-at');
     await vi.waitFor(() => expect(commands).toHaveLength(1));
     await act(async () =>
-      root.render(<InvoiceDueAtPanel selection={{ invoiceId: otherId, revision: 1 }} />)
+      root.render(
+        <QueryComponentProvider>
+          {<InvoiceDueAtPanel selection={{ invoiceId: otherId, revision: 1 }} />}
+        </QueryComponentProvider>
+      )
     );
     await act(async () =>
       resolve(

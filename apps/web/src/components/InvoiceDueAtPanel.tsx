@@ -1,3 +1,6 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
@@ -70,11 +73,19 @@ interface Command {
   timezone: string;
   owner: number;
 }
-export default function InvoiceDueAtPanel({
+export default function InvoiceDueAtPanel(props: Parameters<typeof OwnedInvoiceDueAtPanel>[0]) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedInvoiceDueAtPanel key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedInvoiceDueAtPanel({
   selection,
 }: {
   selection: { invoiceId: string; revision: number } | null;
 }) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const locale = useLocale(),
     time = useAccountTime();
   const [dueTimezone, setDueTimezone] = useState('');
@@ -98,6 +109,7 @@ export default function InvoiceDueAtPanel({
     loadVersion = useRef(0),
     inFlight = useRef(false),
     live = useRef(false);
+  const readAbort = useRef<AbortController | null>(null);
   const invalidFocus = useRef<'dueAt' | 'reason' | null>(null);
   useEffect(() => {
     if (!saving && invalidFocus.current) {
@@ -113,11 +125,13 @@ export default function InvoiceDueAtPanel({
     live.current = true;
     return () => {
       live.current = false;
+      readAbort.current?.abort();
       generation.current++;
       loadVersion.current++;
     };
   }, []);
   function clearWork() {
+    readAbort.current?.abort();
     invalidFocus.current = null;
     generation.current++;
     loadVersion.current++;
@@ -152,6 +166,7 @@ export default function InvoiceDueAtPanel({
   function handleInvoiceIdChange(next: string) {
     if (inFlight.current || pendingAction || (lookup.form.isSubmissionPending() && !loading))
       return;
+    readAbort.current?.abort();
     loadVersion.current++;
     setLoading(false);
     setInvoiceId(next);
@@ -173,14 +188,20 @@ export default function InvoiceDueAtPanel({
       if (!current(owner)) return;
       const id = invoiceId.trim(),
         version = ++loadVersion.current;
+      readAbort.current?.abort();
+      const controller = new AbortController();
+      readAbort.current = controller;
       setLoading(true);
       setUnavailable(true);
       setError(null);
       setSaved(false);
       try {
-        const response = await fetch(`/api/admin/invoices/${id}/due-at`, {
-          credentials: 'include',
-        });
+        const response = await readStaff(
+          'invoices',
+          'detail',
+          `/api/admin/invoices/${id}/due-at`,
+          controller.signal
+        );
         if (!current(owner) || version !== loadVersion.current) return;
         if (response.status === 401 || response.status === 403) {
           clearWork();

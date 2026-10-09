@@ -1,3 +1,6 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance/browser';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
@@ -53,6 +56,14 @@ function isSettings(value: unknown): value is ServiceDuePeriodSetting[] {
 }
 
 export default function ServiceDuePeriodPanel() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedServiceDuePeriodPanel key={JSON.stringify([actor, revision])} />;
+}
+function OwnedServiceDuePeriodPanel() {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const locale = useLocale(),
     draft = useDuePeriodForm();
   const [settings, setSettings] = useState<ServiceDuePeriodSetting[] | null>(null);
@@ -109,7 +120,7 @@ export default function ServiceDuePeriodPanel() {
     setUnavailable(true);
     setError(null);
     setSaved(false);
-    void fetch(path, { credentials: 'include', signal: controller.signal })
+    void readStaff('catalogue', 'detail', path, controller.signal)
       .then(async (response) => {
         if (controller.signal.aborted) return;
         if (!response.ok) {
@@ -141,7 +152,7 @@ export default function ServiceDuePeriodPanel() {
       });
     return () => controller.abort();
     // The resource owns reloads; form changes must not restart its request.
-  }, [reload, locale]);
+  }, [reload, locale, readStaff]);
   const current = (owner: number) => live.current && owner === generation.current;
   function accepted(value: unknown, change: Change, owner: number) {
     if (!current(owner)) return;

@@ -4,6 +4,8 @@ import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useOwnedStaffServiceRead } from './useOwnedStaffServiceRead.js';
 const targets = [
+  ['invoices', 'detail', '/api/admin/invoices/invoice-1/due-at'],
+  ['catalogue', 'detail', '/api/admin/config/invoice-due-periods'],
   [
     'invoices',
     'list',

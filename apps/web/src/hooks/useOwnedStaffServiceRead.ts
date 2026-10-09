@@ -31,7 +31,7 @@ export function useOwnedStaffServiceRead(actor: string | null, revision: number)
     ) => {
       const pathname = path.split('?')[0]!;
       if (
-        !/^\/api\/(?:staff\/electricity\/(?:orders(?:\/(?:conversations|[^/]+))?|increase-requests|contracts\/[^/]+\/price-adjustments)|admin\/invoices\/(?:manual\/profiles|[^/]+\/corrections|bank-receipts(?:\/[^/]+(?:\/allocation)?)?)|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:postal-queue|postal-guidance|document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
+        !/^\/api\/(?:staff\/electricity\/(?:orders(?:\/(?:conversations|[^/]+))?|increase-requests|contracts\/[^/]+\/price-adjustments)|admin\/invoices\/(?:manual\/profiles|[^/]+\/(?:corrections|due-at)|bank-receipts(?:\/[^/]+(?:\/allocation)?)?)|admin\/config\/invoice-due-periods|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:postal-queue|postal-guidance|document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
           pathname
         )
       )
