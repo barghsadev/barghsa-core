@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue remaining financial/business readonly-POST review and confirmation readers, then mutation owners with eligible low-risk optimism. Reminder configuration, deadline/config, invoice receipt/profile/source and prior staff/shared/root/bootstrap read scopes have current acceptance. Whole UI/operational milestones remain separate. Preserve unfinished consultation work, exact money, permission/profile isolation and validated captured commands.
+Continue remaining contract/service and other readonly-POST review and confirmation readers, then mutation owners with eligible low-risk optimism. Manual/correction/receipt confirmation previews, reminder configuration, deadline/config, invoice receipt/profile/source and prior staff/shared/root/bootstrap read scopes have current acceptance. Whole UI/operational milestones remain separate. Preserve unfinished consultation work, exact money, permission/profile isolation and validated captured commands.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.

@@ -1,3 +1,4 @@
+import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -109,6 +110,7 @@ function OwnedManualInvoiceForm({
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
+  const readReview = useOwnedInvoiceReview(actor, profileRevision);
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const unavailable = Boolean(correction?.unavailable);
@@ -488,7 +490,7 @@ function OwnedManualInvoiceForm({
       const controller = new AbortController();
       reviewController.current = controller;
       try {
-        const response = await fetch(
+        const response = await readReview(
           correctionCommand
             ? `/api/admin/invoices/${encodeURIComponent(correctionCommand.invoiceId)}/corrections/review`
             : '/api/admin/invoices/manual/review',
@@ -507,7 +509,8 @@ function OwnedManualInvoiceForm({
                   }
                 : submitted
             ),
-          }
+          },
+          true
         );
         const value: unknown = await response.json();
         if (!owns()) return;

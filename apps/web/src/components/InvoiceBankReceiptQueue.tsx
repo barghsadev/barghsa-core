@@ -1,3 +1,4 @@
+import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -110,12 +111,14 @@ function OwnedInvoiceBankReceiptQueue({
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
+  const readReview = useOwnedInvoiceReview(actor, profileRevision);
   const queueBinding = useReceiptQueueQuery(pendingQuery);
   const queueParams = receiptQueueParams(queueBinding);
   const queueScopeRef = useRef(queueParams);
   const [nextCursor, setNextCursor] = useState<FinanceCursor | null>(null);
   const actionRef = useRef<TeamAction | null>(null);
   const reviewGeneration = useRef(0);
+  const reviewController = useRef<AbortController | null>(null);
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -176,6 +179,8 @@ function OwnedInvoiceBankReceiptQueue({
     }
   }, [queueParams]);
   useLayoutEffect(() => {
+    reviewController.current?.abort();
+    reviewController.current = null;
     reviewGeneration.current++;
     actionRef.current = null;
     setAction(null);
@@ -279,14 +284,18 @@ function OwnedInvoiceBankReceiptQueue({
     const generation = reviewGeneration.current;
     let confirmation: BankReceiptConfirmationReview | null = null;
     if (kind === 'confirm') {
+      reviewController.current?.abort();
+      const controller = new AbortController();
+      reviewController.current = controller;
       setReviewState('loading');
       try {
-        const response = await fetch(
+        const response = await readReview(
           `${base}/${encodeURIComponent(detail.receiptId)}/confirm/review`,
           {
             method: 'POST',
             credentials: 'include',
             headers: withCsrf({ 'Content-Type': 'application/json' }),
+            signal: controller.signal,
             body: '{}',
           }
         );
@@ -307,7 +316,7 @@ function OwnedInvoiceBankReceiptQueue({
         setFinancialReview(confirmation);
         setReviewState('idle');
       } catch {
-        if (generation !== reviewGeneration.current) return;
+        if (controller.signal.aborted || generation !== reviewGeneration.current) return;
         setFinancialReview(null);
         setReviewState('error');
         return;
