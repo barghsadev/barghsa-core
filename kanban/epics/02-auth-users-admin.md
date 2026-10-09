@@ -436,7 +436,7 @@
 **T-05.02.06 — Profile deletion by staff**
 
 - Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.
-- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.
+- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. Launch performs no physical purge or retention-compliance claim. Financial/contractual document bytes remain permanent; any later disposal requires a separately approved retention, hold, backup and authorization policy. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.
 - UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.
 - Dependencies: T-05.02.01
 - Complexity: M
@@ -914,8 +914,8 @@
 **T-09.12.06 — Contract electricity increase limits**
 
 - Description: Admin configures max % increase a customer can request for contracted electricity quantity. Also max contract duration and lead time for advanced orders.
-- Technical notes: Values: `maxQuantityIncreasePercent` (default configurable), `maxContractDuration` (default 24 Jalali months), `leadTimeDays` (default 0). Changes affect new drafts only.
-- UI/UX: Number inputs per setting. Description. Note: "Changes apply to new orders only, not existing contracts."
+- Technical notes: Values: `maxQuantityIncreasePercent` (default configurable), `maxContractDuration` (default 24 Jalali months), `leadTimeDays` (default 0). Duration and lead-time changes affect new order quotes; submitted orders keep their snapshots. Quantity-increase requests capture their cap and staff approval also revalidates the current cap.
+- UI/UX: Number inputs per setting. Description. Note: "Submitted orders keep their snapshots. New increase requests and pending staff approvals use the applicable current cap."
 - Dependencies: admin config framework, electricity module
 - Complexity: S
 

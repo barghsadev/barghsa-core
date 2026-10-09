@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-09T10:13:50.818857+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-09T11:43:26.167503+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.2.0**. Next milestone: **v0.3.0**.
 
@@ -10,12 +10,12 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 562 | Accepted with unchanged source bindings. |
+| done | 581 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 70 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
-| blocked | 1 | Named owner or external prerequisite. |
+| blocked | 2 | Named owner or external prerequisite. |
 | superseded | 2 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -39,8 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-v0.2.0 staging and Telegram closed. Finish v0.3.0 closure after the one consolidated owner response: reconcile approved representations, complete only demonstrated gaps and verification SMS mapping/delivery, then pass complete financial milestone gates and deploy/announce at acceptance. Two signed-provider tasks accepted; no later-release infrastructure batch selected. Production remains unauthorized.
+Finish the only named external v0.3.0 prerequisite: approved verification-status SMS mappings and owned verified staff event-delivery evidence. Nineteen owner-policy-dependent tasks are accepted. Then accept v0.3.0 gates, prepare version/notes, deploy exact staging candidate and verify one Persian summary/grouped album before selecting v0.4.0.
 
+- `02-auth-users-admin.md#T-07.01.03`: Verification notification to user
 - `release-readiness#R-02.01`: Renew fulfillment and financial closure acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -310,7 +311,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-05.02.03` | done | Earlier acceptance_verified | Verification state management |
 | `02-auth-users-admin.md#T-05.02.04` | done | Earlier acceptance_verified | Force password change and session expiry |
 | `02-auth-users-admin.md#T-05.02.05` | done | Earlier acceptance_verified | Identity correction through verification case |
-| `02-auth-users-admin.md#T-05.02.06` | partial | Earlier partial | Profile deletion by staff |
+| `02-auth-users-admin.md#T-05.02.06` | done | Earlier partial | Profile deletion by staff |
 | `02-auth-users-admin.md#T-05.03.01` | done | Earlier acceptance_verified | Create staff user |
 | `02-auth-users-admin.md#T-05.03.02` | done | Earlier acceptance_verified | Staff role assignment |
 | `02-auth-users-admin.md#T-05.04.01` | done | Earlier acceptance_verified | Agent list for legal entity |
@@ -324,7 +325,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-06.01.02` | done | Earlier partial | Ticket list and detail view |
 | `02-auth-users-admin.md#T-06.01.03` | done | Earlier acceptance_verified | Staff ticket management |
 | `02-auth-users-admin.md#T-07.01.01` | done | Earlier partial | Verification mode setting |
-| `02-auth-users-admin.md#T-07.01.03` | partial | Earlier partial | Verification notification to user |
+| `02-auth-users-admin.md#T-07.01.03` | blocked | Earlier partial | Verification notification to user |
 | `02-auth-users-admin.md#T-09.02.01` | done | Earlier acceptance_verified | Province CRUD |
 | `02-auth-users-admin.md#T-09.02.02` | done | Earlier acceptance_verified | City CRUD per province |
 | `02-auth-users-admin.md#T-09.03.01` | done | Earlier acceptance_verified | TOS editor |
@@ -335,7 +336,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.08.01` | done | Earlier partial | Service response targets |
 | `02-auth-users-admin.md#T-09.08.02` | done | Earlier partial | Staff teams and assignment rules |
 | `02-auth-users-admin.md#T-09.08.03` | done | Earlier acceptance_verified | Escalation alerts |
-| `02-auth-users-admin.md#T-09.09.01` | partial | Earlier partial | Reconciliation exceptions view |
+| `02-auth-users-admin.md#T-09.09.01` | done | Earlier partial | Reconciliation exceptions view |
 | `02-auth-users-admin.md#T-09.09.02` | done | Earlier acceptance_verified | Failed jobs dashboard |
 | `02-auth-users-admin.md#T-09.09.03` | done | Earlier acceptance_verified | Dead-letter notifications |
 | `02-auth-users-admin.md#T-09.10.01` | done | Earlier acceptance_verified | Online wallet top-up limit |
@@ -346,7 +347,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-09.12.03` | done | Earlier partial | Gift code management |
 | `02-auth-users-admin.md#T-09.12.04` | done | Earlier partial | Contract template management |
 | `02-auth-users-admin.md#T-09.12.05` | done | Earlier acceptance_verified | Upload policies configuration |
-| `02-auth-users-admin.md#T-09.12.06` | partial | Earlier partial | Contract electricity increase limits |
+| `02-auth-users-admin.md#T-09.12.06` | done | Earlier partial | Contract electricity increase limits |
 | `02-auth-users-admin.md#T-10.01.01` | done | Earlier acceptance_verified | Staff user list (admin) |
 | `02-auth-users-admin.md#T-10.01.02` | done | Earlier acceptance_verified | Staff permission audit view |
 | `03-core-business.md#T-03.07.03.01` | done | Recorded batch work | Retain `refund_obligations` for legacy/order-only termination: `id`, `order_id` (FK), `contract_id` (FK nullable), `invoice_id` (FK), `profile_id` (FK), `total_paid_amount` (bigint), `completed_refund_amount` (bigint default 0), `status` (TEXT CHECK restricted to `pending`, `processing`, `completed`, `failed`), `idempotency_key` (unique), `created_at`, `updated_at`. Current contract cancellations retain `contract_refund_obligations` linked to the shared `refunds` ledger, with state and financial totals derived from that ledger. Owner approved these representations on 2026-10-07; mandatory full refunds and immutable credit, provenance, retry and closure safeguards remain required. |
@@ -356,15 +357,15 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `03-core-business.md#T-03.07.03.05` | done | Recorded batch work | Contract/order cannot be marked financially closed until refund obligation is Completed. Staff cannot dismiss or manually mark complete without the linked wallet credit. |
 | `03-core-business.md#T-03.07.03.06` | done | Recorded batch work | Failed refund processing must be retried and visible in a finance work queue/alert until resolved. Staff do not manually create the required full wallet refund. |
 | `03-core-business.md#T-03.07.03.07` | done | Recorded batch work | Refund completion notification to customer: amount, reason, actor/system, timestamps. |
-| `03-core-business.md#T-03.08.01.01` | partial | Recorded batch work | Admin config: `customer_increase_max_percentage` in electricity settings. Default 0 = disabled. |
+| `03-core-business.md#T-03.08.01.01` | done | Recorded batch work | Admin config: whole `maxQuantityIncreasePercent` in the existing versioned electricity contract-limits settings. Default 0 = disabled. New requests capture their cap; staff approval also rechecks the current cap. |
 | `03-core-business.md#T-03.08.01.02` | done | Recorded batch work | Customer UI: "Request quantity increase" button on active electricity contract detail page. Visible only if they haven't already requested once. |
-| `03-core-business.md#T-03.08.01.03` | partial | Recorded batch work | `POST /electricity/contracts/:id/request-increase` — customer submits desired new quantity. Backend validates: |
+| `03-core-business.md#T-03.08.01.03` | done | Recorded batch work | `POST /api/electricity/contracts/:id/increase` — customer submits desired new quantity. Backend validates: |
 | `03-core-business.md#T-03.08.01.04` | done | Recorded batch work | Staff UI: quantity increase work queue — pending increase requests with contract details, current vs requested quantity, percentage change |
-| `03-core-business.md#T-03.08.01.05` | partial | Recorded batch work | Staff API: `POST /staff/electricity/contracts/:id/approve-increase` — approve with optional effective date. Creates amendment document. |
-| `03-core-business.md#T-03.08.01.06` | partial | Recorded batch work | Staff API: `POST /staff/electricity/contracts/:id/reject-increase` — with reason. |
-| `03-core-business.md#T-03.08.01.07` | partial | Recorded batch work | After approval: |
-| `03-core-business.md#T-03.08.01.08` | partial | Recorded batch work | Record: old/new quantities, percentage, effective period, requester, reviewer, decision, signature, financial adjustment, timestamps. Each step notifies customer. |
-| `03-core-business.md#T-03.08.02.01` | partial | Recorded batch work | `POST /staff/electricity/contracts/:id/adjust-price` — staff sets new price, effective date, reason. Backend: |
+| `03-core-business.md#T-03.08.01.05` | done | Recorded batch work | Staff API: `POST /api/staff/electricity/increase-requests/:id/approve` — approve with optional effective date. Creates amendment document. |
+| `03-core-business.md#T-03.08.01.06` | done | Recorded batch work | Staff API: `POST /api/staff/electricity/increase-requests/:id/reject` — with reason. |
+| `03-core-business.md#T-03.08.01.07` | done | Recorded batch work | After approval: |
+| `03-core-business.md#T-03.08.01.08` | done | Recorded batch work | Record: old/new quantities, percentage, effective period, requester, reviewer, decision, signature, financial adjustment, timestamps. Each step notifies customer. |
+| `03-core-business.md#T-03.08.02.01` | done | Recorded batch work | Two-stage staff workflow: `POST /api/staff/electricity/contracts/:id/price-adjustments` publishes a disclosed proposal; `POST /api/staff/electricity/price-adjustments/:adjustmentId/finalize` finalizes it after review. Staff sets new price, effective date, reason and contractual basis. Backend: |
 | `03-core-business.md#T-03.08.02.02` | done | Recorded batch work | Customer acceptance is not required, but contractual basis, reason, calculation, old/new price, and effective date must be visible to customer before the adjustment is finalized. |
 | `03-core-business.md#T-03.08.02.03` | done | Recorded batch work | Requires explicit permission, step-up authentication, auditing, and mandatory customer notification. |
 | `03-core-business.md#T-03.08.02.04` | done | Recorded batch work | Initially no configurable percentage cap on staff price adjustments. Non-payment follows normal invoice Overdue workflow — does not silently change historical service. |
@@ -415,7 +416,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.1.01.06` | done | Earlier acceptance_verified | Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection |
 | `04-invoices-wallet-contracts.md#T-04.1.02.01` | done | Earlier acceptance_verified | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints |
 | `04-invoices-wallet-contracts.md#T-04.1.02.02` | done | Earlier acceptance_verified | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice |
-| `04-invoices-wallet-contracts.md#T-04.1.02.03` | partial | Earlier partial | Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms |
+| `04-invoices-wallet-contracts.md#T-04.1.02.03` | done | Earlier partial | Use the existing service-specific electricity/saving writers and transaction-owned `ManualInvoiceService` for consultation/solar; create invoices atomically with order/contract records and immutable price/term snapshots |
 | `04-invoices-wallet-contracts.md#T-04.1.02.04` | done | Earlier acceptance_verified | Implement VAT calculation module with category default / product override resolution |
 | `04-invoices-wallet-contracts.md#T-04.1.02.05` | done | Earlier partial | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys |
 | `04-invoices-wallet-contracts.md#T-04.1.02.06` | done | Earlier acceptance_verified | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) |
@@ -471,13 +472,13 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.3.02.04` | done | Recorded batch work | Localized state labels and descriptive text for every state |
 | `04-invoices-wallet-contracts.md#T-04.4.01.01` | done | Recorded batch work | Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet |
 | `04-invoices-wallet-contracts.md#T-04.4.01.02` | done | Recorded batch work | Implement `RefundStateMachine` with all 9 transitions, guards, and audit events |
-| `04-invoices-wallet-contracts.md#T-04.4.01.03` | partial | Recorded batch work | DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))` |
-| `04-invoices-wallet-contracts.md#T-04.4.01.04` | partial | Recorded batch work | Wallet refund: `WalletService.credit()` with idempotency key tied to refund ID |
+| `04-invoices-wallet-contracts.md#T-04.4.01.03` | done | Recorded batch work | Cross-row database budget triggers: serialize refund reservations and ensure reserved refunds plus cumulative refunded amount do not exceed paid amount |
+| `04-invoices-wallet-contracts.md#T-04.4.01.04` | done | Recorded batch work | Wallet refund: shared `postWalletCredit` kernel used by `WalletService.credit`, with an idempotency key tied to the refund ID |
 | `04-invoices-wallet-contracts.md#T-04.4.01.05` | done | Recorded batch work | External refund: workflow for staff to record bank reference; second reconciliation confirmation step |
 | `04-invoices-wallet-contracts.md#T-04.4.01.06` | done | Recorded batch work | Dual-approval integration: if refund amount ≥ threshold, require second finance staff before Approved |
 | `04-invoices-wallet-contracts.md#T-04.4.01.07` | done | Recorded batch work | Retry worker: pick up Failed refunds with bounded backoff; alert if max attempts exceeded |
 | `04-invoices-wallet-contracts.md#T-04.4.02.01` | done | Recorded batch work | Build `AutomaticRefundObligation` trigger: on contract → Rejected/Cancelled, if paid amount > 0, create refund with state Requested, destination = wallet |
-| `04-invoices-wallet-contracts.md#T-04.4.02.02` | partial | Recorded batch work | Worker: pick up auto-refund obligations, execute `WalletService.credit()`, mark refund Completed |
+| `04-invoices-wallet-contracts.md#T-04.4.02.02` | done | Recorded batch work | Worker: pick up auto-refund obligations, execute the transaction-owned shared `postWalletCredit` kernel, mark refund Completed atomically |
 | `04-invoices-wallet-contracts.md#T-04.4.02.03` | done | Recorded batch work | Block contract/order financial closure until linked refund obligations are Completed |
 | `04-invoices-wallet-contracts.md#T-04.4.02.04` | done | Recorded batch work | Finance queue: show failed auto-refund obligations with Retry action |
 | `04-invoices-wallet-contracts.md#T-04.4.02.05` | done | Recorded batch work | Notify customer on completion and on failure (with support path) |
@@ -500,12 +501,12 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.5.04.03` | done | Recorded batch work | Replacement rule: new document linked to superseded doc; rejection requires reason + Replace action |
 | `04-invoices-wallet-contracts.md#T-04.5.04.04` | done | Recorded batch work | Immutable signed docs: once Signed state reached, no replacement; new version for amendments |
 | `04-invoices-wallet-contracts.md#T-04.5.04.05` | done | Recorded batch work | UI: contract detail shows all linked docs with states and version history |
-| `04-invoices-wallet-contracts.md#T-04.6.01.01` | partial | Recorded batch work | Build customer quantity increase request UI/API: validate against max increase percentage, check one-per-contract limit |
-| `04-invoices-wallet-contracts.md#T-04.6.01.02` | partial | Recorded batch work | Staff review queue: approve/reject with reason |
-| `04-invoices-wallet-contracts.md#T-04.6.01.03` | partial | Recorded batch work | On approval: create amendment document version, trigger customer signature workflow |
-| `04-invoices-wallet-contracts.md#T-04.6.01.04` | partial | Recorded batch work | After signature: calculate incremental amount (price snapshot), create adjustment invoice or refund |
+| `04-invoices-wallet-contracts.md#T-04.6.01.01` | done | Recorded batch work | Build customer quantity increase request UI/API: validate against max increase percentage, check one-per-contract limit |
+| `04-invoices-wallet-contracts.md#T-04.6.01.02` | done | Recorded batch work | Staff review queue: approve/reject with reason |
+| `04-invoices-wallet-contracts.md#T-04.6.01.03` | done | Recorded batch work | On approval: create immutable JSON amendment tied to the original contract version; require fresh step-up customer consent bound to amendment hash, session and signing time |
+| `04-invoices-wallet-contracts.md#T-04.6.01.04` | done | Recorded batch work | After signature: calculate incremental amount (price snapshot), create adjustment invoice or refund |
 | `04-invoices-wallet-contracts.md#T-04.6.01.05` | done | Recorded batch work | Enforce effective period: increase applies only to future periods |
-| `04-invoices-wallet-contracts.md#T-04.6.01.06` | partial | Recorded batch work | Admin config for max increase percentage per service type |
+| `04-invoices-wallet-contracts.md#T-04.6.01.06` | done | Recorded batch work | Admin config for electricity-only max increase as a whole percentage; default 0 disables increases; retain existing versioned settings/routes |
 | `04-invoices-wallet-contracts.md#T-04.6.02.01` | done | Recorded batch work | Build staff price adjustment UI: input percentage, effective date, reason, contractual basis |
 | `04-invoices-wallet-contracts.md#T-04.6.02.02` | done | Recorded batch work | Validate: effective date not in past; never changes past/paid periods |
 | `04-invoices-wallet-contracts.md#T-04.6.02.03` | done | Recorded batch work | Calculate adjustment: for each future period affected, compute net increase, create adjustment invoice |

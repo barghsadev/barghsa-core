@@ -3,7 +3,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import { Pool } from 'pg';
-import { beforeAll, beforeEach, afterAll, it, expect } from 'vitest';
+import { beforeEach, afterEach, it, expect } from 'vitest';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { postWalletCredit } from '../../../../packages/db/src/wallet-credit';
 import { runMigrations } from '../../../../packages/db/src/migrate';
@@ -13,19 +13,14 @@ import {
 } from './reconciliation-scanner';
 
 let db: Awaited<ReturnType<typeof createMigratedTestDb>>;
-beforeAll(async () => {
+beforeEach(async () => {
   db = await createMigratedTestDb();
   await db.pool.query(
     "INSERT INTO users(user_id,username,password_hash) VALUES('refund-report-owner','refund-report-owner','fixture')"
   );
 }, 60000);
-afterAll(async () => {
+afterEach(async () => {
   await db?.close();
-});
-beforeEach(async () => {
-  await db.pool.query(
-    'TRUNCATE reconciliation_exceptions,refunds,refund_transactions,wallet_transactions,wallets,invoices,profiles CASCADE'
-  );
 });
 async function owner(paid = '100', returned = '0', kind: string | null = null) {
   const profile = randomUUID(),

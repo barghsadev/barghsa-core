@@ -510,21 +510,21 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.08.01.01** | 🔧 Admin config: `customer_increase_max_percentage` in electricity settings. Default 0 = disabled. | S |
+| **T-03.08.01.01** | 🔧 Admin config: whole `maxQuantityIncreasePercent` in the existing versioned electricity contract-limits settings. Default 0 = disabled. New requests capture their cap; staff approval also rechecks the current cap. | S |
 | **T-03.08.01.02** | 📋 Customer UI: "Request quantity increase" button on active electricity contract detail page. Visible only if they haven't already requested once. | M |
-| **T-03.08.01.03** | 🔧 `POST /electricity/contracts/:id/request-increase` — customer submits desired new quantity. Backend validates:
+| **T-03.08.01.03** | 🔧 `POST /api/electricity/contracts/:id/increase` — customer submits desired new quantity. Backend validates:
   - Contract is active
   - No prior increase request for this contract
-  - New total ≤ original × (1 + max_percentage / 10000)
+  - New total ≤ original × (1 + max_percentage / 100)
   - ⚠️ Applies only to eligible future periods, not past or paid periods | L |
 | **T-03.08.01.04** | 📋 Staff UI: quantity increase work queue — pending increase requests with contract details, current vs requested quantity, percentage change | M |
-| **T-03.08.01.05** | 🔧 Staff API: `POST /staff/electricity/contracts/:id/approve-increase` — approve with optional effective date. Creates amendment document. | L |
-| **T-03.08.01.06** | 🔧 Staff API: `POST /staff/electricity/contracts/:id/reject-increase` — with reason. | S |
+| **T-03.08.01.05** | 🔧 Staff API: `POST /api/staff/electricity/increase-requests/:id/approve` — approve with optional effective date. Creates amendment document. | L |
+| **T-03.08.01.06** | 🔧 Staff API: `POST /api/staff/electricity/increase-requests/:id/reject` — with reason. | S |
 | **T-03.08.01.07** | 🔧 After approval:
-  - Create amendment document requiring customer signature
+  - Create immutable JSON amendment tied to the original contract version; require fresh step-up customer consent bound to amendment hash, session and signing time
   - Customer signs → backend calculates incremental amount (amendment price snapshot)
   - Create linked adjustment invoice
-  - Quantity change effective after adjustment invoice is fully paid (unless staff explicitly approves different condition with reason)
+  - Quantity change effective only after adjustment invoice is fully paid and its effective date is reached; optional staff payment override is deferred
   - Negative adjustment = approved refund/credit instead of negative invoice | L |
 | **T-03.08.01.08** | ⚠️ Record: old/new quantities, percentage, effective period, requester, reviewer, decision, signature, financial adjustment, timestamps. Each step notifies customer. | M |
 
@@ -532,7 +532,7 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.08.02.01** | 🔧 `POST /staff/electricity/contracts/:id/adjust-price` — staff sets new price, effective date, reason. Backend:
+| **T-03.08.02.01** | 🔧 Two-stage staff workflow: `POST /api/staff/electricity/contracts/:id/price-adjustments` publishes a disclosed proposal; `POST /api/staff/electricity/price-adjustments/:adjustmentId/finalize` finalizes it after review. Staff sets new price, effective date, reason and contractual basis. Backend:
   - Validates effective date applies to eligible future periods only
   - Never rewrites past or paid invoice lines
   - Calculates net increase over affected future quantities

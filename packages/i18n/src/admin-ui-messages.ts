@@ -420,9 +420,9 @@ export const fa: Record<string, string> = {
   'admin.contractLimits.unverified':
     'تأیید ذخیره قابل بررسی نیست. انصراف دهید و پیش از ذخیره دوباره، مقدار فعلی را بارگذاری کنید.',
   'admin.contractLimits.scope':
-    'مدت و فاصله شروع برای پیش‌نویس‌های جدید است. سقف افزایش مقدار برای درخواست‌های جدید قراردادهای فعال اعمال می‌شود.',
+    'مدت و فاصله شروع برای پیش‌نویس‌های جدید است. سقف افزایش مقدار در درخواست جدید ثبت می‌شود و هنگام تأیید درخواستِ در انتظار نیز دوباره بررسی می‌شود. سفارش‌های ثبت‌شده تغییر نمی‌کنند.',
   'admin.contractLimits.confirm':
-    'مدت و فاصله شروع برای پیش‌نویس‌های جدید و سقف افزایش مقدار برای درخواست‌های جدید ذخیره شود؟',
+    'محدودیت‌ها ذخیره شود؟ مدت و فاصله شروع برای پیش‌نویس‌های جدید است. سقف افزایش در درخواست‌های جدید و هنگام تأیید درخواست‌های در انتظار اعمال می‌شود.',
   'admin.contractLimits.maxQuantityIncreasePercent': 'حداکثر افزایش مقدار (درصد)',
   'admin.contractLimits.maxQuantityIncreasePercentHelp':
     'عدد صحیح از ۰ تا ۱۰۰۰ وارد کنید. صفر به معنی ممنوعیت افزایش مقدار است.',
@@ -1401,9 +1401,9 @@ export const en: Record<string, string> = {
   'admin.contractLimits.unverified':
     'The save acknowledgement could not be verified. Cancel and reload before saving again.',
   'admin.contractLimits.scope':
-    'Duration and lead time apply to new drafts. The increase cap applies to new requests on active contracts.',
+    'Duration and lead time apply to new drafts. New increase requests capture the cap, and approval of a pending request checks the current cap again. Submitted orders stay unchanged.',
   'admin.contractLimits.confirm':
-    'Save duration and lead time for new drafts, and the increase cap for new requests?',
+    'Save these limits? Duration and lead time apply to new drafts. The increase cap applies to new requests and approval of pending requests.',
   'admin.contractLimits.maxQuantityIncreasePercent': 'Maximum quantity increase (%)',
   'admin.contractLimits.maxQuantityIncreasePercentHelp':
     'Enter an integer from 0 to 1000. Zero prevents quantity increases.',

@@ -14,6 +14,8 @@ Successful archival sets `archived`, `archived_at` and `archived_reason`. It pre
 
 ## Retention handoff
 
+The owner approved soft archival as the launch scope on 9 October 2026. This is not approval for physical disposal or a claim of retention compliance. Financial and contractual document bytes remain permanent. See [fulfillment and financial closure decisions](../decisions/fulfillment-and-financial-closure.md).
+
 This endpoint performs no physical deletion and schedules no purge. Retention duration, holds, approvals and eventual disposal procedures are not configured by this task. Keep records intact until the organization has an approved policy for the affected record classes and an authorized disposal process. The audit's existing retention note is a reminder, not evidence that a retention period or legal basis has been approved.
 
 Before any future disposal feature is built or operated, its owner must supply the applicable policy, hold rules, authorization and evidence requirements, including retained backups and linked business records. Record that operational approval separately from local software tests. No production retention or deletion exercise has been performed by this repair.

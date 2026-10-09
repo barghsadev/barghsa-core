@@ -113,7 +113,7 @@ This epic covers everything related to **money and legal commitments**:
 |----|------|------------|
 | T-04.1.02.01 | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints | M |
 | T-04.1.02.02 | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice | L |
-| T-04.1.02.03 | Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms | M |
+| T-04.1.02.03 | Use the existing service-specific electricity/saving writers and transaction-owned `ManualInvoiceService` for consultation/solar; create invoices atomically with order/contract records and immutable price/term snapshots | M |
 | T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |
 | T-04.1.02.05 | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys | S |
 | T-04.1.02.06 | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) | M |
@@ -417,8 +417,8 @@ If confirmed amount > invoice remaining, excess amount creates a verified profil
 |----|------|------------|
 | T-04.4.01.01 | Create `refunds` table: `id`, `invoiceId`, `profileId`, `amount`, `state`, `destination` (wallet | external_bank), `staffId`, `idempotencyKey`, `bankReference?`, `reconciliationStatus?`, timestamps | L |
 | T-04.4.01.02 | Implement `RefundStateMachine` with all 9 transitions, guards, and audit events | L |
-| T-04.4.01.03 | DB constraint: `CHECK (amount <= (SELECT paidAmount - refundedAmount FROM invoices WHERE id = invoiceId))` | M |
-| T-04.4.01.04 | Wallet refund: `WalletService.credit()` with idempotency key tied to refund ID | M |
+| T-04.4.01.03 | Cross-row database budget triggers: serialize refund reservations and ensure reserved refunds plus cumulative refunded amount do not exceed paid amount | M |
+| T-04.4.01.04 | Wallet refund: shared `postWalletCredit` kernel used by `WalletService.credit`, with an idempotency key tied to the refund ID | M |
 | T-04.4.01.05 | External refund: workflow for staff to record bank reference; second reconciliation confirmation step | M |
 | T-04.4.01.06 | Dual-approval integration: if refund amount ≥ threshold, require second finance staff before Approved | L |
 | T-04.4.01.07 | Retry worker: pick up Failed refunds with bounded backoff; alert if max attempts exceeded | M |
@@ -446,7 +446,7 @@ If confirmed amount > invoice remaining, excess amount creates a verified profil
 | ID | Task | Complexity |
 |----|------|------------|
 | T-04.4.02.01 | Build `AutomaticRefundObligation` trigger: on contract → Rejected/Cancelled, if paid amount > 0, create refund with state Requested, destination = wallet | L |
-| T-04.4.02.02 | Worker: pick up auto-refund obligations, execute `WalletService.credit()`, mark refund Completed | M |
+| T-04.4.02.02 | Worker: pick up auto-refund obligations, execute the transaction-owned shared `postWalletCredit` kernel, mark refund Completed atomically | M |
 | T-04.4.02.03 | Block contract/order financial closure until linked refund obligations are Completed | M |
 | T-04.4.02.04 | Finance queue: show failed auto-refund obligations with Retry action | M |
 | T-04.4.02.05 | Notify customer on completion and on failure (with support path) | M |
@@ -609,10 +609,10 @@ Draft → Awaiting staff review → Awaiting customer acceptance → Accepted �
 |----|------|------------|
 | T-04.6.01.01 | Build customer quantity increase request UI/API: validate against max increase percentage, check one-per-contract limit | M |
 | T-04.6.01.02 | Staff review queue: approve/reject with reason | M |
-| T-04.6.01.03 | On approval: create amendment document version, trigger customer signature workflow | M |
+| T-04.6.01.03 | On approval: create immutable JSON amendment tied to the original contract version; require fresh step-up customer consent bound to amendment hash, session and signing time | M |
 | T-04.6.01.04 | After signature: calculate incremental amount (price snapshot), create adjustment invoice or refund | L |
 | T-04.6.01.05 | Enforce effective period: increase applies only to future periods | M |
-| T-04.6.01.06 | Admin config for max increase percentage per service type | S |
+| T-04.6.01.06 | Admin config for electricity-only max increase as a whole percentage; default 0 disables increases; retain existing versioned settings/routes | S |
 
 ---
 
@@ -721,7 +721,7 @@ Draft → Awaiting staff review → Awaiting customer acceptance → Accepted �
 **Checks:**
 - Wallet: `SUM(completed_transactions.amount) = wallets.postedBalance`
 - Invoice: `SUM(confirmed_receipts + wallet_payments) = invoices.paidAmount`
-- Refund: `SUM(completed_refunds) <= invoices.paidAmount - invoices.refundedAmount`
+- Refund: `SUM(completed_refunds) <= invoices.refundedAmount`; preserved legacy counter residuals are valid. Outstanding reservations plus `refundedAmount` must not exceed `paidAmount`. Credit-note refunds use the ordinary paid original invoice and its existing capacity.
 - Open exceptions: unmatched provider callbacks, chargebacks, expired pending top-ups
 
 **Reporting:** Mismatches logged to finance exception queue with severity. Staff can investigate and resolve.
