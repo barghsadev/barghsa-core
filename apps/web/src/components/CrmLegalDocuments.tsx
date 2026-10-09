@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-crm';
 import { useLocale } from '../hooks/useLocale.js';
@@ -18,7 +22,23 @@ function validLink(value: unknown): value is DocumentLink {
   }
 }
 
-export function CrmLegalDocuments({ profileId, canRead }: { profileId: string; canRead: boolean }) {
+type LegalDocumentsProps = { profileId: string; canRead: boolean };
+export function CrmLegalDocuments(props: LegalDocumentsProps) {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return (
+    <OwnedCrmLegalDocuments
+      key={JSON.stringify([actor, contextRevision, props.profileId, props.canRead])}
+      {...props}
+    />
+  );
+}
+function OwnedCrmLegalDocuments({ profileId, canRead }: LegalDocumentsProps) {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  const sequence = useRef(0);
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [documents, setDocuments] = useState<DocumentLink[] | null>(null);
@@ -34,14 +54,33 @@ export function CrmLegalDocuments({ profileId, canRead }: { profileId: string; c
     setLoading(true);
     setError(false);
     setDocuments(null);
+    let cancel: (() => void) | undefined;
     try {
-      const response = await fetch('/api/crm/profiles/' + profileId + '/documents', {
-        credentials: 'include',
-        cache: 'no-store',
-        signal: abort.signal,
+      const key = queryKeys.profiles.detail(
+        { context: 'staff', ownerId: profileId, accountId: actor, revision: contextRevision },
+        JSON.stringify([reader, 'crm-legal-documents', ++sequence.current])
+      );
+      cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+      abort.signal.addEventListener('abort', cancel, { once: true });
+      const response = await client.fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch('/api/crm/profiles/' + profileId + '/documents', {
+            credentials: 'include',
+            cache: 'no-store',
+            signal,
+          });
+          return {
+            ok: response.ok,
+            value: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
       });
       if (!response.ok) throw new Error('Document request failed');
-      const body: unknown = await response.json();
+      const body: unknown = response.value;
       const result = body as { profileId?: unknown; documents?: unknown } | null;
       if (
         !result ||
@@ -55,6 +94,7 @@ export function CrmLegalDocuments({ profileId, canRead }: { profileId: string; c
     } catch {
       if (!abort.signal.aborted) setError(true);
     } finally {
+      if (cancel) abort.signal.removeEventListener('abort', cancel);
       if (!abort.signal.aborted) {
         setLoading(false);
         request.current = null;

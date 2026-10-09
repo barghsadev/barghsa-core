@@ -1,5 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Building2, UserRound } from 'lucide-react';
 import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
@@ -34,7 +38,17 @@ const emptyFilters = {
   order: 'desc',
   staffOnly: false,
 };
-export default function CrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
+export default function CrmProfileList(props: { query?: ListQueryBinding } = {}) {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return <OwnedCrmProfileList key={JSON.stringify([actor, contextRevision])} {...props} />;
+}
+function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  const sequence = useRef(0);
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const preference = useTimezone();
@@ -152,10 +166,41 @@ export default function CrmProfileList({ query }: { query?: ListQueryBinding } =
         key === 'dateFrom' ? start.toISOString() : end.toISOString().replace('.999Z', '.999999Z')
       );
     }
+    let cancel: (() => void) | undefined;
     try {
-      const response = await fetch(`/api/crm/users?${params}`, {
-        credentials: 'include',
-        signal: controller.signal,
+      const key = [
+        ...queryKeys.profiles.list(
+          {
+            context: 'staff',
+            ownerId: actor ?? 'current-account',
+            accountId: actor,
+            revision: contextRevision,
+          },
+          params,
+          ++sequence.current
+        ),
+        reader,
+        'crm-users',
+        preference.timezone,
+      ] as const;
+      cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+      controller.signal.addEventListener('abort', cancel, { once: true });
+      const response = await client.fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(`/api/crm/users?${params}`, {
+            credentials: 'include',
+            signal,
+          });
+          return {
+            status: response.status,
+            ok: response.ok,
+            value: response.ok ? await response.json() : null,
+          };
+        },
       });
       if (current !== generation.current || controller.signal.aborted) return;
       if ([401, 403].includes(response.status)) {
@@ -174,7 +219,7 @@ export default function CrmProfileList({ query }: { query?: ListQueryBinding } =
         return;
       }
       if (!response.ok) throw new Error('CRM unavailable');
-      const data = await response.json();
+      const data = response.value;
       if (
         !data ||
         !Array.isArray(data.users) ||
@@ -221,9 +266,22 @@ export default function CrmProfileList({ query }: { query?: ListQueryBinding } =
     } catch {
       if (current === generation.current && !controller.signal.aborted) setError(true);
     } finally {
+      if (cancel) controller.signal.removeEventListener('abort', cancel);
       if (current === generation.current) setLoading(false);
     }
-  }, [filters, term, cursor, criteria, denied, preference.status, preference.timezone]);
+  }, [
+    filters,
+    term,
+    cursor,
+    criteria,
+    denied,
+    preference.status,
+    preference.timezone,
+    actor,
+    contextRevision,
+    client,
+    reader,
+  ]);
   useEffect(() => {
     void load();
     return () => {

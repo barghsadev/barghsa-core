@@ -1,4 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-crm';
 import { useLocale } from '../hooks/useLocale.js';
@@ -69,15 +73,23 @@ function parsePage(value: unknown, kind: Kind): Page | null {
   return { items, nextCursor: page.nextCursor as string | null };
 }
 
-export function CrmProfileRecords({
-  profileId,
-  kind,
-  initial,
-}: {
-  profileId: string;
-  kind: Kind;
-  initial: unknown;
-}) {
+type RecordsProps = { profileId: string; kind: Kind; initial: unknown };
+export function CrmProfileRecords(props: RecordsProps) {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return (
+    <OwnedCrmProfileRecords
+      key={JSON.stringify([actor, contextRevision, props.profileId, props.kind])}
+      {...props}
+    />
+  );
+}
+function OwnedCrmProfileRecords({ profileId, kind, initial }: RecordsProps) {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  const sequence = useRef(0);
   const locale = useLocale(),
     time = useAccountTime();
   const [page, setPage] = useState<Page | null>(() => parsePage(initial, kind));
@@ -93,13 +105,35 @@ export function CrmProfileRecords({
       retryCursor.current = cursor;
       setBusy(true);
       setError(false);
+      let cancel: (() => void) | undefined;
       try {
-        const response = await fetch(
-          `/api/crm/profiles/${encodeURIComponent(profileId)}/records/${kind}${cursor ? '?' + new URLSearchParams({ cursor }) : ''}`,
-          { credentials: 'include', signal: controller.signal }
+        const key = queryKeys.profiles.detail(
+          { context: 'staff', ownerId: profileId, accountId: actor, revision: contextRevision },
+          JSON.stringify([reader, 'crm-records', kind, cursor ?? '', ++sequence.current])
         );
+        cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+        controller.signal.addEventListener('abort', cancel, { once: true });
+        const response = await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const response = await fetch(
+              `/api/crm/profiles/${encodeURIComponent(profileId)}/records/${kind}${cursor ? '?' + new URLSearchParams({ cursor }) : ''}`,
+              { credentials: 'include', signal }
+            );
+            return {
+              status: response.status,
+              ok: response.ok,
+              value: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          },
+        });
+        if (controller.signal.aborted) return;
+        if (response.status === 401 || response.status === 403) setPage(null);
         if (!response.ok) throw new Error();
-        const result = parsePage(await response.json(), kind);
+        const result = parsePage(response.value, kind);
         if (!result || (cursor && result.nextCursor === cursor)) throw new Error();
         if (!controller.signal.aborted)
           setPage((current) => ({
@@ -116,11 +150,12 @@ export function CrmProfileRecords({
       } catch {
         if (!controller.signal.aborted) setError(true);
       } finally {
+        if (cancel) controller.signal.removeEventListener('abort', cancel);
         if (!controller.signal.aborted) setBusy(false);
         if (request.current === controller) request.current = null;
       }
     },
-    [profileId, kind]
+    [profileId, kind, actor, contextRevision, client, reader]
   );
   useEffect(() => {
     const firstPage = parsePage(initial, kind);
