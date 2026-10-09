@@ -5,6 +5,10 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useOwnedDocumentRead } from './useOwnedDocumentRead.js';
 const targets = [
   '/api/profiles',
+  '/api/admin/document-templates?category=contract',
+  '/api/admin/document-templates/template-1',
+  '/api/admin/document-templates/template-1/versions/version-1/files/file-1/download',
+  '/api/onboarding/documents/profile-1',
   '/api/admin/document-retention/policies',
   '/api/admin/document-retention/holds?documentId=document-1',
   '/api/admin/document-retention/destruction',
@@ -115,6 +119,9 @@ it.each([
   '/api/admin/documents/document-1/approve',
   '/api/documents/document-1/confirm-upload',
   '/api/admin/documents/document-1/hold',
+  '/api/admin/document-templates/template-1/versions',
+  '/api/admin/document-templates/template-1/publish',
+  '/api/onboarding/documents/profile-1/approve',
   '/api/admin/document-retention/holds/hold-1/release',
   '/api/admin/document-retention/destruction/job-1/approve',
 ])('refuses command %s without dispatch', async (target) => {

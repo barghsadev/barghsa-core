@@ -1,3 +1,6 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, DateCell, TextCell, Input, Label, ListPage } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -35,9 +38,16 @@ import {
   type TemplateVersionDraft,
 } from '../lib/document-template-form.js';
 
-export default function AdminDocumentTemplatesPage({
-  queries,
-}: { queries?: ListQueryBinding } = {}) {
+export default function AdminDocumentTemplatesPage(props: { queries?: ListQueryBinding } = {}) {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
+  return (
+    <OwnedAdminDocumentTemplatesPage key={JSON.stringify([actor, contextRevision])} {...props} />
+  );
+}
+function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBinding } = {}) {
+  const actor = useAccountUser();
+  const contextRevision = useProfileContextRevision();
   const locale = useLocale();
   const word = (key: Parameters<typeof documentTemplateText>[0]) =>
     documentTemplateText(key, locale);
@@ -100,6 +110,19 @@ export default function AdminDocumentTemplatesPage({
   const [acceptedCriteria, setAcceptedCriteria] = useState('');
   const [versionChanged, setVersionChanged] = useState(false);
   const criteria = JSON.stringify([search, category]);
+  const readList = useOwnedDocumentRead(actor, contextRevision, true, undefined, criteria);
+  const readDetail = useOwnedDocumentRead(
+    actor,
+    contextRevision,
+    true,
+    undefined,
+    JSON.stringify(['template-detail', selected])
+  );
+  const linkRequests = useRef(new Set<AbortController>());
+  function retireLinks() {
+    for (const controller of linkRequests.current) controller.abort();
+    linkRequests.current.clear();
+  }
   const visibleRows = acceptedCriteria === criteria ? rows : null;
   const accessDenied = useRef(false);
   const linkGeneration = useRef(0);
@@ -136,6 +159,7 @@ export default function AdminDocumentTemplatesPage({
 
   function choose(id: string | null, force = false) {
     if (owner.current && !force) return;
+    retireLinks();
     ++linkGeneration.current;
     acceptedDetail.current = null;
     setSelected(id);
@@ -156,6 +180,7 @@ export default function AdminDocumentTemplatesPage({
   }
   useEffect(
     () => () => {
+      retireLinks();
       ++linkGeneration.current;
     },
     []
@@ -166,12 +191,19 @@ export default function AdminDocumentTemplatesPage({
     const params = new URLSearchParams();
     if (search) params.set('search', search);
     if (category) params.set('category', category);
-    void fetch(`/api/admin/document-templates?${params}`, { signal: controller.signal })
-      .then(async (response) => {
+    void readList<Template[]>(
+      `/api/admin/document-templates?${params}`,
+      { signal: controller.signal },
+      async (path, options) => {
+        const response = await fetch(path, options);
         if (!response.ok)
           throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
         const data = (await response.json()) as Template[];
         if (!Array.isArray(data)) throw new Error('error');
+        return data;
+      }
+    )
+      .then((data) => {
         if (controller.signal.aborted) return;
         accessDenied.current = false;
         setRows(data);
@@ -189,7 +221,7 @@ export default function AdminDocumentTemplatesPage({
         }
       });
     return () => controller.abort();
-  }, [category, revision, search, criteria]);
+  }, [category, revision, search, criteria, readList]);
   useEffect(() => {
     if (!selected) {
       setDetailState('ready');
@@ -198,13 +230,20 @@ export default function AdminDocumentTemplatesPage({
     const controller = new AbortController();
     setDetailState('loading');
     const current = linkGeneration.current;
-    void fetch(`/api/admin/document-templates/${selected}`, { signal: controller.signal })
-      .then(async (response) => {
+    void readDetail<Template>(
+      `/api/admin/document-templates/${selected}`,
+      { signal: controller.signal },
+      async (path, options) => {
+        const response = await fetch(path, options);
         if (!response.ok)
           throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
         const next = (await response.json()) as Template;
         if (next.id !== selected || (next.versions !== undefined && !Array.isArray(next.versions)))
           throw new Error('error');
+        return next;
+      }
+    )
+      .then((next) => {
         if (controller.signal.aborted || accessDenied.current || current !== linkGeneration.current)
           return;
         const previous = acceptedDetail.current;
@@ -215,6 +254,8 @@ export default function AdminDocumentTemplatesPage({
             retainedFileIds: latest?.files.map((file) => file.id) ?? [],
           });
         else if (previous.versions?.[0]?.id !== latest?.id) {
+          retireLinks();
+          setLinks({});
           const ids = new Set(latest?.files.map((file) => file.id) ?? []);
           version.setValue(
             'retainedFileIds',
@@ -237,6 +278,7 @@ export default function AdminDocumentTemplatesPage({
         const denied = reason instanceof Error && reason.message === 'denied';
         setDetailState(denied ? 'denied' : 'error');
         if (denied) {
+          retireLinks();
           ++linkGeneration.current;
           acceptedDetail.current = null;
           setDetail(null);
@@ -254,7 +296,7 @@ export default function AdminDocumentTemplatesPage({
         }
       });
     return () => controller.abort();
-  }, [selected, detailRevision]);
+  }, [selected, detailRevision, readDetail]);
 
   async function save(event: FormEvent) {
     event.preventDefault();
@@ -333,17 +375,26 @@ export default function AdminDocumentTemplatesPage({
   async function getLink(versionId: string, fileId: string) {
     if (!selected || accessDenied.current) return;
     const current = linkGeneration.current;
+    const controller = new AbortController();
+    linkRequests.current.add(controller);
     try {
-      const response = await fetch(
-        `/api/admin/document-templates/${selected}/versions/${versionId}/files/${fileId}/download`
+      const data = await readDetail<{ url: string }>(
+        `/api/admin/document-templates/${selected}/versions/${versionId}/files/${fileId}/download`,
+        { signal: controller.signal },
+        async (path, options) => {
+          const response = await fetch(path, options);
+          if (!response.ok) throw new Error('Link unavailable');
+          return (await response.json()) as { url: string };
+        }
       );
-      if (!response.ok) throw new Error('Link unavailable');
-      const data = (await response.json()) as { url: string };
       const url = documentUrl(data.url);
-      if (current === linkGeneration.current && !accessDenied.current)
+      if (!controller.signal.aborted && current === linkGeneration.current && !accessDenied.current)
         setLinks((links) => ({ ...links, [fileId]: url }));
     } catch {
-      if (current === linkGeneration.current && !accessDenied.current) setLinkError(true);
+      if (!controller.signal.aborted && current === linkGeneration.current && !accessDenied.current)
+        setLinkError(true);
+    } finally {
+      linkRequests.current.delete(controller);
     }
   }
 

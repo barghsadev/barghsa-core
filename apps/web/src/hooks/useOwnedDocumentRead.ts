@@ -29,9 +29,19 @@ export function useOwnedDocumentRead(
     };
   }, [client, identity]);
   return useCallback(
-    async <T>(path: string, options: RequestInit = {}): Promise<T> => {
+    async <T>(
+      path: string,
+      options: RequestInit = {},
+      decode: (path: string, options: RequestInit) => Promise<T> = documentRequest<T>
+    ): Promise<T> => {
       const url = new URL(path, 'http://barghsa.local');
       const profiles = url.pathname === '/api/profiles';
+      const templates = url.pathname === '/api/admin/document-templates';
+      const template =
+        /^\/api\/admin\/document-templates\/[^/]+(?:\/versions\/[^/]+\/files\/[^/]+\/download)?$/.test(
+          url.pathname
+        );
+      const legal = /^\/api\/onboarding\/documents\/[^/]+$/.test(url.pathname);
       const policies = url.pathname === '/api/admin/document-retention/policies';
       const administration = /^\/api\/admin\/document-retention\/(?:holds|destruction)$/.test(
         url.pathname
@@ -47,7 +57,17 @@ export function useOwnedDocumentRead(
         !path.startsWith('/api/') ||
         (options.method ?? 'GET') !== 'GET' ||
         options.body !== undefined ||
-        !(profiles || policy || list || detail || policies || administration)
+        !(
+          profiles ||
+          policy ||
+          list ||
+          detail ||
+          policies ||
+          administration ||
+          templates ||
+          template ||
+          legal
+        )
       )
         throw new Error('Invalid document read');
       const profile = profileId?.trim() || undefined;
@@ -68,11 +88,17 @@ export function useOwnedDocumentRead(
             { ...authority, context: 'account', ownerId: actor ?? 'account-session' },
             path
           )
-        : policy || policies
-          ? queryKeys.catalogue.detail(authority, url.pathname)
-          : list || administration
-            ? queryKeys.documents.list(authority, params)
-            : queryKeys.documents.detail(authority, url.pathname + url.search);
+        : templates
+          ? queryKeys.catalogue.list(authority, params)
+          : template
+            ? queryKeys.catalogue.detail(authority, url.pathname + url.search)
+            : legal
+              ? queryKeys.documents.detail(authority, url.pathname)
+              : policy || policies
+                ? queryKeys.catalogue.detail(authority, url.pathname)
+                : list || administration
+                  ? queryKeys.documents.list(authority, params)
+                  : queryKeys.documents.detail(authority, url.pathname + url.search);
       const queryKey: ServerQueryKey = [...key, JSON.stringify([reader, ++sequence.current])];
       const controller = new AbortController();
       const external = options.signal;
@@ -95,7 +121,7 @@ export function useOwnedDocumentRead(
           retry: false,
           queryFn: async ({ signal }) => {
             const ownedSignal = external ? AbortSignal.any([external, signal]) : signal;
-            const value = await documentRequest<T>(path, { ...options, signal: ownedSignal });
+            const value = await decode(path, { ...options, signal: ownedSignal });
             if (!current() || signal.aborted) throw new Error('Obsolete document read');
             return value;
           },

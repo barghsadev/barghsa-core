@@ -1,9 +1,22 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { Button } from '@barghsa/ui';
 
-export function LegalProfileDocuments({
+export function LegalProfileDocuments(props: Parameters<typeof OwnedLegalProfileDocuments>[0]) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedLegalProfileDocuments
+      key={JSON.stringify([actor, revision, props.profileId])}
+      {...props}
+    />
+  );
+}
+function OwnedLegalProfileDocuments({
   profileId,
   disabled = false,
   canInteract = () => true,
@@ -14,6 +27,15 @@ export function LegalProfileDocuments({
   canInteract?: () => boolean;
   onAccessDenied?: () => void;
 }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    false,
+    profileId,
+    'legal-profile-documents'
+  );
   const locale = useLocale();
   const [documents, setDocuments] = useState<Array<{ key: string; name: string; url: string }>>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -22,11 +44,14 @@ export function LegalProfileDocuments({
     const controller = new AbortController();
     setDocuments([]);
     setStatus('loading');
-    fetch(`/api/onboarding/documents/${profileId}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
+    readDocument(
+      `/api/onboarding/documents/${profileId}`,
+      {
+        credentials: 'include',
+        signal: controller.signal,
+      },
+      async (path, options) => {
+        const response = await fetch(path, options);
         if (!response.ok) {
           if (!controller.signal.aborted && [401, 403, 404].includes(response.status))
             onAccessDenied?.();
@@ -35,7 +60,8 @@ export function LegalProfileDocuments({
         return response.json() as Promise<{
           documents: Array<{ key: string; name: string; url: string }>;
         }>;
-      })
+      }
+    )
       .then((body) => {
         if (!controller.signal.aborted) {
           setDocuments(body.documents);
@@ -46,7 +72,7 @@ export function LegalProfileDocuments({
         if (!controller.signal.aborted) setStatus('error');
       });
     return () => controller.abort();
-  }, [profileId, retry]);
+  }, [profileId, retry, readDocument]);
   return (
     <section
       className="rounded-lg border p-4 space-y-3"

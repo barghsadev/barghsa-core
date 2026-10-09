@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -105,7 +106,9 @@ afterEach(async () => {
 });
 
 async function render() {
-  await act(async () => root.render(<AdminDocumentTemplatesPage />));
+  await act(async () =>
+    root.render(<QueryComponentProvider>{<AdminDocumentTemplatesPage />}</QueryComponentProvider>)
+  );
 }
 async function click(text: string) {
   const button = [...container.querySelectorAll('button')].find((item) =>
