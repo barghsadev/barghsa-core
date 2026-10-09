@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue remaining business and readonly-POST review/confirmation readers, including staff invoice profile lookup and correction-source reads, then mutation owners with eligible low-risk optimism. Solar staff postal plus primary staff, saving/change/comments, companion/intake/root/bootstrap scopes have current acceptance. Whole UI/operational milestones remain separate. Preserve unfinished consultation work, exact money, permission/profile isolation and validated captured commands.
+Continue staff invoice receipt queue/detail/allocation and remaining business/readonly-POST review/confirmation readers, then mutation owners with eligible low-risk optimism. Invoice profile/source, solar postal and prior staff/shared/root/bootstrap read scopes have current acceptance. Whole UI/operational milestones remain separate. Preserve unfinished consultation work, exact money, permission/profile isolation and validated captured commands.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.

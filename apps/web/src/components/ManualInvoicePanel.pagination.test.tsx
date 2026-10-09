@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -38,7 +39,9 @@ it('keeps the selected customer while loading more manual-invoice profiles', asy
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<ManualInvoiceForm />));
+    await act(async () =>
+      root.render(<QueryComponentProvider>{<ManualInvoiceForm />}</QueryComponentProvider>)
+    );
     const select = container.querySelector<HTMLSelectElement>('#manual-profile')!;
     expect(select.textContent).toContain('First customer');
     await act(async () => {

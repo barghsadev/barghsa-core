@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -78,7 +79,9 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 async function mount() {
-  await act(async () => root.render(<ManualInvoiceForm />));
+  await act(async () =>
+    root.render(<QueryComponentProvider>{<ManualInvoiceForm />}</QueryComponentProvider>)
+  );
   await vi.waitFor(() => expect(host.querySelector('select')?.textContent).toContain('Customer'));
 }
 async function set(input: HTMLInputElement | HTMLSelectElement, value: string) {
@@ -290,7 +293,11 @@ it('discards old review callbacks after the editor is replaced', async () => {
   });
   await click('Issue invoice');
   await vi.waitFor(() => expect(reviews).toHaveLength(1));
-  await act(async () => root.render(<ManualInvoiceForm key="new-editor" />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>{<ManualInvoiceForm key="new-editor" />}</QueryComponentProvider>
+    )
+  );
   await vi.waitFor(() => expect(host.querySelector('select')?.textContent).toContain('Customer'));
   await act(async () =>
     respond(

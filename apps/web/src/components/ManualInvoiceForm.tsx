@@ -1,3 +1,6 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { tInvoiceCorrections as tc } from '@barghsa/i18n/invoice-corrections';
 import {
   useEffect,
@@ -86,7 +89,14 @@ interface InvoiceRequest {
     isTaxable: boolean;
   }>;
 }
-export default function ManualInvoiceForm({
+export default function ManualInvoiceForm(
+  props: Parameters<typeof OwnedManualInvoiceForm>[0] = {}
+) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedManualInvoiceForm key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedManualInvoiceForm({
   correction,
 }: {
   correction?: InvoiceCorrectionSource & {
@@ -96,6 +106,9 @@ export default function ManualInvoiceForm({
     unavailable?: boolean;
   };
 }) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const unavailable = Boolean(correction?.unavailable);
@@ -234,9 +247,12 @@ export default function ManualInvoiceForm({
     }
     const params = new URLSearchParams({ search: query });
     if (before) params.set('before', before);
-    void fetch(`/api/admin/invoices/manual/profiles?${params}`, {
-      signal: abort.signal,
-    })
+    void readStaff(
+      'profiles',
+      'list',
+      `/api/admin/invoices/manual/profiles?${params}`,
+      abort.signal
+    )
       .then(async (response) => {
         if (!response.ok)
           throw new Error(response.status === 403 || response.status === 401 ? 'denied' : 'lookup');
@@ -274,7 +290,7 @@ export default function ManualInvoiceForm({
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [query, revision, correction, before]);
+  }, [query, revision, correction, before, readStaff]);
 
   useEffect(() => {
     if (!locked) return;

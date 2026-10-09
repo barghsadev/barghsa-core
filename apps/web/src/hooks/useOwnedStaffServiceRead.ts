@@ -23,14 +23,15 @@ export function useOwnedStaffServiceRead(actor: string | null, revision: number)
   }, [client, identity]);
   return useCallback(
     async (
-      resource: 'orders' | 'contracts' | 'consultations' | 'solar' | 'catalogue',
+      resource:
+        'orders' | 'contracts' | 'invoices' | 'profiles' | 'consultations' | 'solar' | 'catalogue',
       kind: 'list' | 'detail',
       path: string,
       external: AbortSignal
     ) => {
       const pathname = path.split('?')[0]!;
       if (
-        !/^\/api\/(?:staff\/electricity\/(?:orders(?:\/(?:conversations|[^/]+))?|increase-requests|contracts\/[^/]+\/price-adjustments)|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:postal-queue|postal-guidance|document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
+        !/^\/api\/(?:staff\/electricity\/(?:orders(?:\/(?:conversations|[^/]+))?|increase-requests|contracts\/[^/]+\/price-adjustments)|admin\/invoices\/(?:manual\/profiles|[^/]+\/corrections)|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:postal-queue|postal-guidance|document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
           pathname
         )
       )

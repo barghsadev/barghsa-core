@@ -1,3 +1,6 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Button, Field, FieldLabel, Input, PageLoading } from '@barghsa/ui';
 import { tInvoiceCorrections as t } from '@barghsa/i18n/invoice-corrections';
@@ -44,6 +47,14 @@ function isSource(value: unknown, id: string): value is InvoiceCorrectionSource 
   );
 }
 export default function InvoiceCorrectionsPanel() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedInvoiceCorrectionsPanel key={JSON.stringify([actor, revision])} />;
+}
+function OwnedInvoiceCorrectionsPanel() {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const lookup = useInvoiceLookupForm(t('invoiceIdInvalid', locale)!);
@@ -114,10 +125,12 @@ export default function InvoiceCorrectionsPanel() {
         const id = values.invoiceId.trim().toLowerCase();
         if (loadedId.current !== id) setSource(null);
         try {
-          const response = await fetch(`/api/admin/invoices/${id}/corrections`, {
-            signal: request.signal,
-          });
-          const data: unknown = await response.json();
+          const response = await readStaff(
+            'invoices',
+            'detail',
+            `/api/admin/invoices/${id}/corrections`,
+            request.signal
+          );
           if (owner !== generation.current) return;
           if ([401, 403, 404].includes(response.status)) {
             setSource(null);
@@ -125,6 +138,8 @@ export default function InvoiceCorrectionsPanel() {
             setError('denied');
             return;
           }
+          const data: unknown = await response.json();
+          if (owner !== generation.current) return;
           if (!response.ok || !isSource(data, id)) throw Error('Invalid invoice');
           loadedId.current = id;
           setSource(data);
