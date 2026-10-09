@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Card, CardContent, Button } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
@@ -38,6 +40,12 @@ interface Command {
   stage: 'request' | 'export' | 'read';
 }
 function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
+  const client = useQueryClient();
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const reader = useId();
+  const readSequence = useRef(0);
+  const reads = useRef(new Set<AbortController>());
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const [preview, setPreview] = useState<LifecyclePreview | null>(null);
@@ -58,20 +66,48 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     return true;
   }
   async function refresh(signal?: AbortSignal): Promise<LifecyclePreview | null> {
-    const response = await fetch('/api/tickets/lifecycle-preview', {
-      credentials: 'include',
-      ...(signal ? { signal } : {}),
-    });
-    if (!permitted() || signal?.aborted) return null;
-    if (denied(response)) return null;
-    if (!response.ok) throw new Error('Preview unavailable');
-    const data = lifecyclePreview(await response.json());
-    if (!permitted() || signal?.aborted) return null;
-    if (!data || (command.current && data.profileId !== command.current.profileId))
-      throw new Error('Invalid preview');
-    setPreview(data);
-    setState('ready');
-    return data;
+    const controller = new AbortController();
+    const attempt = ++readSequence.current;
+    const key = queryKeys.tickets.detail(
+      { context: 'account', ownerId: actor ?? 'current-session', accountId: actor, revision },
+      JSON.stringify([reader, 'lifecycle-preview', attempt])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    const abort = () => controller.abort();
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    signal?.addEventListener('abort', abort, { once: true });
+    reads.current.add(controller);
+    try {
+      if (!permitted() || signal?.aborted) throw new Error('Obsolete preview');
+      const { response, raw } = await client.fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal: querySignal }) => {
+          const response = await fetch('/api/tickets/lifecycle-preview', {
+            credentials: 'include',
+            signal: querySignal,
+          });
+          return { response, raw: response.ok ? ((await response.json()) as unknown) : null };
+        },
+      });
+      if (controller.signal.aborted || readSequence.current !== attempt) return null;
+      if (!permitted() || signal?.aborted) return null;
+      if (denied(response)) return null;
+      if (!response.ok) throw new Error('Preview unavailable');
+      const data = lifecyclePreview(raw);
+      if (!permitted() || signal?.aborted) return null;
+      if (!data || (command.current && data.profileId !== command.current.profileId))
+        throw new Error('Invalid preview');
+      setPreview(data);
+      setState('ready');
+      return data;
+    } finally {
+      controller.signal.removeEventListener('abort', cancel);
+      signal?.removeEventListener('abort', abort);
+      reads.current.delete(controller);
+    }
   }
   useEffect(() => {
     alive.current = true;
@@ -84,6 +120,8 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     return () => {
       alive.current = false;
       controller.abort();
+      for (const read of reads.current) read.abort();
+      reads.current.clear();
     };
   }, []);
   async function run(next?: Command) {

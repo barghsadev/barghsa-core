@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue remaining customer/staff/financial read owners, then mutation owners with eligible low-risk optimism. Funding wallet companions, CRM directory/children, assistant display, AI catalogues/confirmation and prior service readers are accepted. Whole UI/operational milestone gates remain separate. Preserve unfinished consultation work, exact money, permission/profile isolation, captured commands and validated receipts.
+Continue remaining customer/staff read owners, including root verification/default-profile reads with explicit session ownership, then mutation owners with eligible low-risk optimism. Ownership/lifecycle reads, funding companions and prior shared/service reads have scoped acceptance. Whole UI/operational milestones remain separate. Preserve unfinished consultation work, exact money, authorization/profile isolation and validated captured commands.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
