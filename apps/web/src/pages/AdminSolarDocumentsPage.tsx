@@ -1,3 +1,6 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -95,7 +98,17 @@ interface SetReview {
   };
 }
 
-export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQueries } = {}) {
+export function AdminSolarDocumentsPage(
+  props: Parameters<typeof OwnedAdminSolarDocumentsPage>[0] = {}
+) {
+  const profileRevision = useProfileContextRevision();
+  const actor = useAccountUser();
+  return <OwnedAdminSolarDocumentsPage key={JSON.stringify([actor, profileRevision])} {...props} />;
+}
+function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQueries } = {}) {
+  const readActor = useAccountUser();
+  const readProfileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
@@ -256,9 +269,11 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
     setDocumentsLoading(true);
     setDocumentsError(false);
     setDocumentsDenied(false);
-    void fetch(
+    void readStaff(
+      'solar',
+      'list',
       `/api/admin/solar/document-review-queue${beforeDocument ? `?before=${encodeURIComponent(beforeDocument)}` : ''}`,
-      { credentials: 'include', signal: controller.signal }
+      controller.signal
     )
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
@@ -295,18 +310,17 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
         if (!controller.signal.aborted) setDocumentsLoading(false);
       });
     return () => controller.abort();
-  }, [beforeDocument, revision, documentsRevision]);
+  }, [beforeDocument, revision, documentsRevision, readStaff]);
   useEffect(() => {
     const controller = new AbortController();
     setQueueError(false);
     setQueueDenied(false);
     setQueueLoading(true);
-    void fetch(
+    void readStaff(
+      'solar',
+      'list',
       `/api/admin/solar/requests${before ? `?before=${encodeURIComponent(before)}` : ''}`,
-      {
-        credentials: 'include',
-        signal: controller.signal,
-      }
+      controller.signal
     )
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
@@ -337,7 +351,7 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
         if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [before, revision, queueRevision]);
+  }, [before, revision, queueRevision, readStaff]);
   useEffect(() => {
     setDetailError(false);
     setDetail(null);
@@ -346,10 +360,12 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
       return;
     }
     const controller = new AbortController();
-    void fetch(`/api/admin/solar/requests/${selected}/documents`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff(
+      'solar',
+      'detail',
+      `/api/admin/solar/requests/${selected}/documents`,
+      controller.signal
+    )
       .then(async (response) => {
         if (!response.ok) throw new Error('details');
         return response.json() as Promise<Detail>;
@@ -361,14 +377,11 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
         if (!controller.signal.aborted) setDetailError(true);
       });
     return () => controller.abort();
-  }, [selected, revision, detailRevision]);
+  }, [selected, revision, detailRevision, readStaff]);
   useEffect(() => {
     const controller = new AbortController();
     setGuidanceError(false);
-    void fetch('/api/admin/solar/document-guidance', {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff('catalogue', 'detail', '/api/admin/solar/document-guidance', controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new Error('guidance');
         return response.json() as Promise<Guidance>;
@@ -385,7 +398,7 @@ export function AdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQu
         if (!controller.signal.aborted) setGuidanceError(true);
       });
     return () => controller.abort();
-  }, [guidanceRevision]);
+  }, [guidanceRevision, readStaff]);
   function saveGuidance(event: FormEvent<HTMLFormElement>) {
     if (busy() || guidanceUnconfirmed || guidanceDenied) {
       event.preventDefault();

@@ -1,3 +1,5 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -48,7 +50,16 @@ interface ReviewedProgress {
   rejected: boolean;
   unconfirmed: boolean;
 }
-export function AdminSolarConstructionPage({
+export function AdminSolarConstructionPage(
+  props: Parameters<typeof OwnedAdminSolarConstructionPage>[0]
+) {
+  const profileRevision = useProfileContextRevision();
+  const actor = useAccountUser();
+  return (
+    <OwnedAdminSolarConstructionPage key={JSON.stringify([actor, profileRevision])} {...props} />
+  );
+}
+function OwnedAdminSolarConstructionPage({
   queries,
   selected,
   onSelect,
@@ -57,6 +68,9 @@ export function AdminSolarConstructionPage({
   selected: string | null;
   onSelect: (id: string | null) => void;
 }) {
+  const readActor = useAccountUser();
+  const readProfileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
   const locale = useLocale();
   const time = useAccountTime(locale);
   const actor = useAccountUser();
@@ -190,10 +204,7 @@ export function AdminSolarConstructionPage({
     const params = new URLSearchParams();
     if (q) params.set('q', q);
     if (before) params.set('before', before);
-    void fetch(`/api/admin/solar/construction?${params}`, {
-      credentials: 'include',
-      signal: abort.signal,
-    })
+    void readStaff('solar', 'list', `/api/admin/solar/construction?${params}`, abort.signal)
       .then(async (response) => {
         if (abort.signal.aborted || accessDenied.current || currentActor.current !== actor) return;
         if (response.status === 401 || response.status === 403) {
@@ -212,7 +223,7 @@ export function AdminSolarConstructionPage({
           setQueueState('error');
       });
     return () => abort.abort();
-  }, [q, before, queueRevision, actor]);
+  }, [q, before, queueRevision, actor, readStaff]);
   useEffect(() => {
     const abort = new AbortController();
     if (accessDenied.current) return () => abort.abort();
@@ -221,10 +232,12 @@ export function AdminSolarConstructionPage({
     setProgress(null);
     setDetailState('loading');
     if (!selected) return () => abort.abort();
-    void fetch(`/api/admin/solar/construction/${encodeURIComponent(selected)}`, {
-      credentials: 'include',
-      signal: abort.signal,
-    })
+    void readStaff(
+      'solar',
+      'detail',
+      `/api/admin/solar/construction/${encodeURIComponent(selected)}`,
+      abort.signal
+    )
       .then(async (response) => {
         if (
           abort.signal.aborted ||
@@ -273,7 +286,7 @@ export function AdminSolarConstructionPage({
           setDetailState('error');
       });
     return () => abort.abort();
-  }, [scope, detailRevision]);
+  }, [scope, detailRevision, readStaff]);
   function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (

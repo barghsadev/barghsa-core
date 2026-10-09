@@ -1,3 +1,5 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -228,8 +230,17 @@ function ConsultationAssignment({
   );
 }
 
-export function AdminConsultationsPage({ queries }: { queries?: ConsultationListQuery } = {}) {
+export function AdminConsultationsPage(
+  props: Parameters<typeof OwnedAdminConsultationsPage>[0] = {}
+) {
+  const profileRevision = useProfileContextRevision();
+  return <OwnedAdminConsultationsPage key={profileRevision} {...props} />;
+}
+function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQuery } = {}) {
   const { assignment: initialAssignment } = useSearch({ from: '/admin/consultations' });
+  const readActor = useAccountUser();
+  const readProfileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
   const locale = useLocale();
   const actor = useAccountUser();
   const time = useAccountTime(locale);
@@ -282,7 +293,9 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
   if (work.current.scope !== workScope)
     work.current = { scope: workScope, generation: work.current.generation + 1 };
   const [team, setTeam] = useState('');
-  const [teams, setTeams] = useState<string[]>([]);
+  const [teamNames, setTeams] = useState<string[]>([]);
+  const [teamsActor, setTeamsActor] = useState<string | null>(null);
+  const teams = teamsActor === actor ? teamNames : [];
   const reasonPaidRef = useRef(false);
   const [reasonPaid, setReasonPaid] = useState(false);
   const reasonForm = useZodForm<ConsultationReasonDraft>(
@@ -531,10 +544,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     const capturedAccess = accessGeneration.current;
     const capturedRead = readGeneration.current;
     setTeamsError(false);
-    void fetch('/api/admin/consultations/teams', {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff('catalogue', 'detail', '/api/admin/consultations/teams', controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new Error('teams');
         return (await response.json()) as { teams: Array<{ name: string }> };
@@ -544,8 +554,10 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           !controller.signal.aborted &&
           capturedAccess === accessGeneration.current &&
           capturedRead === readGeneration.current
-        )
+        ) {
           setTeams(result.teams.map((item) => item.name));
+          setTeamsActor(actor);
+        }
       })
       .catch(() => {
         if (
@@ -556,7 +568,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
           setTeamsError(true);
       });
     return () => controller.abort();
-  }, [revision, teamsRevision]);
+  }, [revision, teamsRevision, readStaff]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -573,10 +585,12 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     });
     if (appliedStatus) query.set('status', appliedStatus);
     if (after) query.set('after', after);
-    void fetch(`/api/admin/consultations/requests?${query}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff(
+      'consultations',
+      'list',
+      `/api/admin/consultations/requests?${query}`,
+      controller.signal
+    )
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
         return (await response.json()) as { requests: RequestRow[]; nextAfter: string | null };
@@ -637,6 +651,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     queueScope,
     revision,
     listRevision,
+    readStaff,
   ]);
 
   useEffect(() => {
@@ -685,10 +700,12 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
     const capturedGeneration = work.current.generation;
     const recoveryAtRead = recoveringReason.current;
     setDetail(null);
-    void fetch(`/api/admin/consultations/requests/${encodeURIComponent(selectedId)}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff(
+      'consultations',
+      'detail',
+      `/api/admin/consultations/requests/${encodeURIComponent(selectedId)}`,
+      controller.signal
+    )
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
         const result = (await response.json()) as Detail;
@@ -742,7 +759,7 @@ export function AdminConsultationsPage({ queries }: { queries?: ConsultationList
         else setDetailError(true);
       });
     return () => controller.abort();
-  }, [selectedId, criteria, revision, detailRevision, workScope]);
+  }, [selectedId, criteria, revision, detailRevision, workScope, readStaff]);
 
   useEffect(() => {
     if (

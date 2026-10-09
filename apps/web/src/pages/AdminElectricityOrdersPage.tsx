@@ -1,3 +1,5 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { ElectricityRejectionPanel } from '../components/ElectricityRejectionPanel.js';
 import { ElectricityRawDraftQueue } from '../components/ElectricityRawDraftQueue.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -161,9 +163,19 @@ function contractTemplate(snapshot: Record<string, unknown>) {
   return { name: template.name, versionNumber: template.versionNumber, text: template.text };
 }
 
-export default function AdminElectricityOrdersPage({
-  queries,
-}: { queries?: StaffOrderListQuery } = {}) {
+export default function AdminElectricityOrdersPage(
+  props: Parameters<typeof OwnedAdminElectricityOrdersPage>[0] = {}
+) {
+  const profileRevision = useProfileContextRevision();
+  const actor = useAccountUser();
+  return (
+    <OwnedAdminElectricityOrdersPage key={JSON.stringify([actor, profileRevision])} {...props} />
+  );
+}
+function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderListQuery } = {}) {
+  const readActor = useAccountUser();
+  const readProfileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
   const locale = useLocale();
   const actor = useAccountUser();
   const formCopy = (key: string) => appText(`electricity.staffReasonForm.${key}`, locale);
@@ -410,10 +422,7 @@ export default function AdminElectricityOrdersPage({
     const url = after
       ? `/api/staff/electricity/orders${queueView === 'conversations' ? '/conversations' : ''}?after=${encodeURIComponent(after)}`
       : `/api/staff/electricity/orders${queueView === 'conversations' ? '/conversations' : ''}`;
-    void fetch(url, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff('orders', 'list', url, controller.signal)
       .then(async (response) => {
         if (controller.signal.aborted || currentActor.current !== actor || accessDenied.current)
           return null;
@@ -459,7 +468,7 @@ export default function AdminElectricityOrdersPage({
           setLoading(false);
       });
     return () => controller.abort();
-  }, [after, revision, queueView, listRevision, actor]);
+  }, [after, revision, queueView, listRevision, actor, readStaff]);
 
   useEffect(() => {
     setLookupId(selectedId ?? '');
@@ -478,10 +487,12 @@ export default function AdminElectricityOrdersPage({
     const controller = new AbortController();
     setDetail(null);
     setDetailError(false);
-    void fetch(`/api/staff/electricity/orders/${encodeURIComponent(selectedId)}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff(
+      'orders',
+      'detail',
+      `/api/staff/electricity/orders/${encodeURIComponent(selectedId)}`,
+      controller.signal
+    )
       .then(async (response) => {
         if (
           controller.signal.aborted ||
@@ -522,7 +533,7 @@ export default function AdminElectricityOrdersPage({
           setDetailError(true);
       });
     return () => controller.abort();
-  }, [scope, revision, detailRevision]);
+  }, [scope, revision, detailRevision, readStaff]);
 
   function choose(decision: Decision) {
     if (

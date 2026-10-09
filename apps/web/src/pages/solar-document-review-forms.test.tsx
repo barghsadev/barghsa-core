@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -74,7 +75,9 @@ async function mount(
   const container = document.createElement('div');
   document.body.append(container);
   const root = createRoot(container);
-  await act(async () => root.render(<AdminSolarDocumentsPage />));
+  await act(async () =>
+    root.render(<QueryComponentProvider>{<AdminSolarDocumentsPage />}</QueryComponentProvider>)
+  );
   const change = async (id: string, text: string) =>
     act(async () =>
       fill(container.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`)!, text)

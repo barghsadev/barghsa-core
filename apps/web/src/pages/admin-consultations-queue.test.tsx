@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { t } from '@barghsa/i18n/app';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -39,7 +40,9 @@ it('opens the unassigned consultation queue from its dashboard link', async () =
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminConsultationsPage />));
+    await act(async () =>
+      root.render(<QueryComponentProvider>{<AdminConsultationsPage />}</QueryComponentProvider>)
+    );
     expect(calls.some((url) => url.includes('/requests?assignment=unassigned'))).toBe(true);
   } finally {
     await act(async () => root.unmount());
@@ -98,7 +101,9 @@ it('keeps earlier consultation work visible after loading another queue page', a
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminConsultationsPage />));
+    await act(async () =>
+      root.render(<QueryComponentProvider>{<AdminConsultationsPage />}</QueryComponentProvider>)
+    );
     expect(container.textContent).toContain('first-work');
     expect(container.textContent).toContain('09/24/2026');
     const more = Array.from(container.querySelectorAll('button')).find(
@@ -199,7 +204,9 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
       item.textContent?.includes(text)
     );
   try {
-    await act(async () => root.render(<AdminConsultationsPage />));
+    await act(async () =>
+      root.render(<QueryComponentProvider>{<AdminConsultationsPage />}</QueryComponentProvider>)
+    );
     await act(async () => button('buyer-one')?.click());
     expect(container.querySelector<HTMLInputElement>('input[type="datetime-local"]')?.value).toBe(
       '2099-01-02T02:30'
@@ -352,7 +359,9 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
       item.textContent?.includes(text)
     );
   try {
-    await act(async () => root.render(<AdminConsultationsPage />));
+    await act(async () =>
+      root.render(<QueryComponentProvider>{<AdminConsultationsPage />}</QueryComponentProvider>)
+    );
     await act(async () => button('buyer-two')?.click());
     const feeInput = Array.from(
       container.querySelectorAll<HTMLInputElement>('input[type="text"]')
@@ -428,7 +437,9 @@ it.each(['en', 'fa'] as const)(
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<AdminConsultationsPage />));
+      await act(async () =>
+        root.render(<QueryComponentProvider>{<AdminConsultationsPage />}</QueryComponentProvider>)
+      );
       const rows = [
         ...container.querySelectorAll<HTMLTableRowElement>('table > tbody > tr:has(th[scope=row])'),
       ];

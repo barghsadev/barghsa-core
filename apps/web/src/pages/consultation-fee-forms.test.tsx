@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -111,9 +112,13 @@ async function mount(
   const render = async (actor = 'reviewer') =>
     act(async () =>
       root.render(
-        <AccountUserProvider value={actor}>
-          <AdminConsultationsPage />
-        </AccountUserProvider>
+        <QueryComponentProvider>
+          {
+            <AccountUserProvider value={actor}>
+              <AdminConsultationsPage />
+            </AccountUserProvider>
+          }
+        </QueryComponentProvider>
       )
     );
   await render();

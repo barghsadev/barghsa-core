@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -78,7 +79,9 @@ for (const [name, Page, path] of [
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<Page />));
+      await act(async () =>
+        root.render(<QueryComponentProvider>{<Page />}</QueryComponentProvider>)
+      );
       expect(container.textContent).toContain('first-work');
       expect(container.textContent).toContain('Sep 24, 2026');
       const button = Array.from(container.querySelectorAll('button')).find(
@@ -155,7 +158,9 @@ it('shows individual pending solar files with uploader, time and another page', 
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminSolarDocumentsPage />));
+    await act(async () =>
+      root.render(<QueryComponentProvider>{<AdminSolarDocumentsPage />}</QueryComponentProvider>)
+    );
     expect(container.textContent).toContain('first.pdf');
     expect(container.textContent).toContain('customer@example.test');
     expect(container.textContent).toContain('Sep 24, 2026');

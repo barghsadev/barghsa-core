@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -186,16 +187,20 @@ async function mount(
   };
   const render = () =>
     root.render(
-      <AccountUserProvider value={actor}>
-        <AdminSolarConstructionPage
-          queries={queries}
-          selected={selected}
-          onSelect={(id) => {
-            selected = id;
-            render();
-          }}
-        />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <AdminSolarConstructionPage
+              queries={queries}
+              selected={selected}
+              onSelect={(id) => {
+                selected = id;
+                render();
+              }}
+            />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     );
   await act(async () => render());
   const note = () => host.querySelector<HTMLTextAreaElement>('#solar-construction-note')!;
