@@ -132,6 +132,7 @@ export const fa: I18nDictionary = {
   'crm.corrections.assignedBody': 'پرونده و مدارک آن را در صف اصلاح هویت بررسی کنید.',
   'crm.profile.title': 'مشخصات پروفایل',
   'crm.corrections.title': 'اصلاح اطلاعات هویتی',
+  'crm.corrections.recovery': 'بازیابی تماس ورود',
   'crm.corrections.request': 'درخواست اصلاح هویت',
   'crm.corrections.description':
     'مدارک را برای بررسی کارشناس مجاز دیگری ارسال کنید. تغییر هویت تنها پس از تأیید اعمال می‌شود.',
@@ -464,6 +465,7 @@ export const en: I18nDictionary = {
     'Review the case and its evidence in the identity correction queue.',
   'crm.profile.title': 'Profile Detail',
   'crm.corrections.title': 'Identity corrections',
+  'crm.corrections.recovery': 'Login contact recovery',
   'crm.corrections.request': 'Request identity correction',
   'crm.corrections.description':
     'Submit evidence for a different authorized staff member to review. Identity changes take effect only after approval.',

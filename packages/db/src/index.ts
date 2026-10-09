@@ -774,3 +774,5 @@ export * from './schema/onboarding-journeys';
 
 export { walletAlertSignals, walletLowBalanceStates } from './schema/wallet-alerts';
 export type { WalletAlertSignal, WalletLowBalanceState } from './schema/wallet-alerts';
+
+export * from './schema/account-recovery';

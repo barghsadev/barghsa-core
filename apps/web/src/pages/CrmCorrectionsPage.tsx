@@ -493,6 +493,9 @@ function Corrections({
   return (
     <section className="space-y-5 max-w-5xl mx-auto" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
+        <a href="/admin/crm/recovery" className="underline">
+          {t('crm.corrections.recovery', locale)}
+        </a>
         <h1 className="text-2xl font-semibold">{t('crm.corrections.title', locale)}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {t('crm.corrections.description', locale)}

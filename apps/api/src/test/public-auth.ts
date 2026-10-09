@@ -3,7 +3,7 @@ export async function fetchWithPreauth(url: string, init: RequestInit): Promise<
   const target = new URL(url);
   if (
     init.method !== 'POST' ||
-    !/^\/api\/auth\/(?:login(?:\/verify|\/resend)?|register(?:\/verify|\/resend)?|forgot-password|reset-password(?:\/verify)?|force-change-password|activate-staff)$/.test(
+    !/^\/api\/auth\/(?:login(?:\/verify|\/resend)?|register(?:\/verify|\/resend)?|forgot-password|reset-password(?:\/verify)?|force-change-password|activate-staff|recovery\/verify)$/.test(
       target.pathname
     )
   )

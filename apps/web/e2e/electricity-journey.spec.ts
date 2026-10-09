@@ -450,6 +450,8 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#addresses-field-2').selectOption(address.cityId);
     await page.locator('#addresses-field-3').fill(addedAddress.fullAddress);
     await page.locator('#addresses-field-4').fill(addedAddress.postalCode);
+    // The journey freezes Date/timers; expire the prior success toast as production would.
+    await page.clock.runFor(5_000);
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
       .click();

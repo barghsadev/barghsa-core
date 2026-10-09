@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -288,6 +289,24 @@ export class ElectricityOrderController {
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     }
     return this.drafts.save(req.session, parsed.data);
+  }
+
+  @Delete('drafts/:mode')
+  @RateLimit({ namespace: 'electricity:draft-write:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Discard only the current account’s private saved wizard progress' })
+  @ApiQuery({ name: 'profileId', type: String, required: true })
+  @ApiResponse({
+    status: 200,
+    description: 'Private progress discarded; business records unchanged.',
+  })
+  discardDraft(
+    @Param('mode') mode: string,
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (mode !== 'simple' && mode !== 'advanced')
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.drafts.discard(req.session, profileId, mode);
   }
 
   @Get('bill-data/:profileId')

@@ -383,6 +383,11 @@
       "types": "./dist/electricity-increase-decision-forms.d.ts",
       "import": "./dist/electricity-increase-decision-forms.js",
       "default": "./dist/electricity-increase-decision-forms.js"
+    },
+    "./recovery": {
+      "types": "./dist/recovery.d.ts",
+      "import": "./dist/recovery.js",
+      "default": "./dist/recovery.js"
     }
   },
   "scripts": {

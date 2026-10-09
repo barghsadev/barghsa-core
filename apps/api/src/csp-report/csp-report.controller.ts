@@ -6,8 +6,14 @@ import {
   HttpStatus,
   Logger,
   BadRequestException,
+  ForbiddenException,
+  Req,
 } from '@nestjs/common';
 import { z } from 'zod';
+import type { Request } from 'express';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SkipCsrf } from '../session/csrf.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 const directive = z.enum([
@@ -70,10 +76,50 @@ function safeOrigin(value: string | undefined): string | undefined {
 export class CspReportController {
   private readonly logger = new Logger(CspReportController.name);
 
-  /** Report-only diagnostics. Global session CSRF protection still applies. */
+  /** Owner-approved native telemetry exception; never changes business state. */
   @Post()
+  @SkipCsrf()
+  @RateLimit({ namespace: 'csp:report', limit: 60, windowMs: 60_000, security: true })
   @HttpCode(HttpStatus.NO_CONTENT)
-  report(@Body() body: unknown): void {
+  report(@Body() body: unknown, @Req() request: Request): void {
+    const trusted = process.env.APP_PUBLIC_URL;
+    let origin: string | undefined;
+    try {
+      const url = trusted ? new URL(trusted) : null;
+      if (
+        url &&
+        !url.username &&
+        !url.password &&
+        (url.protocol === 'https:' ||
+          (process.env.NODE_ENV !== 'production' && url.protocol === 'http:'))
+      )
+        origin = url.origin;
+    } catch {
+      // Missing or invalid public topology must fail closed.
+    }
+    const supplied = request.headers.origin;
+    const site = request.headers['sec-fetch-site'];
+    let referrerOrigin: string | undefined;
+    try {
+      referrerOrigin = request.headers.referer
+        ? new URL(request.headers.referer).origin
+        : undefined;
+    } catch {
+      // Malformed referrers are not origin evidence.
+    }
+    if (
+      !origin ||
+      (supplied !== origin &&
+        !(
+          (supplied === undefined || supplied === 'null') &&
+          site === 'same-origin' &&
+          (referrerOrigin === origin || request.headers['sec-fetch-mode'] === 'no-cors')
+        )) ||
+      (site !== undefined && site !== 'same-origin') ||
+      !/^application\/csp-report(?:\s*;|$)/i.test(request.headers['content-type'] ?? '')
+    ) {
+      throw new ForbiddenException({ error: ErrorCodes.AUTHZ_CSRF_INVALID.code });
+    }
     const parsed = reportSchema.safeParse(body);
     if (!parsed.success) throw new BadRequestException();
     const report = parsed.data['csp-report'];

@@ -261,7 +261,13 @@ function payload(type = 'email.bounced', data: Record<string, unknown> = {}) {
 
 async function post(
   event: unknown,
-  options: { id?: string; rotation?: boolean; tampered?: boolean; stale?: boolean } = {}
+  options: {
+    id?: string;
+    rotation?: boolean;
+    tampered?: boolean;
+    stale?: boolean;
+    withSession?: boolean;
+  } = {}
 ) {
   const id = options.id ?? randomUUID();
   const timestamp = String(Math.floor(Date.now() / 1000) - (options.stale ? 3600 : 0));
@@ -273,6 +279,7 @@ async function post(
     method: 'POST',
     headers: {
       'content-type': 'application/json',
+      ...(options.withSession ? { Cookie: `barghsa_session=${sessionId}` } : {}),
       'svix-id': id,
       'svix-timestamp': timestamp,
       'svix-signature': `${options.rotation ? `v1,${Buffer.alloc(32).toString('base64')} ` : ''}v1,${signature}`,
@@ -539,4 +546,14 @@ it('enforces current read permission and strict pagination inputs', async () => 
   expect((await http.pool.query('SELECT id FROM email_customer_corrections')).rows).toEqual([
     { id },
   ]);
+});
+
+it('uses signed provider proof independently of browser cookies without accepting forged bodies', async () => {
+  expect((await post(payload(), { withSession: true })).status).toBe(200);
+  const count = (await http.pool.query('SELECT count(*)::int AS count FROM email_webhook_events'))
+    .rows[0].count;
+  expect((await post(payload(), { withSession: true, tampered: true })).status).toBe(401);
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM email_webhook_events')).rows[0].count
+  ).toBe(count);
 });

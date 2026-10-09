@@ -103,6 +103,7 @@ import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/
 import { Route as AppSolarRequestsRouteImport } from './routes/_app/solar.requests'
 import { Route as AdminCrmIndexRouteImport } from './routes/admin/crm/index'
 import { Route as AdminCrmCorrectionsRouteImport } from './routes/admin/crm/corrections'
+import { Route as AdminCrmRecoveryRouteImport } from './routes/admin/crm/recovery'
 import { Route as AdminWalletLedgerProfileIdRouteImport } from './routes/admin/wallet-ledger/$profileId'
 import { Route as AppCrmIndexRouteImport } from './routes/app/crm/index'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
@@ -590,6 +591,11 @@ const AdminCrmCorrectionsRoute = AdminCrmCorrectionsRouteImport.update({
   path: '/corrections',
   getParentRoute: () => AdminCrmRoute,
 } as any)
+const AdminCrmRecoveryRoute = AdminCrmRecoveryRouteImport.update({
+  id: '/recovery',
+  path: '/recovery',
+  getParentRoute: () => AdminCrmRoute,
+} as any)
 const AdminWalletLedgerProfileIdRoute =
   AdminWalletLedgerProfileIdRouteImport.update({
     id: '/wallet-ledger/$profileId',
@@ -751,6 +757,7 @@ export interface FileRoutesByFullPath {
   '/settings/username': typeof AppSettingsUsernameRoute
   '/solar/requests': typeof AppSolarRequestsRouteWithChildren
   '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
+  '/admin/crm/recovery': typeof AdminCrmRecoveryRoute
   '/admin/wallet-ledger/$profileId': typeof AdminWalletLedgerProfileIdRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
@@ -850,6 +857,7 @@ export interface FileRoutesByTo {
   '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/settings/username': typeof AppSettingsUsernameRoute
   '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
+  '/admin/crm/recovery': typeof AdminCrmRecoveryRoute
   '/admin/wallet-ledger/$profileId': typeof AdminWalletLedgerProfileIdRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
@@ -960,6 +968,7 @@ export interface FileRoutesById {
   '/_app/settings/username': typeof AppSettingsUsernameRoute
   '/_app/solar/requests': typeof AppSolarRequestsRouteWithChildren
   '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
+  '/admin/crm/recovery': typeof AdminCrmRecoveryRoute
   '/admin/wallet-ledger/$profileId': typeof AdminWalletLedgerProfileIdRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
@@ -1070,6 +1079,7 @@ export interface FileRouteTypes {
     | '/settings/username'
     | '/solar/requests'
     | '/admin/crm/corrections'
+    | '/admin/crm/recovery'
     | '/admin/wallet-ledger/$profileId'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
@@ -1169,6 +1179,7 @@ export interface FileRouteTypes {
     | '/settings/timezone'
     | '/settings/username'
     | '/admin/crm/corrections'
+    | '/admin/crm/recovery'
     | '/admin/wallet-ledger/$profileId'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
@@ -1278,6 +1289,7 @@ export interface FileRouteTypes {
     | '/_app/settings/username'
     | '/_app/solar/requests'
     | '/admin/crm/corrections'
+    | '/admin/crm/recovery'
     | '/admin/wallet-ledger/$profileId'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
@@ -1974,6 +1986,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCrmCorrectionsRouteImport
       parentRoute: typeof AdminCrmRoute
     }
+    '/admin/crm/recovery': {
+      id: '/admin/crm/recovery'
+      path: '/recovery'
+      fullPath: '/admin/crm/recovery'
+      preLoaderRoute: typeof AdminCrmRecoveryRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
     '/admin/wallet-ledger/$profileId': {
       id: '/admin/wallet-ledger/$profileId'
       path: '/wallet-ledger/$profileId'
@@ -2204,12 +2223,14 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface AdminCrmRouteChildren {
   AdminCrmCorrectionsRoute: typeof AdminCrmCorrectionsRoute
+  AdminCrmRecoveryRoute: typeof AdminCrmRecoveryRoute
   AdminCrmIndexRoute: typeof AdminCrmIndexRoute
   AdminCrmProfilesProfileIdRoute: typeof AdminCrmProfilesProfileIdRoute
 }
 
 const AdminCrmRouteChildren: AdminCrmRouteChildren = {
   AdminCrmCorrectionsRoute: AdminCrmCorrectionsRoute,
+  AdminCrmRecoveryRoute: AdminCrmRecoveryRoute,
   AdminCrmIndexRoute: AdminCrmIndexRoute,
   AdminCrmProfilesProfileIdRoute: AdminCrmProfilesProfileIdRoute,
 }

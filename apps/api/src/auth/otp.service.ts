@@ -16,7 +16,8 @@ export type OtpPurpose =
   | 'change_username'
   | 'add_email'
   | 'add_mobile'
-  | 'step_up';
+  | 'step_up'
+  | 'account_recovery';
 
 export interface OtpChallengeResult {
   challengeId: string;
@@ -70,7 +71,7 @@ export class OtpService {
     tosVersionId?: string,
     binding:
       | {
-          purpose: 'change_username' | 'add_email' | 'add_mobile' | 'step_up';
+          purpose: 'change_username' | 'add_email' | 'add_mobile' | 'step_up' | 'account_recovery';
           userId: string;
           sessionId?: string;
           authVersion?: number;
@@ -119,7 +120,7 @@ export class OtpService {
     tosVersionId?: string,
     binding:
       | {
-          purpose: 'change_username' | 'add_email' | 'add_mobile' | 'step_up';
+          purpose: 'change_username' | 'add_email' | 'add_mobile' | 'step_up' | 'account_recovery';
           userId: string;
           sessionId?: string;
           authVersion?: number;

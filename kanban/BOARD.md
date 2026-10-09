@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-09. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-09T09:24:47.403858+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 554 | Accepted with unchanged source bindings. |
+| done | 560 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 78 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 72 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Continue remaining service/other readers and readonly reviews, then mutation owners with eligible low-risk optimism. Consultation fee/paid resolution, wallet top-up and customer saving change previews join prior wallet/saving/solar, consent/document/contract/invoice/service/staff/shared/bootstrap scoped read acceptance. Full UI/service/provider/policy/operational launch gates remain separate. Preserve unfinished consultation work and exact money/authority/profile isolation/captured commands.
+Accepted v0.2.0: push exact reviewed release, immediately enqueue detached staging worker, verify actual health/live version+SHA and Persian summary/single grouped album receipts. Continue exclusively on this milestone until receipts close; resume v0.3.0 afterward. Production is not authorized.
 
-- `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
-- `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
-- `07-ui-ux-design.md#T-07.01.04.04`: Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts.
-- `07-ui-ux-design.md#T-07.01.04.05`: Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action.
+- `02-auth-users-admin.md#T-02.02.03`: CSRF protection
+- `02-auth-users-admin.md#T-02.03.03`: Account recovery support path
+- `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /api/electricity/bill-data/:profileId` (owner-approved existing route, 2026-10-09) — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
+- `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `mode` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `settings_snapshot` and `pricing_snapshot` (separate immutable JSONB: settings, prices, composition; owner-approved existing representation, 2026-10-09), `created_at`, `updated_at`
+- `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
+- `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version_id` (UUID FK to immutable agreement versions; owner-approved existing representation, 2026-10-09), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
 
 ## v0.2.0: Complete customer journeys
 
@@ -72,11 +74,11 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-02.01.04` | done | Earlier acceptance_verified | Password change enforcement on login |
 | `02-auth-users-admin.md#T-02.02.01` | done | Earlier acceptance_verified | Session creation and cookie management |
 | `02-auth-users-admin.md#T-02.02.02` | done | Earlier acceptance_verified | Session revocation |
-| `02-auth-users-admin.md#T-02.02.03` | partial | Earlier partial | CSRF protection |
+| `02-auth-users-admin.md#T-02.02.03` | done | Earlier partial | CSRF protection |
 | `02-auth-users-admin.md#T-02.02.04` | done | Earlier partial | Step-up authentication for sensitive actions |
 | `02-auth-users-admin.md#T-02.03.01` | done | Earlier acceptance_verified | Forgot password request UI |
 | `02-auth-users-admin.md#T-02.03.02` | done | Earlier acceptance_verified | OTP verification and password reset |
-| `02-auth-users-admin.md#T-02.03.03` | partial | Earlier partial | Account recovery support path |
+| `02-auth-users-admin.md#T-02.03.03` | done | Earlier partial | Account recovery support path |
 | `02-auth-users-admin.md#T-02.04.01` | done | Earlier acceptance_verified | Auth rate limit enforcement |
 | `02-auth-users-admin.md#T-03.01.01` | done | Earlier acceptance_verified | App-level profile check middleware |
 | `02-auth-users-admin.md#T-03.01.02` | done | Earlier acceptance_verified | Profile verification check after login |
@@ -193,7 +195,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.05.01.01` | done | Recorded batch work | Customer UI: period type selector — "Weekly" or "Monthly" |
 | `03-core-business.md#T-03.05.01.02` | done | Recorded batch work | Monthly period selector: dropdown with "Current month" and "Next month" (Jalali month names displayed). Pre-calculate and display exact start/end dates in Jalali and Gregorian. |
 | `03-core-business.md#T-03.05.01.03` | done | Recorded batch work | Weekly period selector: options for "Current week", "Next week", "Week after next" (max 2 weeks ahead). Display Saturday-to-Friday range in Jalali. |
-| `03-core-business.md#T-03.05.01.04` | partial | Recorded batch work | Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data. |
+| `03-core-business.md#T-03.05.01.04` | done | Recorded batch work | Bill data integration adapter: `GET /api/electricity/bill-data/:profileId` (owner-approved existing route, 2026-10-09) — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data. |
 | `03-core-business.md#T-03.05.01.05` | done | Recorded batch work | Energy suggestion calculation: `suggestedKwh = avgHourlyConsumption × selectedPeriodHours`. Return `{ suggestedKwh, dataSource, dataPeriod, dataTimestamp, coverage}`. |
 | `03-core-business.md#T-03.05.01.06` | done | Recorded batch work | UI: show suggested quantity labeled "Estimate" with source, period coverage, and timestamp disclaimer. Editable input field. |
 | `03-core-business.md#T-03.05.01.07` | done | Recorded batch work | If bill data is unavailable/inaccessible/fails, customer enters kWh manually. Missing data never blocks manual entry. Show warning but allow proceed. |
@@ -202,7 +204,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.05.02.03` | done | Recorded batch work | Preview UI: display thermal/green breakdown, unit prices, subtotals, discount, VAT, total. Must disclose mandatory green composition and price of each component before submission. |
 | `03-core-business.md#T-03.05.02.04` | done | Recorded batch work | Gift code input with separate "Apply" action triggering validation API. Display validity and discount before submission. Re-validate atomically at submission. |
 | `03-core-business.md#T-03.05.03.01` | done | Recorded batch work | `POST /electricity/orders/simple` — idempotent submission endpoint: |
-| `03-core-business.md#T-03.05.03.02` | partial | Recorded batch work | Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at` |
+| `03-core-business.md#T-03.05.03.02` | done | Recorded batch work | Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `mode` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `settings_snapshot` and `pricing_snapshot` (separate immutable JSONB: settings, prices, composition; owner-approved existing representation, 2026-10-09), `created_at`, `updated_at` |
 | `03-core-business.md#T-03.05.03.03` | done | Recorded batch work | Create `electricity_order_lines` table: `id`, `order_id` (FK), `product_id` (FK), `quantity_kwh`, `unit_price`, `line_total` |
 | `03-core-business.md#T-03.05.03.04` | done | Recorded batch work | Create `electricity_contracts` table: `id`, `order_id` (FK), `contract_id` (FK — to Contracts module), `status` (draft/active/completed/cancelled/etc.) |
 | `03-core-business.md#T-03.05.03.05` | done | Recorded batch work | Idempotency key required on submission. Retrying a timed-out request returns original result without creating duplicates. |
@@ -230,7 +232,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.06.04.04` | done | Recorded batch work | Step 4: Optional gift code |
 | `03-core-business.md#T-03.06.04.05` | done | Recorded batch work | Step 5: Review & submit — full snapshot, wallet balance, explicit confirm |
 | `03-core-business.md#T-03.06.04.06` | done | Recorded batch work | Lead time must be enforced: start date cannot violate lead days setting. |
-| `03-core-business.md#T-03.07.01.01` | partial | Recorded batch work | Commercial state machine for electricity orders: |
+| `03-core-business.md#T-03.07.01.01` | done | Recorded batch work | Commercial state machine for electricity orders: |
 | `03-core-business.md#T-03.07.01.02` | done | Recorded batch work | Financial state machine for electricity orders: |
 | `03-core-business.md#T-03.07.01.03` | done | Recorded batch work | Order detail page: display both commercial and financial statuses separately with distinct labels. Never combine into one ambiguous status. |
 | `03-core-business.md#T-03.07.01.04` | done | Recorded batch work | Show next action clearly for each status pair. For customer: what they need to do. For staff: what action is pending their review. |
@@ -242,7 +244,7 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.07.04.01` | done | Recorded batch work | Customer order list: all profile-scoped electricity orders with commercial + financial status, period, total kWh, total price, submission date, next action callout |
 | `03-core-business.md#T-03.07.04.02` | done | Recorded batch work | Order detail: full submitted data snapshot, per-product breakdown, contract reference, invoice reference and status, payment status, review timeline, comments |
 | `03-core-business.md#T-03.07.04.03` | done | Recorded batch work | No dead ends: always show current state, what happened, next available action, who is responsible, how to get help. |
-| `03-core-business.md#T-03.09.01.01` | partial | Recorded batch work | Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at` |
+| `03-core-business.md#T-03.09.01.01` | done | Recorded batch work | Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version_id` (UUID FK to immutable agreement versions; owner-approved existing representation, 2026-10-09), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at` |
 | `03-core-business.md#T-03.09.01.02` | done | Recorded batch work | Create `saving_order_lines` table: `id`, `order_id` (FK), `description` (text), `amount` (bigint — IRR), `type` (enum: `plan_price`, `hardware_price`, `discount`, `vat`) |
 | `03-core-business.md#T-03.09.01.03` | done | Recorded batch work | Create `saving_fulfillment_stages` table for tracking fulfillment progress per order |
 | `03-core-business.md#T-03.09.02.01` | done | Recorded batch work | Step 1: Saving plan selection — display list of active saving plans with title, price, one-line description. Show inactive plans as unavailable. |

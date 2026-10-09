@@ -1,5 +1,5 @@
 const PUBLIC_AUTH_PATH =
-  /^\/api\/auth\/(?:login(?:\/verify|\/resend)?|register(?:\/verify|\/resend)?|forgot-password|reset-password(?:\/verify)?|force-change-password|activate-staff)$/;
+  /^\/api\/auth\/(?:login(?:\/verify|\/resend)?|register(?:\/verify|\/resend)?|forgot-password|reset-password(?:\/verify)?|force-change-password|activate-staff|recovery\/verify)$/;
 
 /** Obtain a browser-bound token before each public authentication action. */
 export async function publicAuthFetch(path: string, init: RequestInit): Promise<Response> {

@@ -11,6 +11,7 @@ interface Props {
   workingLabel: string;
   onStay: () => void;
   onLeave: () => void;
+  onDiscardSaved?: () => Promise<boolean>;
 }
 
 export default function WizardLeaveDialog(props: Props) {
@@ -42,6 +43,24 @@ export default function WizardLeaveDialog(props: Props) {
       const saved = await onSave();
       if (mounted.current) {
         if (saved) latest.current.onLeave();
+        else setFailed(true);
+      }
+    } catch {
+      if (mounted.current) setFailed(true);
+    } finally {
+      inFlight.current = false;
+      if (mounted.current) setSaving(false);
+    }
+  };
+  const discardSavedAndLeave = async () => {
+    if (inFlight.current || working || !props.onDiscardSaved) return;
+    inFlight.current = true;
+    setSaving(true);
+    setFailed(false);
+    try {
+      const discarded = await props.onDiscardSaved();
+      if (mounted.current) {
+        if (discarded) latest.current.onLeave();
         else setFailed(true);
       }
     } catch {
@@ -87,6 +106,16 @@ export default function WizardLeaveDialog(props: Props) {
           >
             {t('electricity.order.unsaved.leave', locale)}
           </Button>
+          {props.onDiscardSaved && (
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={saving || working}
+              onClick={() => void discardSavedAndLeave()}
+            >
+              {t('electricity.order.unsaved.discardSaved', locale)}
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

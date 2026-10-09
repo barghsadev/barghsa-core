@@ -314,7 +314,7 @@
 | **T-03.05.01.01** | 📋 Customer UI: period type selector — "Weekly" or "Monthly" | S |
 | **T-03.05.01.02** | 📋 Monthly period selector: dropdown with "Current month" and "Next month" (Jalali month names displayed). Pre-calculate and display exact start/end dates in Jalali and Gregorian. | M |
 | **T-03.05.01.03** | 📋 Weekly period selector: options for "Current week", "Next week", "Week after next" (max 2 weeks ahead). Display Saturday-to-Friday range in Jalali. | M |
-| **T-03.05.01.04** | 🔧 Bill data integration adapter: `GET /bill-data/:profileId` — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data. | L |
+| **T-03.05.01.04** | 🔧 Bill data integration adapter: `GET /api/electricity/bill-data/:profileId` (owner-approved existing route, 2026-10-09) — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data. | L |
 | **T-03.05.01.05** | 🔧 Energy suggestion calculation: `suggestedKwh = avgHourlyConsumption × selectedPeriodHours`. Return `{ suggestedKwh, dataSource, dataPeriod, dataTimestamp, coverage}`. | M |
 | **T-03.05.01.06** | 📋 UI: show suggested quantity labeled "Estimate" with source, period coverage, and timestamp disclaimer. Editable input field. | M |
 | **T-03.05.01.07** | ⚠️ If bill data is unavailable/inaccessible/fails, customer enters kWh manually. Missing data never blocks manual entry. Show warning but allow proceed. | S |
@@ -348,7 +348,7 @@
   - Atomic transaction: create Order, create draft Contract, create Invoice
   - Snapshot all prices, settings, composition rules
   - Return order ID with contract and invoice references | XL |
-| **T-03.05.03.02** | Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `type` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `snapshot_data` (JSONB: prices, settings, composition), `created_at`, `updated_at` | L |
+| **T-03.05.03.02** | Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `mode` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `settings_snapshot` and `pricing_snapshot` (separate immutable JSONB: settings, prices, composition; owner-approved existing representation, 2026-10-09), `created_at`, `updated_at` | L |
 | **T-03.05.03.03** | Create `electricity_order_lines` table: `id`, `order_id` (FK), `product_id` (FK), `quantity_kwh`, `unit_price`, `line_total` | M |
 | **T-03.05.03.04** | Create `electricity_contracts` table: `id`, `order_id` (FK), `contract_id` (FK — to Contracts module), `status` (draft/active/completed/cancelled/etc.) | S |
 | **T-03.05.03.05** | ⚠️ Idempotency key required on submission. Retrying a timed-out request returns original result without creating duplicates. | M |
@@ -444,7 +444,7 @@
 | ID | Task | Complexity |
 |----|------|------------|
 | **T-03.07.01.01** | 🔄 Commercial state machine for electricity orders:
-  - `draft` (multi-step form in progress, not yet submitted)
+  - `draft` (persisted business order not yet submitted). Private saved wizard progress lives separately, has no order/contract/invoice, and uses an owner-only explicit discard action; staff rejection/cancellation applies to actual order records (owner-approved interpretation, 2026-10-09).
   - `submitted` → `awaiting_staff_review` (initial after submission)
   - `awaiting_staff_review` → `changes_requested` (staff requests corrections)
   - `changes_requested` → `submitted` (customer resubmits amended order)
@@ -556,7 +556,7 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-03.09.01.01** | Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version` (VARCHAR), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at` | L |
+| **T-03.09.01.01** | Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version_id` (UUID FK to immutable agreement versions; owner-approved existing representation, 2026-10-09), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at` | L |
 | **T-03.09.01.02** | Create `saving_order_lines` table: `id`, `order_id` (FK), `description` (text), `amount` (bigint — IRR), `type` (enum: `plan_price`, `hardware_price`, `discount`, `vat`) | M |
 | **T-03.09.01.03** | Create `saving_fulfillment_stages` table for tracking fulfillment progress per order | M |
 

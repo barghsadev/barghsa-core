@@ -222,7 +222,19 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
   await page.route(`**/api/wallet/${profileId}`, (r) =>
     r.fulfill({ json: { balance: '20000000', currency: 'IRR' } })
   );
-  await page.route(`**/api/electricity/drafts/${mode}?*`, (r) => r.fulfill({ json: state.draft }));
+  await page.route(`**/api/electricity/drafts/${mode}?*`, (r) => {
+    if (r.request().method() === 'DELETE') {
+      state.draft = {
+        currentStep: 1,
+        data:
+          mode === 'simple'
+            ? { period: 'next_week', totalKwh: '', addressId: '' }
+            : { startAt, endAt, quantities: {}, addressId: '' },
+      };
+      return r.fulfill({ json: { discarded: true, profileId, mode } });
+    }
+    return r.fulfill({ json: state.draft });
+  });
   await page.route(`**/api/electricity/drafts/${mode}`, async (r) => {
     const input = r.request().postDataJSON();
     state.saves.push(input);
@@ -579,5 +591,47 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         page.locator(mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]')
       ).toBeChecked();
+    });
+  }
+
+for (const locale of ['en', 'fa'] as const)
+  for (const mode of ['simple', 'advanced'] as const) {
+    test(`${mode} explicitly deletes persisted private progress only after server confirmation (${locale})`, async ({
+      page,
+      context,
+    }) => {
+      const state = await fixture(page, mode, locale);
+      await page.goto(`${path(mode)}?step=2`);
+      await field(page, mode).fill('130');
+      await leave(page, locale);
+      const action = page.getByRole('button', {
+        name: t('electricity.order.unsaved.discardSaved', locale),
+        exact: true,
+      });
+      await context.addCookies([
+        { name: 'barghsa_csrf', value: 'discard-token', url: 'http://127.0.0.1:4173' },
+      ]);
+      let fail = true;
+      await page.route(`**/api/electricity/drafts/${mode}?*`, (r) =>
+        r.request().method() === 'DELETE' && fail
+          ? r.fulfill({ status: 503, json: {} })
+          : r.fallback()
+      );
+      await action.click();
+      await expect(controls(page, locale).dialog.getByRole('alert')).toBeVisible();
+      await expect(field(page, mode)).toHaveValue('130');
+      expect(state.orders).toHaveLength(0);
+      fail = false;
+      const request = page.waitForRequest(
+        (r) =>
+          r.method() === 'DELETE' &&
+          r.url().includes(`/electricity/drafts/${mode}?profileId=${profileId}`)
+      );
+      await action.click();
+      expect((await request).headers()['x-csrf-token']).toBe('discard-token');
+      await expect(page).toHaveURL(/\/electricity$/);
+      expect(state.draft.currentStep).toBe(1);
+      expect(state.saves).toHaveLength(0);
+      expect(state.orders).toHaveLength(0);
     });
   }

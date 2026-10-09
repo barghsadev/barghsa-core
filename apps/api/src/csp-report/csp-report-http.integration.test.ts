@@ -32,7 +32,12 @@ const report = {
 function send(body: string, headers: Record<string, string> = {}) {
   return fetch(fixture.base + '/api/csp-report', {
     method: 'POST',
-    headers: { 'content-type': 'application/csp-report', ...headers },
+    mode: headers['sec-fetch-mode'] === 'no-cors' ? 'no-cors' : 'cors',
+    headers: {
+      'content-type': 'application/csp-report',
+      origin: 'https://app.example.test',
+      ...headers,
+    },
     body,
   });
 }
@@ -64,10 +69,52 @@ it('bounds native report bodies', async () => {
   );
   expect(response.status).toBe(413);
 });
-it('retains session CSRF protection pending the native-report boundary decision', async () => {
-  const response = await send(JSON.stringify(report), { cookie: `barghsa_session=${sessionId}` });
+it('rejects cross-origin reports even with a valid session cookie', async () => {
+  const response = await send(JSON.stringify(report), {
+    cookie: `barghsa_session=${sessionId}`,
+    origin: 'https://attacker.example.test',
+  });
   expect(response.status).toBe(403);
   expect(((await response.json()) as { error: { code: string } }).error.code).toBe(
     'AUTHZ:CSRF_TOKEN_INVALID'
   );
+});
+
+it('accepts bounded same-origin native telemetry with cookies without a CSRF token', async () => {
+  const response = await send(JSON.stringify(report), {
+    cookie: `barghsa_session=${sessionId}`,
+    'sec-fetch-site': 'same-origin',
+  });
+  expect(response.status).toBe(204);
+});
+it.each([
+  { origin: 'null' },
+  { 'sec-fetch-site': 'cross-site' },
+  { 'content-type': 'application/json' },
+])('rejects invalid native telemetry provenance or media type: %j', async (headers) => {
+  expect((await send(JSON.stringify(report), headers)).status).toBe(403);
+});
+
+it('accepts native WebKit opaque-origin reports only with protected same-origin/no-cors metadata', async () => {
+  expect(
+    (
+      await send(JSON.stringify(report), {
+        origin: 'null',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-mode': 'no-cors',
+      })
+    ).status
+  ).toBe(204);
+  expect(
+    (
+      await send(JSON.stringify(report), {
+        origin: 'null',
+        'sec-fetch-site': 'cross-site',
+        'sec-fetch-mode': 'no-cors',
+      })
+    ).status
+  ).toBe(403);
+  expect(
+    (await send(JSON.stringify(report), { origin: 'null', 'sec-fetch-mode': 'no-cors' })).status
+  ).toBe(403);
 });

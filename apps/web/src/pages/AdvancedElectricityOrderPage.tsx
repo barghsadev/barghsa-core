@@ -644,6 +644,43 @@ export function AdvancedElectricityOrderPage() {
             )}
             onSave={() => saveDraft(false)}
             onStay={() => blocker.reset()}
+            onDiscardSaved={async () => {
+              if (!profileId || command.current || completed.current) return false;
+              const token = Symbol();
+              command.current = token;
+              const epoch = generation.current;
+              setSaving(true);
+              try {
+                const response = await fetch(
+                  `/api/electricity/drafts/advanced?profileId=${profileId}`,
+                  {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: withCsrf(),
+                  }
+                );
+                if (!response.ok) return false;
+                const receipt: unknown = await response.json();
+                return (
+                  epoch === generation.current &&
+                  typeof receipt === 'object' &&
+                  receipt !== null &&
+                  'discarded' in receipt &&
+                  receipt.discarded === true &&
+                  'profileId' in receipt &&
+                  receipt.profileId === profileId &&
+                  'mode' in receipt &&
+                  receipt.mode === 'advanced'
+                );
+              } catch {
+                return false;
+              } finally {
+                if (command.current === token) {
+                  command.current = null;
+                  setSaving(false);
+                }
+              }
+            }}
             onLeave={() => blocker.proceed()}
           />
         </Suspense>

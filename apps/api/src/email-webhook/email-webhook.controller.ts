@@ -1,3 +1,4 @@
+import { SkipCsrf } from '../session/csrf.guard.js';
 import { Controller, Post, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import type { IncomingMessage } from 'node:http';
 import { EmailWebhookService } from './email-webhook.service';
@@ -29,6 +30,7 @@ export class EmailWebhookController {
   constructor(private readonly webhookService: EmailWebhookService) {}
 
   @Post()
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   async receive(@Req() req: WebhookRequest): Promise<{ received: true }> {
     const headers: ResendWebhookHeaders = {

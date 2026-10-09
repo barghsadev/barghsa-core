@@ -1359,6 +1359,13 @@
       "when": 1791438951655,
       "tag": "0273_telegram_profile_linkage",
       "breakpoints": true
+    },
+    {
+      "idx": 274,
+      "version": "7",
+      "when": 1791532429278,
+      "tag": "0274_account_recovery",
+      "breakpoints": true
     }
   ]
 }

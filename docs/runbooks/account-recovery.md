@@ -1,6 +1,6 @@
 # Account recovery support
 
-Applies to `02-auth-users-admin.md#T-02.03.03`. This runbook documents current intake, supported actions and escalation. Recovery after loss of every registered contact remains incomplete: the owner must define authorized recovery approvers and identity checks, and the app needs a reviewed way to apply that decision. This document does not authorize a credential override.
+Applies to `02-auth-users-admin.md#T-02.03.03`. On 2026-10-09 the owner approved the recommended restricted manual recovery procedure. Use `/admin/crm/recovery`; the claimant verifies the new contact on `/support`. Staff never collect passwords or OTPs, and never edit credential tables directly.
 
 ## Contact and intake
 
@@ -14,7 +14,7 @@ Support reviews requests without promising a fixed completion time. The previous
 
 Record an intake reference, receipt time, receiving staff member, the claimant's supplied account identifier, a reply contact, which registered channels they can still access, and the requested help. Treat the supplied identifier and new reply contact as unverified. Do not disclose whether an account exists or its stored identity/contact details to an unverified claimant.
 
-Passwords, OTPs, session cookies and reset links must remain with the user and the application. Staff must not collect them. Identity evidence must use an approved restricted channel and retention procedure; ordinary email or a public attachment URL is not that procedure. Selection of that channel is part of the pending owner policy.
+Passwords, OTPs, session cookies and reset links must remain with the user and the application. Staff must not collect them. Identity evidence must use an approved restricted channel and retention procedure; ordinary email or a public attachment URL is not that procedure. Use the sealed verification-evidence upload and restricted case view described below.
 
 ## Route the request
 
@@ -22,7 +22,7 @@ Passwords, OTPs, session cookies and reset links must remain with the user and t
 | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | User can receive a code at the registered login contact                      | Direct the user to `/forgot-password` and let them complete verification and password entry themselves.                                                                          | The app confirms the reset. A sent-code message alone is not recovery.                                                   |
 | Signed-in user can prove control of the existing and proposed login contacts | The existing username-change API requires linked old/new challenges and consumes them together. Use it only through its authenticated application workflow.                      | A successful committed username change; a CRM profile-contact edit is not a substitute.                                  |
-| User reports loss of all registered contacts                                 | Keep the request pending identity review. Escalate to the owner-designated recovery approver once that role and evidence policy are defined.                                     | An explicit decision with evidence and a supported execution path. Do not claim restored access while either is missing. |
+| User reports loss of all registered contacts                                 | Keep the request pending identity review. Use the approved independent collector/reviewer workflow below.                                                                        | An explicit decision with evidence and a supported execution path. Do not claim restored access while either is missing. |
 | Credible compromise requires containment                                     | An authorized staff member may use the existing CRM session-expiration or forced-password-change action after recent step-up. Record the case reference in its mandatory reason. | Read back the result and audit record. Revocation contains access; it does not recover the account.                      |
 
 If an action fails, permission was revoked, the target changed, or evidence conflicts, record the failure and retain the unresolved request. Do not retry a different account, change ownership or edit stored credentials to make the request appear successful.
@@ -31,7 +31,7 @@ If an action fails, permission was revoked, the target changed, or evidence conf
 
 The application has no automatic identity-verification provider. A verified profile flag, caller ID, knowledge of a national identifier, a receipt screenshot or possession of a newly supplied email address does not by itself prove control of the existing login account.
 
-Before a lost-contact recovery can be approved, the owner-defined procedure must establish all of the following:
+The approved procedure establishes all of the following:
 
 1. Which staff role may collect evidence, which role may approve recovery, and whether a separate reviewer is required.
 2. Accepted evidence and verification steps for the existing account owner, including a legal entity's authorized representative when applicable.
@@ -40,7 +40,7 @@ Before a lost-contact recovery can be approved, the owner-defined procedure must
 5. A supported execution method that verifies the proposed new contact, prevents stale or repeated approvals, invalidates applicable sessions/tokens, and records before/after changes with the actor and correlation ID.
 6. Read-back of the committed outcome and a user-completed login before recording recovery as complete. Notification to existing contacts and handling of contested ownership must follow the approved policy.
 
-These are unresolved acceptance requirements, not checks this runbook claims have been performed. Until the policy and execution method exist, support can intake, guide ordinary recovery and escalate; it cannot approve a lost-contact credential replacement.
+The application enforces target binding, separate reviewers, current permissions/step-up, OTP verification, atomic application and closure. Operators must perform and record the manual identity and notification steps; deployment does not claim that a real case has been recovered.
 
 Keep the full case history, including failed attempts and rejected evidence. Existing auth/CRM audit events support investigation, but the staff-permission audit page is not a complete account-recovery timeline. A designated operator must retrieve the relevant account and staff events under authorized audit access. Never add raw credentials or copies of identity documents to ordinary application logs.
 
@@ -61,4 +61,17 @@ The authentication-version database trigger invalidates old account challenges a
 
 Reviewed against [authentication service](../../apps/api/src/auth/auth.service.ts), [CRM controller](../../apps/api/src/crm/crm-v2.controller.ts), [CRM service](../../apps/api/src/crm/crm-v2.service.ts), [correction controller](../../apps/api/src/crm/verification-case.controller.ts), [correction service](../../apps/api/src/crm/verification-case.service.ts) and [authentication-version migration](../../packages/db/drizzle/production/0087_authentication_version.sql).
 
-Local tests cover existing reset, CRM contact separation, correction permissions and session revocation. They do not certify the missing lost-contact recovery policy or implementation. Record their exact runs and this task's remaining criteria in [current task board](../../kanban/BOARD.md) before closing the task.
+Record current native recovery, existing reset/contact/permission caller checks, migration and browser results in [current task board](../../kanban/BOARD.md). Test fixtures prove the implementation; actual support delivery and production operational ownership require their own receipts.
+
+## Approved lost-contact procedure (2026-10-09)
+
+1. A staff member with `crm:edit-identity` and recent step-up opens the immutable target profile, identifies its actual owner, records the support reference and requested new login contact, and uploads one to five evidence files through the verified `verification_evidence` upload boundary. Compare original identity documents to the owner's recorded identity. For a legal profile, also check the current representative's authority against the legal profile and representation documents. A contact, caller ID or receipt alone is insufficient. Conflicting or unverifiable evidence means reject, not override.
+2. A different staff member with `crm:verify` checks the exact owner, old/new contact, sealed evidence and support findings, and records a reasoned approval or rejection. Recovery of staff/admin accounts requires independent administrators; the target cannot authorize its own recovery. The approval expires after one day. Changed ownership, credential version, contact or account eligibility invalidates it.
+3. The reviewer sends the dedicated recovery OTP to the approved new contact. The app returns only the challenge reference to staff. The claimant enters the case/challenge references and their code on `/support`, protected by the existing pre-login CSRF flow. Failed attempts are bounded and audited. Resending invalidates the previous proof. A consumed, expired, mismatched or other-purpose code cannot authorize application.
+4. A different reviewer from the collector uses the explicit confirmation to apply recovery with current permissions and recent step-up. The transaction replaces the login and corresponding contact, removes the lost secondary contact, revokes all sessions and refresh grants, expires trusted devices and old account challenges/password tokens, requires a password change, and stores the case/audit outcome atomically. A retry of the same applied case makes no second credential change. Any mandatory audit/storage/authorization failure rolls back.
+5. The claimant uses ordinary forgot-password and the existing forced-password-change flow as needed, then completes a fresh login with the new contact. The support operator sends the recovery notice to both old and new contacts through the approved support channel and records the actual message/delivery references. These are manual support notices; the recovery endpoint does not claim to send them automatically. Uncertain delivery remains unresolved and must not be invented or blindly retried.
+6. A `crm:verify` operator records both notice references. The app closes the case only after observing a committed post-recovery login with a live session and no outstanding mandatory password change. Until then the case remains `applied`, visibly incomplete. Its restricted case view includes the full append-only decision/change/attempt history and signed evidence access. A failed or rejected attempt remains in that history.
+
+Sealed evidence follows the existing immutable verification-evidence storage policy and remains restricted to authorized verification readers. This workflow authorizes no physical deletion or ordinary email attachment collection. Preserve the case, evidence references and security audit permanently; any future change to identity-evidence retention requires a separately approved policy and reviewed storage change.
+
+Operational receipt references attest to actual support delivery. A queued OTP is not provider delivery acceptance, and a staff assertion is not a substitute for the app's committed login check. Staging uses controlled fixtures; live provider and support ownership evidence remains in the later launch gates.

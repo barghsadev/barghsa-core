@@ -141,7 +141,7 @@
 **T-02.02.03 — CSRF protection**
 
 - Description: Every state-changing POST/PUT/PATCH/DELETE requires a server-generated CSRF token bound to the authenticated session, sent in a custom header (e.g. `X-CSRF-Token`). Validate server-side. Rotate token after auth/session rotation.
-- Technical notes: Double-submit cookie pattern or signed token. Frontend reads CSRF token from meta tag or cookie and sends in header. CSRF failures return 403 with safe error + correlation ID, logged as security event. No exception for API endpoints — every state change requires this.
+- Technical notes: Double-submit cookie pattern or signed token. Frontend reads CSRF token from meta tag or cookie and sends in header. CSRF failures return 403 with safe error + correlation ID, logged as security event. Every customer/staff state change requires this. Owner-approved exceptions (2026-10-09): provider webhooks use their independent signature/secret, time/event/replay and domain proofs; native CSP telemetry requires trusted same-origin provenance, native media type, bounded body/rate and sanitized diagnostics. Payment return GET is read-only; browser payment confirmation and session refresh retain session-bound CSRF. Public authentication, including claimant recovery OTP verification, requires pre-login or authenticated CSRF.
 - UI/UX: N/A (transparent to user; errors caught by frontend interceptor → redirect to login or show error).
 - Dependencies: T-02.02.01
 - Complexity: M
@@ -175,7 +175,7 @@
 **T-02.03.03 — Account recovery support path**
 
 - Description: On forgot-password page, include "Having trouble? Contact support" link for users who no longer control their registered email/phone. Support recovery requires identity verification, full audit history.
-- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in runbook. Staff have verified identity procedure.
+- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in docs/runbooks/account-recovery.md. Owner-approved manual procedure (2026-10-09): crm:edit-identity collects sealed identity/representative-authority evidence; a separate crm:verify reviewer approves the immutable owner/new-contact target. Claimant verifies the dedicated OTP on /support. Recent step-up, fresh proof and a single-use transaction replace the lost contact, revoke old authentication and audit every committed case step. Case closure requires a committed fresh login and actual old/new support-notice references; no automatic provider or notice delivery is implied.
 - UI/UX: Styled as secondary link below the form.
 - Dependencies: T-02.03.01
 - Complexity: S

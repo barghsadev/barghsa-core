@@ -1,3 +1,9 @@
+import { AuthModule } from '../auth/auth.module.js';
+import { AccountRecoveryService } from './account-recovery.service.js';
+import {
+  AccountRecoveryController,
+  RecoveryContactController,
+} from './account-recovery.controller.js';
 import { CrmLegalDocumentsController } from './crm-legal-documents.controller.js';
 import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { VerificationEvidenceService } from './verification-evidence.service.js';
@@ -13,14 +19,17 @@ import { SessionModule } from '../session/session.module.js';
 import { NotificationsModule } from '../notifications/index.js';
 
 @Module({
-  imports: [StaffAssignmentModule, SessionModule, NotificationsModule],
+  imports: [AuthModule, StaffAssignmentModule, SessionModule, NotificationsModule],
   controllers: [
+    AccountRecoveryController,
+    RecoveryContactController,
     CrmLegalDocumentsController,
     CrmController,
     CrmV2Controller,
     VerificationCaseController,
   ],
   providers: [
+    AccountRecoveryService,
     VerifiedAttachmentsService,
     VerificationEvidenceService,
     CrmService,

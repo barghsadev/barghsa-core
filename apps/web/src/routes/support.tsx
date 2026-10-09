@@ -1,3 +1,5 @@
+import { lazy, Suspense } from 'react';
+const RecoveryContactForm = lazy(() => import('../components/RecoveryContactForm.js'));
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
 import { useLocale } from '../hooks/useLocale.js';
@@ -142,6 +144,9 @@ function SupportPage() {
                   </div>
                 </div>
               </div>
+              <Suspense>
+                <RecoveryContactForm />
+              </Suspense>
               <PublicKnowledgeAssistant locale={locale} />
             </div>
           </CardContent>

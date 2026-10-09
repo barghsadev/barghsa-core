@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 import { getDbPool } from '@barghsa/db';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -75,6 +77,39 @@ export class ElectricityDraftService {
             updatedAt: draft.updated_at.toISOString(),
           }
         : { currentStep: 1, data: null, updatedAt: null };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async discard(actor: Actor, profileId: string, mode: 'simple' | 'advanced') {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, profileId))) {
+        throw new NotFoundException('Profile not found');
+      }
+      await client.query(
+        'DELETE FROM electricity_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND mode=$3',
+        [actor.userId, profileId, mode]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id)
+         VALUES($1,$2,'electricity_wizard_discarded',$3::jsonb,$4)`,
+        [
+          uuidv7(),
+          actor.userId,
+          JSON.stringify({ profileId, mode }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+        ]
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { discarded: true, profileId, mode };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

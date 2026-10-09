@@ -56,6 +56,9 @@ class BoardIntegrityTests(unittest.TestCase):
     def test_released_milestone_requires_external_receipts(self):
         release = self.board['releases'][0]
         release['status'] = 'released'
+        release['acceptance'] = None
+        for field in ('published_commit', 'staging_receipt', 'telegram_receipt'):
+            release[field] = None
         self.rejects('requires recorded gate evidence')
         release['acceptance'] = {'review':'synthetic accepted candidate'}
         self.rejects('requires push, staging and Telegram receipts')

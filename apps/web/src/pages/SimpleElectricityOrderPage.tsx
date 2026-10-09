@@ -1300,6 +1300,50 @@ function OwnedSimpleElectricityOrderPage() {
             }
             onSave={async () => (await saveDraft(false)) && !unsavedAddress}
             onStay={() => blocker.reset()}
+            onDiscardSaved={async () => {
+              if (
+                !activeProfileId ||
+                draftSaveInFlight.current ||
+                orderSaveInFlight.current ||
+                addressSaveInFlight.current ||
+                completed.current
+              )
+                return false;
+              const token = Symbol();
+              draftSaveInFlight.current = token;
+              const epoch = draftGeneration.current;
+              setSavingDraft(true);
+              try {
+                const response = await fetch(
+                  `/api/electricity/drafts/simple?profileId=${activeProfileId}`,
+                  {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: withCsrf(),
+                  }
+                );
+                if (!response.ok) return false;
+                const receipt: unknown = await response.json();
+                return (
+                  epoch === draftGeneration.current &&
+                  typeof receipt === 'object' &&
+                  receipt !== null &&
+                  'discarded' in receipt &&
+                  receipt.discarded === true &&
+                  'profileId' in receipt &&
+                  receipt.profileId === activeProfileId &&
+                  'mode' in receipt &&
+                  receipt.mode === 'simple'
+                );
+              } catch {
+                return false;
+              } finally {
+                if (draftSaveInFlight.current === token) {
+                  draftSaveInFlight.current = null;
+                  setSavingDraft(false);
+                }
+              }
+            }}
             onLeave={() => blocker.proceed()}
           />
         </Suspense>

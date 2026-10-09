@@ -114,7 +114,7 @@ export const otpChallenges = pgTable(
     ${table.purpose} = 'legacy_invalid'
     OR (${table.purpose} = 'registration' AND ${table.userId} IS NULL
         AND ${table.passwordHash} IS NOT NULL AND ${table.tosVersionId} IS NOT NULL)
-    OR (${table.purpose} IN ('login','password_reset','change_username','add_email','add_mobile','step_up')
+    OR (${table.purpose} IN ('login','password_reset','change_username','add_email','add_mobile','step_up','account_recovery')
         AND ${table.userId} IS NOT NULL)
   `
     ),
