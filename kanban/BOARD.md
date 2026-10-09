@@ -4,7 +4,7 @@
 
 Snapshot: 2026-10-09T09:24:47.403858+00:00. First production launch: electricity, saving, solar and consultation.
 
-Last confirmed staging release: **v0.1.29**. Next milestone: **v0.2.0**.
+Last confirmed staging release: **v0.2.0**. Next milestone: **v0.3.0**.
 
 Counts describe evidence and task acceptance, not the percentage of product built.
 
@@ -39,14 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Accepted v0.2.0: push exact reviewed release, immediately enqueue detached staging worker, verify actual health/live version+SHA and Persian summary/single grouped album receipts. Continue exclusively on this milestone until receipts close; resume v0.3.0 afterward. Production is not authorized.
+Close the next fulfillment and financial milestone in dependency order: reconcile existing implementation and approved decisions, implement only demonstrated gaps, preserve safeguards, accept complete task criteria and verify staging plus grouped Persian Telegram receipts. Production is not authorized.
 
-- `02-auth-users-admin.md#T-02.02.03`: CSRF protection
-- `02-auth-users-admin.md#T-02.03.03`: Account recovery support path
-- `03-core-business.md#T-03.05.01.04`: Bill data integration adapter: `GET /api/electricity/bill-data/:profileId` (owner-approved existing route, 2026-10-09) — external API call to retrieve historical consumption. Returns hourly kwh data for available lookback period. Implement provider abstraction with failure handling: timeout, auth error, no data.
-- `03-core-business.md#T-03.05.03.02`: Create `electricity_orders` table: `id` (UUIDv7), `profile_id` (FK), `mode` (enum: `simple`, `advanced`), `status` (commercial state enum), `period_start`, `period_end`, `total_kwh`, `average_power_kw`, `green_rule_applied` (bool), `submitted_by` (FK to user — records the agent), `settings_snapshot` and `pricing_snapshot` (separate immutable JSONB: settings, prices, composition; owner-approved existing representation, 2026-10-09), `created_at`, `updated_at`
-- `03-core-business.md#T-03.07.01.01`: Commercial state machine for electricity orders:
-- `03-core-business.md#T-03.09.01.01`: Create `saving_orders` table: `id` (UUIDv7), `profile_id` (FK), `saving_plan_id` (FK), `hardware_product_id` (FK), `bill_identifier` (VARCHAR), `installation_address_id` (FK — addresses), `agreement_version_id` (UUID FK to immutable agreement versions; owner-approved existing representation, 2026-10-09), `agreement_snapshot` (text — snapshot of accepted agreement), `status` (enum — commercial state), `financial_status` (enum), `submitted_at`, `created_at`, `updated_at`
+- `release-readiness#R-02.01`: Renew fulfillment and financial closure acceptance
 
 ## v0.2.0: Complete customer journeys
 
