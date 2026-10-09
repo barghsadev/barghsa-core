@@ -176,3 +176,43 @@ it('cancels funding response bytes on page-only unmount and does not refetch on 
   expect(host.textContent).toBe('');
   expect(submissionCalls()).toHaveLength(0);
 });
+
+it.each(['/api/profiles', '/api/saving/plans', '/api/profiles/profile-1/addresses'])(
+  'cancels saving intake bytes for %s on page-only removal',
+  async (path) => {
+    payload = { availableBalance: '500000' };
+    const previous = vi.mocked(fetch).getMockImplementation()!;
+    let readSignal!: AbortSignal, finishRead!: (value: unknown) => void;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input) === path) {
+          readSignal = init!.signal as AbortSignal;
+          return {
+            ok: true,
+            status: 200,
+            json: () =>
+              new Promise((resolve) => {
+                finishRead = resolve;
+              }),
+          } as Response;
+        }
+        return previous(input, init);
+      })
+    );
+    await mount();
+    expect(finishRead).toBeDefined();
+    expect(readSignal.aborted).toBe(false);
+    const count = vi.mocked(fetch).mock.calls.filter(([url]) => String(url) === path).length;
+    await act(async () => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+    });
+    expect(vi.mocked(fetch).mock.calls.filter(([url]) => String(url) === path)).toHaveLength(count);
+    await act(async () => root.render(<QueryComponentProvider>{null}</QueryComponentProvider>));
+    expect(readSignal.aborted).toBe(true);
+    await act(async () => finishRead({ private: 'obsolete private data' }));
+    expect(host.textContent).toBe('');
+    expect(submissionCalls()).toHaveLength(0);
+  }
+);

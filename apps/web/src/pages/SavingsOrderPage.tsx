@@ -1,3 +1,4 @@
+import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
@@ -249,6 +250,16 @@ function OwnedSavingsOrderPage() {
   const [addressError, setAddressError] = useState(false);
   const actorId = useAccountUser();
   const contextRevision = useProfileContextRevision();
+  const readIntake = useOwnedIntakeRead(JSON.stringify([actorId, contextRevision]));
+  const intakeScope = useMemo(
+    () => ({
+      context: 'account' as const,
+      ownerId: actorId ?? 'current-session',
+      accountId: actorId,
+      revision: contextRevision,
+    }),
+    [actorId, contextRevision]
+  );
   const addressCommand = useSettingsCommand(
     JSON.stringify([actorId, contextRevision, profileId]),
     () => {
@@ -303,16 +314,23 @@ function OwnedSavingsOrderPage() {
     const controller = new AbortController();
     void (async () => {
       try {
-        const [profileResponse, plansResponse] = await Promise.all([
-          fetch('/api/profiles', { credentials: 'include', signal: controller.signal }),
-          fetch('/api/saving/plans', { credentials: 'include', signal: controller.signal }),
+        const [profile, catalogue] = await Promise.all([
+          readIntake<{
+            activeProfileId: string | null;
+            profiles: Array<{ id: string; profileType?: string; type?: string }>;
+          }>(
+            queryKeys.profiles.authority(intakeScope, 'saving-intake-profile'),
+            '/api/profiles',
+            'load',
+            { credentials: 'include', signal: controller.signal }
+          ),
+          readIntake<{ plans: Plan[] }>(
+            queryKeys.catalogue.detail(intakeScope, 'saving-intake-plans'),
+            '/api/saving/plans',
+            'load',
+            { credentials: 'include', signal: controller.signal }
+          ),
         ]);
-        if (!profileResponse.ok || !plansResponse.ok) throw new Error('load');
-        const profile = (await profileResponse.json()) as {
-          activeProfileId: string | null;
-          profiles: Array<{ id: string; profileType?: string; type?: string }>;
-        };
-        const catalogue = (await plansResponse.json()) as { plans: Plan[] };
         if (controller.signal.aborted) return;
         const active = profile.profiles.find((item) => item.id === profile.activeProfileId);
         setProfileId(
@@ -326,19 +344,20 @@ function OwnedSavingsOrderPage() {
       }
     })();
     return () => controller.abort();
-  }, []);
+  }, [readIntake, intakeScope]);
 
   useEffect(() => {
     if (!profileId) return;
     const controller = new AbortController();
-    void fetch(`/api/profiles/${profileId}/addresses`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('addresses');
-        return response.json() as Promise<{ addresses: Address[] }>;
-      })
+    void readIntake<{ addresses: Address[] }>(
+      queryKeys.profiles.list(
+        { ...intakeScope, context: 'customer', ownerId: profileId },
+        new URLSearchParams({ owner: 'saving-intake-addresses' })
+      ),
+      `/api/profiles/${profileId}/addresses`,
+      'addresses',
+      { credentials: 'include', signal: controller.signal }
+    )
       .then((result) => {
         if (!controller.signal.aborted) {
           setAddresses(result.addresses);
@@ -351,7 +370,7 @@ function OwnedSavingsOrderPage() {
         if (!controller.signal.aborted) setLoadError(true);
       });
     return () => controller.abort();
-  }, [profileId]);
+  }, [profileId, readIntake, intakeScope]);
 
   useEffect(() => {
     if (!profileId || !draft || loading || hydratedProfile.current === profileId) return;

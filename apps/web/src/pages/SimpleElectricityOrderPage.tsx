@@ -1,3 +1,4 @@
+import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -11,6 +12,7 @@ import {
   useEffect,
   useLayoutEffect,
   useCallback,
+  useMemo,
   useId,
   useRef,
 } from 'react';
@@ -177,6 +179,16 @@ function OwnedSimpleElectricityOrderPage() {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const walletReadSequence = useRef(0);
+  const readIntake = useOwnedIntakeRead(JSON.stringify([actor, revision]));
+  const intakeScope = useMemo(
+    () => ({
+      context: 'account' as const,
+      ownerId: actor ?? 'current-session',
+      accountId: actor,
+      revision: revision,
+    }),
+    [actor, revision]
+  );
   const locale = useLocale();
   const time = useAccountTime(locale);
   const navigate = useNavigate();
@@ -382,13 +394,16 @@ function OwnedSimpleElectricityOrderPage() {
     setActiveProfileName(null);
     setVerificationError(false);
     try {
-      const response = await fetch('/api/profiles/verification-status', {
-        method: 'GET',
-        credentials: 'include',
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error('Verification unavailable');
-      const data = await response.json();
+      const data = await readIntake<Record<string, unknown> | null>(
+        queryKeys.profiles.authority(intakeScope, 'electricity-intake-verification'),
+        '/api/profiles/verification-status',
+        'Verification unavailable',
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: { Accept: 'application/json' },
+        }
+      );
       if (
         !data ||
         typeof data !== 'object' ||
@@ -418,7 +433,7 @@ function OwnedSimpleElectricityOrderPage() {
     } finally {
       if (current === verificationGeneration.current) setChecking(false);
     }
-  }, []);
+  }, [readIntake, intakeScope]);
 
   // ── Fetch products ──────────────────────────────────────────────────
 
@@ -429,9 +444,11 @@ function OwnedSimpleElectricityOrderPage() {
     setProducts([]);
     setSelectedProductId('');
     try {
-      const res = await fetch('/api/products/electricity');
-      if (!res.ok) throw new Error('Products unavailable');
-      const data: unknown = await res.json();
+      const data: unknown = await readIntake(
+        queryKeys.catalogue.detail(intakeScope, 'electricity-intake-products'),
+        '/api/products/electricity',
+        'Products unavailable'
+      );
       if (!Array.isArray(data)) throw new Error('Invalid products');
       // The catalogue includes unavailable placeholders for the other three
       // system products. Only thermal can be selected in simple ordering.
@@ -468,7 +485,7 @@ function OwnedSimpleElectricityOrderPage() {
     } finally {
       if (current === productGeneration.current) setLoadingProducts(false);
     }
-  }, []);
+  }, [readIntake, intakeScope]);
 
   // ── Fetch addresses ─────────────────────────────────────────────────
 
@@ -483,11 +500,15 @@ function OwnedSimpleElectricityOrderPage() {
       return;
     }
     try {
-      const res = await fetch(`/api/profiles/${activeProfileId}/addresses`, {
-        credentials: 'include',
-      });
-      if (!res.ok) throw new Error('Addresses unavailable');
-      const data = await res.json();
+      const data = await readIntake<{ addresses: Address[] }>(
+        queryKeys.profiles.list(
+          { ...intakeScope, context: 'customer', ownerId: activeProfileId },
+          new URLSearchParams({ owner: 'electricity-intake-addresses' })
+        ),
+        `/api/profiles/${activeProfileId}/addresses`,
+        'Addresses unavailable',
+        { credentials: 'include' }
+      );
       if (
         !Array.isArray(data?.addresses) ||
         data.addresses.some(
@@ -513,7 +534,7 @@ function OwnedSimpleElectricityOrderPage() {
     } finally {
       if (current === addressGeneration.current) setLoadingAddresses(false);
     }
-  }, [activeProfileId]);
+  }, [activeProfileId, readIntake, intakeScope]);
 
   // ── Effects ─────────────────────────────────────────────────────────
 
@@ -561,13 +582,13 @@ function OwnedSimpleElectricityOrderPage() {
 
   useEffect(() => {
     const controller = new AbortController();
-    void fetch('/api/electricity/periods/simple', {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Periods unavailable');
-        const data: unknown = await response.json();
+    void readIntake<unknown>(
+      queryKeys.catalogue.detail(intakeScope, 'electricity-intake-periods'),
+      '/api/electricity/periods/simple',
+      'Periods unavailable',
+      { credentials: 'include', signal: controller.signal }
+    )
+      .then(async (data) => {
         if (
           !data ||
           typeof data !== 'object' ||
@@ -587,20 +608,21 @@ function OwnedSimpleElectricityOrderPage() {
         }
       });
     return () => controller.abort();
-  }, []);
+  }, [readIntake, intakeScope]);
 
   useEffect(() => {
     if (!activeProfileId) return;
     const controller = new AbortController();
     setBillSuggestion(null);
-    void fetch(`/api/electricity/bill-data/${activeProfileId}?period=${period}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Bill data unavailable');
-        return response.json() as Promise<BillSuggestion>;
-      })
+    void readIntake<BillSuggestion>(
+      queryKeys.orders.detail(
+        { ...intakeScope, context: 'customer', ownerId: activeProfileId },
+        `intake-bill:${period}`
+      ),
+      `/api/electricity/bill-data/${activeProfileId}?period=${period}`,
+      'Bill data unavailable',
+      { credentials: 'include', signal: controller.signal }
+    )
       .then((data) => {
         if (!controller.signal.aborted) setBillSuggestion(data);
       })
@@ -613,7 +635,7 @@ function OwnedSimpleElectricityOrderPage() {
           });
       });
     return () => controller.abort();
-  }, [activeProfileId, period, billSuggestionRetry]);
+  }, [activeProfileId, period, billSuggestionRetry, readIntake, intakeScope]);
 
   useEffect(() => {
     if (!activeProfileId) return;
@@ -627,23 +649,24 @@ function OwnedSimpleElectricityOrderPage() {
     completed.current = false;
     setDraftLoading(true);
     setDraftError(false);
-    void fetch(`/api/electricity/drafts/simple?profileId=${activeProfileId}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Draft unavailable');
-        return response.json() as Promise<{
-          currentStep: number;
-          data: {
-            period: SimplePeriod;
-            totalKwh?: string;
-            giftCode?: string;
-            giftCodeInput?: string;
-            addressId?: string;
-          } | null;
-        }>;
-      })
+    void readIntake<{
+      currentStep: number;
+      data: {
+        period: SimplePeriod;
+        totalKwh?: string;
+        giftCode?: string;
+        giftCodeInput?: string;
+        addressId?: string;
+      } | null;
+    }>(
+      queryKeys.orders.detail(
+        { ...intakeScope, context: 'customer', ownerId: activeProfileId },
+        'intake-draft'
+      ),
+      `/api/electricity/drafts/simple?profileId=${activeProfileId}`,
+      'Draft unavailable',
+      { credentials: 'include', signal: controller.signal }
+    )
       .then((draft) => {
         if (controller.signal.aborted) return;
         if (
@@ -693,7 +716,7 @@ function OwnedSimpleElectricityOrderPage() {
       draftSaveInFlight.current = null;
       if (draftGeneration.current === epoch) draftGeneration.current++;
     };
-  }, [activeProfileId, draftRetry]);
+  }, [activeProfileId, draftRetry, readIntake, intakeScope]);
 
   useEffect(() => {
     if (step !== 5 || !activeProfileId) return;

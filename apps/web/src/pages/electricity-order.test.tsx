@@ -1,4 +1,5 @@
-import { QueryProvider } from '../test/query-provider.js';
+import { QueryProvider, QueryComponentProvider } from '../test/query-provider.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -528,3 +529,98 @@ it('electricity funding preview cancels pending wallet bytes on unmount without 
   await act(async () => finish({ balance: '999999999999999999', currency: 'IRR' }));
   expect(orderCalls()).toHaveLength(0);
 });
+
+it.each([
+  '/api/profiles/verification-status',
+  '/api/products/electricity',
+  `/api/profiles/${profileId}/addresses`,
+  '/api/electricity/periods/simple',
+  `/api/electricity/bill-data/${profileId}?period=current_month`,
+  `/api/electricity/drafts/simple?profileId=${profileId}`,
+])('cancels pending intake bytes for %s on page-only removal', async (path) => {
+  const previous = fetchMock.getMockImplementation()!;
+  let signal!: AbortSignal, finish!: (value: unknown) => void;
+  fetchMock.mockImplementation(async (input, init) => {
+    if (String(input) === path) {
+      signal = init!.signal as AbortSignal;
+      return {
+        ok: true,
+        status: 200,
+        json: () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      } as Response;
+    }
+    return previous(input, init);
+  });
+  await mount();
+  expect(finish).toBeDefined();
+  expect(signal.aborted).toBe(false);
+  const count = fetchMock.mock.calls.filter(([url]) => String(url) === path).length;
+  await act(async () => {
+    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(new Event('online'));
+  });
+  expect(fetchMock.mock.calls.filter(([url]) => String(url) === path)).toHaveLength(count);
+  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+  expect(signal.aborted).toBe(true);
+  await act(async () => finish({ private: 'obsolete private data' }));
+  expect(container.textContent).toBe('');
+  expect(orderCalls()).toHaveLength(0);
+});
+it.each(['/api/profiles/verification-status', '/api/products/electricity'])(
+  'refuses old account %s bytes after replacement under a stable query client',
+  async (path) => {
+    const previous = fetchMock.getMockImplementation()!;
+    let first = true,
+      signal!: AbortSignal,
+      finish!: (value: unknown) => void;
+    fetchMock.mockImplementation(async (input, init) => {
+      if (String(input) === path && first) {
+        first = false;
+        signal = init!.signal as AbortSignal;
+        return {
+          ok: true,
+          status: 200,
+          json: () =>
+            new Promise((resolve) => {
+              finish = resolve;
+            }),
+        } as Response;
+      }
+      return previous(input, init);
+    });
+    const actor = async (id: string) =>
+      act(async () =>
+        root.render(
+          <QueryComponentProvider>
+            <AccountUserProvider value={id}>
+              <Page />
+            </AccountUserProvider>
+          </QueryComponentProvider>
+        )
+      );
+    await actor('buyer');
+    expect(signal.aborted).toBe(false);
+    await actor('replacement');
+    expect(signal.aborted).toBe(true);
+    await act(async () =>
+      finish(
+        path.includes('verification')
+          ? {
+              activeProfileId: 'old-private-profile',
+              verificationRequired: false,
+              isVerified: true,
+              activeProfileName: 'Private obsolete',
+            }
+          : [{ ...product, title: { en: 'Private obsolete', fa: 'Private obsolete' } }]
+      )
+    );
+    expect(container.textContent).not.toContain('Private obsolete');
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('old-private-profile'))).toBe(
+      false
+    );
+    expect(orderCalls()).toHaveLength(0);
+  }
+);
