@@ -1,3 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import {
   INVOICE_REMINDER_OFFSETS,
   SERVICE_DUE_PERIOD_TYPES,
@@ -7,6 +11,7 @@ import {
   useEffect,
   useCallback,
   useRef,
+  useId,
   type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
@@ -205,7 +210,31 @@ function inertOutside(keep: HTMLElement): () => void {
 }
 
 export default function ReminderOffsetTogglePanel() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedReminderOffsetTogglePanel key={JSON.stringify([actor, revision])} />;
+}
+function OwnedReminderOffsetTogglePanel() {
   const locale = useLocale();
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const client = useQueryClient();
+  const reader = useId();
+  const identity = JSON.stringify([actor, profileRevision, locale]);
+  const latest = useRef(identity);
+  latest.current = identity;
+  const alive = useRef(true);
+  const sequence = useRef(0);
+  const requests = useRef(new Set<AbortController>());
+  useEffect(() => {
+    alive.current = true;
+    const owned = requests.current;
+    return () => {
+      alive.current = false;
+      for (const controller of owned) controller.abort();
+      owned.clear();
+    };
+  }, [client, identity]);
   const isRtl = locale === 'fa';
   const [toggles, setToggles] = useState<ReminderOffsetToggleDto[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -259,23 +288,58 @@ export default function ReminderOffsetTogglePanel() {
   }
 
   const load = useCallback(async () => {
+    for (const pending of requests.current) pending.abort();
+    const controller = new AbortController();
+    requests.current.add(controller);
+    const queryKey: ServerQueryKey = [
+      ...queryKeys.catalogue.detail(
+        {
+          context: 'staff',
+          ownerId: actor ?? 'staff-session',
+          accountId: actor,
+          revision: profileRevision,
+        },
+        '/api/admin/config/invoice-reminder-offsets'
+      ),
+      JSON.stringify([reader, locale, ++sequence.current]),
+    ];
+    const cancel = () => void client.cancelQueries({ queryKey, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    const current = () =>
+      alive.current && latest.current === identity && !controller.signal.aborted;
     try {
       setLoading(true);
-      const res = await fetch('/api/admin/config/invoice-reminder-offsets');
-      if (!res.ok) {
-        throw new Error(await parseError(res, t('admin.invoices.reminders.loadFailed', locale)));
-      }
-      const data = (await res.json()) as ReminderOffsetToggleDto[];
+      const data = await client.fetchQuery({
+        queryKey,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const res = await fetch('/api/admin/config/invoice-reminder-offsets', { signal });
+          if (!res.ok) {
+            throw new Error(
+              await parseError(res, t('admin.invoices.reminders.loadFailed', locale))
+            );
+          }
+          const data = (await res.json()) as ReminderOffsetToggleDto[];
+          if (!current() || signal.aborted) throw new Error('Obsolete reminder read');
+          return data;
+        },
+      });
+      if (!current()) return;
       setToggles(data);
       setError(null);
     } catch (err) {
+      if (!current()) return;
       setError(
         err instanceof Error ? err.message : t('admin.invoices.reminders.loadFailed', locale)
       );
     } finally {
-      setLoading(false);
+      controller.signal.removeEventListener('abort', cancel);
+      requests.current.delete(controller);
+      if (current()) setLoading(false);
     }
-  }, [locale]);
+  }, [client, identity, reader, actor, profileRevision, locale]);
 
   useEffect(() => {
     load();

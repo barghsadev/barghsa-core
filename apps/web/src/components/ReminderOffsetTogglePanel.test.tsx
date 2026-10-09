@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -24,7 +25,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return {
           ok: true,
@@ -58,7 +59,11 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
 
   async function renderPanel() {
     await act(async () => {
-      root.render(<ReminderOffsetTogglePanel />);
+      root.render(
+        <QueryComponentProvider>
+          <ReminderOffsetTogglePanel />
+        </QueryComponentProvider>
+      );
     });
     await act(async () => {
       await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean));
@@ -109,7 +114,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -160,7 +165,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -264,7 +269,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -289,7 +294,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -344,7 +349,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -373,7 +378,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -414,7 +419,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -437,7 +442,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -476,7 +481,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -526,7 +531,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
@@ -632,7 +637,7 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
       const url = String(input);
       if (
         url.endsWith('/api/admin/config/invoice-reminder-offsets') &&
-        (!init || init.method === 'GET')
+        (init?.method ?? 'GET') === 'GET'
       ) {
         return { ok: true, json: async () => defaultReminderOffsetToggles() };
       }
