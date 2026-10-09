@@ -23,14 +23,14 @@ export function useOwnedStaffServiceRead(actor: string | null, revision: number)
   }, [client, identity]);
   return useCallback(
     async (
-      resource: 'orders' | 'consultations' | 'solar' | 'catalogue',
+      resource: 'orders' | 'contracts' | 'consultations' | 'solar' | 'catalogue',
       kind: 'list' | 'detail',
       path: string,
       external: AbortSignal
     ) => {
       const pathname = path.split('?')[0]!;
       if (
-        !/^\/api\/(?:staff\/electricity\/orders(?:\/(?:conversations|[^/]+))?|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
+        !/^\/api\/(?:staff\/electricity\/(?:orders(?:\/(?:conversations|[^/]+))?|increase-requests|contracts\/[^/]+\/price-adjustments)|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
           pathname
         )
       )

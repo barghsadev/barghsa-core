@@ -1,3 +1,5 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -100,7 +102,13 @@ function bpsToPercent(value: string, format: ReturnType<typeof useNumberFormatti
   return `${signed < 0n ? '-' : ''}${whole}${decimals}%`;
 }
 
-export default function AdminElectricityPriceAdjustmentsPage({
+export default function AdminElectricityPriceAdjustmentsPage(
+  props: Parameters<typeof OwnedAdminElectricityPriceAdjustmentsPage>[0] = {}
+) {
+  const revision = useProfileContextRevision();
+  return <OwnedAdminElectricityPriceAdjustmentsPage key={revision} {...props} />;
+}
+function OwnedAdminElectricityPriceAdjustmentsPage({
   queries,
 }: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
@@ -270,6 +278,8 @@ function PriceWorkspace({
   currentTimezone.current = timezone;
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const formCopy = (key: string) => appText(`electricity.priceForm.${key}`, locale);
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const scope = JSON.stringify([actor, contractId]);
   const currentScope = useRef(scope);
   currentScope.current = scope;
@@ -406,9 +416,11 @@ function PriceWorkspace({
       mounted.current &&
       currentScope.current === scope &&
       request === readGeneration.current;
-    void fetch(
+    void readStaff(
+      'contracts',
+      'detail',
       `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
-      { credentials: 'include', signal: abort.signal }
+      abort.signal
     )
       .then(async (response) => {
         if (!fresh()) return null;
@@ -444,7 +456,7 @@ function PriceWorkspace({
         if (fresh()) setLoading(false);
       });
     return () => abort.abort();
-  }, [contractId, revision, scope]);
+  }, [contractId, revision, scope, readStaff]);
   function live(command: CapturedPriceAction) {
     return (
       mounted.current &&

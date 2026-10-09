@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -89,11 +90,15 @@ it.each(['proposed', 'finalized'] as const)(
     try {
       await act(async () =>
         root.render(
-          <ElectricityPriceAdjustmentsPanel
-            contractId={priceContractId}
-            profileId={priceProfileId}
-            versionId={priceVersionId}
-          />
+          <QueryComponentProvider>
+            {
+              <ElectricityPriceAdjustmentsPanel
+                contractId={priceContractId}
+                profileId={priceProfileId}
+                versionId={priceVersionId}
+              />
+            }
+          </QueryComponentProvider>
         )
       );
       expect(container.textContent).toContain('Published tariff correction');
@@ -143,7 +148,11 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+    await act(async () =>
+      root.render(
+        <QueryComponentProvider>{<AdminElectricityPriceAdjustmentsPage />}</QueryComponentProvider>
+      )
+    );
     expect(fetchMock).toHaveBeenCalledWith(
       '/api/staff/electricity/contracts/11111111-1111-4111-8111-111111111111/price-adjustments',
       expect.objectContaining({ credentials: 'include' })
@@ -250,7 +259,11 @@ it('reviews the server price before preparing the exact publish command', async 
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+    await act(async () =>
+      root.render(
+        <QueryComponentProvider>{<AdminElectricityPriceAdjustmentsPage />}</QueryComponentProvider>
+      )
+    );
     const set = async (selector: string, value: string) => {
       const input = container.querySelector<HTMLInputElement>(selector)!;
       await act(async () => {
@@ -321,7 +334,13 @@ it.each(['charge', 'credit'] as const)(
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+      await act(async () =>
+        root.render(
+          <QueryComponentProvider>
+            {<AdminElectricityPriceAdjustmentsPage />}
+          </QueryComponentProvider>
+        )
+      );
       expect(
         container.querySelector(
           'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'

@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useLayoutEffect, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi, type Mock } from 'vitest';
@@ -127,10 +128,14 @@ async function render(
   root = createRoot(host);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="staff-1">
-        <Page />
-        <Probe actor="staff-1" />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value="staff-1">
+            <Page />
+            <Probe actor="staff-1" />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     )
   );
 }
@@ -546,10 +551,14 @@ it('hides a private captured review at the new actor commit and fences all old c
   const old = dialogs.at(-1)!;
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="staff-2">
-        <Page />
-        <Probe actor="staff-2" />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value="staff-2">
+            <Page />
+            <Probe actor="staff-2" />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     )
   );
   expect(snapshots.find((snapshot) => snapshot.actor === 'staff-2')?.review).toBe(false);

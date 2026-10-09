@@ -1,8 +1,10 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState } from 'react';
-import { t as appText } from '@barghsa/i18n/app';
+import { t as appText } from '@barghsa/i18n/electricity-increase-decision-forms';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   Form,
@@ -25,7 +27,7 @@ import {
   type IncreaseDecision,
   type IncreaseDecisionDraft,
 } from '../lib/electricity-increase-decision-form.js';
-import { t } from '@barghsa/i18n/admin-ui';
+import { adminText as t } from '@barghsa/i18n/electricity-increase-decision-forms';
 import {
   Button,
   Card,
@@ -250,11 +252,17 @@ function IncreaseDecisionEditor({
   );
 }
 
-export default function AdminElectricityIncreasesPage({
-  queries,
-}: { queries?: ListQueryBinding } = {}) {
+export default function AdminElectricityIncreasesPage(
+  props: Parameters<typeof OwnedAdminElectricityIncreasesPage>[0] = {}
+) {
+  const revision = useProfileContextRevision();
+  return <OwnedAdminElectricityIncreasesPage key={revision} {...props} />;
+}
+function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const locale = useLocale();
   const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const formCopy = (key: string) => appText(`electricity.increaseDecisionForm.${key}`, locale);
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
@@ -351,7 +359,7 @@ export default function AdminElectricityIncreasesPage({
     const path =
       `/api/staff/electricity/increase-requests?status=${view}` +
       (before ? `&before=${encodeURIComponent(before)}` : '');
-    void fetch(path, { credentials: 'include', signal: controller.signal })
+    void readStaff('orders', 'list', path, controller.signal)
       .then(async (response) => {
         if (
           controller.signal.aborted ||
@@ -416,7 +424,7 @@ export default function AdminElectricityIncreasesPage({
           setLoading(false);
       });
     return () => controller.abort();
-  }, [before, revision, view, actor]);
+  }, [before, revision, view, actor, readStaff]);
 
   function deny() {
     accessDenied.current = true;

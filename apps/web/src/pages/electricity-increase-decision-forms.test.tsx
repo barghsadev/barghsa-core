@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useLayoutEffect, useState, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -130,10 +131,14 @@ async function render(fetchMock: ReturnType<typeof vi.fn>, actor = 'staff-1') {
   root = createRoot(container);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value={actor}>
-        <AdminElectricityIncreasesPage />
-        <ActorRenderProbe actor={actor} />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value={actor}>
+            <AdminElectricityIncreasesPage />
+            <ActorRenderProbe actor={actor} />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     )
   );
 }
@@ -503,10 +508,14 @@ it('fences a previous actor preview and immediately hides their queue and drafts
   );
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="staff-2">
-        <AdminElectricityIncreasesPage />
-        <ActorRenderProbe actor="staff-2" />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value="staff-2">
+            <AdminElectricityIncreasesPage />
+            <ActorRenderProbe actor="staff-2" />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     )
   );
   await act(async () => held.resolve(Response.json(decisionReview('reject', 'Private draft'))));
@@ -531,10 +540,14 @@ it('hides captured private review at the new actor commit and rejects a stale re
   const staleRetry = retryHandlers.at(-1)!;
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="staff-2">
-        <AdminElectricityIncreasesPage />
-        <ActorRenderProbe actor="staff-2" />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value="staff-2">
+            <AdminElectricityIncreasesPage />
+            <ActorRenderProbe actor="staff-2" />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     )
   );
   expect(actorSnapshots.find((snapshot) => snapshot.actor === 'staff-2')).toMatchObject({
@@ -566,9 +579,13 @@ it('preserves an in-flight captured write across an external cursor change', asy
   await render(fetchMock);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="staff-1">
-        <Bound />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value="staff-1">
+            <Bound />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     )
   );
   await change('reason', 'Outside capacity plan');
@@ -597,9 +614,13 @@ it('rejects a stale retry entry from the previous cursor without rebinding its c
   await render(fetchMock);
   await act(async () =>
     root!.render(
-      <AccountUserProvider value="staff-1">
-        <Bound />
-      </AccountUserProvider>
+      <QueryComponentProvider>
+        {
+          <AccountUserProvider value="staff-1">
+            <Bound />
+          </AccountUserProvider>
+        }
+      </QueryComponentProvider>
     )
   );
   await change('reason', 'Outside capacity plan');
@@ -647,10 +668,14 @@ it('blocks unavailable approval time and rejects a preview resolved for an obsol
   const update = async () =>
     act(async () =>
       root!.render(
-        <AccountUserProvider value="staff-1">
-          <AdminElectricityIncreasesPage />
-          <ActorRenderProbe actor="staff-1" />
-        </AccountUserProvider>
+        <QueryComponentProvider>
+          {
+            <AccountUserProvider value="staff-1">
+              <AdminElectricityIncreasesPage />
+              <ActorRenderProbe actor="staff-1" />
+            </AccountUserProvider>
+          }
+        </QueryComponentProvider>
       )
     );
   accountClock.status = 'ready';
