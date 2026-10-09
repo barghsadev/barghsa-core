@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-09T09:24:47.403858+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-09T10:09:46.270953+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.2.0**. Next milestone: **v0.3.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 560 | Accepted with unchanged source bindings. |
+| done | 562 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 72 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 70 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close the next fulfillment and financial milestone in dependency order: reconcile existing implementation and approved decisions, implement only demonstrated gaps, preserve safeguards, accept complete task criteria and verify staging plus grouped Persian Telegram receipts. Production is not authorized.
+v0.2.0 staging and Telegram closed. Finish v0.3.0 closure after the one consolidated owner response: reconcile approved representations, complete only demonstrated gaps and verification SMS mapping/delivery, then pass complete financial milestone gates and deploy/announce at acceptance. Two signed-provider tasks accepted; no later-release infrastructure batch selected. Production remains unauthorized.
 
 - `release-readiness#R-02.01`: Renew fulfillment and financial closure acceptance
 
@@ -445,7 +445,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.2.01.07` | done | Earlier acceptance_verified | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column |
 | `04-invoices-wallet-contracts.md#T-04.2.01.08` | done | Earlier acceptance_verified | Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue |
 | `04-invoices-wallet-contracts.md#T-04.2.02.01` | done | Earlier acceptance_verified | Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway |
-| `04-invoices-wallet-contracts.md#T-04.2.02.02` | partial | Earlier partial | Build provider callback handler: verify signature, replay window, event id, merchant context; apply credit via `WalletService.credit()` with idempotency key |
+| `04-invoices-wallet-contracts.md#T-04.2.02.02` | done | Earlier partial | Build provider callback handler: verify signature, replay window, event id, merchant context; apply credit via `WalletService.credit()` with idempotency key |
 | `04-invoices-wallet-contracts.md#T-04.2.02.03` | done | Earlier acceptance_verified | Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state |
 | `04-invoices-wallet-contracts.md#T-04.2.02.04` | done | Earlier acceptance_verified | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` |
 | `04-invoices-wallet-contracts.md#T-04.2.02.05` | done | Earlier acceptance_verified | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet |
@@ -456,7 +456,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `04-invoices-wallet-contracts.md#T-04.2.03.03` | done | Earlier acceptance_verified | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry |
 | `04-invoices-wallet-contracts.md#T-04.2.03.04` | done | Earlier acceptance_verified | Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions |
 | `04-invoices-wallet-contracts.md#T-04.2.04.01` | done | Earlier acceptance_verified | Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance |
-| `04-invoices-wallet-contracts.md#T-04.2.04.02` | partial | Earlier partial | Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up |
+| `04-invoices-wallet-contracts.md#T-04.2.04.02` | done | Earlier partial | Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up |
 | `04-invoices-wallet-contracts.md#T-04.2.04.03` | done | Earlier acceptance_verified | Finance alert: push notification + dashboard warning for unresolved chargeback |
 | `04-invoices-wallet-contracts.md#T-04.3.01.01` | done | Earlier acceptance_verified | Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps |
 | `04-invoices-wallet-contracts.md#T-04.3.01.02` | done | Earlier acceptance_verified | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state |
