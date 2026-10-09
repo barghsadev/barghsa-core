@@ -30,7 +30,7 @@ export function useOwnedStaffServiceRead(actor: string | null, revision: number)
     ) => {
       const pathname = path.split('?')[0]!;
       if (
-        !/^\/api\/(?:staff\/electricity\/(?:orders(?:\/(?:conversations|[^/]+))?|increase-requests|contracts\/[^/]+\/price-adjustments)|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
+        !/^\/api\/(?:staff\/electricity\/(?:orders(?:\/(?:conversations|[^/]+))?|increase-requests|contracts\/[^/]+\/price-adjustments)|admin\/consultations\/(?:teams|requests(?:\/[^/]+)?)|admin\/solar\/(?:postal-queue|postal-guidance|document-review-queue|document-guidance|requests(?:\/[^/]+\/documents)?|construction(?:\/[^/]+)?))$/.test(
           pathname
         )
       )

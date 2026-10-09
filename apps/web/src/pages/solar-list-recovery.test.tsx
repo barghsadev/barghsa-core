@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -71,7 +72,7 @@ async function mount(Page: () => ReturnType<typeof Documents>) {
   const container = document.createElement('div');
   document.body.append(container);
   const root = createRoot(container);
-  await act(async () => root.render(<Page />));
+  await act(async () => root.render(<QueryComponentProvider>{<Page />}</QueryComponentProvider>));
   return {
     container,
     close: async () => {

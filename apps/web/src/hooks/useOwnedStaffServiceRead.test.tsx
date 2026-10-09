@@ -4,6 +4,8 @@ import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useOwnedStaffServiceRead } from './useOwnedStaffServiceRead.js';
 const targets = [
+  ['solar', 'list', '/api/admin/solar/postal-queue?lane=needs_staff&before=cursor-1'],
+  ['catalogue', 'detail', '/api/admin/solar/postal-guidance'],
   ['orders', 'list', '/api/staff/electricity/increase-requests?status=pending&before=cursor-1'],
   ['contracts', 'detail', '/api/staff/electricity/contracts/contract-1/price-adjustments'],
   ['orders', 'list', '/api/staff/electricity/orders'],

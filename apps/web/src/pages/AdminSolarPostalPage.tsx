@@ -1,3 +1,5 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
 import { Alert, AlertDescription, Button, FinancialReviewSummary, ListPage } from '@barghsa/ui';
@@ -86,9 +88,18 @@ interface PostalReview {
 
 export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const actor = useAccountUser();
-  return <AdminSolarPostalWorkspace key={actor ?? ''} {...(queries ? { queries } : {})} />;
+  const revision = useProfileContextRevision();
+  return (
+    <AdminSolarPostalWorkspace
+      key={JSON.stringify([actor, revision])}
+      {...(queries ? { queries } : {})}
+    />
+  );
 }
 function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } = {}) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const locale = useLocale();
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
@@ -247,10 +258,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
     setQueueDenied(false);
     const query = new URLSearchParams({ lane });
     if (before) query.set('before', before);
-    void fetch(`/api/admin/solar/postal-queue?${query}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff('solar', 'list', `/api/admin/solar/postal-queue?${query}`, controller.signal)
       .then(async (response) => {
         if (!fresh()) return null;
         if (!response.ok) throw new Error(String(response.status));
@@ -288,15 +296,12 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
         if (fresh()) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [before, lane, revision, queueRevision]);
+  }, [before, lane, revision, queueRevision, readStaff]);
   useEffect(() => {
     const controller = new AbortController();
     const read = ++guidanceRead.current;
     setGuidanceError(false);
-    void fetch('/api/admin/solar/postal-guidance', {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readStaff('catalogue', 'detail', '/api/admin/solar/postal-guidance', controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new Error('guidance');
         return response.json() as Promise<Guidance>;
@@ -312,7 +317,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
         if (!controller.signal.aborted) setGuidanceError(true);
       });
     return () => controller.abort();
-  }, [guidanceRevision]);
+  }, [guidanceRevision, readStaff]);
   const row = visibleRows.find((item) => item.id === selected);
   function saveGuidance(event: FormEvent<HTMLFormElement>) {
     if (!guidance || busy() || guidanceUnconfirmed || guidanceDenied) {
@@ -561,7 +566,12 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
                     disabled={commandPending || contractLocked}
                     className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
                     onClick={() => {
-                      if (contractOwner.current || commandPendingRef.current) return;
+                      if (
+                        contractOwner.current ||
+                        (preparingRef.current && !reasonForm.isSubmissionPending()) ||
+                        commandPendingRef.current
+                      )
+                        return;
                       invalidateReview();
                       setSelected(item.id);
                       setPreview(null);
