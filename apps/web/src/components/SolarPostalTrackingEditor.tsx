@@ -1,5 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import {
   useEffect,
+  useId,
   useRef,
   useState,
   type AriaAttributes,
@@ -78,7 +82,16 @@ interface Proposal {
   settled: boolean;
   unconfirmed: boolean;
 }
-export function SolarPostalTrackingEditor({
+export function SolarPostalTrackingEditor(
+  props: Parameters<typeof OwnedSolarPostalTrackingEditor>[0]
+) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  return (
+    <OwnedSolarPostalTrackingEditor key={JSON.stringify([actor, profileRevision])} {...props} />
+  );
+}
+function OwnedSolarPostalTrackingEditor({
   requestId,
   onSaved,
   onDenied,
@@ -87,6 +100,10 @@ export function SolarPostalTrackingEditor({
   onSaved: () => void;
   onDenied: () => void;
 }) {
+  const client = useQueryClient();
+  const reader = useId();
+  const profileRevision = useProfileContextRevision();
+  const readSequence = useRef(0);
   const locale = useLocale();
   const time = useAccountTime(locale);
   const actor = useAccountUser();
@@ -191,7 +208,27 @@ export function SolarPostalTrackingEditor({
     detailRef.current = null;
     setDetail(null);
     setError(null);
-    void fetch(path, { credentials: 'include', signal: controller.signal })
+    const key = queryKeys.solar.detail(
+      { context: 'staff', ownerId: requestId, accountId: actor, revision: profileRevision },
+      JSON.stringify([requestId, 'postal-tracking', reader, ++readSequence.current])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    void client
+      .fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(path, { credentials: 'include', signal });
+          return {
+            ok: response.ok,
+            status: response.status,
+            data: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
+      })
       .then(async (response) => {
         if (controller.signal.aborted || token !== generation.current) return null;
         if ([401, 403, 404].includes(response.status)) {
@@ -199,7 +236,7 @@ export function SolarPostalTrackingEditor({
           return null;
         }
         if (!response.ok) throw new Error('tracking');
-        const value: unknown = await response.json();
+        const value: unknown = response.data;
         if (controller.signal.aborted || token !== generation.current) return null;
         if (
           !solarTrackingSnapshot(value) ||
@@ -242,8 +279,11 @@ export function SolarPostalTrackingEditor({
           setError('load');
         }
       });
-    return () => controller.abort();
-  }, [path, scopeKey, revision]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [path, scopeKey, revision, client, profileRevision, reader]);
   function reload() {
     if (commandPendingRef.current) return;
     closeProposal();

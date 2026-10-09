@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useLayoutEffect, useRef, type ComponentProps } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -181,10 +182,14 @@ async function mount(
   const render = async (id = requestId, actor = 'staff-one', inspect?: () => void) =>
     act(async () =>
       root.render(
-        <AccountUserProvider value={actor}>
-          <SolarPostalTrackingEditor requestId={id} onSaved={saved} onDenied={denied} />
-          <ScopeProbe actor={actor} {...(inspect ? { inspect } : {})} />
-        </AccountUserProvider>
+        <QueryComponentProvider>
+          {
+            <AccountUserProvider value={actor}>
+              <SolarPostalTrackingEditor requestId={id} onSaved={saved} onDenied={denied} />
+              <ScopeProbe actor={actor} {...(inspect ? { inspect } : {})} />
+            </AccountUserProvider>
+          }
+        </QueryComponentProvider>
       )
     );
   await render();

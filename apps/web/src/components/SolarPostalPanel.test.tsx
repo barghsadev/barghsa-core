@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -60,7 +61,11 @@ it('shows postal instructions and records a shipment, then locks the form while 
   });
   vi.stubGlobal('fetch', fetcher);
   await act(async () =>
-    root.render(<SolarPostalPanel requestId={requestId} profileId={profileId} />)
+    root.render(
+      <QueryComponentProvider>
+        {<SolarPostalPanel requestId={requestId} profileId={profileId} />}
+      </QueryComponentProvider>
+    )
   );
   expect(container.textContent).toContain('Send the originals.');
   expect(container.textContent).toContain('Main office');
@@ -115,7 +120,11 @@ it('shows recorded arrival information with a safe tracking link and copy recove
     )
   );
   await act(async () =>
-    root.render(<SolarPostalPanel requestId={requestId} profileId={profileId} />)
+    root.render(
+      <QueryComponentProvider>
+        {<SolarPostalPanel requestId={requestId} profileId={profileId} />}
+      </QueryComponentProvider>
+    )
   );
   expect(container.textContent).toContain('5 January 2026');
   expect(container.textContent).toContain('2 January 2026');
@@ -161,12 +170,20 @@ it('hides old estimates on route changes and fetch denial, then reloads current 
     })
   );
   await act(async () =>
-    root.render(<SolarPostalPanel requestId={requestId} profileId={profileId} />)
+    root.render(
+      <QueryComponentProvider>
+        {<SolarPostalPanel requestId={requestId} profileId={profileId} />}
+      </QueryComponentProvider>
+    )
   );
   expect(container.textContent).toContain('Old estimate');
   expect(container.querySelector('a')).toBeNull();
   await act(async () =>
-    root.render(<SolarPostalPanel requestId="new-request" profileId={profileId} />)
+    root.render(
+      <QueryComponentProvider>
+        {<SolarPostalPanel requestId="new-request" profileId={profileId} />}
+      </QueryComponentProvider>
+    )
   );
   expect(container.textContent).not.toContain('Old estimate');
   await act(async () => pendingResolve!(new Response('{}', { status: 403 })));
@@ -181,7 +198,11 @@ it('hides old estimates on route changes and fetch denial, then reloads current 
   expect(container.textContent).not.toContain('OLD-TRACK');
   deny = false;
   await act(async () =>
-    root.render(<SolarPostalPanel requestId={requestId} profileId={profileId} />)
+    root.render(
+      <QueryComponentProvider>
+        {<SolarPostalPanel requestId={requestId} profileId={profileId} />}
+      </QueryComponentProvider>
+    )
   );
   expect(container.textContent).toContain('Old estimate');
   expect(container.textContent).not.toContain('Could not load postal details.');

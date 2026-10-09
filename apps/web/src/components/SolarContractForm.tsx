@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from './OrderWalletBalance.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -57,7 +60,12 @@ interface Command {
   uncertain: boolean;
   rejected: boolean;
 }
-export function SolarContractForm({
+export function SolarContractForm(props: Parameters<typeof OwnedSolarContractForm>[0]) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  return <OwnedSolarContractForm key={JSON.stringify([actor, profileRevision])} {...props} />;
+}
+function OwnedSolarContractForm({
   requestId,
   profileId,
   scopeKey: sourceScope = '',
@@ -72,6 +80,10 @@ export function SolarContractForm({
   onDenied?: () => void;
   onCreated: (contractId: string) => void;
 }) {
+  const client = useQueryClient();
+  const reader = useId();
+  const profileRevision = useProfileContextRevision();
+  const readSequence = useRef(0);
   const locale = useLocale(),
     actor = useAccountUser();
   const copy = (key: string) => tSolar(key, locale);
@@ -185,10 +197,30 @@ export function SolarContractForm({
     const controller = new AbortController(),
       token = generation.current;
     setError(null);
-    void fetch(`/api/admin/solar/requests/${encodeURIComponent(requestId)}/contract-options`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    const key = queryKeys.solar.detail(
+      { context: 'staff', ownerId: profileId, accountId: actor, revision: profileRevision },
+      JSON.stringify([requestId, 'contract-options', reader, ++readSequence.current])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    void client
+      .fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(
+            `/api/admin/solar/requests/${encodeURIComponent(requestId)}/contract-options`,
+            { credentials: 'include', signal }
+          );
+          return {
+            ok: response.ok,
+            status: response.status,
+            data: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
+      })
       .then(async (response) => {
         if (controller.signal.aborted || token !== generation.current || scope.current !== scopeKey)
           return;
@@ -197,7 +229,7 @@ export function SolarContractForm({
           return;
         }
         if (!response.ok) throw new Error('options');
-        const value: unknown = await response.json();
+        const value: unknown = response.data;
         if (controller.signal.aborted || token !== generation.current || scope.current !== scopeKey)
           return;
         const parsed = solarContractOptions(value);
@@ -214,8 +246,11 @@ export function SolarContractForm({
         )
           setError('options');
       });
-    return () => controller.abort();
-  }, [scopeKey, revision]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [scopeKey, revision, client, profileRevision, reader]);
   const current = (captured: Command) =>
     scope.current === scopeKey &&
     captured === command.current &&

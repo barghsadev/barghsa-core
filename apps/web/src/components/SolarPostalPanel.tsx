@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { Alert, AlertDescription, Button, Input } from '@barghsa/ui';
 import {
   Form,
@@ -53,13 +57,64 @@ interface State {
   guidance: Guidance;
 }
 
-export function SolarPostalPanel({
-  requestId,
-  profileId,
-}: {
-  requestId: string;
-  profileId: string;
-}) {
+export function SolarPostalPanel(props: Parameters<typeof OwnedSolarPostalPanel>[0]) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  return <OwnedSolarPostalPanel key={JSON.stringify([actor, profileRevision])} {...props} />;
+}
+function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; profileId: string }) {
+  const client = useQueryClient();
+  const reader = useId();
+  const profileRevision = useProfileContextRevision();
+  const readSequence = useRef(0);
+  const actor = useAccountUser();
+  const postalReads = useRef(new Set<AbortController>());
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    const reads = postalReads.current;
+    return () => {
+      mounted.current = false;
+      for (const controller of reads) controller.abort();
+      reads.clear();
+    };
+  }, [client]);
+  async function readPostal(signal?: AbortSignal) {
+    if (!mounted.current || signal?.aborted) throw new Error('Obsolete postal read');
+    const controller = new AbortController();
+    const key = queryKeys.solar.detail(
+      { context: 'customer', ownerId: profileId, accountId: actor, revision: profileRevision },
+      JSON.stringify([requestId, 'postal', reader, ++readSequence.current])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    const abort = () => controller.abort();
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    signal?.addEventListener('abort', abort, { once: true });
+    postalReads.current.add(controller);
+    try {
+      return await client.fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal: querySignal }) => {
+          const response = await fetch(
+            `/api/solar/requests/${encodeURIComponent(requestId)}/postal`,
+            { credentials: 'include', signal: querySignal }
+          );
+          return {
+            ok: response.ok,
+            status: response.status,
+            data: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
+      });
+    } finally {
+      controller.signal.removeEventListener('abort', cancel);
+      signal?.removeEventListener('abort', abort);
+      postalReads.current.delete(controller);
+    }
+  }
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
   const [state, setState] = useState<State | null>(null);
@@ -170,13 +225,10 @@ export function SolarPostalPanel({
     setState(null);
     setLoadError(false);
     setUpload(false);
-    void fetch(`/api/solar/requests/${encodeURIComponent(requestId)}/postal`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void readPostal(controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new Error('postal');
-        return postalState(await response.json());
+        return postalState(response.data);
       })
       .then((value) => {
         if (!controller.signal.aborted && capturedGeneration === generation.current)
@@ -191,7 +243,7 @@ export function SolarPostalPanel({
         }
       });
     return () => controller.abort();
-  }, [scope, revision]);
+  }, [scope, revision, client, actor, profileRevision, reader]);
   useEffect(() => {
     const controller = new AbortController();
     setImages([]);
@@ -203,7 +255,23 @@ export function SolarPostalPanel({
       profileId,
       category: 'image',
     });
-    void documentRequest<DocumentPage>(`/api/documents?${params}`, { signal: controller.signal })
+    const key = queryKeys.solar.list(
+      { context: 'customer', ownerId: profileId, accountId: actor, revision: profileRevision },
+      params,
+      ++readSequence.current
+    );
+    const queryKey = [...key, reader, 'postal-images'] as const;
+    const cancel = () => void client.cancelQueries({ queryKey, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
+    void client
+      .fetchQuery({
+        queryKey,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: ({ signal }) =>
+          documentRequest<DocumentPage>(`/api/documents?${params}`, { signal }),
+      })
       .then((value) => {
         if (
           !controller.signal.aborted &&
@@ -220,8 +288,11 @@ export function SolarPostalPanel({
         if (!controller.signal.aborted && capturedGeneration === generation.current)
           setImageError(true);
       });
-    return () => controller.abort();
-  }, [requestId, profileId, imageRevision]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [requestId, profileId, imageRevision, client, actor, profileRevision, reader]);
   function submit(event: FormEvent<HTMLFormElement>) {
     if (unconfirmed || form.isSubmissionPending()) {
       event.preventDefault();
@@ -278,9 +349,7 @@ export function SolarPostalPanel({
           throw new Error('shipment');
         }
         if (!shipmentReceipt(value)) throw new Error('receipt');
-        const read = await fetch(`/api/solar/requests/${encodeURIComponent(requestId)}/postal`, {
-          credentials: 'include',
-        });
+        const read = await readPostal();
         if (capturedGeneration !== generation.current) return;
         if (!read.ok) {
           postalUnavailable.current = true;
@@ -291,7 +360,7 @@ export function SolarPostalPanel({
         }
         let saved: State;
         try {
-          saved = postalState(await read.json());
+          saved = postalState(read.data);
         } catch {
           if (capturedGeneration === generation.current) {
             postalUnavailable.current = true;
