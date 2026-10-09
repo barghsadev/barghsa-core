@@ -4,6 +4,13 @@ import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useOwnedStaffServiceRead } from './useOwnedStaffServiceRead.js';
 const targets = [
+  [
+    'invoices',
+    'list',
+    '/api/admin/invoices/bank-receipts?q=bank&beforeAt=cursor-1&beforeId=receipt-1',
+  ],
+  ['invoices', 'detail', '/api/admin/invoices/bank-receipts/receipt-1'],
+  ['invoices', 'detail', '/api/admin/invoices/bank-receipts/receipt-1/allocation'],
   ['profiles', 'list', '/api/admin/invoices/manual/profiles?search=customer&before=cursor-1'],
   ['invoices', 'detail', '/api/admin/invoices/invoice-1/corrections'],
   ['solar', 'list', '/api/admin/solar/postal-queue?lane=needs_staff&before=cursor-1'],

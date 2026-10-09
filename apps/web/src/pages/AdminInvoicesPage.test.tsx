@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -29,6 +30,7 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
   let root: Root;
 
   beforeEach(() => {
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     document.documentElement.lang = 'en';
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -64,7 +66,7 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
 
   it('hides the override form when the lookup ID is edited after loading', async () => {
     await act(async () => {
-      root.render(<AdminInvoicesPage />);
+      root.render(<QueryComponentProvider>{<AdminInvoicesPage />}</QueryComponentProvider>);
     });
 
     const lookup = container.querySelector('#invoice-id') as HTMLInputElement;
@@ -118,7 +120,7 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
       })
     );
     await act(async () => {
-      root.render(<AdminInvoicesPage />);
+      root.render(<QueryComponentProvider>{<AdminInvoicesPage />}</QueryComponentProvider>);
     });
     const lookup = container.querySelector('#invoice-id') as HTMLInputElement;
     await act(async () => {
@@ -146,6 +148,10 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
         INVOICE_A
       )
     );
+    await vi.waitFor(async () => {
+      await act(async () => {});
+      expect(container.querySelector('#invoice-deadline-panel [role="alert"]')).toBeTruthy();
+    });
     expect(container.textContent).not.toContain('Due date overridden');
     expect(container.querySelector('#invoice-deadline-panel [role="alert"]')).toBeTruthy();
   });
@@ -164,7 +170,7 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
       })
     );
     await act(async () => {
-      root.render(<AdminInvoicesPage />);
+      root.render(<QueryComponentProvider>{<AdminInvoicesPage />}</QueryComponentProvider>);
     });
     const lookup = container.querySelector('#invoice-id') as HTMLInputElement;
     await act(async () => {

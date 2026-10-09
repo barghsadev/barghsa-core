@@ -1,3 +1,6 @@
+import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useReceiptRejectionForm } from '../hooks/useReceiptRejectionForm.js';
 import type { FormEvent } from 'react';
 import { ReceiptStatusTimeline } from './ReceiptStatusTimeline.js';
@@ -68,8 +71,17 @@ interface Allocation {
   walletCreditAmount: string;
 }
 
-async function getJson<T>(url: string, signal: AbortSignal): Promise<T> {
-  const response = await fetch(url, { credentials: 'include', signal });
+async function getJson<T>(
+  url: string,
+  signal: AbortSignal,
+  readStaff: ReturnType<typeof useOwnedStaffServiceRead>
+): Promise<T> {
+  const response = await readStaff(
+    'invoices',
+    url.split('?')[0] === base ? 'list' : 'detail',
+    url,
+    signal
+  );
   if (!response.ok) throw new Error(String(response.status));
   return (await response.json()) as T;
 }
@@ -79,7 +91,14 @@ export interface ReceiptHistoryQuery {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
-export function InvoiceBankReceiptQueue({
+export function InvoiceBankReceiptQueue(
+  props: Parameters<typeof OwnedInvoiceBankReceiptQueue>[0] = {}
+) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedInvoiceBankReceiptQueue key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedInvoiceBankReceiptQueue({
   initialSelection,
   historyQuery,
   pendingQuery,
@@ -88,6 +107,9 @@ export function InvoiceBankReceiptQueue({
   historyQuery?: ReceiptHistoryQuery;
   pendingQuery?: ListQueryBinding;
 } = {}) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const queueBinding = useReceiptQueueQuery(pendingQuery);
   const queueParams = receiptQueueParams(queueBinding);
   const queueScopeRef = useRef(queueParams);
@@ -169,7 +191,8 @@ export function InvoiceBankReceiptQueue({
     setListState('loading');
     void getJson<{ items: Receipt[]; nextCursor?: FinanceCursor | null }>(
       `${base}${queueParams}`,
-      controller.signal
+      controller.signal,
+      readStaff
     )
       .then((value) => {
         if (!controller.signal.aborted && queueScopeRef.current === queueParams) {
@@ -200,7 +223,7 @@ export function InvoiceBankReceiptQueue({
         }
       });
     return () => controller.abort();
-  }, [revision, listRevision, queueParams]);
+  }, [revision, listRevision, queueParams, readStaff]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -217,9 +240,9 @@ export function InvoiceBankReceiptQueue({
     setAllocationError(false);
     setReviewState('idle');
     void Promise.allSettled([
-      getJson<Receipt>(path, controller.signal),
+      getJson<Receipt>(path, controller.signal, readStaff),
       selectedSource === 'pending'
-        ? getJson<Allocation>(`${path}/allocation`, controller.signal)
+        ? getJson<Allocation>(`${path}/allocation`, controller.signal, readStaff)
         : Promise.resolve(null),
     ]).then(([receipt, preview]) => {
       if (controller.signal.aborted) return;
@@ -233,7 +256,7 @@ export function InvoiceBankReceiptQueue({
       else if (selectedSource === 'pending') setAllocationError(true);
     });
     return () => controller.abort();
-  }, [selectedId, selectedSource, revision]);
+  }, [selectedId, selectedSource, revision, readStaff]);
 
   function refresh() {
     setRevision((value) => value + 1);

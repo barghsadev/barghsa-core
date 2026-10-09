@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -105,7 +106,9 @@ afterEach(async () => {
 });
 
 async function render() {
-  await act(async () => root.render(<InvoiceBankReceiptQueue />));
+  await act(async () =>
+    root.render(<QueryComponentProvider>{<InvoiceBankReceiptQueue />}</QueryComponentProvider>)
+  );
 }
 
 it('previews the selected invoice receipt using its API attachment key and retains the original link', async () => {
@@ -130,7 +133,9 @@ it('opens a receipt selected from an invoice without an unnecessary allocation p
   vi.stubGlobal('fetch', fetcher);
   await act(async () =>
     root.render(
-      <InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Confirmed' }} />
+      <QueryComponentProvider>
+        {<InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Confirmed' }} />}
+      </QueryComponentProvider>
     )
   );
   expect(
@@ -402,7 +407,9 @@ it('local list retry preserves a selected receipt draft and does not rerun its a
   vi.stubGlobal('fetch', fetcher);
   await act(async () =>
     root.render(
-      <InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Submitted' }} />
+      <QueryComponentProvider>
+        {<InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Submitted' }} />}
+      </QueryComponentProvider>
     )
   );
   const draft = container.querySelector('textarea')!;
@@ -439,7 +446,9 @@ it('a forbidden list refresh removes retained receipts and their selected review
   );
   await act(async () =>
     root.render(
-      <InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Submitted' }} />
+      <QueryComponentProvider>
+        {<InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Submitted' }} />}
+      </QueryComponentProvider>
     )
   );
   expect(container.querySelector('textarea')).not.toBeNull();
