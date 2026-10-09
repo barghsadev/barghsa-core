@@ -1,3 +1,4 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Alert, AlertDescription, Button, NativeSelect, PageLoading } from '@barghsa/ui';
 import {
@@ -22,12 +23,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { withCsrf } from '../lib/csrf.js';
 import { contractBase, type ContractSignatureData } from '../lib/contracts.js';
-import {
-  documentBase,
-  documentRequest,
-  DocumentRequestError,
-  type BusinessDocument,
-} from '../lib/documents.js';
+import { documentBase, DocumentRequestError, type BusinessDocument } from '../lib/documents.js';
 import {
   contractSignatureView,
   signatureDocumentPage,
@@ -112,6 +108,7 @@ export function ContractSignaturePanel({
     source?.version.content,
     source?.version.publishedAt,
   ]);
+  const readContract = useOwnedContractRead(actor, profileRevision, profileId, scopeKey);
   const scope = useRef(scopeKey),
     generation = useRef(0),
     owner = useRef<object>({});
@@ -263,7 +260,7 @@ export function ContractSignaturePanel({
     setLoading(true);
     setError(false);
     setMoreError(false);
-    void documentRequest<unknown>(
+    void readContract<unknown>(
       contractBase(staff) + '/' + id + '/signature?versionId=' + encodeURIComponent(versionId),
       { signal: abort.signal }
     )
@@ -275,7 +272,7 @@ export function ContractSignaturePanel({
         const page =
           view.canRequest || view.canRecord
             ? signatureDocumentPage(
-                await documentRequest<unknown>(documentsPath(id, versionId, profileId, staff), {
+                await readContract<unknown>(documentsPath(id, versionId, profileId, staff), {
                   signal: abort.signal,
                 }),
                 profileId,
@@ -305,7 +302,7 @@ export function ContractSignaturePanel({
         if (fresh()) setLoading(false);
       });
     return () => abort.abort();
-  }, [scopeKey, reload]);
+  }, [scopeKey, reload, readContract]);
   function blocked() {
     return (
       scope.current !== scopeKey ||
@@ -334,7 +331,7 @@ export function ContractSignaturePanel({
       !command.current &&
       !preparingRef.current;
     try {
-      const raw = await documentRequest<unknown>(
+      const raw = await readContract<unknown>(
         documentsPath(id, versionId, profileId, staff, next),
         { signal: abort.signal }
       );
@@ -466,13 +463,20 @@ export function ContractSignaturePanel({
             signedDocumentId: documentId,
             requestId: view.request?.id,
           };
-      const response = await fetch(contractBase(staff) + '/' + id + '/signature/review', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(selection),
-      });
-      const value: unknown = await response.json().catch(() => null);
+      const { response, value } = await readContract(
+        contractBase(staff) + '/' + id + '/signature/review',
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(selection),
+        },
+        async (path, options) => {
+          const response = await fetch(path, options);
+          const value: unknown = await response.json().catch(() => null);
+          return { response, value };
+        }
+      );
       if (scope.current !== scopeKey || token !== generation.current) return;
       if ([401, 403, 404].includes(response.status)) {
         withdraw();

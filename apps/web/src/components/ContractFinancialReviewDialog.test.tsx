@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -131,14 +132,18 @@ async function render(action: TeamAction, status = 'ready') {
   } as ComponentProps<typeof ContractFinancialReviewDialog>['time'];
   await act(async () =>
     root.render(
-      <ContractFinancialReviewDialog
-        action={action}
-        contractId={contractId}
-        profileId={profileId}
-        time={time}
-        onClose={() => {}}
-        onSuccess={success}
-      />
+      <QueryComponentProvider>
+        {
+          <ContractFinancialReviewDialog
+            action={action}
+            contractId={contractId}
+            profileId={profileId}
+            time={time}
+            onClose={() => {}}
+            onSuccess={success}
+          />
+        }
+      </QueryComponentProvider>
     )
   );
   await act(async () => vi.dynamicImportSettled());
@@ -257,18 +262,28 @@ it('uses the complete captured review without another preview and forwards exact
   vi.stubGlobal('fetch', fetcher);
   await act(async () =>
     root.render(
-      <ContractFinancialReviewDialog
-        action={action}
-        review={value}
-        profileId={profileId}
-        contractId={contractId}
-        time={{ status: 'ready', timezone: 'UTC', retry: () => {}, format: String, notice: null }}
-        onClose={() => {}}
-        onSuccess={success}
-        onPendingChange={pending}
-        onUnconfirmed={unknown}
-        onDenied={denied}
-      />
+      <QueryComponentProvider>
+        {
+          <ContractFinancialReviewDialog
+            action={action}
+            review={value}
+            profileId={profileId}
+            contractId={contractId}
+            time={{
+              status: 'ready',
+              timezone: 'UTC',
+              retry: () => {},
+              format: String,
+              notice: null,
+            }}
+            onClose={() => {}}
+            onSuccess={success}
+            onPendingChange={pending}
+            onUnconfirmed={unknown}
+            onDenied={denied}
+          />
+        }
+      </QueryComponentProvider>
     )
   );
   expect(fetcher).not.toHaveBeenCalled();

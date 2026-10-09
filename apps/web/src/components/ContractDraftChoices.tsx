@@ -1,10 +1,11 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { forwardRef, useEffect, useRef, useState, useId, type ComponentProps } from 'react';
 import { Button, Field, FieldGroup, FieldLabel, Input, NativeSelect } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import {
   contractAuthoringOptions,
   type ContractAuthoringChoice,
@@ -70,6 +71,7 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
     ]);
     const current = useRef(scope);
     current.current = scope;
+    const readContract = useOwnedContractRead(actor, profileRevision, profileId, scope);
     const acceptedScope = useRef<string | null>(null),
       rowsRef = useRef(rows);
     rowsRef.current = rows;
@@ -96,7 +98,7 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
       callbacks.current.onOptions?.([]);
       const params = new URLSearchParams(order ? { profileId } : { search: query });
       if (cursor) params.set('before', cursor);
-      void documentRequest<unknown>(`/api/admin/contracts/authoring-options?${params}`, {
+      void readContract<unknown>(`/api/admin/contracts/authoring-options?${params}`, {
         signal: abort.signal,
       })
         .then((result) => {
@@ -138,7 +140,7 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
           if (fresh()) setBusy(false);
         });
       return () => abort.abort();
-    }, [scope, disabled]);
+    }, [scope, disabled, readContract]);
     function locked() {
       return disabled || callbacks.current.blocked?.() || callbacks.current.coordination?.blocked();
     }

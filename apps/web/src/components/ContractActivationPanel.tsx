@@ -1,3 +1,4 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useRef, useState } from 'react';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -14,7 +15,7 @@ import {
   type ContractVersion,
   type ContractDetailData,
 } from '../lib/contracts.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { ContractContextEditor } from './ContractContextEditor.js';
 export function ContractActivationPanel({
   id,
@@ -54,6 +55,7 @@ export function ContractActivationPanel({
     ]),
     current = useRef(scope);
   current.current = scope;
+  const readContract = useOwnedContractRead(actor, profileRevision, source?.profileId, scope);
   const [accepted, setAccepted] = useState<{ scope: string; data: ContractActivationData } | null>(
       null
     ),
@@ -73,7 +75,7 @@ export function ContractActivationPanel({
       parentRevision === callbacks.current.coordination?.revision?.() &&
       !callbacks.current.coordination?.blocked();
     setError(false);
-    void documentRequest<unknown>(
+    void readContract<unknown>(
       `${contractBase(staff)}/${id}/activation?versionId=${encodeURIComponent(versionId)}`,
       { signal: controller.signal }
     )
@@ -96,7 +98,7 @@ export function ContractActivationPanel({
         }
       });
     return () => controller.abort();
-  }, [scope, reload, blocked, parentRevision, refreshRevision]);
+  }, [scope, reload, blocked, parentRevision, refreshRevision, readContract]);
   return (
     <section
       className="flex flex-col gap-4 rounded-lg border p-4"

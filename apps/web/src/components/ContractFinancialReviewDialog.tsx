@@ -1,3 +1,4 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useMemo, useState } from 'react';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractText } from '@barghsa/i18n/contracts';
@@ -5,12 +6,20 @@ import { PageLoading } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { sameContractEvidence } from '../lib/contract-review-signature-form.js';
-import { documentRequest } from '../lib/documents.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractFinancialReviewSummary } from './ContractFinancialReviewSummary.js';
 
 /** The selected intent and server review stay fixed through password and network retries. */
-export function ContractFinancialReviewDialog({
+export function ContractFinancialReviewDialog(
+  props: Parameters<typeof OwnedContractFinancialReviewDialog>[0]
+) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedContractFinancialReviewDialog key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedContractFinancialReviewDialog({
   action,
   profileId,
   contractId,
@@ -34,6 +43,14 @@ export function ContractFinancialReviewDialog({
   onSuccess: (result: unknown) => Promise<void>;
 }) {
   const locale = useLocale();
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    profileId,
+    JSON.stringify([action.path, action.body, contractId])
+  );
   const [review, setReview] = useState<ContractFinancialReview | null>(null);
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -58,7 +75,7 @@ export function ContractFinancialReviewDialog({
           signedDocumentId: input.signedDocumentId,
           requestId: input.requestId,
         };
-    void documentRequest<unknown>(
+    void readContract<unknown>(
       acceptance
         ? `${base}/acceptance-review?versionId=${encodeURIComponent(String(input.expectedVersionId))}`
         : `${base}/signature/review`,
@@ -97,7 +114,7 @@ export function ContractFinancialReviewDialog({
         if (!controller.signal.aborted) setError(true);
       });
     return () => controller.abort();
-  }, [action, profileId, contractId, capturedReview]);
+  }, [action, profileId, contractId, capturedReview, readContract]);
   const confirmedAction = useMemo(
     () => ({
       ...action,
