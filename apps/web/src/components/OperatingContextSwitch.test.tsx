@@ -36,6 +36,10 @@ it('shows the current mode and submits a deliberate credential rotation', async 
       <QueryProvider>{<OperatingContextSwitch area="admin" locale="en" />}</QueryProvider>
     )
   );
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(container.querySelector('[aria-label="Switch to customer"]')).not.toBeNull();
+  });
   expect(container.textContent).toContain('Staff mode');
   const button = container.querySelector<HTMLButtonElement>('[aria-label="Switch to customer"]');
   expect(button).not.toBeNull();

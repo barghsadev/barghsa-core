@@ -15,14 +15,12 @@ export interface SessionContext {
 
 export async function readSessionContext(signal?: AbortSignal): Promise<SessionContext | null> {
   const navigationRevision = getProfileContextRevision();
-  const response = await fetch('/api/auth/user', {
-    credentials: 'include',
-    signal: signal ?? null,
-    headers: { Accept: 'application/json' },
-  });
+  const response = await readBootstrapPacket('/api/auth/user', signal, null, navigationRevision);
   if (response.status === 401) return null;
   if (!response.ok) throw new Error('Unable to check session');
   const user: unknown = await response.json();
+  if (signal?.aborted || navigationRevision !== getProfileContextRevision())
+    throw new DOMException('Session check cancelled', 'AbortError');
   return { ...parseSessionContext(user), navigationRevision };
 }
 
@@ -70,16 +68,17 @@ export async function readSessionRole(signal?: AbortSignal): Promise<boolean | n
 }
 
 /** Read availability without assuming that an empty or revoked active context means no profiles. */
-export async function readProfileAvailability(signal: AbortSignal): Promise<boolean | null> {
-  const response = await fetch('/api/profiles', {
-    credentials: 'include',
-    signal,
-    headers: { Accept: 'application/json' },
-  });
+export async function readProfileAvailability(
+  signal: AbortSignal,
+  accountId: string | null = null,
+  revision = getProfileContextRevision()
+): Promise<boolean | null> {
+  const response = await readBootstrapPacket('/api/profiles', signal, accountId, revision);
   if (response.status === 401) return null;
   if (!response.ok) throw new Error('Unable to check profiles');
   const body: unknown = await response.json();
-  if (signal.aborted) throw new DOMException('Profile check cancelled', 'AbortError');
+  if (signal.aborted || revision !== getProfileContextRevision())
+    throw new DOMException('Profile check cancelled', 'AbortError');
   if (
     !body ||
     typeof body !== 'object' ||
@@ -103,4 +102,15 @@ export function isAccountSettingsPath(pathname: string): boolean {
     '/settings/username',
     '/settings/timezone',
   ].includes(pathname.replace(/\/$/, ''));
+}
+
+/** Bootstrap ownership loads only when a route needs an authority read. */
+async function readBootstrapPacket(
+  path: '/api/auth/user' | '/api/profiles',
+  external: AbortSignal | undefined,
+  accountId: string | null,
+  revision: number
+) {
+  const { readRouteBootstrap } = await import('./route-bootstrap-read.js');
+  return readRouteBootstrap(path, external, accountId, revision);
 }

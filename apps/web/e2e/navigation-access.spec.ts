@@ -132,9 +132,11 @@ test('missing or changed-workspace navigation never falls back to broad links an
     aside.getByRole('navigation', { name: 'Main navigation' }).getByRole('link')
   ).toHaveCount(0);
   await expect(page.getByRole('navigation', { name: 'Quick navigation' })).toHaveCount(0);
+  const readsBeforeRefresh = reads;
   configuration = fullNavigation('staff');
   await aside.getByRole('button', { name: 'Refresh navigation', exact: true }).click();
   await expect.poll(() => reads).toBeGreaterThan(1);
+  await expect.poll(() => reads).toBeGreaterThan(readsBeforeRefresh);
   await expect(
     aside.getByRole('navigation', { name: 'Main navigation' }).getByRole('link')
   ).toHaveCount(0);

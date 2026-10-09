@@ -61,3 +61,6 @@ export function useProfileContextRevision() {
     () => 0
   );
 }
+
+/** Own cancellable reads before the React app providers mount. */
+export { subscribe as subscribeProfileContext };

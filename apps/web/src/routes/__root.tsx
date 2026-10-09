@@ -42,7 +42,11 @@ export const Route = createRootRoute({
       if (session === null) throw redirect({ to: '/login', replace: true });
       const isStaff = session.operatingContext === 'staff';
       if (!isStaff) {
-        const available = await readProfileAvailability(abortController.signal);
+        const available = await readProfileAvailability(
+          abortController.signal,
+          session.userId ?? null,
+          session.navigationRevision
+        );
         if (available === null) throw redirect({ to: '/login', replace: true });
         if (!available) throw redirect({ to: '/onboarding', replace: true });
       }
