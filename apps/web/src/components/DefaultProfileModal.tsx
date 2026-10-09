@@ -1,6 +1,8 @@
-import { refreshProfileContext } from '../lib/profile-context.js';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { refreshProfileContext, useProfileContextRevision } from '../lib/profile-context.js';
 import { withCsrf } from '../lib/csrf.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import {
@@ -46,7 +48,26 @@ interface ProfilesResponse {
  * - Calls `POST /api/profiles/switch/:id`, then remounts profile-scoped state without reloading the document.
  * - Renders nothing when the user has a default, only one profile, or none.
  */
-export function DefaultProfileModal() {
+export function DefaultProfileModal({ accountId = null }: { accountId?: string | null } = {}) {
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedDefaultProfileModal
+      key={JSON.stringify([accountId, revision])}
+      accountId={accountId}
+      revision={revision}
+    />
+  );
+}
+function OwnedDefaultProfileModal({
+  accountId,
+  revision,
+}: {
+  accountId: string | null;
+  revision: number;
+}) {
+  const client = useQueryClient();
+  const reader = useId();
+  const sequence = useRef(0);
   const [profiles, setProfiles] = useState<ProfileBrief[] | null>(null);
   const [hasDefault, setHasDefault] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -58,44 +79,66 @@ export function DefaultProfileModal() {
   const isRtl = locale === 'fa';
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
+    const key = queryKeys.profiles.authority(
+      { context: 'account', ownerId: accountId ?? 'current-session', accountId, revision },
+      JSON.stringify([reader, 'default-profile-options', ++sequence.current])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
 
     async function fetchProfiles() {
       try {
-        const response = await fetch('/api/profiles', {
-          method: 'GET',
-          credentials: 'include',
-          headers: { Accept: 'application/json' },
+        const response = await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const response = await fetch('/api/profiles', {
+              method: 'GET',
+              credentials: 'include',
+              signal,
+              headers: { Accept: 'application/json' },
+            });
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as ProfilesResponse) : null,
+            };
+          },
         });
 
         // Not authenticated — no modal
         if (response.status === 401) {
-          if (!cancelled) setLoading(false);
+          if (!controller.signal.aborted) setLoading(false);
           return;
         }
 
         if (!response.ok) {
-          if (!cancelled) setLoading(false);
+          if (!controller.signal.aborted) setLoading(false);
           return;
         }
 
-        const data: ProfilesResponse = await response.json();
-        if (!cancelled) {
+        const data = response.data;
+        if (!data) throw new Error('Invalid profiles');
+        if (!controller.signal.aborted) {
           setProfiles(data.profiles);
           setHasDefault(data.hasDefault);
           setLoading(false);
         }
       } catch {
-        if (!cancelled) setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
 
     fetchProfiles();
 
     return () => {
-      cancelled = true;
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
     };
-  }, []);
+  }, [client, accountId, revision, reader]);
 
   // Don't render anything while loading or if we have no data.
   if (loading || !profiles) return null;

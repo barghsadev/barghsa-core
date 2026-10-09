@@ -136,6 +136,13 @@ function RootComponent() {
   }, [profileRevision, router]);
   const { pathname } = useLocation();
   const matches = useMatches();
+  const accountId =
+    matches
+      .map(
+        (match) => match.context as { userId?: unknown; appSession?: { userId?: unknown } | null }
+      )
+      .map((context) => context.userId ?? context.appSession?.userId)
+      .find((id): id is string => typeof id === 'string' && !!id.trim()) ?? null;
   const isStaff = matches.some(
     (match) => (match.context as { isStaff?: unknown }).isStaff === true
   );
@@ -158,12 +165,12 @@ function RootComponent() {
       <BrandThemeProvider key={profileRevision}>
         {showCustomerBanner && (
           <Suspense fallback={null}>
-            <VerificationBanner />
+            <VerificationBanner accountId={accountId} />
           </Suspense>
         )}
         {needsProfile(pathname, isStaff) && (
           <Suspense fallback={null}>
-            <DefaultProfileModal />
+            <DefaultProfileModal accountId={accountId} />
           </Suspense>
         )}
         <Outlet />

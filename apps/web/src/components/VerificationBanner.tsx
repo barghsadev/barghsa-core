@@ -1,6 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/workspace';
 
@@ -30,7 +33,26 @@ interface VerificationStatusResponse {
  * - The profile is already verified
  * - Verification is not required by the system
  */
-export function VerificationBanner() {
+export function VerificationBanner({ accountId = null }: { accountId?: string | null } = {}) {
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedVerificationBanner
+      key={JSON.stringify([accountId, revision])}
+      accountId={accountId}
+      revision={revision}
+    />
+  );
+}
+function OwnedVerificationBanner({
+  accountId,
+  revision,
+}: {
+  accountId: string | null;
+  revision: number;
+}) {
+  const client = useQueryClient();
+  const reader = useId();
+  const sequence = useRef(0);
   const [status, setStatus] = useState<VerificationStatusResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(false);
@@ -44,45 +66,66 @@ export function VerificationBanner() {
   const isRtl = locale === 'fa';
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
+    const key = queryKeys.profiles.authority(
+      { context: 'account', ownerId: accountId ?? 'current-session', accountId, revision },
+      JSON.stringify([reader, 'verification-status', pathname, locale, ++sequence.current])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
     setLoading(true);
     setStatus(null);
 
     async function fetchStatus() {
       try {
-        const response = await fetch('/api/profiles/verification-status', {
-          method: 'GET',
-          credentials: 'include',
-          headers: { Accept: 'application/json', 'Accept-Language': locale },
+        const response = await client.fetchQuery({
+          queryKey: key,
+          staleTime: 0,
+          gcTime: 0,
+          retry: false,
+          queryFn: async ({ signal }) => {
+            const response = await fetch('/api/profiles/verification-status', {
+              method: 'GET',
+              credentials: 'include',
+              signal,
+              headers: { Accept: 'application/json', 'Accept-Language': locale },
+            });
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as VerificationStatusResponse) : null,
+            };
+          },
         });
 
         // Not authenticated — no banner
         if (response.status === 401) {
-          if (!cancelled) setLoading(false);
+          if (!controller.signal.aborted) setLoading(false);
           return;
         }
 
         if (!response.ok) {
-          if (!cancelled) setLoading(false);
+          if (!controller.signal.aborted) setLoading(false);
           return;
         }
 
-        const data: VerificationStatusResponse = await response.json();
-        if (!cancelled) {
+        const data = response.data;
+        if (!controller.signal.aborted) {
           setStatus(data);
           setLoading(false);
         }
       } catch {
-        if (!cancelled) setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
 
     fetchStatus();
 
     return () => {
-      cancelled = true;
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
     };
-  }, [locale, pathname]);
+  }, [locale, pathname, client, accountId, revision, reader]);
 
   // Don't render anything while loading, or if no status data, or if dismissed
   if (loading || !status) return null;
