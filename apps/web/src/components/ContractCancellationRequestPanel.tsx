@@ -1,3 +1,6 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -13,7 +16,7 @@ import {
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCancellationRequestForm } from '../hooks/useCancellationForm.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { contractBase } from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
@@ -41,7 +44,14 @@ type RequestPanelProps = {
   onReview: (request: CancellationRequest) => void;
 };
 export function ContractCancellationRequestPanel(props: RequestPanelProps) {
-  return <RequestWorkspace key={`${props.id}:${props.versionId}:${props.staff}`} {...props} />;
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <RequestWorkspace
+      key={JSON.stringify([actor, revision, `${props.id}:${props.versionId}:${props.staff}`])}
+      {...props}
+    />
+  );
 }
 function RequestWorkspace({
   id,
@@ -51,6 +61,14 @@ function RequestWorkspace({
   onReview,
   unavailable = false,
 }: RequestPanelProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    undefined,
+    JSON.stringify([id, versionId, staff])
+  );
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
   const [data, setData] = useState<{
@@ -97,7 +115,7 @@ function RequestWorkspace({
     const owner = ++generation.current;
     setLoading(true);
     setError(false);
-    void documentRequest<{ request: CancellationRequest | null; canRequest?: boolean }>(
+    void readContract<{ request: CancellationRequest | null; canRequest?: boolean }>(
       `${contractBase(staff)}/${id}/cancellation-requests`,
       { signal: controller.signal }
     )
@@ -118,7 +136,7 @@ function RequestWorkspace({
         else setError(true);
       });
     return () => controller.abort();
-  }, [id, versionId, staff, reload]);
+  }, [id, versionId, staff, reload, readContract]);
   function choose(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy || denied || error || draft.form.isSubmissionPending()) return;

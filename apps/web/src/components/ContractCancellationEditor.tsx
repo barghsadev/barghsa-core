@@ -1,3 +1,6 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -17,7 +20,7 @@ import {
   useCancellationDecisionForm,
   type CancellationValues,
 } from '../hooks/useCancellationForm.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import type {
   CancellationPreview,
   CancellationIntent,
@@ -25,7 +28,12 @@ import type {
 } from '../lib/contract-cancellation.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
-export default function CancellationEditor({
+export default function CancellationEditor(props: Parameters<typeof OwnedCancellationEditor>[0]) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedCancellationEditor key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedCancellationEditor({
   id,
   terminalAction = 'cancel',
   customerRequestId,
@@ -40,6 +48,14 @@ export default function CancellationEditor({
   unavailable: boolean;
   onChanged: () => void;
 }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    undefined,
+    JSON.stringify([id, terminalAction, customerRequestId])
+  );
   const locale = useLocale(),
     word = (key: string) =>
       contractText(
@@ -120,13 +136,13 @@ export default function CancellationEditor({
     setLoading(true);
     setError(false);
     void Promise.all([
-      documentRequest<CancellationPreview>(
+      readContract<CancellationPreview>(
         `/api/admin/contracts/${id}/cancellation-preview${terminalAction === 'reject' ? '?terminalAction=reject' : ''}`,
         {
           signal: controller.signal,
         }
       ),
-      documentRequest<{ intent: CancellationIntent | null }>(
+      readContract<{ intent: CancellationIntent | null }>(
         `/api/admin/contracts/${id}/cancellations${terminalAction === 'reject' ? '?terminalAction=reject' : ''}`,
         {
           signal: controller.signal,
@@ -174,7 +190,7 @@ export default function CancellationEditor({
         else setError(true);
       });
     return () => controller.abort();
-  }, [id, reload, customerRequestId, terminalAction]);
+  }, [id, reload, customerRequestId, terminalAction, readContract]);
   function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy || error || denied || !permitted || draft.form.isSubmissionPending()) return;

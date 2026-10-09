@@ -467,6 +467,7 @@ function ApprovalWorkspace({
                     requestId={request.id}
                     initialReason={reasons[request.id] ?? ''}
                     disabled={!!action || validating !== null || loading || error}
+                    draftDisabled={!!action || validating !== null || loading}
                     {...(validating === request.id ||
                     (action &&
                       selected.current?.id === request.id &&

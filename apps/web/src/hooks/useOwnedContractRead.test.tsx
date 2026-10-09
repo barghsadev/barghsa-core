@@ -15,6 +15,13 @@ const targets = [
   ]),
   '/api/documents' + documentParams,
   '/api/admin/documents' + documentParams + '&profileId=profile-1',
+  '/api/contracts/contract-1/cancellation-status',
+  '/api/admin/contracts/contract-1/cancellation-status',
+  '/api/contracts/contract-1/cancellation-requests?read=1',
+  '/api/admin/contracts/contract-1/cancellation-requests',
+  '/api/admin/contracts/contract-1/cancellation-preview?terminalAction=reject',
+  '/api/admin/contracts/contract-1/cancellations?terminalAction=reject',
+  '/api/admin/contract-cancellation-requests?service=savings&before=cursor-1',
 ];
 const body = JSON.stringify({ profileId: 'profile-1', lines: [], amount: '250000' });
 const headers = { 'Content-Type': 'application/json', 'x-csrf-token': 'review-csrf' };
@@ -28,7 +35,9 @@ function Probe({ target, actor, revision }: { target: string; actor: string; rev
     setShown('');
     void read<{ text: string }>(target, {
       ...(/\/(?:signature\/review|accept|signature-request)$/.test(target) ||
-      target === '/api/admin/contracts/contract-1/signature'
+      target === '/api/admin/contracts/contract-1/signature' ||
+      target === '/api/admin/contracts/contract-1/cancellations' ||
+      target === '/api/contracts/contract-1/cancellation-requests'
         ? { method: 'POST', body }
         : {}),
       headers,
@@ -118,6 +127,8 @@ it.each([
   '/api/admin/contracts/contract-1/signature',
   '/api/contracts/contract-1/accept',
   '/api/admin/contracts/contract-1/signature-request',
+  '/api/admin/contracts/contract-1/cancellations',
+  '/api/contracts/contract-1/cancellation-requests',
   '/api/admin/contracts/contract-1/other/signature/review',
   '/api/documents?businessRecordType=invoice&businessRecordId=invoice-1&state=Approved',
 ])('refuses unsupported read/command %s without dispatch', async (target) => {

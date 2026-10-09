@@ -17,6 +17,7 @@ export function ApprovalDecisionForm({
   requestId,
   initialReason,
   disabled,
+  draftDisabled = disabled,
   pending,
   onChange,
   validate,
@@ -25,6 +26,7 @@ export function ApprovalDecisionForm({
   requestId: string;
   initialReason: string;
   disabled: boolean;
+  draftDisabled?: boolean;
   pending?: 'approve' | 'reject';
   onChange: (reason: string) => void;
   validate: (run: (generation: number) => Promise<void>) => Promise<void>;
@@ -94,7 +96,7 @@ export function ApprovalDecisionForm({
         rows={3}
         maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
         className="block w-full rounded border bg-background p-2 text-foreground"
-        disabled={busy}
+        disabled={draftDisabled || draft.form.formState.isSubmitting}
         value={reason}
         onChange={(event) => {
           setReason(event.target.value);

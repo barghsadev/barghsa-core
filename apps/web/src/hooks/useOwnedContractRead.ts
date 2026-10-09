@@ -36,11 +36,18 @@ export function useOwnedContractRead(
       const url = new URL(path, 'http://barghsa.local');
       const method = options.method ?? 'GET';
       const documents = /^\/api\/(?:admin\/)?documents$/.test(url.pathname);
-      const list = url.pathname === '/api/admin/contracts/authoring-options' || documents;
+      const list =
+        url.pathname === '/api/admin/contracts/authoring-options' ||
+        url.pathname === '/api/admin/contract-cancellation-requests' ||
+        documents;
       const permitted =
         method === 'GET'
           ? url.pathname === '/api/admin/contracts/authoring-options' ||
-            /^\/api\/(?:admin\/)?contracts\/[^/]+\/(?:activation|signature|acceptance-review)$/.test(
+            url.pathname === '/api/admin/contract-cancellation-requests' ||
+            /^\/api\/(?:admin\/)?contracts\/[^/]+\/(?:activation|signature|acceptance-review|cancellation-status|cancellation-requests)$/.test(
+              url.pathname
+            ) ||
+            /^\/api\/admin\/contracts\/[^/]+\/(?:cancellation-preview|cancellations)$/.test(
               url.pathname
             ) ||
             (documents &&

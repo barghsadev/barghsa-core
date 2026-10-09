@@ -4,6 +4,7 @@ import { en, fa } from '@barghsa/i18n/contracts';
 import { t } from '@barghsa/i18n/admin-ui';
 import {
   financeContractId,
+  financeVersionId,
   financeCursor,
   cancellationRow,
   obligationRow,
@@ -69,7 +70,40 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.route(`**/api/admin/contracts/${financeContractId}/activation*`, (route) =>
       route.fulfill({
-        json: { checks: [], isCurrent: true, ready: false, evaluatedAt: '2026-10-01T00:00:00Z' },
+        json: {
+          contractId: financeContractId,
+          versionId: financeVersionId,
+          state: 'Active',
+          checks: [
+            'staffApproval',
+            'customerAcceptance',
+            'signature',
+            'initialPayment',
+            'serviceStart',
+          ].map((key) => ({ key, required: false, status: 'not_required' })),
+          isCurrent: true,
+          ready: true,
+          ruleRevision: 1,
+          initialInvoiceId: null,
+          serviceStartsAt: null,
+          serviceEndsAt: null,
+          evaluatedAt: '2026-10-01T00:00:00Z',
+        },
+      })
+    );
+    await page.route(`**/api/admin/contracts/${financeContractId}/signature?*`, (route) =>
+      route.fulfill({
+        json: {
+          contractId: financeContractId,
+          versionId: financeVersionId,
+          state: 'Active',
+          isCurrent: true,
+          isAmendment: false,
+          canRequest: false,
+          canRecord: false,
+          request: null,
+          signature: null,
+        },
       })
     );
     await page.route(`**/api/admin/contracts/${financeContractId}/cancellation-requests`, (route) =>

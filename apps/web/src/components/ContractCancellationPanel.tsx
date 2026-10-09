@@ -1,8 +1,11 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Alert, AlertDescription, Button, PageLoading, StatusBadge } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { contractBase } from '../lib/contracts.js';
 import type { CancellationStatus } from '../lib/contract-cancellation.js';
 import { ContractCancellationRequestPanel } from './ContractCancellationRequestPanel.js';
@@ -15,9 +18,24 @@ type CancellationPanelProps = {
   onChanged: () => void;
 };
 export function ContractCancellationPanel(props: CancellationPanelProps) {
-  return <CancellationWorkspace key={`${props.id}:${props.versionId}:${props.staff}`} {...props} />;
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <CancellationWorkspace
+      key={JSON.stringify([actor, revision, `${props.id}:${props.versionId}:${props.staff}`])}
+      {...props}
+    />
+  );
 }
 function CancellationWorkspace({ id, versionId, staff, onChanged }: CancellationPanelProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    undefined,
+    JSON.stringify([id, versionId, staff])
+  );
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
   const money = (value: string) => new Intl.NumberFormat(locale).format(BigInt(value));
@@ -32,7 +50,7 @@ function CancellationWorkspace({ id, versionId, staff, onChanged }: Cancellation
     const controller = new AbortController();
     setError(false);
     setLoading(true);
-    void documentRequest<CancellationStatus>(`${contractBase(staff)}/${id}/cancellation-status`, {
+    void readContract<CancellationStatus>(`${contractBase(staff)}/${id}/cancellation-status`, {
       signal: controller.signal,
     })
       .then((value) => {
@@ -51,7 +69,7 @@ function CancellationWorkspace({ id, versionId, staff, onChanged }: Cancellation
         setError(true);
       });
     return () => controller.abort();
-  }, [id, staff, reload]);
+  }, [id, staff, reload, readContract]);
   return (
     <section
       className="flex flex-col gap-4 rounded-lg border p-4"

@@ -1,16 +1,26 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, Button, ListPage, PageLoading } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { ContractDetailLoader } from './ContractDetailLoader.js';
 import type { CancellationRequest } from './ContractCancellationRequestPanel.js';
 
 type QueueProps = { service?: 'savings'; onOpenSavingOrder?: (id: string) => void };
 export function ContractCancellationRequestQueue(props: QueueProps = {}) {
-  return <CancellationQueue key={props.service ?? 'all'} {...props} />;
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <CancellationQueue key={JSON.stringify([actor, revision, props.service ?? 'all'])} {...props} />
+  );
 }
 function CancellationQueue({ service, onOpenSavingOrder }: QueueProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(actor, revision, undefined, JSON.stringify([service]));
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
   const [rows, setRows] = useState<CancellationRequest[]>([]),
@@ -37,7 +47,7 @@ function CancellationQueue({ service, onOpenSavingOrder }: QueueProps) {
       ...(cursor ? { before: cursor } : {}),
       ...(service ? { service } : {}),
     }).toString();
-    void documentRequest<{ requests: CancellationRequest[]; nextBefore: string | null }>(
+    void readContract<{ requests: CancellationRequest[]; nextBefore: string | null }>(
       `/api/admin/contract-cancellation-requests${query ? '?' + query : ''}`,
       { signal: controller.signal }
     )
@@ -75,7 +85,7 @@ function CancellationQueue({ service, onOpenSavingOrder }: QueueProps) {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [cursor, reload, service]);
+  }, [cursor, reload, service, readContract]);
   function refresh() {
     setCursor(null);
     setNext(null);

@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -127,12 +128,16 @@ afterEach(async () => {
 async function render(staff = true) {
   await act(async () =>
     root.render(
-      <ContractCancellationPanel
-        id="contract"
-        versionId="version"
-        staff={staff}
-        onChanged={changed}
-      />
+      <QueryComponentProvider>
+        {
+          <ContractCancellationPanel
+            id="contract"
+            versionId="version"
+            staff={staff}
+            onChanged={changed}
+          />
+        }
+      </QueryComponentProvider>
     )
   );
 }
@@ -511,7 +516,16 @@ it('abandons old version callbacks and drafts on scope change', async () => {
   const success = h.success!;
   await act(async () =>
     root.render(
-      <ContractCancellationPanel id="contract" versionId="next" staff={true} onChanged={changed} />
+      <QueryComponentProvider>
+        {
+          <ContractCancellationPanel
+            id="contract"
+            versionId="next"
+            staff={true}
+            onChanged={changed}
+          />
+        }
+      </QueryComponentProvider>
     )
   );
   await act(async () => success(saved()));
@@ -546,14 +560,18 @@ for (const locale of ['en', 'fa'] as const)
     h.result = { ...saved(), terminalAction: 'reject' };
     await act(async () =>
       root.render(
-        <CancellationEditor
-          id="contract"
-          terminalAction="reject"
-          customerRequestId={null}
-          canChooseRefund={false}
-          unavailable={false}
-          onChanged={changed}
-        />
+        <QueryComponentProvider>
+          {
+            <CancellationEditor
+              id="contract"
+              terminalAction="reject"
+              customerRequestId={null}
+              canChooseRefund={false}
+              unavailable={false}
+              onChanged={changed}
+            />
+          }
+        </QueryComponentProvider>
       )
     );
     await input('textarea', 'End service');
@@ -585,14 +603,18 @@ for (const locale of ['en', 'fa'] as const)
 it('withdraws rejection when its authoritative preview is for cancellation', async () => {
   await act(async () =>
     root.render(
-      <CancellationEditor
-        id="contract"
-        terminalAction="reject"
-        customerRequestId={null}
-        canChooseRefund={false}
-        unavailable={false}
-        onChanged={changed}
-      />
+      <QueryComponentProvider>
+        {
+          <CancellationEditor
+            id="contract"
+            terminalAction="reject"
+            customerRequestId={null}
+            canChooseRefund={false}
+            unavailable={false}
+            onChanged={changed}
+          />
+        }
+      </QueryComponentProvider>
     )
   );
   expect(container.querySelector('textarea')).toBeNull();

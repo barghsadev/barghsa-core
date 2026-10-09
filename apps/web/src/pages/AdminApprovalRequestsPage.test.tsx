@@ -366,3 +366,40 @@ for (const locale of ['en', 'fa'] as const)
       expect(dialog.textContent).toContain('250000');
       expect(dialog.textContent).not.toContain(contractText('version', locale));
     });
+
+for (const locale of ['en', 'fa'] as const)
+  it(
+    locale + ': edits retained reasons during list failure while every decision remains blocked',
+    async () => {
+      state.locale = locale;
+      let status = 200;
+      vi.mocked(fetch).mockImplementation(async () =>
+        Response.json(status === 200 ? [row()] : {}, { status })
+      );
+      await render();
+      await edit('Retained evidence');
+      status = 503;
+      await click(t('admin.approvals.refresh', locale));
+      await vi.waitFor(() =>
+        expect(container.textContent).toContain(t('admin.approvals.error', locale))
+      );
+      expect(field().disabled).toBe(false);
+      expect(button(t('admin.approvals.approve', locale)).disabled).toBe(true);
+      expect(button(t('admin.approvals.reject', locale)).disabled).toBe(true);
+      await edit('Edited during recovery');
+      const calls = vi.mocked(fetch).mock.calls.length;
+      await reject();
+      expect(state.confirmation).toBeNull();
+      expect(fetch).toHaveBeenCalledTimes(calls);
+      status = 200;
+      await click(t('admin.approvals.retry', locale));
+      await vi.waitFor(() =>
+        expect(button(t('admin.approvals.reject', locale)).disabled).toBe(false)
+      );
+      expect(field().value).toBe('Edited during recovery');
+      status = 401;
+      await click(t('admin.approvals.refresh', locale));
+      await vi.waitFor(() => expect(field()).toBeNull());
+      expect(container.textContent).not.toContain('Edited during recovery');
+    }
+  );
