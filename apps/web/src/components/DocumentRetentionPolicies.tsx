@@ -1,3 +1,6 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -12,7 +15,6 @@ import {
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { documentRequest } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 type Policy = {
@@ -36,6 +38,20 @@ const kinds = [
 ] as const;
 
 export function DocumentRetentionPolicies() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedDocumentRetentionPolicies key={JSON.stringify([actor, revision])} />;
+}
+function OwnedDocumentRetentionPolicies() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    true,
+    undefined,
+    'DocumentRetentionPolicies'
+  );
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const time = useAccountTime();
@@ -52,7 +68,7 @@ export function DocumentRetentionPolicies() {
 
   useEffect(() => {
     const controller = new AbortController();
-    void documentRequest<PoliciesResponse>('/api/admin/document-retention/policies', {
+    void readDocument<PoliciesResponse>('/api/admin/document-retention/policies', {
       signal: controller.signal,
     })
       .then((response) => {
@@ -64,7 +80,7 @@ export function DocumentRetentionPolicies() {
         if (!controller.signal.aborted) setError(true);
       });
     return () => controller.abort();
-  }, [reload]);
+  }, [reload, readDocument]);
   useEffect(() => {
     const current = data?.policies.find((item) => item.businessRecordType === kind);
     if (!current) return;

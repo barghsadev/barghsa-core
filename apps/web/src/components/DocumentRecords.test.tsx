@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -67,17 +68,21 @@ async function render(
 ) {
   await act(async () =>
     root.render(
-      <DocumentRecords
-        items={items}
-        view={view}
-        staff={staff}
-        locale={locale}
-        selectedId={documentRow.id}
-        onSelect={onSelect}
-        onReplace={onReplace}
-        onChanged={onChanged}
-        formatDate={(value) => `account time: ${value}`}
-      />
+      <QueryComponentProvider>
+        {
+          <DocumentRecords
+            items={items}
+            view={view}
+            staff={staff}
+            locale={locale}
+            selectedId={documentRow.id}
+            onSelect={onSelect}
+            onReplace={onReplace}
+            onChanged={onChanged}
+            formatDate={(value) => `account time: ${value}`}
+          />
+        }
+      </QueryComponentProvider>
     )
   );
 }
@@ -126,16 +131,20 @@ for (const view of ['table', 'card'] as const)
 it('gives all known statuses meaningful badges and handles an unknown status safely', async () => {
   await act(async () =>
     root.render(
-      <>
-        {[...documentStates, '__proto__'].map((state) => (
-          <DocumentStatusBadge
-            key={state}
-            state={state}
-            locale="en"
-            reason="private scanner signature"
-          />
-        ))}
-      </>
+      <QueryComponentProvider>
+        {
+          <>
+            {[...documentStates, '__proto__'].map((state) => (
+              <DocumentStatusBadge
+                key={state}
+                state={state}
+                locale="en"
+                reason="private scanner signature"
+              />
+            ))}
+          </>
+        }
+      </QueryComponentProvider>
     )
   );
   expect(
@@ -275,7 +284,7 @@ it('aborts requests when its parent profile scope unmounts', async () => {
   });
   await render();
   await click('Preview');
-  await act(async () => root.render(null));
+  await act(async () => root.render(<QueryComponentProvider>{null}</QueryComponentProvider>));
   expect(signal?.aborted).toBe(true);
   await act(async () => pending.resolve(response({ url: 'https://files.test/private.png' })));
   expect(container.innerHTML).toBe('');

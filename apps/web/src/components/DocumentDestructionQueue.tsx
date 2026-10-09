@@ -1,3 +1,6 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -13,7 +16,7 @@ import {
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 type Item = {
@@ -32,6 +35,20 @@ type Response = {
 };
 
 export function DocumentDestructionQueue() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedDocumentDestructionQueue key={JSON.stringify([actor, revision])} />;
+}
+function OwnedDocumentDestructionQueue() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    true,
+    undefined,
+    'DocumentDestructionQueue'
+  );
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const time = useAccountTime();
@@ -50,7 +67,7 @@ export function DocumentDestructionQueue() {
     const controller = new AbortController();
     setLoading(true);
     setError(false);
-    void documentRequest<Response>('/api/admin/document-retention/destruction', {
+    void readDocument<Response>('/api/admin/document-retention/destruction', {
       signal: controller.signal,
     })
       .then((response) => {
@@ -79,7 +96,7 @@ export function DocumentDestructionQueue() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [reload]);
+  }, [reload, readDocument]);
 
   useEffect(() => {
     if (!selected) return;

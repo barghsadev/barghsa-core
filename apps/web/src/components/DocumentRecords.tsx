@@ -1,3 +1,6 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, type ListView } from '@barghsa/ui';
 import { FileImage, FileText, FileVideo } from 'lucide-react';
@@ -7,7 +10,6 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   documentBase,
   isQuarantinedDocument,
-  documentRequest,
   DocumentRequestError,
   documentUrl,
   type BusinessDocument,
@@ -41,7 +43,12 @@ const identity = (item: BusinessDocument) =>
   ]);
 
 /** File access is lazy and stays bound to the accepted document revision in either layout. */
-export function DocumentList({
+export function DocumentList(props: Parameters<typeof OwnedDocumentList>[0]) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedDocumentList key={JSON.stringify([actor, revision, props.staff])} {...props} />;
+}
+function OwnedDocumentList({
   items,
   staff,
   locale,
@@ -64,6 +71,15 @@ export function DocumentList({
   onChanged?: (documentId: string) => void;
   onDenied?: () => void;
 }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    staff,
+    undefined,
+    'document-record-links'
+  );
   const word = (key: string) => documentText(key, locale),
     numbers = useNumberFormatting(locale);
   const rows = items.filter((item) => staff || item.state !== 'Removed');
@@ -123,7 +139,7 @@ export function DocumentList({
     }));
     const current = () => alive.current && !abort.signal.aborted && keys.current.has(key);
     try {
-      const result = await documentRequest<{ url: string; expiresIn?: number }>(
+      const result = await readDocument<{ url: string; expiresIn?: number }>(
         `${documentBase(staff)}/${encodeURIComponent(item.id)}/${type}`,
         { signal: abort.signal }
       );

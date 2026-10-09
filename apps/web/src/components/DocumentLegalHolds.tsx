@@ -1,3 +1,6 @@
+import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -13,7 +16,7 @@ import {
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { documentRequest, type BusinessDocument } from '../lib/documents.js';
+import { type BusinessDocument } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 type Hold = {
@@ -28,7 +31,26 @@ type Hold = {
 };
 type HoldsResponse = { held: boolean; canManage: boolean; holds: Hold[] };
 
-export function DocumentLegalHolds({ document }: { document: BusinessDocument }) {
+export function DocumentLegalHolds(props: Parameters<typeof OwnedDocumentLegalHolds>[0]) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedDocumentLegalHolds
+      key={JSON.stringify([actor, revision, props.document.id, props.document.profileId])}
+      {...props}
+    />
+  );
+}
+function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readDocument = useOwnedDocumentRead(
+    actor,
+    revision,
+    true,
+    document.profileId,
+    JSON.stringify([document.id, document.profileId])
+  );
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const time = useAccountTime();
@@ -44,7 +66,7 @@ export function DocumentLegalHolds({ document }: { document: BusinessDocument })
 
   useEffect(() => {
     const controller = new AbortController();
-    void documentRequest<HoldsResponse>(
+    void readDocument<HoldsResponse>(
       `/api/admin/document-retention/holds?documentId=${encodeURIComponent(document.id)}`,
       { signal: controller.signal }
     )
@@ -58,7 +80,7 @@ export function DocumentLegalHolds({ document }: { document: BusinessDocument })
         if (!controller.signal.aborted) setError(true);
       });
     return () => controller.abort();
-  }, [document.id, reload]);
+  }, [document.id, reload, readDocument]);
 
   function create(event: FormEvent) {
     event.preventDefault();

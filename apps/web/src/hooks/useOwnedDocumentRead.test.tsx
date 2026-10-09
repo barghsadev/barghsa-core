@@ -5,6 +5,9 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useOwnedDocumentRead } from './useOwnedDocumentRead.js';
 const targets = [
   '/api/profiles',
+  '/api/admin/document-retention/policies',
+  '/api/admin/document-retention/holds?documentId=document-1',
+  '/api/admin/document-retention/destruction',
   ...['document', 'contract', 'image', 'video'].map((category) => '/api/upload/policy/' + category),
   ...['/api/documents', '/api/admin/documents'].flatMap((base) => [
     base + '?businessRecordType=contract&before=cursor-1',
@@ -112,6 +115,8 @@ it.each([
   '/api/admin/documents/document-1/approve',
   '/api/documents/document-1/confirm-upload',
   '/api/admin/documents/document-1/hold',
+  '/api/admin/document-retention/holds/hold-1/release',
+  '/api/admin/document-retention/destruction/job-1/approve',
 ])('refuses command %s without dispatch', async (target) => {
   await act(async () =>
     root.render(
