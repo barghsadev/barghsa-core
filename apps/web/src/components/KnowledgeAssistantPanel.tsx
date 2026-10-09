@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useEffect, useId, useRef, useState } from 'react';
 import { BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
@@ -36,16 +40,7 @@ type Turn = {
 };
 type PendingRequest = { requestId: string; message: string };
 
-export default function KnowledgeAssistantPanel({
-  locale,
-  slotKey,
-  profileId,
-  profileName,
-  open,
-  onOpenChange,
-  embedded = false,
-  pathname = '/ai',
-}: {
+type AssistantPanelProps = {
   locale: Locale;
   slotKey: 'individual_chatbot' | 'legal_entity_chatbot';
   profileId: string;
@@ -54,7 +49,31 @@ export default function KnowledgeAssistantPanel({
   onOpenChange: (open: boolean) => void;
   embedded?: boolean;
   pathname?: string;
-}) {
+};
+export default function KnowledgeAssistantPanel(props: AssistantPanelProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedKnowledgeAssistantPanel
+      key={JSON.stringify([actor, revision, props.profileId, props.slotKey])}
+      {...props}
+    />
+  );
+}
+function OwnedKnowledgeAssistantPanel({
+  locale,
+  slotKey,
+  profileId,
+  profileName,
+  open,
+  onOpenChange,
+  embedded = false,
+  pathname = '/ai',
+}: AssistantPanelProps) {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
   const copy = (key: Parameters<typeof assistantChatFormText>[0]) =>
     assistantChatFormText(key, locale);
   const form = useWizardForm<{ message: string }>(
@@ -237,11 +256,31 @@ export default function KnowledgeAssistantPanel({
     setRetry(null);
     const abort = new AbortController();
     controller.current = abort;
+    let cancel: (() => void) | undefined;
     try {
-      const response = await fetch('/api/dashboard', {
-        credentials: 'include',
-        cache: 'no-store',
-        signal: abort.signal,
+      const key = queryKeys.dashboard.detail(
+        { context: 'customer', ownerId: profileId, accountId: actor, revision },
+        JSON.stringify([reader, 'assistant-account-snapshot', id])
+      );
+      cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+      abort.signal.addEventListener('abort', cancel, { once: true });
+      const response = await client.fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch('/api/dashboard', {
+            credentials: 'include',
+            cache: 'no-store',
+            signal,
+          });
+          return {
+            status: response.status,
+            ok: response.ok,
+            value: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
       });
       if (abort.signal.aborted) return;
       if (response.status === 401 || response.status === 403) {
@@ -249,7 +288,7 @@ export default function KnowledgeAssistantPanel({
         return;
       }
       if (!response.ok) throw new Error('Dashboard unavailable');
-      const result: unknown = await response.json();
+      const result: unknown = response.value;
       if (abort.signal.aborted) return;
       if (!result || typeof result !== 'object') throw new Error('Invalid dashboard response');
       const dashboard = result as {
@@ -299,6 +338,7 @@ export default function KnowledgeAssistantPanel({
     } catch {
       if (!abort.signal.aborted) setError(label('account.error'));
     } finally {
+      if (cancel) abort.signal.removeEventListener('abort', cancel);
       if (controller.current === abort) {
         controller.current = null;
         if (!abort.signal.aborted) {

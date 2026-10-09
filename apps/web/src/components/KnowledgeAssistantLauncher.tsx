@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { readAssistantAvailability, type AssistantAvailability } from '../lib/assistant-chat.js';
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react';
 import { BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/workspace';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -8,13 +11,16 @@ const KnowledgeAssistantPanel = lazy(() => import('./KnowledgeAssistantPanel.js'
 
 type Availability = AssistantAvailability;
 
-export function KnowledgeAssistantLauncher({
-  locale,
-  pathname,
-}: {
-  locale: Locale;
-  pathname?: string;
-}) {
+type LauncherProps = { locale: Locale; pathname?: string };
+export function KnowledgeAssistantLauncher(props: LauncherProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedKnowledgeAssistantLauncher key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedKnowledgeAssistantLauncher({ locale, pathname }: LauncherProps) {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const trigger = useRef<HTMLButtonElement>(null);
   const [availability, setAvailability] = useState<(Availability & { revision: number }) | null>(
@@ -25,21 +31,43 @@ export function KnowledgeAssistantLauncher({
 
   useEffect(() => {
     const controller = new AbortController();
+    const key = queryKeys.catalogue.detail(
+      { context: 'account', ownerId: actor ?? 'current-account', accountId: actor, revision },
+      JSON.stringify([reader, 'customer-assistant-availability'])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
     setAvailability(null);
     setOpen(false);
-    void fetch('/api/ai/knowledge/availability', {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void client
+      .fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch('/api/ai/knowledge/availability', {
+            credentials: 'include',
+            signal,
+          });
+          return {
+            status: response.status,
+            value: response.status === 200 ? ((await response.json()) as unknown) : null,
+          };
+        },
+      })
       .then(async (response) =>
-        response.status === 200 ? readAssistantAvailability(await response.json()) : null
+        response.status === 200 ? readAssistantAvailability(response.value) : null
       )
       .then((value) => {
         if (!controller.signal.aborted) setAvailability(value ? { ...value, revision } : null);
       })
       .catch(() => undefined);
-    return () => controller.abort();
-  }, [revision]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [revision, actor, client, reader]);
 
   if (
     availability?.revision !== revision ||

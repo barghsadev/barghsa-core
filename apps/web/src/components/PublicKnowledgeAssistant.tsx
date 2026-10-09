@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button } from '@barghsa/ui';
@@ -18,7 +22,23 @@ export function StaffKnowledgeAssistant({ locale }: { locale: Locale }) {
   return <KnowledgeQuestionAssistant locale={locale} staff />;
 }
 
-function KnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; staff: boolean }) {
+function KnowledgeQuestionAssistant(props: { locale: Locale; staff: boolean }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedKnowledgeQuestionAssistant
+      key={JSON.stringify([props.staff, props.staff ? actor : null, props.staff ? revision : 0])}
+      {...props}
+    />
+  );
+}
+function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; staff: boolean }) {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const accountId = staff ? actor : null;
+  const contextRevision = staff ? revision : 0;
   const copy = (key: string) => t('assistant.public.' + key, locale);
   const scopeCopy = (key: string) => t('assistant.' + (staff ? 'staff.' : 'public.') + key, locale);
   const endpoint = staff ? '/api/staff/knowledge' : '/api/public/knowledge';
@@ -39,6 +59,17 @@ function KnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; staff: 
     formatInTimezone(value, 'Asia/Tehran', locale, { timeStyle: 'short' });
   useEffect(() => {
     const controller = new AbortController();
+    const key = queryKeys.catalogue.detail(
+      {
+        context: staff ? 'staff' : 'account',
+        ownerId: staff ? (accountId ?? 'current-account') : reader,
+        accountId,
+        revision: contextRevision,
+      },
+      JSON.stringify([reader, endpoint, locale, attempt])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
     setAvailable(null);
     setAnswer(null);
     setQuestion(null);
@@ -46,12 +77,19 @@ function KnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; staff: 
     setError(null);
     setFieldError(false);
     sending.current = null;
-    void fetch(endpoint + '/availability', {
-      credentials,
-      signal: controller.signal,
-    })
+    void client
+      .fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch(endpoint + '/availability', { credentials, signal });
+          return { ok: response.ok, value: (await response.json()) as unknown };
+        },
+      })
       .then(async (response) => {
-        const data: unknown = await response.json();
+        const data: unknown = response.value;
         if (
           !response.ok ||
           !chatRecord(data) ||
@@ -66,9 +104,10 @@ function KnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; staff: 
       });
     return () => {
       controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
       sending.current?.abort();
     };
-  }, [locale, attempt, endpoint, credentials]);
+  }, [locale, attempt, endpoint, credentials, client, reader, staff, accountId, contextRevision]);
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!available || sending.current || cooldown.blocked()) return;

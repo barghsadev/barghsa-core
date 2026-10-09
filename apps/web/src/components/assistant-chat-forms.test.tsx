@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -104,23 +105,25 @@ async function mount(
 ) {
   await act(async () =>
     root.render(
-      kind === 'admin' ? (
-        <AdminAgentTestChat
-          agents={[{ id, title: 'Agent', enabled }]}
-          locale="en"
-          disabled={disabled}
-        />
-      ) : (
-        <KnowledgeAssistantPanel
-          embedded
-          locale="en"
-          profileId={profile}
-          profileName="Customer"
-          slotKey="individual_chatbot"
-          open
-          onOpenChange={() => {}}
-        />
-      )
+      <QueryComponentProvider>
+        {kind === 'admin' ? (
+          <AdminAgentTestChat
+            agents={[{ id, title: 'Agent', enabled }]}
+            locale="en"
+            disabled={disabled}
+          />
+        ) : (
+          <KnowledgeAssistantPanel
+            embedded
+            locale="en"
+            profileId={profile}
+            profileName="Customer"
+            slotKey="individual_chatbot"
+            open
+            onOpenChange={() => {}}
+          />
+        )}
+      </QueryComponentProvider>
     )
   );
 }

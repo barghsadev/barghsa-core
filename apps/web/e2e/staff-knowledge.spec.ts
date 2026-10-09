@@ -1,3 +1,5 @@
+import { createServer, type Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { test, expect } from './coverage-fixture';
@@ -17,6 +19,14 @@ const answer = {
   policyChecks: [],
   answeredAt: '2026-10-08T01:00:00.000Z',
 };
+let staffServer: Server | undefined;
+test.afterEach(async () => {
+  if (!staffServer) return;
+  const server = staffServer;
+  staffServer = undefined;
+  server.closeAllConnections();
+  await new Promise<void>((done) => server.close(() => done()));
+});
 for (const locale of ['en', 'fa'] as const) {
   test(
     'assigned staff guide uses CSRF and clears answers after access loss (' + locale + ')',
@@ -39,20 +49,48 @@ for (const locale of ['en', 'fa'] as const) {
         if (/\/api\/(profiles|dashboard|ai\/knowledge)(?:\/|$)/.test(r.url()))
           privateReads.push(r.url());
       });
-      await page.route('**/api/staff/knowledge/availability', (r) => {
-        expect(r.request().headers().cookie).toContain('barghsa_session=owned-staff-browser');
-        return r.fulfill({ json: { available: true } });
-      });
-      await page.route('**/api/staff/knowledge/questions', (r) => {
-        expect(r.request().headers()['x-csrf-token']).toBe('owned-staff-csrf');
-        expect(r.request().headers().cookie).toContain('barghsa_session=owned-staff-browser');
-        sent.push(r.request().postDataJSON());
-        return r.fulfill(
-          sent.length === 1
-            ? { json: answer }
-            : { status: 403, json: { error: { code: 'AUTHZ:FORBIDDEN' } } }
+      const httpErrors: unknown[] = [];
+      staffServer = createServer(async (request, response) => {
+        response.setHeader('Content-Type', 'application/json');
+        response.setHeader('Access-Control-Allow-Origin', new URL(baseURL!).origin);
+        response.setHeader('Access-Control-Allow-Credentials', 'true');
+        response.setHeader(
+          'Access-Control-Allow-Headers',
+          'content-type, accept-language, x-csrf-token'
         );
+        response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        if (request.method === 'OPTIONS') {
+          response.statusCode = 204;
+          response.end();
+          return;
+        }
+        try {
+          // WebKit omits cookies from intercepted headers; verify the actual HTTP request.
+          expect(request.headers.cookie).toContain('barghsa_session=owned-staff-browser');
+          if (request.url === '/api/staff/knowledge/availability') {
+            response.end(JSON.stringify({ available: true }));
+            return;
+          }
+          expect(request.headers['x-csrf-token']).toBe('owned-staff-csrf');
+          expect(request.headers.cookie).toContain('barghsa_session=owned-staff-browser');
+          const chunks: Buffer[] = [];
+          for await (const chunk of request) chunks.push(Buffer.from(chunk));
+          sent.push(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+          response.statusCode = sent.length === 1 ? 200 : 403;
+          response.end(
+            JSON.stringify(sent.length === 1 ? answer : { error: { code: 'AUTHZ:FORBIDDEN' } })
+          );
+        } catch (error) {
+          httpErrors.push(error);
+          response.statusCode = 500;
+          response.end('{}');
+        }
       });
+      await new Promise<void>((done) => staffServer!.listen(0, '127.0.0.1', done));
+      const staffOrigin = `http://127.0.0.1:${(staffServer.address() as AddressInfo).port}`;
+      await page.route('**/api/staff/knowledge/**', (route) =>
+        route.continue({ url: staffOrigin + new URL(route.request().url()).pathname })
+      );
       await page.goto('/admin/agents');
       const guide = page.locator('[data-slot=staff-knowledge]');
       await expect(
@@ -96,6 +134,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(guide).not.toContainText(answer.reply);
       await expect(input).toHaveCount(0);
       expect(sent).toHaveLength(2);
+      expect(httpErrors).toEqual([]);
     }
   );
 }

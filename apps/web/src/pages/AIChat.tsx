@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../lib/query-keys.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import { readAssistantAvailability, type AssistantAvailability } from '../lib/assistant-chat.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -8,6 +11,14 @@ import KnowledgeAssistantPanel from '../components/KnowledgeAssistantPanel.js';
 type Availability = AssistantAvailability;
 
 export default function AIChat() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedAIChat key={JSON.stringify([actor, revision])} />;
+}
+function OwnedAIChat() {
+  const client = useQueryClient();
+  const reader = useId();
+  const actor = useAccountUser();
   const locale = useLocale();
   const profileRevision = useProfileContextRevision();
   const [retry, setRetry] = useState(0);
@@ -18,15 +29,40 @@ export default function AIChat() {
 
   useEffect(() => {
     const controller = new AbortController();
+    const key = queryKeys.catalogue.detail(
+      {
+        context: 'account',
+        ownerId: actor ?? 'current-account',
+        accountId: actor,
+        revision: profileRevision,
+      },
+      JSON.stringify([reader, 'assistant-page-availability', retry])
+    );
+    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
+    controller.signal.addEventListener('abort', cancel, { once: true });
     setAvailability(null);
     setStatus('loading');
-    void fetch('/api/ai/knowledge/availability', {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    void client
+      .fetchQuery({
+        queryKey: key,
+        staleTime: 0,
+        gcTime: 0,
+        retry: false,
+        queryFn: async ({ signal }) => {
+          const response = await fetch('/api/ai/knowledge/availability', {
+            credentials: 'include',
+            signal,
+          });
+          return {
+            status: response.status,
+            ok: response.ok,
+            value: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        },
+      })
       .then(async (response) => {
         if (!response.ok) throw new Error('Assistant availability unavailable');
-        const value = readAssistantAvailability(await response.json());
+        const value = readAssistantAvailability(response.value);
         if (response.status !== 200 || !value) throw new Error('Invalid availability');
         return value;
       })
@@ -42,8 +78,11 @@ export default function AIChat() {
       .catch(() => {
         if (!controller.signal.aborted) setStatus('error');
       });
-    return () => controller.abort();
-  }, [profileRevision, retry]);
+    return () => {
+      controller.abort();
+      controller.signal.removeEventListener('abort', cancel);
+    };
+  }, [profileRevision, retry, actor, client, reader]);
 
   return (
     <div

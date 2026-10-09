@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -35,7 +36,13 @@ afterEach(async () => {
   document.cookie = 'barghsa_csrf=; Max-Age=0; path=/';
 });
 async function render(locale: 'en' | 'fa' = 'en') {
-  await act(async () => root.render(<PublicKnowledgeAssistant locale={locale} />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <PublicKnowledgeAssistant locale={locale} />
+      </QueryComponentProvider>
+    )
+  );
 }
 async function fill(value: string) {
   const input = host.querySelector('textarea')!;
@@ -193,7 +200,13 @@ it.each(['en', 'fa'] as const)(
         Response.json({ error: { code: 'AUTHZ:FORBIDDEN' } }, { status: 403 })
       );
     vi.stubGlobal('fetch', fetcher);
-    await act(async () => root.render(<StaffKnowledgeAssistant locale={locale} />));
+    await act(async () =>
+      root.render(
+        <QueryComponentProvider>
+          <StaffKnowledgeAssistant locale={locale} />
+        </QueryComponentProvider>
+      )
+    );
     expect(host.textContent).toContain(t('assistant.staff.title', locale));
     expect(host.textContent).toContain(t('assistant.staff.scope', locale));
     await fill('Staff question');
