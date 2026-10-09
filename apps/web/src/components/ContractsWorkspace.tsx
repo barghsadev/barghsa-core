@@ -1,3 +1,4 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 import { useListView } from '../hooks/useListView.js';
 import { ContractRefundQueue } from './ContractRefundQueue.js';
@@ -34,7 +35,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
 import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetailLoader } from './ContractDetailLoader.js';
@@ -349,6 +350,14 @@ function ContractResults({
   readEpoch: MutableRefObject<number>;
   queries?: RecordListQuery | undefined;
 }) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    undefined,
+    JSON.stringify([staff, query])
+  );
   const { view, setView } = useListView('contracts');
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -399,7 +408,7 @@ function ContractResults({
     if (cursor) params.set('before', cursor);
     setLoading(true);
     setError(false);
-    void documentRequest<{ contracts: ContractSummary[]; nextBefore: string | null }>(
+    void readContract<{ contracts: ContractSummary[]; nextBefore: string | null }>(
       `${contractBase(staff)}?${params}`,
       { signal: controller.signal }
     )
@@ -424,7 +433,7 @@ function ContractResults({
         if (fresh()) setLoading(false);
       });
     return () => controller.abort();
-  }, [staff, query, cursor, reload, retryRevision, acceptPage, locked]);
+  }, [staff, query, cursor, reload, retryRevision, acceptPage, locked, readContract]);
   function refresh() {
     if (coordination.blocked()) return;
     if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });

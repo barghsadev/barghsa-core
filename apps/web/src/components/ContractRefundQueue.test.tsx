@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -69,7 +70,9 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function render() {
-  await act(async () => root.render(<ContractRefundQueue />));
+  await act(async () =>
+    root.render(<QueryComponentProvider>{<ContractRefundQueue />}</QueryComponentProvider>)
+  );
 }
 async function click(label: string) {
   const button = [...container.querySelectorAll('button')].find((b) => b.textContent === label);
@@ -139,7 +142,7 @@ it('ignores a response after the queue has unmounted', async () => {
   );
   await render();
   const signal = request.mock.calls[0]?.[1]?.signal;
-  await act(async () => root.render(null));
+  await act(async () => root.render(<QueryComponentProvider>{null}</QueryComponentProvider>));
   expect(signal?.aborted).toBe(true);
   await act(async () => resolve({ obligations: [row('late')], nextBefore: null }));
   expect(container.textContent).toBe('');

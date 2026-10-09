@@ -1,3 +1,4 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, Button, ListPage, PageLoading, StatusBadge } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
@@ -8,8 +9,10 @@ import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js'
 import { validRefundReceipt } from '../lib/refund-receipt.js';
 import type { RefundDecisionValues, RefundOperation } from '../hooks/useRefundForm.js';
 import { t } from '@barghsa/i18n/workspace';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { documentRequest, DocumentRequestError } from '../lib/documents.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 const loadRefundSummary = () => import('./RefundFinancialReviewSummary.js');
 interface Obligation {
@@ -25,6 +28,14 @@ interface Obligation {
   orderId: string | null;
 }
 export function ContractRefundQueue() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedContractRefundQueue key={JSON.stringify([actor, revision])} />;
+}
+function OwnedContractRefundQueue() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(actor, revision, undefined, 'contract-refunds');
   useEffect(() => {
     if (window.location.hash === '#refund-obligations')
       document.getElementById('refund-obligations')?.scrollIntoView();
@@ -75,7 +86,7 @@ export function ContractRefundQueue() {
     readController.current = controller;
     setLoading(true);
     setError(false);
-    void documentRequest<{ obligations: Obligation[]; nextBefore: string | null }>(
+    void readContract<{ obligations: Obligation[]; nextBefore: string | null }>(
       `/api/admin/wallet-refunds/contract-obligations${cursor ? '?before=' + encodeURIComponent(cursor) : ''}`,
       { signal: controller.signal }
     )
@@ -114,7 +125,7 @@ export function ContractRefundQueue() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [cursor, reload]);
+  }, [cursor, reload, readContract]);
   function refresh() {
     setCursor(null);
     setNext(null);
@@ -173,7 +184,11 @@ export function ContractRefundQueue() {
         const controller = new AbortController();
         reviewController.current = controller;
         try {
-          const value = await requestRefundReview(actionPath + '/review', body, controller.signal);
+          const value = await readContract(
+            actionPath + '/review',
+            { method: 'POST', signal: controller.signal },
+            (path, options) => requestRefundReview(path, body, options.signal!)
+          );
           const { parseRefundDecisionReview } = await import('@barghsa/shared/finance');
           if (!owns()) return;
           const review = parseRefundDecisionReview(value);

@@ -15,6 +15,20 @@ const targets = [
   ]),
   '/api/documents' + documentParams,
   '/api/admin/documents' + documentParams + '&profileId=profile-1',
+  '/api/contracts?state=Active&before=cursor-1',
+  '/api/admin/contracts?service=electricity&before=cursor-1',
+  '/api/contracts/contract-1',
+  '/api/admin/contracts/contract-1',
+  '/api/contracts/contract-1/versions?before=2',
+  '/api/admin/contracts/contract-1/versions?before=2',
+  '/api/contracts/contract-1/versions/version-1',
+  '/api/admin/contracts/contract-1/versions/version-1',
+  '/api/electricity/contracts/contract-1/increase',
+  '/api/admin/contract-activation-rules',
+  '/api/admin/wallet-refunds/contract-obligations?before=cursor-1',
+  '/api/admin/wallet-refunds/refund-1/process/review',
+  '/api/admin/external-refunds/refund-1/record-transfer/review',
+  '/api/admin/external-refunds/refund-1/reconcile/review',
   '/api/contracts/contract-1/cancellation-status',
   '/api/admin/contracts/contract-1/cancellation-status',
   '/api/contracts/contract-1/cancellation-requests?read=1',
@@ -34,7 +48,7 @@ function Probe({ target, actor, revision }: { target: string; actor: string; rev
     const controller = new AbortController();
     setShown('');
     void read<{ text: string }>(target, {
-      ...(/\/(?:signature\/review|accept|signature-request)$/.test(target) ||
+      ...(/\/(?:review|accept|signature-request)$/.test(target) ||
       target === '/api/admin/contracts/contract-1/signature' ||
       target === '/api/admin/contracts/contract-1/cancellations' ||
       target === '/api/contracts/contract-1/cancellation-requests'
@@ -65,7 +79,7 @@ beforeEach(() => {
     'fetch',
     vi.fn(async (_path: RequestInfo | URL, init?: RequestInit) => {
       expect(init?.credentials).toBe('include');
-      const preview = String(_path).endsWith('/signature/review');
+      const preview = String(_path).endsWith('/review');
       expect(init?.body).toBe(preview ? body : undefined);
       expect(new Headers(init?.headers).get('x-csrf-token')).toBe('review-csrf');
       expect(new Headers(init?.headers).get('content-type')).toBe('application/json');

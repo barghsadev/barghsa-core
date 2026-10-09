@@ -36,13 +36,33 @@ export function useOwnedContractRead(
       const url = new URL(path, 'http://barghsa.local');
       const method = options.method ?? 'GET';
       const documents = /^\/api\/(?:admin\/)?documents$/.test(url.pathname);
+      const collection = /^\/api\/(?:admin\/)?contracts$/.test(url.pathname);
+      const history = /^\/api\/(?:admin\/)?contracts\/[^/]+\/versions$/.test(url.pathname);
+      const recordPath = /^\/api\/(?:admin\/)?contracts\/[^/]+(?:\/versions(?:\/[^/]+)?)?$/.test(
+        url.pathname
+      );
+      const increase = /^\/api\/electricity\/contracts\/[^/]+\/increase$/.test(url.pathname);
+      const config = url.pathname === '/api/admin/contract-activation-rules';
+      const obligations = url.pathname === '/api/admin/wallet-refunds/contract-obligations';
+      const refundPreview =
+        /^\/api\/admin\/(?:wallet-refunds\/[^/]+\/process|external-refunds\/[^/]+\/(?:record-transfer|reconcile))\/review$/.test(
+          url.pathname
+        );
       const list =
         url.pathname === '/api/admin/contracts/authoring-options' ||
         url.pathname === '/api/admin/contract-cancellation-requests' ||
-        documents;
+        documents ||
+        collection ||
+        history ||
+        obligations;
       const permitted =
         method === 'GET'
-          ? url.pathname === '/api/admin/contracts/authoring-options' ||
+          ? collection ||
+            recordPath ||
+            increase ||
+            config ||
+            obligations ||
+            url.pathname === '/api/admin/contracts/authoring-options' ||
             url.pathname === '/api/admin/contract-cancellation-requests' ||
             /^\/api\/(?:admin\/)?contracts\/[^/]+\/(?:activation|signature|acceptance-review|cancellation-status|cancellation-requests)$/.test(
               url.pathname
@@ -56,7 +76,8 @@ export function useOwnedContractRead(
               !!url.searchParams.get('contractVersionId') &&
               url.searchParams.get('state') === 'Approved')
           : method === 'POST' &&
-            /^\/api\/(?:admin\/)?contracts\/[^/]+\/signature\/review$/.test(url.pathname);
+            (/^\/api\/(?:admin\/)?contracts\/[^/]+\/signature\/review$/.test(url.pathname) ||
+              refundPreview);
       if (!path.startsWith('/api/') || !permitted) throw new Error('Invalid contract read');
       const staff = url.pathname.startsWith('/api/admin/');
       const authority = {
@@ -73,7 +94,9 @@ export function useOwnedContractRead(
       params.set('endpoint', url.pathname);
       const key = list
         ? queryKeys.contracts.list(authority, params)
-        : queryKeys.contracts.detail(authority, url.pathname + url.search);
+        : config
+          ? queryKeys.catalogue.detail(authority, url.pathname + url.search)
+          : queryKeys.contracts.detail(authority, url.pathname + url.search);
       const queryKey: ServerQueryKey = [...key, JSON.stringify([reader, ++sequence.current])];
       const controller = new AbortController();
       const external = options.signal;

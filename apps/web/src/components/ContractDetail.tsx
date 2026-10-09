@@ -1,3 +1,4 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
 import { Link } from '@tanstack/react-router';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
@@ -65,6 +66,14 @@ function ContractIncreaseEntry(props: {
   formatTimestamp: (value: string) => string;
 }) {
   const locale = useLocale();
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    props.profileId,
+    JSON.stringify([props.contractId, props.versionId])
+  );
   const [available, setAvailable] = useState(false);
   const [opened, setOpened] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -73,7 +82,7 @@ function ContractIncreaseEntry(props: {
     const controller = new AbortController();
     setAvailable(false);
     setFailed(false);
-    void documentRequest<{ canRequest: unknown; request: unknown }>(
+    void readContract<{ canRequest: unknown; request: unknown }>(
       `/api/electricity/contracts/${encodeURIComponent(props.contractId)}/increase`,
       { signal: controller.signal }
     )
@@ -86,7 +95,7 @@ function ContractIncreaseEntry(props: {
         if (!controller.signal.aborted) setFailed(true);
       });
     return () => controller.abort();
-  }, [props.contractId, props.versionId, props.profileId, retry]);
+  }, [props.contractId, props.versionId, props.profileId, retry, readContract]);
   if (opened)
     return (
       <Suspense fallback={<PageLoading label={t('electricity.increase.loading', locale)} />}>
@@ -157,6 +166,13 @@ function ContractDetailContent({
   const [next, setNext] = useState<number | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    undefined,
+    JSON.stringify([id, staff, selectedVersion])
+  );
   const [reload, setReload] = useState(0);
   const [error, setError] = useState(false);
   const [historyError, setHistoryError] = useState(false);
@@ -279,10 +295,10 @@ function ContractDetailContent({
 
     const base = `${contractBase(staff)}/${encodeURIComponent(id)}`;
     void Promise.all([
-      documentRequest<ContractDetailData>(base, { signal: controller.signal }),
-      documentRequest<VersionPage>(`${base}/versions`, { signal: controller.signal }),
+      readContract<ContractDetailData>(base, { signal: controller.signal }),
+      readContract<VersionPage>(`${base}/versions`, { signal: controller.signal }),
       selectedVersion
-        ? documentRequest<ContractVersion | ContractDetailData>(
+        ? readContract<ContractVersion | ContractDetailData>(
             `${base}/versions/${encodeURIComponent(selectedVersion)}`,
             { signal: controller.signal }
           )
@@ -324,7 +340,7 @@ function ContractDetailContent({
         else setError(true);
       });
     return () => controller.abort();
-  }, [id, staff, selectedVersion, reload, refreshRevision]);
+  }, [id, staff, selectedVersion, reload, refreshRevision, readContract]);
   useEffect(() => {
     reasonForm.reset({ reason: '' });
   }, [selectedVersion]);
@@ -337,7 +353,7 @@ function ContractDetailContent({
     setLoadingMore(true);
     setHistoryError(false);
     try {
-      const page = await documentRequest<VersionPage>(
+      const page = await readContract<VersionPage>(
         `${contractBase(staff)}/${id}/versions?before=${next}`,
         { signal: controller.signal }
       );

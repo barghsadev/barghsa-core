@@ -1,8 +1,11 @@
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, Button, PageLoading } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { documentRequest } from '../lib/documents.js';
+
 import type { ContractActivationRule } from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 const fields = ['signatureRequired', 'paymentRequired', 'serviceStartRequired'] as const;
@@ -29,6 +32,19 @@ export function ContractActivationRules() {
   );
 }
 function RulesEditor() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedRulesEditor key={JSON.stringify([actor, revision])} />;
+}
+function OwnedRulesEditor() {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readContract = useOwnedContractRead(
+    actor,
+    revision,
+    undefined,
+    'contract-activation-rules'
+  );
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
   const [data, setData] = useState<{ rules: ContractActivationRule[]; canEdit: boolean } | null>(
@@ -44,7 +60,7 @@ function RulesEditor() {
     setError(false);
     setAction(null);
     setDrafts([]);
-    void documentRequest<{ rules: ContractActivationRule[]; canEdit: boolean }>(
+    void readContract<{ rules: ContractActivationRule[]; canEdit: boolean }>(
       '/api/admin/contract-activation-rules',
       { signal: controller.signal }
     )
@@ -58,7 +74,7 @@ function RulesEditor() {
         if (!controller.signal.aborted) setError(true);
       });
     return () => controller.abort();
-  }, [reload]);
+  }, [reload, readContract]);
   function save(row: ContractActivationRule) {
     setAction({
       title: word('saveActivationRules'),
