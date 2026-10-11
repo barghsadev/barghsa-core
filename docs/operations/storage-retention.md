@@ -3,7 +3,14 @@
 `pnpm setup:bucket --bucket <name>` enables versioning and replaces the target
 bucket's lifecycle policy. The command uses the S3 environment variables listed
 by `pnpm setup:bucket --help`. Review existing custom rules before applying it.
-This audit has not applied the policy to a deployed bucket.
+Staging now has versioning and the exact standard tagged lifecycle policy.
+The October 12 preflight confirmed the versioned application configuration
+matches the tested provider. Disposable live objects proved distinct versions,
+hold-aware classification, refused deletion while held, and exact-version
+cleanup after releasing the synthetic hold. An isolated bucket first verified
+policy compatibility. These receipts certify provider operations and policy
+readback, not elapsed-day expiration or a complete business destruction manifest.
+The current evidence is recorded under v0.4.0 in `kanban/board.json`.
 
 Expiry requires both the exact prefix and an explicit object-version tag
 `legal-hold=false`: `tmp/` and `uploads/` after 1 day, `previews/` after 7 days,
@@ -116,6 +123,11 @@ record-type policy hold. The admin workspace shows this result beside each
 document.
 
 ## Approved document destruction
+
+Financial, contractual and signed-document bytes are permanently retained,
+including after removal and parent closure. Migration0272 enforces this policy
+in eligibility, destruction and byte-clearing guards. Retention deadlines and
+legal approval authorize destruction only for other eligible document types.
 
 The worker plans up to 25 eligible removed documents during its nightly 02:00
 UTC window. It records an audit manifest and leaves every object untouched

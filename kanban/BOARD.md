@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T22:15:28.995021+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T22:22:22.261211+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 588 | Accepted with unchanged source bindings. |
+| done | 589 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 44 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 43 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close actual v0.4.0 staging operations/provider/payment/storage gates. Native named and generic producers have local acceptance; deploy intended independent monitoring with protected configuration and record source/native receipts. Telegram requires route/proxy action. No additional producer foundation or later-release batch.
+Finish v0.4.0 actual staging payment sandbox, scanner/recovery and independent monitoring source/native receipts. Storage live configuration/version-aware boundary accepted; operations credentials/role provisioned. Telegram requires outbound route/proxy action. No later-release work or producer foundation batches.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
@@ -573,7 +573,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.08.05` | done | Recorded batch work | Provider test fakes & contract tests |
 | `05-notifications-documents-ai.md#T-05.09.01` | done | Recorded batch work | File storage abstraction interface |
 | `05-notifications-documents-ai.md#T-05.09.02` | done | Recorded batch work | S3 adapter |
-| `05-notifications-documents-ai.md#T-05.09.03` | partial | Recorded batch work | Storage config entity & admin UI |
+| `05-notifications-documents-ai.md#T-05.09.03` | done | Recorded batch work | Storage config entity & admin UI |
 | `05-notifications-documents-ai.md#T-05.09.04` | done | Recorded batch work | Preview derivative generation |
 | `05-notifications-documents-ai.md#T-05.10.01` | done | Recorded batch work | Document template entity |
 | `05-notifications-documents-ai.md#T-05.10.02` | done | Recorded batch work | Template file upload & placeholder extraction |
