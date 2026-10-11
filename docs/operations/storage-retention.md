@@ -101,11 +101,19 @@ server settings; bucket setup cannot install the S3 abort rule there.
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider
-metadata and a durable `Pending scan` timestamp. With ClamAV configured, a
-verified clean verdict moves the upload to `Available`; infected files enter
-quarantine. Scanner errors leave the file pending for retry. Without a configured
-scanner, the explicit `not_configured` fallback is recorded. It is not a
-clean-file claim. Repeated verification does not reset an available file.
+metadata and a durable `Pending scan` timestamp. Canonical business-document
+confirmation seals the inspected bytes and creates a `PendingScan` document and
+durable worker job when ClamAV is configured. A verified clean verdict makes that
+document `Available`; infected files enter quarantine. Scanner errors retain
+`PendingScan`, the failed attempt and a future retry deadline. Downloads remain
+blocked until the document is available. Repeated verification does not reset it.
+
+Generic storage-upload recording uses `Available` with `not_configured` metadata
+as an intermediate byte-inspection result. This metadata is not a ClamAV verdict
+and does not make its canonical document available. Consumers must use the
+document's state and scan result for that decision. If the canonical document
+scanner itself is unconfigured, its explicit fallback permits availability and
+records why scanning was skipped; it does not claim a clean scan.
 
 ## Document policy and legal hold
 

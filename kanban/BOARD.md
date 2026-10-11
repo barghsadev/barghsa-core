@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T22:35:29.848259+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T22:48:34.753227+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish v0.4.0 scanner/recovery and intended independent monitoring source/native firing/recovery receipts. Storage and controlled payment boundaries now have actual source-bound staging receipts; operations secrets/role provisioned. Telegram requires outbound route/proxy action. No later-release work or producer foundation batches.
+Close v0.4.0 intended independent monitoring source/native firing/recovery receipts and AI/Telegram linkage/isolation. Storage, controlled native payment and document scanner/quarantine/privacy/retry boundaries have actual current-source staging evidence. Operations secrets/role provisioned; Telegram requires outbound route/proxy action. No later-release or producer foundation work.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
