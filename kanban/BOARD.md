@@ -2,9 +2,9 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T19:29:22.571058+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T19:37:45.085050+00:00. First production launch: electricity, saving, solar and consultation.
 
-Last confirmed staging release: **v0.2.0**. Next milestone: **v0.3.0**.
+Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
 Counts describe evidence and task acceptance, not the percentage of product built.
 
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Accepted v0.3.0: push exact candidate, enqueue staging immediately and verify actual deployment plus one Persian summary/grouped album. Select v0.4.0 after confirmation. Live SMS provisioning remains the owner-deferred production operational gate.
+Select v0.4.0 documents/notifications/AI gaps from current implementation and task-level evidence. v0.3.0 accepted, deployed and Telegram-confirmed. No production authorization; deferred live SMS remains R-05.03.
 
-- `release-readiness#R-02.01`: Renew fulfillment and financial closure acceptance
+- `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
 
 ## v0.2.0: Complete customer journeys
 
