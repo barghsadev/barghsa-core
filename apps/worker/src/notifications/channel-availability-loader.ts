@@ -109,6 +109,8 @@ export async function loadNotificationRecipient(
           THEN u.username END AS mobile
     ) contacts
     WHERE o.id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL
+      AND (o.event_key NOT IN ('system.service_outage','admin.operations_alert') OR (o.profile_id IS NULL AND u.is_staff=true AND u.is_admin=true
+        AND EXISTS(SELECT 1 FROM operations_alert_receipts a WHERE a.id=o.payload->>'alertReceiptId' AND a.status=o.payload->>'alertStatus')))
       AND (o.event_key NOT IN (
         'contract.created','contract.awaiting_acceptance','contract.accepted',
         'contract.signed','contract.active','contract.cancelled','contract.changes_requested',

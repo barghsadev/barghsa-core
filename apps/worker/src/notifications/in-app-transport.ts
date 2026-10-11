@@ -133,6 +133,8 @@ export class InAppNotificationTransport implements INotificationTransport {
       }
     }
     if (
+      payload.eventKey === 'system.service_outage' ||
+      payload.eventKey === 'admin.operations_alert' ||
       payload.eventKey === 'document.scan_failed' ||
       payload.eventKey === 'document.quarantined'
     ) {
@@ -145,6 +147,16 @@ export class InAppNotificationTransport implements INotificationTransport {
       );
       if (!allowed.rows[0])
         throw new Error('Document alert recipient is no longer an active administrator');
+      if (
+        payload.eventKey === 'system.service_outage' ||
+        payload.eventKey === 'admin.operations_alert'
+      ) {
+        const source = await pool.query(
+          'SELECT id FROM operations_alert_receipts WHERE id=$1 AND status=$2',
+          [payload.payload.alertReceiptId, payload.payload.alertStatus]
+        );
+        if (!source.rows[0]) throw new Error('Operations alert requires its protected receipt');
+      }
     }
 
     const templates = await pool.query(

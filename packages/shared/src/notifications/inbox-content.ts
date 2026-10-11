@@ -44,6 +44,18 @@ export function renderInboxTemplates(
   return content;
 }
 const labels: Record<string, [string, string, string, string]> = {
+  'admin.operations_alert': [
+    'اعلان عملیاتی',
+    'Operations alert',
+    'این اعلان عملیاتی نیازمند بررسی مدیر است.',
+    'An administrator should review this operations alert.',
+  ],
+  'system.service_outage': [
+    'وضعیت سرویس',
+    'Service status',
+    'وضعیت سرویس را در بخش مدیریت بررسی کنید.',
+    'Review the service status in the administration workspace.',
+  ],
   'auth.otp_sent': [
     'کد تأیید ارسال شد',
     'Verification code sent',
@@ -160,6 +172,12 @@ export function defaultInboxContent(
     content.fa.body += ` هدف: ${purpose}، راه ارسال: ${channel}، زمان: ${sentAt}.`;
     content.en.body += ` Purpose: ${purpose}. Channel: ${channel}. Sent: ${sentAt}.`;
   }
+  if (event === 'system.service_outage' || event === 'admin.operations_alert') {
+    const details = scalar(data.details);
+    const eta = scalar(data.eta);
+    content.fa.body += ` ${details}. زمان بازیابی: ${eta}.`;
+    content.en.body += ` ${details}. Recovery estimate: ${eta}.`;
+  }
   if (event === 'document.scan_failed' || event === 'document.quarantined') {
     const name = scalar(data.documentName);
     if (name) {
@@ -184,6 +202,7 @@ export function defaultInboxLink(event: string, data: Record<string, unknown> = 
     return notificationLink(typeof data.link_route === 'string' ? data.link_route : null);
   if (event === 'document.scan_failed' || event === 'document.quarantined')
     return '/admin/documents';
+  if (event === 'system.service_outage') return '/admin';
   if (event.startsWith('payment.wallet_')) return '/wallet';
   if (event === 'auth.refresh_token_reused' || event === 'auth.otp_sent')
     return '/settings/security';

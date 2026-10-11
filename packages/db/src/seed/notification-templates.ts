@@ -54,6 +54,16 @@ export interface SeedEventDefinition {
 /** The complete seed catalog, with separate channel groups where required. */
 export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
   {
+    eventKey: 'admin.operations_alert',
+    faBody: '{{details}}\n{{eta}}',
+    enBody: '{{details}}\n{{eta}}',
+    channels: ['in_app'],
+    variables: [
+      { name: 'details', description: 'شرح اعلان / Alert details' },
+      { name: 'eta', description: 'وضعیت پیگیری / Follow-up status' },
+    ],
+  },
+  {
     eventKey: 'auth.otp_sent',
     faSubject: 'کد ورود بارق‌سا',
     enSubject: 'Barghsa sign-in code',

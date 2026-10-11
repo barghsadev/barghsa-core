@@ -1,0 +1,10 @@
+groups:
+  - name: barghsa-staging-worker
+    rules:
+      - alert: WorkerUnavailable
+        expr: up{job="barghsa-worker"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Background worker cannot be scraped

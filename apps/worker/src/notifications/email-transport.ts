@@ -38,6 +38,7 @@ export class EmailNotificationTransport implements INotificationTransport {
             'auth.session_revoked',
             'auth.refresh_token_reused',
             'auth.new_device_login',
+            'system.service_outage',
           ].includes(payload.eventKey)
         ))
     )

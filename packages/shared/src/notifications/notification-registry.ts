@@ -55,6 +55,11 @@ export interface NotificationTypeDefinition {
 
 /** The code-defined registry of business notification events (E-05 §3 Appendix). */
 export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTypeDefinition>> = {
+  'admin.operations_alert': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
   // ── Authentication & security — immediate, security-pinned ──────────────
   'auth.otp_sent': { classification: 'immediate', securityPinned: true, category: 'mandatory' },
   'auth.password_changed': {
