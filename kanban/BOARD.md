@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T19:44:29.523587+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -39,8 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Select v0.4.0 documents/notifications/AI gaps from current implementation and task-level evidence. v0.3.0 accepted, deployed and Telegram-confirmed. No production authorization; deferred live SMS remains R-05.03.
+Close the current milestone: implement demonstrated permanent-provider pause scope and complete deployed provider/storage/ops receipts. Owner authorizes reusing the bot and creating missing staging/sandbox/ops configuration. Protected bot config installed on unchanged v0.3.0 API; callback remains unavailable because VPS cannot reach official Telegram API. Existing healthy ngrok callback remains untouched. Investigate safe egress/registered HTTP sandbox/ops receiver options; do not fabricate vendor or private-linkage proof, weaken activation or financial guards, or start later releases.
 
+- `05-notifications-documents-ai.md#T-05.08.02`: Circuit breaker implementation
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
 
 ## v0.2.0: Complete customer journeys
