@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T21:38:55.990335+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T21:46:09.368601+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Complete bounded remaining producer reconciliation and protected staging operations/payment configuration. Obtain actual provider/storage/monitoring receipts for v0.4.0; Telegram awaits route/proxy action. Required OTP, awaiting-staff and outage publishers now implemented. Reuse current local evidence; no later-release infrastructure or new partial foundation work.
+Close the concrete remaining generic notification outbox gap using the current business transaction and stable staff approval occurrences; reconcile the bounded same-state/collection/compatibility paths, then complete protected staging operations/payment setup and actual provider/storage/monitoring receipts. Required OTP, awaiting-staff and outage publishers are implemented. Telegram requires route/proxy action. No later-release work.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
