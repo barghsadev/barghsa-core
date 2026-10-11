@@ -12,7 +12,8 @@ beforeAll(async () => {
   ctx = await createIsolatedTestDb('test_', 4);
   await ctx.pool.query(`CREATE TABLE sms_provider_configs (
     id uuid PRIMARY KEY, status text NOT NULL, last_test_status text NOT NULL,
-    config jsonb NOT NULL
+    config jsonb NOT NULL, degraded boolean NOT NULL DEFAULT false,
+    degraded_reason text
   )`);
   await ctx.pool.query(`CREATE TABLE provider_health_events (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(), channel text NOT NULL,
@@ -29,7 +30,7 @@ beforeAll(async () => {
     await ctx.pool.query(statement.trim());
   await ctx.pool.query(`CREATE TABLE notification_outbox (created_at timestamptz, status text);
     CREATE TABLE notification_dead_letter (status text);
-    CREATE TABLE email_provider_configs (id uuid, degraded boolean)`);
+    CREATE TABLE email_provider_configs (id uuid, degraded boolean, status text NOT NULL DEFAULT 'active', degraded_reason text)`);
 }, 40_000);
 
 afterAll(async () => {
@@ -40,6 +41,7 @@ afterAll(async () => {
 beforeEach(async () => {
   await ctx.pool.query('DELETE FROM provider_health_events');
   await ctx.pool.query('DELETE FROM sms_provider_configs');
+  await ctx.pool.query('DELETE FROM email_provider_configs');
   await ctx.pool.query(
     `INSERT INTO sms_provider_configs(id,status,last_test_status,config)
      VALUES ($1,'active','passed',$2)`,
@@ -54,6 +56,67 @@ function creditResponse(balance: number): typeof fetch {
       async () => new Response(JSON.stringify({ status: 1, data: balance }), { status: 200 })
     );
 }
+
+it('exports only active provider health and resolves a retired configuration pause without clearing history', async () => {
+  const email = '305fdb51-40f5-4b60-89f0-3a58f7056f53';
+  const replacement = '80f9cfdc-42ed-4ea6-a8bf-7dfab38b07a2';
+  await ctx.pool.query(
+    "INSERT INTO email_provider_configs(id,status,degraded,degraded_reason) VALUES($1,'active',true,'provider_configuration_pause')",
+    [email]
+  );
+  await ctx.pool.query(
+    "UPDATE sms_provider_configs SET degraded=true,degraded_reason='provider_configuration_pause' WHERE id=$1",
+    [providerId]
+  );
+  await collectNotificationGauges(ctx.pool);
+  expect(await exportWorkerMetrics()).toContain(`provider_email_health{provider_id="${email}"} 0`);
+  expect(await exportWorkerMetrics()).toContain(
+    `provider_sms_health{provider_id="${providerId}"} 0`
+  );
+
+  await ctx.pool.query("UPDATE email_provider_configs SET status='superseded' WHERE id=$1", [
+    email,
+  ]);
+  await ctx.pool.query(
+    "INSERT INTO email_provider_configs(id,status,degraded) VALUES($1,'active',false)",
+    [replacement]
+  );
+  await ctx.pool.query("UPDATE sms_provider_configs SET status='superseded' WHERE id=$1", [
+    providerId,
+  ]);
+  await ctx.pool.query(
+    "INSERT INTO sms_provider_configs(id,status,last_test_status,config,degraded) VALUES($1,'active','passed','{}',false)",
+    [replacement]
+  );
+  await collectNotificationGauges(ctx.pool);
+  const text = await exportWorkerMetrics();
+  expect(text).toContain(`provider_email_health{provider_id="${replacement}"} 1`);
+  expect(text).toContain(`provider_sms_health{provider_id="${replacement}"} 1`);
+  expect(text).not.toContain(`provider_email_health{provider_id="${email}"}`);
+  expect(text).not.toContain(`provider_sms_health{provider_id="${providerId}"}`);
+  for (const status of ['disabled', 'draft']) {
+    await ctx.pool.query('UPDATE email_provider_configs SET status=$1', [status]);
+    await ctx.pool.query('UPDATE sms_provider_configs SET status=$1', [status]);
+    await collectNotificationGauges(ctx.pool);
+    expect(await exportWorkerMetrics()).not.toMatch(/provider_(email|sms)_health\{provider_id=/);
+  }
+  expect(
+    (
+      await ctx.pool.query(
+        'SELECT degraded,degraded_reason FROM email_provider_configs WHERE id=$1',
+        [email]
+      )
+    ).rows[0]
+  ).toEqual({ degraded: true, degraded_reason: 'provider_configuration_pause' });
+  expect(
+    (
+      await ctx.pool.query(
+        'SELECT degraded,degraded_reason FROM sms_provider_configs WHERE id=$1',
+        [providerId]
+      )
+    ).rows[0]
+  ).toEqual({ degraded: true, degraded_reason: 'provider_configuration_pause' });
+});
 
 it('claims once across replicas, alerts once while low, and records recovery', async () => {
   const request = creditResponse(50);

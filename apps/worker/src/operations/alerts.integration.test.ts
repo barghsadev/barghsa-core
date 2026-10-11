@@ -214,89 +214,93 @@ it('authenticates machine requests, rejects browser credentials and enforces siz
   expect((await request({ alerts: [], padding: 'x'.repeat(140000) })).status).toBe(413);
   expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rowCount).toBe(0);
 });
-it('records actual HTTP firing and recovery receipts and delivers only private admin inbox/email occurrences', async () => {
-  const input = envelope();
-  const response = await request(input);
-  expect(response.status).toBe(200);
-  const first = (await response.json()) as { receipts: { id: string; inserted: boolean }[] };
-  expect(first.receipts).toHaveLength(1);
-  expect(first.receipts[0]!.inserted).toBe(true);
-  const repeat = await request(input);
-  expect(repeat.status).toBe(200);
-  expect(await repeat.json()).toEqual({
-    receipts: [{ id: first.receipts[0]!.id, inserted: false }],
-  });
-  input.alerts[0]!.status = 'resolved';
-  expect((await request(input)).status).toBe(200);
-  const events = (
-    await ctx.pool.query(
-      "SELECT * FROM notification_outbox WHERE event_key='system.service_outage' ORDER BY created_at,id"
-    )
-  ).rows;
-  expect(events).toHaveLength(2);
-  expect(events.map((e) => e.user_id)).toEqual(['ops-admin', 'ops-admin']);
-  expect(
-    events.every(
-      (e) => e.profile_id === null && JSON.stringify(e.channels) === '["in_app","email"]'
-    )
-  ).toBe(true);
-  expect(JSON.stringify(events.map((e) => e.payload))).not.toMatch(
-    /DO_NOT_COPY|unsafe\.example|generatorURL|annotations/
-  );
-  const send = vi.fn<typeof fetch>(
-    async () => new Response(JSON.stringify({ id: 'provider-' + randomUUID() }), { status: 200 })
-  );
-  expect(
-    await runOutboxPoll({
-      pool: ctx.pool,
-      transports: {
-        in_app: new InAppNotificationTransport(ctx.pool),
-        email: new EmailNotificationTransport(ctx.pool, send),
-      },
-    })
-  ).toMatchObject({ delivered: 2, failed: 0 });
-  expect(send).toHaveBeenCalledTimes(2);
-  const notices = (
-    await ctx.pool.query(
-      "SELECT * FROM in_app_notifications WHERE type='system.service_outage' ORDER BY created_at"
-    )
-  ).rows;
-  expect(notices).toHaveLength(2);
-  expect(
-    notices.every(
-      (n) =>
-        n.profile_id === null &&
-        n.recipient_user_id === 'ops-admin' &&
-        n.operating_context === 'staff' &&
-        n.link_route === '/admin'
-    )
-  ).toBe(true);
-  expect(notices.map((n) => n.params.alertStatus).sort()).toEqual(['firing', 'resolved']);
-  expect(
-    notices.find((n) => n.params.alertStatus === 'firing').localized_content.fa.body
-  ).toContain('اختلال');
-  expect(
-    notices.find((n) => n.params.alertStatus === 'resolved').localized_content.en.body
-  ).toContain('Resolved');
-  await ctx.pool.query('UPDATE in_app_notifications SET is_read=true');
-  const snapshot = JSON.stringify(
-    (await ctx.pool.query('SELECT * FROM in_app_notifications ORDER BY id')).rows
-  );
-  expect((await request(input)).status).toBe(200);
-  expect(
-    await runOutboxPoll({
-      pool: ctx.pool,
-      transports: {
-        in_app: new InAppNotificationTransport(ctx.pool),
-        email: new EmailNotificationTransport(ctx.pool, send),
-      },
-    })
-  ).toMatchObject({ leased: 0 });
-  expect(send).toHaveBeenCalledTimes(2);
-  expect(
-    JSON.stringify((await ctx.pool.query('SELECT * FROM in_app_notifications ORDER BY id')).rows)
-  ).toBe(snapshot);
-});
+it.each(['EmailProviderDegraded', 'SmsProviderDegraded'])(
+  'records actual %s HTTP firing/recovery and delivers only private admin inbox/email occurrences',
+  async (alertname) => {
+    const input = envelope();
+    input.alerts[0]!.labels.alertname = alertname;
+    const response = await request(input);
+    expect(response.status).toBe(200);
+    const first = (await response.json()) as { receipts: { id: string; inserted: boolean }[] };
+    expect(first.receipts).toHaveLength(1);
+    expect(first.receipts[0]!.inserted).toBe(true);
+    const repeat = await request(input);
+    expect(repeat.status).toBe(200);
+    expect(await repeat.json()).toEqual({
+      receipts: [{ id: first.receipts[0]!.id, inserted: false }],
+    });
+    input.alerts[0]!.status = 'resolved';
+    expect((await request(input)).status).toBe(200);
+    const events = (
+      await ctx.pool.query(
+        "SELECT * FROM notification_outbox WHERE event_key='system.service_outage' ORDER BY created_at,id"
+      )
+    ).rows;
+    expect(events).toHaveLength(2);
+    expect(events.map((e) => e.user_id)).toEqual(['ops-admin', 'ops-admin']);
+    expect(
+      events.every(
+        (e) => e.profile_id === null && JSON.stringify(e.channels) === '["in_app","email"]'
+      )
+    ).toBe(true);
+    expect(JSON.stringify(events.map((e) => e.payload))).not.toMatch(
+      /DO_NOT_COPY|unsafe\.example|generatorURL|annotations/
+    );
+    const send = vi.fn<typeof fetch>(
+      async () => new Response(JSON.stringify({ id: 'provider-' + randomUUID() }), { status: 200 })
+    );
+    expect(
+      await runOutboxPoll({
+        pool: ctx.pool,
+        transports: {
+          in_app: new InAppNotificationTransport(ctx.pool),
+          email: new EmailNotificationTransport(ctx.pool, send),
+        },
+      })
+    ).toMatchObject({ delivered: 2, failed: 0 });
+    expect(send).toHaveBeenCalledTimes(2);
+    const notices = (
+      await ctx.pool.query(
+        "SELECT * FROM in_app_notifications WHERE type='system.service_outage' ORDER BY created_at"
+      )
+    ).rows;
+    expect(notices).toHaveLength(2);
+    expect(
+      notices.every(
+        (n) =>
+          n.profile_id === null &&
+          n.recipient_user_id === 'ops-admin' &&
+          n.operating_context === 'staff' &&
+          n.link_route === '/admin'
+      )
+    ).toBe(true);
+    expect(notices.map((n) => n.params.alertStatus).sort()).toEqual(['firing', 'resolved']);
+    expect(
+      notices.find((n) => n.params.alertStatus === 'firing').localized_content.fa.body
+    ).toContain('اختلال');
+    expect(
+      notices.find((n) => n.params.alertStatus === 'resolved').localized_content.en.body
+    ).toContain('Resolved');
+    await ctx.pool.query('UPDATE in_app_notifications SET is_read=true');
+    const snapshot = JSON.stringify(
+      (await ctx.pool.query('SELECT * FROM in_app_notifications ORDER BY id')).rows
+    );
+    expect((await request(input)).status).toBe(200);
+    expect(
+      await runOutboxPoll({
+        pool: ctx.pool,
+        transports: {
+          in_app: new InAppNotificationTransport(ctx.pool),
+          email: new EmailNotificationTransport(ctx.pool, send),
+        },
+      })
+    ).toMatchObject({ leased: 0 });
+    expect(send).toHaveBeenCalledTimes(2);
+    expect(
+      JSON.stringify((await ctx.pool.query('SELECT * FROM in_app_notifications ORDER BY id')).rows)
+    ).toBe(snapshot);
+  }
+);
 it.each(['raise', 'suppress'])(
   'rolls receipt and every recipient intent back when a job insert is %s',
   async (failure) => {

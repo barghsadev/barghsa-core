@@ -8,6 +8,8 @@ import {
   notificationsQueueDepth,
   notificationsDeadLetterCount,
   providerEmailHealth,
+  providerSmsHealth,
+  providerSmsCreditLow,
 } from './worker-metrics.js';
 
 /**
@@ -26,6 +28,7 @@ function makePool(
     deadLetter?: number;
     /** Provider health rows: [{ id, health }]. */
     providerHealth?: Array<{ id: string; health: number }>;
+    smsHealth?: Array<{ id: string; health: number }>;
   } = {}
 ): any {
   return {
@@ -42,6 +45,9 @@ function makePool(
       if (sql.includes('email_provider_configs')) {
         return { rows: overrides.providerHealth ?? [] };
       }
+      if (sql.includes('sms_provider_configs') && !sql.includes('low_credit_alert_active')) {
+        return { rows: overrides.smsHealth ?? [] };
+      }
       return { rows: [] };
     },
   };
@@ -55,6 +61,8 @@ describe('worker notification metrics', () => {
     notificationsDeadLetterCount.reset();
     notificationsDeliveryAttempts.reset();
     providerEmailHealth.reset();
+    providerSmsHealth.reset();
+    providerSmsCreditLow.reset();
   });
 
   it('recordDeliveryAttempt increments the labelled attempts counter', async () => {
@@ -108,5 +116,18 @@ describe('worker notification metrics', () => {
     // HELP/TYPE header lines exist for a registered metric; assert no label
     // series was emitted (no provider_id= rows).
     expect(text).not.toMatch(/provider_email_health\{provider_id=/);
+  });
+
+  it('reports SMS degradation and removes stale health series after replacement', async () => {
+    await collectNotificationGauges(makePool({ smsHealth: [{ id: 'sms-paused', health: 0 }] }));
+    expect(await exportWorkerMetrics()).toContain(
+      'provider_sms_health{provider_id="sms-paused"} 0'
+    );
+    await collectNotificationGauges(
+      makePool({ smsHealth: [{ id: 'sms-replacement', health: 1 }] })
+    );
+    const text = await exportWorkerMetrics();
+    expect(text).toContain('provider_sms_health{provider_id="sms-replacement"} 1');
+    expect(text).not.toContain('provider_sms_health{provider_id="sms-paused"}');
   });
 });

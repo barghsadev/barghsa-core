@@ -5,6 +5,7 @@ import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 const labels: Record<string, string> = {
   EmailProviderDegraded: 'اختلال ارسال ایمیل / Email delivery unavailable',
+  SmsProviderDegraded: 'اختلال ارسال پیامک / SMS delivery unavailable',
   SmsProviderLowCredit: 'اعتبار پیامک پایین است / SMS credit is low',
   NotificationDeadLettersPending:
     'اعلان‌های ناموفق نیازمند بررسی هستند / Notification failures need triage',
@@ -145,9 +146,12 @@ export async function publishOperationsAlerts(pool: Pool, alerts: Alert[]) {
             ? 'بازیابی مشاهده شد / Recovery observed'
             : 'هنوز مشخص نیست / Not yet estimated',
       };
-      const outage = ['EmailProviderDegraded', 'AiModelCircuitOpen', 'WorkerUnavailable'].includes(
-        alert.name
-      );
+      const outage = [
+        'EmailProviderDegraded',
+        'SmsProviderDegraded',
+        'AiModelCircuitOpen',
+        'WorkerUnavailable',
+      ].includes(alert.name);
       const eventKey = outage ? 'system.service_outage' : 'admin.operations_alert';
       const channels = outage ? (['in_app', 'email'] as const) : (['in_app'] as const);
       for (const admin of admins.rows) {

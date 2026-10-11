@@ -349,5 +349,69 @@
         'alert_rule_test':
           [{ 'eval_time': '30m', 'alertname': 'SmsProviderLowCredit', 'exp_alerts': [] }],
       },
+      {
+        'name': 'SMS circuit alert preserves replica disagreement and clears on recovery',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'provider_sms_health{job="worker",environment="staging",database="core",provider_id="sms-a",instance="a",pod="a"}',
+              'values': '1 1 1 1',
+            },
+            {
+              'series': 'provider_sms_health{job="worker",environment="staging",database="core",provider_id="sms-a",instance="b",pod="b"}',
+              'values': '1 0 0 1',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'SmsProviderDegraded', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'SmsProviderDegraded',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'provider_id': 'sms-a',
+                        'severity': 'warning',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'SMS provider circuit is open',
+                        'description': 'Provider sms-a stopped sending after provider failures. Inspect its configuration, health and delivery history; a configuration pause requires a tested replacement.',
+                      },
+                  },
+                ],
+            },
+            {
+              'eval_time': '2m',
+              'alertname': 'SmsProviderDegraded',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'worker',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'provider_id': 'sms-a',
+                        'severity': 'warning',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'SMS provider circuit is open',
+                        'description': 'Provider sms-a stopped sending after provider failures. Inspect its configuration, health and delivery history; a configuration pause requires a tested replacement.',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '3m', 'alertname': 'SmsProviderDegraded', 'exp_alerts': [] },
+          ],
+      },
     ],
 }

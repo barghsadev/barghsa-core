@@ -63,6 +63,13 @@ export const providerEmailHealth = new Gauge({
   registers: [registry],
 });
 
+export const providerSmsHealth = new Gauge({
+  name: 'provider_sms_health',
+  help: 'Active SMS provider circuit breaker health: 1=healthy, 0=tripped/degraded',
+  labelNames: ['provider_id'] as const,
+  registers: [registry],
+});
+
 export const providerSmsCreditLow = new Gauge({
   name: 'provider_sms_credit_low',
   help: 'Active verified SMS provider credit state: 1=below configured threshold, 0=not low',
@@ -119,11 +126,20 @@ export async function collectNotificationGauges(
   // so the /metrics endpoint reflects the same state the send path enforces.
   const healthRes = await pool.query(
     `SELECT id, CASE WHEN degraded THEN 0 ELSE 1 END AS health
-       FROM email_provider_configs`
+       FROM email_provider_configs WHERE status='active'`
   );
   providerEmailHealth.reset();
   for (const row of healthRes.rows as Array<{ id: string; health: number }>) {
     providerEmailHealth.set({ provider_id: row.id }, Number(row.health));
+  }
+
+  const smsHealthRes = await pool.query(
+    `SELECT id, CASE WHEN degraded THEN 0 ELSE 1 END AS health
+       FROM sms_provider_configs WHERE status='active'`
+  );
+  providerSmsHealth.reset();
+  for (const row of smsHealthRes.rows as Array<{ id: string; health: number }>) {
+    providerSmsHealth.set({ provider_id: row.id }, Number(row.health));
   }
 
   const creditRes = await pool.query(
