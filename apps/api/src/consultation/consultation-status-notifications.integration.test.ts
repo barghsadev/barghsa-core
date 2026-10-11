@@ -87,6 +87,35 @@ const notices = async (f: Awaited<ReturnType<typeof fixture>>, recipient: string
       [f.profile, recipient]
     )
   ).rows;
+async function expectInformationalDelivery(
+  f: Awaited<ReturnType<typeof fixture>>,
+  recipients: string[]
+) {
+  const rows = (
+    await http.pool.query(
+      `SELECT ob.user_id,ob.channels,ob.status,j.status AS job_status,j.provider_ref,n.id AS notice_id,
+      n.operating_context,n.profile_id,h.status AS history_status,h.provider_ref AS history_ref
+     FROM notification_outbox ob JOIN notification_job j ON j.outbox_id=ob.id
+     JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+     JOIN notification_delivery_log h ON h.notification_id=ob.id
+     WHERE ob.profile_id=$1 AND ob.event_key='general'`,
+      [f.profile]
+    )
+  ).rows;
+  expect(rows.map((r) => r.user_id).sort()).toEqual([...recipients].sort());
+  for (const row of rows) {
+    expect(row).toMatchObject({
+      profile_id: f.profile,
+      channels: ['in_app'],
+      status: 'delivered',
+      job_status: 'done',
+      operating_context: 'customer',
+      history_status: 'delivered',
+    });
+    expect(row.provider_ref).toBe(row.notice_id);
+    expect(row.history_ref).toBe(row.notice_id);
+  }
+}
 it('keeps repeated states as separate history occurrences and serializes duplicate delivery without rewriting read state', async () => {
   const f = await fixture();
   const ids = [
@@ -96,11 +125,12 @@ it('keeps repeated states as separate history occurrences and serializes duplica
   ];
   const outbox = (
     await http.pool.query(
-      'SELECT * FROM notification_outbox WHERE profile_id=$1 ORDER BY created_at,id',
+      "SELECT * FROM notification_outbox WHERE profile_id=$1 AND event_key='order.status_changed' ORDER BY created_at,id",
       [f.profile]
     )
   ).rows;
   expect(outbox).toHaveLength(3);
+  await expectInformationalDelivery(f, [f.manager, f.manager, f.manager]);
   expect(outbox.map((r) => r.idempotency_key)).toEqual(
     ids.map((id) => `order.status_changed:consultation:${f.id}:${id}:${f.owner}`)
   );
@@ -148,11 +178,12 @@ it('keeps repeated states as separate history occurrences and serializes duplica
   expect(
     (
       await http.pool.query(
-        'SELECT count(*)::int AS count FROM notification_outbox WHERE profile_id=$1',
+        "SELECT count(*)::int AS count FROM notification_outbox WHERE profile_id=$1 AND event_key='order.status_changed'",
         [f.profile]
       )
     ).rows[0].count
   ).toBe(3);
+  await expectInformationalDelivery(f, [f.manager, f.manager, f.manager]);
 });
 it.each(['revoked', 'disabled'] as const)(
   'keeps the owner delivery private and omits a %s original manager submitter',
@@ -175,7 +206,7 @@ it.each(['revoked', 'disabled'] as const)(
     expect(
       (
         await http.pool.query(
-          'SELECT user_id,channels FROM notification_outbox WHERE profile_id=$1',
+          "SELECT user_id,channels FROM notification_outbox WHERE profile_id=$1 AND event_key='order.status_changed'",
           [f.profile]
         )
       ).rows
@@ -183,6 +214,7 @@ it.each(['revoked', 'disabled'] as const)(
       { user_id: f.owner, channels: ['in_app', 'email'] },
       { user_id: f.owner, channels: ['in_app', 'email'] },
     ]);
+    await expectInformationalDelivery(f, [f.manager]);
   }
 );
 it('resolves the current profile owner instead of retaining an earlier owner recipient', async () => {
@@ -193,11 +225,13 @@ it('resolves the current profile owner instead of retaining an earlier owner rec
   expect(await notices(f, f.next)).toHaveLength(1);
   expect(
     (
-      await http.pool.query('SELECT user_id FROM notification_outbox WHERE profile_id=$1', [
-        f.profile,
-      ])
+      await http.pool.query(
+        "SELECT user_id FROM notification_outbox WHERE profile_id=$1 AND event_key='order.status_changed'",
+        [f.profile]
+      )
     ).rows
   ).toEqual([{ user_id: f.next }]);
+  await expectInformationalDelivery(f, [f.manager]);
 });
 it('keeps a same-state informational update in the inbox without inventing a status transition', async () => {
   const f = await fixture();
@@ -206,11 +240,12 @@ it('keeps a same-state informational update in the inbox without inventing a sta
   expect(
     (
       await http.pool.query(
-        'SELECT count(*)::int AS count FROM notification_outbox WHERE profile_id=$1',
+        "SELECT count(*)::int AS count FROM notification_outbox WHERE profile_id=$1 AND event_key='order.status_changed'",
         [f.profile]
       )
     ).rows[0].count
   ).toBe(1);
+  await expectInformationalDelivery(f, [f.manager, f.manager, f.owner]);
   expect((await notices(f, f.owner)).map((r) => r.type)).toEqual([
     'order.status_changed',
     'general',

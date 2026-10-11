@@ -283,6 +283,7 @@ export class TicketsService {
           recipients.push({ userId: user.user_id, staff: true });
       }
     }
+    const informationalOccurrence = occurrenceId ?? (event === 'created' ? 'created' : uuidv7());
     for (const { userId, staff } of recipients) {
       const localizedContent = Object.fromEntries(
         (['fa', 'en'] as const).map((locale) => [
@@ -321,7 +322,14 @@ export class TicketsService {
           },
           client
         );
-      } else await this.notifications.create(params, client);
+      } else
+        await this.notifications.create(
+          {
+            ...params,
+            businessOccurrenceKey: `ticket-note:${ticket.id}:${event}:${informationalOccurrence}`,
+          },
+          client
+        );
     }
   }
 

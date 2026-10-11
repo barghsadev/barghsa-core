@@ -1,6 +1,7 @@
 import { notifyElectricityStatus } from '../electricity/electricity-status-notifications.js';
 import { notifyCancellationRequest } from './contract-cancellation-request-notifications.js';
 import { contractText } from '@barghsa/i18n/contracts';
+import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import {
@@ -145,6 +146,7 @@ export async function notifyContractReview(
         evidence.rows[0]!.occurred_at.toISOString();
     }
   }
+  const informationalOccurrence = uuidv7();
   for (const { userId, operatingContext } of recipients) {
     const params = {
       userId,
@@ -192,6 +194,13 @@ export async function notifyContractReview(
         },
         client
       );
-    else await notifications.create(params, client);
+    else
+      await notifications.create(
+        {
+          ...params,
+          businessOccurrenceKey: `contract-note:${id}:${event}:${informationalOccurrence}`,
+        },
+        client
+      );
   }
 }

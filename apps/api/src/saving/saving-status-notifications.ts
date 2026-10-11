@@ -35,7 +35,10 @@ export async function notifySavingStatus(
   };
   const notifications = new NotificationsService();
   const informational = async (userId: string) => {
-    const notice = await notifications.create({ ...params, userId }, client);
+    const notice = await notifications.create(
+      { ...params, userId, businessOccurrenceKey: `saving-note:${id}:${uuidv7()}` },
+      client
+    );
     if (
       !(
         await client.query(

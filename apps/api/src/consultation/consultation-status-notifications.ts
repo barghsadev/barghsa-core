@@ -36,7 +36,17 @@ export async function notifyConsultationStatus(
   };
   const notifications = new NotificationsService();
   const informational = async (userId: string) => {
-    const notice = await notifications.create({ ...params, userId }, client);
+    let notice;
+    try {
+      notice = await notifications.create(
+        { ...params, userId, businessOccurrenceKey: `consultation-note:${request.id}:${event.id}` },
+        client
+      );
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Mandatory staff inbox notice was not stored')
+        throw new Error('Private consultation inbox was not stored', { cause: error });
+      throw error;
+    }
     const stored = await client.query(
       "SELECT id FROM in_app_notifications WHERE id=$1 AND recipient_user_id=$2 AND profile_id=$3 AND operating_context='customer'",
       [notice.id, userId, request.profile_id]

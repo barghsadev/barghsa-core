@@ -32,8 +32,12 @@ export async function notifySolarStatus(
     link: `/solar/requests/${id}`,
   };
   const notifications = new NotificationsService();
+  const informationalOccurrence = uuidv7();
   const informational = async (userId: string) => {
-    const notice = await notifications.create({ ...params, userId }, client);
+    const notice = await notifications.create(
+      { ...params, userId, businessOccurrenceKey: `solar-note:${id}:${informationalOccurrence}` },
+      client
+    );
     if (
       !(
         await client.query(

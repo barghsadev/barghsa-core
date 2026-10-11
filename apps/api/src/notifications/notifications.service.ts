@@ -48,7 +48,7 @@ export interface CreateNotificationParams {
   localizedContent?: Record<'fa' | 'en', { title: string; body: string }>;
   body?: string;
   link?: string;
-  /** Stable private staff occurrence, supplied only by an authorized business writer. */
+  /** Private occurrence, supplied only by an authorized transactional business writer. */
   businessOccurrenceKey?: string;
 }
 
@@ -115,13 +115,13 @@ export class NotificationsService {
       if (
         !transaction ||
         delivery ||
-        params.operatingContext !== 'staff' ||
-        params.profileId ||
+        !['staff', 'customer'].includes(params.operatingContext) ||
+        (params.operatingContext === 'staff' && params.profileId) ||
         params.type !== 'general' ||
         !params.businessOccurrenceKey.trim()
       )
-        throw new Error('Durable staff notice requires its private business transaction');
-      return this.createDurableStaffNotice(params, transaction);
+        throw new Error('Durable notice requires its private business transaction');
+      return this.createDurableNotice(params, transaction);
     }
     const pool = transaction ?? getDbPool();
     const id = uuidv7();
@@ -177,12 +177,12 @@ export class NotificationsService {
     };
   }
 
-  private async createDurableStaffNotice(
+  private async createDurableNotice(
     params: CreateNotificationParams,
     transaction: { query(sql: string, values?: unknown[]): Promise<unknown> }
   ): Promise<NotificationResult> {
     const { businessOccurrenceKey, ...noticeParams } = params;
-    const key = `staff-notice:${businessOccurrenceKey}:${params.userId}`;
+    const key = `${params.operatingContext}-notice:${businessOccurrenceKey}:${params.userId}`;
     const outboxId = uuidv7();
     const payload = {
       ...noticeParams,
@@ -190,31 +190,38 @@ export class NotificationsService {
       link_route: notificationLink(params.link),
     };
     const inserted = (await transaction.query(
-      `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
-       VALUES($1,$2,'general',$3,ARRAY['in_app'],'delivered',$4,5,$5)
+      `INSERT INTO notification_outbox(id,user_id,profile_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$6,'general',$3,ARRAY['in_app'],'delivered',$4,5,$5)
        ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
-      [outboxId, params.userId, payload, key, correlationIdStorage.getStore() ?? null]
+      [
+        outboxId,
+        params.userId,
+        payload,
+        key,
+        correlationIdStorage.getStore() ?? null,
+        params.profileId ?? null,
+      ]
     )) as { rows: { id: string }[] };
     if (!inserted.rows[0]) {
       const existing = (await transaction.query(
         `SELECT n.id,n.is_read,n.read_at,n.created_at FROM notification_outbox ob
          JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
-         WHERE ob.idempotency_key=$1 AND ob.user_id=$2 AND ob.profile_id IS NULL
+         WHERE ob.idempotency_key=$1 AND ob.user_id=$2 AND ob.profile_id IS NOT DISTINCT FROM $4::uuid
           AND ob.event_key='general' AND ob.payload=$3::jsonb AND ob.channels=ARRAY['in_app']
-          AND ob.status='delivered' AND n.recipient_user_id=ob.user_id AND n.profile_id IS NULL
-          AND n.operating_context='staff' AND n.type='general'
+          AND ob.status='delivered' AND n.recipient_user_id=ob.user_id AND n.profile_id IS NOT DISTINCT FROM ob.profile_id
+          AND n.operating_context=$5 AND n.type='general'
           AND EXISTS(SELECT 1 FROM notification_job j WHERE j.outbox_id=ob.id AND j.channel='in_app'
             AND j.status='done' AND j.provider_ref=n.id::text)
           AND EXISTS(SELECT 1 FROM notification_delivery_log h WHERE h.notification_id=ob.id AND h.channel='in_app'
             AND h.status='delivered' AND h.attempt_number=1 AND h.provider_ref=n.id::text)`,
-        [key, params.userId, payload]
+        [key, params.userId, payload, params.profileId ?? null, params.operatingContext]
       )) as { rows: { id: string; is_read: boolean; read_at: Date | null; created_at: Date }[] };
       const saved = existing.rows[0];
       if (!saved) throw new Error('Staff notice occurrence conflicts with saved delivery');
       return {
         id: saved.id,
         userId: params.userId,
-        profileId: null,
+        profileId: params.profileId ?? null,
         type: 'general',
         title: params.title,
         body: params.body ?? null,
@@ -228,8 +235,14 @@ export class NotificationsService {
     const notice = await this.create(noticeParams, transaction);
     const bound = (await transaction.query(
       `UPDATE in_app_notifications SET delivery_key=$2 WHERE id=$1 AND recipient_user_id=$3
-       AND profile_id IS NULL AND operating_context='staff' AND type='general'`,
-      [notice.id, `outbox:${outboxId}`, params.userId]
+       AND profile_id IS NOT DISTINCT FROM $4::uuid AND operating_context=$5 AND type='general'`,
+      [
+        notice.id,
+        `outbox:${outboxId}`,
+        params.userId,
+        params.profileId ?? null,
+        params.operatingContext,
+      ]
     )) as { rowCount: number };
     if (bound.rowCount !== 1) throw new Error('Mandatory staff inbox notice was not stored');
     const jobs = (await transaction.query(

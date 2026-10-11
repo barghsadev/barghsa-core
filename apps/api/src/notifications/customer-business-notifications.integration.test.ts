@@ -95,8 +95,37 @@ it('stores private staff outbox/job/history once and preserves read state on com
   expect(await snapshot(key)).toEqual(read);
   await expect(service.create(input)).rejects.toThrow('private business transaction');
   await expect(
-    transaction((c) => service.create({ ...input, operatingContext: 'customer' }, c))
+    transaction((c) => service.create({ ...input, operatingContext: 'account' }, c))
   ).rejects.toThrow('private business transaction');
+});
+
+it('keeps generic customer envelopes scoped to their explicit profile and recipient', async () => {
+  const input = {
+    ...staffNotice(),
+    operatingContext: 'customer' as const,
+    profileId: profile,
+    businessOccurrenceKey: 'customer-note:' + randomUUID(),
+    link: '/consultations/' + randomUUID(),
+  };
+  const created = await transaction((c) => service.create(input, c));
+  const key = `customer-notice:${input.businessOccurrenceKey}:${input.userId}`;
+  const saved = await snapshot(key);
+  expect(saved.outbox[0]).toMatchObject({
+    profile_id: profile,
+    user_id: input.userId,
+    channels: ['in_app'],
+  });
+  expect(saved.inbox[0]).toMatchObject({
+    profile_id: profile,
+    recipient_user_id: input.userId,
+    operating_context: 'customer',
+  });
+  expect((await transaction((c) => service.create(input, c))).id).toBe(created.id);
+  expect(await snapshot(key)).toEqual(saved);
+  await expect(
+    transaction((c) => service.create({ ...input, profileId: foreignProfile }, c))
+  ).rejects.toThrow('conflicts');
+  expect(await snapshot(key)).toEqual(saved);
 });
 
 it.each([
