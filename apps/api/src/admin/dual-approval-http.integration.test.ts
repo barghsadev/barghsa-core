@@ -752,6 +752,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
         expect(notice.profile_id).toBeNull();
         expect(notice.localized_content.en.body).toContain(reason);
         expect(notice.localized_content.fa.body).toContain(reason);
+        await expectStaffDelivery(approval.id, 'emergency', notice.recipient_user_id);
       }
       const after = await receiptWriteSnapshot(kind, other.id, other.profile);
       expect({ ...after, counts: untouched.counts }).toEqual(untouched);
@@ -1086,6 +1087,37 @@ it('rejects the receipt and its approval together and preserves a generic reject
   }
 });
 
+async function expectStaffDelivery(requestId: string, phase: string, userId: string) {
+  const key = `staff-notice:approval:${requestId}:${phase}:${userId}`;
+  const rows = (
+    await http.pool.query(
+      `SELECT ob.profile_id,ob.user_id,ob.event_key,ob.channels,ob.status,ob.payload,
+      j.status AS job_status,j.channel,j.attempts,j.provider_ref,
+      n.id AS notice_id,n.operating_context,h.status AS history_status,h.provider_ref AS history_ref
+     FROM notification_outbox ob JOIN notification_job j ON j.outbox_id=ob.id
+     JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+     JOIN notification_delivery_log h ON h.notification_id=ob.id WHERE ob.idempotency_key=$1`,
+      [key]
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  expect(rows[0]).toMatchObject({
+    profile_id: null,
+    user_id: userId,
+    event_key: 'general',
+    channels: ['in_app'],
+    status: 'delivered',
+    job_status: 'done',
+    channel: 'in_app',
+    attempts: 1,
+    operating_context: 'staff',
+    history_status: 'delivered',
+    payload: { operatingContext: 'staff', link_route: '/admin/approval-requests' },
+  });
+  expect(rows[0].provider_ref).toBe(rows[0].notice_id);
+  expect(rows[0].history_ref).toBe(rows[0].notice_id);
+}
+
 it('commits bilingual private approval notices with the decision and rolls back on notice failure', async () => {
   await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW()');
   const id = await seed();
@@ -1104,6 +1136,7 @@ it('commits bilingual private approval notices with the decision and rolls back 
     link_route: '/admin/approval-requests',
     localized_content: { fa: { title: 'درخواست تأیید شد' }, en: { title: 'Request approved' } },
   });
+  await expectStaffDelivery(id, 'approve', 'initiator');
   expect((await decide('reviewer', id)).status).toBe(409);
   const pending = await seed();
   await http.pool
@@ -1226,6 +1259,7 @@ it('notifies eligible reviewers exactly once for receipt-created approvals and r
       localized_content: { en: { title: 'Financial approval requested' } },
     });
     expect(notices[0].localized_content.fa.title).toBe('درخواست تأیید دومرحله‌ای جدید');
+    await expectStaffDelivery(requestId, 'requested', 'reviewer');
     if (kind === 'wallet') {
       expect(requests[0].amount_irr).toBe('9007199254740993');
       expect(notices[0].localized_content.en.body).toContain('9,007,199,254,740,993 IRR');

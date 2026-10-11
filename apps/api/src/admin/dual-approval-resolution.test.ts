@@ -8,7 +8,14 @@ import {
 } from './dual-approval-resolution.js';
 
 function mockClient() {
-  const query = vi.fn().mockResolvedValue({ rows: [] });
+  const query = vi.fn(async (sql: string, values?: unknown[]) => ({
+    rows:
+      sql.includes('INSERT INTO notification_outbox') ||
+      sql.includes('INSERT INTO in_app_notifications')
+        ? [{ id: values?.[0] }]
+        : [],
+    rowCount: 1,
+  }));
   return { query };
 }
 

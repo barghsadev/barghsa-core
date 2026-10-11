@@ -48,6 +48,8 @@ export interface CreateNotificationParams {
   localizedContent?: Record<'fa' | 'en', { title: string; body: string }>;
   body?: string;
   link?: string;
+  /** Stable private staff occurrence, supplied only by an authorized business writer. */
+  businessOccurrenceKey?: string;
 }
 
 export interface NotificationResult {
@@ -109,6 +111,18 @@ export class NotificationsService {
         | 'payment.wallet_topup_failed';
     }
   ): Promise<NotificationResult> {
+    if (params.businessOccurrenceKey !== undefined) {
+      if (
+        !transaction ||
+        delivery ||
+        params.operatingContext !== 'staff' ||
+        params.profileId ||
+        params.type !== 'general' ||
+        !params.businessOccurrenceKey.trim()
+      )
+        throw new Error('Durable staff notice requires its private business transaction');
+      return this.createDurableStaffNotice(params, transaction);
+    }
     const pool = transaction ?? getDbPool();
     const id = uuidv7();
     const now = new Date();
@@ -161,6 +175,76 @@ export class NotificationsService {
       createdAt: now,
       updatedAt: now,
     };
+  }
+
+  private async createDurableStaffNotice(
+    params: CreateNotificationParams,
+    transaction: { query(sql: string, values?: unknown[]): Promise<unknown> }
+  ): Promise<NotificationResult> {
+    const { businessOccurrenceKey, ...noticeParams } = params;
+    const key = `staff-notice:${businessOccurrenceKey}:${params.userId}`;
+    const outboxId = uuidv7();
+    const payload = {
+      ...noticeParams,
+      link: notificationLink(params.link),
+      link_route: notificationLink(params.link),
+    };
+    const inserted = (await transaction.query(
+      `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,'general',$3,ARRAY['in_app'],'delivered',$4,5,$5)
+       ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
+      [outboxId, params.userId, payload, key, correlationIdStorage.getStore() ?? null]
+    )) as { rows: { id: string }[] };
+    if (!inserted.rows[0]) {
+      const existing = (await transaction.query(
+        `SELECT n.id,n.is_read,n.read_at,n.created_at FROM notification_outbox ob
+         JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
+         WHERE ob.idempotency_key=$1 AND ob.user_id=$2 AND ob.profile_id IS NULL
+          AND ob.event_key='general' AND ob.payload=$3::jsonb AND ob.channels=ARRAY['in_app']
+          AND ob.status='delivered' AND n.recipient_user_id=ob.user_id AND n.profile_id IS NULL
+          AND n.operating_context='staff' AND n.type='general'
+          AND EXISTS(SELECT 1 FROM notification_job j WHERE j.outbox_id=ob.id AND j.channel='in_app'
+            AND j.status='done' AND j.provider_ref=n.id::text)
+          AND EXISTS(SELECT 1 FROM notification_delivery_log h WHERE h.notification_id=ob.id AND h.channel='in_app'
+            AND h.status='delivered' AND h.attempt_number=1 AND h.provider_ref=n.id::text)`,
+        [key, params.userId, payload]
+      )) as { rows: { id: string; is_read: boolean; read_at: Date | null; created_at: Date }[] };
+      const saved = existing.rows[0];
+      if (!saved) throw new Error('Staff notice occurrence conflicts with saved delivery');
+      return {
+        id: saved.id,
+        userId: params.userId,
+        profileId: null,
+        type: 'general',
+        title: params.title,
+        body: params.body ?? null,
+        link: payload.link,
+        read: saved.is_read,
+        readAt: saved.read_at,
+        createdAt: saved.created_at,
+        updatedAt: saved.created_at,
+      };
+    }
+    const notice = await this.create(noticeParams, transaction);
+    const bound = (await transaction.query(
+      `UPDATE in_app_notifications SET delivery_key=$2 WHERE id=$1 AND recipient_user_id=$3
+       AND profile_id IS NULL AND operating_context='staff' AND type='general'`,
+      [notice.id, `outbox:${outboxId}`, params.userId]
+    )) as { rowCount: number };
+    if (bound.rowCount !== 1) throw new Error('Mandatory staff inbox notice was not stored');
+    const jobs = (await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
+       VALUES($1,'in_app','done','urgent',5,1,$2,$3)`,
+      [outboxId, notice.id, payload]
+    )) as { rowCount: number };
+    if (jobs.rowCount !== 1) throw new Error('Staff notice delivery job was not stored');
+    const history = (await transaction.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+       VALUES($1,'in_app','delivered',1,$2)`,
+      [outboxId, notice.id]
+    )) as { rowCount: number };
+    if (history.rowCount !== 1) throw new Error('Staff notice delivery history was not stored');
+    return notice;
   }
 
   private async renderNativeInbox(

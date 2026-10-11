@@ -33,6 +33,105 @@ afterAll(async () => {
   await http?.close();
 });
 const service = new NotificationsService();
+function staffNotice() {
+  return {
+    userId: 'business-owner',
+    operatingContext: 'staff' as const,
+    type: 'general' as const,
+    businessOccurrenceKey: 'approval:' + randomUUID() + ':requested',
+    title: 'درخواست تأیید',
+    body: 'بررسی مالی',
+    localizedContent: {
+      fa: { title: 'درخواست تأیید', body: 'بررسی مالی' },
+      en: { title: 'Approval request', body: 'Financial review' },
+    },
+    link: '/admin/approval-requests',
+  };
+}
+it('stores private staff outbox/job/history once and preserves read state on competing replay', async () => {
+  const input = staffNotice();
+  const key = `staff-notice:${input.businessOccurrenceKey}:${input.userId}`;
+  const results = await Promise.all([
+    transaction((c) => service.create(input, c)),
+    transaction((c) => service.create(input, c)),
+  ]);
+  expect(results[0].id).toBe(results[1].id);
+  const before = await snapshot(key);
+  expect(before.outbox).toHaveLength(1);
+  expect(before.outbox[0]).toMatchObject({
+    profile_id: null,
+    user_id: input.userId,
+    event_key: 'general',
+    channels: ['in_app'],
+    status: 'delivered',
+  });
+  expect(before.inbox).toHaveLength(1);
+  expect(before.inbox[0]).toMatchObject({
+    profile_id: null,
+    recipient_user_id: input.userId,
+    operating_context: 'staff',
+    type: 'general',
+  });
+  expect(before.jobs).toHaveLength(1);
+  expect(before.jobs[0]).toMatchObject({
+    status: 'done',
+    channel: 'in_app',
+    provider_ref: results[0].id,
+    attempts: 1,
+  });
+  expect(before.logs).toHaveLength(1);
+  expect(before.logs[0]).toMatchObject({
+    status: 'delivered',
+    channel: 'in_app',
+    provider_ref: results[0].id,
+  });
+  await db.pool.query('UPDATE in_app_notifications SET is_read=true WHERE id=$1', [results[0].id]);
+  const read = await snapshot(key);
+  expect((await transaction((c) => service.create(input, c))).read).toBe(true);
+  expect(await snapshot(key)).toEqual(read);
+  await expect(
+    transaction((c) => service.create({ ...input, body: 'Changed' }, c))
+  ).rejects.toThrow('conflicts');
+  expect(await snapshot(key)).toEqual(read);
+  await expect(service.create(input)).rejects.toThrow('private business transaction');
+  await expect(
+    transaction((c) => service.create({ ...input, operatingContext: 'customer' }, c))
+  ).rejects.toThrow('private business transaction');
+});
+
+it.each([
+  'notification_outbox',
+  'in_app_notifications',
+  'notification_job',
+  'notification_delivery_log',
+])('rolls staff notice and business state back for suppressed %s writes', async (table) => {
+  const input = staffNotice();
+  const key = `staff-notice:${input.businessOccurrenceKey}:${input.userId}`;
+  const before = await snapshot(key);
+  const locale = (await db.pool.query("SELECT locale FROM users WHERE user_id='business-owner'"))
+    .rows[0].locale;
+  await db.pool
+    .query(`CREATE FUNCTION suppress_staff_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RETURN NULL; END $$;
+      CREATE TRIGGER suppress_staff_notice BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION suppress_staff_notice()`);
+  try {
+    await expect(
+      transaction(async (c) => {
+        await c.query("UPDATE users SET locale='en' WHERE user_id='business-owner'");
+        await service.create(input, c);
+      })
+    ).rejects.toThrow();
+  } finally {
+    await db.pool.query(
+      `DROP TRIGGER suppress_staff_notice ON ${table}; DROP FUNCTION suppress_staff_notice()`
+    );
+  }
+  expect(await snapshot(key)).toEqual(before);
+  expect(
+    (await db.pool.query("SELECT locale FROM users WHERE user_id='business-owner'")).rows[0].locale
+  ).toBe(locale);
+  await transaction((c) => service.create(input, c));
+  expect((await snapshot(key)).outbox).toHaveLength(1);
+});
 it('stores a distinct inbox-only awaiting-staff occurrence and preserves its original receipt on replay', async () => {
   const input = {
     ...params(),
@@ -94,8 +193,9 @@ async function transaction<T>(work: (client: PoolClient) => Promise<T>) {
   const client = await db.pool.connect();
   try {
     await client.query('BEGIN');
-    await work(client);
+    const result = await work(client);
     await client.query('COMMIT');
+    return result;
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;
