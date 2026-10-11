@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-09T11:43:26.167503+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T19:29:22.571058+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.2.0**. Next milestone: **v0.3.0**.
 
@@ -10,12 +10,12 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 581 | Accepted with unchanged source bindings. |
+| done | 583 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 49 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
-| blocked | 2 | Named owner or external prerequisite. |
+| blocked | 1 | Named owner or external prerequisite. |
 | superseded | 2 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish the only named external v0.3.0 prerequisite: approved verification-status SMS mappings and owned verified staff event-delivery evidence. Nineteen owner-policy-dependent tasks are accepted. Then accept v0.3.0 gates, prepare version/notes, deploy exact staging candidate and verify one Persian summary/grouped album before selecting v0.4.0.
+Accepted v0.3.0: push exact candidate, enqueue staging immediately and verify actual deployment plus one Persian summary/grouped album. Select v0.4.0 after confirmation. Live SMS provisioning remains the owner-deferred production operational gate.
 
-- `02-auth-users-admin.md#T-07.01.03`: Verification notification to user
 - `release-readiness#R-02.01`: Renew fulfillment and financial closure acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -302,7 +301,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-02.01` | partial | Recorded batch work | Renew fulfillment and financial closure acceptance |
+| `release-readiness#R-02.01` | done | Recorded batch work | Renew fulfillment and financial closure acceptance |
 | `release-readiness#R-02.02` | done | Recorded batch work | Verify staff operations and customer support for all services |
 | `02-auth-users-admin.md#T-05.01.01` | done | Earlier acceptance_verified | CRM users list page |
 | `02-auth-users-admin.md#T-05.01.02` | done | Earlier acceptance_verified | CRM filters and search |
@@ -325,7 +324,7 @@ Staff can fulfill, revise, reject, cancel, refund and close work for all four se
 | `02-auth-users-admin.md#T-06.01.02` | done | Earlier partial | Ticket list and detail view |
 | `02-auth-users-admin.md#T-06.01.03` | done | Earlier acceptance_verified | Staff ticket management |
 | `02-auth-users-admin.md#T-07.01.01` | done | Earlier partial | Verification mode setting |
-| `02-auth-users-admin.md#T-07.01.03` | blocked | Earlier partial | Verification notification to user |
+| `02-auth-users-admin.md#T-07.01.03` | done | Earlier partial | Verification notification to user |
 | `02-auth-users-admin.md#T-09.02.01` | done | Earlier acceptance_verified | Province CRUD |
 | `02-auth-users-admin.md#T-09.02.02` | done | Earlier acceptance_verified | City CRUD per province |
 | `02-auth-users-admin.md#T-09.03.01` | done | Earlier acceptance_verified | TOS editor |

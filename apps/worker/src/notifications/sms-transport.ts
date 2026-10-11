@@ -3,6 +3,7 @@ import { durableDelivery, readDeliveryReceipt } from './send-receipt.js';
 import {
   createSmsSender,
   prepareSmsMessage,
+  validSmsMessage,
   type DeliveryPool,
   type SmsMessage,
 } from '@barghsa/shared/notification-delivery';
@@ -41,7 +42,7 @@ export class SmsNotificationTransport implements INotificationTransport {
       if (Number(jobs.rows[0]!.attempts) > 0)
         throw new Error('Legacy SMS delivery requires reconciliation');
       const templates = await this.pool.query(
-        `SELECT id,version,variables FROM notification_templates
+        `SELECT id,version,variables,body_template FROM notification_templates
         WHERE event_key=$1 AND channel='sms' AND locale=$2 AND status='active' AND is_active=true`,
         [payload.eventKey, recipient.locale]
       );
@@ -62,7 +63,8 @@ export class SmsNotificationTransport implements INotificationTransport {
         payload.eventKey,
         names,
         payload.payload ?? {},
-        recipient.locale
+        recipient.locale,
+        typeof template.body_template === 'string' ? template.body_template : undefined
       );
       const result = await this.pool.query(
         `UPDATE notification_job SET delivery_payload=COALESCE(delivery_payload,$2::jsonb)
@@ -91,12 +93,7 @@ export class SmsNotificationTransport implements INotificationTransport {
       saved.profileId !== recipient.profileId ||
       saved.idempotencyKey !== payload.idempotencyKey ||
       message?.destination !== recipient.mobile ||
-      typeof message.providerId !== 'string' ||
-      typeof message.templateId !== 'string' ||
-      !Array.isArray(message.parameters) ||
-      message.parameters.some(
-        (item) => !item || typeof item.name !== 'string' || typeof item.value !== 'string'
-      )
+      !validSmsMessage(message)
     ) {
       throw new Error('SMS recipient or identity changed; delivery requires reconciliation');
     }

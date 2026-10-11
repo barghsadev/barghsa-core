@@ -2,19 +2,58 @@ import {
   SmsirConfigSchema,
   decryptProviderSecret,
   sendSmsirVerification,
+  sendSmsirText,
 } from '../auth-delivery/index.js';
-import { resolvePath } from '../notifications/template-engine.js';
+import { resolvePath, renderTemplate } from '../notifications/template-engine.js';
 import { PostgresRateLimiterStore } from '../rate-limit/index.js';
 import type { DeliveryPool } from './email.js';
 import { SmsCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
 import { isTransientProviderError } from './email-errors.js';
 import { DeliveryRejected, type DeliveryExecutor } from './execution.js';
 
-export interface SmsMessage {
+interface SmsRecipient {
   providerId: string;
   destination: string;
-  templateId: string;
-  parameters: Array<{ name: string; value: string }>;
+}
+
+export type SmsMessage = SmsRecipient &
+  (
+    | { mode?: undefined; templateId: string; parameters: Array<{ name: string; value: string }> }
+    | { mode: 'direct'; sender: string; text: string }
+  );
+
+export function validSmsMessage(value: unknown): value is SmsMessage {
+  if (!value || typeof value !== 'object') return false;
+  const message = value as Record<string, unknown>;
+  if (
+    typeof message.providerId !== 'string' ||
+    !message.providerId.trim() ||
+    typeof message.destination !== 'string' ||
+    !/^(?:\+98|0)9\d{9}$/.test(message.destination)
+  )
+    return false;
+  if (message.mode === 'direct')
+    return (
+      typeof message.sender === 'string' &&
+      /^\d+$/.test(message.sender) &&
+      Number.isSafeInteger(Number(message.sender)) &&
+      Number(message.sender) > 0 &&
+      typeof message.text === 'string' &&
+      !!message.text.trim() &&
+      message.text.length <= 1600
+    );
+  return (
+    message.mode === undefined &&
+    typeof message.templateId === 'string' &&
+    /^\d+$/.test(message.templateId) &&
+    Number.isSafeInteger(Number(message.templateId)) &&
+    Number(message.templateId) > 0 &&
+    Array.isArray(message.parameters) &&
+    message.parameters.length > 0 &&
+    message.parameters.every(
+      (item) => item && typeof item.name === 'string' && typeof item.value === 'string'
+    )
+  );
 }
 
 export async function prepareSmsMessage(
@@ -23,7 +62,8 @@ export async function prepareSmsMessage(
   eventKey: string,
   allowList: string[],
   data: Record<string, unknown>,
-  locale?: 'fa' | 'en'
+  locale?: 'fa' | 'en',
+  bodyTemplate?: string
 ): Promise<SmsMessage> {
   if (!/^(?:\+98|0)9\d{9}$/.test(destination))
     throw new DeliveryRejected('Invalid SMS destination');
@@ -36,6 +76,20 @@ export async function prepareSmsMessage(
     throw new Error('SMS provider unavailable');
   const config = SmsirConfigSchema.parse(rows[0]!.config);
   const candidates = config.template_mappings?.filter((item) => item.event_key === eventKey) ?? [];
+  if (!candidates.length && typeof bodyTemplate === 'string') {
+    const rendered = renderTemplate(bodyTemplate, allowList, { data, escapeValues: false });
+    if (rendered.missing.length || rendered.unknown.length)
+      throw new DeliveryRejected('SMS template data incomplete');
+    const message: SmsMessage = {
+      providerId: rows[0]!.id,
+      destination,
+      mode: 'direct',
+      sender: config.sender,
+      text: rendered.output,
+    };
+    if (!validSmsMessage(message)) throw new DeliveryRejected('Invalid direct SMS');
+    return message;
+  }
   const localized = locale ? candidates.filter((item) => item.locale === locale) : [];
   const mappings = localized.length
     ? localized
@@ -69,14 +123,7 @@ export function createSmsSender(
 ) {
   return async (message: SmsMessage, signal?: AbortSignal): Promise<string> => {
     signal?.throwIfAborted();
-    if (
-      !/^(?:\+98|0)9\d{9}$/.test(message.destination) ||
-      !message.parameters.length ||
-      !/^\d+$/.test(message.templateId) ||
-      !Number.isSafeInteger(Number(message.templateId)) ||
-      Number(message.templateId) <= 0
-    )
-      throw new DeliveryRejected('Invalid SMS message');
+    if (!validSmsMessage(message)) throw new DeliveryRejected('Invalid SMS message');
     const rows = (
       await pool.query(
         "SELECT id,transport,config FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'"
@@ -85,6 +132,8 @@ export function createSmsSender(
     if (rows.length !== 1 || rows[0]!.id !== message.providerId || rows[0]!.transport !== 'smsir')
       throw new Error('SMS provider changed; delivery requires reconciliation');
     const config = SmsirConfigSchema.parse(rows[0]!.config);
+    if (message.mode === 'direct' && message.sender !== config.sender)
+      throw new Error('SMS sender changed; delivery requires reconciliation');
     const quota = await new PostgresRateLimiterStore((sql, params) =>
       pool.query(sql, params)
     ).incrementSecurity(`provider:smsir:${message.providerId}`, config.throughput_limit, 60_000);
@@ -97,16 +146,29 @@ export function createSmsSender(
     let providerOutcome: EmailBreakerOutcome | undefined;
     const send = async () => {
       try {
-        const receipt = await sendSmsirVerification(
-          apiKey,
-          process.env.SMSIR_API_BASE || 'https://api.sms.ir',
-          message.destination,
-          message.templateId,
-          message.parameters,
-          request,
-          config.timeout * 1000,
-          signal
-        );
+        const base = process.env.SMSIR_API_BASE || 'https://api.sms.ir';
+        const receipt =
+          message.mode === 'direct'
+            ? await sendSmsirText(
+                apiKey,
+                base,
+                message.destination,
+                message.sender,
+                message.text,
+                request,
+                config.timeout * 1000,
+                signal
+              )
+            : await sendSmsirVerification(
+                apiKey,
+                base,
+                message.destination,
+                message.templateId,
+                message.parameters,
+                request,
+                config.timeout * 1000,
+                signal
+              );
         providerOutcome = { ok: true };
         return receipt;
       } catch (error) {

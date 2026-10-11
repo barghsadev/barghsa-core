@@ -28,7 +28,9 @@ Financial and contractual document bytes remain permanent. Any later disposal of
 
 ## Verification notifications
 
-Use the reviewed `profile.verification_status` templates in Persian and English. `messageFa` and `messageEn` contain the result, reason and corrective steps. SMS mappings must reference real approved provider templates and their parameters. A mapping, fixture or connectivity test does not prove event delivery.
+Use the reviewed `profile.verification_status` templates in Persian and English. `messageFa` and `messageEn` contain the result, reason and corrective steps. Provider mappings are optional when an activated line supports direct text. Configured mappings must reference real approved templates and take precedence. A mapping, fixture or connectivity test does not prove event delivery.
+
+On 11 October 2026 the owner deferred SMS.ir provisioning and live SMS evidence for v0.3.0 staging. Both authorized direct-send probes were rejected before acceptance. Preserve live delivery as a production-launch prerequisite. The texts and later setup procedure are in [SMS.ir verification templates](../operations/smsir-verification-templates.md).
 
 Test external delivery only to an owned verified staff destination. Preserve exact provider and delivery receipts without recording secrets in this document. Importing templates does not authorize historical resend or backfill. See [notification template setup](../operations/notification-template-seeding.md).
 

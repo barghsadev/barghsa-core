@@ -35,7 +35,11 @@ async function smsirRequest(
     throw new Error('SMS.ir returned an invalid outcome');
   if (status !== 1) {
     const data = result.data ?? result.Data;
-    if (data && typeof data === 'object' && ('messageId' in data || 'MessageId' in data))
+    if (
+      data &&
+      typeof data === 'object' &&
+      ('messageId' in data || 'MessageId' in data || 'messageIds' in data || 'MessageIds' in data)
+    )
       throw new Error('SMS.ir returned a conflicting outcome');
     throw new DeliveryRejected('SMS.ir rejected request');
   }
@@ -81,4 +85,37 @@ export async function sendSmsirVerification(
   const id = data?.messageId ?? data?.MessageId;
   if (!Number.isSafeInteger(id) || id! <= 0) throw new Error('SMS.ir returned no receipt');
   return String(id);
+}
+
+export async function sendSmsirText(
+  apiKey: string,
+  base: string,
+  mobile: string,
+  sender: string,
+  text: string,
+  request: typeof fetch = fetch,
+  timeout = 15_000,
+  signal?: AbortSignal
+): Promise<string> {
+  if (
+    !/^\d+$/.test(sender) ||
+    !Number.isSafeInteger(Number(sender)) ||
+    Number(sender) <= 0 ||
+    !text.trim() ||
+    text.length > 1600
+  )
+    throw new DeliveryRejected('Invalid direct SMS');
+  const data = (await smsirRequest(
+    'send/bulk',
+    apiKey,
+    base,
+    { lineNumber: Number(sender), messageText: text, mobiles: [mobile.replace(/^\+98/, '0')] },
+    request,
+    timeout,
+    signal
+  )) as { messageIds?: number[]; MessageIds?: number[] } | null;
+  const ids = data?.messageIds ?? data?.MessageIds;
+  if (!Array.isArray(ids) || ids.length !== 1 || !Number.isSafeInteger(ids[0]) || ids[0]! <= 0)
+    throw new Error('SMS.ir returned no single-recipient receipt');
+  return String(ids[0]);
 }

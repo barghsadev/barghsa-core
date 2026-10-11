@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
-import { createSmsSender, prepareSmsMessage } from './sms.js';
+import { createSmsSender, prepareSmsMessage, validSmsMessage } from './sms.js';
 import { DeliveryRejected } from './execution.js';
 import { classifyProviderError } from './email-errors.js';
 let server: Server,
@@ -24,6 +24,79 @@ afterAll(async () => {
   await new Promise<void>((resolve, reject) =>
     server.close((error) => (error ? reject(error) : resolve()))
   );
+});
+
+for (const locale of ['fa', 'en'] as const) {
+  it(`renders unmapped ${locale} notification text without exposing unapproved data and retains one receipt`, async () => {
+    const { pool, request } = setup();
+    const text = locale === 'fa' ? 'پروفایل آزمایشی تأیید شد.' : 'The test profile was verified.';
+    const field = locale === 'fa' ? 'messageFa' : 'messageEn';
+    const message = await prepareSmsMessage(
+      pool,
+      '+989121234567',
+      'profile.verification_status',
+      [field],
+      { [field]: text, secret: 'never-send' },
+      locale,
+      `{{${field}}}`
+    );
+    expect(message).toEqual({
+      providerId: 'sms-provider',
+      destination: '+989121234567',
+      mode: 'direct',
+      sender: '3000',
+      text,
+    });
+    response = { status: 1, data: { messageIds: [987], packId: 'pack' } };
+    expect(await createSmsSender(pool, request)(message)).toBe('987');
+    expect(received.at(-1)).toEqual({
+      lineNumber: 3000,
+      messageText: text,
+      mobiles: ['09121234567'],
+    });
+    request.mockClear();
+    const execute = vi.fn().mockResolvedValue('saved-receipt');
+    expect(await createSmsSender(pool, request, execute)(message)).toBe('saved-receipt');
+    expect(request).not.toHaveBeenCalled();
+    response = { status: 1, data: { messageId: 123 } };
+  });
+}
+
+it('fails direct preflight closed for unknown/missing variables, oversize text and sender drift', async () => {
+  const { pool, request } = setup();
+  await expect(
+    prepareSmsMessage(
+      pool,
+      '+989121234567',
+      'unmapped',
+      [],
+      { secret: 'private' },
+      'en',
+      '{{secret}}'
+    )
+  ).rejects.toThrow('incomplete');
+  await expect(
+    prepareSmsMessage(pool, '+989121234567', 'unmapped', ['message'], {}, 'en', '{{message}}')
+  ).rejects.toThrow('incomplete');
+  await expect(
+    prepareSmsMessage(pool, '+989121234567', 'unmapped', [], {}, 'en', 'x'.repeat(1601))
+  ).rejects.toThrow('Invalid');
+  const message = await prepareSmsMessage(
+    pool,
+    '+989121234567',
+    'unmapped',
+    ['message'],
+    { message: 'do not expand {{secret}}', secret: 'private' },
+    'en',
+    '{{message}}'
+  );
+  expect(message.mode === 'direct' && message.text).toBe('do not expand {{secret}}');
+  await expect(
+    createSmsSender(pool, request)({ ...message, mode: 'direct', sender: '3001', text: 'text' })
+  ).rejects.toThrow('sender changed');
+  expect(request).not.toHaveBeenCalled();
+  expect(validSmsMessage({ ...message, mode: 'unknown' })).toBe(false);
+  expect(validSmsMessage({ ...message, destination: 'invalid' })).toBe(false);
 });
 function setup(count = 1) {
   const query = vi.fn(async (sql: string) => ({
@@ -72,6 +145,7 @@ it('executes only after preflight, preserves receipts and distinguishes explicit
   const message = await prepareSmsMessage(pool, '+989121234567', 'invoice.created', ['amount'], {
     amount: 5000,
   });
+  if (message.mode === 'direct') throw new Error('Configured mapping must use template delivery');
   const execute = vi.fn<NonNullable<Parameters<typeof createSmsSender>[2]>>(
     async (provider, send) => {
       expect(provider).toEqual({ id: 'sms-provider', transport: 'smsir' });
