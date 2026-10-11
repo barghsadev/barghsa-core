@@ -30,6 +30,7 @@ export interface SmsProvider {
   lastTestStatus: TestStatus;
   createdAt: string;
   degraded: boolean;
+  degradedReason: string | null;
   breakerCooldownUntil: string | null;
   lastFailureAt: string | null;
   healthMetrics: ProviderHealthMetrics | undefined;
@@ -93,6 +94,9 @@ export function readSmsProvider(
   if (
     !Number.isFinite(Date.parse(createdAt)) ||
     (row.degraded !== undefined && typeof row.degraded !== 'boolean') ||
+    (row.degradedReason !== undefined &&
+      row.degradedReason !== null &&
+      typeof row.degradedReason !== 'string') ||
     (expected &&
       (row.status !== expected.status || (expected.id !== undefined && id !== expected.id)))
   )
@@ -106,6 +110,7 @@ export function readSmsProvider(
     lastTestStatus: row.lastTestStatus as TestStatus,
     createdAt,
     degraded: row.degraded === true,
+    degradedReason: typeof row.degradedReason === 'string' ? row.degradedReason : null,
     breakerCooldownUntil: optionalDate(row.breakerCooldownUntil),
     lastFailureAt: optionalDate(row.lastFailureAt),
     healthMetrics: readHealthMetrics(row.healthMetrics),

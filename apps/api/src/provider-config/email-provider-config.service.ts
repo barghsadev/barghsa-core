@@ -529,7 +529,7 @@ export class EmailProviderConfigService {
     breaker = this.circuitBreaker
   ): Promise<
     | { allow: true; kind: 'closed' | 'half_open'; probeToken?: string }
-    | { allow: false; kind: 'open'; degradedReason: string; cooldownUntil: Date }
+    | { allow: false; kind: 'open'; degradedReason: string; cooldownUntil: Date | null }
   > {
     if (!breaker) return { allow: true, kind: 'closed' };
     const decision = await breaker.decision(id);
@@ -599,7 +599,9 @@ export class EmailProviderConfigService {
         errBody(
           409,
           ErrorCodes.CONFLICT_STATE.code,
-          `Email provider is degraded by the circuit breaker; test-send paused until ${breaker.cooldownUntil.toISOString()}`
+          breaker.cooldownUntil
+            ? `Email provider is degraded by the circuit breaker; test-send paused until ${breaker.cooldownUntil.toISOString()}`
+            : 'Email provider configuration requires a tested replacement version'
         ),
         409
       );

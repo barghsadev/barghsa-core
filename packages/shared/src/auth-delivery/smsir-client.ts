@@ -22,8 +22,17 @@ async function smsirRequest(
     },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
-  if (!response.ok)
-    throw Object.assign(new Error('SMS.ir request failed'), { httpStatus: response.status });
+  if (!response.ok) {
+    // Typed diagnostics affect health only. HTTP failures still carry no retry-safe rejection proof.
+    const diagnostic = (await response.json().catch(() => null)) as {
+      status?: unknown;
+      Status?: unknown;
+    } | null;
+    throw Object.assign(new Error('SMS.ir request failed'), {
+      httpStatus: response.status,
+      smsirStatus: diagnostic?.status ?? diagnostic?.Status,
+    });
+  }
   const result = (await response.json()) as {
     status?: number;
     Status?: number;
@@ -41,7 +50,7 @@ async function smsirRequest(
       ('messageId' in data || 'MessageId' in data || 'messageIds' in data || 'MessageIds' in data)
     )
       throw new Error('SMS.ir returned a conflicting outcome');
-    throw new DeliveryRejected('SMS.ir rejected request');
+    throw Object.assign(new DeliveryRejected('SMS.ir rejected request'), { smsirStatus: status });
   }
   return result.data ?? result.Data;
 }

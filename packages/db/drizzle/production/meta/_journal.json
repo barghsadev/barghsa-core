@@ -1366,6 +1366,13 @@
       "when": 1791532429278,
       "tag": "0274_account_recovery",
       "breakpoints": true
+    },
+    {
+      "idx": 275,
+      "version": "7",
+      "when": 1791749199200,
+      "tag": "0275_provider_configuration_pause",
+      "breakpoints": true
     }
   ]
 }

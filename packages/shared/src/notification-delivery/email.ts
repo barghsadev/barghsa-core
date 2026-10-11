@@ -1,5 +1,5 @@
 import { EmailCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
-import { isTransientEmailError } from './email-errors.js';
+import { isTransientEmailError, requiresProviderConfigurationFix } from './email-errors.js';
 import { lookup } from 'node:dns/promises';
 import { createHash } from 'node:crypto';
 import nodemailer from 'nodemailer';
@@ -66,7 +66,11 @@ export function createEmailSender(
       } catch (error) {
         // Caller cancellation provides no provider-health outcome.
         if (!message.signal?.aborted)
-          providerOutcome = { ok: false, transient: isTransientEmailError(error) };
+          providerOutcome = {
+            ok: false,
+            transient: isTransientEmailError(error),
+            configurationFailure: requiresProviderConfigurationFix(error),
+          };
         throw error;
       }
     };
@@ -105,10 +109,15 @@ export function createEmailSender(
               reply_to: config.reply_to,
             }),
           });
-          if (!response.ok)
+          if (!response.ok) {
+            const diagnostic = (await response.json().catch(() => null)) as {
+              name?: unknown;
+            } | null;
             throw Object.assign(new Error('Email provider rejected message'), {
               httpStatus: response.status,
+              providerErrorName: diagnostic?.name,
             });
+          }
           const body = (await response.json()) as { id?: unknown };
           if (typeof body.id !== 'string' || !body.id.trim())
             throw new Error('Email provider returned no receipt');

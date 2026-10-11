@@ -4,8 +4,8 @@ vi.mock('./email-breaker.js', () => ({
     async decision() {
       return { allow: true, kind: 'closed' };
     }
-    async recordOutcome() {
-      await breaker.record();
+    async recordOutcome(_id: string, outcome: unknown) {
+      await breaker.record(outcome);
     }
   },
 }));
@@ -46,6 +46,26 @@ const message = {
   html: '<p>5000</p>',
   idempotencyKey: 'stable-test-key',
 };
+it('records typed Resend credential faults as configuration failures while preserving HTTP uncertainty', async () => {
+  code = 403;
+  body = { name: 'suspended_api_key' };
+  const { send } = setup();
+  const error = await send(message).catch((error) => error);
+  expect(error).toMatchObject({ httpStatus: 403, providerErrorName: 'suspended_api_key' });
+  expect(error).not.toBeInstanceOf(DeliveryRejected);
+  expect(breaker.record).toHaveBeenLastCalledWith({
+    ok: false,
+    transient: false,
+    configurationFailure: true,
+  });
+  body = { name: 'validation_error' };
+  await expect(send(message)).rejects.toThrow('rejected');
+  expect(breaker.record).toHaveBeenLastCalledWith({
+    ok: false,
+    transient: false,
+    configurationFailure: false,
+  });
+});
 function setup(
   suppressed = false,
   provider = true,

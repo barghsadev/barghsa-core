@@ -120,6 +120,23 @@ for (const scenario of scenarios) {
   const render = async () => {
     await act(async () => root.render(<QueryProvider>{scenario.page}</QueryProvider>));
   };
+  it(`${scenario.name}: configuration pause requests a tested replacement instead of an automatic probe`, async () => {
+    reads({
+      list: () =>
+        reply([
+          {
+            ...scenario.row,
+            status: 'active',
+            degraded: true,
+            degradedReason: 'provider_configuration_pause',
+            breakerCooldownUntil: null,
+          },
+        ]),
+    });
+    await render();
+    expect(host.textContent).toContain('Paused; a corrected and tested version is required');
+    expect(host.textContent).not.toContain('Recovery probe ready');
+  });
   it(`${scenario.name}: draft credentials survive read failure and key-order/health refresh`, async () => {
     let failed = false;
     reads({

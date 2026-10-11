@@ -30,6 +30,7 @@ export interface EmailProvider {
   lastTestAt?: string | null;
   lastTestError?: string | null;
   degraded?: boolean;
+  degradedReason?: string | null;
   breakerOpenedAt?: string | null;
   breakerCooldownUntil?: string | null;
   lastFailureAt?: string | null;
@@ -145,7 +146,7 @@ function provider(value: unknown): EmailProvider {
     )
       throw new ProviderRequestError();
   }
-  for (const field of ['activatedBy', 'lastTestError']) {
+  for (const field of ['activatedBy', 'lastTestError', 'degradedReason']) {
     if (row[field] !== undefined && row[field] !== null && typeof row[field] !== 'string')
       throw new ProviderRequestError();
   }

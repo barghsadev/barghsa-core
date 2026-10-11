@@ -615,6 +615,8 @@ export default function AdminEmailProvidersPage() {
 
   function healthLabel(p: EmailProvider): string {
     if (!p.degraded) return providerText('admin.providers.health.healthy', uiLocale);
+    if (p.degradedReason === 'provider_configuration_pause')
+      return providerText('admin.providers.health.configuration', uiLocale);
     if (p.breakerCooldownUntil && Date.parse(p.breakerCooldownUntil) > Date.now())
       return `${providerText('admin.providers.health.paused', uiLocale)} ${time.format(p.breakerCooldownUntil)}`;
     return providerText('admin.providers.health.probe', uiLocale);

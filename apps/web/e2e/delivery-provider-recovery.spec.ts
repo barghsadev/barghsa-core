@@ -28,6 +28,76 @@ const sms = {
     template_mappings: [{ event_key: 'auth.otp', template_id: '42', variables: { code: 'CODE' } }],
   },
 };
+for (const locale of ['en', 'fa'] as const) {
+  test(`configuration pauses remain visible on both provider tabs (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    await page.route('**/api/admin/email-providers', (route) =>
+      route.fulfill({
+        json: [
+          {
+            ...email,
+            status: 'active',
+            degraded: true,
+            degradedReason: 'provider_configuration_pause',
+            breakerCooldownUntil: null,
+          },
+        ],
+      })
+    );
+    await page.route('**/api/admin/sms-providers/template-event-keys', (route) =>
+      route.fulfill({ json: ['auth.otp'] })
+    );
+    await page.route('**/api/admin/sms-providers/template-variable-choices', (route) =>
+      route.fulfill({ json: [{ eventKey: 'auth.otp', locale, variables: ['code'] }] })
+    );
+    await page.route('**/api/admin/sms-providers', (route) =>
+      route.fulfill({
+        json: [
+          {
+            ...sms,
+            status: 'active',
+            degraded: true,
+            degradedReason: 'provider_configuration_pause',
+            breakerCooldownUntil: null,
+          },
+        ],
+      })
+    );
+    await page.goto('/admin/providers');
+    await expect(
+      page
+        .getByText(providerText('admin.providers.health.configuration', locale), { exact: true })
+        .filter({ visible: true })
+    ).toBeVisible();
+    await expect(
+      page.getByText(providerText('admin.providers.health.probe', locale), { exact: true })
+    ).toHaveCount(0);
+    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    await expect(
+      page
+        .getByText(smsProviderText('healthConfiguration', locale), { exact: true })
+        .filter({ visible: true })
+    ).toBeVisible();
+    await expect(
+      page.getByText(smsProviderText('healthProbe', locale), { exact: true })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole('heading', { level: 1, name: smsProviderText('title', locale), exact: true })
+    ).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await expect
+      .poll(async () => (await new AxeBuilder({ page }).analyze()).violations)
+      .toEqual([]);
+    await page.screenshot({
+      path: `/tmp/barghsa-provider-configuration-pause-${locale}.png`,
+      fullPage: true,
+    });
+  });
+}
 for (const locale of ['en', 'fa'] as const)
   for (const theme of ['light', 'dark'] as const) {
     test(`email draft and recipient recover without loss (${locale}, ${theme})`, async ({

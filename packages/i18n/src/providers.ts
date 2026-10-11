@@ -25,6 +25,7 @@ const fa = {
   'admin.providers.health.healthy': 'ارسال سالم',
   'admin.providers.health.paused': 'ارسال متوقف تا',
   'admin.providers.health.probe': 'آزمایش بازیابی آماده است',
+  'admin.providers.health.configuration': 'متوقف؛ نسخه اصلاح‌شده و آزموده‌شده لازم است',
   'admin.providers.health.lastSuccessfulTest': 'آخرین تست موفق',
   'admin.providers.health.lastFailure': 'آخرین خطا',
   'admin.providers.health.lastHour': 'یک ساعت گذشته',
@@ -124,6 +125,7 @@ const en: Record<keyof typeof fa, string> = {
   'admin.providers.health.healthy': 'Delivery healthy',
   'admin.providers.health.paused': 'Delivery paused until',
   'admin.providers.health.probe': 'Recovery probe ready',
+  'admin.providers.health.configuration': 'Paused; a corrected and tested version is required',
   'admin.providers.health.lastSuccessfulTest': 'Last successful test',
   'admin.providers.health.lastFailure': 'Last failure',
   'admin.providers.health.lastHour': 'Last hour',
@@ -291,6 +293,7 @@ const smsEn = {
   healthHealthy: 'Delivery healthy',
   healthPaused: 'Delivery paused until',
   healthProbe: 'Recovery probe ready',
+  healthConfiguration: 'Paused; a corrected and tested version is required',
   healthLastFailure: 'Last failure',
 };
 const smsFa: Record<keyof typeof smsEn, string> = {
@@ -381,6 +384,7 @@ const smsFa: Record<keyof typeof smsEn, string> = {
   healthHealthy: 'ارسال سالم',
   healthPaused: 'ارسال متوقف تا',
   healthProbe: 'آزمایش بازیابی آماده است',
+  healthConfiguration: 'متوقف؛ نسخه اصلاح‌شده و آزموده‌شده لازم است',
   healthLastFailure: 'آخرین خطا',
 };
 export function smsProviderText(key: keyof typeof smsEn, locale: 'en' | 'fa'): string {

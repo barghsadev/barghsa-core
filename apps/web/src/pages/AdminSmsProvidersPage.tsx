@@ -54,6 +54,8 @@ export default function AdminSmsProvidersPage() {
   const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
   const healthLabel = (provider: SmsProvider) => {
     if (!provider.degraded) return text('healthHealthy');
+    if (provider.degradedReason === 'provider_configuration_pause')
+      return text('healthConfiguration');
     if (provider.breakerCooldownUntil && Date.parse(provider.breakerCooldownUntil) > Date.now())
       return `${text('healthPaused')} ${time.format(provider.breakerCooldownUntil)}`;
     return text('healthProbe');

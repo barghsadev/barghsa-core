@@ -2,6 +2,31 @@ import { DeliveryRejected } from './execution.js';
 
 export type ProviderErrorKind = 'transient' | 'permanent' | 'unknown';
 
+/** Confirmed provider configuration failures, independent of delivery retry safety. */
+export function requiresProviderConfigurationFix(error: unknown): boolean {
+  if (classifyProviderError(error) !== 'permanent' || !error || typeof error !== 'object')
+    return false;
+  const value = error as {
+    httpStatus?: unknown;
+    providerErrorName?: unknown;
+    smsirStatus?: unknown;
+    code?: unknown;
+    command?: unknown;
+  };
+  return (
+    value.httpStatus === 401 ||
+    (typeof value.smsirStatus === 'number' &&
+      [10, 11, 12, 13, 14, 101, 113, 119, 123].includes(value.smsirStatus)) ||
+    value.code === 'EAUTH' ||
+    value.command === 'MAIL FROM' ||
+    (value.httpStatus === 403 &&
+      typeof value.providerErrorName === 'string' &&
+      ['invalid_permission', 'restricted_api_key', 'suspended_api_key'].includes(
+        value.providerErrorName
+      ))
+  );
+}
+
 /** Classify provider outcomes without inspecting unsafe provider response text. */
 export function classifyProviderError(error: unknown): ProviderErrorKind {
   if (error instanceof DeliveryRejected) return 'permanent';

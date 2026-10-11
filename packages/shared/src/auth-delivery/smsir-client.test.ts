@@ -1,5 +1,6 @@
 import { expect, it, vi } from 'vitest';
 import { getSmsirCredit, sendSmsirVerification, sendSmsirText } from './smsir-client.js';
+import { DeliveryRejected } from '../notification-delivery/execution.js';
 
 it('uses the provider request contract and requires a successful receipt', async () => {
   const request = vi
@@ -99,8 +100,15 @@ it('rejects invalid direct text or sender before a provider request and preserve
   request.mockResolvedValueOnce(
     new Response(JSON.stringify({ status: 123, data: null }), { status: 400 })
   );
-  await expect(
-    sendSmsirText('key', 'https://api.sms.ir', '09121234567', '3000', 'text', request)
-  ).rejects.toMatchObject({ httpStatus: 400 });
+  const error = await sendSmsirText(
+    'key',
+    'https://api.sms.ir',
+    '09121234567',
+    '3000',
+    'text',
+    request
+  ).catch((error) => error);
+  expect(error).toMatchObject({ httpStatus: 400, smsirStatus: 123 });
+  expect(error).not.toBeInstanceOf(DeliveryRejected);
   expect(request).toHaveBeenCalledTimes(1);
 });

@@ -1,4 +1,5 @@
 import type { DeliveryPool } from './email.js';
+export const PROVIDER_CONFIGURATION_PAUSE = 'provider_configuration_pause';
 export interface EmailBreakerConfig {
   /** Successive failures inside `windowMs` before the breaker trips. */
   readonly threshold: number;
@@ -34,12 +35,13 @@ export type EmailBreakerDecision =
       allow: false;
       kind: 'open';
       degradedReason: string;
-      cooldownUntil: Date;
+      cooldownUntil: Date | null;
       state: EmailBreakerState;
     };
 
 export interface EmailBreakerOutcome {
   ok: boolean;
+  configurationFailure?: boolean;
   /** False for a permanent provider error; omitted only by callers reporting known transient failures. */
   transient?: boolean;
   /** Candidate cause recorded in `degraded_reason` when a failure trips. */
@@ -100,11 +102,20 @@ export class ProviderCircuitBreaker {
   async decision(providerId: string): Promise<EmailBreakerDecision> {
     let state = await this.readState(providerId);
     if (!state.degraded) return { allow: true, kind: 'closed', state };
+    if (state.degradedReason === PROVIDER_CONFIGURATION_PAUSE)
+      return {
+        allow: false,
+        kind: 'open',
+        state,
+        degradedReason: PROVIDER_CONFIGURATION_PAUSE,
+        cooldownUntil: null,
+      };
     const now = await this.now();
     const deadline = new Date(now.getTime() + this.config.cooldownMs);
     const claimed = await this.pool.query(
       `UPDATE ${this.table} SET cooldown_until=$3
-      WHERE id=$1 AND degraded=true AND (cooldown_until IS NULL OR cooldown_until <= $2)
+      WHERE id=$1 AND degraded=true AND degraded_reason IS DISTINCT FROM 'provider_configuration_pause'
+        AND (cooldown_until IS NULL OR cooldown_until <= $2)
       RETURNING ${COLUMNS}`,
       [providerId, now, deadline]
     );
@@ -118,7 +129,10 @@ export class ProviderCircuitBreaker {
       kind: 'open',
       state,
       degradedReason: state.degradedReason ?? `${this.subject} degraded`,
-      cooldownUntil: state.cooldownUntil ?? deadline,
+      cooldownUntil:
+        state.degradedReason === PROVIDER_CONFIGURATION_PAUSE
+          ? null
+          : (state.cooldownUntil ?? deadline),
     };
   }
   async recordOutcome(
@@ -129,9 +143,16 @@ export class ProviderCircuitBreaker {
     const token = outcome.probeToken ?? null;
     // A legacy boolean is not proof of ownership of the current recovery probe.
     if (outcome.isProbe && !token) return this.readState(providerId);
-    const owned = `((NOT degraded AND $3::timestamptz IS NULL) OR
-      (degraded AND cooldown_until=$3::timestamptz AND cooldown_until>$2::timestamptz))`;
-    if (outcome.ok || (outcome.transient === false && !token)) {
+    const owned = `(degraded_reason IS DISTINCT FROM 'provider_configuration_pause' AND
+      ((NOT degraded AND $3::timestamptz IS NULL) OR
+      (degraded AND cooldown_until=$3::timestamptz AND cooldown_until>$2::timestamptz)))`;
+    if (!outcome.ok && outcome.configurationFailure && this.channel !== 'ai') {
+      await this.pool.query(
+        `UPDATE ${this.table} SET degraded=true,degraded_reason='provider_configuration_pause',
+         opened_at=COALESCE(opened_at,$2),last_failure_at=$2,cooldown_until=NULL WHERE id=$1`,
+        [providerId, now]
+      );
+    } else if (outcome.ok || (outcome.transient === false && !token)) {
       await this.pool.query(
         `UPDATE ${this.table} SET degraded=false,degraded_reason=NULL,
         consecutive_failures=0,window_failures=0,recent_failure_times='{}'::timestamptz[],window_started_at=NULL,last_failure_at=NULL,opened_at=NULL,cooldown_until=NULL

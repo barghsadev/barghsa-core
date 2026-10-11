@@ -8,7 +8,7 @@ import { resolvePath, renderTemplate } from '../notifications/template-engine.js
 import { PostgresRateLimiterStore } from '../rate-limit/index.js';
 import type { DeliveryPool } from './email.js';
 import { SmsCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
-import { isTransientProviderError } from './email-errors.js';
+import { isTransientProviderError, requiresProviderConfigurationFix } from './email-errors.js';
 import { DeliveryRejected, type DeliveryExecutor } from './execution.js';
 
 interface SmsRecipient {
@@ -174,7 +174,11 @@ export function createSmsSender(
       } catch (error) {
         // An owner-requested cancellation is not a provider-health failure.
         if (!signal?.aborted)
-          providerOutcome = { ok: false, transient: isTransientProviderError(error) };
+          providerOutcome = {
+            ok: false,
+            transient: isTransientProviderError(error),
+            configurationFailure: requiresProviderConfigurationFix(error),
+          };
         throw error;
       }
     };
