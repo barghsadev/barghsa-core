@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T19:37:45.085050+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T19:44:29.523587+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 583 | Accepted with unchanged source bindings. |
+| done | 587 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 49 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 45 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -560,11 +560,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.06.05` | done | Earlier acceptance_verified | Secrets encryption & masking |
 | `05-notifications-documents-ai.md#T-05.06.06` | partial | Earlier partial | Circuit breaker for email |
 | `05-notifications-documents-ai.md#T-05.06.07` | done | Earlier acceptance_verified | Email delivery callback handling |
-| `05-notifications-documents-ai.md#T-05.07.01` | partial | Recorded batch work | SMS.ir config entity |
-| `05-notifications-documents-ai.md#T-05.07.02` | partial | Recorded batch work | Template mapping |
+| `05-notifications-documents-ai.md#T-05.07.01` | done | Recorded batch work | SMS.ir config entity |
+| `05-notifications-documents-ai.md#T-05.07.02` | done | Recorded batch work | Template mapping |
 | `05-notifications-documents-ai.md#T-05.07.03` | done | Recorded batch work | SMS.ir adapter |
 | `05-notifications-documents-ai.md#T-05.07.04` | partial | Recorded batch work | Credit monitoring |
-| `05-notifications-documents-ai.md#T-05.07.05` | partial | Recorded batch work | SMS.ir admin UI |
+| `05-notifications-documents-ai.md#T-05.07.05` | done | Recorded batch work | SMS.ir admin UI |
 | `05-notifications-documents-ai.md#T-05.08.01` | done | Recorded batch work | Error classification utility |
 | `05-notifications-documents-ai.md#T-05.08.02` | partial | Recorded batch work | Circuit breaker implementation |
 | `05-notifications-documents-ai.md#T-05.08.03` | done | Recorded batch work | Provider health dashboard |
@@ -594,7 +594,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.13.04` | done | Recorded batch work | Safe preview derivative endpoint |
 | `05-notifications-documents-ai.md#T-05.14.01` | done | Recorded batch work | Retention policy configuration |
 | `05-notifications-documents-ai.md#T-05.14.02` | done | Recorded batch work | Legal hold |
-| `05-notifications-documents-ai.md#T-05.14.03` | partial | Recorded batch work | Destruction job |
+| `05-notifications-documents-ai.md#T-05.14.03` | done | Recorded batch work | Destruction job |
 | `05-notifications-documents-ai.md#T-05.15.01` | done | Recorded batch work | Multipart upload API |
 | `05-notifications-documents-ai.md#T-05.15.02` | done | Recorded batch work | Orphan detection & cleanup |
 | `05-notifications-documents-ai.md#T-05.16.01` | done | Recorded batch work | AI model entity & CRUD |
