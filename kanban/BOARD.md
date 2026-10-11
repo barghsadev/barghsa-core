@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T23:38:43.886073+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T23:58:36.091614+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 589 | Accepted with unchanged source bindings. |
+| done | 593 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 43 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 39 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Refresh immutable operational preflight with active-version email/SMS health routing, then finish actual native rule firing/recovery receipts using original delays. Storage/payment/scanner gates have genuine source-bound evidence. Preserve admin email preferences and prohibit SMS resends. Telegram still requires outbound route/proxy action. No later-release work.
+Finish controlled configuration-pause/tested replacement operational recovery. Repair owner-blocked AI workspace and Telegram outbound route; complete live slot/linkage/isolation. Preserve email preference, no SMS resend, no later-release work.
 
-- `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
+- `05-notifications-documents-ai.md#T-05.08.02`: Circuit breaker implementation
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
 
 ## v0.2.0: Complete customer journeys
@@ -533,11 +533,11 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.11.04` | done | Earlier partial | AI agent management |
 | `02-auth-users-admin.md#T-09.11.05` | partial | Earlier partial | Agent slot assignment |
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
-| `05-notifications-documents-ai.md#T-05.01.02` | partial | Earlier acceptance_verified | Durable outbox table & write pipeline |
+| `05-notifications-documents-ai.md#T-05.01.02` | done | Earlier acceptance_verified | Durable outbox table & write pipeline |
 | `05-notifications-documents-ai.md#T-05.01.03` | done | Earlier acceptance_verified | Job queue with retry schedule |
 | `05-notifications-documents-ai.md#T-05.01.04` | done | Earlier partial | Idempotency for delivery |
 | `05-notifications-documents-ai.md#T-05.01.05` | done | Earlier acceptance_verified | Status tracking & delivery logs |
-| `05-notifications-documents-ai.md#T-05.01.06` | partial | Earlier partial | Dead-letter queue & admin UI |
+| `05-notifications-documents-ai.md#T-05.01.06` | done | Earlier partial | Dead-letter queue & admin UI |
 | `05-notifications-documents-ai.md#T-05.01.07` | done | Earlier acceptance_verified | Metrics & observability |
 | `05-notifications-documents-ai.md#T-05.02.01` | done | Earlier acceptance_verified | Notification entity & in-app transport |
 | `05-notifications-documents-ai.md#T-05.02.02` | done | Earlier acceptance_verified | Notification center API |
@@ -559,12 +559,12 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.06.03` | done | Earlier acceptance_verified | Resend configuration |
 | `05-notifications-documents-ai.md#T-05.06.04` | done | Earlier acceptance_verified | Provider admin UI |
 | `05-notifications-documents-ai.md#T-05.06.05` | done | Earlier acceptance_verified | Secrets encryption & masking |
-| `05-notifications-documents-ai.md#T-05.06.06` | partial | Earlier partial | Circuit breaker for email |
+| `05-notifications-documents-ai.md#T-05.06.06` | done | Earlier partial | Circuit breaker for email |
 | `05-notifications-documents-ai.md#T-05.06.07` | done | Earlier acceptance_verified | Email delivery callback handling |
 | `05-notifications-documents-ai.md#T-05.07.01` | done | Recorded batch work | SMS.ir config entity |
 | `05-notifications-documents-ai.md#T-05.07.02` | done | Recorded batch work | Template mapping |
 | `05-notifications-documents-ai.md#T-05.07.03` | done | Recorded batch work | SMS.ir adapter |
-| `05-notifications-documents-ai.md#T-05.07.04` | partial | Recorded batch work | Credit monitoring |
+| `05-notifications-documents-ai.md#T-05.07.04` | done | Recorded batch work | Credit monitoring |
 | `05-notifications-documents-ai.md#T-05.07.05` | done | Recorded batch work | SMS.ir admin UI |
 | `05-notifications-documents-ai.md#T-05.08.01` | done | Recorded batch work | Error classification utility |
 | `05-notifications-documents-ai.md#T-05.08.02` | partial | Recorded batch work | Circuit breaker implementation |
