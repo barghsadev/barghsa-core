@@ -123,6 +123,31 @@ it('keeps an uncertain network outcome held across restarts and administrative r
   expect(row.status).toBe('unknown');
   expect(row.last_error).not.toContain('private-secret');
 });
+for (const accepted of [false, true]) {
+  it(`never resends a Resend occurrence older than its provider cache window (${accepted ? 'accepted' : 'unknown'})`, async () => {
+    const id = await queue();
+    const resend = { ...provider, transport: 'resend' as const };
+    const send = vi.fn(async () => {
+      if (!accepted) throw new Error('Response lost after provider I/O');
+      return 'resend-accepted-receipt';
+    });
+    const execute = durableDelivery(pool, id, 'email', 'stable-expired-cache-occurrence');
+    if (accepted) expect(await execute(resend, send)).toBe('resend-accepted-receipt');
+    else await expect(execute(resend, send)).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+    await pool.query(
+      "UPDATE notification_send_receipts SET updated_at=NOW()-INTERVAL '48 hours' WHERE outbox_id=$1",
+      [id]
+    );
+    await pool.query("UPDATE notification_job SET status='queued',attempts=0 WHERE outbox_id=$1", [
+      id,
+    ]);
+    const restarted = durableDelivery(pool, id, 'email', 'stable-expired-cache-occurrence');
+    if (accepted) expect(await restarted(resend, send)).toBe('resend-accepted-receipt');
+    else await expect(restarted(resend, send)).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+}
+
 it('retries a proven rejection while preserving provider and occurrence identity', async () => {
   const id = await queue();
   const send = vi

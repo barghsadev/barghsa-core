@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T20:17:31.913532+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T20:35:33.192712+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 587 | Accepted with unchanged source bindings. |
+| done | 588 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 45 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 44 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish v0.4.0 live provider/storage/payment/Telegram/operations gates. Permanent configuration pause now implemented and tested; deployed alert receipts remain. Owner authorizes reuse/create of staging configuration. Private bot configuration installed; official Telegram egress still fails and healthy previous callback is untouched. Complete authorized configuration work and concrete receipts without weakening financial/activation guards, fabricating vendor evidence or selecting later releases.
+Implement retained auth.otp_sent safe private notices, distinct order.awaiting_staff native transitions and system.service_outage admin publication. Reuse current engines and prove transaction/rollback/idempotency/account isolation; preserve all financial and secret boundaries. Continue v0.4.0 private operations/payment/storage setup while Telegram egress awaits owner route/proxy action. No later release selected.
 
-- `05-notifications-documents-ai.md#T-05.08.02`: Circuit breaker implementation
+- `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
 
 ## v0.2.0: Complete customer journeys
@@ -535,7 +535,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
 | `05-notifications-documents-ai.md#T-05.01.02` | partial | Earlier acceptance_verified | Durable outbox table & write pipeline |
 | `05-notifications-documents-ai.md#T-05.01.03` | done | Earlier acceptance_verified | Job queue with retry schedule |
-| `05-notifications-documents-ai.md#T-05.01.04` | partial | Earlier partial | Idempotency for delivery |
+| `05-notifications-documents-ai.md#T-05.01.04` | done | Earlier partial | Idempotency for delivery |
 | `05-notifications-documents-ai.md#T-05.01.05` | done | Earlier acceptance_verified | Status tracking & delivery logs |
 | `05-notifications-documents-ai.md#T-05.01.06` | partial | Earlier partial | Dead-letter queue & admin UI |
 | `05-notifications-documents-ai.md#T-05.01.07` | done | Earlier acceptance_verified | Metrics & observability |

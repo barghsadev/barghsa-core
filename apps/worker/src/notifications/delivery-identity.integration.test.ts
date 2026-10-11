@@ -998,7 +998,9 @@ it('dead-letters explicit SMS rejection without resending and shares quota with 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(
       JSON.stringify(
-        accepted ? { status: 1, data: { messageId: 987 } } : { status: 11, data: null }
+        // Invalid-recipient rejection remains local. Disabled-key status11 now
+        // correctly pauses the provider and cannot be reused by authentication.
+        accepted ? { status: 1, data: { messageId: 987 } } : { status: 104, data: null }
       )
     );
   });
