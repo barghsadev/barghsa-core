@@ -4,6 +4,24 @@ import {
   defaultInboxLink,
   IMPLEMENTED_INBOX_EVENTS,
 } from './inbox-content.js';
+
+it('shows OTP delivery metadata without rendering the code, destination or authorization data', () => {
+  expect(defaultInboxLink('auth.otp_sent')).toBe('/settings/security');
+  const content = defaultInboxContent('auth.otp_sent', {
+    purpose: 'Sign-in',
+    channel: 'Email',
+    sentAt: '2026-10-11T12:00:00.000Z',
+    verificationCode: '123456',
+    destination: 'private@example.test',
+    otp_hash: 'secret-hash',
+  });
+  for (const locale of ['fa', 'en'] as const) {
+    expect(content[locale].body).toContain('Sign-in');
+    expect(content[locale].body).toContain('Email');
+    expect(content[locale].body).toContain('2026-10-11T12:00:00.000Z');
+    expect(content[locale].body).not.toMatch(/123456|private@example|secret-hash/);
+  }
+});
 it('gives every currently emitted inbox event usable Persian and English content', () => {
   for (const event of IMPLEMENTED_INBOX_EVENTS) {
     const content = defaultInboxContent(event, {

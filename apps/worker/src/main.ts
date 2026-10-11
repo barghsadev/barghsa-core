@@ -37,6 +37,7 @@ import {
 } from './notifications/sms-credit-monitor.js';
 import { EmailNotificationTransport } from './notifications/email-transport.js';
 import { runAuthDelivery } from './auth-delivery/runner.js';
+import { publishAuthDeliveryNotice } from './auth-delivery/inbox-notice.js';
 import { PollerGroup } from './jobs/poller-group.js';
 import { JobHandlerRegistry, runOneAsyncJob } from './jobs/async-runner.js';
 import {
@@ -425,13 +426,24 @@ async function main(): Promise<void> {
 
   pollers.every(async () => {
     const outcome = await runAuthDelivery(getDbPool());
+    let notice: 'idle' | 'published';
+    try {
+      notice = await publishAuthDeliveryNotice(getDbPool());
+    } catch {
+      await recordJobFailure({
+        jobType: 'auth_delivery',
+        error: 'auth_delivery_notice_unavailable',
+        errorCategory: 'transient',
+      });
+      return;
+    }
     if (outcome === 'retry' || outcome === 'dead') {
       await recordJobFailure({
         jobType: 'auth_delivery',
         error: 'delivery_failed',
         errorCategory: 'transient',
       });
-    } else if (outcome === 'sent') {
+    } else if (outcome === 'sent' || notice === 'published') {
       await recordJobSuccess('auth_delivery');
     }
   }, 1000);

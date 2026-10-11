@@ -28,6 +28,10 @@ The owner retained the original `auth.otp_sent`, `order.awaiting_staff` and `sys
 
 `order.awaiting_staff` is a separate private inbox occurrence when a native electricity, saving, solar or consultation submission enters staff review. Electricity and saving returns to review create a new occurrence; replaying the same command does not. Publication shares the business transaction, so a failure to store the notice rolls back the transition. Existing submission and status events remain.
 
+OTP notices consume confirmed `auth_delivery_outbox` records through a separate transaction. That transaction stores only purpose, channel and delivery time in an account-scoped inbox intent. A notice failure retries this intent without calling the authentication sender again. The recipient is captured from the bound challenge; registration supplies its exact new account only after successful contact verification. The publisher never searches for a later owner of the contact.
+
+Apply migration `0276_auth_delivery_notices` before the updated API and worker. It does not replay historical delivery intents. Secret-bearing active OTP inbox templates become archived versions with retained lineage; their replacements contain delivery metadata only. Authentication email/SMS templates keep their code variables. This migration's versioned template history records the automatic change without inventing a user actor in the account-bound audit ledger. Binary rollback can keep the additive columns and trigger; old workers leave unprocessed notice intents available for the corrected worker.
+
 ## Document destruction schedule
 
 The current worker polls hourly and permits document destruction only when the UTC hour is 02. This implements the documented nightly 02:00 UTC window. It is not unrestricted hourly destruction. Each pass remains bounded and requires legal approval, retention eligibility, current hold checks and exact-version deletion. Restarts do not bypass idempotent manifests or permanent financial/contractual retention.

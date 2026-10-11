@@ -1373,6 +1373,13 @@
       "when": 1791749199200,
       "tag": "0275_provider_configuration_pause",
       "breakpoints": true
+    },
+    {
+      "idx": 276,
+      "version": "7",
+      "when": 1791751707013,
+      "tag": "0276_auth_delivery_notices",
+      "breakpoints": true
     }
   ]
 }

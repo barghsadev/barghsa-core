@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T20:46:32.865882+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-11T21:16:53.717005+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish safe auth.otp_sent and system.service_outage publishers and required v0.4.0 operational receipts. Native awaiting-staff criterion now verified for all four services. Preserve transaction, secret, ownership and money safeguards; no later-release batch.
+Finish original system.service_outage admin publisher, bounded remaining notification writers and v0.4.0 operational/provider/storage receipts. Safe OTP and four-service awaiting-staff criteria now verified. Telegram egress still requires route/proxy action. No later-release batch.
 
 - `05-notifications-documents-ai.md#T-05.01.02`: Durable outbox table & write pipeline
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries

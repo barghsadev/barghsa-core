@@ -44,6 +44,12 @@ export function renderInboxTemplates(
   return content;
 }
 const labels: Record<string, [string, string, string, string]> = {
+  'auth.otp_sent': [
+    'کد تأیید ارسال شد',
+    'Verification code sent',
+    'کد تأیید فقط در راه ارتباطی تأییدشده شما قابل مشاهده است.',
+    'Your verification code is available only through your verified contact.',
+  ],
   'wallet.low_balance': [
     'موجودی کیف پول پایین',
     'Low wallet balance',
@@ -147,6 +153,13 @@ export function defaultInboxContent(
     fa: { title: text[0]!, body: text[2]! },
     en: { title: text[1]!, body: text[3]! },
   };
+  if (event === 'auth.otp_sent') {
+    const purpose = scalar(data.purpose);
+    const channel = scalar(data.channel);
+    const sentAt = scalar(data.sentAt);
+    content.fa.body += ` هدف: ${purpose}، راه ارسال: ${channel}، زمان: ${sentAt}.`;
+    content.en.body += ` Purpose: ${purpose}. Channel: ${channel}. Sent: ${sentAt}.`;
+  }
   if (event === 'document.scan_failed' || event === 'document.quarantined') {
     const name = scalar(data.documentName);
     if (name) {
@@ -172,7 +185,8 @@ export function defaultInboxLink(event: string, data: Record<string, unknown> = 
   if (event === 'document.scan_failed' || event === 'document.quarantined')
     return '/admin/documents';
   if (event.startsWith('payment.wallet_')) return '/wallet';
-  if (event === 'auth.refresh_token_reused') return '/settings/security';
+  if (event === 'auth.refresh_token_reused' || event === 'auth.otp_sent')
+    return '/settings/security';
   if (event === 'payment.invoice_reminder') {
     const id = scalar(data.invoiceId);
     return id && /^[a-f0-9-]{36}$/i.test(id) ? `/invoices/${id}` : '/invoices';

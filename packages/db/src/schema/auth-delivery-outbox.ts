@@ -1,5 +1,14 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, uuid, timestamp, integer, index, check } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  text,
+  uuid,
+  timestamp,
+  integer,
+  index,
+  check,
+  boolean,
+} from 'drizzle-orm/pg-core';
 import { users } from './users.js';
 import { otpChallenges } from './otp-challenge.js';
 
@@ -21,6 +30,10 @@ export const authDeliveryOutbox = pgTable(
     leaseUntil: timestamp('lease_until', { withTimezone: true }),
     leaseToken: uuid('lease_token'),
     providerRef: text('provider_ref'),
+    sentAt: timestamp('sent_at', { withTimezone: true }),
+    /** Captured account identity, never resolved by looking up the current contact owner. */
+    noticeUserId: text('notice_user_id').references(() => users.userId, { onDelete: 'cascade' }),
+    inboxNoticePending: boolean('inbox_notice_pending').notNull().default(true),
     lastError: text('last_error'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -30,6 +43,11 @@ export const authDeliveryOutbox = pgTable(
       sql`(${table.kind}='otp' AND ${table.challengeId} IS NOT NULL AND ${table.userId} IS NULL) OR (${table.kind}='staff_activation' AND ${table.challengeId} IS NULL AND ${table.userId} IS NOT NULL)`
     ),
     index('auth_delivery_due_idx').on(table.status, table.availableAt),
+    index('auth_delivery_inbox_notice_idx')
+      .on(table.sentAt, table.id)
+      .where(
+        sql`${table.status}='sent' AND ${table.kind}='otp' AND ${table.inboxNoticePending} AND ${table.noticeUserId} IS NOT NULL`
+      ),
     check(
       'auth_delivery_status_check',
       sql`${table.status} IN ('pending','leased','sent','cancelled','dead')`

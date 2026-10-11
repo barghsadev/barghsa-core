@@ -59,6 +59,14 @@ async function expectRegistrationRolledBack(challengeId: string, username: strin
       )
     ).rows[0]
   ).toEqual({ consumed_at: null, attempts_remaining: 5 });
+  expect(
+    (
+      await fixture.pool.query(
+        'SELECT notice_user_id FROM auth_delivery_outbox WHERE challenge_id=$1',
+        [challengeId]
+      )
+    ).rows
+  ).toEqual([{ notice_user_id: null }]);
   const counts = (
     await fixture.pool.query(
       `SELECT (SELECT count(*)::int FROM users WHERE username=$1) AS users,
@@ -92,6 +100,14 @@ it('rolls registration back when its creation audit fails, then permits exactly 
   expect(
     (await fixture.pool.query("SELECT user_id FROM audit_log WHERE event='user_created'")).rows
   ).toEqual([{ user_id: created.userId }]);
+  expect(
+    (
+      await fixture.pool.query(
+        'SELECT notice_user_id FROM auth_delivery_outbox WHERE challenge_id=$1',
+        [body.challengeId]
+      )
+    ).rows
+  ).toEqual([{ notice_user_id: created.userId }]);
 }, 15000);
 
 for (const table of ['tos_versions', 'sessions', 'refresh_tokens', 'audit_log']) {

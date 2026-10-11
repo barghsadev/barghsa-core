@@ -325,6 +325,18 @@ describe('notification template seeding', () => {
       'fa:in_app',
       'fa:sms',
     ]);
+    for (const template of otp.filter((r) => r.channel === 'in_app')) {
+      expect(template.bodyTemplate).not.toContain('verificationCode');
+      expect(template.variables).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: 'purpose' }),
+          expect.objectContaining({ name: 'channel' }),
+          expect.objectContaining({ name: 'sentAt' }),
+        ])
+      );
+    }
+    for (const template of otp.filter((r) => r.channel !== 'in_app'))
+      expect(template.bodyTemplate).toContain('{{verificationCode}}');
   });
 
   it('is idempotent: re-running skips already-seeded combos', async () => {

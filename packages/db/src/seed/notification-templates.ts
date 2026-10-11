@@ -51,7 +51,7 @@ export interface SeedEventDefinition {
   variables: SeedTemplateVariable[];
 }
 
-/** The complete seed catalog, one entry per registered event key. */
+/** The complete seed catalog, with separate channel groups where required. */
 export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
   {
     eventKey: 'auth.otp_sent',
@@ -61,10 +61,23 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
       'کد تأیید شما: {{verificationCode}}\n\nاین کد تا {{expiryMinutes}} دقیقه معتبر است. اگر این درخواست را شما انجام نداده‌اید، لطفاً بلافاصله بارق‌سا را ترک کرده و با پشتیبانی تماس بگیرید.',
     enBody:
       'Your verification code is {{verificationCode}}.\n\nThis code expires in {{expiryMinutes}} minutes. If you did not make this request, please leave Barghsa and contact support immediately.',
-    channels: ['email', 'sms', 'in_app'],
+    channels: ['email', 'sms'],
     variables: [
       { name: 'verificationCode', description: 'کد یکبارمصرف ورود / One-time sign-in code' },
       { name: 'expiryMinutes', description: 'دقایق اعتبار کد / Code expiry in minutes' },
+    ],
+  },
+  {
+    eventKey: 'auth.otp_sent',
+    faBody:
+      'کد تأیید برای {{purpose}} از طریق {{channel}} در {{sentAt}} ارسال شد. کد فقط در راه ارتباطی تأییدشده شما قابل مشاهده است.',
+    enBody:
+      'A verification code for {{purpose}} was sent through {{channel}} at {{sentAt}}. The code is available only through your verified contact.',
+    channels: ['in_app'],
+    variables: [
+      { name: 'purpose', description: 'هدف تأیید / Verification purpose' },
+      { name: 'channel', description: 'راه ارسال / Delivery channel' },
+      { name: 'sentAt', description: 'زمان ارسال / Delivery time' },
     ],
   },
   {

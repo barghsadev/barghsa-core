@@ -1050,6 +1050,14 @@ export class AuthService {
       // Pending invitations are discoverable by the verified username after
       // registration. Only the invitation acceptance endpoint grants membership.
 
+      // Bind delivery notices to this newly verified account, never a future
+      // owner of the same contact. This does not enqueue or resend the OTP.
+      await client.query(
+        `UPDATE auth_delivery_outbox SET notice_user_id=$2
+         WHERE challenge_id=$1 AND kind='otp' AND inbox_notice_pending AND notice_user_id IS NULL`,
+        [challengeId, userId]
+      );
+
       // 5. Record TOS acceptance immutably in tos_acceptances (T-04.01.02)
       // A newer publication must not change the terms this challenge accepted.
       const tosResult = await client.query<{ id: string; content_fa: string; content_en: string }>(
