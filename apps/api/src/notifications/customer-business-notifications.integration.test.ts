@@ -33,6 +33,46 @@ afterAll(async () => {
   await http?.close();
 });
 const service = new NotificationsService();
+it('stores a distinct inbox-only awaiting-staff occurrence and preserves its original receipt on replay', async () => {
+  const input = {
+    ...params(),
+    eventKey: 'order.awaiting_staff' as const,
+    payload: { orderNumber: randomUUID() },
+    link: '/electricity/orders/' + randomUUID(),
+  };
+  await transaction((client) => service.createCustomerBusinessEvent(input, client));
+  const before = await snapshot(input.occurrenceKey);
+  expect(before.outbox).toHaveLength(1);
+  expect(before.outbox[0]).toMatchObject({
+    event_key: 'order.awaiting_staff',
+    channels: ['in_app'],
+    user_id: 'business-owner',
+    profile_id: profile,
+  });
+  expect(before.inbox).toHaveLength(1);
+  expect(before.inbox[0]).toMatchObject({
+    type: 'order.awaiting_staff',
+    recipient_user_id: 'business-owner',
+    profile_id: profile,
+    operating_context: 'customer',
+  });
+  expect(before.jobs).toHaveLength(1);
+  expect(before.jobs[0]).toMatchObject({
+    channel: 'in_app',
+    status: 'done',
+    attempts: 1,
+    provider_ref: before.inbox[0].id,
+  });
+  expect(before.logs).toHaveLength(1);
+  await db.pool.query('UPDATE in_app_notifications SET is_read=true WHERE id=$1', [
+    before.inbox[0].id,
+  ]);
+  const read = await snapshot(input.occurrenceKey);
+  await transaction(async (client) =>
+    expect(await service.createCustomerBusinessEvent(input, client)).toBe(false)
+  );
+  expect(await snapshot(input.occurrenceKey)).toEqual(read);
+});
 function params(eventKey: ContractCustomerEvent = 'contract.awaiting_acceptance') {
   return {
     userId: 'business-owner',

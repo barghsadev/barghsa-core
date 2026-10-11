@@ -779,7 +779,7 @@ it('keeps electricity order conversations public or staff-only and reachable aft
         [`/electricity/orders/${order.orderId}`]
       )
     ).rows
-  ).toEqual([{ type: 'general' }, { type: 'order.submitted' }]);
+  ).toEqual([{ type: 'general' }, { type: 'order.awaiting_staff' }, { type: 'order.submitted' }]);
 
   const detail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
     headers: staffHeaders,
@@ -1726,6 +1726,14 @@ it('requests changes with a reason and returns the order to the customer', async
   expect(result).toMatchObject({ status: 'awaiting_staff_review' });
   expect(result.versionId).not.toBe(versionId);
   expect((await resubmit()).status).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT COUNT(*)::int AS count FROM notification_outbox WHERE event_key='order.awaiting_staff' AND payload->>'orderNumber'=$1",
+        [order.orderId]
+      )
+    ).rows[0].count
+  ).toBe(2);
   await expectCoreAudit(http.pool, 'electricity.order_resubmitted', order.orderId, {
     entity: 'electricity_order',
     fromState: 'changes_requested',

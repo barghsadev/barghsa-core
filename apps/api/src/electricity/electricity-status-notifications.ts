@@ -2,6 +2,7 @@ import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { t } from '@barghsa/i18n/app';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifyOrderAwaitingStaff } from '../notifications/order-notifications.js';
 
 export async function notifyElectricityStatus(
   client: PoolClient,
@@ -31,6 +32,7 @@ export async function notifyElectricityStatus(
   const message = content
     ? { title: content.title, localizedContent: content.localizedContent }
     : undefined;
+  const occurrence = uuidv7();
   await new NotificationsService().createCustomerBusinessEvent(
     {
       ...(message ?? {
@@ -46,9 +48,11 @@ export async function notifyElectricityStatus(
       type: 'general',
       ...(link ? { link } : {}),
       eventKey: 'order.status_changed',
-      occurrenceKey: `order.status_changed:electricity:${id}:${uuidv7()}:${current.user_id}`,
+      occurrenceKey: `order.status_changed:electricity:${id}:${occurrence}:${current.user_id}`,
       payload: { orderNumber: id, newStatus: fa + ' / ' + en, status: to },
     },
     client
   );
+  if (to === 'awaiting_staff_review')
+    await notifyOrderAwaitingStaff(client, 'electricity', id, occurrence);
 }

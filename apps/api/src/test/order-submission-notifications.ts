@@ -65,6 +65,56 @@ export async function expectOrderSubmitted(
   ).toEqual([
     { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: rows[0].notice_id },
   ]);
+  await expectOrderAwaitingStaff(pool, input, 'submission');
+}
+
+export async function expectOrderAwaitingStaff(
+  pool: Pool,
+  input: { service: string; id: string; profileId: string; owner: string; route: string },
+  occurrence: string
+) {
+  const notices = (
+    await pool.query(
+      `SELECT o.*,n.id AS notice_id,n.recipient_user_id,n.operating_context,n.type,n.localized_content,n.link_route
+    FROM notification_outbox o JOIN in_app_notifications n ON n.delivery_key='outbox:'||o.id::text
+    WHERE o.idempotency_key=$1`,
+      [`order.awaiting_staff:${input.service}:${input.id}:${occurrence}:${input.owner}`]
+    )
+  ).rows;
+  expect(notices).toHaveLength(1);
+  const notice = notices[0];
+  expect(notice).toMatchObject({
+    profile_id: input.profileId,
+    user_id: input.owner,
+    event_key: 'order.awaiting_staff',
+    channels: ['in_app'],
+    payload: { orderNumber: input.id, link_route: `${input.route}/${input.id}` },
+    recipient_user_id: input.owner,
+    operating_context: 'customer',
+    type: 'order.awaiting_staff',
+    link_route: `${input.route}/${input.id}`,
+  });
+  for (const locale of ['fa', 'en'])
+    expect(notice.localized_content[locale].body).toContain(input.id);
+  expect(notice.localized_content.fa.title).toMatch(/[\u0600-\u06ff]/);
+  expect(
+    (
+      await pool.query(
+        'SELECT channel,status,attempts,provider_ref FROM notification_job WHERE outbox_id=$1',
+        [notice.id]
+      )
+    ).rows
+  ).toEqual([{ channel: 'in_app', status: 'done', attempts: 1, provider_ref: notice.notice_id }]);
+  expect(
+    (
+      await pool.query(
+        'SELECT channel,status,attempt_number,provider_ref FROM notification_delivery_log WHERE notification_id=$1',
+        [notice.id]
+      )
+    ).rows
+  ).toEqual([
+    { channel: 'in_app', status: 'delivered', attempt_number: 1, provider_ref: notice.notice_id },
+  ]);
 }
 
 /** Native HTTP failure leaves all business rows unchanged; session/rate-limit activity is outside that transaction. */
@@ -93,18 +143,19 @@ export async function expectSubmissionNotificationRollback(
     );
     return Object.fromEntries(entries);
   };
-  for (const mode of ['raise', 'suppress'] as const) {
-    const before = await snapshot();
-    await pool.query(
-      `CREATE FUNCTION fail_order_submission_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event_key='order.submitted' THEN ${mode === 'raise' ? "RAISE EXCEPTION 'order notice unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_order_submission_notice BEFORE INSERT ON notification_outbox FOR EACH ROW EXECUTE FUNCTION fail_order_submission_notice()`
-    );
-    try {
-      expect((await submit()).status).toBe(500);
-      expect(await snapshot()).toEqual(before);
-    } finally {
+  for (const event of ['order.submitted', 'order.awaiting_staff'])
+    for (const mode of ['raise', 'suppress'] as const) {
+      const before = await snapshot();
       await pool.query(
-        'DROP TRIGGER fail_order_submission_notice ON notification_outbox; DROP FUNCTION fail_order_submission_notice()'
+        `CREATE FUNCTION fail_order_submission_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event_key='${event}' THEN ${mode === 'raise' ? "RAISE EXCEPTION 'order notice unavailable';" : 'RETURN NULL;'} END IF; RETURN NEW; END $$; CREATE TRIGGER fail_order_submission_notice BEFORE INSERT ON notification_outbox FOR EACH ROW EXECUTE FUNCTION fail_order_submission_notice()`
       );
+      try {
+        expect((await submit()).status).toBe(500);
+        expect(await snapshot()).toEqual(before);
+      } finally {
+        await pool.query(
+          'DROP TRIGGER fail_order_submission_notice ON notification_outbox; DROP FUNCTION fail_order_submission_notice()'
+        );
+      }
     }
-  }
 }

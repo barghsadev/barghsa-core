@@ -25,6 +25,7 @@ export type ContractCustomerEvent =
 export type CustomerBusinessEvent =
   | ContractCustomerEvent
   | 'order.submitted'
+  | 'order.awaiting_staff'
   | 'order.status_changed'
   | 'order.cancellation_requested'
   | 'document.review_completed';
@@ -579,9 +580,10 @@ export class NotificationsService {
       ...(params.link ? { link_route: notificationLink(params.link) } : {}),
     };
     const outboxId = uuidv7();
+    const channels = params.eventKey === 'order.awaiting_staff' ? ['in_app'] : ['in_app', 'email'];
     const inserted = await transaction.query(
       `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
-       VALUES($1,$2,$3,$4,$5,ARRAY['in_app','email'],'queued',$6,5,$7)
+       VALUES($1,$2,$3,$4,$5,$8::text[],'queued',$6,5,$7)
        ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
       [
         outboxId,
@@ -591,15 +593,16 @@ export class NotificationsService {
         payload,
         params.occurrenceKey,
         correlationIdStorage.getStore() ?? null,
+        channels,
       ]
     );
     if (!inserted.rows[0]) {
       const existing = await transaction.query(
         `SELECT ob.id FROM notification_outbox ob JOIN in_app_notifications n ON n.delivery_key='outbox:'||ob.id::text
          WHERE ob.idempotency_key=$1 AND ob.profile_id=$2 AND ob.user_id=$3 AND ob.event_key=$4 AND ob.payload=$5::jsonb
-         AND ob.channels=ARRAY['in_app','email'] AND n.profile_id=ob.profile_id AND n.recipient_user_id=ob.user_id
+         AND ob.channels=$6::text[] AND n.profile_id=ob.profile_id AND n.recipient_user_id=ob.user_id
          AND n.operating_context='customer' AND n.type=ob.event_key`,
-        [params.occurrenceKey, params.profileId, params.userId, params.eventKey, payload]
+        [params.occurrenceKey, params.profileId, params.userId, params.eventKey, payload, channels]
       );
       if (!existing.rows[0])
         throw new Error('Business notification occurrence conflicts with saved delivery');
@@ -611,10 +614,11 @@ export class NotificationsService {
     // In-app delivery is immediate and already persisted; only email awaits the worker/window.
     const jobs = await transaction.query(
       `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts,attempts,provider_ref,delivery_payload)
-       VALUES($1,'in_app','done',$2,5,1,$3,$4),($1,'email','queued',$2,5,0,NULL,NULL)`,
+       VALUES($1,'in_app','done',$2,5,1,$3,$4)${channels.includes('email') ? ",($1,'email','queued',$2,5,0,NULL,NULL)" : ''}`,
       [outboxId, priority, notice.id, payload]
     );
-    if (jobs.rowCount !== 2) throw new Error('Business delivery jobs were not stored');
+    if (jobs.rowCount !== channels.length)
+      throw new Error('Business delivery jobs were not stored');
     const history = await transaction.query(
       `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
        VALUES($1,'in_app','delivered',1,$2)`,

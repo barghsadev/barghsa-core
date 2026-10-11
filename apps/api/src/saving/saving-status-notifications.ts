@@ -2,6 +2,7 @@ import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { tSaving } from '@barghsa/i18n/saving';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import { notifyOrderAwaitingStaff } from '../notifications/order-notifications.js';
 
 /** Invoked once by the native transaction after its guarded state write. */
 export async function notifySavingStatus(
@@ -46,13 +47,14 @@ export async function notifySavingStatus(
       throw new Error('Private saving inbox was not stored');
   };
   if (from !== to) {
+    const occurrence = uuidv7();
     // A UUID names this guarded mutation occurrence; the stored outbox reuses it on worker retries.
     await notifications.createCustomerBusinessEvent(
       {
         ...params,
         userId: current.user_id,
         eventKey: 'order.status_changed',
-        occurrenceKey: `order.status_changed:saving:${id}:${uuidv7()}:${current.user_id}`,
+        occurrenceKey: `order.status_changed:saving:${id}:${occurrence}:${current.user_id}`,
         payload: {
           orderNumber: id,
           newStatus: `${tSaving(label, 'fa')} / ${tSaving(label, 'en')}`,
@@ -61,6 +63,8 @@ export async function notifySavingStatus(
       },
       client
     );
+    if (to === 'awaiting_staff_review')
+      await notifyOrderAwaitingStaff(client, 'saving', id, occurrence);
   } else {
     await informational(current.user_id);
   }

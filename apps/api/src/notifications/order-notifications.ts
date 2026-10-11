@@ -1,11 +1,16 @@
 import type { PoolClient } from 'pg';
 import { NotificationsService } from './notifications.service.js';
+import { t } from '@barghsa/i18n/app';
 
 const orders = {
-  electricity: { table: 'electricity_orders', route: '/electricity/orders' },
-  saving: { table: 'saving_orders', route: '/savings/orders' },
-  solar: { table: 'solar_construction_requests', route: '/solar/requests' },
-  consultation: { table: 'consultation_requests', route: '/consultations' },
+  electricity: {
+    table: 'electricity_orders',
+    route: '/electricity/orders',
+    waiting: 'awaiting_staff_review',
+  },
+  saving: { table: 'saving_orders', route: '/savings/orders', waiting: 'awaiting_staff_review' },
+  solar: { table: 'solar_construction_requests', route: '/solar/requests', waiting: 'submitted' },
+  consultation: { table: 'consultation_requests', route: '/consultations', waiting: 'submitted' },
 } as const;
 
 /** Called only for a new native submission, inside its business transaction. */
@@ -42,7 +47,47 @@ export async function notifyOrderSubmitted(
     },
     client
   );
+  await notifyOrderAwaitingStaff(client, service, id, 'submission');
   return row.user_id;
+}
+
+/** A separate private occurrence for each actual entry into the staff-review queue. */
+export async function notifyOrderAwaitingStaff(
+  client: PoolClient,
+  service: keyof typeof orders,
+  id: string,
+  occurrence: string
+): Promise<void> {
+  const definition = orders[service];
+  const row = (
+    await client.query<{ profile_id: string; user_id: string; status: string }>(
+      `SELECT o.profile_id,p.user_id,o.status FROM ${definition.table} o JOIN profiles p ON p.id=o.profile_id
+     WHERE o.id=$1 AND NOT p.archived FOR SHARE OF p`,
+      [id]
+    )
+  ).rows[0];
+  if (!row || row.status !== definition.waiting || !occurrence.trim())
+    throw new Error('Awaiting-staff notification does not match saved review state');
+  const fa = t('electricity.order.status.awaiting_staff_review', 'fa');
+  const en = t('electricity.order.status.awaiting_staff_review', 'en');
+  await new NotificationsService().createCustomerBusinessEvent(
+    {
+      userId: row.user_id,
+      profileId: row.profile_id,
+      operatingContext: 'customer',
+      type: 'general',
+      eventKey: 'order.awaiting_staff',
+      occurrenceKey: `order.awaiting_staff:${service}:${id}:${occurrence}:${row.user_id}`,
+      payload: { orderNumber: id },
+      title: en,
+      localizedContent: {
+        fa: { title: fa, body: `${fa} ${id}` },
+        en: { title: en, body: `${en} ${id}` },
+      },
+      link: `${definition.route}/${id}`,
+    },
+    client
+  );
 }
 
 /** The native cancellation engine owns the state/refund decision and its stable command key. */

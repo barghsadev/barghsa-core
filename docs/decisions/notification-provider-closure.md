@@ -24,7 +24,9 @@ The durable send claim commits before provider I/O. Accepted receipts are recove
 
 [Resend documents a 24-hour idempotency cache](https://resend.com/docs/dashboard/emails/idempotency-keys). Send the stable key in its `Idempotency-Key` header, but preserve the local receipt indefinitely. The [SMS.ir request contracts](https://sms.ir/rest-api/) expose no idempotency-key field. Their physical sends therefore use the committed local claim and acceptance receipt, with uncertainty held rather than retried. This approval does not assert an undocumented vendor guarantee or successful live SMS delivery.
 
-The owner retained the original `auth.otp_sent`, `order.awaiting_staff` and `system.service_outage` event requirements. Their required publishers remain separate work; this delivery-identity decision does not accept or defer them. OTP values must remain confined to the verified-contact authentication delivery path.
+The owner retained the original `auth.otp_sent`, `order.awaiting_staff` and `system.service_outage` event requirements. Each requires its own publisher and acceptance evidence. On 11 October 2026 the owner approved a safe OTP inbox notice containing purpose, delivery time and channel. The OTP itself remains confined to the verified-contact authentication delivery path and must never enter the general inbox or its event payload.
+
+`order.awaiting_staff` is a separate private inbox occurrence when a native electricity, saving, solar or consultation submission enters staff review. Electricity and saving returns to review create a new occurrence; replaying the same command does not. Publication shares the business transaction, so a failure to store the notice rolls back the transition. Existing submission and status events remain.
 
 ## Document destruction schedule
 
