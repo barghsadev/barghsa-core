@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-12T04:46:20.772544+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-12T04:51:19.438896+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish native answer/isolation verification on the bounded Flash image for v0.4.0. Resolve Telegram outbound routing, then actual webhook handoff/private linkage. No later release or production deployment.
+Resolve owner-blocked staging Telegram outbound route or approved protected proxy, then authorized actual webhook handoff/private linkage/isolation/version checks. Four non-Telegram native AI slots are verified. Accept and stage v0.4.0 only after all gates; no later release or production deployment.
 
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
