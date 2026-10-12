@@ -241,6 +241,7 @@ it('answers anonymously through the compiled private worker using only published
     { kbId: publicKb, title: 'Published guide', excerpt: 'PUBLIC_GUIDANCE' },
   ]);
   expect(JSON.stringify(messages)).toContain('PUBLIC_GUIDANCE');
+  expect(JSON.stringify(messages)).not.toContain('authenticated staff knowledge context');
   expect(JSON.stringify(messages)).not.toMatch(/PRIVATE/);
   expect(body).not.toHaveProperty('profileId');
   expect(body).not.toHaveProperty('conversationId');
@@ -442,6 +443,7 @@ it('staff fixed slot consumes staff/public sources with session audit and no bus
   });
   const prompt = JSON.stringify(messages);
   expect(prompt).toContain('staff_PRIVATE_CONTENT');
+  expect(prompt).toContain('authenticated staff knowledge context');
   expect(prompt).toContain('PUBLIC_GUIDANCE');
   expect(prompt).not.toMatch(/customer_PRIVATE|admin_PRIVATE|PROFILE_PRIVATE/);
   expect(
