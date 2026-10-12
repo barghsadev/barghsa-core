@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-12T00:33:22.981588+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-12T00:57:14.537687+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -12,10 +12,10 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | --- | ---: | --- |
 | done | 594 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 38 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
-| blocked | 1 | Named owner or external prerequisite. |
+| blocked | 4 | Named owner or external prerequisite. |
 | superseded | 2 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish native AI workspace/protected configuration and Telegram outbound route/linkage/slot isolation. Permanent-pause and other operations gates have actual receipts. Preserve disabled failed model, existing webhook, no SMS resend and no later-release work.
+After owner subscription approval or working protected AI configuration, provision/test/enable native AI and complete live slots. Repair approved Telegram egress, handoff/link/isolation. Preserve disabled/pending model, existing webhook, all operational receipts, no SMS resend, no later-release batch.
 
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
@@ -523,7 +523,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-03.01` | done | Recorded batch work | Renew document, notification and AI acceptance |
-| `release-readiness#R-03.02` | partial | Recorded batch work | Verify live staging provider and storage boundaries |
+| `release-readiness#R-03.02` | blocked | Recorded batch work | Verify live staging provider and storage boundaries |
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | done | Earlier acceptance_verified | SMS.ir configuration |
@@ -532,7 +532,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.11.02` | done | Earlier partial | Knowledge base management |
 | `02-auth-users-admin.md#T-09.11.03` | done | Earlier acceptance_verified | Policy management |
 | `02-auth-users-admin.md#T-09.11.04` | done | Earlier partial | AI agent management |
-| `02-auth-users-admin.md#T-09.11.05` | partial | Earlier partial | Agent slot assignment |
+| `02-auth-users-admin.md#T-09.11.05` | blocked | Earlier partial | Agent slot assignment |
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
 | `05-notifications-documents-ai.md#T-05.01.02` | done | Earlier acceptance_verified | Durable outbox table & write pipeline |
 | `05-notifications-documents-ai.md#T-05.01.03` | done | Earlier acceptance_verified | Job queue with retry schedule |
@@ -621,7 +621,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.22.01` | done | Recorded batch work | AuthZ for AI actions |
 | `05-notifications-documents-ai.md#T-05.22.02` | superseded | Recorded batch work | Trusted-UI confirmation for writes |
 | `05-notifications-documents-ai.md#T-05.22.03` | done | Recorded batch work | AI audit logging |
-| `05-notifications-documents-ai.md#T-05.22.04` | partial | Recorded batch work | Data isolation per slot |
+| `05-notifications-documents-ai.md#T-05.22.04` | blocked | Recorded batch work | Data isolation per slot |
 | `05-notifications-documents-ai.md#T-05.22.05` | done | Recorded batch work | Sensitive value redaction |
 | `05-notifications-documents-ai.md#T-05.22.06` | done | Recorded batch work | Source attribution in answers |
 | `05-notifications-documents-ai.md#T-05.23.01` | done | Recorded batch work | AI worker process isolation |
