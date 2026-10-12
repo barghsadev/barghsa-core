@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-11T23:58:36.091614+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-10-12T00:33:22.981588+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 593 | Accepted with unchanged source bindings. |
+| done | 594 | Accepted with unchanged source bindings. |
 | verify | 730 | Existing work may be complete; inspect evidence before building. |
-| partial | 39 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 38 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish controlled configuration-pause/tested replacement operational recovery. Repair owner-blocked AI workspace and Telegram outbound route; complete live slot/linkage/isolation. Preserve email preference, no SMS resend, no later-release work.
+Finish native AI workspace/protected configuration and Telegram outbound route/linkage/slot isolation. Permanent-pause and other operations gates have actual receipts. Preserve disabled failed model, existing webhook, no SMS resend and no later-release work.
 
-- `05-notifications-documents-ai.md#T-05.08.02`: Circuit breaker implementation
+- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
+- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
 
 ## v0.2.0: Complete customer journeys
@@ -567,7 +568,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.07.04` | done | Recorded batch work | Credit monitoring |
 | `05-notifications-documents-ai.md#T-05.07.05` | done | Recorded batch work | SMS.ir admin UI |
 | `05-notifications-documents-ai.md#T-05.08.01` | done | Recorded batch work | Error classification utility |
-| `05-notifications-documents-ai.md#T-05.08.02` | partial | Recorded batch work | Circuit breaker implementation |
+| `05-notifications-documents-ai.md#T-05.08.02` | done | Recorded batch work | Circuit breaker implementation |
 | `05-notifications-documents-ai.md#T-05.08.03` | done | Recorded batch work | Provider health dashboard |
 | `05-notifications-documents-ai.md#T-05.08.04` | done | Recorded batch work | Provider runbook documentation |
 | `05-notifications-documents-ai.md#T-05.08.05` | done | Recorded batch work | Provider test fakes & contract tests |
