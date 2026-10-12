@@ -65,6 +65,11 @@ export async function completeChat(input: ChatCompletionInput): Promise<ChatComp
         temperature: input.temperature,
         messages: input.messages,
         stream: false,
+        // Flash otherwise adds reasoning tokens outside the visible answer cap.
+        // Keep this bounded assistant within its existing latency/token budget.
+        ...(['deepseek/deepseek-v4-flash', 'deepseek-v4-flash'].includes(input.modelName)
+          ? { reasoning: { effort: 'none' } }
+          : {}),
       };
   const response = await guardedRequest(`${base}/${anthropic ? 'messages' : 'chat/completions'}`, {
     method: 'POST',
