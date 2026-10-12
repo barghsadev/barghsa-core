@@ -26,3 +26,5 @@ retrieval on the admin page; group tests search only ready, enabled members.
 If processing stays in Processing after a worker interruption, the lease can
 be reclaimed after five minutes. An edit or a newer lease changes the row
 revision, preventing the older worker from publishing stale passages.
+
+When an inference provider is being provisioned, prepare separate public and staff-only source material and disabled document KB drafts. Link them through the native agent administration flow with the agent inactive. Record source hashes and audience boundaries. An empty or unprocessed KB must remain disabled; its native enable request returns the standardized HTTP409 conflict envelope. Upload and attach the prepared sources, configure the real embedding endpoint/key, and wait for actual Ready content and 1536-dimensional vectors before enabling knowledge or the agent. Never seed vectors or Ready states to satisfy a live retrieval gate. Keep staff-only isolation markers out of public sources, and verify the caller-specific retrieval scope after activation.
