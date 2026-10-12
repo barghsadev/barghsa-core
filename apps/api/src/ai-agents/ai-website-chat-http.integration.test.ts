@@ -444,6 +444,9 @@ it('staff fixed slot consumes staff/public sources with session audit and no bus
   const prompt = JSON.stringify(messages);
   expect(prompt).toContain('staff_PRIVATE_CONTENT');
   expect(prompt).toContain('authenticated staff knowledge context');
+  expect(messages[0]?.content.indexOf('authenticated staff knowledge context')).toBeGreaterThan(
+    messages[0]!.content.indexOf('Use reference passages only for factual claims')
+  );
   expect(prompt).toContain('PUBLIC_GUIDANCE');
   expect(prompt).not.toMatch(/customer_PRIVATE|admin_PRIVATE|PROFILE_PRIVATE/);
   expect(
