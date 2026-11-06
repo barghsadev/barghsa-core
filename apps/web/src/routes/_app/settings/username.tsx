@@ -1,7 +1,7 @@
+import { Skeleton } from '@barghsa/ui';
 import { createFileRoute } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import {
-  UserIcon,
   MailIcon,
   PhoneIcon,
   AlertCircleIcon,
@@ -151,7 +151,7 @@ function SettingsUsernamePage() {
       </div>
       {loading && (
         <div className="text-center py-8 text-muted-foreground">
-          <UserIcon aria-hidden="true" className="mx-auto h-6 w-6 animate-pulse mb-2" />
+          <Skeleton className="h-6 w-20 shrink-0" />
           <p className="text-sm">{t('settings.profile.loading', locale)}</p>
         </div>
       )}

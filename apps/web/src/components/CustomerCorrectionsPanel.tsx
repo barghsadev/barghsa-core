@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -144,7 +144,7 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
       </div>
       {notice && <p role="status">{label('saved')}</p>}
       {loading ? (
-        <p role="status">{label('loading')}</p>
+        <LoadingStatus>{label('loading')}</LoadingStatus>
       ) : error ? (
         <p role="alert">{label('error')}</p>
       ) : access?.canView === false ? (

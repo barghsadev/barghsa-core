@@ -28,7 +28,7 @@ import {
 import type { PolicyCatalogueKind } from '../lib/catalogue-category-query.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -388,7 +388,7 @@ function OwnedAiPoliciesPage({
       >
         {label('refresh')}
       </Button>
-      {list.loading && <p role="status">{label('loading')}</p>}
+      {list.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {list.error && (
         <div role="alert">
           <p>{label('error')}</p>
@@ -655,14 +655,14 @@ function OwnedAiPoliciesPage({
                 {label(kind === 'policies' ? 'addPolicy' : 'addGroup')}
               </Button>
             </ListPage.Toolbar>
-            {choices.loading && <p role="status">{label('optionsLoading')}</p>}
+            {choices.loading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
             {choices.error && (
               <div role="alert">
                 <p>{label('optionsError')}</p>
                 <Button onClick={choices.retry}>{label('optionsRetry')}</Button>
               </div>
             )}
-            {selectedRead.loading && <p role="status">{label('detailLoading')}</p>}
+            {selectedRead.loading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
             {selectedRead.error && (
               <div role="alert">
                 <p>{label('detailError')}</p>
@@ -988,7 +988,7 @@ function OwnedAiPoliciesPage({
               error={list.error}
               empty={!rows.length}
               retainContent={rows.length > 0}
-              loadingView={<p role="status">{label('loading')}</p>}
+              loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
               errorView={
                 <div role="alert">
                   <p>{label('error')}</p>

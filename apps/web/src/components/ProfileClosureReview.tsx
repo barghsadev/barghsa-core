@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input } from '@barghsa/ui';
+import { LoadingStatus, Button, Input } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -280,7 +280,7 @@ function ClosureReview({
     >
       <fieldset disabled={locked} className="contents">
         <h3 className="font-semibold">{label('review')}</h3>
-        {loading && <p role="status">{t('settings.privacy.loading', locale)}</p>}
+        {loading && <LoadingStatus>{t('settings.privacy.loading', locale)}</LoadingStatus>}
         {error && (
           <p role="alert">
             {error === 'unknown'

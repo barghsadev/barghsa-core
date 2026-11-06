@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { tSaving } from '@barghsa/i18n/saving';
-import { Button, Card, CardContent, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, Card, CardContent, ListPage } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
@@ -83,7 +83,7 @@ export function SavingsPage() {
           error={state === 'error' || state === 'denied'}
           empty={!plans.length}
           retainContent={!!plans.length && state !== 'denied'}
-          loadingView={<p role="status">{copy('loading')}</p>}
+          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
           errorView={
             state === 'denied' ? (
               <p role="alert">{copy('catalogueDenied')}</p>

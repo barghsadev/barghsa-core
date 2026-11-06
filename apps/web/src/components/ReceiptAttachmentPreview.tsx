@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 
@@ -55,9 +55,9 @@ export function ReceiptAttachmentPreview({
           ) : (
             <>
               {state === 'loading' && (
-                <p role="status" className="text-muted-foreground">
+                <LoadingStatus className="text-muted-foreground">
                   {label('previewLoading')}
-                </p>
+                </LoadingStatus>
               )}
               <img
                 key={revision}

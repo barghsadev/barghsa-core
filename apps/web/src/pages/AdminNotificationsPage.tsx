@@ -4,7 +4,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Alert, Button, ListPage, DateCell, TextCell } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, ListPage, DateCell, TextCell } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
@@ -1026,7 +1026,7 @@ export default function AdminNotificationsPage({
           empty={false}
           emptyView={null}
           retainContent={accepted}
-          loadingView={<p role="status">{t('admin.notifications.loading', uiLocale)}</p>}
+          loadingView={<LoadingStatus>{t('admin.notifications.loading', uiLocale)}</LoadingStatus>}
           errorView={
             <div role="alert">
               <p>

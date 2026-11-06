@@ -1,6 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
+  LoadingStatus,
   Button,
   DatePicker,
   datePickerAtTime,
@@ -12,7 +13,7 @@ import {
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
-import { t as settingsText } from '@barghsa/i18n/admin-ui';
+import { tWorkspace as settingsText } from '@barghsa/i18n/workspace-admin';
 import { tVat } from '@barghsa/i18n/vat';
 import {
   CHARGE_CATEGORIES,
@@ -414,7 +415,7 @@ export default function AdminVatPage() {
           </Button>
         </div>
       )}
-      {preference.status === 'loading' && <p role="status">{label('timezoneLoading')}</p>}
+      {preference.status === 'loading' && <LoadingStatus>{label('timezoneLoading')}</LoadingStatus>}
       {preference.status === 'error' && (
         <div role="alert">
           <p>{label('timezoneError')}</p>
@@ -597,14 +598,16 @@ export default function AdminVatPage() {
       {!scope.denied && (
         <>
           {saved && <p role="status">{label('saved')}</p>}
-          {preference.status === 'loading' && <p role="status">{label('timezoneLoading')}</p>}
+          {preference.status === 'loading' && (
+            <LoadingStatus>{label('timezoneLoading')}</LoadingStatus>
+          )}
           {preference.status === 'error' && (
             <div role="alert">
               <p>{label('timezoneError')}</p>
               <Button onClick={preference.retry}>{label('timezoneRetry')}</Button>
             </div>
           )}
-          {productRead.loading && <p role="status">{label('productsLoading')}</p>}
+          {productRead.loading && <LoadingStatus>{label('productsLoading')}</LoadingStatus>}
           {productRead.error && (
             <div role="alert">
               <p>{label('productsError')}</p>
@@ -851,7 +854,7 @@ export default function AdminVatPage() {
                 error={rateRead.error}
                 empty={!rates.length}
                 retainContent={rates.length > 0}
-                loadingView={<p role="status">{label('loading')}</p>}
+                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
                 emptyView={<p>{label('empty')}</p>}
                 errorView={
                   <div role="alert">
@@ -905,7 +908,7 @@ export default function AdminVatPage() {
                 error={overrideRead.error}
                 empty={!overrides.length}
                 retainContent={overrides.length > 0}
-                loadingView={<p role="status">{label('loading')}</p>}
+                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
                 emptyView={<p>{label('empty')}</p>}
                 errorView={
                   <div role="alert">

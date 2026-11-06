@@ -1,5 +1,5 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
+import { LoadingStatus, Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import { walletHistoryQueryOptions } from '../lib/wallet-history-query.js';
 import { WalletHistoryFilters } from './WalletHistoryFilters.js';
@@ -192,7 +192,7 @@ function HistoryPage({
         error={error}
         empty={!page?.transactions.length}
         retainContent={!!page?.transactions.length}
-        loadingView={<p role="status">{label('loading')}</p>}
+        loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
         errorView={
           <div className="flex flex-col gap-2">
             <p role="alert">

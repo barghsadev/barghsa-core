@@ -1,4 +1,4 @@
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
 type State = {
@@ -35,7 +35,7 @@ export function PreferenceSettingsStatus({
   const copy = (key: string) => tPreferenceSettingsForms(key, locale);
   return (
     <div className="space-y-2">
-      {editor.loading && <p role="status">{copy('loading')}</p>}
+      {editor.loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {editor.loadFailed && <p role="alert">{loadError}</p>}
       {editor.error && (
         <div role="alert" className="text-sm text-destructive">

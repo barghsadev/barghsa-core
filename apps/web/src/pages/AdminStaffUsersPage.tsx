@@ -5,7 +5,17 @@ import { StaffEffectivePermissions } from '../components/StaffEffectivePermissio
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Alert, Button, DataTable, DateCell, Input, Label, ListPage, TextCell } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  Button,
+  DataTable,
+  DateCell,
+  Input,
+  Label,
+  ListPage,
+  TextCell,
+} from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -751,7 +761,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
             {label('refresh')}
           </Button>
         </ListPage.Toolbar>
-        {accessLoading && <p role="status">{label('loading')}</p>}
+        {accessLoading && <LoadingStatus>{label('loading')}</LoadingStatus>}
         {accessError && (
           <div role="alert">
             <p>{label('accessError')}</p>
@@ -760,7 +770,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
             </Button>
           </div>
         )}
-        {optionsLoading && <p role="status">{label('optionsLoading')}</p>}
+        {optionsLoading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
         {optionsError && (
           <div role="alert">
             <p>{label('optionsError')}</p>
@@ -780,7 +790,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                 error={error}
                 empty={!list.items.length}
                 retainContent={!!list.items.length}
-                loadingView={<p role="status">{label('loading')}</p>}
+                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
                 errorView={
                   <div role="alert">
                     {label('error')}{' '}

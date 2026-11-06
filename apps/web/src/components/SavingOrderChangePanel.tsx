@@ -4,7 +4,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from './OrderWalletBalance.js';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { LoadingStatus, Button, Card, CardContent } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -408,7 +408,7 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
           <h2 className="text-xl font-semibold">{copy('changeOrder')}</h2>
           <p className="text-sm text-muted-foreground">{copy('changeOrderHelp')}</p>
         </div>
-        {status === 'loading' && <p role="status">{copy('loading')}</p>}
+        {status === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
         {(status === 'forbidden' || status === 'missing') && (
           <p role="alert">
             {formCopy(status === 'missing' ? 'customerMissing' : 'customerForbidden')}

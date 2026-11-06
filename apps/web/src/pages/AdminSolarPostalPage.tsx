@@ -2,7 +2,14 @@ import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
-import { Alert, AlertDescription, Button, FinancialReviewSummary, ListPage } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  AlertDescription,
+  Button,
+  FinancialReviewSummary,
+  ListPage,
+} from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -527,7 +534,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
             error={queueError || queueDenied}
             empty={!visibleRows.length}
             retainContent={!!visibleRows.length && !queueDenied}
-            loadingView={<p role="status">{copy('loading')}</p>}
+            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
             errorView={
               queueDenied ? (
                 <p role="alert">{copy('staffQueueForbidden')}</p>

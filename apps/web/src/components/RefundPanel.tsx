@@ -2,7 +2,16 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
-import { Button, Card, CardContent, Input, Field, FieldLabel, StatusBadge } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Card,
+  CardContent,
+  Input,
+  Field,
+  FieldLabel,
+  StatusBadge,
+} from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
@@ -474,7 +483,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
         </Button>
         <RefundFormAlert message={lookup.errors.root?.validation?.message} />
       </form>
-      {status === 'loading' && <p role="status">{word('loading')}</p>}
+      {status === 'loading' && <LoadingStatus>{word('loading')}</LoadingStatus>}
       <RefundFormAlert
         message={
           status === 'error' ? word('error') : status === 'denied' ? word('forbidden') : undefined

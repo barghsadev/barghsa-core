@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import { useLocale } from '../hooks/useLocale.js';
@@ -170,7 +170,7 @@ export function KnowledgeBaseDocumentPicker(props: Props) {
           />
         </fieldset>
       </form>
-      {read.loading && <p role="status">{label('loadingFiles')}</p>}
+      {read.loading && <LoadingStatus>{label('loadingFiles')}</LoadingStatus>}
       {read.error && (
         <div role="alert">
           <p>{label('fileError')}</p>

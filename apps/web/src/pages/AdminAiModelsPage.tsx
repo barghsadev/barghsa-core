@@ -16,7 +16,7 @@ import {
   type FormEvent,
 } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -319,7 +319,7 @@ function OwnedAiModelsPage({
       <Button type="button" variant="outline" disabled={loading || pending} onClick={refresh}>
         {label('refresh')}
       </Button>
-      {loading && <p role="status">{label('loading')}</p>}
+      {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {error && (
         <div role="alert">
           <p>{label('error')}</p>
@@ -748,7 +748,7 @@ function OwnedAiModelsPage({
               error={error}
               empty={models.length === 0}
               retainContent={models.length > 0}
-              loadingView={<p role="status">{label('loading')}</p>}
+              loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
               errorView={
                 <div role="alert">
                   <p>{label('error')}</p>

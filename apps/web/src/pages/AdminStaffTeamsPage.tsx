@@ -3,7 +3,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
-import { Alert, Badge, Button, Input, Label, ListPage, TextCell } from '@barghsa/ui';
+import { LoadingStatus, Alert, Badge, Button, Input, Label, ListPage, TextCell } from '@barghsa/ui';
 import {
   DEFAULT_STAFF_ASSIGNMENT_RULES,
   STAFF_ASSIGNMENT_WORK_TYPES,
@@ -528,7 +528,7 @@ export default function AdminStaffTeamsPage() {
           error={error || denied}
           empty={!teams.length}
           retainContent={!!teams.length && !denied}
-          loadingView={<p role="status">{label('loading')}</p>}
+          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={
             <div role="alert">
               <p>{label(denied ? 'forbidden' : 'error')}</p>
@@ -685,7 +685,7 @@ export default function AdminStaffTeamsPage() {
                   />
                 </div>
                 {memberLoading ? (
-                  <p role="status">{label('loading')}</p>
+                  <LoadingStatus>{label('loading')}</LoadingStatus>
                 ) : memberError ? (
                   <div role="alert">
                     <p>{label('memberError')}</p>
@@ -805,7 +805,7 @@ export default function AdminStaffTeamsPage() {
             >
               <h2 className="text-lg font-semibold">{label('rules')}</h2>
               <p className="text-sm text-muted-foreground">{label('expertiseHelp')}</p>
-              {rulesLoading && <p role="status">{label('rulesLoading')}</p>}
+              {rulesLoading && <LoadingStatus>{label('rulesLoading')}</LoadingStatus>}
               {rulesError && (
                 <div role="alert">
                   <p>{label('rulesError')}</p>

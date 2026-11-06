@@ -3,7 +3,16 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
-import { Alert, AlertDescription, Button, Input, Label, ListPage, Textarea } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  AlertDescription,
+  Button,
+  Input,
+  Label,
+  ListPage,
+  Textarea,
+} from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -438,7 +447,7 @@ function OwnedAdminSolarConstructionPage({
           error={queueState === 'error' || queueState === 'denied'}
           empty={!rows.length}
           retainContent={!!rows.length}
-          loadingView={<p role="status">{copy('loading')}</p>}
+          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
           errorView={
             <div className="space-y-2">
               <p role="alert">

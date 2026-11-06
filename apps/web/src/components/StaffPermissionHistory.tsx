@@ -1,7 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
-import { Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
+import { LoadingStatus, Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 
@@ -147,7 +147,7 @@ export function StaffPermissionHistory({
         {invalid && <p role="alert">{label('invalidRange')}</p>}
       </form>
       {loading || zone.status === 'loading' ? (
-        <p role="status">{label('loading')}</p>
+        <LoadingStatus>{label('loading')}</LoadingStatus>
       ) : error || zone.status === 'error' ? (
         <div role="alert">
           {label('error')}{' '}

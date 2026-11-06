@@ -12,6 +12,7 @@ import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { FinanceCursor } from '../lib/finance-list-query.js';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
+  LoadingStatus,
   Alert,
   AlertDescription,
   Button,
@@ -664,7 +665,9 @@ function OwnedInvoiceBankReceiptQueue({
                   </form>
                 ) : null}
               </div>
-              {reviewState === 'loading' ? <p role="status">{word('reviewLoading')}</p> : null}
+              {reviewState === 'loading' ? (
+                <LoadingStatus>{word('reviewLoading')}</LoadingStatus>
+              ) : null}
               {reviewState === 'error' ? <p role="alert">{word('reviewError')}</p> : null}
             </>
           ) : null}

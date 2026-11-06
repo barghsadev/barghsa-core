@@ -1,3 +1,4 @@
+import { Skeleton } from '@barghsa/ui';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -20,7 +21,14 @@ import { useBlocker, useNavigate } from '@tanstack/react-router';
 import { toast } from '../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
-import { Button, Card, CardContent, DependentSelect } from '@barghsa/ui';
+import {
+  SkeletonText,
+  LoadingStatus,
+  Button,
+  Card,
+  CardContent,
+  DependentSelect,
+} from '@barghsa/ui';
 import { useGeographyOptions, loadGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
@@ -1166,9 +1174,9 @@ function OwnedSimpleElectricityOrderPage() {
   if (checking) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <p role="status" className="text-muted-foreground">
+        <LoadingStatus className="text-muted-foreground">
           {t('electricity.order.checking', locale)}
-        </p>
+        </LoadingStatus>
       </div>
     );
   }
@@ -1224,6 +1232,7 @@ function OwnedSimpleElectricityOrderPage() {
         className="container mx-auto max-w-md space-y-4 p-6"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
+        {draftLoading && <SkeletonText lines={2} />}
         <p role={draftError ? 'alert' : 'status'}>
           {t(
             draftError ? 'electricity.order.draftLoadFailed' : 'electricity.order.draftLoading',
@@ -1450,7 +1459,7 @@ function OwnedSimpleElectricityOrderPage() {
 
                     {loadingProducts ? (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Loader2Icon className="h-4 w-4 animate-spin" />
+                        <Skeleton className="h-6 w-20 shrink-0" />
                         {t('electricity.order.loadingProducts', locale)}
                       </div>
                     ) : productError ? (
@@ -1759,7 +1768,7 @@ function OwnedSimpleElectricityOrderPage() {
 
                     {loadingAddresses ? (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Loader2Icon className="h-4 w-4 animate-spin" />
+                        <Skeleton className="h-6 w-20 shrink-0" />
                         {t('electricity.order.loadingAddresses', locale)}
                       </div>
                     ) : addressError ? (

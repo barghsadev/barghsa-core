@@ -2,6 +2,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/team';
 import {
+  LoadingStatus,
   Alert,
   AlertDescription,
   Badge,
@@ -115,7 +116,7 @@ function TeamCatalogue() {
             error={transfers.error || scope.denied}
             retainContent={!!transfers.data?.transfers.length}
             empty={!!transfers.data && !transfers.data.transfers.length}
-            loadingView={<p role="status">{word('loading')}</p>}
+            loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
             errorView={
               <p role="alert">{word(scope.denied ? 'forbidden' : 'loadTransfersError')}</p>
             }
@@ -182,7 +183,7 @@ function TeamCatalogue() {
           retainContent={!!profiles.data}
           empty={false}
           emptyView={null}
-          loadingView={<p role="status">{word('loading')}</p>}
+          loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
           errorView={<p role="alert">{word(scope.denied ? 'forbidden' : 'loadError')}</p>}
         >
           {!scope.denied &&
@@ -641,7 +642,7 @@ function TeamMembers({
           retainContent={!!team}
           empty={false}
           emptyView={null}
-          loadingView={<p role="status">{word('loading')}</p>}
+          loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
           errorView={<p role="alert">{word(scope.denied ? 'forbidden' : 'loadError')}</p>}
         >
           {team && (

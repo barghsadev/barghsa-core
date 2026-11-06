@@ -6,7 +6,7 @@ import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { MonitorIcon, SmartphoneIcon, GlobeIcon, Trash2Icon, ShieldAlertIcon } from 'lucide-react';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import { TrustedDevices } from '../../../components/TrustedDevices.js';
 import { SecurityRevocationDialog } from '../../../components/SecurityRevocationDialog.js';
 import { usePreferenceSettingsOwner } from '../../../hooks/usePreferenceSettingsForm.js';
@@ -210,9 +210,9 @@ function SettingsSecurityPage() {
               </Button>
             </div>
             {lists.loading.sessions && (
-              <p role="status" className="text-sm text-muted-foreground">
+              <LoadingStatus className="text-sm text-muted-foreground">
                 {text('loading')}
-              </p>
+              </LoadingStatus>
             )}
             {lists.failed.sessions && (
               <p role="alert" className="text-sm text-destructive">

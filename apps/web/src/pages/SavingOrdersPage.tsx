@@ -1,4 +1,4 @@
-import { ListPage } from '@barghsa/ui';
+import { LoadingStatus, ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -293,7 +293,7 @@ export function SavingOrdersPage({
           error={state === 'error'}
           empty={orders.length === 0}
           retainContent={orders.length > 0}
-          loadingView={<p role="status">{copy('loading')}</p>}
+          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
           errorView={
             <div className="space-y-2">
               <p role="alert">

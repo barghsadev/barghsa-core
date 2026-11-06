@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Button, ListPage, ScrollArea } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
 import { AgentSlotChoiceForm } from '../components/AgentSlotChoiceForm.js';
@@ -151,7 +151,7 @@ export default function AdminAgentSlotsPage() {
       </div>
       {!scope.denied && (
         <div className="space-y-2">
-          {agents.loading && <p role="status">{label('agentsLoading')}</p>}
+          {agents.loading && <LoadingStatus>{label('agentsLoading')}</LoadingStatus>}
           {agents.error && <p role="alert">{label('agentsError')}</p>}
           <Button type="button" variant="outline" disabled={agents.loading} onClick={refreshAgents}>
             {label('agentsRetry')}
@@ -192,7 +192,7 @@ export default function AdminAgentSlotsPage() {
           empty={false}
           emptyView={null}
           retainContent={slots.data !== null}
-          loadingView={<p role="status">{label('loading')}</p>}
+          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={<p role="alert">{label(scope.denied ? 'denied' : 'error')}</p>}
         >
           <ScrollArea

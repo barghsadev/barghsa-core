@@ -2,7 +2,7 @@ import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
+import { LoadingStatus, Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
 import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -180,7 +180,7 @@ function OwnedWalletInvoicePaymentPanel({
       ) : (
         <>
           {loading ? (
-            <p role="status">{text('loading')}</p>
+            <LoadingStatus>{text('loading')}</LoadingStatus>
           ) : error ? (
             <Alert variant="destructive">
               <AlertDescription>{text('loadError')}</AlertDescription>

@@ -36,6 +36,20 @@ function SkeletonText({
     </div>
   );
 }
+
+/** Keep the existing progress label visible; placeholders contain no private data. */
+function LoadingStatus({
+  children,
+  className,
+  ...props
+}: Omit<React.ComponentProps<'div'>, 'role'>) {
+  return (
+    <div {...props} role="status" data-slot="loading-status" className="min-w-0 space-y-3">
+      <SkeletonText lines={2} />
+      <p className={className}>{children}</p>
+    </div>
+  );
+}
 function SkeletonCard({ className, ...props }: React.ComponentProps<typeof Skeleton>) {
   return <Skeleton className={cn('h-32 w-full', className)} {...props} />;
 }
@@ -72,4 +86,12 @@ function SkeletonChart({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-export { Skeleton, SkeletonText, SkeletonCard, SkeletonAvatar, SkeletonTableRow, SkeletonChart };
+export {
+  Skeleton,
+  SkeletonText,
+  SkeletonCard,
+  SkeletonAvatar,
+  SkeletonTableRow,
+  SkeletonChart,
+  LoadingStatus,
+};

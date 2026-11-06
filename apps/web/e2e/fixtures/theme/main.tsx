@@ -1,3 +1,6 @@
+import SonnerToaster from '../../../src/components/SonnerToaster';
+import { useTheme } from '../../../src/hooks/useTheme';
+import { toast as appToast } from '../../../src/lib/toast-api';
 import '@barghsa/ui/styles.css';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -70,6 +73,19 @@ import {
 import { Toaster, toast } from '../../../../../packages/ui/src/components/ui/toast';
 import { Skeleton } from '../../../../../packages/ui/src/components/ui/skeleton';
 import { PageLoading } from '../../../../../packages/ui/src/components/ui/page-states';
+function NoticeControls() {
+  const { setTheme } = useTheme();
+  return (
+    <section aria-label="Application notices" className="flex flex-wrap gap-3">
+      <SonnerToaster />
+      <Button onClick={() => appToast.success('Application notice', { duration: 60_000 })}>
+        Application notice
+      </Button>
+      <Button onClick={() => setTheme('light')}>Light notice theme</Button>
+      <Button onClick={() => setTheme('system')}>Device notice theme</Button>
+    </section>
+  );
+}
 function Auxiliary() {
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState('');
@@ -291,6 +307,7 @@ createRoot(document.getElementById('root')!).render(
         </Alert>
         <Controls />
         <Auxiliary />
+        <NoticeControls />
       </main>
     </BrandThemeProvider>
   </UiDirectionProvider>

@@ -5,7 +5,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
-import { Button, DateCell, TextCell, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, DateCell, TextCell, ListPage } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { NotificationDeliveryHistory } from './NotificationDeliveryHistory.js';
 
@@ -436,7 +436,7 @@ export default function DeadLetterPanel({
           retainContent={queue.data !== null && rows.length > 0}
           empty={queue.ready && !rows.length}
           emptyView={<p>{label('empty')}</p>}
-          loadingView={<p role="status">{t('admin.notifications.loading', uiLocale)}</p>}
+          loadingView={<LoadingStatus>{t('admin.notifications.loading', uiLocale)}</LoadingStatus>}
           errorView={
             <div role="alert">
               <p>{label('loadFailed')}</p>

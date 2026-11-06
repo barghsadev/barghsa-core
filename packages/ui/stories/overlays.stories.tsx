@@ -437,6 +437,7 @@ export const Toasts: Story = () => {
           UI.baseToast.add({
             title: text('انجام شد', 'Completed'),
             description: text('عملیات نمایشی تکمیل شد.', 'The sample action completed.'),
+            timeout: 0,
           })
         }
       >
@@ -452,12 +453,19 @@ export const SonnerNotifications: Story = () => {
     locale = useContext(StoryLocale);
   return (
     <>
-      <Toaster theme={theme} dir={locale === 'fa' ? 'rtl' : 'ltr'} closeButton />
+      <Toaster
+        theme={theme}
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        closeButton
+        toastOptions={{ closeButtonAriaLabel: text('بستن اعلان', 'Close notification') }}
+      />
       <div className="flex flex-wrap gap-3">
         {(['success', 'info', 'warning', 'error'] as const).map((kind) => (
           <UI.Button
             key={kind}
-            onClick={() => toast[kind](text('اعلان نمونه', 'Sample notification'))}
+            onClick={() =>
+              toast[kind](text('اعلان نمونه', 'Sample notification'), { duration: 60_000 })
+            }
           >
             {kind}
           </UI.Button>
@@ -508,5 +516,37 @@ export const CommandWindow: Story = () => {
         </UI.Command>
       </UI.CommandDialog>
     </>
+  );
+};
+
+/** Descriptions remain tooltips; keyboard-operable links use the installed popover. */
+export const RichHelp: Story = () => {
+  const text = useStoryText();
+  return (
+    <UI.Popover>
+      <UI.PopoverTrigger render={<UI.Button variant="outline" />}>
+        {text('راهنمای پیونددار', 'Help with links')}
+      </UI.PopoverTrigger>
+      <UI.PopoverContent>
+        <UI.PopoverHeader>
+          <UI.PopoverTitle>{text('راهنمای بیشتر', 'More guidance')}</UI.PopoverTitle>
+          <UI.PopoverDescription>
+            {text(
+              'پیوند راهنما با صفحه‌کلید در دسترس است.',
+              'The guidance link is available by keyboard.'
+            )}
+          </UI.PopoverDescription>
+        </UI.PopoverHeader>
+        <a href="#guidance" className="min-h-11 flex items-center text-primary underline">
+          {text('باز کردن راهنما', 'Open guidance')}
+        </a>
+        <p id="guidance" tabIndex={-1} className="text-sm text-muted-foreground">
+          {text(
+            'پیش از ادامه، خدمت متناسب با درخواست خود را انتخاب کنید.',
+            'Choose the service that matches your request before continuing.'
+          )}
+        </p>
+      </UI.PopoverContent>
+    </UI.Popover>
   );
 };

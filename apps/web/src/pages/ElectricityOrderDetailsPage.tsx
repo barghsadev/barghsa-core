@@ -9,6 +9,7 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { contractText } from '@barghsa/i18n/contracts';
 import {
+  LoadingStatus,
   Button,
   Card,
   CardContent,
@@ -710,7 +711,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       </header>
       {time.notice}
       {loading ? (
-        <p role="status">{t('electricity.order.detailLoading', locale)}</p>
+        <LoadingStatus>{t('electricity.order.detailLoading', locale)}</LoadingStatus>
       ) : error || !detail ? (
         <div role="alert" className="space-y-3">
           <p>{t('electricity.order.detailFailed', locale)}</p>

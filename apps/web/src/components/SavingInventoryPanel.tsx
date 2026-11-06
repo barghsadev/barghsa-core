@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Button, Input, Label, Alert } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label, Alert } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -72,7 +72,7 @@ export function SavingInventoryPanel({
       </div>
       {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
       {editor.resource.error && <Alert variant="destructive">{label('inventoryLoadError')}</Alert>}
-      {editor.resource.loading && <p role="status">{label('loading')}</p>}
+      {editor.resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {editor.saved && <p role="status">{label('saved')}</p>}
       {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}
       {inventory && (

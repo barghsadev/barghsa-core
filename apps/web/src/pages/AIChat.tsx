@@ -1,3 +1,4 @@
+import { LoadingStatus } from '@barghsa/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -91,7 +92,7 @@ function OwnedAIChat() {
     >
       {(status === 'loading' ||
         (status === 'ready' && availability?.revision !== profileRevision)) && (
-        <p role="status">{t('assistant.page.loading', locale)}</p>
+        <LoadingStatus>{t('assistant.page.loading', locale)}</LoadingStatus>
       )}
       {status === 'unavailable' && (
         <section className="rounded-2xl border bg-card p-6">

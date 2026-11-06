@@ -6,13 +6,28 @@ export const Statuses: Story = () => {
   const text = useStoryText();
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap gap-3">
-        {(['default', 'success', 'warning', 'destructive', 'info', 'purple'] as const).map(
-          (tone) => (
-            <UI.StatusBadge key={tone} label={tone} tone={tone} />
-          )
-        )}
-      </div>
+      {(['sm', 'default', 'lg'] as const).map((size) => (
+        <div key={size} className="flex flex-wrap items-center gap-3">
+          {(['default', 'success', 'warning', 'destructive', 'info', 'purple'] as const).flatMap(
+            (tone) =>
+              [true, false].map((dot) => (
+                <UI.StatusBadge
+                  key={tone + String(dot)}
+                  label={tone + ' · ' + size}
+                  tone={tone}
+                  size={size}
+                  dot={dot}
+                />
+              ))
+          )}
+          <UI.StatusBadge
+            label={text('در انتظار بررسی', 'Awaiting review')}
+            state="pending"
+            size={size}
+            variant="dot"
+          />
+        </div>
+      ))}
       <UI.DualStatusDisplay
         commercialLabel={text('درخواست', 'Request')}
         commercialStatus={text('تأیید شده', 'Approved')}

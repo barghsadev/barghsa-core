@@ -1,3 +1,4 @@
+import { LoadingStatus } from '@barghsa/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -440,7 +441,7 @@ function OwnedReminderOffsetTogglePanel() {
         className="bg-card text-card-foreground rounded-lg border border-border p-6 text-muted-foreground"
         dir={isRtl ? 'rtl' : 'ltr'}
       >
-        {t('admin.invoices.reminders.loading', locale)}
+        <LoadingStatus>{t('admin.invoices.reminders.loading', locale)}</LoadingStatus>
       </div>
     );
   }

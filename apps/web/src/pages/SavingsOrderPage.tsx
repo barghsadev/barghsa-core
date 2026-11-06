@@ -8,7 +8,14 @@ import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useMemo, useId, useRef, useState } from 'react';
-import { Button, Card, CardContent, FinancialReviewSummary, DependentSelect } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Card,
+  CardContent,
+  FinancialReviewSummary,
+  DependentSelect,
+} from '@barghsa/ui';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../components/GeographyLoadError.js';
 import { t } from '@barghsa/i18n/app';
@@ -705,7 +712,7 @@ function OwnedSavingsOrderPage() {
         </Link>
         <h1 className="text-3xl font-semibold">{copy('orderTitle')}</h1>
       </header>
-      {loading && <p role="status">{copy('loading')}</p>}
+      {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {loadError && (
         <p role="alert" className="text-destructive">
           {copy('error')}
@@ -719,7 +726,7 @@ function OwnedSavingsOrderPage() {
           </Button>
         </div>
       )}
-      {draftLoading && profileId && <p role="status">{copy('loading')}</p>}
+      {draftLoading && profileId && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {!loading && !profileId && <p role="alert">{copy('profileRequired')}</p>}
       {addressCommand.phase !== 'ready' && (
         <div role="alert" className="space-y-2">

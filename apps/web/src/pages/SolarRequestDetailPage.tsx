@@ -1,3 +1,4 @@
+import { LoadingStatus } from '@barghsa/ui';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -307,7 +308,7 @@ function SolarRequestDetail({
       </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
       {time.notice}
-      {loading && <p role="status">{copy('loading')}</p>}
+      {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {error && (
         <div className="space-y-2">
           <p role="alert">{copy('notFound')}</p>

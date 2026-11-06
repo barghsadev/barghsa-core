@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
+  LoadingStatus,
   Badge,
   Button,
   Card,
@@ -132,7 +133,7 @@ function AuditTimeline({
           {open && (
             <div id={`${id}-entries`} className="flex min-w-0 flex-col gap-4">
               {time.notice}
-              {read.loading && <p role="status">{word('loading')}</p>}
+              {read.loading && <LoadingStatus>{word('loading')}</LoadingStatus>}
               {(read.error || cycle || boundary.denied) && (
                 <p role="alert">{word(boundary.denied ? 'denied' : 'error')}</p>
               )}

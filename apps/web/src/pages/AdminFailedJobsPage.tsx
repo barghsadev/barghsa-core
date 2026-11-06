@@ -5,7 +5,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
-import { Button, Label, DateCell, TextCell, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, Label, DateCell, TextCell, ListPage } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useOperationalQueue } from '../hooks/useOperationalQueue.js';
@@ -374,7 +374,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
           retainContent={queue.data !== null && jobs.length > 0}
           empty={queue.ready && !jobs.length}
           emptyView={<p>{label('empty')}</p>}
-          loadingView={<p role="status">{label('loading')}</p>}
+          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={
             <div role="alert">
               <p>{label('error')}</p>

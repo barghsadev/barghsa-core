@@ -1,4 +1,4 @@
-import { ListPage, Button } from '@barghsa/ui';
+import { LoadingStatus, ListPage, Button } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -237,7 +237,7 @@ export function SolarRequestsPage({
           error={error}
           empty={rows.length === 0}
           retainContent={rows.length > 0}
-          loadingView={<p role="status">{copy('loading')}</p>}
+          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
           errorView={
             <div className="space-y-2">
               <p role="alert">

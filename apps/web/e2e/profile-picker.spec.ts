@@ -88,6 +88,8 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: locale === 'fa' ? 'فهرست' : 'Menu', exact: true })
       .click();
     await page.locator('#profile-switcher').click();
+    await expect(page.locator('#profile-switcher [data-slot=avatar]')).toHaveCount(1);
+    await expect(page.locator('#profile-switcher [data-slot=avatar-fallback]')).toHaveText('FC');
     const unavailable = page.locator('[data-slot=popover-content]');
     await expect(unavailable.getByRole('alert')).toBeVisible();
     expect(writes).toBe(0);
@@ -106,6 +108,7 @@ for (const locale of ['en', 'fa'] as const) {
       name: t('dashboard.profile.switchLabel', locale),
     });
     await expect(choices.getByRole('radio')).toHaveCount(2);
+    await expect(choices.locator('[data-slot=avatar]')).toHaveCount(2);
     await expect(choices.locator('[data-profile-id="' + first + '"]')).toHaveAttribute(
       'aria-checked',
       'true'

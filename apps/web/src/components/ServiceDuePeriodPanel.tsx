@@ -4,6 +4,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance/browser';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
+  LoadingStatus,
   Button,
   Field,
   FieldGroup,
@@ -261,7 +262,7 @@ function OwnedServiceDuePeriodPanel() {
         {t('title', locale)}
       </h2>
       <p className="text-sm text-muted-foreground">{t('description', locale)}</p>
-      {loading && <p role="status">{t('loading', locale)}</p>}
+      {loading && <LoadingStatus>{t('loading', locale)}</LoadingStatus>}
       <FormAlert message={error ?? undefined} />
       <Button
         type="button"

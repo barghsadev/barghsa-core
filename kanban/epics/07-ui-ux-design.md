@@ -69,15 +69,15 @@
 
 ### S-07.01.01 — shadcn/ui scaffold & Base UI configuration
 
-**Description:** Initialize shadcn/ui within `packages/ui` with Tailwind CSS v4, Radix UI primitives, and class-variance-authority for component variants. Configure Base UI (the actual Base UI package by MUI — `@mui/base` / `@mui/base-ui`) as the supplementary headless layer for complex widgets (comboboxes, date pickers, number input with locale formatting). Radix is the shadcn dependency only; Base UI is the sole supplementary headless library. No MUI Core, React Aria Components, or other interchangeable headless libraries.
+**Description:** Initialize shadcn/ui within `packages/ui` with Tailwind CSS v4, the installed `base-nova` preset and `@base-ui/react` primitives, and class-variance-authority for component variants. Use the same Base UI package for complex widgets (comboboxes, Jalali date pickers and locale-aware number inputs). Retain the tested local table sorting/selection helpers. No MUI Core, React Aria Components, or additional interchangeable headless libraries.
 
 **Tasks:**
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-07.01.01.01** | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. | M |
-| **T-07.01.01.02** | Install and configure shadcn/ui CLI: set `style: "new-york"`, `baseColor: "zinc"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). | L |
-| **T-07.01.01.03** | Install and configure Base UI (by MUI — `@mui/base` / `@mui/base-ui`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable). | L |
+| **T-07.01.01.01** | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (self-hosted Vazirmatn for Persian and English, following the existing design context), border-radius, spacing scale, and animation tokens. | M |
+| **T-07.01.01.02** | Install and configure shadcn/ui CLI: retain installed `style: "base-nova"`, `baseColor: "zinc"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). | L |
+| **T-07.01.01.03** | Install and configure Base UI (`@base-ui/react`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via `useTableSort` and `useTableSelection`). | L |
 | **T-07.01.01.04** | Configure `cva` (class-variance-authority) or `tailwind-variants` for all components: define `buttonVariants`, `inputVariants`, `cardVariants`, `badgeVariants` as exportable variant objects. | M |
 | **T-07.01.01.05** | Set up Storybook or Ladle in `packages/ui` for visual component documentation. Add stories for each component showing all variants, RTL mode, dark mode, and interactive states. | L |
 | **T-07.01.01.06** | Create a `packages/ui/src/index.ts` barrel export. Verify tree-shaking: importing only Button should not pull in Dialog or DatePicker. | M |
@@ -94,7 +94,7 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-07.01.02.01** | **Button** — variants: `default` (primary brand), `secondary`, `destructive` (danger red), `outline`, `ghost`, `link`. Sizes: `xs`, `sm`, `default`, `lg`, `xl` (full-width responsive). States: loading (spinner icon + disabled), disabled (reduced opacity + no events), active (press animation). Support `asChild` from Radix for polymorphic rendering (buttons as anchors or router Links). | M |
+| **T-07.01.02.01** | **Button** — variants: `default` (primary brand), `secondary`, `destructive` (danger red), `outline`, `ghost`, `link`. Sizes: `xs`, `sm`, `default`, `lg`, `xl` (full-width responsive). States: loading (spinner icon + disabled), disabled (reduced opacity + no events), active (press animation). Support Base UI `render` composition for polymorphic rendering (buttons as anchors or router Links). | M |
 | **T-07.01.02.02** | **Input** — variants: `default`, `error` (red border + error icon), `success` (green check). Sizes matching Button. States: disabled, read-only, focused (ring). Supporting elements: leading icon slot, trailing icon slot (for password visibility toggle, clear button), helper text below, error message below. Prefix/suffix text (e.g. IRR currency prefix, kWh suffix). | M |
 | **T-07.01.02.03** | **Label** — association with input via `htmlFor`. Required indicator (red asterisk). Optional muted text. Disabled label styling when associated input is disabled. | S |
 | **T-07.01.02.04** | **Card** — variants: `default` (bordered, shadow-sm), `interactive` (hover elevation + cursor-pointer), `flat` (no border, subtle bg), `widget` (dashboard card with icon header). Subcomponents: CardHeader, CardTitle, CardDescription, CardContent, CardFooter. | M |
@@ -114,7 +114,7 @@
 | **T-07.01.03.02** | **Sheet (Drawer)** — side: `left` (sidebar mobile menu), `right` (notification panel, details panel), `top`, `bottom` (mobile action sheet). Sizes proportional to viewport. Backdrop blur option. | M |
 | **T-07.01.03.03** | **DropdownMenu** — nested submenus, checkbox items, radio items, separator, disabled items, shortcut labels. Used in table row actions, user menu, overflow menus. | M |
 | **T-07.01.03.04** | **Popover** — controlled/uncontrolled, placement (top/bottom/left/right + align start/center/end), offset, arrow. Used for date picker popups, filter dropdowns, info tooltips (rich content). | M |
-| **T-07.01.03.05** | **Tooltip** — delay show/hide, placement, rich content (HTML, links), disabled trigger handling. | S |
+| **T-07.01.03.05** | **Tooltip** — delay show/hide, placement, rich non-interactive descriptions; keyboard-accessible linked help through Popover, disabled trigger handling. | S |
 | **T-07.01.03.06** | **Select (native & custom)** — native `<select>` fallback for mobile. Custom Select with search/filter, grouped options, multi-select with chips/tags, clearable. | M |
 | **T-07.01.03.07** | **Command Palette / Combobox** — searchable list with keyboard navigation (arrow keys, typeahead). Used for searchable dropdowns (city selector, product selector, agent selector). | M |
 | **T-07.01.03.08** | **Tabs** — variants: `underline` (default), `pills`, `boxed`. Orientation: horizontal, vertical. Controlled/uncontrolled. Responsive: horizontal scroll on mobile with overflow buttons. | M |

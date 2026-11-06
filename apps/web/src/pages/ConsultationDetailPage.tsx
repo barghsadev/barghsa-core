@@ -7,6 +7,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import {
+  LoadingStatus,
   Button,
   Alert,
   AlertDescription,
@@ -473,7 +474,7 @@ export function ConsultationDetailPage() {
         {copy('informationReload')}
       </Button>
       {time.notice}
-      {loading && <p role="status">{copy('loading')}</p>}
+      {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {error && <p role="alert">{copy('loadError')}</p>}
       {request && (
         <>

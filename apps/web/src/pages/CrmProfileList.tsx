@@ -8,6 +8,7 @@ import { ArrowDown, ArrowUp, Building2, UserRound } from 'lucide-react';
 import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
 import {
+  LoadingStatus,
   Button,
   Input,
   Label,
@@ -478,7 +479,7 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
             error={error}
             empty={!result?.users.length}
             retainContent={!!result?.users.length}
-            loadingView={<p role="status">{t('crm.list.loading', locale)}</p>}
+            loadingView={<LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
             emptyView={preference.status === 'ready' ? <p>{t('crm.list.empty', locale)}</p> : null}
             errorView={
               <div role="alert">

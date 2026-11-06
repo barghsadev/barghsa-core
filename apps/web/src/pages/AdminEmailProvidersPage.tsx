@@ -1,4 +1,4 @@
-import { Button, DateCell, ListPage, TextCell } from '@barghsa/ui';
+import { LoadingStatus, Button, DateCell, ListPage, TextCell } from '@barghsa/ui';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
   useProviderCatalogue,
@@ -1030,7 +1030,9 @@ export default function AdminEmailProvidersPage() {
           empty={false}
           emptyView={null}
           retainContent={catalogue.data !== null}
-          loadingView={<p role="status">{providerText('admin.providers.loading', uiLocale)}</p>}
+          loadingView={
+            <LoadingStatus>{providerText('admin.providers.loading', uiLocale)}</LoadingStatus>
+          }
           errorView={
             <div role="alert" className="space-y-2">
               {providerText(

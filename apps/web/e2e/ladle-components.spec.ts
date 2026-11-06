@@ -84,25 +84,19 @@ for (const story of Object.keys(meta.stories)) {
           const loadedFaces = await page.evaluate(async () => {
             const persian = document.documentElement.lang === 'fa';
             const faces = await document.fonts.load(
-              '16px ' + (persian ? 'Vazirmatn' : '"Inter Variable"'),
+              '16px ' + 'Vazirmatn',
               persian ? 'نمونه' : 'Sample'
             );
             return faces.map((face) => ({ family: face.family, status: face.status }));
           });
           expect(loadedFaces.length).toBeGreaterThan(0);
+          await expect(surface).toHaveCSS('font-family', /Vazirmatn/);
           expect(loadedFaces.every((face) => face.status === 'loaded')).toBe(true);
           expect(await page.evaluate(() => document.documentElement.lang)).toBe(rtl ? 'fa' : 'en');
           expect(
             await page.evaluate(() => document.documentElement.classList.contains('dark'))
           ).toBe(theme === 'dark');
-          expect(
-            await page.evaluate(() =>
-              document.fonts.check(
-                '16px ' +
-                  (document.documentElement.lang === 'fa' ? 'Vazirmatn' : '"Inter Variable"')
-              )
-            )
-          ).toBe(true);
+          expect(await page.evaluate(() => document.fonts.check('16px ' + 'Vazirmatn'))).toBe(true);
           expect(
             await surface.evaluate((node) => {
               const probe = document.createElement('div');

@@ -2,7 +2,7 @@ import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, DateCell, TextCell, Input, Label, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, DateCell, TextCell, Input, Label, ListPage } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
@@ -508,7 +508,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                 error={state === 'error' || state === 'denied'}
                 empty={!visibleRows?.length}
                 retainContent={!!visibleRows?.length && state !== 'denied'}
-                loadingView={<p role="status">{word('loading')}</p>}
+                loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
                 errorView={
                   <div role="alert" className="space-y-2">
                     <p>{word(state === 'denied' ? 'denied' : 'error')}</p>
@@ -588,7 +588,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
             </div>
           </div>
           <div className="min-w-0 space-y-7" role="region" aria-label={word('workspaceTitle')}>
-            {detailState === 'loading' && <p role="status">{word('loadingDetail')}</p>}
+            {detailState === 'loading' && <LoadingStatus>{word('loadingDetail')}</LoadingStatus>}
             {(detailState === 'error' || detailState === 'denied') && (
               <div role="alert" className="space-y-2">
                 <p>{word(detailState === 'denied' ? 'denied' : 'detailError')}</p>

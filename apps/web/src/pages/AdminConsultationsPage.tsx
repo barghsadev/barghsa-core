@@ -8,6 +8,7 @@ import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useRef, useState } from 'react';
 import { useSearch } from '@tanstack/react-router';
 import {
+  LoadingStatus,
   Button,
   Alert,
   FinancialReviewSummary,
@@ -1399,7 +1400,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               error={queueError || queueDenied}
               empty={rows.length === 0}
               retainContent={rows.length > 0 && !queueDenied}
-              loadingView={<p role="status">{copy('loading')}</p>}
+              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
               errorView={
                 queueDenied ? (
                   <p role="alert">{copy('queueForbidden')}</p>
@@ -1676,7 +1677,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                       {feeForm.formState.errors.root && (
                         <Alert variant="destructive">{feeCopy('validationUnavailable')}</Alert>
                       )}
-                      {reviewLoading && <p role="status">{feeCopy('checking')}</p>}
+                      {reviewLoading && <LoadingStatus>{feeCopy('checking')}</LoadingStatus>}
                       <Button
                         type="submit"
                         loading={reviewLoading || feeForm.formState.isSubmitting}

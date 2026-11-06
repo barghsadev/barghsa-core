@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import {
   CatalogueEditorStatus,
   CatalogueSaveButton,
@@ -499,7 +499,7 @@ export default function AdminElectricityRulesPage() {
       ) : (
         <>
           <p className="rounded border bg-card p-3 text-card-foreground">{label('snapshot')}</p>
-          {safety.loading && <p role="status">{label('safetyLoading')}</p>}
+          {safety.loading && <LoadingStatus>{label('safetyLoading')}</LoadingStatus>}
           {safety.error && (
             <div role="alert" className="space-y-2">
               <p>{label('safetyError')}</p>

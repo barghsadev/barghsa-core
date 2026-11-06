@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import {
   DEFAULT_SERVICE_WORKFLOWS,
@@ -282,7 +282,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
     <section className="space-y-4" aria-label={text('title')} dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h2 className="text-xl font-semibold">{text('title')}</h2>
       <p className="text-sm text-muted-foreground">{text('note')}</p>
-      {state.resource.loading && <p role="status">{text('loading')}</p>}
+      {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {state.resource.error && <Alert variant="destructive">{text('error')}</Alert>}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
       {saved && <p role="status">{text('saved')}</p>}

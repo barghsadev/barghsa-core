@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { tMaintenance } from '@barghsa/i18n/maintenance';
+import { tPublicMaintenance as tMaintenance } from '@barghsa/i18n/maintenance-public';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import {
+  LoadingStatus,
   Button,
   Dialog,
   DialogContent,
@@ -96,7 +97,7 @@ export function StaffEffectivePermissions({
         {paused ? (
           <p role="status">{text('paused')}</p>
         ) : loading ? (
-          <p role="status">{t('common.loading', locale)}</p>
+          <LoadingStatus>{t('common.loading', locale)}</LoadingStatus>
         ) : null}
         {error && (
           <div role="alert" className="space-y-2">

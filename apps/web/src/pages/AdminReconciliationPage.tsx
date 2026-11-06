@@ -5,6 +5,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import {
+  LoadingStatus,
   Button,
   ListPage,
   DateCell,
@@ -527,7 +528,7 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
           error={error || (!accessLoading && !accessError && !canView)}
           empty={!visibleItems.length}
           retainContent={!!visibleItems.length && canView}
-          loadingView={<p role="status">{label('loading')}</p>}
+          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={
             <div role="alert" className="space-y-2">
               <p>{label(canView ? 'error' : 'forbidden')}</p>
@@ -676,7 +677,9 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
             {uncertain && (
               <div role="alert" className="space-y-3">
                 <p>{label('unconfirmed')}</p>
-                {freshState === 'loading' && <p role="status">{label('reviewLoading')}</p>}
+                {freshState === 'loading' && (
+                  <LoadingStatus>{label('reviewLoading')}</LoadingStatus>
+                )}
                 {freshState === 'error' && (
                   <>
                     <p>{label('reviewError')}</p>

@@ -4,7 +4,7 @@ import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueRe
 import { lazy, Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/workspace';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import {
   isPendingInvitations,
@@ -141,9 +141,9 @@ function AccountInvitations({ locale }: { locale: Locale }) {
         </div>
       )}
       {resource.loading && (
-        <p role="status" className="text-sm text-muted-foreground">
+        <LoadingStatus className="text-sm text-muted-foreground">
           {t('invitation.banner.loading', locale)}
-        </p>
+        </LoadingStatus>
       )}
       {(!!invitations.length || !!completed.length) && (
         <Suspense fallback={<p role="status">{t('invitation.banner.loading', locale)}</p>}>

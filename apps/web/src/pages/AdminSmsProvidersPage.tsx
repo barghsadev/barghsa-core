@@ -5,7 +5,7 @@ import {
   useProviderCommandGuard,
 } from '../hooks/useProviderCatalogue.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, DateCell, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import { LoadingStatus, Button, DateCell, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import { smsProviderText } from '@barghsa/i18n/providers';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -203,7 +203,7 @@ export default function AdminSmsProvidersPage() {
       </div>
       {!scope.denied && (
         <div>
-          {templateVariables.loading && <p role="status">{text('variablesLoading')}</p>}
+          {templateVariables.loading && <LoadingStatus>{text('variablesLoading')}</LoadingStatus>}
           {templateVariables.error && <p role="alert">{text('variablesFailed')}</p>}
           <Button
             type="button"
@@ -217,7 +217,7 @@ export default function AdminSmsProvidersPage() {
       )}
       {!scope.denied && (
         <div>
-          {eventKeys.loading && <p role="status">{text('eventsLoading')}</p>}
+          {eventKeys.loading && <LoadingStatus>{text('eventsLoading')}</LoadingStatus>}
           {eventKeys.error && <p role="alert">{text('eventsFailed')}</p>}
           <Button
             type="button"
@@ -610,7 +610,7 @@ export default function AdminSmsProvidersPage() {
           loading={loading}
           error={loadFailed || scope.denied}
           retainContent={catalogue.data !== null}
-          loadingView={<p role="status">{smsProviderText('tabs', locale)}…</p>}
+          loadingView={<LoadingStatus>{smsProviderText('tabs', locale)}…</LoadingStatus>}
           errorView={<p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>}
           empty={!providers.length}
           emptyView={<p>{text('empty')}</p>}

@@ -7,7 +7,7 @@ import {
 } from '@barghsa/shared/notifications';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react';
-import { Alert, Button } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import type { Locale } from '@barghsa/i18n/app';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -247,7 +247,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
       >
         {notificationFormText('refresh', uiLocale)}
       </Button>
-      {resource.loading && <p role="status">{label('loading')}</p>}
+      {resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {resource.error && <Alert variant="destructive">{label('loadFailed')}</Alert>}
       {scope.denied && (
         <Alert variant="destructive">{notificationFormText('denied', uiLocale)}</Alert>

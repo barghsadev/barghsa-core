@@ -1,3 +1,4 @@
+import { LoadingStatus } from '@barghsa/ui';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useState, useEffect } from 'react';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -200,7 +201,9 @@ export default function TemplatePreviewPanel({
       </div>
 
       {loading && templates.length === 0 ? (
-        <div className="text-muted-foreground">{t('admin.notifications.loading', uiLocale)}</div>
+        <LoadingStatus className="text-muted-foreground">
+          {t('admin.notifications.loading', uiLocale)}
+        </LoadingStatus>
       ) : (
         <>
           {/* Selection controls: event / language / channel / version */}

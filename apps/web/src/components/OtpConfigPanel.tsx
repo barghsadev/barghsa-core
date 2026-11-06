@@ -13,7 +13,7 @@ import {
   type OtpConfig,
   type OtpDraft,
 } from '../lib/verification-settings-form.js';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 import { SettingsFormSection } from './SettingsFormSection.js';
 import { AuditLogViewer } from './AuditLogViewer.js';
@@ -127,7 +127,7 @@ export function OtpConfigPanel() {
   const feedback = (
     <>
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
-      {state.resource.loading && <p role="status">{text('otpLoading')}</p>}
+      {state.resource.loading && <LoadingStatus>{text('otpLoading')}</LoadingStatus>}
       {state.resource.error && <Alert variant="destructive">{text('otpLoadFailed')}</Alert>}
       {(state.changed || state.uncertain) && (
         <Alert variant="destructive">{text(state.uncertain ? 'unverified' : 'changedDraft')}</Alert>

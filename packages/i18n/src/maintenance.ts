@@ -1,11 +1,8 @@
+import { enPublicMaintenance, faPublicMaintenance } from './maintenance-public.js';
 import { lookup } from './lookup.js';
 
 const en: Record<string, string> = {
-  title: 'Service temporarily unavailable',
-  description: 'New requests are paused while the team works on this service.',
-  until: 'Estimated return',
-  support: 'Contact support',
-  back: 'Return to dashboard',
+  ...enPublicMaintenance,
   active: 'Paused',
   inactive: 'Available',
   electricity_checkout: 'Electricity checkout',
@@ -50,11 +47,7 @@ const en: Record<string, string> = {
 };
 
 const fa: Record<string, string> = {
-  title: 'این خدمت موقتاً در دسترس نیست',
-  description: 'ثبت درخواست جدید تا پایان بررسی کارشناسان متوقف شده است.',
-  until: 'زمان تخمینی بازگشت',
-  support: 'تماس با پشتیبانی',
-  back: 'بازگشت به داشبورد',
+  ...faPublicMaintenance,
   active: 'متوقف‌شده',
   inactive: 'در دسترس',
   electricity_checkout: 'ثبت سفارش برق',

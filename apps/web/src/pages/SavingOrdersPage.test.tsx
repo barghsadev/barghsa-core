@@ -1,3 +1,5 @@
+import { QueryProvider } from '../test/query-provider.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -38,7 +40,15 @@ it('requests pending saving orders and offers the full list', async () => {
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<SavingOrdersPage pendingOnly />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AccountUserProvider value="saving-viewer">
+            <SavingOrdersPage pendingOnly />
+          </AccountUserProvider>
+        </QueryProvider>
+      )
+    );
     expect(request).toHaveBeenCalledWith(
       '/api/saving/orders?profileId=profile-1&status=pending',
       expect.any(Object)

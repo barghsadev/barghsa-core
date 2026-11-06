@@ -1,5 +1,5 @@
 import { contentFormText } from '@barghsa/i18n/content-forms';
-import { Alert } from '@barghsa/ui';
+import { LoadingStatus, Alert } from '@barghsa/ui';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -436,7 +436,7 @@ export default function AdminContractTemplatesPage() {
           loading={catalogue.loading}
           error={catalogue.error}
           retainContent={catalogue.data !== null}
-          loadingView={<p role="status">{label('loading')}</p>}
+          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={
             <div role="alert">
               {label('error')}{' '}
@@ -456,7 +456,7 @@ export default function AdminContractTemplatesPage() {
                   {label('add')}
                 </Button>
               </ListPage.Toolbar>
-              {history.loading && <p role="status">{label('loading')}</p>}
+              {history.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
               {history.error && (
                 <div role="alert">
                   {label('error')}{' '}

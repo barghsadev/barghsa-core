@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
-import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
@@ -520,7 +520,7 @@ function Corrections({
             </div>
           )}
           {profileId && profileRead.loading && (
-            <p role="status">{t('crm.profile.loading', locale)}</p>
+            <LoadingStatus>{t('crm.profile.loading', locale)}</LoadingStatus>
           )}
           {profileId && profileType && canCreate && (
             <form
@@ -680,7 +680,7 @@ function Corrections({
                 error={queueError}
                 empty={!queue?.cases.length}
                 retainContent={!!queue?.cases.length}
-                loadingView={<p role="status">{t('crm.list.loading', locale)}</p>}
+                loadingView={<LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
                 emptyView={<p>{t('crm.corrections.empty', locale)}</p>}
                 errorView={
                   <div role="alert">
@@ -738,7 +738,7 @@ function Corrections({
               </Button>
             </nav>
           )}
-          {detailRead.loading && <p role="status">{t('crm.list.loading', locale)}</p>}
+          {detailRead.loading && <LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
           {detailRead.error && (
             <div role="alert">
               <p>{t('crm.corrections.error', locale)}</p>

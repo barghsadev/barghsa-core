@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useEffect, useId, useRef, useState } from 'react';
-import { Card, CardContent, Button } from '@barghsa/ui';
+import { LoadingStatus, Card, CardContent, Button } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useLocale } from '../hooks/useLocale.js';
@@ -229,7 +229,9 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     >
       <h1 className="text-2xl font-semibold">{t('settings.privacy.title', locale)}</h1>
       <p className="text-muted-foreground">{t('settings.privacy.intro', locale)}</p>
-      {state === 'loading' && <p role="status">{t('settings.privacy.loading', locale)}</p>}
+      {state === 'loading' && (
+        <LoadingStatus>{t('settings.privacy.loading', locale)}</LoadingStatus>
+      )}
       {state === 'error' && (
         <div role="alert">
           <p>{t('settings.privacy.error', locale)}</p>

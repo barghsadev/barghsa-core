@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
+import { Toaster } from '@barghsa/ui/sonner';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { useLocale } from '../hooks/useLocale.js';
-import { useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { useTheme } from '../hooks/useTheme.js';
 import { connectToast } from '../lib/toast-api.js';
 
 export default function SonnerToaster() {
   const locale = useLocale();
-  const { brandConfig } = useBrandConfig();
+  const { resolvedTheme } = useTheme();
   useEffect(() => connectToast(toast), []);
   return (
     <Toaster
-      theme={brandConfig.darkMode ? 'dark' : 'light'}
+      theme={resolvedTheme}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
       position={locale === 'fa' ? 'bottom-left' : 'bottom-right'}
       customAriaLabel={feedbackText('region', locale)}

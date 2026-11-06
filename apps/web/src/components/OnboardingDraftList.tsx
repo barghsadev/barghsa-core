@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/onboarding-drafts';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
@@ -123,11 +123,7 @@ export default function OnboardingDraftList({
           </ul>
         </>
       )}
-      {loading && (
-        <p role="status" className="text-sm">
-          {t('loading', locale)}
-        </p>
-      )}
+      {loading && <LoadingStatus className="text-sm">{t('loading', locale)}</LoadingStatus>}
       {error && (
         <p role="alert" className="text-sm text-destructive">
           {t(error === 'denied' ? 'denied' : 'error', locale)}

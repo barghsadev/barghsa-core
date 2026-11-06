@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  LoadingStatus,
   Badge,
   Button,
   Dialog,
@@ -224,7 +225,7 @@ function ActivityHistory({
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">{word('activityHint')}</p>
-      {resource.loading && <p role="status">{word('activityLoading')}</p>}
+      {resource.loading && <LoadingStatus>{word('activityLoading')}</LoadingStatus>}
       {resource.error && (
         <div className="space-y-2">
           <p role="alert">{word('activityError')}</p>

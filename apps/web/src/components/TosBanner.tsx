@@ -5,7 +5,7 @@ import { useRouterState } from '@tanstack/react-router';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n/terms';
-import { Button } from '@barghsa/ui';
+import { SkeletonText, Button } from '@barghsa/ui';
 import {
   Dialog,
   DialogContent,
@@ -356,7 +356,7 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
                 aria-label={t('tos.page.loading', locale)}
                 className="flex items-center justify-center h-full"
               >
-                <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
+                <SkeletonText lines={3} className="w-full max-w-md" />
               </div>
             )}
             {error && (

@@ -1,4 +1,4 @@
-import { ListPage } from '@barghsa/ui';
+import { LoadingStatus, ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -342,7 +342,7 @@ export function ElectricityOrdersPage({
           error={error}
           empty={noProfile || orders.length === 0}
           retainContent={!noProfile && orders.length > 0}
-          loadingView={<p role="status">{t('electricity.orders.loading', locale)}</p>}
+          loadingView={<LoadingStatus>{t('electricity.orders.loading', locale)}</LoadingStatus>}
           errorView={
             <div role="alert" className="space-y-2">
               <p>

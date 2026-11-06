@@ -1,3 +1,4 @@
+import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
 import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
@@ -20,7 +21,7 @@ import {
   validateNationalId,
 } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { Loader2Icon, ChevronRightIcon, UploadIcon } from 'lucide-react';
+import { ChevronRightIcon, UploadIcon } from 'lucide-react';
 import {
   Input,
   Label,
@@ -944,7 +945,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           </Label>
                           {loadingCompanyTypes ? (
                             <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                              <Loader2Icon className="h-4 w-4 animate-spin" />
+                              <Skeleton className="h-6 w-20 shrink-0" />
                               {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
                             </div>
                           ) : companyTypesError ? (
@@ -1072,7 +1073,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         <Label htmlFor="officialProvinceId">{isRtl ? 'استان' : 'Province'}</Label>
                         {loadingProvinces ? (
                           <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                            <Loader2Icon className="h-4 w-4 animate-spin" />
+                            <Skeleton className="h-6 w-20 shrink-0" />
                             {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
                           </div>
                         ) : (

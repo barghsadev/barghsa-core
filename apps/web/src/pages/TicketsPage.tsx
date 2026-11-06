@@ -19,7 +19,7 @@ import { FilePreview } from '../components/FilePreview.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
-import { Button, Input, Label, ListPage, ListViewToggle } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label, ListPage, ListViewToggle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import type { SupportListQuery } from '../lib/support-list-query.js';
@@ -794,7 +794,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
             error={!!queueError}
             empty={!visibleQueue?.data.length}
             retainContent={!!visibleQueue?.data.length && queueError !== 'forbidden'}
-            loadingView={<p role="status">{text('loading')}</p>}
+            loadingView={<LoadingStatus>{text('loading')}</LoadingStatus>}
             errorView={
               <div role="alert" className="space-y-2">
                 <p>{text(queueError === 'forbidden' ? 'forbidden' : 'queueError')}</p>
@@ -842,7 +842,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
           />
         </ListPage>
       </fieldset>
-      {detailLoading && <p role="status">{text('loading')}</p>}
+      {detailLoading && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {detailError && (
         <div role="alert" className="space-y-2">
           <p>{text(detailError === 'forbidden' ? 'forbidden' : 'detailError')}</p>

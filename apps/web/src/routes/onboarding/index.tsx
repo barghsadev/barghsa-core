@@ -9,7 +9,7 @@ import {
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/')({ component: OnboardingPage });
 type ProfileType = 'INDIVIDUAL' | 'LEGAL';
@@ -107,7 +107,7 @@ function OnboardingContent({ accountId }: { accountId: string }) {
           <OnboardingDraftList locale={locale} onReady={setDraftListReady} disabled={submitting} />
         </Suspense>
         {loading ? (
-          <p role="status">{t('onboarding.journey.loading', locale)}</p>
+          <LoadingStatus>{t('onboarding.journey.loading', locale)}</LoadingStatus>
         ) : journey ? (
           <>
             <div className="rounded-xl border bg-card p-5 space-y-3">

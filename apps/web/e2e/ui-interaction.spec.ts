@@ -33,6 +33,27 @@ async function accessible(page: Page) {
     );
     audit.include('[data-slot="tooltip-content"][data-open]');
   }
+  await expect(
+    page.locator('[data-closed][data-ending-style]').filter({ visible: true })
+  ).toHaveCount(0);
+  for (const selector of [
+    '[data-slot="popover-content"]',
+    '[data-slot="select-content"]',
+    '[data-slot="combobox-popup"]',
+    '[data-slot="dropdown-menu-content"]',
+    '[data-slot="toast"]',
+    '[data-sonner-toast]',
+  ]) {
+    const popup = page.locator(selector).filter({ visible: true });
+    if (await popup.count()) {
+      await expect(popup.first()).toHaveCSS('opacity', '1');
+      expect(await popup.first().evaluate((node) => getComputedStyle(node).direction)).toBe(
+        await page.locator('html').getAttribute('dir')
+      );
+      await expect(popup.first()).toHaveCSS('font-family', /Vazirmatn/);
+      audit.include(selector);
+    }
+  }
   expect((await audit.withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual(
     []
   );
@@ -255,5 +276,148 @@ for (const fa of [false, true])
       await page.setViewportSize({ width: 1280, height: 960 });
       await expect(next).toBeEnabled();
       await expect.poll(() => inViewport(first, viewport)).toBe(true);
+    });
+  }
+
+for (const fa of [false, true])
+  for (const theme of ['light', 'dark']) {
+    test(`active widgets, scrub controls and help links respect direction and theme (${fa ? 'fa' : 'en'}, ${theme})`, async ({
+      page,
+    }) => {
+      await story(page, 'widgets--numbers', fa, theme);
+      const number = page.getByRole('textbox', { name: fa ? 'مقدار' : 'Quantity', exact: true });
+      const output = page.getByRole('status', {
+        name: fa ? 'مقدار کنونی' : 'Current quantity',
+        exact: true,
+      });
+      await number.press('ArrowUp');
+      await expect(output).toHaveText('1235');
+      await number.press('ArrowDown');
+      await expect(output).toHaveText('1234.5');
+      const scrub = page.locator('[data-slot="number-field-scrub"]');
+      const bounds = await scrub.boundingBox();
+      await page.mouse.move(bounds!.x + bounds!.width / 2, bounds!.y + bounds!.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(bounds!.x + bounds!.width / 2 + 60, bounds!.y + bounds!.height / 2, {
+        steps: 12,
+      });
+      await page.mouse.up();
+      await expect(output).not.toHaveText('1234.5');
+      const quantity = Number(await output.textContent());
+      expect(quantity).toBeGreaterThanOrEqual(0);
+      expect(quantity).toBeLessThanOrEqual(5000);
+      await expect(
+        page.getByRole('textbox', {
+          name: fa ? 'مقدار غیرفعال' : 'Disabled quantity',
+          exact: true,
+        })
+      ).toBeDisabled();
+      await expect(
+        page.getByRole('textbox', {
+          name: fa ? 'مقدار فقط خواندنی' : 'Read-only quantity',
+          exact: true,
+        })
+      ).not.toBeEditable();
+      await accessible(page);
+      await story(page, 'workflows--statuses', fa, theme);
+      for (const size of ['sm', 'default', 'lg']) {
+        await expect(page.getByText('success · ' + size, { exact: true })).toHaveCount(2);
+      }
+      await expect(
+        page.getByText(fa ? 'در انتظار بررسی' : 'Awaiting review', { exact: true })
+      ).toHaveCount(3);
+      await accessible(page);
+      await story(page, 'widgets--multiple-choices', fa, theme);
+      const services = page.getByRole('combobox', { name: fa ? 'خدمات' : 'Services', exact: true });
+      await services.click();
+      await page.getByRole('option', { name: 'Green', exact: true }).click();
+      await expect(page.locator('[data-story-surface] output')).toHaveText('Thermal, Green');
+      await accessible(page);
+      await services.press('Escape');
+      await page
+        .getByRole('button', { name: (fa ? 'حذف ' : 'Remove ') + 'Green', exact: true })
+        .click();
+      await expect(page.locator('[data-story-surface] output')).toHaveText('Thermal');
+      await page
+        .getByRole('button', { name: fa ? 'پاک‌کردن انتخاب‌ها' : 'Clear choices', exact: true })
+        .click();
+      await expect(page.locator('[data-story-surface] output')).toHaveText('');
+      await story(page, 'lists--filters', fa, theme);
+      for (const name of [fa ? 'انتخاب' : 'Selection', fa ? 'چند انتخاب' : 'Multiple selections']) {
+        const filter = page.getByRole('combobox', { name, exact: true });
+        await filter.click();
+        await expect(filter).toHaveAttribute('aria-expanded', 'true');
+        await accessible(page);
+        await filter.press('Escape');
+        await expect(filter).toHaveAttribute('aria-expanded', 'false');
+      }
+      await story(page, 'widgets--dates', fa, theme);
+      const date = page.getByRole('combobox', { name: fa ? 'تاریخ' : 'Date', exact: true });
+      const before = await date.textContent();
+      await date.press('Enter');
+      const popup = page.locator('[data-slot="popover-content"]').filter({ visible: true });
+      await expect(popup.getByRole('grid')).toBeVisible();
+      await accessible(page);
+      await popup.locator('button[data-day]:not([disabled])').nth(10).press('Enter');
+      await expect(popup).toBeHidden();
+      await expect(date).not.toHaveText(before!);
+      await expect(date).toBeFocused();
+      const range = page.getByRole('combobox', {
+        name: fa ? 'بازه تاریخ' : 'Date range',
+        exact: true,
+      });
+      await range.press('Enter');
+      await popup.locator('button[data-day]:not([disabled])').nth(10).click();
+      await popup.locator('button[data-day]:not([disabled])').nth(15).click();
+      await expect(popup.locator('button[data-range-start=true]')).toHaveCount(1);
+      await expect(popup.locator('button[data-range-end=true]')).toHaveCount(1);
+      await accessible(page);
+      await page.keyboard.press('Escape');
+      await expect(popup).toBeHidden();
+      await expect(range).toBeFocused();
+      await story(page, 'overlays--rich-help', fa, theme);
+      const help = page.getByRole('button', {
+        name: fa ? 'راهنمای پیونددار' : 'Help with links',
+        exact: true,
+      });
+      await help.press('Enter');
+      const link = page.getByRole('link', {
+        name: fa ? 'باز کردن راهنما' : 'Open guidance',
+        exact: true,
+      });
+      await link.focus();
+      await expect(link).toBeFocused();
+      await expect(link).toHaveAttribute('href', '#guidance');
+      await accessible(page);
+      await link.press('Enter');
+      await expect(page).toHaveURL(/#guidance$/);
+      await page.keyboard.press('Escape');
+      await expect(help).toBeFocused();
+      await story(page, 'overlays--toasts', fa, theme);
+      await page
+        .getByRole('button', { name: fa ? 'نمایش اعلان' : 'Show notification', exact: true })
+        .click();
+      const toast = page.locator('[data-slot="toast"]');
+      await expect(toast).toContainText(fa ? 'انجام شد' : 'Completed');
+      await toast.focus();
+      await expect(toast).toBeFocused();
+      await toast.press('Tab');
+      await expect(
+        toast.getByRole('button', { name: fa ? 'بستن اعلان' : 'Close notification', exact: true })
+      ).toBeFocused();
+      await accessible(page);
+      await toast
+        .getByRole('button', { name: fa ? 'بستن اعلان' : 'Close notification', exact: true })
+        .press('Enter');
+      await expect(toast).toBeHidden();
+      await story(page, 'overlays--sonner-notifications', fa, theme);
+      await page.getByRole('button', { name: 'success', exact: true }).click();
+      const notice = page.locator('[data-sonner-toast]');
+      await expect(notice).toContainText(fa ? 'اعلان نمونه' : 'Sample notification');
+      await accessible(page);
+      await notice
+        .getByRole('button', { name: fa ? 'بستن اعلان' : 'Close notification', exact: true })
+        .click();
+      await expect(notice).toBeHidden();
     });
   }

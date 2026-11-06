@@ -1,7 +1,7 @@
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
-import { Alert, Button, DataTable, Label, ListPage, TextCell } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, DataTable, Label, ListPage, TextCell } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -316,7 +316,7 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
               error={isError}
               empty={roles?.length === 0}
               retainContent={roles !== null && roles.length > 0}
-              loadingView={<p role="status">{t('common.loading', locale)}</p>}
+              loadingView={<LoadingStatus>{t('common.loading', locale)}</LoadingStatus>}
               errorView={
                 <div role="alert" className="space-y-2">
                   <p>{t('admin.roles.load.failed', locale)}</p>

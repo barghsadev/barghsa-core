@@ -1,4 +1,4 @@
-import { Alert, Button } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button } from '@barghsa/ui';
 import type { CSSProperties } from 'react';
 import { DANGER_TEXT_COLORS } from '../lib/brand-config.js';
 import { getBrandTextColor, useBrandConfig } from '../providers/BrandThemeProvider.js';
@@ -53,7 +53,7 @@ export function CatalogueEditorStatus({
 }) {
   return (
     <>
-      {loading && <p role="status">{label('loading')}</p>}
+      {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {denied && <Alert variant="destructive">{label('forbidden')}</Alert>}
       {error && (
         <div role="alert" className="space-y-2 rounded-md border border-destructive p-3">

@@ -398,6 +398,11 @@
       "types": "./dist/terms-history.d.ts",
       "import": "./dist/terms-history.js",
       "default": "./dist/terms-history.js"
+    },
+    "./maintenance-public": {
+      "types": "./dist/maintenance-public.d.ts",
+      "import": "./dist/maintenance-public.js",
+      "default": "./dist/maintenance-public.js"
     }
   },
   "scripts": {

@@ -1,6 +1,12 @@
 import { DEFAULT_BRAND_CONFIG } from '../lib/brand-config.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { Button, NativeSelect, NativeSelectOption } from '@barghsa/ui';
+import {
+  LoadingSkeleton,
+  LoadingStatus,
+  Button,
+  NativeSelect,
+  NativeSelectOption,
+} from '@barghsa/ui';
 import {
   getContrastForeground,
   useBrandConfig,
@@ -311,10 +317,7 @@ export default function AdminBrandingConfig() {
   if (loading && !activeConfig) {
     return (
       <div className="flex items-center justify-center h-64">
-        <span role="status" className="sr-only">
-          {text('loading')}
-        </span>
-        <div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <LoadingSkeleton label={text('loading')} variant="form" />
       </div>
     );
   }
@@ -455,7 +458,9 @@ export default function AdminBrandingConfig() {
       </div>
 
       {loadError && <p role="alert">{text('loadFailed')}</p>}
-      {activeConfig && (loading || historyRead.loading) && <p role="status">{text('loading')}</p>}
+      {activeConfig && (loading || historyRead.loading) && (
+        <LoadingStatus>{text('loading')}</LoadingStatus>
+      )}
       {timezone.status === 'error' && (
         <div role="alert">
           {text('timezoneFailed')}{' '}

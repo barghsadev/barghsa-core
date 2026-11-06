@@ -7,6 +7,7 @@ import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import {
+  LoadingStatus,
   Alert,
   AlertDescription,
   Textarea,
@@ -745,7 +746,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
               error={error || denied}
               empty={orders.length === 0 && !selectedId}
               retainContent={orders.length > 0 && !denied}
-              loadingView={<p role="status">{copy('loading')}</p>}
+              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
               errorView={
                 denied ? (
                   <p role="alert">{copy('forbidden')}</p>
@@ -1384,7 +1385,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                         {copy('reject')}
                       </Button>
                     </div>
-                    {reviewLoading ? <p role="status">{copy('reviewLoading')}</p> : null}
+                    {reviewLoading ? <LoadingStatus>{copy('reviewLoading')}</LoadingStatus> : null}
                     {reviewError ? <p role="alert">{copy('reviewError')}</p> : null}
                   </div>
                 ) : null}

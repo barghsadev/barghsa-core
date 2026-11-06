@@ -2,7 +2,7 @@ import { useOwnedGateRead } from '../hooks/useOwnedGateRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label } from '@barghsa/ui';
 import { telegramText } from '@barghsa/i18n/telegram';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { useLocale } from '../hooks/useLocale.js';
@@ -244,7 +244,7 @@ export default function TelegramLinkPanel({ scope }: { scope: Scope }) {
       <p className="text-sm text-muted-foreground">{copy('scope')}</p>
       {scope.isCurrent() && (
         <>
-          {loading && <p role="status">{securitySettingsText('loading', locale)}</p>}
+          {loading && <LoadingStatus>{securitySettingsText('loading', locale)}</LoadingStatus>}
           {source && !source.available && <p>{copy('unavailable')}</p>}
           {source?.link && (
             <div role="status" className="text-sm space-y-1">

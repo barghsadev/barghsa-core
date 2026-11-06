@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState, useEffect, useCallback, useRef, type FormEvent } from 'react';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
-import { Alert, Button } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
@@ -228,7 +228,7 @@ export default function AdminVerificationConfig() {
         </p>
       )}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
-      {state.resource.loading && <p role="status">{text('loading')}</p>}
+      {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {state.resource.error && (
         <Alert variant="destructive">
           {text('loadFailed')}{' '}

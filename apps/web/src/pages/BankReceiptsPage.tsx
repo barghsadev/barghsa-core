@@ -1,4 +1,4 @@
-import { ListPage, ListToolbar } from '@barghsa/ui';
+import { LoadingStatus, ListPage, ListToolbar } from '@barghsa/ui';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
@@ -450,10 +450,10 @@ function ReceiptHistory({
           empty={items.length === 0}
           retainContent={items.length > 0}
           loadingView={
-            <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
+            <LoadingStatus className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
               {label('loading')}
-            </p>
+            </LoadingStatus>
           }
           errorView={
             <div className="space-y-2">

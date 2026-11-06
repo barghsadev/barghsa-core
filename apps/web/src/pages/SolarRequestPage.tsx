@@ -3,7 +3,7 @@ import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Button, Card, CardContent, Input, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -536,10 +536,10 @@ export function SolarRequestPage() {
         <h1 className="text-3xl font-semibold">{copy('title')}</h1>
         <p className="text-muted-foreground">{copy('instruction')}</p>
       </div>
-      {loading && <p role="status">{copy('loading')}</p>}
+      {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {loadError && <p role="alert">{copy('loadError')}</p>}
       {!loading && !profileId && <p role="alert">{copy('profileRequired')}</p>}
-      {profileId && draftLoading && <p role="status">{copy('draftLoading')}</p>}
+      {profileId && draftLoading && <LoadingStatus>{copy('draftLoading')}</LoadingStatus>}
       {profileId && draftError && (
         <div role="alert">
           <p>{copy('draftLoadError')}</p>

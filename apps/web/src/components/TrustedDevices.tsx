@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText, type TrustedDeviceTextKey } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
@@ -54,9 +54,9 @@ export function TrustedDevices({
       </div>
       <p className="text-sm text-muted-foreground">{text('description')}</p>
       {lists.loading.devices && (
-        <p role="status" className="text-sm text-muted-foreground">
+        <LoadingStatus className="text-sm text-muted-foreground">
           {securitySettingsText('loading', locale)}
-        </p>
+        </LoadingStatus>
       )}
       {lists.failed.devices && (
         <p role="alert" className="text-sm text-destructive">

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import {
+  LoadingStatus,
   Alert,
   AlertDescription,
   Button,
@@ -457,7 +458,7 @@ export function CitiesPanel({
           empty={false}
           emptyView={null}
           retainContent={list.data !== null}
-          loadingView={<p role="status">{t('cityLoading')}</p>}
+          loadingView={<LoadingStatus>{t('cityLoading')}</LoadingStatus>}
           errorView={
             <Alert role="alert" variant="destructive">
               <AlertDescription>

@@ -5,6 +5,7 @@ import type { ProductCatalogueType } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
+  LoadingStatus,
   Button,
   Badge,
   CurrencyCell,
@@ -770,7 +771,9 @@ export default function AdminCataloguePage({
                     </>
                   }
                 />
-                {preference.status === 'loading' && <p role="status">{label('loading')}</p>}
+                {preference.status === 'loading' && (
+                  <LoadingStatus>{label('loading')}</LoadingStatus>
+                )}
                 {preference.status === 'error' && (
                   <div role="alert" className="space-y-2">
                     <p>{label('timezoneError')}</p>
@@ -779,7 +782,9 @@ export default function AdminCataloguePage({
                     </Button>
                   </div>
                 )}
-                {editor && detailState === 'loading' && <p role="status">{label('loading')}</p>}
+                {editor && detailState === 'loading' && (
+                  <LoadingStatus>{label('loading')}</LoadingStatus>
+                )}
                 {editor && detailState === 'error' && (
                   <div role="alert" className="space-y-2">
                     <p>{label('detailError')}</p>
@@ -895,7 +900,9 @@ export default function AdminCataloguePage({
                             <p className="mb-3 text-sm text-muted-foreground">
                               {label('planHardwareHelp')}
                             </p>
-                            {hardwareState === 'loading' && <p role="status">{label('loading')}</p>}
+                            {hardwareState === 'loading' && (
+                              <LoadingStatus>{label('loading')}</LoadingStatus>
+                            )}
                             {hardwareState === 'error' && (
                               <div role="alert" className="space-y-2">
                                 <p>{label('hardwareError')}</p>
@@ -1311,7 +1318,7 @@ export default function AdminCataloguePage({
                   error={state === 'error' || state === 'denied'}
                   empty={!rows.length}
                   retainContent={!!rows.length && state !== 'denied'}
-                  loadingView={<p role="status">{label('loading')}</p>}
+                  loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
                   errorView={
                     state === 'denied' ? (
                       <p role="alert">{label('denied')}</p>

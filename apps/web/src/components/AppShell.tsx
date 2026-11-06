@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
-import { cn } from '@barghsa/ui';
+import { cn, Separator } from '@barghsa/ui';
 import { ArrowUpRight, type LucideIcon } from 'lucide-react';
 import { BrandMark } from './BrandMark.js';
 import { Topbar } from './Topbar.js';
@@ -125,8 +125,9 @@ export function AppShell({
             <BrandMark compact={compact && !menuOpen} />
           </Link>
           {profile ? (
-            <div className="mb-5 border-b pb-4 md:hidden md:group-hover/sidebar:block md:group-focus-within/sidebar:block md:group-data-[expanded=true]/sidebar:block lg:block">
+            <div className="mb-5 md:hidden md:group-hover/sidebar:block md:group-focus-within/sidebar:block md:group-data-[expanded=true]/sidebar:block lg:block">
               {profile}
+              <Separator aria-hidden="true" className="mt-4" />
             </div>
           ) : null}
           <nav aria-label={shellText('navigation', locale)} className="flex flex-col gap-5">
@@ -175,7 +176,8 @@ export function AppShell({
             ))}
           </nav>
           {area === 'dashboard' && (
-            <div className="mt-6 border-t pt-4">
+            <div className="mt-6">
+              <Separator aria-hidden="true" className="mb-4" />
               <Link
                 to="/tickets"
                 className="shell-navigation-link md:px-2 md:group-hover/sidebar:px-3 md:group-focus-within/sidebar:px-3 md:group-data-[expanded=true]/sidebar:px-3 lg:px-3"

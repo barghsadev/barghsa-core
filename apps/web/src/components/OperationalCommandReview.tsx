@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import {
+  LoadingStatus,
   Button,
   Dialog,
   DialogContent,
@@ -103,7 +104,7 @@ export function OperationalCommandReview<T extends { id: string }>({
           <DialogTitle>{word('title')}</DialogTitle>
           <DialogDescription>{word('description')}</DialogDescription>
         </DialogHeader>
-        {state === 'loading' && <p role="status">{word('loading')}</p>}
+        {state === 'loading' && <LoadingStatus>{word('loading')}</LoadingStatus>}
         {state === 'error' && <p role="alert">{word('error')}</p>}
         {state === 'ready' && (
           <ul className="space-y-3 break-words" aria-label={word('saved')}>

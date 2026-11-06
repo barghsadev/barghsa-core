@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
-import { Button, Textarea } from '@barghsa/ui';
+import { LoadingStatus, Button, Textarea } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -378,7 +378,7 @@ function CommentWorkspace({
     <section className="space-y-4" aria-label={copy('comments')} data-testid="order-comments">
       <h2 className="text-xl font-semibold">{copy('comments')}</h2>
       {error && <p role="alert">{error === 'load' ? copy('commentError') : formCopy(error)}</p>}
-      {loading && <p role="status">{copy('staffLoading')}</p>}
+      {loading && <LoadingStatus>{copy('staffLoading')}</LoadingStatus>}
       <div className="flex flex-wrap gap-2">
         {error !== 'forbidden' && (
           <Button

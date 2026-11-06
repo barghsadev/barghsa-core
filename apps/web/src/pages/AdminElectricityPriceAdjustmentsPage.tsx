@@ -8,6 +8,7 @@ import { adminText as t } from '@barghsa/i18n/electricity-price-forms';
 import { t as appText } from '@barghsa/i18n/electricity-price-forms';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
+  LoadingStatus,
   Button,
   Card,
   CardContent,
@@ -753,7 +754,7 @@ function PriceWorkspace({
           )}
         </div>
       ) : null}
-      {loading ? <p role="status">{copy('loading')}</p> : null}
+      {loading ? <LoadingStatus>{copy('loading')}</LoadingStatus> : null}
       {error ? <p role="alert">{copy(error)}</p> : null}
       {uncertain ? (
         <div role="alert" className="space-y-2">

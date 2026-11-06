@@ -26,7 +26,9 @@ export function SelectFilter({
     setInput({ value, label: labelText, text: labelText });
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      <FieldLabel id={`${id}-label`} htmlFor={id}>
+        {label}
+      </FieldLabel>
       <ComboBox
         items={items}
         value={selected}
@@ -37,7 +39,7 @@ export function SelectFilter({
         isItemEqualToValue={(item, selected) => item.value === selected.value}
         onValueChange={(item) => onChange(item?.value ?? '')}
       >
-        <ComboBoxInput id={id} />
+        <ComboBoxInput id={id} aria-labelledby={`${id}-label`} />
         <ComboBoxPopup emptyMessage={emptyLabel}>
           {(item: { value: string; label: string }) => (
             <ComboBoxItem key={item.value} value={item}>

@@ -81,6 +81,9 @@ export const LoadingShapes: Story = () => {
           </tbody>
         </table>
       </div>
+      <UI.LoadingStatus className="text-sm text-muted-foreground">
+        {text('در حال بارگذاری پروفایل', 'Loading profile')}
+      </UI.LoadingStatus>
       <div className="flex h-12 items-center gap-4">
         <span>{text('بخش یک', 'Section one')}</span>
         <UI.Separator orientation="vertical" />

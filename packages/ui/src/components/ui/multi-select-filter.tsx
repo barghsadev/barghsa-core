@@ -37,7 +37,9 @@ export function MultiSelectFilter({
   const selected = options.filter((item) => value.includes(item.value));
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      <FieldLabel id={`${id}-label`} htmlFor={id}>
+        {label}
+      </FieldLabel>
       <ComboBox
         multiple
         items={[...options]}
@@ -65,7 +67,12 @@ export function MultiSelectFilter({
               {item.label}
             </ComboBoxChip>
           ))}
-          <ComboBoxInput ref={inputRef} id={id} className="min-h-11" />
+          <ComboBoxInput
+            ref={inputRef}
+            id={id}
+            aria-labelledby={`${id}-label`}
+            className="min-h-11"
+          />
         </ComboBoxChips>
         <ComboBoxPopup emptyMessage={emptyLabel}>
           {(item: { value: string; label: string }) => (

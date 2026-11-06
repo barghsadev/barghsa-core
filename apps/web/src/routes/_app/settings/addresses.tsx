@@ -1,18 +1,11 @@
+import { Skeleton } from '@barghsa/ui';
 import { useRef } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useSavedAddressSettingsEditor } from '../../../hooks/useSavedAddressSettingsEditor.js';
 import type { SavedAddress as Address } from '../../../lib/settings-form.js';
 import { t } from '@barghsa/i18n/app';
 import { addressesText } from '@barghsa/i18n/addresses';
-import {
-  MapPinIcon,
-  PlusIcon,
-  PencilIcon,
-  Trash2Icon,
-  StarIcon,
-  Loader2Icon,
-  XIcon,
-} from 'lucide-react';
+import { MapPinIcon, PlusIcon, PencilIcon, Trash2Icon, StarIcon, XIcon } from 'lucide-react';
 import {
   Button,
   DependentSelect,
@@ -201,7 +194,7 @@ function SettingsAddressesPage() {
       {/* Loading */}
       {loading && (
         <div className="text-center py-8 text-muted-foreground">
-          <Loader2Icon className="mx-auto h-5 w-5 animate-spin mb-2" />
+          <Skeleton className="h-6 w-20 shrink-0" />
           <p className="text-sm">{t('settings.addresses.loading', locale)}</p>
         </div>
       )}

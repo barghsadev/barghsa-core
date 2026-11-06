@@ -1,6 +1,6 @@
 import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { useCallback, useRef, useState } from 'react';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import {
   DEFAULT_VERIFICATION_POLICY,
   VERIFICATION_DOCUMENT_TYPES,
@@ -142,7 +142,7 @@ export function VerificationPolicySettings() {
     >
       <h2 className="text-xl font-semibold">{text('policyTitle')}</h2>
       <p className="text-sm text-muted-foreground">{text('policyWarning')}</p>
-      {state.resource.loading && <p role="status">{text('loading')}</p>}
+      {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {state.resource.error && <Alert variant="destructive">{text('loadFailed')}</Alert>}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
       {saved && <p role="status">{text('policySaved')}</p>}

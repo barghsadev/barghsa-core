@@ -1,3 +1,4 @@
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -30,6 +31,13 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 
 let host: HTMLDivElement;
 let root: Root;
+function renderReceipt(children: ReactNode) {
+  root.render(
+    <QueryComponentProvider>
+      <AccountUserProvider value="receipt-viewer">{children}</AccountUserProvider>
+    </QueryComponentProvider>
+  );
+}
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
@@ -83,7 +91,7 @@ it.each(['en', 'fa'] as const)(
       });
     });
     vi.stubGlobal('fetch', fetcher);
-    await act(async () => root.render(<BankReceiptsPage />));
+    await act(async () => renderReceipt(<BankReceiptsPage />));
     expect(host.textContent).toContain('Bank Mellat');
     expect(host.textContent).toContain(firstReceipt.invoiceId);
     expect(
@@ -102,7 +110,7 @@ it.each(['en', 'fa'] as const)(
     expect(host.textContent).toContain(secondReceipt.invoiceId);
     expect(host.textContent).toContain(locale === 'en' ? 'Not provided' : 'ثبت نشده');
 
-    await act(async () => root.render(<BankReceiptsPage statuses={['Rejected']} />));
+    await act(async () => renderReceipt(<BankReceiptsPage statuses={['Rejected']} />));
     expect(fetcher.mock.calls.some(([url]) => String(url).includes('statuses=Rejected'))).toBe(
       true
     );
@@ -123,7 +131,7 @@ it('offers a retry after the initial receipt request fails', async () => {
       ? Promise.resolve(Response.json({ activeProfileId: 'profile-1' }))
       : fetcher(raw)
   );
-  await act(async () => root.render(<BankReceiptsPage />));
+  await act(async () => renderReceipt(<BankReceiptsPage />));
   expect(host.querySelector('[role="alert"]')?.textContent).toContain('Could not load receipts');
   const retry = [...host.querySelectorAll('button')].find((button) =>
     button.textContent?.includes('Try again')
@@ -159,12 +167,12 @@ it('aborts older pages when filters change and ignores a late response', async (
       );
     })
   );
-  await act(async () => root.render(<BankReceiptsPage />));
+  await act(async () => renderReceipt(<BankReceiptsPage />));
   const older = [...host.querySelectorAll('button')].find((button) =>
     button.textContent?.includes('Show older')
   )!;
   await act(async () => older.click());
-  await act(async () => root.render(<BankReceiptsPage statuses={['Rejected']} />));
+  await act(async () => renderReceipt(<BankReceiptsPage statuses={['Rejected']} />));
   expect(olderSignal?.aborted).toBe(true);
   await act(async () => resolveOlder(Response.json({ items: [firstReceipt], nextCursor: null })));
   expect(host.textContent).not.toContain(firstReceipt.receiptId);
@@ -195,7 +203,7 @@ it('keeps exact receipt criteria through ascending pagination and retry', async 
     })
   );
   await act(async () =>
-    root.render(
+    renderReceipt(
       <BankReceiptsPage
         query={{ q: 'Bank_%', sort: 'submitted_at:asc' }}
         statuses={['Submitted', 'Rejected']}
@@ -247,10 +255,10 @@ it('clears the old receipt scope immediately and rejects late search responses',
   });
   vi.stubGlobal('fetch', fetcher);
   await act(async () =>
-    root.render(<BankReceiptsPage query={{ q: 'old', sort: 'submitted_at:desc' }} />)
+    renderReceipt(<BankReceiptsPage query={{ q: 'old', sort: 'submitted_at:desc' }} />)
   );
   await act(async () =>
-    root.render(<BankReceiptsPage query={{ q: 'current', sort: 'submitted_at:asc' }} />)
+    renderReceipt(<BankReceiptsPage query={{ q: 'current', sort: 'submitted_at:asc' }} />)
   );
   expect(oldSignal?.aborted).toBe(true);
   await act(async () => resolveOld(Response.json({ items: [firstReceipt], nextCursor: null })));
@@ -258,7 +266,7 @@ it('clears the old receipt scope immediately and rejects late search responses',
   expect(host.textContent).not.toContain(firstReceipt.receiptId);
   const count = fetcher.mock.calls.length;
   await act(async () =>
-    root.render(<BankReceiptsPage query={{ q: 'current', sort: 'submitted_at:asc' }} />)
+    renderReceipt(<BankReceiptsPage query={{ q: 'current', sort: 'submitted_at:asc' }} />)
   );
   expect(fetcher).toHaveBeenCalledTimes(count);
 });
@@ -301,12 +309,12 @@ it.each(['account', 'profile'] as const)(
         <BankReceiptsPage />
       </AccountUserProvider>
     );
-    await act(async () => root.render(render('account-1')));
+    await act(async () => renderReceipt(render('account-1')));
     expect(host.textContent).toContain(firstReceipt.receiptId);
     await act(async () => moreButton().click());
     switched = true;
     await act(async () => {
-      if (kind === 'account') root.render(render('account-2'));
+      if (kind === 'account') renderReceipt(render('account-2'));
       else refreshProfileContext();
     });
     expect(host.textContent).not.toContain(firstReceipt.receiptId);
@@ -335,7 +343,7 @@ it('rejects a late denial before the new profile render and accepts only its fir
     })
   );
   await act(async () =>
-    root.render(
+    renderReceipt(
       <AccountUserProvider value="account-1">
         <BankReceiptsPage />
       </AccountUserProvider>
@@ -370,7 +378,7 @@ it.each(['missing', 'changed'] as const)(
       })
     );
     await act(async () =>
-      root.render(<BankReceiptsPage query={{ q: 'saved', sort: 'submitted_at:asc' }} />)
+      renderReceipt(<BankReceiptsPage query={{ q: 'saved', sort: 'submitted_at:asc' }} />)
     );
     active = kind === 'missing' ? null : 'profile-2';
     await act(async () => moreButton().click());
@@ -416,7 +424,7 @@ it('keeps accepted receipts and the exact cursor after a malformed profile read'
       );
     })
   );
-  await act(async () => root.render(<BankReceiptsPage />));
+  await act(async () => renderReceipt(<BankReceiptsPage />));
   malformed = true;
   await act(async () => moreButton().click());
   expect(host.querySelector('[role=alert]')).not.toBeNull();

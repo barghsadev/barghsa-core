@@ -1,3 +1,4 @@
+import { SkeletonText } from '@barghsa/ui';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { createFileRoute, Link, useSearch } from '@tanstack/react-router';
@@ -179,7 +180,7 @@ function TermsPage() {
           {/* Loading state */}
           {loading && (
             <div className="flex flex-col items-center justify-center py-16">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              <SkeletonText lines={3} className="w-full max-w-md" />
               <p className="mt-4 text-sm text-muted-foreground">{t('tos.page.loading', locale)}</p>
             </div>
           )}

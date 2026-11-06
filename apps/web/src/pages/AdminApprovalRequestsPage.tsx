@@ -4,7 +4,7 @@ import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, FinancialReviewSummary, Label, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, FinancialReviewSummary, Label, ListPage } from '@barghsa/ui';
 import {
   ApprovalDecisionForm,
   type ApprovalDecisionDraft,
@@ -363,7 +363,7 @@ function ApprovalWorkspace({
           error={error}
           empty={!visibleItems.length}
           retainContent={!!visibleItems.length && !denied}
-          loadingView={<p role="status">{t('admin.approvals.loading', locale)}</p>}
+          loadingView={<LoadingStatus>{t('admin.approvals.loading', locale)}</LoadingStatus>}
           errorView={
             <div role="alert" className="space-y-2">
               <p>{t(denied ? 'admin.approvals.loadForbidden' : 'admin.approvals.error', locale)}</p>

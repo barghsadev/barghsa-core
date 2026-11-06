@@ -3,7 +3,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { Alert, AlertDescription } from '@barghsa/ui';
+import { Skeleton, Alert, AlertDescription } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
 import { Loader2 } from 'lucide-react';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
@@ -33,7 +33,8 @@ import {
 import { rememberWalletInvoiceReturn } from '../lib/wallet-invoice-return.js';
 import { useMaintenance } from '../hooks/useMaintenance.js';
 import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
-import { tMaintenance } from '@barghsa/i18n/maintenance';
+import { feedbackText } from '@barghsa/i18n/feedback';
+import { tPublicMaintenance as tMaintenance } from '@barghsa/i18n/maintenance-public';
 
 const OnlineTopUpReviewDialog = lazy(() => import('../components/OnlineTopUpReviewDialog.js'));
 const OnlinePaymentReturnPanel = lazy(() =>
@@ -634,11 +635,9 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       )}
 
       {loading ? (
-        <div
-          className="h-40 rounded-lg bg-muted animate-pulse"
-          aria-hidden="true"
-          data-testid="wallet-loading"
-        />
+        <div role="status" aria-label={feedbackText('loading', locale)}>
+          <Skeleton className="h-40 rounded-lg" data-testid="wallet-loading" />
+        </div>
       ) : (
         <div className="space-y-6" data-testid="wallet-loaded">
           {wallet && (

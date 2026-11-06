@@ -1,7 +1,16 @@
 import { lazy, Suspense, useState, useRef, type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { LogOut, Settings, UserRound } from 'lucide-react';
-import { Button, Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  AvatarNameFallback,
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTitle,
+  PopoverTrigger,
+  SizedAvatar,
+} from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { useAsyncData } from '../hooks/useAsyncData.js';
 import { parseSessionContext } from '../lib/session-role.js';
@@ -81,16 +90,11 @@ export function ProfileMenu({
             className={profileBadge ? 'flex min-w-0 flex-col items-center gap-0.5' : 'contents'}
           >
             {profileBadge ?? (
-              <span
-                aria-hidden="true"
-                className="flex size-8 items-center justify-center rounded-full bg-muted text-sm font-medium text-foreground"
-              >
-                {user?.username ? (
-                  Array.from(user.username).slice(0, 2).join('').toLocaleUpperCase(locale)
-                ) : (
-                  <UserRound className="size-4" />
-                )}
-              </span>
+              <SizedAvatar aria-hidden="true" size="sm">
+                <AvatarNameFallback name={user?.username ?? ''} className="font-medium">
+                  {user?.username ? undefined : <UserRound className="size-4" />}
+                </AvatarNameFallback>
+              </SizedAvatar>
             )}
             <span
               data-slot="operating-context-indicator"
@@ -110,9 +114,9 @@ export function ProfileMenu({
           <div className="min-w-0 space-y-1">
             <PopoverTitle>{shellText('account', locale)}</PopoverTitle>
             {account.status === 'loading' ? (
-              <p role="status" className="text-sm text-muted-foreground">
+              <LoadingStatus className="text-sm text-muted-foreground">
                 {shellText('accountLoading', locale)}
-              </p>
+              </LoadingStatus>
             ) : account.status === 'error' ? (
               <div role="alert" className="space-y-2">
                 <p className="text-sm text-muted-foreground">{shellText('accountError', locale)}</p>

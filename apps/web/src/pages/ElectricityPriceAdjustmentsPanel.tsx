@@ -4,7 +4,7 @@ import { useServerListQuery } from '../hooks/useServerQuery.js';
 import { useEffect, useId, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { LoadingStatus, Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -167,7 +167,7 @@ export function ElectricityPriceAdjustmentsPanel({
     <Card data-testid="electricity-price-history">
       <CardContent className="space-y-4 pt-6 text-sm">
         <h2 className="font-semibold">{copy('title')}</h2>
-        {loading ? <p role="status">{copy('loading')}</p> : null}
+        {loading ? <LoadingStatus>{copy('loading')}</LoadingStatus> : null}
         {error ? (
           <div role="alert" className="flex items-center gap-3">
             <span>{copy('error')}</span>

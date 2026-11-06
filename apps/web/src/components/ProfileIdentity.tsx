@@ -1,4 +1,4 @@
-import { Badge } from '@barghsa/ui';
+import { AvatarNameFallback, Badge, SizedAvatar } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/workspace';
 import type { SwitcherProfile } from './ProfileSwitcher.js';
 
@@ -19,12 +19,9 @@ export function ProfileAvatar({
   compact?: boolean;
 }) {
   return (
-    <span
-      aria-hidden="true"
-      className={`flex shrink-0 items-center justify-center rounded-full bg-muted font-semibold ${compact ? 'size-6 text-xs' : 'size-8 text-sm'}`}
-    >
-      {Array.from(profileName(profile, locale)).slice(0, 2).join('').toLocaleUpperCase(locale)}
-    </span>
+    <SizedAvatar aria-hidden="true" size={compact ? 'xs' : 'sm'}>
+      <AvatarNameFallback name={profileName(profile, locale)} className="font-semibold" />
+    </SizedAvatar>
   );
 }
 export function ProfileTypeBadge({

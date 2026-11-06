@@ -69,7 +69,6 @@ export const Numbers: Story = () => {
   const [value, setValue] = useState<number | null>(1234.5);
   return (
     <div className="max-w-sm space-y-5">
-      <UI.Label htmlFor="number">{text('مقدار', 'Quantity')}</UI.Label>
       <UI.NumberField
         id="number"
         locale={locale === 'fa' ? 'fa-IR' : 'en-US'}
@@ -80,13 +79,44 @@ export const Numbers: Story = () => {
         step={0.5}
         format={{ maximumFractionDigits: 2 }}
       >
+        <UI.NumberFieldScrubArea>
+          <UI.Label htmlFor="number">{text('مقدار', 'Quantity')}</UI.Label>
+        </UI.NumberFieldScrubArea>
         <UI.NumberFieldGroup>
           <UI.NumberFieldDecrement />
           <UI.NumberFieldInput />
           <UI.NumberFieldIncrement />
         </UI.NumberFieldGroup>
       </UI.NumberField>
-      <output>{value}</output>
+      <output aria-label={text('مقدار کنونی', 'Current quantity')}>{value}</output>
+      <UI.Label htmlFor="number-disabled">{text('مقدار غیرفعال', 'Disabled quantity')}</UI.Label>
+      <UI.NumberField
+        id="number-disabled"
+        locale={locale === 'fa' ? 'fa-IR' : 'en-US'}
+        defaultValue={24}
+        disabled
+      >
+        <UI.NumberFieldGroup>
+          <UI.NumberFieldDecrement />
+          <UI.NumberFieldInput />
+          <UI.NumberFieldIncrement />
+        </UI.NumberFieldGroup>
+      </UI.NumberField>
+      <UI.Label htmlFor="number-readonly">
+        {text('مقدار فقط خواندنی', 'Read-only quantity')}
+      </UI.Label>
+      <UI.NumberField
+        id="number-readonly"
+        locale={locale === 'fa' ? 'fa-IR' : 'en-US'}
+        defaultValue={35}
+        readOnly
+      >
+        <UI.NumberFieldGroup>
+          <UI.NumberFieldDecrement />
+          <UI.NumberFieldInput />
+          <UI.NumberFieldIncrement />
+        </UI.NumberFieldGroup>
+      </UI.NumberField>
     </div>
   );
 };
@@ -126,14 +156,16 @@ export const MultipleChoices: Story = () => {
   return (
     <div className="max-w-md space-y-5">
       <UI.MultiSelect multiple items={items} value={values} onValueChange={setValues}>
-        <UI.Label htmlFor="choices">{text('خدمات', 'Services')}</UI.Label>
+        <UI.Label id="choices-label" htmlFor="choices">
+          {text('خدمات', 'Services')}
+        </UI.Label>
         <UI.MultiSelectChips>
           {values.map((value) => (
             <UI.MultiSelectChip key={value} removeLabel={text('حذف ', 'Remove ') + value}>
               {value}
             </UI.MultiSelectChip>
           ))}
-          <UI.MultiSelectInput id="choices" />
+          <UI.MultiSelectInput id="choices" aria-labelledby="choices-label" />
         </UI.MultiSelectChips>
         <UI.MultiSelectClear clearLabel={text('پاک‌کردن انتخاب‌ها', 'Clear choices')} />
         <UI.MultiSelectPopup emptyMessage={text('نتیجه‌ای یافت نشد', 'No results')}>

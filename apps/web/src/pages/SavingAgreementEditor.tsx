@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
-import { Button, Label, Input, Textarea, Alert } from '@barghsa/ui';
+import { LoadingStatus, Button, Label, Input, Textarea, Alert } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueEditor, type CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
@@ -86,7 +86,7 @@ export function SavingAgreementEditor({
         </Button>
       </div>
       {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
-      {editor.resource.loading && <p role="status">{label('loading')}</p>}
+      {editor.resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {editor.resource.error && <Alert variant="destructive">{label('agreementLoadError')}</Alert>}
       {editor.saved && <p role="status">{label('saved')}</p>}
       {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}

@@ -14,7 +14,17 @@ import {
   Suspense,
   type FormEvent,
 } from 'react';
-import { Alert, Button, Input, Label, ListPage } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  AvatarNameFallback,
+  Button,
+  Input,
+  Label,
+  ListPage,
+  Separator,
+  SizedAvatar,
+} from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
@@ -446,7 +456,7 @@ function OwnedAiAgentsPage({
       >
         {label('refresh')}
       </Button>
-      {loading && <p role="status">{label('loading')}</p>}
+      {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {error && (
         <div role="alert">
           <p>{label('error')}</p>
@@ -455,7 +465,7 @@ function OwnedAiAgentsPage({
           </Button>
         </div>
       )}
-      {optionsLoading && <p role="status">{label('optionsLoading')}</p>}
+      {optionsLoading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
       {optionsError && (
         <div role="alert">
           <p>{label('optionsError')}</p>
@@ -464,7 +474,7 @@ function OwnedAiAgentsPage({
           </Button>
         </div>
       )}
-      {detailLoading && <p role="status">{label('detailLoading')}</p>}
+      {detailLoading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
       {detailError && (
         <div role="alert">
           <p>{label('detailError')}</p>
@@ -577,7 +587,7 @@ function OwnedAiAgentsPage({
         ) : (
           <>
             {saved && <p role="status">{label('saved')}</p>}
-            {optionsLoading && <p role="status">{label('optionsLoading')}</p>}
+            {optionsLoading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
             {optionsError && (
               <div role="alert">
                 <p>{label('optionsError')}</p>
@@ -586,7 +596,7 @@ function OwnedAiAgentsPage({
                 </Button>
               </div>
             )}
-            {detailLoading && <p role="status">{label('detailLoading')}</p>}
+            {detailLoading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
             {detailError && (
               <div role="alert">
                 <p>{label('detailError')}</p>
@@ -812,6 +822,7 @@ function OwnedAiAgentsPage({
                     ))}
                   </div>
                 </fieldset>
+                <Separator aria-hidden="true" />
                 <div className="flex gap-2">
                   <CatalogueSaveButton
                     label={label('save')}
@@ -834,7 +845,7 @@ function OwnedAiAgentsPage({
               error={error}
               empty={!rows.length}
               retainContent={rows.length > 0}
-              loadingView={<p role="status">{label('loading')}</p>}
+              loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
               errorView={
                 <div role="alert">
                   <p>{label('error')}</p>
@@ -854,6 +865,9 @@ function OwnedAiAgentsPage({
                 actionsLabel={copy('tableActions')}
                 renderDetails={(row) => (
                   <div className="space-y-2 text-sm">
+                    <SizedAvatar size="sm" aria-hidden="true">
+                      <AvatarNameFallback name={row.title} />
+                    </SizedAvatar>
                     <p className="break-words text-sm">
                       {label('model')}: {row.modelTitle}
                     </p>

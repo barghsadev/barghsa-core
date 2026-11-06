@@ -32,7 +32,7 @@ import {
 } from '@barghsa/shared/finance';
 import { WalletReceiptTimeline } from '../components/WalletReceiptTimeline.js';
 import { BankReceiptFinancialReview } from '../components/BankReceiptFinancialReview.js';
-import { Alert, Button, ListPage, ListViewToggle, ScrollArea } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, ListPage, ListViewToggle, ScrollArea } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useListView } from '../hooks/useListView.js';
 import { StaffWalletReceiptList } from '../components/StaffWalletReceiptList.js';
@@ -929,7 +929,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
             error={!!queueError || denied}
             empty={!items.length}
             retainContent={!!items.length && !denied}
-            loadingView={<p role="status">{t('admin.walletReceipts.loading', locale)}</p>}
+            loadingView={<LoadingStatus>{t('admin.walletReceipts.loading', locale)}</LoadingStatus>}
             errorView={
               <div role="alert" className="space-y-2">
                 <p>{denied ? t('admin.walletReceipts.queue.forbidden', locale) : queueError}</p>
@@ -968,7 +968,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
               </h2>
 
               {detailLoading && (
-                <p role="status">{t('admin.walletReceipts.detail.loading', locale)}</p>
+                <LoadingStatus>{t('admin.walletReceipts.detail.loading', locale)}</LoadingStatus>
               )}
               {detailError && (
                 <div role="alert" className="space-y-2">
@@ -1119,7 +1119,9 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                     )}
 
                     {allocationLoading && (
-                      <p role="status">{t('admin.walletReceipts.review.loading', locale)}</p>
+                      <LoadingStatus>
+                        {t('admin.walletReceipts.review.loading', locale)}
+                      </LoadingStatus>
                     )}
                     {financialReview && (
                       <BankReceiptFinancialReview

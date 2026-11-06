@@ -1,3 +1,4 @@
+import { LoadingStatus } from '@barghsa/ui';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n';
@@ -79,7 +80,7 @@ export function PublishedTermsHistory({
           </li>
         ))}
       </ul>
-      {loading && <p role="status">{t('tos.page.loading', locale)}</p>}
+      {loading && <LoadingStatus>{t('tos.page.loading', locale)}</LoadingStatus>}
       {error && <p role="alert">{termsHistoryText('historyError', locale)}</p>}
       {history?.versions.length === 0 && <p>{termsHistoryText('historyEmpty', locale)}</p>}
       {(error || history?.nextCursor) && (

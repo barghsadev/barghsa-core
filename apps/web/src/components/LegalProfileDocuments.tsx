@@ -4,7 +4,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
-import { Button } from '@barghsa/ui';
+import { LoadingStatus, Button } from '@barghsa/ui';
 
 export function LegalProfileDocuments(props: Parameters<typeof OwnedLegalProfileDocuments>[0]) {
   const actor = useAccountUser();
@@ -80,7 +80,7 @@ function OwnedLegalProfileDocuments({
     >
       <h2 className="text-base font-semibold">{t('onboarding.documents.title', locale)}</h2>
       {status === 'loading' ? (
-        <p role="status">{t('onboarding.draft.loading', locale)}</p>
+        <LoadingStatus>{t('onboarding.draft.loading', locale)}</LoadingStatus>
       ) : status === 'error' ? (
         <p role="alert">{t('onboarding.documents.loadError', locale)}</p>
       ) : documents.length ? (

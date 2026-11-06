@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label } from '@barghsa/ui';
 interface ProfileOption {
   id: string;
   title: string;
@@ -122,7 +122,7 @@ export function GiftProfilePicker({
         </Button>
       </div>
       <p className="mb-3 text-sm text-muted-foreground">{label('profileHelp')}</p>
-      {loading && <p role="status">{label('loading')}</p>}
+      {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {(error || selectedError) && <p role="alert">{label('profileError')}</p>}
       <div className="flex max-h-64 flex-col gap-3 overflow-y-auto">
         {allIds.map((id) => {

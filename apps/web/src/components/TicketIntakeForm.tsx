@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { Button, Input, NativeSelect, Textarea } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, NativeSelect, Textarea } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -323,7 +323,7 @@ export function TicketIntakeForm({
             ['normal', 'high'].map((v) => ({ value: v, label: text(v) }))
           )}
           {loading ? (
-            open && <p role="status">{text('loading')}</p>
+            open && <LoadingStatus>{text('loading')}</LoadingStatus>
           ) : options ? (
             <>
               {field('profileId', 'profile', [

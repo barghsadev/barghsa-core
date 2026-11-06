@@ -1,6 +1,6 @@
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
-import { ListPage } from '@barghsa/ui';
+import { LoadingStatus, ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -684,7 +684,7 @@ export function ConsultationsPage({
         <p className="max-w-2xl text-muted-foreground">{copy('intro')}</p>
       </header>
       {time.notice}
-      {loading && <p role="status">{copy('loading')}</p>}
+      {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {loadError && (
         <div role="alert" className="space-y-2">
           <p>
@@ -746,7 +746,7 @@ export function ConsultationsPage({
                               error={productsError || productsDenied}
                               empty={!products.length}
                               retainContent={!!products.length && !productsDenied}
-                              loadingView={<p role="status">{copy('loading')}</p>}
+                              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
                               errorView={
                                 productsDenied ? (
                                   <p role="alert">{copy('productsDenied')}</p>
@@ -953,7 +953,7 @@ export function ConsultationsPage({
                 error={requestsError}
                 empty={requests.length === 0}
                 retainContent={requests.length > 0}
-                loadingView={<p role="status">{copy('loading')}</p>}
+                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
                 errorView={
                   <div className="space-y-2">
                     <p role="alert">

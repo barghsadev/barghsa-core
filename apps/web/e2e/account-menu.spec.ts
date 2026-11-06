@@ -101,6 +101,8 @@ for (const locale of ['en', 'fa'] as const) {
         name: shellText('accountMenu', locale),
         exact: true,
       });
+      await expect(menu.locator('[data-slot=avatar]')).toHaveCount(1);
+      await expect(menu.locator('[data-slot=avatar-fallback]')).toHaveText('AE');
       const header = page.getByRole('banner');
       for (const width of [320, 375, 390, 414, 768, 1024, 1280, 1920]) {
         await page.setViewportSize({ width, height: 1000 });

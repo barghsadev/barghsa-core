@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription, Button, Input, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Alert, AlertDescription, Button, Input, ListPage } from '@barghsa/ui';
 import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -191,7 +191,7 @@ export default function AdminGeographyPage({ query }: { query?: GeographyQueryBi
           empty={false}
           emptyView={null}
           retainContent={list.data !== null}
-          loadingView={<p role="status">{t('loading')}</p>}
+          loadingView={<LoadingStatus>{t('loading')}</LoadingStatus>}
           errorView={
             <Alert role="alert" variant="destructive">
               <AlertDescription>

@@ -1,3 +1,4 @@
+import { LoadingStatus } from '@barghsa/ui';
 import { InvoiceActivity } from './InvoiceActivity.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -148,10 +149,10 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
       )}
 
       {loading ? (
-        <p className="flex items-center gap-2 text-sm text-muted-foreground">
+        <LoadingStatus className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
           {t('invoices.details.loading', locale)}
-        </p>
+        </LoadingStatus>
       ) : error === 'not-found' ? (
         <p className="text-destructive" role="alert">
           {t('invoices.details.notFound', locale)}

@@ -5,7 +5,14 @@ import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/workspace';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
-import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Card,
+  CardContent,
+  FinancialReviewSummary,
+  Input,
+} from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -426,7 +433,9 @@ export function ElectricityIncreasePanel({
     <Card>
       <CardContent className="space-y-3 pt-6 text-sm">
         <h2 className="font-semibold">{t('electricity.increase.title', locale)}</h2>
-        {loading ? <p role="status">{t('electricity.increase.loading', locale)}</p> : null}
+        {loading ? (
+          <LoadingStatus>{t('electricity.increase.loading', locale)}</LoadingStatus>
+        ) : null}
         {error === 'load' ? (
           <Button
             data-testid="electricity-increase-refresh"

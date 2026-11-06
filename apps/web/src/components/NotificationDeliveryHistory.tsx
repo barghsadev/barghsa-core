@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  LoadingStatus,
   Button,
   Dialog,
   DialogContent,
@@ -236,7 +237,7 @@ export function NotificationDeliveryHistory({
         {time.notice}
         <p className="text-sm">{label('attemptHelp')}</p>
         {loading ? (
-          <p role="status">{t('admin.notifications.loading', locale)}</p>
+          <LoadingStatus>{t('admin.notifications.loading', locale)}</LoadingStatus>
         ) : error ? (
           <div role="alert">
             <p>{label('loadFailed')}</p>

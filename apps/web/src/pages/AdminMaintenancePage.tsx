@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, DatePicker, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Button, DatePicker, Input, Label } from '@barghsa/ui';
 import {
   Form,
   FormInput,
@@ -222,7 +222,7 @@ export default function AdminMaintenancePage() {
       </header>
       {time.notice}
       {saved && <p role="status">{copy('saved')}</p>}
-      {state === 'loading' && <p role="status">{copy('loading')}</p>}
+      {state === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {state === 'denied' && <p role="alert">{copy('denied')}</p>}
       {state === 'error' && <p role="alert">{copy('loadError')}</p>}
       {state === 'ready' && (

@@ -32,7 +32,7 @@ import {
 import type { KnowledgeCatalogueKind } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
-import { Button, Input, Label, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
 import { KnowledgeBaseDocumentPicker } from '../components/KnowledgeBaseDocumentPicker.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -459,7 +459,7 @@ function OwnedKnowledgeBasesPage({
       >
         {label('refresh')}
       </Button>
-      {list.loading && <p role="status">{label('loading')}</p>}
+      {list.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {list.error && (
         <div role="alert">
           <p>{label('error')}</p>
@@ -753,14 +753,14 @@ function OwnedKnowledgeBasesPage({
                 {label(kind === 'knowledge-bases' ? 'addKb' : 'addGroup')}
               </Button>
             </ListPage.Toolbar>
-            {choices.loading && <p role="status">{label('optionsLoading')}</p>}
+            {choices.loading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
             {choices.error && (
               <div role="alert">
                 <p>{label('optionsError')}</p>
                 <Button onClick={choices.retry}>{label('optionsRetry')}</Button>
               </div>
             )}
-            {selectedRead.loading && <p role="status">{label('detailLoading')}</p>}
+            {selectedRead.loading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
             {selectedRead.error && (
               <div role="alert">
                 <p>{label('detailError')}</p>
@@ -1018,7 +1018,7 @@ function OwnedKnowledgeBasesPage({
               error={list.error}
               empty={!rows.length}
               retainContent={rows.length > 0}
-              loadingView={<p role="status">{label('loading')}</p>}
+              loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
               errorView={
                 <div role="alert">
                   <p>{label('error')}</p>
@@ -1174,7 +1174,7 @@ function OwnedKnowledgeBasesPage({
                   }}
                   onQuery={testQuery}
                 />
-                {queryState === 'loading' && <p role="status">{label('queryLoading')}</p>}
+                {queryState === 'loading' && <LoadingStatus>{label('queryLoading')}</LoadingStatus>}
                 {queryState === 'error' && <p role="alert">{label('queryError')}</p>}
                 {queryResult?.id === detail.id &&
                   (queryResult.rows.length ? (

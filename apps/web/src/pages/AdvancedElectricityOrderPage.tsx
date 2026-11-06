@@ -1,7 +1,7 @@
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
-import { Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
+import { LoadingStatus, Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { toast } from '../lib/toast-api.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
@@ -605,7 +605,7 @@ export function AdvancedElectricityOrderPage() {
     }
   }
 
-  if (loading) return <p role="status">{t('electricity.order.draftLoading', locale)}</p>;
+  if (loading) return <LoadingStatus>{t('electricity.order.draftLoading', locale)}</LoadingStatus>;
   if (loadError || !profileId || !options)
     return (
       <div role="alert" className="space-y-3">

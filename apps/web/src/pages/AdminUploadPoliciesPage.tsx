@@ -18,6 +18,7 @@ import {
 } from '../lib/storage-policy-form.js';
 import type { UploadPolicyDto } from '@barghsa/shared/admin';
 import {
+  LoadingStatus,
   Button,
   Dialog,
   DialogContent,
@@ -311,7 +312,7 @@ export default function AdminUploadPoliciesPage() {
       >
         {t('admin.jobs.refresh', locale)}
       </Button>
-      {(accessLoading || loading) && <p role="status">{t('common.loading', locale)}</p>}
+      {(accessLoading || loading) && <LoadingStatus>{t('common.loading', locale)}</LoadingStatus>}
       {accessError && (
         <div role="alert">
           <p>{label('accessError')}</p>
@@ -487,7 +488,7 @@ export default function AdminUploadPoliciesPage() {
             {t('admin.jobs.refresh', locale)}
           </Button>
         </ListPage.Toolbar>
-        {accessLoading && <p role="status">{label('accessLoading')}</p>}
+        {accessLoading && <LoadingStatus>{label('accessLoading')}</LoadingStatus>}
         {accessError && (
           <div role="alert" className="space-y-2">
             <p>{label('accessError')}</p>
@@ -501,7 +502,7 @@ export default function AdminUploadPoliciesPage() {
             error={error}
             empty={limits.length === 0}
             retainContent={accepted.current && limits.length > 0}
-            loadingView={<p role="status">{t('admin.jobs.loading', locale)}</p>}
+            loadingView={<LoadingStatus>{t('admin.jobs.loading', locale)}</LoadingStatus>}
             errorView={
               <div role="alert" className="space-y-2">
                 <p>{label('loadError')}</p>

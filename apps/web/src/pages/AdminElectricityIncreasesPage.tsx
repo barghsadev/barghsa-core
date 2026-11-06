@@ -29,6 +29,7 @@ import {
 } from '../lib/electricity-increase-decision-form.js';
 import { adminText as t } from '@barghsa/i18n/electricity-increase-decision-forms';
 import {
+  LoadingStatus,
   Button,
   Card,
   CardContent,
@@ -739,7 +740,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
           error={error}
           empty={!visibleRequests?.length}
           retainContent={!!visibleRequests?.length && !denied}
-          loadingView={<p role="status">{copy('loading')}</p>}
+          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
           errorView={
             <div role="alert" className="space-y-2">
               <p>{copy(denied ? 'forbidden' : 'error')}</p>
@@ -1007,7 +1008,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
             </div>
           ) : null}
         </ListPage.Content>
-        {reviewLoading ? <p role="status">{copy('reviewLoading')}</p> : null}
+        {reviewLoading ? <LoadingStatus>{copy('reviewLoading')}</LoadingStatus> : null}
         {uncertain ? (
           <div role="alert" className="space-y-2">
             <p>{formCopy('uncertain')}</p>

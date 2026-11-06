@@ -3,7 +3,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { Alert, AlertDescription, Button, Input } from '@barghsa/ui';
+import { LoadingStatus, Alert, AlertDescription, Button, Input } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -392,7 +392,7 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
   return (
     <section className="space-y-4 rounded-xl border p-5" aria-label={copy('postalStage')}>
       <h2 className="text-xl font-semibold">{copy('postalStage')}</h2>
-      {!visible && !loadError && <p role="status">{copy('loading')}</p>}
+      {!visible && !loadError && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {visible && (
         <>
           <p>{visible.guidance[locale]}</p>

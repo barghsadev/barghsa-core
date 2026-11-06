@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, ListPage, ScrollArea } from '@barghsa/ui';
+import { LoadingStatus, Button, ListPage, ScrollArea } from '@barghsa/ui';
 import type { FormEvent } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
@@ -342,7 +342,7 @@ export function InvoiceLedger({
           error={status === 'error' || status === 'forbidden'}
           empty={items.length === 0}
           retainContent={items.length > 0 && status !== 'forbidden'}
-          loadingView={<p role="status">{word('loading')}</p>}
+          loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
           errorView={
             status === 'forbidden' ? (
               <p role="alert">{word('forbidden')}</p>
@@ -461,7 +461,9 @@ export function InvoiceLedger({
               {word('close')}
             </button>
           </div>
-          {detailStatus === 'loading' ? <p role="status">{word('loadingDetail')}</p> : null}
+          {detailStatus === 'loading' ? (
+            <LoadingStatus>{word('loadingDetail')}</LoadingStatus>
+          ) : null}
           {detailStatus === 'error' ? (
             <p role="alert">
               {word('detailError')}{' '}

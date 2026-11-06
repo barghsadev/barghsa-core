@@ -63,7 +63,12 @@ for (const locale of ['en', 'fa'] as const)
         if (route.request().method() !== 'GET') writes++;
         return route.fulfill({ status: 404, json: {} });
       });
-      await page.route('**/api/admin/agents', (route) => {
+      let releaseAgentRead!: () => void;
+      const agentGate = new Promise<void>((resolve) => {
+        releaseAgentRead = resolve;
+      });
+      await page.route('**/api/admin/agents', async (route) => {
+        await agentGate;
         if (route.request().method() !== 'GET') writes++;
         return route.fulfill({
           status: agentStatus,
@@ -197,10 +202,23 @@ for (const locale of ['en', 'fa'] as const)
       const agentText = (key: string) => t(`admin.agents.${key}`, locale);
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto('/admin/agents');
+      try {
+        const pending = page.locator('#admin-content [data-slot=loading-status]');
+        await expect(pending).toBeVisible();
+        await expect(pending.locator('[data-slot=skeleton]')).toHaveCount(2);
+        await expect(page.locator('#admin-content [data-slot=avatar]')).toHaveCount(0);
+        expect(writes).toBe(0);
+      } finally {
+        releaseAgentRead();
+      }
+
       const agentTable = page.getByRole('table', { name: agentText('title'), exact: true });
       await expect(agentTable).toBeVisible();
       const agentRow = agentTable.locator('tbody tr').first();
       await expect(agentRow).toContainText(agent.title);
+      await expect(agentRow.locator('[data-slot=avatar]')).toHaveCount(1);
+      await expect(agentRow.locator('[data-slot=avatar]')).toHaveAttribute('aria-hidden', 'true');
+      await expect(agentRow.locator('[data-slot=avatar-fallback]')).toHaveText('Z<');
       await expect(agentRow).toContainText(aiAgentFormText('linkedKbs', locale));
       await expect(agentRow.locator('dd').first()).toHaveText(number.format(12));
       await expect(agentTable.locator('tbody tr').nth(1).locator('dd').first()).toHaveText('—');

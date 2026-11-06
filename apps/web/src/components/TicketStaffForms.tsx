@@ -1,5 +1,5 @@
 import { useRef, type FormEvent } from 'react';
-import { Button, NativeSelect, Textarea } from '@barghsa/ui';
+import { LoadingStatus, Button, NativeSelect, Textarea } from '@barghsa/ui';
 import {
   Form,
   FormControl,
@@ -204,7 +204,7 @@ export function TicketStaffForms({
     <>
       {canAssign && (
         <div className="flex flex-col gap-3">
-          {optionsLoading && <p role="status">{text('loading')}</p>}
+          {optionsLoading && <LoadingStatus>{text('loading')}</LoadingStatus>}
           {optionsError && (
             <div role="alert">
               <p>{text(optionsError === 'forbidden' ? 'forbidden' : 'assignmentError')}</p>

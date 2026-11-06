@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -324,7 +324,7 @@ export default function AdminStorageConfig() {
           {label(notice)}
         </p>
       )}
-      {config.loading && <p role="status">{label('loading')}</p>}
+      {config.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {config.error && (
         <Alert variant="destructive">
           {label('loadError')}{' '}
@@ -468,7 +468,7 @@ export default function AdminStorageConfig() {
           </div>
         </form>
       )}
-      {cleanup.loading && <p role="status">{label('loading')}</p>}
+      {cleanup.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {cleanup.error && (
         <Alert variant="destructive">
           {label('loadError')}{' '}

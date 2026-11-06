@@ -3,6 +3,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
+  LoadingStatus,
   Alert,
   AlertDescription,
   Button,
@@ -540,7 +541,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
             error={documentsError || documentsDenied}
             empty={!pendingDocuments.length}
             retainContent={!!pendingDocuments.length && !documentsDenied}
-            loadingView={<p role="status">{copy('loading')}</p>}
+            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
             errorView={
               documentsDenied ? (
                 <p role="alert">{copy('staffQueueForbidden')}</p>
@@ -608,7 +609,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
             error={queueError || queueDenied}
             empty={!requests.length}
             retainContent={!!requests.length && !queueDenied}
-            loadingView={<p role="status">{copy('loading')}</p>}
+            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
             errorView={
               queueDenied ? (
                 <p role="alert">{copy('staffQueueForbidden')}</p>

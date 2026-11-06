@@ -20,9 +20,15 @@ This work changes the authentication, customer application and admin shells. Exi
 | Customer and admin route inventories               | `DashboardLayout.tsx` and `AdminLayout.tsx`     |
 | Authentication frame                               | `apps/web/src/components/AuthLayout.tsx`        |
 | Shared shell copy                                  | `packages/i18n/src/shell.ts`                    |
-| Component catalogue                                | `apps/web/e2e/fixtures/design-system/main.tsx`  |
+| Component catalogue                                | `packages/ui/stories` and `packages/ui/.ladle`  |
 
 The installed shadcn configuration is `base-nova` with `@base-ui/react`. Preserve it. Epic 07's older references to a Radix-based `new-york` preset and legacy MUI package names do not describe the current library. Replacing the installed headless layer would create a separate migration with little visual benefit.
+
+The implementation choices follow the owner’s instruction to build with recommended decisions and the existing design direction. Button composition uses Base UI’s `render` prop for native anchors and other triggers. Tables keep the tested `useTableSort` and `useTableSelection` helpers; the maintained package name is `@base-ui/react`. These are representation reconciliations, with the required sorting, selection, keyboard, disabled and pending behavior preserved.
+
+Tooltips provide non-interactive descriptions. Help containing links uses the shared Popover so the content can receive keyboard focus and Escape restores focus to its trigger. The link functionality is delivered through that accessible interaction.
+
+Shared Avatar now supplies identity fallback in profile choices, the user menu and AI agent records. Presence requires an authoritative caller-supplied state. Shared Separators divide sidebar and form sections. Read placeholders preserve visible localized progress labels and existing ownership, command locks and financial snapshots. Mutation progress and pending business states do not imply a new read. Application Sonner notices use the resolved published/user/device theme and the same semantic variables and font as the page. Open selection popups retain explicit label references even when their focus manager hides surrounding content. Public maintenance copy has its own small entry; the full administrator translator reuses those exact five Persian/English messages.
 
 ## Color
 

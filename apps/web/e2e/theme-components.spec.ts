@@ -1,3 +1,4 @@
+import { feedbackText } from '@barghsa/i18n/feedback';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, registerComponentCoverage } from './coverage-fixture';
 import { build, preview, type PreviewServer } from 'vite';
@@ -459,3 +460,73 @@ for (const locale of ['en', 'fa'])
         .toBe('shimmer');
     });
   }
+
+for (const locale of ['fa', 'en'] as const) {
+  test(`application notices follow device, user and published policy (${locale})`, async ({
+    page,
+  }, info) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    let themeMode: 'light' | 'dark' | 'system' = 'system';
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          appTitle: 'Notice check',
+          appTitleFa: 'آزمون اعلان',
+          supportEmail: 'support@example.test',
+          supportPhone: '02126658042',
+          supportMobile: '09002550292',
+          slogan: '',
+          primaryColor: '#176b5b',
+          secondaryColor: '#547467',
+          accentColor: '#d6a74e',
+          backgroundColor: '#f6f7f4',
+          darkBackgroundColor: '#15201c',
+          logoUrl: null,
+          faviconUrl: null,
+          darkMode: themeMode === 'dark',
+          themeMode,
+        },
+      })
+    );
+    await page.goto(`${url}?${locale}`);
+    await expect(page.locator('html')).toHaveClass(/dark/);
+    await page.getByRole('button', { name: 'Application notice', exact: true }).click();
+    const toast = page.locator('[data-sonner-toast]').filter({ hasText: 'Application notice' });
+    const host = page.locator('[data-sonner-toaster]');
+    const color = async () =>
+      page.evaluate(() => {
+        const probe = document.createElement('span');
+        probe.style.backgroundColor = 'var(--popover)';
+        document.body.append(probe);
+        const color = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return color;
+      });
+    await expect(toast).toBeVisible();
+    await expect(host).toHaveAttribute('data-sonner-theme', 'dark');
+    await expect(toast).toHaveCSS('background-color', await color());
+    await expect(toast).toHaveCSS('font-family', /Vazirmatn/);
+    await page.screenshot({
+      path: info.outputPath(`application-notice-${locale}.png`),
+      fullPage: true,
+    });
+    await page.getByRole('button', { name: 'Light notice theme', exact: true }).click();
+    await expect(page.locator('html')).not.toHaveClass(/dark/);
+    await expect(host).toHaveAttribute('data-sonner-theme', 'light');
+    await expect(toast).toHaveCSS('background-color', await color());
+    themeMode = 'dark';
+    await page.evaluate(() => window.dispatchEvent(new Event('barghsa:branding-activated')));
+    await expect(page.locator('html')).toHaveClass(/dark/);
+    await expect(host).toHaveAttribute('data-sonner-theme', 'dark');
+    await page.emulateMedia({ colorScheme: 'light' });
+    await expect(host).toHaveAttribute('data-sonner-theme', 'dark');
+    await page.getByRole('button', { name: 'Device notice theme', exact: true }).click();
+    themeMode = 'system';
+    await page.evaluate(() => window.dispatchEvent(new Event('barghsa:branding-activated')));
+    await expect(page.locator('html')).not.toHaveClass(/dark/);
+    await expect(host).toHaveAttribute('data-sonner-theme', 'light');
+    await expect(toast).toHaveCSS('background-color', await color());
+    await toast.getByRole('button', { name: feedbackText('close', locale) }).click();
+    await expect(toast).toBeHidden();
+  });
+}

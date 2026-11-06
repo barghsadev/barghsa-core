@@ -1,3 +1,4 @@
+import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
@@ -15,7 +16,7 @@ import { toast } from '../../../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { Loader2Icon, ChevronRightIcon } from 'lucide-react';
+import { ChevronRightIcon } from 'lucide-react';
 import { Input, Label, Alert, AlertTitle, AlertDescription, DependentSelect } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
@@ -448,7 +449,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       </Label>
                       {loadingProvinces ? (
                         <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                          <Loader2Icon className="h-4 w-4 animate-spin" />
+                          <Skeleton className="h-6 w-20 shrink-0" />
                           {t('onboarding.individual.loading', locale)}
                         </div>
                       ) : (

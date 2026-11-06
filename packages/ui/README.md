@@ -6,7 +6,7 @@ Product imports use `@barghsa/ui`, `@barghsa/ui/form`, `@barghsa/ui/sonner` and 
 
 Run `pnpm --filter @barghsa/ui stories` for the local Ladle catalogue on `127.0.0.1:61000`. Build it with `pnpm --filter @barghsa/ui stories:build`, then use `stories:preview` to inspect the static output. `stories:typecheck` checks examples and real component props with the same strict compiler settings.
 
-The catalogue uses the real shared components, CSS tokens and locally bundled fonts. Its RTL control selects Persian/Vazirmatn; LTR selects English/Inter. Light and dark controls apply the same document class and direction context used by the components. [Ladle providers](https://ladle.dev/docs/providers/) supply these controls to each story. The documentation compiler aliases the legacy JSX namespace expected by Ladle's MDX/Prism declarations to React 19's actual JSX types; it does not disable library checks or alter product types.
+The catalogue uses the real shared components, CSS tokens and locally bundled fonts. Its RTL control selects Persian; LTR selects English. Both use the self-hosted Vazirmatn family selected by the product design system. Light and dark controls apply the same document class and direction context used by the components. [Ladle providers](https://ladle.dev/docs/providers/) supply these controls to each story. The documentation compiler aliases the legacy JSX namespace expected by Ladle's MDX/Prism declarations to React 19's actual JSX types; it does not disable library checks or alter product types.
 
 Stories group related compound components: primitives and their variants, menus/overlays, Base UI widgets, bound form adapters, filters/lists/cells, and workflow states. All examples use local sample data and callbacks. They make no account or business API requests. Story source and builds are excluded from product entries, navigation and the package's distribution files.
 
@@ -18,7 +18,11 @@ Use the shared `DirectionProvider` around headless widgets so portal placement f
 
 `Alert` supports `info`, `success`, `warning`, `error` and `critical`, alongside the existing `default` and `destructive` variants. Critical alerts pulse a decorative ring while keeping text readable; reduced motion stops the animation. Compose `AlertAction` with `AlertDismiss` for separate actions and closing. Supply the dismiss button's localized `dismissLabel` and an `onDismiss` callback that owns removal and any follow-up focus. The dismiss button never submits a form.
 
+Use non-interactive rich descriptions in `Tooltip`. Interactive help with links uses `Popover`, with a labelled trigger, keyboard-reachable links, Escape dismissal and focus restoration. The overlays stories demonstrate both interactions.
+
 `SizedAvatar` supplies `xs`/`sm`/`md`/`lg`/`xl` sizes of 24/32/48/64/96px. The original `Avatar` keeps its existing 24/32/40px sizes. Compose `AvatarNameFallback` with a person's `name` to use the first and last word's initials when an image is absent or fails; explicit children override those initials. `SizedAvatarGroupCount` matches the chosen size. `AvatarPresence` requires an owner-supplied status and localized `statusLabel`; online, offline and busy use distinct solid, dashed and double rings. Supply the person's accessible name separately. These components do not fetch photos or infer presence.
+
+`LoadingStatus` keeps a localized read-progress label visible inside a native status region with decorative text placeholders. Use it only while an actual read is pending; command progress and business states such as pending approval keep their existing presentation. It does not change read guards, accepted rows, retries or actions.
 
 `SkeletonText` accepts a line count; `SkeletonCard`, `SkeletonAvatar` and `SkeletonChart` provide common shapes. Put `SkeletonTableRow` inside a native table body and set its column count. Place loading shapes inside an owner-labelled loading status. The placeholders are decorative and stop shimmering under reduced motion. Existing `Skeleton` and page loading states retain their original defaults.
 

@@ -1,6 +1,15 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Button, DateCell, TextCell, DatePicker, Input, Label, ListPage } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  DateCell,
+  TextCell,
+  DatePicker,
+  Input,
+  Label,
+  ListPage,
+} from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { tGift } from '@barghsa/i18n/gifts';
 import { GIFT_CODE_CATEGORIES, type GiftCodeDto } from '@barghsa/shared/promotions';
@@ -492,7 +501,7 @@ export default function AdminGiftCodesPage({
           empty={false}
           emptyView={null}
           retainContent={catalogue.rows !== null}
-          loadingView={<p role="status">{label('loading')}</p>}
+          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={<p role="alert">{scope.denied ? label('denied') : label('error')}</p>}
         >
           {catalogue.rows !== null && !scope.denied && (
@@ -519,7 +528,7 @@ export default function AdminGiftCodesPage({
                       {label('cancel')}
                     </Button>
                   )}
-                  {detail.loading && <p role="status">{label('loading')}</p>}
+                  {detail.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
                   {detail.error && (
                     <p role="alert">
                       {label('statsError')}{' '}

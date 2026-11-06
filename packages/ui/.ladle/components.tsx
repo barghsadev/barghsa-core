@@ -11,6 +11,7 @@ export const Provider: GlobalProvider = ({ children, globalState }) => {
     document.documentElement.lang = rtl ? 'fa' : 'en';
     document.documentElement.dir = rtl ? 'rtl' : 'ltr';
     document.documentElement.classList.toggle('dark', dark);
+    document.body.style.fontFamily = 'var(--font-sans)';
   }, [rtl, dark]);
   return (
     <DirectionProvider direction={rtl ? 'rtl' : 'ltr'}>
@@ -18,7 +19,7 @@ export const Provider: GlobalProvider = ({ children, globalState }) => {
         <StoryLocale.Provider value={rtl ? 'fa' : 'en'}>
           <main
             data-story-surface
-            className="min-h-dvh min-w-0 bg-background p-6 text-foreground"
+            className="min-h-dvh min-w-0 bg-background p-6 font-sans text-foreground"
             dir={rtl ? 'rtl' : 'ltr'}
           >
             <h1 className="mb-6 text-xl font-semibold">

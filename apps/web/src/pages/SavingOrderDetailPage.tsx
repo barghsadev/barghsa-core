@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { LoadingStatus, Button, Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -167,7 +167,7 @@ export function SavingOrderDetailPage() {
         <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>
       </header>
       {time.notice}
-      {state === 'loading' && <p role="status">{copy('loading')}</p>}
+      {state === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {state === 'error' && (
         <div className="space-y-2">
           <p role="alert">{copy('error')}</p>

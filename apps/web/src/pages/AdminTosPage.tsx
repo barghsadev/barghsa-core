@@ -6,7 +6,7 @@ import {
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
-import { Alert } from '@barghsa/ui';
+import { LoadingStatus, Alert } from '@barghsa/ui';
 import { adminTosText } from './admin-tos-text.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
@@ -668,7 +668,7 @@ export default function AdminTosPage() {
           empty={false}
           emptyView={null}
           retainContent={historyAccepted}
-          loadingView={<p role="status">{text.loading}</p>}
+          loadingView={<LoadingStatus>{text.loading}</LoadingStatus>}
           errorView={scope.denied ? <p role="alert">{text.denied}</p> : null}
         >
           {historyAccepted && !scope.denied && (

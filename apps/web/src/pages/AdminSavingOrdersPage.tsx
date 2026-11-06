@@ -3,7 +3,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { SavingFulfillmentHistory } from '../components/SavingFulfillmentProgress.js';
 import type { SavingFulfillmentEvent } from '../lib/saving-fulfillment.js';
-import { ListPage } from '@barghsa/ui';
+import { LoadingStatus, ListPage } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Button, Card, CardContent, FinancialReviewSummary, Input } from '@barghsa/ui';
@@ -545,7 +545,7 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
               error={state === 'error' || state === 'forbidden'}
               empty={orders.length === 0}
               retainContent={orders.length > 0 && state !== 'forbidden'}
-              loadingView={<p role="status">{copy('staffLoading')}</p>}
+              loadingView={<LoadingStatus>{copy('staffLoading')}</LoadingStatus>}
               errorView={
                 state === 'forbidden' ? (
                   <p role="alert">{copy('staffForbidden')}</p>

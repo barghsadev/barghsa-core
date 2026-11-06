@@ -16,6 +16,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import {
+  LoadingStatus,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -552,9 +553,9 @@ function CrmProfileDetailContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
-        <div role="status" className="text-muted-foreground">
+        <LoadingStatus className="text-muted-foreground">
           {t('crm.profile.loading', locale)}
-        </div>
+        </LoadingStatus>
       </div>
     );
   }
