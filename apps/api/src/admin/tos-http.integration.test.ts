@@ -76,6 +76,53 @@ async function create() {
   return (await response.json()) as { id: string };
 }
 
+it('paginates only published terms metadata anonymously without recording acceptance', async () => {
+  const published: string[] = [];
+  for (let index = 0; index < 22; index++) {
+    const created = await request('', 'POST', { ...draft, versionId: `public-${index}` });
+    expect(created.status).toBe(201);
+    const { id } = (await created.json()) as { id: string };
+    expect((await request(`/${id}/publish`, 'POST', { changeType: 'minor' })).status).toBe(200);
+    published.push(id);
+  }
+  const unpublished = await create();
+  const first = await fetch(`${http.base}/api/tos/versions`);
+  expect(first.status).toBe(200);
+  const page = (await first.json()) as {
+    versions: { id: string; versionId: string; publishedAt: string }[];
+    nextCursor: string;
+  };
+  expect(page.versions).toHaveLength(20);
+  expect(page.nextCursor).toBe(page.versions.at(-1)!.id);
+  expect(page.versions.map((row) => row.id)).toEqual([...published].reverse().slice(0, 20));
+  for (const row of page.versions) {
+    expect(Object.keys(row).sort()).toEqual(['id', 'publishedAt', 'versionId']);
+    expect(Number.isFinite(Date.parse(row.publishedAt))).toBe(true);
+  }
+  const last = await fetch(`${http.base}/api/tos/versions?before=${page.nextCursor}`);
+  const remaining = (await last.json()) as typeof page;
+  expect(remaining.versions.map((row) => row.id)).toEqual([...published].reverse().slice(20));
+  expect(remaining.nextCursor).toBeNull();
+  for (const cursor of [unpublished.id, randomUUID()]) {
+    expect(await (await fetch(`${http.base}/api/tos/versions?before=${cursor}`)).json()).toEqual({
+      versions: [],
+      nextCursor: null,
+    });
+  }
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM tos_acceptances')).rows[0].count
+  ).toBe(0);
+});
+
+it('rejects malformed or repeated public history cursors before returning metadata', async () => {
+  for (const query of [
+    'before=',
+    'before=invalid',
+    `before=${randomUUID()}&before=${randomUUID()}`,
+  ])
+    expect((await fetch(`${http.base}/api/tos/versions?${query}`)).status).toBe(400);
+});
+
 it('serves the exact published terms after replacement without requiring authentication', async () => {
   const first = await create();
   expect((await request(`/${first.id}/publish`, 'POST', { changeType: 'major' })).status).toBe(200);

@@ -1,6 +1,7 @@
 import { ZxcvbnFactory } from '@zxcvbn-ts/core';
 import { dictionary as common, adjacencyGraphs } from '@zxcvbn-ts/language-common';
 import { dictionary as english } from '@zxcvbn-ts/language-en';
+export { passwordStrengthFeedback } from '@barghsa/i18n/password-strength-feedback';
 
 export type StrengthLevel = 'weak' | 'fair' | 'good' | 'strong';
 export interface StrengthResult {

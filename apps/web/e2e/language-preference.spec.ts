@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect } from './coverage-fixture';
 
 test.use({ locale: 'en-US' });
@@ -7,6 +8,7 @@ test('Persian default and a chosen language survive later visits in an English b
 }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
 
+  await mockPublicAuthCsrf(page);
   await page.goto('/login');
   await expect(page.locator('html')).toHaveAttribute('lang', 'fa');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');

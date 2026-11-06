@@ -388,6 +388,16 @@
       "types": "./dist/recovery.d.ts",
       "import": "./dist/recovery.js",
       "default": "./dist/recovery.js"
+    },
+    "./password-strength-feedback": {
+      "types": "./dist/password-strength-feedback.d.ts",
+      "import": "./dist/password-strength-feedback.js",
+      "default": "./dist/password-strength-feedback.js"
+    },
+    "./terms-history": {
+      "types": "./dist/terms-history.d.ts",
+      "import": "./dist/terms-history.js",
+      "default": "./dist/terms-history.js"
     }
   },
   "scripts": {

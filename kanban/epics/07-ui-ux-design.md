@@ -617,7 +617,7 @@
 | ID | Task | Complexity |
 |----|------|------------|
 | **T-07.14.01.01** | Build `PasswordStrengthMeter` component: hidden by default, appears with slide-down animation when password field is focused. Stays visible as long as password field has content. Contains: strength bar (0–4 segments, color-coded: empty=gray, weak=red, fair=orange, strong=yellow, very-strong=green), strength label (i18n), optional checklist of requirements. | M |
-| **T-07.14.01.02** | Implement strength calculation: `weak` (< 8 chars or only lowercase), `fair` (8+ chars, mixed case), `strong` (8+ chars, mixed case + number), `very-strong` (12+ chars, mixed case + number + special char). Bonus points for length > 16. | M |
+| **T-07.14.01.02** | Keep the existing local zxcvbn estimator required by T-01.01.03. Map its raw scores 0–4 to five display labels and improvement hints. Predictable patterns must remain weak, and passwords never reach a third-party strength API. The meter remains informational and backend minimum-password rules remain authoritative. Owner approved this retained estimator with the full required meter UI on 2026-11-06; the character-class heuristic is not required. | M |
 | **T-07.14.01.03** | Localize strength labels and recommendation text. Persian: `خیلی ضعیف` / `ضعیف` / `متوسط` / `قوی` / `بسیار قوی`. Each level shows improvement hint in the correct language. | S |
 | **T-07.14.01.04** | ⚠️ Password strength meter is informational only — never block form submission based on strength. Minimum strength requirements are enforced by backend zod validation. | S |
 | **T-07.14.01.05** | ⚠️ Password visibility toggle button (eye icon) in the password input's trailing slot. Clicking toggles between `password` and `text` input types. | S |
@@ -711,7 +711,7 @@
 | **T-07.17.01.02** | On mobile (< `md`): single column. Brand section collapses to compact strip at top (logo + title only), form takes full width. Value propositions are hidden or moved below the form. | M |
 | **T-07.17.01.03** | Auth layout must NOT render the app sidebar, topbar, or bottom tab bar. It is a completely separate layout from `AppShell`. Use TanStack Router's layout nesting for auth routes. | M |
 | **T-07.17.01.04** | Add language switcher in auth pages (top-right for LTR, top-left for RTL) so users can switch language before login/register. | S |
-| **T-07.17.01.05** | ⚠️ Auth pages must never render authenticated app data. If already authenticated, redirect to `/app/dashboard`. | S |
+| **T-07.17.01.05** | Auth pages must never render authenticated app data. Check the current session before showing a form; authenticated visitors enter through canonical `/app`, preserving current role, terms and profile/onboarding gates. An expired session can use the public forms. | S |
 
 ---
 

@@ -21,6 +21,11 @@ export interface CurrentTosResponse {
   publishedAt: Date | null;
 }
 
+export interface PublishedTosHistory {
+  versions: { id: string; versionId: string; publishedAt: Date }[];
+  nextCursor: string | null;
+}
+
 export interface TosVersionListItem {
   revision: string;
   id: string;
@@ -79,6 +84,25 @@ function withRevision(version: TosVersionDetail): TosVersionDetail {
 @Injectable()
 export class TosService {
   private readonly logger = new Logger(TosService.name);
+
+  /** Public metadata only; draft IDs cannot be used to seek into published history. */
+  async publishedHistory(before?: string): Promise<PublishedTosHistory> {
+    const result = await getDbPool().query<PublishedTosHistory['versions'][number]>(
+      `SELECT id, version_id AS "versionId", published_at AS "publishedAt"
+       FROM tos_versions WHERE status='published' AND published_at IS NOT NULL
+         AND ($1::uuid IS NULL OR (published_at,id) < (
+           SELECT published_at,id FROM tos_versions
+           WHERE id=$1::uuid AND status='published' AND published_at IS NOT NULL
+         ))
+       ORDER BY published_at DESC,id DESC LIMIT 21`,
+      [before ?? null]
+    );
+    const versions = result.rows.slice(0, 20);
+    return {
+      versions,
+      nextCursor: result.rows.length > 20 ? versions.at(-1)!.id : null,
+    };
+  }
 
   /**
    * Returns the currently active TOS version.

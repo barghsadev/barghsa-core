@@ -43269,6 +43269,77 @@
         ]
       }
     },
+    "/api/tos/versions": {
+      "get": {
+        "operationId": "TosController_publishedHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "nextCursor": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "versions": {
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "publishedAt": {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "versionId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "versionId",
+                          "publishedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 20,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "versions",
+                    "nextCursor"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "description": "Invalid history cursor"
+          }
+        },
+        "summary": "List public metadata for published terms versions",
+        "tags": [
+          "Terms of Service"
+        ]
+      }
+    },
     "/api/upload/policy/{category}": {
       "get": {
         "description": "Authenticated customer and staff contexts can read category formats and size bounds. This creates no reservation and grants no record access. Upload and byte verification recheck current policy.",

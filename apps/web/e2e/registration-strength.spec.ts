@@ -17,7 +17,13 @@ async function openPassword(page: Page, locale: string) {
   await mockPublicAuthCsrf(page);
   await page.route('**/api/tos/current?*', (route) =>
     route.fulfill({
-      json: { id: '00000000-0000-4000-8000-000000000001', versionId: 'v1', content: 'Terms' },
+      json: {
+        id: '00000000-0000-4000-8000-000000000001',
+        versionId: 'v1',
+        content: 'Terms',
+        updatedAt: '2026-09-01T00:00:00Z',
+        publishedAt: '2026-09-01T00:00:00Z',
+      },
     })
   );
   await page.goto('/register');
@@ -31,7 +37,7 @@ async function openPassword(page: Page, locale: string) {
 
 for (const locale of ['en', 'fa']) {
   const weak = locale === 'fa' ? 'ضعیف' : 'Weak';
-  const strong = locale === 'fa' ? 'قوی' : 'Strong';
+  const strong = locale === 'fa' ? 'بسیار قوی' : 'Very strong';
   const secret = 'kV9!zmQ2#xrD7@pL4';
   test(`password strength detects patterns locally without changing the minimum policy (${locale})`, async ({
     page,
@@ -92,7 +98,10 @@ for (const locale of ['en', 'fa']) {
     await expect(meter).toHaveAttribute('aria-busy', 'false');
     await expect(meter).toHaveAttribute('aria-valuetext', strong);
     await password.press('Tab');
-    await expect(page.locator('#password-strength')).toBeHidden();
+    await expect(page.locator('#password-strength')).toBeVisible();
+    await expect(page.locator('[role=progressbar] > span')).toHaveCount(4);
+    await expect(page.locator('[role=progressbar] > span:not(.bg-muted)')).toHaveCount(4);
+    await expect(meter).toHaveAttribute('aria-valuetext', strong);
   });
 
   test(`password strength reports a failed download and recovers after reload (${locale})`, async ({

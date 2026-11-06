@@ -5,6 +5,7 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { PublishedTermsHistory } from '../components/PublishedTermsHistory.js';
 
 const TosContent = lazy(() => import('../components/TosContent.js'));
 
@@ -223,6 +224,13 @@ function TermsPage() {
                 <TosContent content={tos.content} language={locale} />
               </Suspense>
             </article>
+          )}
+          {tos && !loading && !error && (
+            <PublishedTermsHistory
+              key={`${locale}:${version ?? ''}`}
+              locale={locale}
+              currentId={tos.id}
+            />
           )}
         </div>
       </main>

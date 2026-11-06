@@ -13,9 +13,25 @@ for (const sample of [
     await page.route('**/api/auth/login', (route) =>
       route.fulfill({ json: { requiresOtp: true, challengeId: 'digits-challenge' } })
     );
+    let signedIn = false;
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill(
+        signedIn
+          ? {
+              json: {
+                userId: 'digits-user',
+                isStaff: true,
+                operatingContext: 'staff',
+                requiresTosAcceptance: false,
+              },
+            }
+          : { status: 401, json: {} }
+      )
+    );
     let submitted: unknown;
     await page.route('**/api/auth/login/verify', (route) => {
       submitted = route.request().postDataJSON();
+      signedIn = true;
       return route.fulfill({
         json: {
           userId: 'digits-user',
@@ -50,6 +66,9 @@ for (const sample of [
     } else {
       for (let index = 0; index < 6; index++) await inputs.nth(index).fill(sample.value[index]!);
     }
+    // Login retains an explicit verification step so device trust stays an opt-in.
+    await expect(page.locator('#trust-device')).toBeEnabled();
+    await page.locator('button[type=submit]').click();
     await expect(page).toHaveURL(/\/app$/);
     expect(first!.x).toBeLessThan(last!.x);
     expect(submitted).toEqual({

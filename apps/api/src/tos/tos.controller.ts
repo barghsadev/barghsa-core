@@ -31,6 +31,42 @@ export class TosController {
 
   constructor(private readonly tosService: TosService) {}
 
+  @Get('versions')
+  @ApiOperation({ summary: 'List public metadata for published terms versions' })
+  @ApiQuery({ name: 'before', required: false, type: String, format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['versions', 'nextCursor'],
+      properties: {
+        versions: {
+          type: 'array',
+          maxItems: 20,
+          items: {
+            type: 'object',
+            required: ['id', 'versionId', 'publishedAt'],
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              versionId: { type: 'string' },
+              publishedAt: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+        nextCursor: { type: 'string', format: 'uuid', nullable: true },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid history cursor' })
+  publishedHistory(@Query('before') before?: string) {
+    if (before !== undefined && !z.uuid().safeParse(before).success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    return this.tosService.publishedHistory(before);
+  }
+
   /**
    * GET /api/tos/current
    *

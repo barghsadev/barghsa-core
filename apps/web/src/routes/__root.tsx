@@ -37,6 +37,10 @@ export const Route = createRootRoute({
       if (!preload) rememberEntryLocale();
       throw redirect({ href: location.href, reloadDocument: true });
     }
+    if (isAuthEntryPath(location.pathname)) {
+      const session = await readSessionContext(abortController.signal);
+      if (session !== null) throw redirect({ to: '/app', replace: true });
+    }
     if (location.pathname === '/app' || location.pathname.startsWith('/app/')) {
       const session = await readSessionContext(abortController.signal);
       if (session === null) throw redirect({ to: '/login', replace: true });
