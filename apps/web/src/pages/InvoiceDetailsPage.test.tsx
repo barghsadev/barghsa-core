@@ -1,3 +1,4 @@
+import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import type { ReactNode } from 'react';
@@ -206,7 +207,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         )
       );
       await act(async () => {
-        root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />);
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={ORIGINAL_ID} />
+          </QueryProvider>
+        );
       });
       const activity = container.querySelector('[data-testid="invoice-activity"]')!;
       expect(activity.querySelectorAll('li')).toHaveLength(12);
@@ -268,7 +273,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
     );
     await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+      root.render(
+        <QueryProvider>
+          <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+        </QueryProvider>
+      );
     });
     const timeline = container.querySelector('section[aria-label] ol');
     expect(timeline?.querySelectorAll('li')).toHaveLength(3);
@@ -313,7 +322,13 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
     );
     try {
-      await act(async () => root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />));
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        )
+      );
       expect(container.querySelector(`#bank-receipt-${receiptId}`)).not.toBeNull();
       expect(scroll).toHaveBeenCalledWith({ block: 'start' });
     } finally {
@@ -336,7 +351,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
       );
       await act(async () => {
-        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        );
       });
       const link = container.querySelector('a[href="/contracts?contractId=contract-1"]');
       expect(link?.textContent).toBe(locale === 'en' ? 'Open contract' : 'مشاهده قرارداد');
@@ -359,7 +378,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
       );
       await act(async () => {
-        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        );
       });
       const link = container.querySelector('a[href="/savings/orders/saving-order-1"]');
       expect(link?.textContent).toBe(
@@ -379,7 +402,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
       );
       await act(async () => {
-        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        );
       });
       const link = container.querySelector('a[href="/solar/requests/solar-request-1"]');
       expect(link?.textContent).toBe(
@@ -405,7 +432,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       })
     );
     await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />);
+      root.render(
+        <QueryProvider>
+          <InvoiceDetailsPage invoiceId={ORIGINAL_ID} />
+        </QueryProvider>
+      );
     });
     expect(container.querySelector('[role="alert"]')).not.toBeNull();
     await act(async () => {
@@ -440,7 +471,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     );
 
     await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+      root.render(
+        <QueryProvider>
+          <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+        </QueryProvider>
+      );
     });
 
     expect(container.querySelector(`[data-testid="invoice-card-${ORIGINAL_ID}"]`)).toBeTruthy();
@@ -492,7 +527,13 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         )
       );
 
-      await act(async () => root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />));
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        )
+      );
 
       const card = container.querySelector(`[data-testid="invoice-card-${REPLACEMENT_ID}"]`)!;
       const headings = Array.from(card.querySelectorAll('thead th')).map(
@@ -526,7 +567,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     );
 
     await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />);
+      root.render(
+        <QueryProvider>
+          <InvoiceDetailsPage invoiceId={ORIGINAL_ID} />
+        </QueryProvider>
+      );
     });
 
     expect(
@@ -546,7 +591,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     );
 
     await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />);
+      root.render(
+        <QueryProvider>
+          <InvoiceDetailsPage invoiceId={ORIGINAL_ID} />
+        </QueryProvider>
+      );
     });
 
     expect(container.textContent).toContain('Invoice not found');
@@ -572,7 +621,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       );
 
       await act(async () => {
-        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        );
       });
 
       expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeTruthy();
@@ -592,7 +645,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     );
 
     await act(async () => {
-      root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />);
+      root.render(
+        <QueryProvider>
+          <InvoiceDetailsPage invoiceId={ORIGINAL_ID} />
+        </QueryProvider>
+      );
     });
 
     expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeNull();
@@ -613,7 +670,13 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         return { ok: false, status: 404, json: async () => ({}) };
       });
       vi.stubGlobal('fetch', fetchMock);
-      await act(async () => root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />));
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        )
+      );
       const amount = container.querySelector<HTMLInputElement>(
         '[data-testid="invoice-receipt-amount"]'
       )!;
@@ -756,7 +819,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       vi.stubGlobal('fetch', fetchMock);
 
       await act(async () => {
-        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+        root.render(
+          <QueryProvider>
+            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+          </QueryProvider>
+        );
       });
       await act(async () => {
         await Promise.resolve();

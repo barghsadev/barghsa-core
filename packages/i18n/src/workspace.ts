@@ -640,6 +640,11 @@ export const fa: I18nDictionary = {
   'electricity.order.remainingAmount': 'مانده پرداخت',
   'electricity.order.financialReviewLink': 'بررسی مالی و پرداخت فاکتور',
   'electricity.order.contractPending': 'پیش‌نویس قرارداد در انتظار انتشار',
+  'electricity.order.documentsTitle': 'مدارک و پیش‌نیازهای قرارداد',
+  'electricity.order.documentsNotice':
+    'برای بررسی مدارک درخواستی و ارسال نسخه امضاشده در صورت نیاز، قرارداد را باز کنید. پیش‌نیازهای نسخه فعلی در زیر نمایش داده می‌شوند.',
+  'electricity.order.documentsPending':
+    'مدارک و پیش‌نیازهای قرارداد پس از بررسی و انتشار قرارداد توسط کارکنان در دسترس قرار می‌گیرند.',
   'electricity.order.contractStatus': 'وضعیت قرارداد',
   'electricity.order.nextAction.await_activation':
     'پرداخت و پذیرش قرارداد ثبت شده‌اند؛ فعال‌سازی در انتظار تکمیل پیش‌نیازهای قرارداد است.',
@@ -1493,6 +1498,11 @@ export const en: I18nDictionary = {
   'electricity.order.remainingAmount': 'Amount remaining',
   'electricity.order.financialReviewLink': 'Invoice financial review and payment',
   'electricity.order.contractPending': 'Contract draft awaiting publication',
+  'electricity.order.documentsTitle': 'Contract documents and prerequisites',
+  'electricity.order.documentsNotice':
+    'Open the contract to review requested documents and submit a signed copy if required. The current version’s prerequisites appear below.',
+  'electricity.order.documentsPending':
+    'Contract documents and prerequisites become available after staff review and publish the contract.',
   'electricity.order.contractStatus': 'Contract status',
   'electricity.order.nextAction.await_activation':
     'Payment and acceptance are recorded. Activation is waiting for the contract prerequisites.',

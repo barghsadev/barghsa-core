@@ -73,9 +73,11 @@ for (const locale of ['en', 'fa'] as const) {
         });
       }
     );
-    await page.route('**/increase-requests/*/approve/review', (r) =>
-      r.fulfill({ json: increaseReview('approve') })
-    );
+    await page.route('**/increase-requests/*/approve/review', (r) => {
+      const review = increaseReview('approve');
+      review.data.reason = r.request().postDataJSON().reason;
+      return r.fulfill({ json: review });
+    });
     await page.route('**/increase-requests/*/approve', (r) => {
       writes.push(r.request().url());
       return r.fulfill({ json: {} });
@@ -95,12 +97,16 @@ for (const locale of ['en', 'fa'] as const) {
     expect(reads.at(-1)).toBe(failed);
     expect(new URLSearchParams(failed).get('before')).toBe(changeCursor);
     await expect(reason).toHaveValue('PRIVATE-CAPACITY');
+    const approvalReason = page.locator('#increase-approval-reason-' + increaseRow.requestId);
+    await approvalReason.fill('PRIVATE-APPROVAL');
     await page.getByRole('button', { name: copy('approve'), exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
+    await expect(page.getByRole('dialog')).toContainText('PRIVATE-APPROVAL');
     await page.goBack();
     await expect.poll(() => params(page).get('cursor')).toBeNull();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(reason).toHaveValue('');
+    await expect(approvalReason).toHaveValue('');
     await page.goForward();
     await expect.poll(() => params(page).get('cursor')).toBe(changeCursor);
     await page.reload();

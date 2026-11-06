@@ -1,3 +1,5 @@
+import { QueryProvider } from '../test/query-provider.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -35,7 +37,15 @@ it('loads unpaid invoices and offers the unfiltered list', async () => {
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<InvoicesPage unpaidOnly />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AccountUserProvider value="invoice-viewer">
+            <InvoicesPage unpaidOnly />
+          </AccountUserProvider>
+        </QueryProvider>
+      )
+    );
     expect(request).toHaveBeenCalledWith('/api/invoices?status=unpaid', expect.any(Object));
     expect(container.textContent).toContain('No unpaid invoices');
     expect(container.querySelector('a[href="/invoices"]')).not.toBeNull();
@@ -78,7 +88,15 @@ it('shows an invoice due date when the API supplies one', async () => {
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<InvoicesPage />));
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <AccountUserProvider value="invoice-viewer">
+            <InvoicesPage />
+          </AccountUserProvider>
+        </QueryProvider>
+      )
+    );
     expect(container.textContent).toContain('Issued: 2026-09-23T10:00:00Z');
     expect(container.textContent).toContain('Due: 2026-09-30T10:00:00Z');
     expect(container.textContent).toContain('Electricity service period:');

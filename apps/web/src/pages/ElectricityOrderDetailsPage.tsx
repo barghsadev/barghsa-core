@@ -70,6 +70,11 @@ const ElectricityOrderRevisionForm = lazy(() =>
     default: module.ElectricityOrderRevisionForm,
   }))
 );
+const ContractActivationPanel = lazy(() =>
+  import('../components/ContractActivationPanel.js').then((module) => ({
+    default: module.ContractActivationPanel,
+  }))
+);
 
 interface ElectricityOrderDetail {
   orderId: string;
@@ -667,6 +672,16 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const latestEvent = detail?.timeline?.at(-1);
   const terminalOrder =
     detail !== null && ['rejected', 'cancelled'].includes(detail.electricityStatus);
+  const canOpenContract =
+    detail !== null &&
+    [
+      'AwaitingCustomerAcceptance',
+      'Accepted',
+      'AwaitingSignature',
+      'Signed',
+      'Active',
+      'Completed',
+    ].includes(detail.contractState);
   const refundRemaining = detail ? BigInt(detail.paidIrR) - BigInt(detail.refundedIrR) : 0n;
   const actionOwner =
     detail?.nextAction === 'none'
@@ -677,7 +692,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
         ? 'customer'
         : 'staff';
   return (
-    <main
+    <div
       className="container mx-auto max-w-2xl space-y-6 px-4 py-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -903,6 +918,29 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                   {numbers.money(detail.pricingSnapshot.vatIrR)}
                 </p>
               ) : null}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="space-y-3 pt-6">
+              <h2 className="font-semibold">{t('electricity.order.documentsTitle', locale)}</h2>
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  canOpenContract
+                    ? 'electricity.order.documentsNotice'
+                    : 'electricity.order.documentsPending',
+                  locale
+                )}
+              </p>
+              {canOpenContract && (
+                <Suspense fallback={<p role="status">{contractText('loading', locale)}</p>}>
+                  <ContractActivationPanel
+                    key={JSON.stringify([detail.profileId, detail.contractId, detail.versionId])}
+                    id={detail.contractId}
+                    versionId={detail.versionId}
+                    staff={false}
+                  />
+                </Suspense>
+              )}
             </CardContent>
           </Card>
           <OrderWalletBalance
@@ -1143,9 +1181,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             </Card>
           ) : null}
           <div className="flex flex-wrap gap-3">
-            {['AwaitingCustomerAcceptance', 'Accepted', 'Signed', 'Active', 'Completed'].includes(
-              detail.contractState
-            ) ? (
+            {canOpenContract ? (
               <Link
                 to="/contracts"
                 search={{ contractId: detail.contractId }}
@@ -1308,6 +1344,6 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           </DialogContent>
         </Dialog>
       ) : null}
-    </main>
+    </div>
   );
 }

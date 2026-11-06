@@ -3,6 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
+import { contractText } from '@barghsa/i18n/contracts';
+import { correctionDetail } from './electricity-correction-form-fixture';
 
 const profileId = '10000000-0000-4000-8000-000000000001';
 const orderId = '20000000-0000-4000-8000-000000000001';
@@ -45,6 +47,94 @@ async function customerShell(page: Page, locale: 'en' | 'fa') {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`order documents wait for publication and show read-only signature prerequisites (${locale})`, async ({
+    page,
+  }) => {
+    await customerShell(page, locale);
+    let contractState = 'AwaitingStaffReview';
+    let denied = false;
+    const activationReads: string[] = [];
+    const writes: string[] = [];
+    const detail = correctionDetail();
+    await page.route(`**/api/electricity/orders/${orderId}`, (route) =>
+      route.fulfill({
+        json: {
+          ...detail,
+          orderId,
+          profileId,
+          electricityStatus: 'approved',
+          commercialStatus: 'approved',
+          nextAction: 'await_activation',
+          contractState,
+        },
+      })
+    );
+    await page.route(`**/api/electricity/orders/${orderId}/comments*`, (route) =>
+      route.fulfill({ json: { comments: [], nextBefore: null } })
+    );
+    await page.route(`**/api/contracts/${detail.contractId}/activation?*`, (route) => {
+      activationReads.push(route.request().url());
+      if (route.request().method() !== 'GET') writes.push(route.request().method());
+      return route.fulfill({
+        status: denied ? 403 : 200,
+        json: denied
+          ? {}
+          : {
+              contractId: detail.contractId,
+              versionId: detail.versionId,
+              state: contractState,
+              isCurrent: true,
+              ready: false,
+              ruleRevision: 1,
+              initialInvoiceId: detail.invoiceId,
+              serviceStartsAt: detail.periodStart,
+              serviceEndsAt: detail.periodEnd,
+              evaluatedAt: '2026-10-04T10:00:00.000Z',
+              checks: [
+                { key: 'staffApproval', required: true, status: 'met' },
+                { key: 'customerAcceptance', required: true, status: 'met' },
+                { key: 'signature', required: true, status: 'unmet' },
+                { key: 'initialPayment', required: true, status: 'unmet' },
+                { key: 'serviceStart', required: false, status: 'not_required' },
+              ],
+            },
+      });
+    });
+    await page.goto(`/electricity/orders/${orderId}`);
+    await expect(page.getByText(t('electricity.order.documentsPending', locale))).toBeVisible();
+    expect(activationReads).toEqual([]);
+    const contractLink = page.locator(`a[href="/contracts?contractId=${detail.contractId}"]`);
+    await expect(contractLink).toHaveCount(0);
+    contractState = 'AwaitingSignature';
+    await page.reload();
+    const activation = page.getByRole('region', {
+      name: contractText('activationTitle', locale),
+      exact: true,
+    });
+    const signature = activation
+      .getByRole('listitem')
+      .filter({ hasText: contractText('prerequisite.signature', locale) });
+    await expect(signature).toContainText(contractText('prerequisite.unmet', locale));
+    await expect(contractLink).toBeVisible();
+    expect(activationReads).toHaveLength(1);
+    expect(new URL(activationReads[0]!).searchParams.get('versionId')).toBe(detail.versionId);
+    await expect(activation.locator('input,textarea,select')).toHaveCount(0);
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await activation.locator('..').screenshot({
+      path: `/tmp/barghsa-order-prerequisites-${locale}-${test.info().project.name}.png`,
+    });
+    denied = true;
+    await activation.getByRole('button', { name: contractText('refresh', locale) }).click();
+    await expect(activation.getByRole('alert')).toBeVisible();
+    await expect(signature).toHaveCount(0);
+    await expect(page.locator('[data-slot="dual-status-display"]')).toBeVisible();
+    await expect(contractLink).toBeVisible();
+    expect(writes).toEqual([]);
+  });
+
   test(`electricity list labels service and payment independently in both layouts (${locale})`, async ({
     page,
   }, testInfo) => {

@@ -1,0 +1,11 @@
+# Service detail workspaces
+
+Contract lists use the accepted party and stated commercial value. A later profile edit does not rewrite the accepted party. Contract detail keeps version selection, amendment history, activation checks, signatures and version-bound documents together. Download links remain subject to the document service's current authorization. A selected historical version cannot authorize a mutation of the current version.
+
+Invoice detail retains the original, replacement and adjustment chain with each recorded explanation. Each invoice keeps its own line amounts, VAT, dates and payment history. Credit adjustments remain distinct from amounts payable. Receipt attachments, deposit metadata and verification history appear with their matched invoice. Viewing an attachment does not confirm a payment.
+
+Staff receipt queues show receipt and invoice references, exact amounts, bank, deposit date and verification state. Review uses the captured allocation and current authority. Customer history exposes only the permitted receipt projection and attachment path. Internal reviewer metadata is not a customer receipt field.
+
+Electricity detail keeps commercial and financial state separate, with submitted quantities, green composition, pricing and gift snapshots, payment outcomes and history. Its documents section uses the existing read-only activation checks for the current published contract version. The contract remains accessible while awaiting signature. Before publication, the section shows a waiting notice. If contract-read permission is absent, that section shows its own error without withdrawing an otherwise authorized order read. Required signature or other prerequisites come from the server, not a hard-coded assumption or payment status.
+
+The solar postal panel shows the configured original-document checklist, recorded postal state, carrier/tracking number and customer-visible staff notes. Estimated arrival is optional staff-supplied information, not a delivery guarantee. Missing estimates stay explicit. Tracking links accept public HTTPS destinations and display the destination host; unsafe links are suppressed. Sending a parcel does not establish receipt or installation. The [construction tracker](financial-and-service-status.md) uses its separate recorded milestones.
