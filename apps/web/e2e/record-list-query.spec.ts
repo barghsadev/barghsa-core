@@ -328,6 +328,38 @@ for (const locale of ['en', 'fa'] as const)
         `**/api/admin/contracts/${financeContractId}/cancellation-requests`,
         (route) => route.fulfill({ json: { request: null, canRequest: false } })
       );
+      // Missing current-authority companion reads correctly withdraw the selected detail.
+      await page.route(`**/api/admin/contracts/${financeContractId}/signature?*`, (route) =>
+        route.fulfill({
+          json: {
+            contractId: financeContractId,
+            versionId: financeVersion.id,
+            state: 'Active',
+            isCurrent: true,
+            isAmendment: false,
+            canRequest: false,
+            canRecord: false,
+            request: null,
+            signature: null,
+          },
+        })
+      );
+      await page.route(`**/api/admin/contracts/${financeContractId}/cancellation-status`, (route) =>
+        route.fulfill({
+          json: {
+            contractId: financeContractId,
+            state: 'Active',
+            cancelledAt: null,
+            financialStatus: 'not_cancelled',
+            financiallyClosed: false,
+            refundAmount: '0',
+            returnedAmount: '0',
+            refunds: [],
+            canCancel: false,
+            canChooseRefund: false,
+          },
+        })
+      );
       await page.goto(
         `/admin/contracts?contractNumber=${encodeURIComponent(JSON.stringify('9223372036854775807'))}&profileId=${documentProfileId}&state=Active&serviceType=electricity&cursor=${documentRow.id}&contractId=${financeContractId}`
       );

@@ -4,6 +4,69 @@ import { expect, it, vi } from 'vitest';
 import { ListPage } from './components/ui/list-page';
 import { ListToolbar } from './components/ui/list-toolbar';
 import { TextFilter } from './components/ui/text-filter';
+import { ListFilterPanel } from './components/ui/list-filter-panel';
+
+it('shows clear-all controls only for applied filters, including inside the drawer', async () => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+  );
+  const host = document.createElement('div');
+  document.body.append(host);
+  const root = createRoot(host);
+  const render = (count: number) =>
+    act(async () =>
+      root.render(
+        <ListFilterPanel
+          activeCount={count}
+          countLabel={String(count)}
+          onClear={vi.fn()}
+          labels={{
+            filters: 'Filters',
+            clear: 'Clear all',
+            activeCount: `${count} active filters`,
+            selected: 'Selected filters',
+            remove: 'Remove {filter}',
+          }}
+          drawer={{
+            dir: 'ltr',
+            onOpen: vi.fn(),
+            onApply: vi.fn(),
+            labels: {
+              apply: 'Apply',
+              cancel: 'Cancel',
+              close: 'Close',
+              description: 'Choose filters',
+            },
+          }}
+        >
+          <input aria-label="Search filter" />
+        </ListFilterPanel>
+      )
+    );
+  const clearButtons = () =>
+    [...document.querySelectorAll('button')].filter((button) => button.textContent === 'Clear all');
+  try {
+    await render(0);
+    await act(async () => host.querySelector<HTMLButtonElement>('button')!.click());
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(clearButtons()).toHaveLength(0);
+    await render(2);
+    expect(clearButtons()).toHaveLength(2);
+    expect(document.querySelector('[role="dialog"]')?.textContent).toContain('Clear all');
+    await render(0);
+    expect(clearButtons()).toHaveLength(0);
+  } finally {
+    await act(async () => root.unmount());
+    host.remove();
+    vi.unstubAllGlobals();
+  }
+});
 
 it('keeps accepted content mounted through page loading and errors, then replaces it for a new empty scope', async () => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);

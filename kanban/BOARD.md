@@ -10,12 +10,12 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 726 | Accepted with unchanged source bindings. |
-| verify | 598 | Existing work may be complete; inspect evidence before building. |
+| done | 741 | Accepted with unchanged source bindings. |
+| verify | 586 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
-| blocked | 4 | Named owner or external prerequisite. |
+| blocked | 1 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Resume earliest milestone closure after owner refreshes the expired Liara management login/current protected credential. External Telegram host, verified handoff, actual owned private link and code receipts are complete. Diagnose/repair existing workspace embedding404; retain original failed question terminal, source/authority/budget safeguards and all assertions. Verify one fresh real Telegram knowledge answer, then accept all v0.4 gates and immediately enqueue exact release push. Preserved unfinished15-task list/table patch must be resumed separately; apply only its two UI source paths, never overwrite newer board with saved patch hunks.
+Follow owner replacement of deleted paid Liara with OpenRouter free models through restricted eu.barghsa.com relay. Key is in ignored mode0600.env; no credential in Git. Configure and verify actual zero-priced chat and1536-dimensional embeddings, process/reindex existing knowledge safely, complete actual Telegram reply/audience/version receipt, then accept and release v0.4.0. No Liara recreation or production deployment. Fifteen list/table criteria have been accepted independently; no later infrastructure batch.
 
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
@@ -523,7 +523,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-03.01` | done | Recorded batch work | Renew document, notification and AI acceptance |
-| `release-readiness#R-03.02` | blocked | Recorded batch work | Verify live staging provider and storage boundaries |
+| `release-readiness#R-03.02` | verify | Recorded batch work | Verify live staging provider and storage boundaries |
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | done | Earlier acceptance_verified | SMS.ir configuration |
@@ -532,7 +532,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.11.02` | done | Earlier partial | Knowledge base management |
 | `02-auth-users-admin.md#T-09.11.03` | done | Earlier acceptance_verified | Policy management |
 | `02-auth-users-admin.md#T-09.11.04` | done | Earlier partial | AI agent management |
-| `02-auth-users-admin.md#T-09.11.05` | blocked | Earlier partial | Agent slot assignment |
+| `02-auth-users-admin.md#T-09.11.05` | verify | Earlier partial | Agent slot assignment |
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
 | `05-notifications-documents-ai.md#T-05.01.02` | done | Earlier acceptance_verified | Durable outbox table & write pipeline |
 | `05-notifications-documents-ai.md#T-05.01.03` | done | Earlier acceptance_verified | Job queue with retry schedule |
@@ -621,7 +621,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.22.01` | done | Recorded batch work | AuthZ for AI actions |
 | `05-notifications-documents-ai.md#T-05.22.02` | superseded | Recorded batch work | Trusted-UI confirmation for writes |
 | `05-notifications-documents-ai.md#T-05.22.03` | done | Recorded batch work | AI audit logging |
-| `05-notifications-documents-ai.md#T-05.22.04` | blocked | Recorded batch work | Data isolation per slot |
+| `05-notifications-documents-ai.md#T-05.22.04` | verify | Recorded batch work | Data isolation per slot |
 | `05-notifications-documents-ai.md#T-05.22.05` | done | Recorded batch work | Sensitive value redaction |
 | `05-notifications-documents-ai.md#T-05.22.06` | done | Recorded batch work | Source attribution in answers |
 | `05-notifications-documents-ai.md#T-05.23.01` | done | Recorded batch work | AI worker process isolation |
@@ -831,17 +831,17 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.17.02.05` | done | Recorded batch work | Build `ForcePasswordChangePage`: shown when user is required to change password (admin-enforced). New password + confirm. Strength meter. On success → show success toast → redirect to login. |
 | `07-ui-ux-design.md#T-07.17.02.06` | done | Recorded batch work | Build `TosPage`: simple page rendering TOS content (fetched from API). Shows last-updated date. Version history accessible. Used both for TOS display and re-acceptance flow. |
 | `07-ui-ux-design.md#T-07.17.02.07` | done | Recorded batch work | OTP responses must always be generic: "If valid, a code was sent." Never reveal whether an account/email/mobile exists. |
-| `07-ui-ux-design.md#T-07.18.01.01` | verify | Recorded batch work | Create `useListQuery` hook: manages `{ search, sort, filters, page, pageSize }` from URL search params. Syncs with router (shareable URLs). Returns query params for API calls. Supports cursor pagination as a variant. |
-| `07-ui-ux-design.md#T-07.18.01.02` | verify | Recorded batch work | Build `ListToolbar` component: search input (with debounce, 300ms), filter button (opens filter popover/drawer), sort dropdown, "Add new" button (for create actions). Responsive: wraps on mobile. |
-| `07-ui-ux-design.md#T-07.18.01.03` | verify | Recorded batch work | Build `ListFilterPanel`: popover/drawer with filter fields. Each field type: text, select (single/multi), date range, number range, status checkboxes. "Apply" and "Clear all" buttons. Active filter count badge on filter button. Populated filters shown as tag/chips above the list. |
-| `07-ui-ux-design.md#T-07.18.01.04` | verify | Recorded batch work | Build `ListSortDropdown`: selects sort field + direction (asc/desc). Uses allowlisted sort fields from API. Default sort applied if none selected. |
-| `07-ui-ux-design.md#T-07.18.01.05` | verify | Recorded batch work | Build `ListViewToggle`: switch between Table view and Card view. Persisted preference per user (localStorage). Default: table on desktop, cards on mobile. |
-| `07-ui-ux-design.md#T-07.18.01.06` | verify | Recorded batch work | Build `ListPage` compound component: combines ListToolbar + ListFilterPanel + AsyncView(DataTable or CardList) + Pagination. All list pages use this compound component for consistency. |
-| `07-ui-ux-design.md#T-07.18.02.01` | verify | Recorded batch work | `StatusFilter`: multi-select checkboxes for status values. Show colored badges for each status in the filter list. |
-| `07-ui-ux-design.md#T-07.18.02.02` | verify | Recorded batch work | `DateRangeFilter`: two date pickers (start/end) with preset ranges (Today, Last 7 days, This month, Last month, Custom). Localized (Jalali/Gregorian). |
-| `07-ui-ux-design.md#T-07.18.02.03` | verify | Recorded batch work | `TextFilter`: single search input with debounce. `NumberFilter`: min/max range inputs. `SelectFilter`: single-select dropdown with search. `MultiSelectFilter`: combobox with chips. |
-| `07-ui-ux-design.md#T-07.18.02.04` | verify | Recorded batch work | All filter state serialized to URL search params so filters survive page refresh and are shareable. |
-| `07-ui-ux-design.md#T-07.18.02.05` | verify | Recorded batch work | "Clear all filters" button shown only when filters are active. Active filter count badge on filter button. |
+| `07-ui-ux-design.md#T-07.18.01.01` | done | Recorded batch work | Create `useListQuery` hook: manages `{ search, sort, filters, page, pageSize }` from URL search params. Syncs with router (shareable URLs). Returns query params for API calls. Supports cursor pagination as a variant. |
+| `07-ui-ux-design.md#T-07.18.01.02` | done | Recorded batch work | Build `ListToolbar` component: search input (with debounce, 300ms), filter button (opens filter popover/drawer), sort dropdown, "Add new" button (for create actions). Responsive: wraps on mobile. |
+| `07-ui-ux-design.md#T-07.18.01.03` | done | Recorded batch work | Build `ListFilterPanel`: popover/drawer with filter fields. Each field type: text, select (single/multi), date range, number range, status checkboxes. "Apply" and "Clear all" buttons. Active filter count badge on filter button. Populated filters shown as tag/chips above the list. |
+| `07-ui-ux-design.md#T-07.18.01.04` | done | Recorded batch work | Build `ListSortDropdown`: selects sort field + direction (asc/desc). Uses allowlisted sort fields from API. Default sort applied if none selected. |
+| `07-ui-ux-design.md#T-07.18.01.05` | done | Recorded batch work | Build `ListViewToggle`: switch between Table view and Card view. Persisted preference per user (localStorage). Default: table on desktop, cards on mobile. |
+| `07-ui-ux-design.md#T-07.18.01.06` | done | Recorded batch work | Build `ListPage` compound component: combines ListToolbar + ListFilterPanel + AsyncView(DataTable or CardList) + Pagination. All list pages use this compound component for consistency. |
+| `07-ui-ux-design.md#T-07.18.02.01` | done | Recorded batch work | `StatusFilter`: multi-select checkboxes for status values. Show colored badges for each status in the filter list. |
+| `07-ui-ux-design.md#T-07.18.02.02` | done | Recorded batch work | `DateRangeFilter`: two date pickers (start/end) with preset ranges (Today, Last 7 days, This month, Last month, Custom). Localized (Jalali/Gregorian). |
+| `07-ui-ux-design.md#T-07.18.02.03` | done | Recorded batch work | `TextFilter`: single search input with debounce. `NumberFilter`: min/max range inputs. `SelectFilter`: single-select dropdown with search. `MultiSelectFilter`: combobox with chips. |
+| `07-ui-ux-design.md#T-07.18.02.04` | done | Recorded batch work | All filter state serialized to URL search params so filters survive page refresh and are shareable. |
+| `07-ui-ux-design.md#T-07.18.02.05` | done | Recorded batch work | "Clear all filters" button shown only when filters are active. Active filter count badge on filter button. |
 | `07-ui-ux-design.md#T-07.18.03.01` | done | Recorded batch work | Contract list/detail page pattern: List columns (contract number, type, status badge, legal entity, start date, end date, amount). Detail sections (header with status, parties, terms, schedule, version timeline, amendment history, download links). Prerequisite display: show linked order, invoice, and document statuses. Contract detail page owned by E-04; this pattern defines the UI composition. |
 | `07-ui-ux-design.md#T-07.18.03.02` | done | Recorded batch work | Invoice list/detail page pattern: List columns (invoice number, type, status badge, period, amount, due date, payment status). Detail sections (header with status + amount, line items table, VAT breakdown, payment timeline, bank receipt attachment, payment method). Invoice detail page owned by E-04. |
 | `07-ui-ux-design.md#T-07.18.03.03` | done | Recorded batch work | Bank receipt list/detail page pattern: List columns (receipt ID, invoice reference, amount, bank name, deposit date, verification status). Detail sections (receipt image, deposit metadata, matched invoice, verification timeline). Bank receipt page owned by E-04. |
@@ -888,10 +888,10 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.23.01.04` | done | Recorded batch work | Build `TicketReplyInput`: textarea with formatting toolbar (bold, italic, list, link), file upload (drag & drop), "Add internal note" toggle (staff only), "Submit reply" button. |
 | `07-ui-ux-design.md#T-07.23.01.05` | done | Recorded batch work | Build `TicketStatusDropdown` (staff): change ticket status with reason input. Statuses: Open, In Progress, Waiting on Customer, Waiting on Staff, Resolved, Closed. |
 | `07-ui-ux-design.md#T-07.23.01.06` | done | Recorded batch work | Staff internal notes must never be visible to customers. Backend enforces visibility flag. Frontend never renders internal notes when role is customer. |
-| `07-ui-ux-design.md#T-07.24.01.01` | verify | Recorded batch work | Build `DataTable` component using Base UI Table or TanStack Table. Features: column definition with header, accessor, cell renderer, sorting (client or server), row selection (checkbox), expandable rows (sub-row), sticky header, horizontal scroll for many columns, row hover highlight. |
-| `07-ui-ux-design.md#T-07.24.01.02` | verify | Recorded batch work | Build column renderers: `TextCell`, `NumberCell` (locale-formatted), `DateCell` (localized relative/absolute), `StatusCell` (colored badge), `ActionCell` (dropdown menu with row actions), `CurrencyCell` (IRR/toman formatted), `AvatarCell` (small avatar + name), `LinkCell` (clickable reference). |
-| `07-ui-ux-design.md#T-07.24.01.03` | verify | Recorded batch work | Build `CardListView` as mobile alternative: each row renders as a card showing key fields. Responsive switch at `md` breakpoint. |
-| `07-ui-ux-design.md#T-07.24.01.04` | verify | Recorded batch work | Ensure table is keyboard navigable: Tab through rows, Enter/Space for row actions, arrow keys for sort/filter navigation. Screen reader announces row count, column headers, current sort. |
+| `07-ui-ux-design.md#T-07.24.01.01` | done | Recorded batch work | Build `DataTable` component using Base UI Table or TanStack Table. Features: column definition with header, accessor, cell renderer, sorting (client or server), row selection (checkbox), expandable rows (sub-row), sticky header, horizontal scroll for many columns, row hover highlight. |
+| `07-ui-ux-design.md#T-07.24.01.02` | done | Recorded batch work | Build column renderers: `TextCell`, `NumberCell` (locale-formatted), `DateCell` (localized relative/absolute), `StatusCell` (colored badge), `ActionCell` (dropdown menu with row actions), `CurrencyCell` (IRR/toman formatted), `AvatarCell` (small avatar + name), `LinkCell` (clickable reference). |
+| `07-ui-ux-design.md#T-07.24.01.03` | done | Recorded batch work | Build `CardListView` as mobile alternative: each row renders as a card showing key fields. Responsive switch at `md` breakpoint. |
+| `07-ui-ux-design.md#T-07.24.01.04` | done | Recorded batch work | Ensure table is keyboard navigable: Tab through rows, Enter/Space for row actions, arrow keys for sort/filter navigation. Screen reader announces row count, column headers, current sort. |
 | `07-ui-ux-design.md#T-07.25.01.01` | done | Recorded batch work | Build `FileUpload` component: drop zone (dashed border, icon, "Drag files here or click to browse" text), file list (name, size, progress bar per file), file type validation (extension + MIME against configured allowlist), size validation, max file count. Accessibility: keyboard-accessible drop zone, screen reader announces upload progress. |
 | `07-ui-ux-design.md#T-07.25.01.02` | done | Recorded batch work | Build `FilePreview` component: image preview (thumbnail), PDF preview (first page), document icon fallback. Used in document lists, ticket attachments, upload review. |
 | `07-ui-ux-design.md#T-07.25.01.03` | done | Recorded batch work | Build `DocumentStatusBadge` component: state labels with colored badges — Uploading (gray), Pending scan (yellow pulse), Available (green), Submitted for review (blue), Approved (green check), Rejected (red, with reason shown), Superseded (outline), Quarantined (red alert), Removed (gray strikethrough). |

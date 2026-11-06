@@ -196,9 +196,11 @@ export function ListFilterPanel({
               {children}
             </div>
             <SheetFooter className="shrink-0 border-t sm:flex-row sm:justify-end">
-              <Button type="button" variant="ghost" onClick={clear}>
-                {labels.clear}
-              </Button>
+              {activeCount > 0 && (
+                <Button type="button" variant="ghost" onClick={clear}>
+                  {labels.clear}
+                </Button>
+              )}
               <SheetClose render={<Button type="button" variant="outline" />}>
                 {drawer.labels.cancel}
               </SheetClose>
