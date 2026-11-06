@@ -85,6 +85,15 @@ for (const locale of ['en', 'fa'] as const)
           await page.route('**/api/admin/sms-providers/template-event-keys', (route) =>
             route.fulfill({ json: ['otp:login'] })
           );
+          if (action === 'sms')
+            await page.route('**/api/admin/sms-providers/template-variable-choices', (route) =>
+              route.fulfill({
+                json: [
+                  { eventKey: 'otp:login', locale: 'en', variables: ['code'] },
+                  { eventKey: 'otp:login', locale: 'fa', variables: ['code'] },
+                ],
+              })
+            );
           await page.route(`**/api/admin/${action}-providers/${action}`, (route) =>
             mutate(route, { ...(action === 'email' ? email : sms), label: 'Reviewed change' })
           );

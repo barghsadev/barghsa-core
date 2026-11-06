@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-06T15:43:25.768473+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06T15:49:28.400742+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 597 | Accepted with unchanged source bindings. |
-| verify | 728 | Existing work may be complete; inspect evidence before building. |
+| done | 603 | Accepted with unchanged source bindings. |
+| verify | 722 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,14 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing admin settings layout, section forms, version/history comparison, audit and OTP step-up adoption. Reuse valid source-bound native/browser evidence and implement only demonstrated gaps. Keep external Telegram hosting blocked; no new server or production deployment.
+Inspect existing staff roles/effective permissions, geography bilingual CRUD/import and terms editor/diff/history against exact UI criteria. Reuse accepted domain evidence and implement demonstrated gaps; preserve authority, version, audit and publication guards.
 
-- `07-ui-ux-design.md#T-07.30.01.01`: Build `AdminSettingsLayout`: nested sidebar navigation (left) + content area (right). Categories: Branding, Staff & Roles, Geography, Products, Pricing & VAT, Gift Codes, Notifications, Documents, Electricity, AI Orchestration, Security, System. Section collapse on mobile into dropdown.
-- `07-ui-ux-design.md#T-07.30.01.02`: Build `SettingsFormSection` pattern: card with title, description, form fields. Save button per section (not full page save). Shows toast on success.
-- `07-ui-ux-design.md#T-07.30.01.03`: Build `VersionedSettingsCard`: shows current active config, last updated date, updated by. "Edit" button opens edit mode. Save creates Draft version. "Activate" button promotes Draft to Active. "View history" shows versions (date, author, status badge). Rollback button on superseded versions.
-- `07-ui-ux-design.md#T-07.30.01.04`: Build `ConfigPreviewCard`: side-by-side "Current" vs "Draft" comparison. Used for branding preview, template changes, VAT rate changes.
-- `07-ui-ux-design.md#T-07.30.01.05`: Build `AuditLogViewer`: timeline of config changes — field changed, old value, new value, changed by, timestamp. Expandable per entry.
-- `07-ui-ux-design.md#T-07.30.01.06`: Build `StepUpAuthGate`: when admin attempts a sensitive action (provider config, refund threshold, role change), show MFA step-up dialog. User re-authenticates (OTP) and the action proceeds only after successful step-up. Dialog shows "Sensitive action requires re-authentication."
+- `07-ui-ux-design.md#T-07.30.02.02`: StaffRolesPage: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. "View effective permissions" per staff user.
+- `07-ui-ux-design.md#T-07.30.02.03`: GeographyPage: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed.
+- `07-ui-ux-design.md#T-07.30.02.04`: TosEditorPage: rich text editor (TipTap-like) with side-by-side diff against current active version, "Mark as material change" toggle, version history list.
 
 ## v0.2.0: Complete customer journeys
 
@@ -922,12 +919,12 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.29.01.03` | verify | Recorded batch work | Build `AgentDetailDialog`: shows agent details, role, activity history. Actions: change role, remove agent (with destructive confirmation dialog), withdraw pending invite. |
 | `07-ui-ux-design.md#T-07.29.01.04` | verify | Recorded batch work | Build `AgentInvitationBanner` (on dashboard): when the current user has been invited to a legal entity, show a prominent card: "You've been invited to join [Legal Entity Name] by [Inviter Name]". Accept / Decline buttons. Not dismissible until action taken. |
 | `07-ui-ux-design.md#T-07.29.01.05` | verify | Recorded batch work | Removing the last owner is blocked unless ownership is transferred first. Show explanatory message. |
-| `07-ui-ux-design.md#T-07.30.01.01` | verify | Recorded batch work | Build `AdminSettingsLayout`: nested sidebar navigation (left) + content area (right). Categories: Branding, Staff & Roles, Geography, Products, Pricing & VAT, Gift Codes, Notifications, Documents, Electricity, AI Orchestration, Security, System. Section collapse on mobile into dropdown. |
-| `07-ui-ux-design.md#T-07.30.01.02` | verify | Recorded batch work | Build `SettingsFormSection` pattern: card with title, description, form fields. Save button per section (not full page save). Shows toast on success. |
-| `07-ui-ux-design.md#T-07.30.01.03` | verify | Recorded batch work | Build `VersionedSettingsCard`: shows current active config, last updated date, updated by. "Edit" button opens edit mode. Save creates Draft version. "Activate" button promotes Draft to Active. "View history" shows versions (date, author, status badge). Rollback button on superseded versions. |
-| `07-ui-ux-design.md#T-07.30.01.04` | verify | Recorded batch work | Build `ConfigPreviewCard`: side-by-side "Current" vs "Draft" comparison. Used for branding preview, template changes, VAT rate changes. |
-| `07-ui-ux-design.md#T-07.30.01.05` | verify | Recorded batch work | Build `AuditLogViewer`: timeline of config changes — field changed, old value, new value, changed by, timestamp. Expandable per entry. |
-| `07-ui-ux-design.md#T-07.30.01.06` | verify | Recorded batch work | Build `StepUpAuthGate`: when admin attempts a sensitive action (provider config, refund threshold, role change), show MFA step-up dialog. User re-authenticates (OTP) and the action proceeds only after successful step-up. Dialog shows "Sensitive action requires re-authentication." |
+| `07-ui-ux-design.md#T-07.30.01.01` | done | Recorded batch work | Build `AdminSettingsLayout`: nested sidebar navigation (left) + content area (right). Categories: Branding, Staff & Roles, Geography, Products, Pricing & VAT, Gift Codes, Notifications, Documents, Electricity, AI Orchestration, Security, System. Section collapse on mobile into dropdown. |
+| `07-ui-ux-design.md#T-07.30.01.02` | done | Recorded batch work | Build `SettingsFormSection` pattern: card with title, description, form fields. Save button per section (not full page save). Shows toast on success. |
+| `07-ui-ux-design.md#T-07.30.01.03` | done | Recorded batch work | Build `VersionedSettingsCard`: shows current active config, last updated date, updated by. "Edit" button opens edit mode. Save creates Draft version. "Activate" button promotes Draft to Active. "View history" shows versions (date, author, status badge). Rollback button on superseded versions. |
+| `07-ui-ux-design.md#T-07.30.01.04` | done | Recorded batch work | Build `ConfigPreviewCard`: side-by-side "Current" vs "Draft" comparison. Used for branding preview, template changes, VAT rate changes. |
+| `07-ui-ux-design.md#T-07.30.01.05` | done | Recorded batch work | Build `AuditLogViewer`: timeline of config changes — field changed, old value, new value, changed by, timestamp. Expandable per entry. |
+| `07-ui-ux-design.md#T-07.30.01.06` | done | Recorded batch work | Build `StepUpAuthGate`: when admin attempts a sensitive action (provider config, refund threshold, role change), show MFA step-up dialog. User re-authenticates (OTP) and the action proceeds only after successful step-up. Dialog shows "Sensitive action requires re-authentication." |
 | `07-ui-ux-design.md#T-07.30.02.01` | done | Recorded batch work | BrandingSettingsPage: logo upload with preview (light + dark), color pickers (primary, secondary, accent), app title inputs (FA/EN), favicon upload, preview toggle, versioned save + activate. |
 | `07-ui-ux-design.md#T-07.30.02.02` | verify | Recorded batch work | StaffRolesPage: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. "View effective permissions" per staff user. |
 | `07-ui-ux-design.md#T-07.30.02.03` | verify | Recorded batch work | GeographyPage: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed. |

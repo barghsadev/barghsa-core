@@ -93,9 +93,20 @@ for (const width of [390, 1440]) {
           });
           await expect(lead).toBeDisabled();
           await confirm.click();
-          await expect(dialog.getByRole('alert')).toBeVisible();
+          await expect(
+            dialog
+              .getByRole('alert')
+              .filter({ hasText: t('admin.contractLimits.unverified', locale) })
+          ).toBeVisible();
           await expect(page.locator('[data-sonner-toast]')).toHaveCount(0);
           await expect(lead).toHaveValue('14');
+          await expect(confirm).toBeDisabled();
+          expect(writes).toHaveLength(1);
+          await dialog
+            .getByRole('button', { name: t('admin.contractLimits.refresh', locale), exact: true })
+            .click();
+          await expect(confirm).toBeEnabled();
+          expect(writes).toHaveLength(1);
           await confirm.click();
           await expect(dialog).toHaveCount(0);
           await expect(page.locator('[data-sonner-toast]')).toContainText(

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-06T15:43:25.768473+00:00",
+  "updated": "2026-11-06T15:49:28.400742+00:00",
   "source_commit": "93b9fec7a2c18f2635d57cd923ffce0626ee0413",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -22850,7 +22850,7 @@
             },
             {
               "path": "apps/web/e2e/admin-otp-step-up.spec.ts",
-              "sha256": "a5902d175e6cf9aded07cf2b2587623c8f7def63c8f0df0a67076984504ffa8c"
+              "sha256": "743b3d7882f7ce4a34e601bc5959ccb3f1f51ff721ba2b1bd4a26bca583b69fd"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -23897,6 +23897,14 @@
               ],
               "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-assets/acceptance-proof.json",
               "scope": "Branding-only delta with 115 targeted unit/native cases and 6 production browser journeys; unrelated controller/OpenAPI/browser-case bodies and all old SQL/journal entries proven unchanged. No whole-suite or pending live gate recertification."
+            },
+            {
+              "batch": "release-0.5-admin-settings-adoption",
+              "paths": [
+                "apps/web/e2e/admin-otp-step-up.spec.ts"
+              ],
+              "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/scope-proof.json",
+              "scope": "SMS-only fixture metadata; original OTP assertions and product authority unchanged. Sixteen current OTP browser cases and native step-up checks verified."
             }
           ],
           "electricity_finance_read_renewal": {
@@ -421307,21 +421315,52 @@
         "story": "07-ui-ux-design.md#spec-f2c78e3ce685"
       },
       "requirement": "| **T-07.30.01.01** | Build `AdminSettingsLayout`: nested sidebar navigation (left) + content area (right). Categories: Branding, Staff & Roles, Geography, Products, Pricing & VAT, Gift Codes, Notifications, Documents, Electricity, AI Orchestration, Security, System. Section collapse on mobile into dropdown. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-admin-settings-framework"
+          "2026-10-01-admin-settings-framework",
+          "release-0.5-admin-settings-adoption"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-settings-adoption",
+          "base_commit": "ce7f20e539cf76aac23b7145db68f16ae9f0e404",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/admin-settings.spec.ts",
+              "sha256": "fc9c5be4438b34a4d9015e1085aa746acd97302be04940779a55062844e6b249"
+            },
+            {
+              "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+              "sha256": "51397f42bf352adbd6291dc70bfe077d160cbff3f3e10db0a1c48778758fe086"
+            },
+            {
+              "path": "apps/web/src/components/admin-settings-layout.test.tsx",
+              "sha256": "dfda07beee9db65a013588ccb4cb50e04061e4f65c6906e3e6b0165883d34510"
+            },
+            {
+              "path": "apps/web/src/lib/admin-settings-navigation.ts",
+              "sha256": "09210a32cae635bc50e215a072c70d50b978869b40f2a53d138be51188363657"
+            },
+            {
+              "path": "apps/web/src/pages/AdminLayout.tsx",
+              "sha256": "49928899fc0737445bd9fae91cbc13eb4676ffcf849c00dd18302ed1be00bd67"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Twelve permission-filtered categories, bounded desktop navigation, grouped mobile select, safe destinations, active state and destination focus. Eight bilingual/light-dark desktop/mobile journeys and nine component cases verify actual shell adoption.",
+          "limitations": [
+            "Live provider delivery and milestone staging/Telegram receipts remain separate gates."
+          ]
+        }
       }
     },
     {
@@ -421335,21 +421374,52 @@
         "story": "07-ui-ux-design.md#spec-f2c78e3ce685"
       },
       "requirement": "| **T-07.30.01.02** | Build `SettingsFormSection` pattern: card with title, description, form fields. Save button per section (not full page save). Shows toast on success. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-admin-settings-framework"
+          "2026-10-01-admin-settings-framework",
+          "release-0.5-admin-settings-adoption"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-settings-adoption",
+          "base_commit": "ce7f20e539cf76aac23b7145db68f16ae9f0e404",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/OtpConfigPanel.tsx",
+              "sha256": "9529b54cb664eb73fd0983b972af6a78c1f5ab1cf2c332cce69e4fe739909391"
+            },
+            {
+              "path": "apps/web/src/components/SettingsFormSection.test.tsx",
+              "sha256": "ad3e6b1a4659c2847167ba67db3c408ead7be71b9fee76bf4fdbe3fb2bc17c76"
+            },
+            {
+              "path": "apps/web/src/components/SettingsFormSection.tsx",
+              "sha256": "15b4456dd457468cf732a43104b29bac761a262064bf3f3c425abb84a0a6c259"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+              "sha256": "7ae1dd4d68d4552a3be4074e892f2d50e62cf2d0ed07873f08ddc3f8908e4db3"
+            },
+            {
+              "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
+              "sha256": "da0e9cb357c29d6a1242659432b87960cff878ab2c86f5a17ec721f58132bec9"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Accessible per-section cards/forms/actions and confirmed-save toast, adopted by OTP, service targets and contract limits. Independent form/StrictMode cases and actual section save/recovery journeys pass. Unverified receipt blocks retry until a manual read; no automatic resend.",
+          "limitations": [
+            "Live provider delivery and milestone staging/Telegram receipts remain separate gates."
+          ]
+        }
       }
     },
     {
@@ -421363,21 +421433,44 @@
         "story": "07-ui-ux-design.md#spec-f2c78e3ce685"
       },
       "requirement": "| **T-07.30.01.03** | Build `VersionedSettingsCard`: shows current active config, last updated date, updated by. \"Edit\" button opens edit mode. Save creates Draft version. \"Activate\" button promotes Draft to Active. \"View history\" shows versions (date, author, status badge). Rollback button on superseded versions. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-admin-versioned-settings"
+          "2026-10-01-admin-versioned-settings",
+          "release-0.5-admin-settings-adoption"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-settings-adoption",
+          "base_commit": "ce7f20e539cf76aac23b7145db68f16ae9f0e404",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/versioned-settings.spec.ts",
+              "sha256": "6b5c9a36987db8eda6f46bb58e8e64e24bce8cdecb1eeca592e523bf08f61c4d"
+            },
+            {
+              "path": "apps/web/src/components/VersionedSettingsCard.tsx",
+              "sha256": "ce3b9eab114f4cff0cb7bb44827165afa223f805a3454fabaebcca8dae5efe10"
+            },
+            {
+              "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+              "sha256": "86932ed2d1a370a99a1039aaaaccee02fe0531d5351b14de7503ae3d17a6e32a"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Branding active metadata, explicit edit, immutable draft, exact activation, expandable history and restore-as-draft with separate publication. Four current version-review journeys and sixteen page cases verify adoption; accepted native branding checks remain valid.",
+          "limitations": [
+            "Live provider delivery and milestone staging/Telegram receipts remain separate gates."
+          ]
+        }
       }
     },
     {
@@ -421391,21 +421484,52 @@
         "story": "07-ui-ux-design.md#spec-f2c78e3ce685"
       },
       "requirement": "| **T-07.30.01.04** | Build `ConfigPreviewCard`: side-by-side \"Current\" vs \"Draft\" comparison. Used for branding preview, template changes, VAT rate changes. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-admin-versioned-settings"
+          "2026-10-01-admin-versioned-settings",
+          "release-0.5-admin-settings-adoption"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-settings-adoption",
+          "base_commit": "ce7f20e539cf76aac23b7145db68f16ae9f0e404",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/versioned-settings.spec.ts",
+              "sha256": "6b5c9a36987db8eda6f46bb58e8e64e24bce8cdecb1eeca592e523bf08f61c4d"
+            },
+            {
+              "path": "apps/web/src/components/ConfigPreviewCard.tsx",
+              "sha256": "369081853b0234f5dc8636f6538476ccd12dc23803c0cb40f3f733a1eadc4dbb"
+            },
+            {
+              "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+              "sha256": "86932ed2d1a370a99a1039aaaaccee02fe0531d5351b14de7503ae3d17a6e32a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+              "sha256": "3818c5323c9ce5b019ea44c82865dd7d151eb9d27be7b541d608fd529af462d5"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVatPage.tsx",
+              "sha256": "d825ece0b840e222cbf6f261eb021d6e5092c4021c3f03ab1176262d3b0cdcef"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Current/draft comparisons used by branding, VAT proposals and document-template metadata/version selections. Four bilingual/light-dark browser journeys verify pending proposals stay separate and unsafe template HTML is not executed.",
+          "limitations": [
+            "Live provider delivery and milestone staging/Telegram receipts remain separate gates."
+          ]
+        }
       }
     },
     {
@@ -421419,21 +421543,68 @@
         "story": "07-ui-ux-design.md#spec-f2c78e3ce685"
       },
       "requirement": "| **T-07.30.01.05** | Build `AuditLogViewer`: timeline of config changes — field changed, old value, new value, changed by, timestamp. Expandable per entry. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-admin-config-audit"
+          "2026-10-01-admin-config-audit",
+          "release-0.5-admin-settings-adoption"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-settings-adoption",
+          "base_commit": "ce7f20e539cf76aac23b7145db68f16ae9f0e404",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
+              "sha256": "056c04e5fc6ca5b86b26e7e3a9ca3497255c0f491d9a3ffdc8bc71134d8aec71"
+            },
+            {
+              "path": "apps/api/src/admin/config-audit.controller.ts",
+              "sha256": "b5c2af193be60f8c4991ce08ba1a2dd850e335aebbd270667963f8b441283a4c"
+            },
+            {
+              "path": "apps/api/src/admin/config-audit.test.ts",
+              "sha256": "71e28080ef6661d554bcb45a853584db73eeed4dcf3792e025d1a41288298392"
+            },
+            {
+              "path": "apps/web/e2e/config-audit.spec.ts",
+              "sha256": "85736d23154d0aef370585c18669d6979d92230da6148e589d969fa916d8b961"
+            },
+            {
+              "path": "apps/web/src/components/AuditLogViewer.test.tsx",
+              "sha256": "5b20b8e9d5969d8f58f536e6e5e5bcb388748b7fef950fbf09647aebb0c190fc"
+            },
+            {
+              "path": "apps/web/src/components/AuditLogViewer.tsx",
+              "sha256": "17730d87047ef2a263240df8103fd3a6f65d5c18b3d59870264fc47e6114adc3"
+            },
+            {
+              "path": "apps/web/src/components/OtpConfigPanel.tsx",
+              "sha256": "9529b54cb664eb73fd0983b972af6a78c1f5ab1cf2c332cce69e4fe739909391"
+            },
+            {
+              "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+              "sha256": "86932ed2d1a370a99a1039aaaaccee02fe0531d5351b14de7503ae3d17a6e32a"
+            },
+            {
+              "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
+              "sha256": "da0e9cb357c29d6a1242659432b87960cff878ab2c86f5a17ec721f58132bec9"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Expandable config timeline with allowlisted old/new values, actor, localized time and version. Native scope permission/session rechecks, private no-store and bound microsecond cursors pass. Twelve browser recovery/denial/isolation journeys and eight component cases pass.",
+          "limitations": [
+            "Live provider delivery and milestone staging/Telegram receipts remain separate gates."
+          ]
+        }
       }
     },
     {
@@ -421447,12 +421618,10 @@
         "story": "07-ui-ux-design.md#spec-f2c78e3ce685"
       },
       "requirement": "| **T-07.30.01.06** | Build `StepUpAuthGate`: when admin attempts a sensitive action (provider config, refund threshold, role change), show MFA step-up dialog. User re-authenticates (OTP) and the action proceeds only after successful step-up. Dialog shows \"Sensitive action requires re-authentication.\" | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -421460,9 +421629,74 @@
         "changed_paths": [],
         "batches": [
           "2026-10-01-admin-config-audit",
-          "2026-10-01-admin-otp-step-up"
+          "2026-10-01-admin-otp-step-up",
+          "release-0.5-admin-settings-adoption"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-settings-adoption",
+          "base_commit": "ce7f20e539cf76aac23b7145db68f16ae9f0e404",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up.controller.ts",
+              "sha256": "a25dbfa1ada1f196005eb8122cadb56affcf6b6c527e231206974eaee9e0d529"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up.service.ts",
+              "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.test.ts",
+              "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/web/e2e/admin-otp-step-up.spec.ts",
+              "sha256": "743b3d7882f7ce4a34e601bc5959ccb3f1f51ff721ba2b1bd4a26bca583b69fd"
+            },
+            {
+              "path": "apps/web/e2e/otp-step-up-fixture.ts",
+              "sha256": "744cbb721ce869b1fe4fdda57f173276ac59a4d7394428621d0006912348d1c4"
+            },
+            {
+              "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
+              "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+            },
+            {
+              "path": "apps/web/src/components/StepUpAuthGate.tsx",
+              "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+              "sha256": "4bfcbfddbf5181324c06de75ea647d7417fc0851bd906a7c1b9b23e1e5752def"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+              "sha256": "98d4a675abc376ccf7afeb02e69aa1892ce583eb4268b0dd11957b59d9956017"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "OTP step-up adopted in email/SMS providers, refund/dual-approval threshold and staff role replacement. Native challenge/session/account/purpose binding, issuance/attempt/expiry/audit/concurrency and rotated CSRF checks pass. Sixteen bilingual/light-dark browser journeys pass. No live delivery inferred.",
+          "limitations": [
+            "Live provider delivery and milestone staging/Telegram receipts remain separate gates."
+          ]
+        }
       }
     },
     {
@@ -455213,6 +455447,227 @@
       "release_accepted": false,
       "external_sends": false,
       "production_authorized": false
+    },
+    "release-0.5-admin-settings-adoption": {
+      "batch": "release-0.5-admin-settings-adoption",
+      "base_commit": "ce7f20e539cf76aac23b7145db68f16ae9f0e404",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.30.01.01",
+        "07-ui-ux-design.md#T-07.30.01.02",
+        "07-ui-ux-design.md#T-07.30.01.03",
+        "07-ui-ux-design.md#T-07.30.01.04",
+        "07-ui-ux-design.md#T-07.30.01.05",
+        "07-ui-ux-design.md#T-07.30.01.06"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
+          "sha256": "056c04e5fc6ca5b86b26e7e3a9ca3497255c0f491d9a3ffdc8bc71134d8aec71"
+        },
+        {
+          "path": "apps/api/src/admin/config-audit.controller.ts",
+          "sha256": "b5c2af193be60f8c4991ce08ba1a2dd850e335aebbd270667963f8b441283a4c"
+        },
+        {
+          "path": "apps/api/src/admin/config-audit.test.ts",
+          "sha256": "71e28080ef6661d554bcb45a853584db73eeed4dcf3792e025d1a41288298392"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+          "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up.controller.ts",
+          "sha256": "a25dbfa1ada1f196005eb8122cadb56affcf6b6c527e231206974eaee9e0d529"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up.service.ts",
+          "sha256": "44168c1da43b87679cbda10a313b9c7f86c0d51e5b2327f8b88ee90da274cdff"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.test.ts",
+          "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+        },
+        {
+          "path": "apps/web/e2e/admin-otp-step-up.spec.ts",
+          "sha256": "743b3d7882f7ce4a34e601bc5959ccb3f1f51ff721ba2b1bd4a26bca583b69fd"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings.spec.ts",
+          "sha256": "fc9c5be4438b34a4d9015e1085aa746acd97302be04940779a55062844e6b249"
+        },
+        {
+          "path": "apps/web/e2e/config-audit.spec.ts",
+          "sha256": "85736d23154d0aef370585c18669d6979d92230da6148e589d969fa916d8b961"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/otp-step-up-fixture.ts",
+          "sha256": "744cbb721ce869b1fe4fdda57f173276ac59a4d7394428621d0006912348d1c4"
+        },
+        {
+          "path": "apps/web/e2e/versioned-settings.spec.ts",
+          "sha256": "6b5c9a36987db8eda6f46bb58e8e64e24bce8cdecb1eeca592e523bf08f61c4d"
+        },
+        {
+          "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+          "sha256": "51397f42bf352adbd6291dc70bfe077d160cbff3f3e10db0a1c48778758fe086"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.test.tsx",
+          "sha256": "5b20b8e9d5969d8f58f536e6e5e5bcb388748b7fef950fbf09647aebb0c190fc"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.tsx",
+          "sha256": "17730d87047ef2a263240df8103fd3a6f65d5c18b3d59870264fc47e6114adc3"
+        },
+        {
+          "path": "apps/web/src/components/ConfigPreviewCard.tsx",
+          "sha256": "369081853b0234f5dc8636f6538476ccd12dc23803c0cb40f3f733a1eadc4dbb"
+        },
+        {
+          "path": "apps/web/src/components/OtpConfigPanel.tsx",
+          "sha256": "9529b54cb664eb73fd0983b972af6a78c1f5ab1cf2c332cce69e4fe739909391"
+        },
+        {
+          "path": "apps/web/src/components/SettingsFormSection.test.tsx",
+          "sha256": "ad3e6b1a4659c2847167ba67db3c408ead7be71b9fee76bf4fdbe3fb2bc17c76"
+        },
+        {
+          "path": "apps/web/src/components/SettingsFormSection.tsx",
+          "sha256": "15b4456dd457468cf732a43104b29bac761a262064bf3f3c425abb84a0a6c259"
+        },
+        {
+          "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
+          "sha256": "51f1d9021808cf0c49733bb4eebbd2f60f4599cb14aada18466ae3df8262a84f"
+        },
+        {
+          "path": "apps/web/src/components/StepUpAuthGate.tsx",
+          "sha256": "59f4b8e4bb78e745bd3338d7bfb842fdb67756f11a5f8f5d0230b2d8e496421f"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+        },
+        {
+          "path": "apps/web/src/components/VersionedSettingsCard.tsx",
+          "sha256": "ce3b9eab114f4cff0cb7bb44827165afa223f805a3454fabaebcca8dae5efe10"
+        },
+        {
+          "path": "apps/web/src/components/admin-settings-layout.test.tsx",
+          "sha256": "dfda07beee9db65a013588ccb4cb50e04061e4f65c6906e3e6b0165883d34510"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+          "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/lib/admin-settings-navigation.ts",
+          "sha256": "09210a32cae635bc50e215a072c70d50b978869b40f2a53d138be51188363657"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "86932ed2d1a370a99a1039aaaaccee02fe0531d5351b14de7503ae3d17a6e32a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "7ae1dd4d68d4552a3be4074e892f2d50e62cf2d0ed07873f08ddc3f8908e4db3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+          "sha256": "3818c5323c9ce5b019ea44c82865dd7d151eb9d27be7b541d608fd529af462d5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "4bfcbfddbf5181324c06de75ea647d7417fc0851bd906a7c1b9b23e1e5752def"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "49928899fc0737445bd9fae91cbc13eb4676ffcf849c00dd18302ed1be00bd67"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "98d4a675abc376ccf7afeb02e69aa1892ce583eb4268b0dd11957b59d9956017"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "d825ece0b840e222cbf6f261eb021d6e5092c4021c3f03ab1176262d3b0cdcef"
+        },
+        {
+          "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
+          "sha256": "da0e9cb357c29d6a1242659432b87960cff878ab2c86f5a17ec721f58132bec9"
+        },
+        {
+          "path": "apps/web/src/pages/branding-settings.test.tsx",
+          "sha256": "34f4c7a7b0547e6873e0bd3b7f943940a8896ba2d73c42997678985be4c1801e"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+        }
+      ],
+      "review": {
+        "result": "accepted",
+        "findings": [],
+        "details": "Existing components and actual callers inspected; complete fixture-only diff reviewed once. No product rebuild. Save acknowledgement test retains its alert and adds disabled confirmation, exact write counts and manual-read recovery. SMS choices fixture restored. Original OTP, security, contrast, keyboard and RTL assertions retained."
+      },
+      "criteria": {
+        "01": "Twelve permission-filtered categories, bounded desktop navigation, grouped mobile select, safe destinations, active state and destination focus. Eight bilingual/light-dark desktop/mobile journeys and nine component cases verify actual shell adoption.",
+        "02": "Accessible per-section cards/forms/actions and confirmed-save toast, adopted by OTP, service targets and contract limits. Independent form/StrictMode cases and actual section save/recovery journeys pass. Unverified receipt blocks retry until a manual read; no automatic resend.",
+        "03": "Branding active metadata, explicit edit, immutable draft, exact activation, expandable history and restore-as-draft with separate publication. Four current version-review journeys and sixteen page cases verify adoption; accepted native branding checks remain valid.",
+        "04": "Current/draft comparisons used by branding, VAT proposals and document-template metadata/version selections. Four bilingual/light-dark browser journeys verify pending proposals stay separate and unsafe template HTML is not executed.",
+        "05": "Expandable config timeline with allowlisted old/new values, actor, localized time and version. Native scope permission/session rechecks, private no-store and bound microsecond cursors pass. Twelve browser recovery/denial/isolation journeys and eight component cases pass.",
+        "06": "OTP step-up adopted in email/SMS providers, refund/dual-approval threshold and staff role replacement. Native challenge/session/account/purpose binding, issuance/attempt/expiry/audit/concurrency and rotated CSRF checks pass. Sixteen bilingual/light-dark browser journeys pass. No live delivery inferred."
+      },
+      "passing_check_receipts": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/settings-native.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/audit-resolution.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/settings-browser-recovery.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/fixtures-lint.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/fixture-format.json"
+      ],
+      "passing_case_evidence": [
+        {
+          "receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/settings-unit.json",
+          "passing_cases": 32,
+          "failed_suite": "AuditLogViewer import resolution; zero audit cases executed there"
+        },
+        {
+          "receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/settings-browser.json",
+          "passing_cases": 32,
+          "failed_cases": 12,
+          "note": "Failed suite remains failed; only actual passing cases counted."
+        }
+      ],
+      "unit_native_distinct_cases": 77,
+      "browser_distinct_cases": 44,
+      "browser_case_provenance": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/browser-cases.json",
+      "scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-settings/scope-proof.json",
+      "reused_runtime": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-assets/runtime-bindings.json",
+      "reuse_reason": "No product sources, dependencies or compiled outputs changed after accepted ce7f20e5. Fixture-only edits do not require a rebuild.",
+      "failures_preserved": [
+        "settings-unit.json",
+        "settings-browser.json"
+      ],
+      "failure_disposition": "Audit import resolution failed once. Export/compiled entry inspection and direct Node import succeeded; isolated instrumented Vite resolution passed eight cases without changing resolution or assertions. Root cause remains unconfirmed. Twelve failed browser cases were diagnosed, fixtures corrected and focused rerun passed.",
+      "external_sends": false,
+      "release_accepted": false,
+      "production_authorized": false
     }
   },
   "historical_improvements": [
@@ -455252,17 +455707,14 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-admin-settings-adoption",
+    "id": "release-0.5-admin-staff-geography-policy-pages",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.30.01.01",
-      "07-ui-ux-design.md#T-07.30.01.02",
-      "07-ui-ux-design.md#T-07.30.01.03",
-      "07-ui-ux-design.md#T-07.30.01.04",
-      "07-ui-ux-design.md#T-07.30.01.05",
-      "07-ui-ux-design.md#T-07.30.01.06"
+      "07-ui-ux-design.md#T-07.30.02.02",
+      "07-ui-ux-design.md#T-07.30.02.03",
+      "07-ui-ux-design.md#T-07.30.02.04"
     ],
-    "goal": "Inspect existing admin settings layout, section forms, version/history comparison, audit and OTP step-up adoption. Reuse valid source-bound native/browser evidence and implement only demonstrated gaps. Keep external Telegram hosting blocked; no new server or production deployment."
+    "goal": "Inspect existing staff roles/effective permissions, geography bilingual CRUD/import and terms editor/diff/history against exact UI criteria. Reuse accepted domain evidence and implement demonstrated gaps; preserve authority, version, audit and publication guards."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
