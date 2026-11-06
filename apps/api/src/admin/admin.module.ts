@@ -28,6 +28,7 @@ import { UploadPolicyService } from './upload-policy.service.js';
 import { UploadPolicyController } from './upload-policy.controller.js';
 import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js';
 import { ContractElectricityLimitsController } from './contract-electricity-limits.controller.js';
+import { VerificationPolicyController } from './verification-policy.controller.js';
 import { InvoiceModule } from '../invoice/invoice.module.js';
 import { WalletModule } from '../wallet/index.js';
 import { TosModule } from '../tos/tos.module.js';
@@ -55,6 +56,7 @@ import { ConfigAuditController } from './config-audit.controller.js';
     WalletModule,
   ],
   controllers: [
+    VerificationPolicyController,
     ConfigAuditController,
     AdminBrandAssetController,
     AdminController,

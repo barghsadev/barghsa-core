@@ -1,3 +1,4 @@
+import { lockVerificationPolicy } from './verification-policy-config.js';
 import { assertStaffTeamFields } from './staff-team-fields.js';
 import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
 import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
@@ -649,12 +650,21 @@ export class AdminService {
         );
       }
 
-      // ── 4. Auto-create verified individual profile ──────────────────
+      // Only this authorized staff-creation transaction may apply the staff exception.
+      const verificationPolicy = await lockVerificationPolicy(client);
       const profileId = uuidv7();
       await client.query(
-        `INSERT INTO profiles (id, user_id, profile_type, is_default, status, first_name, last_name, created_at, updated_at)
-         VALUES ($1, $2, 'INDIVIDUAL', true, 'VERIFIED', $3, $4, $5, $6)`,
-        [profileId, userId, input.firstName, input.lastName, now, now]
+        `INSERT INTO profiles (id, user_id, profile_type, is_default, status, first_name, last_name, created_at, updated_at,verified_at)
+         VALUES ($1, $2, 'INDIVIDUAL', true, $7, $3, $4, $5, $6,CASE WHEN $7='VERIFIED' THEN $5::timestamptz ELSE NULL END)`,
+        [
+          profileId,
+          userId,
+          input.firstName,
+          input.lastName,
+          now,
+          now,
+          verificationPolicy.autoVerifyStaff ? 'VERIFIED' : 'PENDING_VERIFICATION',
+        ]
       );
 
       // ── 4b. Assign initial roles ────────────────────────────────────
@@ -682,6 +692,7 @@ export class AdminService {
             activationMethod: input.activationMethod,
             roleIds: assignedRoleIds,
             profileId,
+            staffAutoVerification: verificationPolicy.autoVerifyStaff,
             stepUpVerified: true,
             stepUpVerifiedAt,
           }),

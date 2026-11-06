@@ -13,10 +13,21 @@ const mockClient = {
   release: vi.fn(),
 };
 
+let currentVerificationMode: () => Promise<unknown>;
 const addressActor = { userId: 'user-1', sessionId: 'session-1', csrfToken: 'csrf' };
 // Business-rule units use a valid actor; real HTTP tests cover session deadlines.
 const transactionalClient = {
   query(sql: string, params?: unknown[]) {
+    if (sql === 'LOCK TABLE app_config IN SHARE MODE') return Promise.resolve({ rows: [] });
+    if (sql.startsWith('SELECT key,value,version FROM app_config')) {
+      const keys = params?.[0] as string[];
+      if (keys.includes('profile_verification_policy')) return Promise.resolve({ rows: [] });
+      return currentVerificationMode().then((mode) => ({
+        rows:
+          mode === undefined ? [] : [{ key: 'profile_verification_mode', value: mode, version: 0 }],
+      }));
+    }
+
     if (sql === 'SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE')
       return Promise.resolve({ rows: [{ disabled_at: null }] });
     if (sql.startsWith('SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2'))
@@ -29,7 +40,16 @@ const transactionalClient = {
 };
 
 vi.mock('@barghsa/db', () => ({
-  getDbPool: () => mockPool,
+  getDbPool: () => ({
+    ...mockPool,
+    query: (sql: string, ...args: unknown[]) => {
+      if (sql.startsWith('SELECT key,value,version FROM app_config'))
+        return Promise.resolve({ rows: [] });
+      if (sql === 'SELECT verified_at FROM profiles WHERE id=$1')
+        return Promise.resolve({ rows: [{ verified_at: null }] });
+      return mockPool.query(sql, ...args);
+    },
+  }),
 }));
 
 describe('ProfilesService', () => {
@@ -41,6 +61,7 @@ describe('ProfilesService', () => {
       get: vi.fn(),
     } as unknown as ConfigCacheService;
 
+    currentVerificationMode = async () => configCache.get('profile_verification_mode');
     service = new ProfilesService(configCache, {
       create: vi.fn().mockResolvedValue(undefined),
     } as unknown as NotificationsService);

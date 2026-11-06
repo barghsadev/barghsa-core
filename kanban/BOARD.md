@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 616 | Accepted with unchanged source bindings. |
-| verify | 709 | Existing work may be complete; inspect evidence before building. |
+| done | 617 | Accepted with unchanged source bindings. |
+| verify | 708 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,9 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Deliver full owner-required verification settings with per-profile requirements/documents, expiry, configurable protected staff auto-verification, manual review and draft/active lifecycle. Inspect current mode, evidence upload/sealing, CRM review, staff creation and commercial profile checks. Implement enforcement and UI as one outcome; preserve current identity and financial/security safeguards.
+Implement the owner-required service targets and escalation as one enforced workflow. Inspect existing SLA scan, targets, assignment, notifications and UIs. Deliver per-priority ticket targets, order fulfillment, contract review and verification targets plus condition/from-role-or-team/to-role-or-team escalation, timeout and notification. Preserve existing consultation/verification/ticket routing, current authority, retries, audit and idempotency; verify domain and bilingual responsive UI on final sources.
 
-- `07-ui-ux-design.md#T-07.30.02.14`: VerificationSettingsPage: identity verification requirements per profile type (Individual/Legal), required document types, verification expiry, auto-verification for staff profiles, manual verification override. Versioned settings with Draft → Active lifecycle.
+- `07-ui-ux-design.md#T-07.30.02.15`: ServiceTargetsPage: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger.
+- `07-ui-ux-design.md#T-07.30.02.17`: EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows.
 
 ## v0.2.0: Complete customer journeys
 
@@ -936,7 +937,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.02.11` | done | Recorded batch work | GiftCodesPage: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle. |
 | `07-ui-ux-design.md#T-07.30.02.12` | done | Recorded batch work | UploadPoliciesPage: table (category, allowed formats, max size), edit modal per category. Deployment-safe boundary warnings. |
 | `07-ui-ux-design.md#T-07.30.02.13` | done | Recorded batch work | DualApprovalPage: threshold input (IRR) with large number format, description of affected actions. Step-up required to change. Emergency override section. |
-| `07-ui-ux-design.md#T-07.30.02.14` | verify | Recorded batch work | VerificationSettingsPage: identity verification requirements per profile type (Individual/Legal), required document types, verification expiry, auto-verification for staff profiles, manual verification override. Versioned settings with Draft → Active lifecycle. |
+| `07-ui-ux-design.md#T-07.30.02.14` | done | Recorded batch work | VerificationSettingsPage: identity verification requirements per profile type (Individual/Legal), required document types, verification expiry, auto-verification for staff profiles, manual verification override. Versioned settings with Draft → Active lifecycle. |
 | `07-ui-ux-design.md#T-07.30.02.15` | verify | Recorded batch work | ServiceTargetsPage: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger. |
 | `07-ui-ux-design.md#T-07.30.02.16` | done | Recorded batch work | TeamAssignmentPage: staff team management — create teams (Support, Finance, Operations, Legal), assign staff to teams, set team lead, configure auto-assignment rules (round-robin, least-loaded, skill-based), team escalation path. |
 | `07-ui-ux-design.md#T-07.30.02.17` | verify | Inventory needed | EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows. |

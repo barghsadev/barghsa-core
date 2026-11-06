@@ -55,8 +55,10 @@ async function readState(db: Pool | PoolClient) {
   };
 }
 
-export async function readVerificationModeConfig(): Promise<VerificationModeConfig> {
-  return (await readState(getDbPool())).config;
+export async function readVerificationModeConfig(
+  db: Pool | PoolClient = getDbPool()
+): Promise<VerificationModeConfig> {
+  return (await readState(db)).config;
 }
 
 export async function changeVerificationMode(

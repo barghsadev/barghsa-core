@@ -68,6 +68,9 @@ export const profiles = pgTable('profiles', {
   /** Iranian national ID (10 digits, unique among active profiles). */
   nationalId: text('national_id'),
 
+  /** Last successful verification, retained independently of unrelated profile edits. */
+  verifiedAt: timestamp('verified_at', { withTimezone: true, mode: 'date' }),
+
   /** When the profile was created. */
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
@@ -92,6 +95,7 @@ export const createProfilesTable = sql`
     first_name TEXT,
     last_name TEXT,
     national_id TEXT,
+    verified_at TIMESTAMPTZ,
     archived BOOLEAN NOT NULL DEFAULT false,
     archived_at TIMESTAMPTZ,
     archived_reason TEXT,

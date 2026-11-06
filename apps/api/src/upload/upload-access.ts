@@ -101,9 +101,14 @@ export async function requireUploadContext(
       ? 'admin:branding:edit'
       : purpose === 'knowledge_base'
         ? 'admin:ai:kb'
-        : purpose === 'verification_evidence'
-          ? 'crm:edit-identity'
-          : undefined;
+        : undefined;
+  if (
+    purpose === 'verification_evidence' &&
+    !['crm:edit-identity', 'crm:verify'].some((permission) =>
+      hasStaffPermission(request, permission)
+    )
+  )
+    throw new ForbiddenException('Verification evidence upload is not permitted');
   if (staffPermission && !hasStaffPermission(request, staffPermission))
     throw new ForbiddenException('Upload purpose is not permitted');
   if (purpose === 'branding_logo' || purpose === 'knowledge_base') {

@@ -3664,6 +3664,550 @@
         ]
       }
     },
+    "/api/admin/config/profile-verification-policy": {
+      "get": {
+        "operationId": "VerificationPolicyController_read",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "active": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "INDIVIDUAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "LEGAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "allowManualOverride": {
+                          "type": "boolean"
+                        },
+                        "autoVerifyStaff": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "INDIVIDUAL",
+                        "LEGAL",
+                        "autoVerifyStaff",
+                        "allowManualOverride"
+                      ],
+                      "type": "object"
+                    },
+                    "draft": {
+                      "additionalProperties": false,
+                      "nullable": true,
+                      "properties": {
+                        "INDIVIDUAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "LEGAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "allowManualOverride": {
+                          "type": "boolean"
+                        },
+                        "autoVerifyStaff": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "INDIVIDUAL",
+                        "LEGAL",
+                        "autoVerifyStaff",
+                        "allowManualOverride"
+                      ],
+                      "type": "object"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "active",
+                    "draft",
+                    "version"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read active verification requirements and saved draft",
+        "tags": [
+          "Admin verification policy"
+        ]
+      },
+      "put": {
+        "operationId": "VerificationPolicyController_write",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "draft",
+                      "activate"
+                    ],
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "policy": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "INDIVIDUAL": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "documents": {
+                            "items": {
+                              "enum": [
+                                "national_id",
+                                "birth_certificate",
+                                "registration_notice",
+                                "articles_of_association",
+                                "representative_authority"
+                              ],
+                              "type": "string"
+                            },
+                            "maxItems": 5,
+                            "type": "array",
+                            "uniqueItems": true
+                          },
+                          "expiryDays": {
+                            "maximum": 3650,
+                            "minimum": 1,
+                            "nullable": true,
+                            "type": "integer"
+                          },
+                          "required": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "required",
+                          "documents",
+                          "expiryDays"
+                        ],
+                        "type": "object"
+                      },
+                      "LEGAL": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "documents": {
+                            "items": {
+                              "enum": [
+                                "national_id",
+                                "birth_certificate",
+                                "registration_notice",
+                                "articles_of_association",
+                                "representative_authority"
+                              ],
+                              "type": "string"
+                            },
+                            "maxItems": 5,
+                            "type": "array",
+                            "uniqueItems": true
+                          },
+                          "expiryDays": {
+                            "maximum": 3650,
+                            "minimum": 1,
+                            "nullable": true,
+                            "type": "integer"
+                          },
+                          "required": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "required",
+                          "documents",
+                          "expiryDays"
+                        ],
+                        "type": "object"
+                      },
+                      "allowManualOverride": {
+                        "type": "boolean"
+                      },
+                      "autoVerifyStaff": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "INDIVIDUAL",
+                      "LEGAL",
+                      "autoVerifyStaff",
+                      "allowManualOverride"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "action",
+                  "expectedVersion",
+                  "policy"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "active": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "INDIVIDUAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "LEGAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "allowManualOverride": {
+                          "type": "boolean"
+                        },
+                        "autoVerifyStaff": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "INDIVIDUAL",
+                        "LEGAL",
+                        "autoVerifyStaff",
+                        "allowManualOverride"
+                      ],
+                      "type": "object"
+                    },
+                    "draft": {
+                      "additionalProperties": false,
+                      "nullable": true,
+                      "properties": {
+                        "INDIVIDUAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "LEGAL": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "documents": {
+                              "items": {
+                                "enum": [
+                                  "national_id",
+                                  "birth_certificate",
+                                  "registration_notice",
+                                  "articles_of_association",
+                                  "representative_authority"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 5,
+                              "type": "array",
+                              "uniqueItems": true
+                            },
+                            "expiryDays": {
+                              "maximum": 3650,
+                              "minimum": 1,
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "required": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "required",
+                            "documents",
+                            "expiryDays"
+                          ],
+                          "type": "object"
+                        },
+                        "allowManualOverride": {
+                          "type": "boolean"
+                        },
+                        "autoVerifyStaff": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "INDIVIDUAL",
+                        "LEGAL",
+                        "autoVerifyStaff",
+                        "allowManualOverride"
+                      ],
+                      "type": "object"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "active",
+                    "draft",
+                    "version"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Save or activate exact versioned verification requirements",
+        "tags": [
+          "Admin verification policy"
+        ]
+      }
+    },
     "/api/admin/config/service-response-targets": {
       "get": {
         "operationId": "AdminController_getServiceResponseTargets",
@@ -20655,6 +21199,39 @@
                       "unverify",
                       "reverify"
                     ],
+                    "type": "string"
+                  },
+                  "evidence": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "maxLength": 1024,
+                          "type": "string"
+                        },
+                        "type": {
+                          "enum": [
+                            "national_id",
+                            "birth_certificate",
+                            "registration_notice",
+                            "articles_of_association",
+                            "representative_authority"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "key"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 5,
+                    "type": "array"
+                  },
+                  "overrideReason": {
+                    "description": "Explicit document override, requiring active policy and elevated current permission.",
+                    "maxLength": 1000,
+                    "minLength": 1,
                     "type": "string"
                   },
                   "reason": {

@@ -1,3 +1,5 @@
+import { verificationIsCurrent, type VerificationProfileType } from '@barghsa/shared/verification';
+import { lockVerificationPolicy } from '../admin/verification-policy-config.js';
 import { notifyElectricityStatus } from '../electricity/electricity-status-notifications.js';
 import type { PoolClient } from 'pg';
 import { requireAddressGeography } from '../profiles/address-geography.js';
@@ -107,7 +109,7 @@ export class OrdersService {
   ): Promise<boolean> {
     const profile = (
       await client.query(
-        'SELECT id,user_id,profile_type,status FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',
+        'SELECT id,user_id,profile_type,status,verified_at FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',
         [profileId]
       )
     ).rows[0];
@@ -133,10 +135,14 @@ export class OrdersService {
         mode != null
           ? mode !== 'DISABLED'
           : config.rows.find((row) => row.key === 'verification.required')?.value === true;
+      const policy = await lockVerificationPolicy(client);
+      const rule = policy[profile.profile_type as VerificationProfileType];
       if (
         profile.status === 'DRAFT' ||
         profile.status === 'SUSPENDED' ||
-        (required && profile.status !== 'VERIFIED')
+        (required &&
+          rule.required &&
+          !verificationIsCurrent(profile.status, profile.verified_at, rule))
       )
         throw new HttpException({ error: ErrorCodes.AUTHZ_PROFILE_NOT_VERIFIED.code }, 403);
     }

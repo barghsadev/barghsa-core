@@ -465,12 +465,17 @@ describe('CrmV2Service.expireSessions', () => {
       .mockResolvedValueOnce(undefined) // BEGIN
       .mockResolvedValueOnce({ rows: [{ user_id: ACTOR_USER_ID, is_admin: true }] }) // current permission
       .mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] }) // locked target still exists
+      .mockResolvedValueOnce({ rows: [{ changed: true }] }) // current unrevoked sessions
       .mockResolvedValueOnce(undefined) // INSERT audit_log
       .mockResolvedValueOnce(undefined); // COMMIT
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }));
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js');
-    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
+    const notifications = {
+      create: vi.fn().mockResolvedValue(undefined),
+      createAccountBusinessEvent: vi.fn().mockResolvedValue(undefined),
+    };
+    const service = new Svc(ms, notifications as unknown as any);
 
     const result = await service.expireSessions(
       TARGET_USER_ID,
@@ -479,9 +484,17 @@ describe('CrmV2Service.expireSessions', () => {
       '10.0.0.1'
     );
 
+    expect(mockClientQuery).toHaveBeenCalledWith(
+      'SELECT EXISTS(SELECT 1 FROM sessions WHERE user_id=$1 AND revoked_at IS NULL) AS changed',
+      [TARGET_USER_ID]
+    );
     expect(result).not.toBeNull();
     expect(result).not.toHaveProperty('error');
     expect(ms.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID, undefined, client);
+    expect(notifications.createAccountBusinessEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: TARGET_USER_ID }),
+      client
+    );
     expect(mockRelease).toHaveBeenCalledTimes(1);
   });
 

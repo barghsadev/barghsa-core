@@ -31,7 +31,19 @@ function mockClient() {
   // error) resolve instead of returning undefined. Explicit
   // mockResolvedValueOnce entries still take precedence over it.
   mockClientQuery.mockImplementation(async () => ({ rows: [] }));
-  const client = { query: mockClientQuery, release: mockRelease };
+  const client = {
+    query: (sql: string, ...args: unknown[]) => {
+      // Native HTTP tests cover policy revisions and both staff auto-verification settings.
+      // These service-rule units retain the default policy without consuming business responses.
+      if (
+        sql === 'LOCK TABLE app_config IN SHARE MODE' ||
+        sql.startsWith('SELECT key,value,version FROM app_config')
+      )
+        return Promise.resolve({ rows: [] });
+      return mockClientQuery(sql, ...args);
+    },
+    release: mockRelease,
+  };
   return { mockClientQuery, mockRelease, client };
 }
 
@@ -274,6 +286,7 @@ describe('AdminService.createStaffUser (link)', () => {
     expect(insertProfileSql).toContain('profiles');
     expect(insertProfileSql).toContain("'INDIVIDUAL'");
     expect(insertProfileSql).toContain("'VERIFIED'");
+    expect((insertProfileCall![1] as unknown[])[6]).toBe('VERIFIED');
   });
 });
 
@@ -695,10 +708,10 @@ describe('AdminService.listStaffRoles', () => {
 describe('AdminService.getEffectivePermissions', () => {
   it('returns the union of permissions across roles for a non-admin', async () => {
     const { pool } = mockPool();
-    const { client } = mockClient();
+    const { client, mockClientQuery } = mockClient();
     pool.connect.mockResolvedValue(client);
-    client.query.mockResolvedValueOnce({ rows: [] });
-    client.query
+    mockClientQuery.mockResolvedValueOnce({ rows: [] });
+    mockClientQuery
       .mockResolvedValueOnce({ rows: [{ user_id: 'u1', is_admin: false }] }) // user lookup
       .mockResolvedValueOnce({
         // roles lookup
@@ -733,10 +746,10 @@ describe('AdminService.getEffectivePermissions', () => {
 
   it('returns the wildcard set for an admin user', async () => {
     const { pool } = mockPool();
-    const { client } = mockClient();
+    const { client, mockClientQuery } = mockClient();
     pool.connect.mockResolvedValue(client);
-    client.query.mockResolvedValueOnce({ rows: [] });
-    client.query
+    mockClientQuery.mockResolvedValueOnce({ rows: [] });
+    mockClientQuery
       .mockResolvedValueOnce({ rows: [{ user_id: 'u1', is_admin: true }] })
       .mockResolvedValueOnce({ rows: [] });
 
@@ -752,10 +765,10 @@ describe('AdminService.getEffectivePermissions', () => {
 
   it('throws 404 for an unknown user', async () => {
     const { pool } = mockPool();
-    const { client } = mockClient();
+    const { client, mockClientQuery } = mockClient();
     pool.connect.mockResolvedValue(client);
-    client.query.mockResolvedValueOnce({ rows: [] });
-    client.query.mockResolvedValueOnce({ rows: [] });
+    mockClientQuery.mockResolvedValueOnce({ rows: [] });
+    mockClientQuery.mockResolvedValueOnce({ rows: [] });
 
     vi.doMock('@barghsa/db', () => mockDbModule(pool));
     const { AdminService: Svc } = await import('./admin.service.js');

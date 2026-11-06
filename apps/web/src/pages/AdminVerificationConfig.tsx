@@ -22,6 +22,7 @@ import {
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
 import { OtpConfigPanel } from '../components/OtpConfigPanel.js';
+import { VerificationPolicySettings } from '../components/VerificationPolicySettings.js';
 const TeamActionDialog = lazy(() =>
   import('../components/TeamActionDialog.js').then((module) => ({
     default: module.TeamActionDialog,
@@ -398,6 +399,7 @@ export default function AdminVerificationConfig() {
         </Suspense>
       )}
       <OtpConfigPanel />
+      <VerificationPolicySettings />
     </div>
   );
 }

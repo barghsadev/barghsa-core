@@ -1360,7 +1360,15 @@ it('rolls back transition effects and receipt when notification fails, then retr
       "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
     )
   ).rows[0].count;
-  expect(initialNotices).toBe(2);
+  await expectOrderSubmitted(http.pool, {
+    service: 'electricity',
+    id: order.orderId,
+    profileId: input.profileId as string,
+    owner: 'buyer',
+    table: 'electricity_orders',
+    route: '/electricity/orders',
+  });
+  expect(initialNotices).toBe(3);
   const command = { expectedVersionId: versionId, idempotencyKey: randomUUID() };
   await http.pool.query(
     `CREATE FUNCTION fail_transition_notice() RETURNS trigger LANGUAGE plpgsql AS $$
@@ -1418,7 +1426,7 @@ it('rolls back transition effects and receipt when notification fails, then retr
     )
   ).rows[0].count;
   expect(notices - initialNotices).toBe(2);
-  expect(notices).toBe(4);
+  expect(notices).toBe(5);
   await expectElectricityStatusDeliveries(http.pool, order.orderId, 'buyer', ['approved']);
   const contractNotice = await expectContractCustomerDelivery(
     http.pool,

@@ -1,10 +1,16 @@
+import {
+  readVerificationPolicyConfig,
+  lockVerificationPolicy,
+} from '../admin/verification-policy-config.js';
+import { verificationIsCurrent, type VerificationPolicy } from '@barghsa/shared/verification';
+import { VerificationEvidenceService } from './verification-evidence.service.js';
 import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { editCrmLegalInfo, readCrmLegalInfo } from './crm-profile-legal.js';
 import { editCrmAddress } from './crm-profile-address.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { createHash } from 'node:crypto';
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import type { CreateNotificationParams } from '../notifications/notifications.service.js';
@@ -176,6 +182,8 @@ export interface CrmSiblingProfile {
  * Complete CRM profile detail DTO returned by the endpoint.
  */
 export interface CrmProfileDetail {
+  verificationPolicy: VerificationPolicy;
+  verificationCurrent: boolean;
   profile: {
     id: string;
     isDefault: boolean;
@@ -229,7 +237,8 @@ export class CrmV2Service {
 
   constructor(
     private readonly sessionService: SessionService,
-    private readonly notificationsService: NotificationsService
+    private readonly notificationsService: NotificationsService,
+    private readonly evidence: VerificationEvidenceService = new VerificationEvidenceService()
   ) {}
 
   /**
@@ -247,7 +256,7 @@ export class CrmV2Service {
 
     // 1. Fetch the profile
     const profileResult = await pool.query(
-      `SELECT id, user_id, profile_type, is_default, status, title, contact_email, contact_mobile,
+      `SELECT id, user_id, profile_type, is_default, status, verified_at, title, contact_email, contact_mobile,
               first_name, last_name, national_id, archived, archived_at, archived_reason,
               created_at AT TIME ZONE 'UTC' AS created_at,
               updated_at AT TIME ZONE 'UTC' AS updated_at
@@ -387,7 +396,14 @@ export class CrmV2Service {
       includeCorrections
     );
 
+    const verificationPolicy = (await readVerificationPolicyConfig()).active;
     return {
+      verificationPolicy,
+      verificationCurrent: verificationIsCurrent(
+        String(profileRow.status),
+        profileRow.verified_at as Date | null,
+        verificationPolicy[profileRow.profile_type as 'INDIVIDUAL' | 'LEGAL']
+      ),
       profile: {
         id: profileRow.id as string,
         isDefault: profileRow.is_default === true,
@@ -616,7 +632,7 @@ export class CrmV2Service {
       await client.query('BEGIN');
       const profile = (
         await client.query(
-          `SELECT p.id,p.user_id,p.status,
+          `SELECT p.id,p.user_id,p.status,p.profile_type,p.verified_at,
            COALESCE(NULLIF(BTRIM(p.title),''), CASE WHEN p.profile_type='LEGAL' THEN NULLIF(BTRIM(lp.legal_name),'')
              ELSE NULLIF(BTRIM(CONCAT_WS(' ',p.first_name,p.last_name)),'') END,p.id::text) AS profile_name
            FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id
@@ -630,6 +646,9 @@ export class CrmV2Service {
       }
       await requireStaffMutationPermission(client, actorUserId, 'crm:verify');
       await requireSessionStepUp(client, actor);
+      const policy = await lockVerificationPolicy(client);
+      const rule = policy[profile.profile_type as 'INDIVIDUAL' | 'LEGAL'];
+      const stillVerified = verificationIsCurrent(profile.status, profile.verified_at, rule);
       const currentStatus = profile.status as string,
         targetStatus = transition.targetStatus;
       const result = {
@@ -639,25 +658,53 @@ export class CrmV2Service {
         newStatus: targetStatus,
         reason,
       };
-      if (currentStatus === targetStatus) {
+      if (currentStatus === targetStatus && (action !== 'verify' || stillVerified)) {
         await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
         return result;
       }
-      if (!transition.allowedFrom.includes(currentStatus)) {
+      if (
+        !transition.allowedFrom.includes(currentStatus) &&
+        !(action === 'verify' && currentStatus === 'VERIFIED' && !stillVerified)
+      ) {
         await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
         return {
           error: `Cannot ${action} a profile with status '${currentStatus}'. Allowed source statuses: ${transition.allowedFrom.join(', ')}`,
         };
       }
+      const evidence = dto.evidence ?? [];
+      if (
+        new Set(evidence.map((item) => item.type)).size !== evidence.length ||
+        new Set(evidence.map((item) => item.key)).size !== evidence.length
+      )
+        throw new BadRequestException('Distinct document types and evidence files are required');
+      const missing = rule.documents.filter((type) => !evidence.some((item) => item.type === type));
+      if (action === 'verify' && dto.overrideReason) {
+        if (!policy.allowManualOverride)
+          throw new BadRequestException('Manual override is disabled');
+        await requireStaffMutationPermission(client, actorUserId, 'admin:config:write');
+      } else if (action === 'verify' && missing.length) {
+        throw new BadRequestException({
+          error: 'VERIFICATION:DOCUMENTS:REQUIRED',
+          documentTypes: missing,
+        });
+      }
+      const sealedEvidence: { type: string; key: string }[] = [];
+      if (action === 'verify')
+        for (const item of evidence) {
+          let key = item.key;
+          if (key.startsWith('verification-evidence/'))
+            await this.evidence.validate(client, [key], profileId);
+          else key = (await this.evidence.seal(client, [key], actorUserId, profileId))[0]!;
+          sealedEvidence.push({ type: item.type, key });
+        }
       const now = new Date(),
         correlationId = uuidv7();
-      await client.query('UPDATE profiles SET status=$1,updated_at=$2 WHERE id=$3', [
-        targetStatus,
-        now,
-        profileId,
-      ]);
+      await client.query(
+        "UPDATE profiles SET status=$1,updated_at=$2,verified_at=CASE WHEN $1='VERIFIED' THEN $2::timestamptz ELSE NULL END WHERE id=$3",
+        [targetStatus, now, profileId]
+      );
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
         VALUES ($1,$2,'verification_change',$3::jsonb,$4,$5,$6)`,
@@ -671,6 +718,9 @@ export class CrmV2Service {
             action,
             reason,
             profileOwnerUserId: profile.user_id,
+            verificationPolicy: policy,
+            evidence: sealedEvidence,
+            ...(dto.overrideReason ? { overrideReason: dto.overrideReason } : {}),
           }),
           correlationId,
           ip || null,

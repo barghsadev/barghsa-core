@@ -50,6 +50,7 @@ beforeEach(() => {
     )
       return { rows: [] };
     if (text.startsWith('SELECT key, value, version FROM app_config')) return { rows: [] };
+    if (text.startsWith('SELECT key,value,version FROM app_config')) return { rows: [] }; // no expanded verification policy configured
     if (text.includes('WHERE system_key = ANY')) return { rows: greenRows };
     if (text.includes('INSERT INTO electricity_orders')) return { rows: [] };
     if (text.includes('UPDATE electricity_orders')) return { rows: [] };

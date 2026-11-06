@@ -1,3 +1,9 @@
+import {
+  readVerificationPolicyConfig,
+  lockVerificationPolicy,
+} from '../admin/verification-policy-config.js';
+import { verificationIsCurrent } from '@barghsa/shared/verification';
+import { readVerificationModeConfig } from '../admin/verification-mode-config.js';
 import { requireAddressGeography } from './address-geography.js';
 import { readOnboardingDraftState } from './onboarding-draft-state.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
@@ -315,8 +321,13 @@ export class ProfilesService {
       };
     }
 
-    const isVerified = defaultProfile.status === 'VERIFIED';
-    const verificationRequired = mode !== 'DISABLED';
+    const policy = (await readVerificationPolicyConfig()).active;
+    const rule = policy[defaultProfile.profileType];
+    const stamp =
+      (await getDbPool().query('SELECT verified_at FROM profiles WHERE id=$1', [defaultProfile.id]))
+        .rows[0]?.verified_at ?? null;
+    const isVerified = verificationIsCurrent(defaultProfile.status, stamp, rule);
+    const verificationRequired = mode !== 'DISABLED' && rule.required;
     const verificationMethod = mode === 'API' ? 'api' : 'manual';
 
     // Scope notices to the current owner/default profile, including after a profile switch.
@@ -340,7 +351,10 @@ export class ProfilesService {
           ? 'ACTIVE'
           : 'PENDING_VERIFICATION';
     const verificationNotice =
-      notice && notice.is_read === false && notice.status === expectedStatus
+      notice &&
+      notice.is_read === false &&
+      notice.status === expectedStatus &&
+      (expectedStatus !== 'VERIFIED' || isVerified)
         ? {
             id: notice.id as string,
             localizedContent: notice.localized_content as Record<
@@ -1505,7 +1519,6 @@ export class ProfilesService {
       );
     }
 
-    const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED';
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
@@ -1591,6 +1604,10 @@ export class ProfilesService {
         }
         await requireAddressGeography(client, address.province_id, address.city_id);
       }
+      const policy = await lockVerificationPolicy(client);
+      const mode = (await readVerificationModeConfig(client)).mode;
+      const verificationRequired =
+        mode !== 'DISABLED' && policy[locked.profile_type as 'INDIVIDUAL' | 'LEGAL'].required;
       // Finished forms already set their verification status; completion preserves it.
       const targetStatus = isDraft
         ? verificationRequired

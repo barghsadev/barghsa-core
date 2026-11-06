@@ -1,3 +1,5 @@
+import { ProfileVerificationReview } from '../components/ProfileVerificationReview.js';
+import { DEFAULT_VERIFICATION_POLICY, type VerificationPolicy } from '@barghsa/shared/verification';
 import { z } from 'zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -132,11 +134,14 @@ interface SiblingProfile {
 }
 
 interface ProfileDetail {
+  verificationPolicy?: VerificationPolicy;
+  verificationCurrent?: boolean;
   viewerPermissions?: {
     canReadDocuments?: boolean;
     canEdit: boolean;
     canEditIdentity?: boolean;
     canVerify: boolean;
+    canOverrideVerification?: boolean;
     canManageUser: boolean;
   };
   profile: Profile;
@@ -327,8 +332,6 @@ function CrmProfileDetailContent() {
     action: TeamAction;
     kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive';
   } | null>(null);
-  const [verificationAction, setVerificationAction] = useState('verify');
-  const [verificationReason, setVerificationReason] = useState('');
   const [showArchive, setShowArchive] = useState(false);
   const [archiveReason, setArchiveReason] = useState('');
   const archiveButton = useRef<HTMLButtonElement>(null);
@@ -675,69 +678,22 @@ function CrmProfileDetailContent() {
       {data.viewerPermissions?.canVerify &&
         !profile.archived &&
         ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(profile.status) && (
-          <div className="mb-4 space-y-3 rounded border bg-card text-card-foreground p-4">
-            <Label htmlFor="crm-verify-action">
-              {t('crm.profile.verification.action', locale)}
-            </Label>
-            <select
-              id="crm-verify-action"
-              className="block rounded border border-input bg-background text-foreground p-2"
-              value={
-                profile.status === 'VERIFIED'
-                  ? verificationAction === 'verify'
-                    ? 'unverify'
-                    : verificationAction
-                  : 'verify'
-              }
-              onChange={(event) => setVerificationAction(event.target.value)}
-            >
-              {(profile.status === 'VERIFIED' ? ['unverify', 'reverify'] : ['verify']).map(
-                (action) => (
-                  <option key={action} value={action}>
-                    {t(`crm.profile.verification.${action}`, locale)}
-                  </option>
-                )
-              )}
-            </select>
-            <Label htmlFor="crm-verify-reason">
-              {t('crm.profile.verification.reason', locale)}
-            </Label>
-            <textarea
-              id="crm-verify-reason"
-              className="block w-full rounded border border-input bg-background text-foreground p-2"
-              maxLength={1000}
-              value={verificationReason}
-              onChange={(event) => setVerificationReason(event.target.value)}
-            />
-            <Button
-              disabled={
-                !!pendingAction || (profile.status === 'VERIFIED' && !verificationReason.trim())
-              }
-              onClick={() => {
-                const action =
-                  profile.status === 'VERIFIED'
-                    ? verificationAction === 'verify'
-                      ? 'unverify'
-                      : verificationAction
-                    : 'verify';
-                queueAction(
-                  {
-                    title: t(`crm.profile.verification.${action}`, locale),
-                    description: `${profile.title || profileId} · ${verificationReason.trim()}`,
-                    path: `/api/crm/profiles/${profileId}/verify`,
-                    method: 'POST',
-                    body: {
-                      action,
-                      ...(verificationReason.trim() ? { reason: verificationReason.trim() } : {}),
-                    },
-                  },
-                  'verification'
-                );
-              }}
-            >
-              {t('crm.profile.verification.review', locale)}
-            </Button>
-          </div>
+          <ProfileVerificationReview
+            key={JSON.stringify([profileId, profile.updatedAt])}
+            profileId={profileId}
+            status={profile.status}
+            title={profile.title || profileId}
+            current={data.verificationCurrent ?? profile.status === 'VERIFIED'}
+            policy={{
+              ...(data.verificationPolicy ?? DEFAULT_VERIFICATION_POLICY)[
+                profile.profileType as 'INDIVIDUAL' | 'LEGAL'
+              ],
+              allowManualOverride: data.verificationPolicy?.allowManualOverride ?? false,
+            }}
+            canOverride={data.viewerPermissions?.canOverrideVerification === true}
+            disabled={!!pendingAction}
+            onReview={(action) => queueAction(action, 'verification')}
+          />
         )}
       {data.viewerPermissions?.canManageUser && !profile.archived && (
         <Button

@@ -1,3 +1,7 @@
+import {
+  VERIFICATION_DOCUMENT_TYPES,
+  type VerificationDocumentType,
+} from '@barghsa/shared/verification';
 import { InputFieldException } from '../common/input-field.exception.js';
 import {
   crmLegalChangesSchema,
@@ -49,6 +53,8 @@ export interface UpdateProfileDto {
  * DTO for profile verification actions.
  */
 export interface VerifyProfileDto {
+  evidence?: { type: VerificationDocumentType; key: string }[];
+  overrideReason?: string;
   /** The verification action to perform. */
   action: string;
   /** Reason for the action (required for unverify/reverify). */
@@ -183,6 +189,8 @@ export class CrmV2Controller {
         canEdit: hasStaffPermission(req, 'crm:edit'),
         canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
         canVerify: hasStaffPermission(req, 'crm:verify'),
+        canOverrideVerification:
+          hasStaffPermission(req, 'crm:verify') && hasStaffPermission(req, 'admin:config:write'),
         canManageUser: hasStaffPermission(req, 'admin:users:edit'),
       },
     };
@@ -412,6 +420,8 @@ export class CrmV2Controller {
         canEdit: hasStaffPermission(req, 'crm:edit'),
         canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
         canVerify: hasStaffPermission(req, 'crm:verify'),
+        canOverrideVerification:
+          hasStaffPermission(req, 'crm:verify') && hasStaffPermission(req, 'admin:config:write'),
         canManageUser: hasStaffPermission(req, 'admin:users:edit'),
       },
     };
@@ -453,6 +463,25 @@ export class CrmV2Controller {
           type: 'string',
           description: 'Reason for the action (required for unverify/reverify)',
         },
+        evidence: {
+          type: 'array',
+          maxItems: 5,
+          items: {
+            type: 'object',
+            required: ['type', 'key'],
+            properties: {
+              type: { type: 'string', enum: [...VERIFICATION_DOCUMENT_TYPES] },
+              key: { type: 'string', maxLength: 1024 },
+            },
+          },
+        },
+        overrideReason: {
+          type: 'string',
+          minLength: 1,
+          maxLength: 1000,
+          description:
+            'Explicit document override, requiring active policy and elevated current permission.',
+        },
       },
     },
   })
@@ -486,6 +515,18 @@ export class CrmV2Controller {
       .object({
         action: z.enum(['verify', 'unverify', 'reverify']),
         reason: z.string().trim().max(1000).optional(),
+        evidence: z
+          .array(
+            z
+              .object({
+                type: z.enum(VERIFICATION_DOCUMENT_TYPES),
+                key: z.string().min(1).max(1024),
+              })
+              .strict()
+          )
+          .max(5)
+          .optional(),
+        overrideReason: z.string().trim().min(1).max(1000).optional(),
       })
       .strict()
       .safeParse(dto);
@@ -504,6 +545,10 @@ export class CrmV2Controller {
       {
         action: parsed.data.action,
         ...(parsed.data.reason !== undefined ? { reason: parsed.data.reason } : {}),
+        ...(parsed.data.evidence !== undefined ? { evidence: parsed.data.evidence } : {}),
+        ...(parsed.data.overrideReason !== undefined
+          ? { overrideReason: parsed.data.overrideReason }
+          : {}),
       },
       req.session,
       req.ip ?? 'unknown'
