@@ -1,3 +1,4 @@
+import { Icon } from './Icon.js';
 import type { ReactNode, RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@barghsa/ui';
@@ -49,8 +50,9 @@ export function Topbar({
         <span className="shrink-0 text-muted-foreground">{title}</span>
         {currentLabel ? (
           <>
-            <ChevronRight
-              className="size-3.5 shrink-0 text-muted-foreground rtl:rotate-180"
+            <Icon
+              icon={ChevronRight}
+              className="size-3.5 shrink-0 text-muted-foreground"
               aria-hidden="true"
             />
             <span className="truncate font-medium">{currentLabel}</span>

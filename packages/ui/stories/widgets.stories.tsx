@@ -300,3 +300,30 @@ export const Calendars: Story = () => {
     </div>
   );
 };
+
+/** Offered month identities remain owned by the calling service. */
+export const Months: Story = () => {
+  const text = useStoryText();
+  const [value, setValue] = useState('current_month');
+  return (
+    <div className="max-w-md space-y-3">
+      <UI.Label htmlFor="offered-month">{text('ماه تحویل', 'Delivery month')}</UI.Label>
+      <UI.MonthPicker
+        id="offered-month"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        className="w-full"
+        months={[
+          { value: 'current_month', label: text('فروردین ۱۴۰۵', 'March 2026') },
+          { value: 'next_month', label: text('اردیبهشت ۱۴۰۵', 'April 2026') },
+          {
+            value: 'unavailable',
+            label: text('خارج از بازه مجاز', 'Outside the allowed period'),
+            disabled: true,
+          },
+        ]}
+      />
+      <output aria-label={text('ماه انتخاب شده', 'Selected month')}>{value}</output>
+    </div>
+  );
+};

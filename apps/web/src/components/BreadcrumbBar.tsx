@@ -1,3 +1,4 @@
+import { Icon } from './Icon.js';
 import { useEffect, useRef } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
@@ -64,8 +65,9 @@ export function BreadcrumbBar({
     </Link>
   );
   const separator = (
-    <ChevronRight
-      className="size-3.5 shrink-0 text-muted-foreground rtl:rotate-180"
+    <Icon
+      icon={ChevronRight}
+      className="size-3.5 shrink-0 text-muted-foreground"
       aria-hidden="true"
     />
   );

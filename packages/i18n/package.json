@@ -403,6 +403,11 @@
       "types": "./dist/maintenance-public.d.ts",
       "import": "./dist/maintenance-public.js",
       "default": "./dist/maintenance-public.js"
+    },
+    "./calendar": {
+      "types": "./dist/calendar.d.ts",
+      "import": "./dist/calendar.js",
+      "default": "./dist/calendar.js"
     }
   },
   "scripts": {
@@ -414,5 +419,10 @@
   },
   "devDependencies": {
     "@barghsa/tsconfig": "workspace:*"
+  },
+  "dependencies": {
+    "@date-fns/tz": "1.5.0",
+    "date-fns": "4.4.0",
+    "date-fns-jalali": "4.4.0-0"
   }
 }

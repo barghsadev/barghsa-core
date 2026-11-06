@@ -118,6 +118,22 @@ for (const story of Object.keys(meta.stories)) {
           expect(
             await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)
           ).toBe(true);
+          if (story === 'widgets--months') {
+            const month = surface.getByRole('combobox', {
+              name: rtl ? 'ماه تحویل' : 'Delivery month',
+              exact: true,
+            });
+            await expect(month).toHaveValue('current_month');
+            await expect(month.locator('option[value=unavailable]')).toBeDisabled();
+            await month.selectOption('next_month');
+            await expect(month).toHaveValue('next_month');
+            await expect(
+              surface.getByRole('status', {
+                name: rtl ? 'ماه انتخاب شده' : 'Selected month',
+                exact: true,
+              })
+            ).toHaveText('next_month');
+          }
           expect(errors).toEqual([]);
           expect(external).toEqual([]);
           if (

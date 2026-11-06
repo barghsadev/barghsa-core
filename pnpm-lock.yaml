@@ -486,6 +486,16 @@ importers:
         version: 8.69.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
 
   packages/i18n:
+    dependencies:
+      '@date-fns/tz':
+        specifier: 1.5.0
+        version: 1.5.0
+      date-fns:
+        specifier: 4.4.0
+        version: 4.4.0
+      date-fns-jalali:
+        specifier: 4.4.0-0
+        version: 4.4.0-0
     devDependencies:
       '@barghsa/tsconfig':
         specifier: workspace:*

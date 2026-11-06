@@ -5,6 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       (() => {
+        const supported = (value) => {
+          const code = typeof value === 'string' ? value.toLowerCase().split('-')[0] : null;
+          return code === 'fa' || code === 'en' ? code : null;
+        };
+        let language;
+        // Peek at the one-time entry handoff; the client consumes it after loading.
+        try {
+          const entry = JSON.parse(sessionStorage.getItem('barghsa.entry-locale'));
+          if (
+            entry &&
+            supported(entry.locale) &&
+            typeof entry.expires === 'number' &&
+            entry.expires > Date.now() &&
+            entry.expires <= Date.now() + 30_000
+          )
+            language = supported(entry.locale);
+        } catch {}
+        try {
+          language ??= supported(localStorage.getItem('barghsa.locale'));
+        } catch {}
+        try {
+          const cookie = document.cookie
+            .split('; ')
+            .find((part) => part.startsWith('barghsa_locale='));
+          language ??= supported(cookie?.slice('barghsa_locale='.length));
+        } catch {}
+        try {
+          language ??= supported(new URL(location.href).searchParams.get('lang'));
+        } catch {}
+        const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
+        language ??= languages.map(supported).find((value) => value !== null) ?? 'fa';
+        document.documentElement.lang = language;
+        document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr';
         let preference, policy;
         try {
           preference = localStorage.getItem('barghsa.theme.v1');

@@ -26,6 +26,18 @@ function savedPreference(): Locale | null {
   return null;
 }
 
+/** Explicit saved choices win over URL hints and the browser's language list. */
+function browserPreference(): Locale {
+  try {
+    const hint = supported(new URL(location.href).searchParams.get('lang'));
+    if (hint) return hint;
+  } catch {
+    // An unavailable URL must not prevent the market fallback.
+  }
+  const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
+  return languages.map(supported).find((locale) => locale !== null) ?? 'fa';
+}
+
 function applyLocale(locale: Locale): void {
   document.documentElement.lang = locale;
   document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -56,7 +68,7 @@ export function rememberEntryLocale(): void {
   }
 }
 
-/** Resolve the one-time navigation handoff, then the saved preference, before React renders. */
+/** Resolve the one-time navigation handoff, saved preference, then URL/browser hints before React renders. */
 export function restoreEntryLocale(): void {
   let handoff: Locale | null = null;
   try {
@@ -77,7 +89,7 @@ export function restoreEntryLocale(): void {
       }
     }
   } catch {
-    // Continue with the saved preference or the Farsi default.
+    // Continue with saved preferences, URL/browser hints and the Farsi fallback.
   }
-  applyLocale(handoff ?? savedPreference() ?? 'fa');
+  applyLocale(handoff ?? savedPreference() ?? browserPreference());
 }

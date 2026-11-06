@@ -214,8 +214,8 @@
 | **T-07.03.01.01** | Configure Tailwind CSS with `rtl` variant: `dark:rtl:bg-red-500`. Add direction-aware utilities: `ps-*` (padding-inline-start), `pe-*` (padding-inline-end), `ms-*` (margin-inline-start), `me-*` (margin-inline-end), `text-start`, `text-end`, `inset-inline-start`, `inset-inline-end`, `start-*`, `end-*`. | M |
 | **T-07.03.01.02** | Complete the existing `UiDirectionProvider` using the application’s live locale store, sets `dir="rtl"` or `dir="ltr"` on `<html>`, and provides `isRtl` boolean to the component tree. | S |
 | **T-07.03.01.03** | Create `useDirection()` hook returning `{ dir, isRtl, isLtr }`. Create `DirectionAware` utility component that renders different content based on direction. | S |
-| **T-07.03.01.04** | Audit all shadcn/ui components for hardcoded LTR assumptions in their Radix props (e.g. `side="right"` in DropdownMenu should be `side="left"` in RTL). Create a `useFlippedPlacement(placement)` hook that flips `left` ↔ `right` when `isRtl`. | L |
-| **T-07.03.01.05** | Import and configure `packages/i18n` in `apps/web`. Set up `react-i18next` or `next-intl` with `lng` detection (cookie, URL, user preference), fallback language (`fa`), and language namespaces. | M |
+| **T-07.03.01.04** | Audit installed Base UI/shadcn components for hardcoded physical LTR placements. Keep native logical inline placements; create `useFlippedPlacement(placement)` to mirror physical `left` ↔ `right` in RTL while leaving logical/top/bottom placements intact. | L |
+| **T-07.03.01.05** | Retain and configure the existing `packages/i18n` native namespace dictionaries and `useLocale` subscription in `apps/web`. Detect the short-lived entry handoff, explicit storage/cookie preference, supported URL hint and browser language, with Persian fallback. No second i18n framework is required. | M |
 | **T-07.03.01.06** | ⚠️ Icons with directional meaning (arrows, chevrons, carets) must flip horizontally in RTL mode. Implement `Icon` wrapper that auto-flips icons ending in `-left`/`-right` (e.g. `ChevronLeft` → mirrored in RTL). | M |
 | **T-07.03.01.07** | ⚠️ Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements. | L |
 
@@ -231,8 +231,8 @@
 |----|------|------------|
 | **T-07.03.02.01** | Build LanguageSwitcher component: button/dropdown showing "FA" / "EN" labels. Changes language, toggles direction, persists in cookie and localStorage for subsequent client visits. | M |
 | **T-07.03.02.02** | Implement early client language detection for the approved Vite SPA: read the persisted language preference from cookie/localStorage, falling back to browser language preferences. Set `dir` and `lang` attributes on `<html>` before React renders. No flash of the wrong direction during initial client rendering. | M |
-| **T-07.03.02.03** | ⚠️ When language changes: (1) update `dir` on `<html>`, (2) update `lang` attribute, (3) reload i18n resources, (4) re-translate current page without full browser reload. Animations should not be required to transition direction. | M |
-| **T-07.03.02.04** | ⚠️ Date and number formatting must change with language — Persian uses Jalali calendar, Arabic numerals with Persian separators; English uses Gregorian calendar and Western numerals. Direction change is decoupled from locale data change but both happen together. | M |
+| **T-07.03.02.03** | ⚠️ When language changes: (1) update `dir` on `<html>`, (2) update `lang` attribute, (3) select the already bundled i18n namespaces, (4) re-translate current page without full browser reload. Animations should not be required to transition direction. | M |
+| **T-07.03.02.04** | ⚠️ Date and number formatting must change with language — Persian uses Jalali calendar, Arabic numerals with Persian separators; English uses Gregorian calendar and Western numerals. Explicit published numeral preferences retain precedence over these language defaults. Direction change is decoupled from locale data change but both happen together. | M |
 
 ---
 
@@ -435,9 +435,9 @@
 |----|------|------------|
 | **T-07.09.01.01** | Integrate `date-fns-jalali` (or equivalent) into `packages/i18n`. Create `useCalendar()` hook that returns `{ calendar, format, parse, addDays, ... }` pointing to either `date-fns` (Gregorian) or `date-fns-jalali` functions based on current locale. | M |
 | **T-07.09.01.02** | Create `DateDisplay` component: renders a date in the active calendar. Props: `date` (ISO string or Date), `format` (e.g. `"PPP"` for full, `"PP"` for medium, `"P"` for short), `showTime` (optional). Example: Persian `۱۴۰۳/۰۶/۰۱`, English `2024/08/22`. | M |
-| **T-07.09.01.03** | Create `DateTimeDisplay` component: renders date + time in user's timezone. `date` + `timezone` props. Falls back to profile timezone if not provided. Displays: Persian `۱۴۰۳/۰۶/۰۱ ۱۵:۳۰`, English `2024-08-22 15:30`. | M |
+| **T-07.09.01.03** | Create `DateTimeDisplay` component: renders date + time in user's timezone. `date` + `timezone` props. Without an explicit zone, use the existing accepted account timezone preference through its owner-scoped hook; wait on account changes and expose read failure/retry. Displays a Persian 24-hour clock and English 12-hour AM/PM clock. Public views supply an explicit zone. | M |
 | **T-07.09.01.04** | Create `RelativeTime` component: "2 hours ago", "3 days ago", "لحظاتی پیش", "۲ ساعت پیش". Respects locale. Updates automatically within a page (poll or mount-time calculation). | M |
-| **T-07.09.01.05** | ⚠️ Ensure timezone conversion is correct. Dates stored as UTC `timestamptz`; display converts to user's timezone (default Iran Standard Time, UTC+3:30, with DST awareness). Profile timezone setting overrides default. | L |
+| **T-07.09.01.05** | ⚠️ Ensure timezone conversion is correct. Dates stored as UTC `timestamptz`; display converts to user's timezone (default Iran Standard Time, UTC+3:30, with DST awareness). The accepted account timezone setting overrides the default; do not create a duplicate profile setting or silently use a previous account’s zone. | L |
 
 ---
 
@@ -450,8 +450,8 @@
 | ID | Task | Complexity |
 |----|------|------------|
 | **T-07.09.02.01** | Build `DatePicker` component using Base UI DatePicker primitives or a purpose-built Jalali-aware picker (e.g. `react-day-picker` with Jalali adapter). Props: `value`, `onChange`, `minDate`, `maxDate`, `disabled`, `error`, `placeholder`. Calendar switches to Jalali in Persian locale, Gregorian in English. | L |
-| **T-07.09.02.02** | Build `DateRangePicker` component: selects start and end dates. Used in advanced electricity ordering (custom period). Same locale switching as single DatePicker. | L |
-| **T-07.09.02.03** | Build `MonthPicker` component: selects a single Jalali/Gregorian month (used in simple electricity ordering for "current month" / "next month" selection). | M |
+| **T-07.09.02.02** | Retain shared DatePicker `calendarMode="range"` for day ranges and paired DateTimePicker controls for advanced electricity custom periods. Both select start/end and switch calendar with locale. Preserve captured instants, hours, half-open boundaries and backend-reviewed ordering intervals. | L |
+| **T-07.09.02.03** | Build `MonthPicker` as a native controlled selector of server-offered month identities with localized Jalali/Gregorian labels. Use it in simple electricity ordering for current/next month; retain the weekly control and server authority over periods and prices. | M |
 | **T-07.09.02.04** | Build `DateTimePicker` component: date + time selection. Time formats: Persian uses 24-hour, English uses 12-hour with AM/PM. | M |
 | **T-07.09.02.05** | ⚠️ Ensure keyboard accessibility: date picker is fully navigable via arrow keys, Tab, Enter, Escape. Screen reader announces selected date in correct calendar system. | M |
 | **T-07.09.02.06** | ⚠️ Jalali leap years must be handled correctly. Test boundary dates (Esfand 29th in non-leap, Esfand 30th in leap, Farvardin 1st). | L |

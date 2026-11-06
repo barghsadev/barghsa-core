@@ -1,3 +1,4 @@
+import { Icon } from '../components/Icon.js';
 import { SkeletonText } from '@barghsa/ui';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { timezoneText } from '@barghsa/i18n/timezone';
@@ -202,7 +203,7 @@ function TermsPage() {
                 to="/"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:decoration-2"
               >
-                <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                <Icon icon={ArrowLeftIcon} className="h-3.5 w-3.5" aria-hidden="true" />
                 {t('tos.page.backToHome', locale)}
               </Link>
             </div>

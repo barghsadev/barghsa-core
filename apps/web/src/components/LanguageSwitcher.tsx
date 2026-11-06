@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
     >
       <Languages aria-hidden="true" data-icon="inline-start" />
       <span className="inline" lang={locale === 'fa' ? 'en' : 'fa'}>
-        {locale === 'fa' ? 'English' : 'فارسی'}
+        {shellText('languageCode', locale)}
       </span>
     </Button>
   );

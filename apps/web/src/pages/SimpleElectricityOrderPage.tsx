@@ -22,6 +22,7 @@ import { toast } from '../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
 import {
+  MonthPicker,
   SkeletonText,
   LoadingStatus,
   Button,
@@ -1560,27 +1561,40 @@ function OwnedSimpleElectricityOrderPage() {
                             >
                               {t('electricity.order.period.selection', locale)}
                             </label>
-                            <select
-                              id="electricity-period"
-                              {...fields.bind('period')}
-                              value={period}
-                              disabled={submitting || periodOptions.length === 0}
-                              onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
-                              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                            >
-                              {periodOptions
-                                .filter((option) =>
-                                  period.includes('month')
-                                    ? option.key.includes('month')
-                                    : option.key.includes('week')
-                                )
-                                .map((option) => (
-                                  <option key={option.key} value={option.key}>
-                                    {t(periodLabels[option.key], locale)} ·{' '}
-                                    {periodChoiceDate(option, locale)}
-                                  </option>
-                                ))}
-                            </select>
+                            {period.includes('month') ? (
+                              <MonthPicker
+                                id="electricity-period"
+                                {...fields.bind('period')}
+                                value={period}
+                                disabled={submitting || periodOptions.length === 0}
+                                onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
+                                className="w-full"
+                                months={periodOptions
+                                  .filter((option) => option.key.includes('month'))
+                                  .map((option) => ({
+                                    value: option.key,
+                                    label: `${t(periodLabels[option.key], locale)} · ${periodChoiceDate(option, locale)}`,
+                                  }))}
+                              />
+                            ) : (
+                              <select
+                                id="electricity-period"
+                                {...fields.bind('period')}
+                                value={period}
+                                disabled={submitting || periodOptions.length === 0}
+                                onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
+                                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                {periodOptions
+                                  .filter((option) => option.key.includes('week'))
+                                  .map((option) => (
+                                    <option key={option.key} value={option.key}>
+                                      {t(periodLabels[option.key], locale)} ·{' '}
+                                      {periodChoiceDate(option, locale)}
+                                    </option>
+                                  ))}
+                              </select>
+                            )}
                           </div>
                         </div>
                         {periodOptions.find((option) => option.key === period) ? (

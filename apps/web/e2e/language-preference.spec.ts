@@ -3,13 +3,14 @@ import { test, expect } from './coverage-fixture';
 
 test.use({ locale: 'en-US' });
 
-test('Persian default and a chosen language survive later visits in an English browser', async ({
-  page,
-}) => {
+test('browser language and an explicit Persian choice survive later visits', async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
 
   await mockPublicAuthCsrf(page);
   await page.goto('/login');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+  await page.getByRole('button', { name: 'Switch language to Persian' }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'fa');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
