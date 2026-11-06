@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-06T15:49:28.400742+00:00",
+  "updated": "2026-11-06T15:51:56.436282+00:00",
   "source_commit": "93b9fec7a2c18f2635d57cd923ffce0626ee0413",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -421852,21 +421852,61 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.02** | **StaffRolesPage**: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. \"View effective permissions\" per staff user. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-staff-access-inspection"
+          "2026-10-01-staff-access-inspection",
+          "release-0.5-admin-staff-geography-policy-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "accepted-admin-staff-geography-terms-ui",
+          "base_commit": "ae9f67fd5e7f327e0a6f5e95495057d175c9dbf1",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/AdminRolesPage.tsx",
+              "sha256": "a1aa8b6e6db0d551b8da6048b095efaf0c2e64036ea0c6ed7128080f20934075"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+            },
+            {
+              "path": "apps/web/src/components/EffectivePermissionsView.tsx",
+              "sha256": "8623e1075786229ca1eb41905cbf63ffd60b2d999bc05ff7f0b68e8c680877c2"
+            },
+            {
+              "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
+              "sha256": "dc326aa85b4977f7f71b13abebd34a9ba2ba69cf22934f7bb7bf4a7a8355f92d"
+            },
+            {
+              "path": "apps/web/src/lib/staff-permissions.ts",
+              "sha256": "5cd7202ec0b81e19bb1a0d8f8f231c5d1cbde725a5be816b689328f5b4280183"
+            },
+            {
+              "path": "apps/web/src/components/staff-access-inspection.test.tsx",
+              "sha256": "a39238e1da9a7fbeedeac9f82614d5f146de2c65fd763c9b7b9e3cb2824f3d3d"
+            },
+            {
+              "path": "apps/web/e2e/staff-access-inspection.spec.ts",
+              "sha256": "d3a4d019483aed716d24cbb8a685a3a05ed76c5b038406686df2c1ef2180c555"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/acceptance-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/native-reuse.json"
+          ],
+          "criterion_result": "Responsive roles table/cards expose grouped checkbox grants read-only, including wildcard and ungranted comparison. Staff-user effective-permission inspection validates exact-user receipts, current access and denial cleanup. Eight FA/EN light/dark browser journeys and relevant component cases pass. Existing accepted native staff authority is reused.",
+          "limitations": [
+            "Production-provider and staging/Telegram milestone evidence remain separate."
+          ]
+        }
       }
     },
     {
@@ -421880,21 +421920,73 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.03** | **GeographyPage**: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-20-geography-browser-stability"
+          "2026-09-20-geography-browser-stability",
+          "release-0.5-admin-staff-geography-policy-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "accepted-admin-staff-geography-terms-ui",
+          "base_commit": "ae9f67fd5e7f327e0a6f5e95495057d175c9dbf1",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/AdminGeographyPage.tsx",
+              "sha256": "80209e5557a898ca152018c4c8de42be18a7f6d798d8d75bea29e24b00c0d70e"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCitiesPanel.tsx",
+              "sha256": "6aa103e1964e83f8c8a222a325c88e88ca20aaada6029202c851b5ab6cc9664c"
+            },
+            {
+              "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
+              "sha256": "f7d670bf1ba201cd7fa386edf8e708d20ee8c15cb14adcc040afa4642b4e7900"
+            },
+            {
+              "path": "apps/web/src/lib/geography-api.ts",
+              "sha256": "e34e61e4c0e87274ffd8c8219ecbad6253a2202dcfa513458142568f3505ae57"
+            },
+            {
+              "path": "apps/web/src/lib/geography-form-values.ts",
+              "sha256": "afa0aa91f45d8acd6a0933ce326909a97175efb0ce7209be9f637b0e05007577"
+            },
+            {
+              "path": "apps/web/src/hooks/useGeographyList.ts",
+              "sha256": "3ad2c1946666e29fbebd10fd8d1f059e3443d00f8e141092d7b2e6fb19090615"
+            },
+            {
+              "path": "apps/web/src/components/GeographyRecordTable.tsx",
+              "sha256": "27483ac0cc35d905763a60ae69d329a385f69e8dd456e98ae8ba69f7776f461c"
+            },
+            {
+              "path": "apps/web/src/pages/geography-native-forms.test.tsx",
+              "sha256": "24d60448e1aeb764adb48ad202fb13a3f734922b7e90bf25878c23b3294199f1"
+            },
+            {
+              "path": "apps/web/e2e/geography.spec.ts",
+              "sha256": "fef8137d15ee5ece462db818799ff80c0e6baf07e8a3bc279fd7491997498783"
+            },
+            {
+              "path": "apps/web/e2e/geography-native-forms.spec.ts",
+              "sha256": "d7d65e7bd93afd8726e626af139470f7ba03e0b6de841e1981f194df78d31804"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/acceptance-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/native-reuse.json"
+          ],
+          "criterion_result": "Bilingual province/city CRUD, expandable city workspace, filters/pagination, focus recovery and 200-row all-or-none city import implemented. Twelve current browser journeys verify CRUD/error/raw-input/import/keyboard behavior with Axe assertions. Existing accepted native import, current-session/version/audit/reference guards reused unchanged.",
+          "limitations": [
+            "Production-provider and staging/Telegram milestone evidence remain separate."
+          ]
+        }
       }
     },
     {
@@ -421908,19 +422000,60 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.04** | **TosEditorPage**: rich text editor (TipTap-like) with side-by-side diff against current active version, \"Mark as material change\" toggle, version history list. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.5-admin-staff-geography-policy-pages"
+        ],
+        "current_acceptance": {
+          "kind": "accepted-admin-staff-geography-terms-ui",
+          "base_commit": "ae9f67fd5e7f327e0a6f5e95495057d175c9dbf1",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/AdminTosPage.tsx",
+              "sha256": "a5bb9ebf4e5d4ad335bffbef3171e89ba9666292f2432e7abf84deed5d8683ff"
+            },
+            {
+              "path": "apps/web/src/pages/TosRichText.tsx",
+              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+            },
+            {
+              "path": "apps/web/src/pages/TosPreview.tsx",
+              "sha256": "e2ba9a09049614fa4251b06fdbb0a41bb058ba69b8c0d5d8f87909b2f8b29cd9"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/pages/AdminTosDraft.test.tsx",
+              "sha256": "2ce0b1a456ac7b89968d923327a30ac698093bb575d38fab75483fab9555c698"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.test.tsx",
+              "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+            },
+            {
+              "path": "apps/web/e2e/content-forms.spec.ts",
+              "sha256": "2892c1351951036c3651c005e3772b28fc8c03d716dd9cf1363ec7e001cb839b"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/acceptance-proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/native-reuse.json"
+          ],
+          "criterion_result": "Native rich-text editor preserves Markdown/formatting, bilingual content and draft errors. Publication compares active/proposed content side by side with bounded text diff and material-change checkbox; history includes published and draft versions with guarded edit/discard/publication. Six current form/recovery browser cases and current draft/sanitization units pass. Accepted native and actual migrated-API publication evidence reused.",
+          "limitations": [
+            "Production-provider and staging/Telegram milestone evidence remain separate."
+          ]
+        }
       }
     },
     {
@@ -455668,6 +455801,135 @@
       "external_sends": false,
       "release_accepted": false,
       "production_authorized": false
+    },
+    "release-0.5-admin-staff-geography-policy-pages": {
+      "batch": "release-0.5-admin-staff-geography-policy-pages",
+      "base_commit": "ae9f67fd5e7f327e0a6f5e95495057d175c9dbf1",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.30.02.02",
+        "07-ui-ux-design.md#T-07.30.02.03",
+        "07-ui-ux-design.md#T-07.30.02.04"
+      ],
+      "review": {
+        "result": "accepted",
+        "findings": [],
+        "details": "Inspected existing three page implementations and direct callers, effective grants, import parser and immutable terms publication. No missing criterion found, so no product implementation rebuilt. Final batch changes only board acceptance. Existing current native source bindings verified before reuse; fresh production-browser journeys retain all assertions."
+      },
+      "criteria": {
+        "02": "Responsive roles table/cards expose grouped checkbox grants read-only, including wildcard and ungranted comparison. Staff-user effective-permission inspection validates exact-user receipts, current access and denial cleanup. Eight FA/EN light/dark browser journeys and relevant component cases pass. Existing accepted native staff authority is reused.",
+        "03": "Bilingual province/city CRUD, expandable city workspace, filters/pagination, focus recovery and 200-row all-or-none city import implemented. Twelve current browser journeys verify CRUD/error/raw-input/import/keyboard behavior with Axe assertions. Existing accepted native import, current-session/version/audit/reference guards reused unchanged.",
+        "04": "Native rich-text editor preserves Markdown/formatting, bilingual content and draft errors. Publication compares active/proposed content side by side with bounded text diff and material-change checkbox; history includes published and draft versions with guarded edit/discard/publication. Six current form/recovery browser cases and current draft/sanitization units pass. Accepted native and actual migrated-API publication evidence reused."
+      },
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/AdminRolesPage.tsx",
+          "sha256": "a1aa8b6e6db0d551b8da6048b095efaf0c2e64036ea0c6ed7128080f20934075"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "cd83b5a6f0564dd73c791c49dbfee905db5a34389fa148e5c9fd93f6b03a4d4f"
+        },
+        {
+          "path": "apps/web/src/components/EffectivePermissionsView.tsx",
+          "sha256": "8623e1075786229ca1eb41905cbf63ffd60b2d999bc05ff7f0b68e8c680877c2"
+        },
+        {
+          "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
+          "sha256": "dc326aa85b4977f7f71b13abebd34a9ba2ba69cf22934f7bb7bf4a7a8355f92d"
+        },
+        {
+          "path": "apps/web/src/lib/staff-permissions.ts",
+          "sha256": "5cd7202ec0b81e19bb1a0d8f8f231c5d1cbde725a5be816b689328f5b4280183"
+        },
+        {
+          "path": "apps/web/src/components/staff-access-inspection.test.tsx",
+          "sha256": "a39238e1da9a7fbeedeac9f82614d5f146de2c65fd763c9b7b9e3cb2824f3d3d"
+        },
+        {
+          "path": "apps/web/e2e/staff-access-inspection.spec.ts",
+          "sha256": "d3a4d019483aed716d24cbb8a685a3a05ed76c5b038406686df2c1ef2180c555"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGeographyPage.tsx",
+          "sha256": "80209e5557a898ca152018c4c8de42be18a7f6d798d8d75bea29e24b00c0d70e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCitiesPanel.tsx",
+          "sha256": "6aa103e1964e83f8c8a222a325c88e88ca20aaada6029202c851b5ab6cc9664c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
+          "sha256": "f7d670bf1ba201cd7fa386edf8e708d20ee8c15cb14adcc040afa4642b4e7900"
+        },
+        {
+          "path": "apps/web/src/lib/geography-api.ts",
+          "sha256": "e34e61e4c0e87274ffd8c8219ecbad6253a2202dcfa513458142568f3505ae57"
+        },
+        {
+          "path": "apps/web/src/lib/geography-form-values.ts",
+          "sha256": "afa0aa91f45d8acd6a0933ce326909a97175efb0ce7209be9f637b0e05007577"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyList.ts",
+          "sha256": "3ad2c1946666e29fbebd10fd8d1f059e3443d00f8e141092d7b2e6fb19090615"
+        },
+        {
+          "path": "apps/web/src/components/GeographyRecordTable.tsx",
+          "sha256": "27483ac0cc35d905763a60ae69d329a385f69e8dd456e98ae8ba69f7776f461c"
+        },
+        {
+          "path": "apps/web/src/pages/geography-native-forms.test.tsx",
+          "sha256": "24d60448e1aeb764adb48ad202fb13a3f734922b7e90bf25878c23b3294199f1"
+        },
+        {
+          "path": "apps/web/e2e/geography.spec.ts",
+          "sha256": "fef8137d15ee5ece462db818799ff80c0e6baf07e8a3bc279fd7491997498783"
+        },
+        {
+          "path": "apps/web/e2e/geography-native-forms.spec.ts",
+          "sha256": "d7d65e7bd93afd8726e626af139470f7ba03e0b6de841e1981f194df78d31804"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "a5bb9ebf4e5d4ad335bffbef3171e89ba9666292f2432e7abf84deed5d8683ff"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "e2ba9a09049614fa4251b06fdbb0a41bb058ba69b8c0d5d8f87909b2f8b29cd9"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosDraft.test.tsx",
+          "sha256": "2ce0b1a456ac7b89968d923327a30ac698093bb575d38fab75483fab9555c698"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.test.tsx",
+          "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+        },
+        {
+          "path": "apps/web/e2e/content-forms.spec.ts",
+          "sha256": "2892c1351951036c3651c005e3772b28fc8c03d716dd9cf1363ec7e001cb839b"
+        }
+      ],
+      "passing_check_receipts": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/admin-page-unit.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/admin-page-browser.json"
+      ],
+      "passing_fresh_unit_cases": 32,
+      "passing_fresh_browser_cases": 26,
+      "native_reuse": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-pages/native-reuse.json",
+      "runtime_reuse": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-assets/runtime-bindings.json",
+      "runtime_reuse_reason": "No product source, dependency, test fixture or compiled output changed in this batch.",
+      "release_accepted": false,
+      "external_sends": false,
+      "production_authorized": false
     }
   },
   "historical_improvements": [
@@ -455707,14 +455969,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-admin-staff-geography-policy-pages",
+    "id": "release-0.5-admin-communications-ai-pages",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.30.02.02",
-      "07-ui-ux-design.md#T-07.30.02.03",
-      "07-ui-ux-design.md#T-07.30.02.04"
+      "07-ui-ux-design.md#T-07.30.02.05",
+      "07-ui-ux-design.md#T-07.30.02.06",
+      "07-ui-ux-design.md#T-07.30.02.07",
+      "07-ui-ux-design.md#T-07.30.02.08"
     ],
-    "goal": "Inspect existing staff roles/effective permissions, geography bilingual CRUD/import and terms editor/diff/history against exact UI criteria. Reuse accepted domain evidence and implement demonstrated gaps; preserve authority, version, audit and publication guards."
+    "goal": "Inspect actual notification template editor, masked email/SMS provider controls and AI orchestration tabs against exact UI acceptance. Reuse accepted native domain safety and current per-case evidence; verify affected journeys, implement demonstrated gaps, retain deferred Telegram host live gates."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",

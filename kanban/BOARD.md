@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-06T15:49:28.400742+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06T15:51:56.436282+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 603 | Accepted with unchanged source bindings. |
-| verify | 722 | Existing work may be complete; inspect evidence before building. |
+| done | 606 | Accepted with unchanged source bindings. |
+| verify | 719 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,11 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing staff roles/effective permissions, geography bilingual CRUD/import and terms editor/diff/history against exact UI criteria. Reuse accepted domain evidence and implement demonstrated gaps; preserve authority, version, audit and publication guards.
+Inspect actual notification template editor, masked email/SMS provider controls and AI orchestration tabs against exact UI acceptance. Reuse accepted native domain safety and current per-case evidence; verify affected journeys, implement demonstrated gaps, retain deferred Telegram host live gates.
 
-- `07-ui-ux-design.md#T-07.30.02.02`: StaffRolesPage: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. "View effective permissions" per staff user.
-- `07-ui-ux-design.md#T-07.30.02.03`: GeographyPage: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed.
-- `07-ui-ux-design.md#T-07.30.02.04`: TosEditorPage: rich text editor (TipTap-like) with side-by-side diff against current active version, "Mark as material change" toggle, version history list.
+- `07-ui-ux-design.md#T-07.30.02.05`: NotificationTemplatesPage: template list (event key filter, language toggle, channel filter), template editor with variable sidebar, preview pane with sample data, test send button.
+- `07-ui-ux-design.md#T-07.30.02.06`: EmailProviderPage: provider selector (SMTP/Resend), conditional credential fields (secrets masked), test connection button, activate/disable/rollback buttons, current active version display.
+- `07-ui-ux-design.md#T-07.30.02.07`: SmsProviderPage: API key (masked), sender line, throughput, low-credit threshold. Template mapping sub-section: event key → SMS template ID + variable mapping. Test send.
+- `07-ui-ux-design.md#T-07.30.02.08`: AiOrchestrationPage: nested tabs — Models (table + add/edit), Knowledge Bases (tree/list + upload + processing status), Policies (list + editor), Agents (list + create/edit + test chat at bottom), Agent Slots (table + assignment dropdown).
 
 ## v0.2.0: Complete customer journeys
 
@@ -926,9 +927,9 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.01.05` | done | Recorded batch work | Build `AuditLogViewer`: timeline of config changes — field changed, old value, new value, changed by, timestamp. Expandable per entry. |
 | `07-ui-ux-design.md#T-07.30.01.06` | done | Recorded batch work | Build `StepUpAuthGate`: when admin attempts a sensitive action (provider config, refund threshold, role change), show MFA step-up dialog. User re-authenticates (OTP) and the action proceeds only after successful step-up. Dialog shows "Sensitive action requires re-authentication." |
 | `07-ui-ux-design.md#T-07.30.02.01` | done | Recorded batch work | BrandingSettingsPage: logo upload with preview (light + dark), color pickers (primary, secondary, accent), app title inputs (FA/EN), favicon upload, preview toggle, versioned save + activate. |
-| `07-ui-ux-design.md#T-07.30.02.02` | verify | Recorded batch work | StaffRolesPage: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. "View effective permissions" per staff user. |
-| `07-ui-ux-design.md#T-07.30.02.03` | verify | Recorded batch work | GeographyPage: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed. |
-| `07-ui-ux-design.md#T-07.30.02.04` | verify | Inventory needed | TosEditorPage: rich text editor (TipTap-like) with side-by-side diff against current active version, "Mark as material change" toggle, version history list. |
+| `07-ui-ux-design.md#T-07.30.02.02` | done | Recorded batch work | StaffRolesPage: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. "View effective permissions" per staff user. |
+| `07-ui-ux-design.md#T-07.30.02.03` | done | Recorded batch work | GeographyPage: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed. |
+| `07-ui-ux-design.md#T-07.30.02.04` | done | Recorded batch work | TosEditorPage: rich text editor (TipTap-like) with side-by-side diff against current active version, "Mark as material change" toggle, version history list. |
 | `07-ui-ux-design.md#T-07.30.02.05` | verify | Recorded batch work | NotificationTemplatesPage: template list (event key filter, language toggle, channel filter), template editor with variable sidebar, preview pane with sample data, test send button. |
 | `07-ui-ux-design.md#T-07.30.02.06` | verify | Recorded batch work | EmailProviderPage: provider selector (SMTP/Resend), conditional credential fields (secrets masked), test connection button, activate/disable/rollback buttons, current active version display. |
 | `07-ui-ux-design.md#T-07.30.02.07` | verify | Recorded batch work | SmsProviderPage: API key (masked), sender line, throughput, low-credit threshold. Template mapping sub-section: event key → SMS template ID + variable mapping. Test send. |
