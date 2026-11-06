@@ -66,3 +66,11 @@ Changing the transport does not accept a release or authorize production. Keep
 the previous webhook until replacement preflight passes. If handoff has already
 occurred, inspect pending updates and durable delivery state before restoring an
 earlier verified callback. Preserve unknown sends indefinitely for reconciliation.
+
+If private link codes arrive but knowledge answers fail, inspect the durable
+question status and test the embedding provider separately. Telegram transport,
+embedding access and the model worker have separate failure boundaries. A healthy
+worker does not prove provider access. Check management credential expiry before
+using the provider console/API to diagnose a missing workspace; expired management
+access and a runtime HTTP 404 do not establish the same cause. Keep failed/unknown
+delivery history intact and verify the repair before requesting a fresh question.

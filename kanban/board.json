@@ -90897,7 +90897,8 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Owner completes the real current-customer/profile Telegram link and controlled private question requested at https://stg.barghsa.com/settings/security. Verify fresh confirmation, current authority, Telegram slot, only published customer/public sources, root footer and exact sent message IDs before acceptance."
+        "Restore authenticated Liara management access using the requested owner login/current protected credential. Inspect the existing approved workspace and repair the runtime embedding404 without weakening source/authority/budget protections.",
+        "After confirmed provider repair, complete a fresh real private knowledge question and verify Telegram slot, only authorized published customer/public sources, root version and exact persisted answer message receipt. Prior failed row remains terminal."
       ],
       "owner": null,
       "depends_on": [],
@@ -91106,7 +91107,8 @@
           "release-0.4-live-provider-provisioning-prerequisites",
           "release-0.4-native-knowledge-fixture-preparation",
           "release-0.4-telegram-external-host",
-          "release-0.4-telegram-verified-handoff"
+          "release-0.4-telegram-verified-handoff",
+          "release-0.4-telegram-real-link-provider-diagnosis"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -92012,9 +92014,10 @@
           "state": "TLS relay and scoped API preflight healthy; authenticated callback and authorized handoff confirmed; awaiting owner actual customer linkage/question",
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
           "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
-        }
+        },
+        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json"
       },
-      "blocker": "External transport and authorized webhook handoff are verified. Owner must complete the real current-customer/profile link and one private knowledge question to certify live linkage, audience and exact persisted reply receipts. Synthetic callbacks are not acceptance."
+      "blocker": "Actual private customer link and code receipts verified. Knowledge generation failed because configured Liara embeddings returned404. Existing management credential expired2026-10-28 and returns401; owner refresh/current protected management access required to inspect and repair the existing approved workspace. No answer receipt or release acceptance fabricated."
     },
     {
       "key": "02-auth-users-admin.md#T-09.12.01",
@@ -403841,7 +403844,8 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Owner completes the real current-customer/profile Telegram link and controlled private question requested at https://stg.barghsa.com/settings/security. Verify fresh confirmation, current authority, Telegram slot, only published customer/public sources, root footer and exact sent message IDs before acceptance."
+        "Restore authenticated Liara management access using the requested owner login/current protected credential. Inspect the existing approved workspace and repair the runtime embedding404 without weakening source/authority/budget protections.",
+        "After confirmed provider repair, complete a fresh real private knowledge question and verify Telegram slot, only authorized published customer/public sources, root version and exact persisted answer message receipt. Prior failed row remains terminal."
       ],
       "owner": null,
       "depends_on": [],
@@ -403864,7 +403868,8 @@
           "release-0.4-live-provider-provisioning-prerequisites",
           "release-0.4-native-knowledge-fixture-preparation",
           "release-0.4-telegram-external-host",
-          "release-0.4-telegram-verified-handoff"
+          "release-0.4-telegram-verified-handoff",
+          "release-0.4-telegram-real-link-provider-diagnosis"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -404794,9 +404799,10 @@
           "state": "TLS relay and scoped API preflight healthy; authenticated callback and authorized handoff confirmed; awaiting owner actual customer linkage/question",
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
           "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
-        }
+        },
+        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json"
       },
-      "blocker": "External transport and authorized webhook handoff are verified. Owner must complete the real current-customer/profile link and one private knowledge question to certify live linkage, audience and exact persisted reply receipts. Synthetic callbacks are not acceptance."
+      "blocker": "Actual private customer link and code receipts verified. Knowledge generation failed because configured Liara embeddings returned404. Existing management credential expired2026-10-28 and returns401; owner refresh/current protected management access required to inspect and repair the existing approved workspace. No answer receipt or release acceptance fabricated."
     },
     {
       "key": "05-notifications-documents-ai.md#T-05.22.05",
@@ -508982,8 +508988,9 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Owner completes the real current-customer/profile Telegram link and controlled private question requested at https://stg.barghsa.com/settings/security. Verify fresh confirmation, current authority, Telegram slot, only published customer/public sources, root footer and exact sent message IDs before acceptance.",
-        "Once all v0.4 gates are accepted, prepare version/reviewed captures, verify exact push, immediately enqueue staging, then verify actual deployment and one Persian summary/grouped album receipts. Production remains unauthorized."
+        "Restore authenticated Liara management access using the requested owner login/current protected credential. Inspect the existing approved workspace and repair the runtime embedding404 without weakening source/authority/budget protections.",
+        "After confirmed provider repair, complete a fresh real private knowledge question and verify Telegram slot, only authorized published customer/public sources, root version and exact persisted answer message receipt. Prior failed row remains terminal.",
+        "After all v0.4 criteria and live gates pass, prepare version/reviewed captures, verify exact release push, immediately enqueue staging and verify actual deployment plus Persian Telegram summary/grouped album receipts. Production remains unauthorized."
       ],
       "owner": null,
       "depends_on": [],
@@ -512322,7 +512329,8 @@
           "release-0.4-live-provider-provisioning-prerequisites",
           "release-0.4-native-knowledge-fixture-preparation",
           "release-0.4-telegram-external-host",
-          "release-0.4-telegram-verified-handoff"
+          "release-0.4-telegram-verified-handoff",
+          "release-0.4-telegram-real-link-provider-diagnosis"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -512462,9 +512470,10 @@
           "state": "TLS relay and scoped API preflight healthy; authenticated callback and authorized handoff confirmed; awaiting owner actual customer linkage/question",
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
           "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
-        }
+        },
+        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json"
       },
-      "blocker": "External transport and authorized webhook handoff are verified. Owner must complete the real current-customer/profile link and one private knowledge question to certify live linkage, audience and exact persisted reply receipts. Synthetic callbacks are not acceptance."
+      "blocker": "Actual private customer link and code receipts verified. Knowledge generation failed because configured Liara embeddings returned404. Existing management credential expired2026-10-28 and returns401; owner refresh/current protected management access required to inspect and repair the existing approved workspace. No answer receipt or release acceptance fabricated."
     },
     {
       "key": "release-readiness#R-04.01",
@@ -541232,6 +541241,111 @@
       "private_linkage_accepted": false,
       "milestone_accepted": false,
       "production_authorized": false
+    },
+    "release-0.4-telegram-real-link-provider-diagnosis": {
+      "batch": "release-0.4-telegram-real-link-provider-diagnosis",
+      "base_commit": "8654f9ee29e810f642d0bd9ba5c509090c6d5d63",
+      "owner_confirmation": "Owner completed the requested real customer Telegram link and question on2026-11-06.",
+      "actual_private_link": {
+        "verified": true,
+        "active_links": 1,
+        "confirmation_message_ids": [
+          238,
+          240
+        ],
+        "root_version": "0.3.0",
+        "current_private_identity_and_profile_authorized": true
+      },
+      "actual_question": {
+        "id": "01a1b28d-704d-70fc-ad9c-52230bbfc0d9",
+        "kind": "question",
+        "status": "failed",
+        "sent_message_id": null,
+        "last_error": "telegram_processing_failed",
+        "attempts": 1,
+        "created_at": "2026-11-06T20:29:36.205Z",
+        "link_id": "01a1b28c-de65-732c-9382-1f24a5eaacca",
+        "intent_id": null,
+        "source_count": 0,
+        "sources": [],
+        "private_identity_exact": true,
+        "current_profile_authorized": true,
+        "verified_at": "2026-11-06T20:28:58.850Z",
+        "user_hash": "67d99bacd8be0aabb07d6cdaa015277762baf5c5dea8f12bf951cd0cb8f31d6b",
+        "profile_hash": "94ad7de80889bb1fd54402ff76a274f538608ce1cf6106c8401a691d68003297",
+        "chat_hash": "c9b34b1f66d5cd9aaf5c854cec4c5e819de8226690ce6e864813b32baf5cafa5",
+        "staff_marker_excluded": true
+      },
+      "runtime_failure": {
+        "embedding_status": 404,
+        "embedding_latency_ms": 112,
+        "ai_worker_health": 200,
+        "provider_workspace_id": "6acc5ff771f459ee1a5c3b4d",
+        "management_status": 401,
+        "management_credential_expiry": "2026-10-28T08:38:38+00:00",
+        "workspace_state": "unknown until authenticated management access restored",
+        "account_balance": "unknown; no insufficient-funds claim",
+        "no_automatic_question_or_message_replay": true
+      },
+      "evidence": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/live-telegram-receipts.json",
+          "sha256": "228fb4dae76e968245b085696f2a8b5aac5385089dbb7b9959b1d8689f5bbe42"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/embedding-provider-diagnosis.log",
+          "sha256": "0b2ef4c735165970e2873a1b9a377beeed19aba1834ed2d96894bba14bb117cf"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/telegram-generation-readonly-diagnosis.log",
+          "sha256": "707c4a40b7539cfd90571bd4e38a8b72fd84bd8587b9c8a47c222ea4916e16ad"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/liara-current-safe-inventory.json",
+          "sha256": "6c86fecac4d4c8261401ccd5f749c774619a195c9dfff02397e0271cefb54f7b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json",
+          "sha256": "7388054c7ce385d76eb2dd7e95a2b14631c8bd004d96a348e9edc5e91309597e"
+        }
+      ],
+      "owner_action": "Refresh existing protected Liara CLI management login with liara login, or identify a current protected management credential. No token in chat. Inspect and repair the existing already-approved workspace before requesting one fresh real private question.",
+      "unaccepted": [
+        "Actual Telegram knowledge reply, authorized sources and exact sent answer receipt",
+        "v0.4.0 release acceptance/deployment/announcement"
+      ],
+      "production_authorized": false
+    },
+    "release-0.5-list-table-and-recovery-journeys": {
+      "status": "unfinished_safely_isolated",
+      "base_commit": "8654f9ee29e810f642d0bd9ba5c509090c6d5d63",
+      "isolation": {
+        "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/isolation-receipt.json",
+        "sha256": "18873e12aa3a300cad5e9056b647ce4ac70065ac026025478ce677c1331560bd"
+      },
+      "passed": {
+        "ui_component_cases": 25,
+        "web_component_query_cases": 111,
+        "ui_distribution_cases": 8,
+        "browser_cases": 80,
+        "original_and_added_payload_limits": 91
+      },
+      "failed": {
+        "browser_cases": 8,
+        "scope": "Staff contract details: unmocked companion404s; full diagnosis and fixture correction pending."
+      },
+      "checks": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/ui-unit.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/web-unit.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/browser.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/budgets.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/types.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/ui-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/web-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/lint.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/format.json"
+      ],
+      "task_statuses_accepted": false
     }
   },
   "historical_improvements": [
@@ -541271,18 +541385,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-telegram-external-host-live-closure",
+    "id": "release-0.4-telegram-provider-live-closure",
     "release": "0.4.0",
     "task_keys": [
       "02-auth-users-admin.md#T-09.11.05",
       "05-notifications-documents-ai.md#T-05.22.04",
       "release-readiness#R-03.02"
     ],
-    "goal": "Close v0.4.0 immediately after the requested actual owner customer Telegram link/question. External host, scoped reviewed API image, secret-authenticated callback and authorized one-webhook handoff are verified. Collect durable real private receipts and current profile/audience/version evidence; never fabricate a human link. Then accept milestone and enqueue exact release immediately. Independent later-release preparation may continue while this concrete owner action is pending; no production action."
+    "goal": "Resume earliest milestone closure after owner refreshes the expired Liara management login/current protected credential. External Telegram host, verified handoff, actual owned private link and code receipts are complete. Diagnose/repair existing workspace embedding404; retain original failed question terminal, source/authority/budget safeguards and all assertions. Verify one fresh real Telegram knowledge answer, then accept all v0.4 gates and immediately enqueue exact release push. Preserved unfinished15-task list/table patch must be resumed separately; apply only its two UI source paths, never overwrite newer board with saved patch hunks."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
-    "next_update_after": "Owner actual Telegram link/question and v0.4.0 release receipts; then remaining v0.5.0 UI acceptance",
+    "next_update_after": "Refreshed Liara management access, repair of verified runtime embedding404, actual Telegram answer receipt and v0.4 release closure; then resume safely isolated v0.5 list/table batch",
     "method": "v0.2.0 and v0.3.0 accepted and staging/Telegram verified. Continue dependency order. Required external operational proof, including SMS, remains before production."
   },
   "capabilities": [

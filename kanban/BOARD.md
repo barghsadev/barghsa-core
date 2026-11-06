@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close v0.4.0 immediately after the requested actual owner customer Telegram link/question. External host, scoped reviewed API image, secret-authenticated callback and authorized one-webhook handoff are verified. Collect durable real private receipts and current profile/audience/version evidence; never fabricate a human link. Then accept milestone and enqueue exact release immediately. Independent later-release preparation may continue while this concrete owner action is pending; no production action.
+Resume earliest milestone closure after owner refreshes the expired Liara management login/current protected credential. External Telegram host, verified handoff, actual owned private link and code receipts are complete. Diagnose/repair existing workspace embedding404; retain original failed question terminal, source/authority/budget safeguards and all assertions. Verify one fresh real Telegram knowledge answer, then accept all v0.4 gates and immediately enqueue exact release push. Preserved unfinished15-task list/table patch must be resumed separately; apply only its two UI source paths, never overwrite newer board with saved patch hunks.
 
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
