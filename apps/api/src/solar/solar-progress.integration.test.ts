@@ -40,7 +40,37 @@ async function login(role?: string) {
 async function fixture(options: Parameters<typeof seedSolarConstruction>[3] = {}) {
   const owner = await login(),
     actor = await login('construction-writer');
-  return seedSolarConstruction(http.pool, owner, actor, options);
+  const seeded = await seedSolarConstruction(http.pool, owner, actor, options);
+  const initialNotifications = (
+    await http.pool.query<{ id: string; type: string }>(
+      'SELECT id,type FROM in_app_notifications WHERE profile_id=$1 ORDER BY id',
+      [seeded.profile]
+    )
+  ).rows;
+  expect(initialNotifications.map((notice) => notice.type).sort()).toEqual(
+    options.activate === false ? ['contract.created'] : ['contract.active', 'contract.created']
+  );
+  return { ...seeded, initialNotifications };
+}
+async function milestoneNotifications(fixtures: Array<Awaited<ReturnType<typeof fixture>>>) {
+  return (
+    await http.pool.query(
+      `SELECT profile_id,recipient_user_id,type,link_route FROM in_app_notifications
+       WHERE profile_id=ANY($1::uuid[]) AND NOT(id=ANY($2::uuid[])) ORDER BY id`,
+      [
+        fixtures.map((f) => f.profile),
+        fixtures.flatMap((f) => f.initialNotifications.map((notice) => notice.id)),
+      ]
+    )
+  ).rows;
+}
+function expectedMilestoneNotification(f: Awaited<ReturnType<typeof fixture>>) {
+  return {
+    profile_id: f.profile,
+    recipient_user_id: f.owner,
+    type: 'general',
+    link_route: `/solar/requests/${f.request}`,
+  };
 }
 function send(
   user: string,
@@ -172,7 +202,9 @@ it('projects construction note feedback without weakening protected commands, li
   const after = await snapshot();
   expect(after.events).toHaveLength(1);
   expect(after.audit).toHaveLength(1);
-  expect(after.notifications).toHaveLength(1);
+  expect(after.notifications).toHaveLength(before.notifications.length + 1);
+  expect(after.notifications).toEqual(expect.arrayContaining(before.notifications));
+  expect(await milestoneNotifications([f])).toEqual([expectedMilestoneNotification(f)]);
   expect(after.request).toEqual(before.request);
   expect(after.postal).toEqual(before.postal);
   expect(after.contract).toEqual(before.contract);
@@ -242,14 +274,9 @@ it('records three ordered milestones and exposes the same authorized customer ti
       )
     ).rows[0].n
   ).toBe(3);
-  expect(
-    (
-      await http.pool.query(
-        'SELECT count(*)::int AS n FROM in_app_notifications WHERE recipient_user_id=$1 AND profile_id=$2',
-        [f.owner, f.profile]
-      )
-    ).rows[0].n
-  ).toBe(3);
+  expect(await milestoneNotifications([f])).toEqual(
+    Array.from({ length: 3 }, () => expectedMilestoneNotification(f))
+  );
   expect(
     (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [f.contract])).rows[0].state
   ).toBe('Active');
@@ -264,14 +291,7 @@ it('replays a lost response once, including concurrently, and rejects changed op
   expect((await record(f, { ...input, note: 'Changed after review' })).status).toBe(409);
   expect((await record(f, { ...input, expectedReviewHash: '0'.repeat(64) })).status).toBe(409);
   expect((await record(f, input, await login('construction-writer'))).status).toBe(409);
-  expect(
-    (
-      await http.pool.query(
-        'SELECT count(*)::int AS n FROM in_app_notifications WHERE profile_id=$1',
-        [f.profile]
-      )
-    ).rows[0].n
-  ).toBe(1);
+  expect(await milestoneNotifications([f])).toEqual([expectedMilestoneNotification(f)]);
 });
 it('rejects skipped milestones, stale revisions, changed eligibility and strict invalid commands', async () => {
   const f = await fixture();
@@ -499,14 +519,10 @@ it('returns a conflict when two independent requests race to reuse one operation
       )
     ).rows[0].n
   ).toBe(1);
-  expect(
-    (
-      await http.pool.query(
-        'SELECT count(*)::int AS n FROM in_app_notifications WHERE profile_id=ANY($1::uuid[])',
-        [[first.profile, second.profile]]
-      )
-    ).rows[0].n
-  ).toBe(1);
+  const winner = results[0]!.status === 200 ? first : second;
+  expect(await milestoneNotifications([first, second])).toEqual([
+    expectedMilestoneNotification(winner),
+  ]);
 });
 
 it('fails safely on a locked profile and lets the exact reviewed command retry after the competing transaction', async () => {
