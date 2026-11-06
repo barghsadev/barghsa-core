@@ -1,4 +1,4 @@
-# External staging Telegram transport
+# External staging integration transport
 
 The owner designated `eu.barghsa.com` for Telegram because the staging network
 cannot reach Telegram. NGINX relays only this bot's `getMe` and `sendMessage`
@@ -24,7 +24,8 @@ flow. Keep the renewal timer enabled and install the existing
 site on this dedicated host.
 
 Render `nginx.conf` privately, replacing `__BOT_TOKEN__` with the configured bot
-token and `__WEBHOOK_SECRET__` with the existing customer webhook secret. Validate
+token, `__WEBHOOK_SECRET__` with the existing customer webhook secret, and
+`__OPENROUTER_API_KEY__` with the owner-provided protected OpenRouter key. Validate
 the token against `^[0-9]+:[A-Za-z0-9_-]{20,}$` and the secret against
 `^[A-Za-z0-9_-]{32,256}$` before substitution. Read them from a mode-0600 file or
 stdin; never pass them as command arguments. Install the result at
@@ -74,3 +75,35 @@ worker does not prove provider access. Check management credential expiry before
 using the provider console/API to diagnose a missing workspace; expired management
 access and a runtime HTTP 404 do not establish the same cause. Keep failed/unknown
 delivery history intact and verify the repair before requesting a fresh question.
+
+## OpenRouter staging replacement
+
+The owner deleted the paid Liara AI workspace and approved free OpenRouter models
+through this host on 2026-11-06. Do not recreate that workspace. The key is kept in
+the ignored mode-0600 root `.env` as `OPENROUTER_API_KEY`, rendered into protected
+host configuration, and stored encrypted through the existing model configuration
+API. Keep it out of Git, command arguments and logs.
+
+Only authenticated POST requests from the staging IP reach
+`https://eu.barghsa.com/api/v1/chat/completions` and `/api/v1/embeddings`.
+NGINX forwards them to the fixed official OpenRouter host, verifies TLS, rebuilds
+headers and keeps retries/caching disabled. Other paths are unavailable. No
+customer cookie, arbitrary destination or arbitrary authorization header is
+forwarded. Existing application model tests, source/audience checks, monthly token
+budget and current-authority checks still apply.
+
+Select models from the current catalogue whose prompt and completion prices are
+zero. Free variants have account/provider quotas and can return 429; one observed
+Google free-model probe did so. Keep those failures visible and use another tested
+free model. Paid fallback requires a new owner instruction. See the
+[official free-model notes](https://openrouter.ai/collections/free-models/).
+
+Knowledge indexing and query embeddings must use the same provider/model and
+1,536 dimensions. The embedding client requests this dimension explicitly and
+still rejects incorrect, non-finite or zero vectors. Change the model through the
+existing knowledge configuration/reprocess workflow: it disables changed content,
+removes its obsolete index, and publishes only successfully rebuilt content.
+Never query the former Liara embedding space with a different model. Verify real
+processing and retrieval before re-enabling the linked agent or declaring the
+Telegram knowledge-answer gate passed. OpenRouter documents the
+[embedding catalogue](https://openrouter.ai/docs/api/api-reference/embeddings/list-embeddings-models).

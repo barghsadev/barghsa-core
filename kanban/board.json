@@ -89691,11 +89691,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -89893,6 +89893,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.ts",
+                "packages/shared/src/ai-models/embedding.test.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         }
@@ -91108,7 +91120,8 @@
           "release-0.4-native-knowledge-fixture-preparation",
           "release-0.4-telegram-external-host",
           "release-0.4-telegram-verified-handoff",
-          "release-0.4-telegram-real-link-provider-diagnosis"
+          "release-0.4-telegram-real-link-provider-diagnosis",
+          "release-0.4-openrouter-free-provider-and-telegram-closure"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -91556,11 +91569,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -91902,6 +91915,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
               ],
               "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -92015,7 +92040,13 @@
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
           "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
         },
-        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json"
+        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json",
+        "openrouter_free_replacement": {
+          "owner_approved": true,
+          "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
+          "native_configuration_and_reindex": "pending",
+          "real_telegram_answer": "pending"
+        }
       }
     },
     {
@@ -397027,11 +397058,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -397229,6 +397260,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.ts",
+                "packages/shared/src/ai-models/embedding.test.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         }
@@ -397377,11 +397420,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -397579,6 +397622,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.ts",
+                "packages/shared/src/ai-models/embedding.test.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         }
@@ -397729,11 +397784,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -397931,6 +397986,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.ts",
+                "packages/shared/src/ai-models/embedding.test.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         }
@@ -398080,11 +398147,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -398282,6 +398349,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.ts",
+                "packages/shared/src/ai-models/embedding.test.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         }
@@ -401276,11 +401355,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -401437,6 +401516,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -401752,11 +401843,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -401913,6 +402004,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -402226,11 +402329,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -402387,6 +402490,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -402700,11 +402815,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -402885,6 +403000,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -403197,11 +403324,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -403329,6 +403456,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -403649,11 +403788,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -403810,6 +403949,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -403868,7 +404019,8 @@
           "release-0.4-native-knowledge-fixture-preparation",
           "release-0.4-telegram-external-host",
           "release-0.4-telegram-verified-handoff",
-          "release-0.4-telegram-real-link-provider-diagnosis"
+          "release-0.4-telegram-real-link-provider-diagnosis",
+          "release-0.4-openrouter-free-provider-and-telegram-closure"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -404320,11 +404472,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -404686,6 +404838,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
               ],
               "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -404799,7 +404963,13 @@
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
           "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
         },
-        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json"
+        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json",
+        "openrouter_free_replacement": {
+          "owner_approved": true,
+          "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
+          "native_configuration_and_reindex": "pending",
+          "real_telegram_answer": "pending"
+        }
       }
     },
     {
@@ -405097,11 +405267,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -405258,6 +405428,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -405570,11 +405752,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -405731,6 +405913,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -406044,11 +406238,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -406205,6 +406399,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -406519,11 +406725,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -406704,6 +406910,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -407016,11 +407234,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -407177,6 +407395,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -407489,11 +407719,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -407650,6 +407880,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -519375,11 +519617,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -520192,6 +520434,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
               ],
               "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -522901,11 +523155,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
-              "sha256": "4e290bb6ec5f77da2ee37fcadb03f84f65218a33f08ddccec5307278d28499c2"
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.ts",
-              "sha256": "11e202196af0b92cf81e0037d81d911ca415992d4abe607f578acc523bc0b84b"
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
             },
             {
               "path": "packages/shared/src/ai-models/guarded-http.ts",
@@ -523566,6 +523820,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
               ],
               "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
+            },
+            {
+              "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+              "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+              "paths": [
+                "packages/shared/src/ai-models/embedding.test.ts",
+                "packages/shared/src/ai-models/embedding.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
+              ],
+              "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
             }
           ]
         },
@@ -523582,7 +523848,8 @@
           "release-0.4-native-knowledge-fixture-preparation",
           "release-0.4-telegram-external-host",
           "release-0.4-telegram-verified-handoff",
-          "release-0.4-telegram-real-link-provider-diagnosis"
+          "release-0.4-telegram-real-link-provider-diagnosis",
+          "release-0.4-openrouter-free-provider-and-telegram-closure"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -523723,7 +523990,13 @@
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
           "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
         },
-        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json"
+        "real_telegram_link_provider_diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/real-link-provider-diagnosis-proof.json",
+        "openrouter_free_replacement": {
+          "owner_approved": true,
+          "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
+          "native_configuration_and_reindex": "pending",
+          "real_telegram_answer": "pending"
+        }
       }
     },
     {
@@ -553448,6 +553721,423 @@
       "previous_isolation": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/isolation-receipt.json",
       "milestone_accepted": false,
       "production_authorized": false
+    },
+    "release-0.4-openrouter-free-provider-and-telegram-closure": {
+      "batch": "release-0.4-openrouter-free-provider-and-telegram-closure",
+      "base_commit": "8109dedfc7e1d1b31533e5c805e78a1e42be686f",
+      "status": "implementation_verified_live_configuration_pending",
+      "source_evidence": [
+        {
+          "path": "apps/api/package.json",
+          "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
+          "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.ts",
+          "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
+          "sha256": "379645f5a7033f6e8845cb2814f6a33c963b0abac36d65a18b4d3cebbce30ae7"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
+          "sha256": "3f73ec24553b66f34220f0c85f9a825f4c282bf7887dfebb020eda0e51e19cb2"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-routed-http.integration.test.ts",
+          "sha256": "9a4879b297b767eec8ffcba00c3932d36a9d0467ae55d36a84e4e02c14f5fce8"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+          "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
+          "sha256": "ed127ebcb8ca89901526af8b814afdd83db5f274c2c644bc5d6388d5edf42e4e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+          "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-budget.ts",
+          "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+          "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.ts",
+          "sha256": "c47c622fabde926b1d3256afc0da3087d412e5801e7cf7c48a3fdd31e98821c8"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+          "sha256": "edde7fbf92be12d7b01c2303c0b4f6ce1ac089b53f2e9b22d379c0047e1f5287"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+          "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.module.ts",
+          "sha256": "97345252f57b9792fce630119d2a682ca9acc1e6bf202ad56acf55b16ad550f2"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
+          "sha256": "4dd22782e4566ca1fa0032a0e5a4817642fc80f52ffc8225154c71442d2f6cac"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+        },
+        {
+          "path": "apps/api/src/telegram/root-version.ts",
+          "sha256": "4a25ae51b1e196b4c6ffbb0b363750375f87c57aa51fea8219196336c5e4c4e1"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links.controller.ts",
+          "sha256": "21717ef3400f715fcd2df452755ec1a56db10c769ce6b5177937445c234b1544"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links.service.ts",
+          "sha256": "d7e56e200eae3c9291cb4ca2f701491a5e1911a38f55d189a99b98db47690000"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.test.ts",
+          "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.ts",
+          "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+          "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
+          "sha256": "39f0862f3cc55b68e1f4a006fb17625555545305af2ef4f6992e37d89e28dd51"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram.module.ts",
+          "sha256": "a6509298a2f42b7a77987761414e29a71841ec6ed9cdeca929f5543b19b6e151"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/worker/package.json",
+          "sha256": "1febe26378c97b60c2aa13d0bfd32b62d3b2e012d6661ef4d38b6a10eaf30fd8"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
+          "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/extraction.ts",
+          "sha256": "24df42c0de53542b469ca0954979275a7936294e85cfc43509d3b0e2d1cb2f22"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/processing-runner.integration.test.ts",
+          "sha256": "906cf72f4cb7da030b575816e1188b172b4e1acc5c295d54eab95752c4a72e2a"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/processing-runner.ts",
+          "sha256": "17cf6b95ed383a8bfc43c1d3dc700ca6cde3e01c4259ea358c01b6c111afaaf3"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "deploy/telegram/README.md",
+          "sha256": "bd20b0d00fe63c75baa89a3403b61e0985e17119d50da2746931a038471b783b"
+        },
+        {
+          "path": "deploy/telegram/nginx.conf",
+          "sha256": "78ea447acb717b16cf5393d28896b75d8e199cd1fb9abd3ae9d9dd72aa625122"
+        },
+        {
+          "path": "package.json",
+          "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+        },
+        {
+          "path": "packages/shared/src/ai-models/embedding.test.ts",
+          "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
+        },
+        {
+          "path": "packages/shared/src/ai-models/embedding.ts",
+          "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
+        },
+        {
+          "path": "packages/shared/src/ai-models/guarded-http.ts",
+          "sha256": "975ee8868bed3981f83413aae4540ac0d59c12253744157fa17955104fbc6e6d"
+        },
+        {
+          "path": "packages/shared/tsconfig.json",
+          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+        }
+      ],
+      "checks": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/shared-build.json",
+          "sha256": "1e6674cf1045412cca66c4d2b940018f90742e48f7c386ba2e031a1777bbc86a",
+          "log_sha256": "94bea620c8c03ae9e12fa7c16ce421b996297d15d7f1d60b984e2da1869fcfbf"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/builds.json",
+          "sha256": "f777b5f3bdd496757ea1088778e02f0987ce92692894c9a96b0250f5c1121f30",
+          "log_sha256": "8c5268bfdf9a735dd5f373086c9aea3f5bc546e5247343131238cc5f2e2675bf"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/shared-unit.json",
+          "sha256": "2b2b1d6140d2d78ad6655a3c8ee32bf45f6440a281861d308546cba608f0f999",
+          "log_sha256": "ad46000b92e800391964170b20074993a24ef4a5d25d7068697ee2541e1b74d1"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/api-native.json",
+          "sha256": "3b86485e9f308127a068e22d28b8b48ba73101b84bce70ff117a5a1534a45a49",
+          "log_sha256": "af37eb430f8144960f3777cd0e4a88e70b06d6d2287c95866921ac3165d19e1c"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/worker-native.json",
+          "sha256": "62f2ead77d87a2c0939338b09806e4a450a144265dda2ad97239d616d3f921bf",
+          "log_sha256": "52bc2e453d86b49b01d58d42ffc4f6939b9db3542bfea9f6a58c55d45d9b9ac1"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/types.json",
+          "sha256": "8721c117e9f159587e0e4564fb8f9dfc5956945b8249693be2cfbedeee68cf75",
+          "log_sha256": "96db2113a90537c6442706fff36663c1dcfbc5a09abcacefa368742d0a1298a7"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/lint.json",
+          "sha256": "1801c34b773ee5b63f625fd0657257a10cd5b07552e98b45963613154af858df",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/format.json",
+          "sha256": "ae9486a15f907c75e5111e2f5f052399fa017dd8427051563c14188d70dd40f7",
+          "log_sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ],
+      "distinct_cases": {
+        "shared_embedding": 2,
+        "native_api_http_database": 40,
+        "worker_processing_database": 7,
+        "shared_distribution": 27
+      },
+      "review": "Accepted narrow gateway and explicit existing1536-dimensional embedding request. All response vector/order/nonzero/bounds/SSRF guards remain exact; no schema or assertions weakened. NGINX adds only two authenticated staging-IP POST routes to fixed official OpenRouter, verified TLS, bounded bodies/timeouts and no retries/cache/secret logging. Existing Telegram routes remain exact.",
+      "owner_decision": "Owner deleted costly Liara AI, refreshed CLI access and explicitly instructed replacement with free OpenRouter models through eu.barghsa.com, key in ignored.env. Do not recreate Liara.",
+      "secret_storage": "Ignored root.env mode0600; rendered root-only EU configuration; no key value in Git or receipt. Encrypted native model storage pending guarded configuration.",
+      "provider_evidence": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/zero-price-catalogue.json",
+          "sha256": "58c3277d0e066ab5fc7f896395d9061ff2ebfeed88b8087a67d31055f35e5f74"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/free-provider-native-probes.json",
+          "sha256": "109c7207b1be2ed9b25b1c4c08e2d7b02286d43c7cef601d919ce76acdc13391"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/free-liquid-native-probe.json",
+          "sha256": "0228921edd45bb9ff4042f08090463d41f20d8f0e87de998c64f4fe55145c8ef"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/free-router-and-quota.json",
+          "sha256": "204171082b6ec8373251b65b9dc20f10303a11660816cf1f62abd9fd840b97b1"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/relay-install-receipt.json",
+          "sha256": "8722ab5d42ca898fbe59485878427aaa63e34d68f84e6735522986e221d92ec9"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/staging-relay-probes.json",
+          "sha256": "7528e15b09f6fc0c75d0b017647596a181f6955db452979c85502400d43c11c1"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/public-relay-boundaries.json",
+          "sha256": "8632f9e8737ad595719a950a6440d45047377b7b3a94024fa5a4f97f9ef74b3c"
+        }
+      ],
+      "provider_observations": "NVIDIA free embedding returned actual1536 dimensions and cost0; Liquid/free-router returned nonempty READY and cost0. Google and one Liquid probe returned429 from shared free capacity; no paid fallback or physical Telegram resend. Current index must be rebuilt with the new model before querying it.",
+      "live_gate_accepted": false,
+      "release_accepted": false,
+      "production_authorized": false,
+      "source_renewals": [
+        {
+          "key": "02-auth-users-admin.md#T-09.11.02",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.ts",
+            "packages/shared/src/ai-models/embedding.test.ts"
+          ]
+        },
+        {
+          "key": "02-auth-users-admin.md#T-09.11.05",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.01",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.ts",
+            "packages/shared/src/ai-models/embedding.test.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.02",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.ts",
+            "packages/shared/src/ai-models/embedding.test.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.03",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.ts",
+            "packages/shared/src/ai-models/embedding.test.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.04",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.ts",
+            "packages/shared/src/ai-models/embedding.test.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.21.01",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.21.02",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.21.03",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.01",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.02",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.03",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.04",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.05",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.06",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.01",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.02",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.03",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.04",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "release-readiness#R-03.01",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        },
+        {
+          "key": "release-readiness#R-03.02",
+          "paths": [
+            "packages/shared/src/ai-models/embedding.test.ts",
+            "packages/shared/src/ai-models/embedding.ts"
+          ]
+        }
+      ]
     }
   },
   "historical_improvements": [

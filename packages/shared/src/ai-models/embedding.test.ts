@@ -67,7 +67,12 @@ it('sends a bounded embedding request and restores provider index order', async 
       {
         path: '/v1/embeddings',
         token: 'Bearer test-only-secret',
-        body: { model: 'embed-1536', input: ['alpha', 'beta'], encoding_format: 'float' },
+        body: {
+          model: 'embed-1536',
+          input: ['alpha', 'beta'],
+          encoding_format: 'float',
+          dimensions: EMBEDDING_DIMENSIONS,
+        },
       },
     ]);
   } finally {

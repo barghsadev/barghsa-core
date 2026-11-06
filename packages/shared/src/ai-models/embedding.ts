@@ -28,7 +28,12 @@ export class OpenAiEmbeddingClient implements EmbeddingClient {
         accept: 'application/json',
         ...(token ? { authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify({ model, input: texts, encoding_format: 'float' }),
+      body: JSON.stringify({
+        model,
+        input: texts,
+        encoding_format: 'float',
+        dimensions: EMBEDDING_DIMENSIONS,
+      }),
       maxBytes: 2 * 1024 * 1024,
       allowHttp: allowlist.some(
         (host) => host.toLowerCase().replace(/\.$/, '') === url.hostname.toLowerCase()
