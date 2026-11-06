@@ -1,0 +1,13 @@
+# Support ticket workspace
+
+Customer and staff tickets share the current list and detail components. The list uses `ListPage`, with subject, status, priority, relative and exact update times, and authorized related-record links. Mobile cards expose secondary fields through a keyboard-accessible disclosure. High, normal and low priorities display P1, P2 and P3 respectively; an unknown historical priority is displayed without inventing a mapping.
+
+The conversation is ordered by creation time and ID. Public customer comments use the card background, staff replies have a brand border, and internal notes have a warning background and an explicit localized INTERNAL label. Author context is recorded with the reply. Customers receive approved display names or role labels, not the private staff directory. Plain text remains literal; formatted replies pass through the shared safe Markdown renderer.
+
+Internal notes are private at every read boundary. Customer comment queries filter them in SQL, including when the ticket owner is also a staff member using customer context. Customer code filters the response again before storing or rendering it. Attachment previews independently recheck the current ticket, comment visibility, original file index and storage binding. A cached preview or old retry receipt cannot restore a revoked permission.
+
+The reply editor supports bold, italic, lists, HTTP/HTTPS links, previews and up to five validated PDF/JPEG/PNG files through selection or drag and drop. Staff public and internal replies keep separate text, file and upload drafts. Switching branches does not copy private content into a public reply. An uncertain submission retains the captured body, visibility, ordered file keys and submission ID. Retrying reuses that exact command, and only an accepted matching receipt clears its branch.
+
+Staff status controls offer the six domain statuses through valid transitions and require a reason in the UI. Reasons are trimmed and recorded in the status audit, outside customer responses. Assignment, current grants and the ticket lifecycle still govern writes. Reply, assignment, audit, private notification and receipt changes commit atomically; failed audits or notifications roll back the operation. Resolved or closed tickets must be reopened before a new reply. A customer reply to a ticket waiting on the customer resumes staff work.
+
+These interfaces provide support actions, not financial commands. Related records open their own authorized business workflows. Ticket editing cannot approve a payment, contract, refund or verification decision.

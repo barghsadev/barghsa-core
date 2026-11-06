@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 667 | Accepted with unchanged source bindings. |
-| verify | 658 | Existing work may be complete; inspect evidence before building. |
+| done | 673 | Accepted with unchanged source bindings. |
+| verify | 652 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,14 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify and finish customer/staff ticket list/detail, chronological rich replies/attachments, staff-only internal notes and reasoned status changes. Inspect current adoption before building gaps, reuse matching framework/document evidence, and preserve current actor/profile visibility, assignment permissions, sanitization, immutable activity and exact mutation/retry boundaries. Accept the complete support journey, then select the next remaining v0.5.0 group.
+Verify and finish configured file upload, safe file preview, document state/list and actionable localized validation in customer/staff workspaces. Inspect current implementation first, reuse matching ticket/contract/storage evidence, and preserve staged byte verification, owner/profile access, immutable financial/contract files, quarantine privacy, retention and exact upload/mutation retry boundaries. Accept the complete document/media journey before selecting another v0.5.0 group.
 
-- `07-ui-ux-design.md#T-07.23.01.01`: Build `TicketListPage`: uses ListPage compound component. Columns: subject, status badge, priority indicator (P1/P2/P3), last update (relative time), related entity link. Expandable row on mobile.
-- `07-ui-ux-design.md#T-07.23.01.02`: Build `TicketDetailPage`: header (subject, status badge, priority, created date, related entity), conversation thread, reply input area (for public reply), internal note toggle (staff only).
-- `07-ui-ux-design.md#T-07.23.01.03`: Build `CommentThread` component: chronological message list. Customer comments (white bubble, left-aligned in LTR), Staff comments (brand-colored border, same alignment), Internal notes (yellow background, "INTERNAL" badge, visible only to staff). Each comment: author avatar + name, timestamp, content, attachment thumbnails.
-- `07-ui-ux-design.md#T-07.23.01.04`: Build `TicketReplyInput`: textarea with formatting toolbar (bold, italic, list, link), file upload (drag & drop), "Add internal note" toggle (staff only), "Submit reply" button.
-- `07-ui-ux-design.md#T-07.23.01.05`: Build `TicketStatusDropdown` (staff): change ticket status with reason input. Statuses: Open, In Progress, Waiting on Customer, Waiting on Staff, Resolved, Closed.
-- `07-ui-ux-design.md#T-07.23.01.06`: Staff internal notes must never be visible to customers. Backend enforces visibility flag. Frontend never renders internal notes when role is customer.
+- `07-ui-ux-design.md#T-07.25.01.01`: Build `FileUpload` component: drop zone (dashed border, icon, "Drag files here or click to browse" text), file list (name, size, progress bar per file), file type validation (extension + MIME against configured allowlist), size validation, max file count. Accessibility: keyboard-accessible drop zone, screen reader announces upload progress.
+- `07-ui-ux-design.md#T-07.25.01.02`: Build `FilePreview` component: image preview (thumbnail), PDF preview (first page), document icon fallback. Used in document lists, ticket attachments, upload review.
+- `07-ui-ux-design.md#T-07.25.01.03`: Build `DocumentStatusBadge` component: state labels with colored badges — Uploading (gray), Pending scan (yellow pulse), Available (green), Submitted for review (blue), Approved (green check), Rejected (red, with reason shown), Superseded (outline), Quarantined (red alert), Removed (gray strikethrough).
+- `07-ui-ux-design.md#T-07.25.01.04`: Build `DocumentList` component: list of documents with icon, filename, size, upload date, status badge, download/delete/replace actions per permission.
+- `07-ui-ux-design.md#T-07.25.01.05`: Upload validation errors must be specific: "PDF files up to 25MB are accepted", "File type .exe is not supported".
+- `07-ui-ux-design.md#T-07.25.01.06`: Quarantined files show safe message: "This file cannot be accepted. Please upload a replacement." — never reveal malware detection details to customer.
 
 ## v0.2.0: Complete customer journeys
 
@@ -885,12 +885,12 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.22.02.03` | done | Recorded batch work | Solar construction request wizard: Step 1 (Solar type + property details), Step 2 (On-Grid/Off-Grid selection + bill identifier for On-Grid), Step 3 (Contract stages preview + TOS check), Step 4 (Review + submit). |
 | `07-ui-ux-design.md#T-07.22.02.04` | done | Recorded batch work | Saving plan order wizard: Step 1 (Select plan), Step 2 (Select hardware), Step 3 (Bill identifier), Step 4 (Address select/add), Step 5 (Accept agreement + Review + Submit). |
 | `07-ui-ux-design.md#T-07.22.02.05` | done | Recorded batch work | Onboarding wizard: Step 1 (Select profile type: Individual/Legal), Step 2a (Individual: name, national ID, province/city, address, postal code), Step 2b (Legal: company info, representative, address, registration info), Step 3 (Review + Submit). |
-| `07-ui-ux-design.md#T-07.23.01.01` | verify | Recorded batch work | Build `TicketListPage`: uses ListPage compound component. Columns: subject, status badge, priority indicator (P1/P2/P3), last update (relative time), related entity link. Expandable row on mobile. |
-| `07-ui-ux-design.md#T-07.23.01.02` | verify | Recorded batch work | Build `TicketDetailPage`: header (subject, status badge, priority, created date, related entity), conversation thread, reply input area (for public reply), internal note toggle (staff only). |
-| `07-ui-ux-design.md#T-07.23.01.03` | verify | Recorded batch work | Build `CommentThread` component: chronological message list. Customer comments (white bubble, left-aligned in LTR), Staff comments (brand-colored border, same alignment), Internal notes (yellow background, "INTERNAL" badge, visible only to staff). Each comment: author avatar + name, timestamp, content, attachment thumbnails. |
-| `07-ui-ux-design.md#T-07.23.01.04` | verify | Recorded batch work | Build `TicketReplyInput`: textarea with formatting toolbar (bold, italic, list, link), file upload (drag & drop), "Add internal note" toggle (staff only), "Submit reply" button. |
-| `07-ui-ux-design.md#T-07.23.01.05` | verify | Recorded batch work | Build `TicketStatusDropdown` (staff): change ticket status with reason input. Statuses: Open, In Progress, Waiting on Customer, Waiting on Staff, Resolved, Closed. |
-| `07-ui-ux-design.md#T-07.23.01.06` | verify | Recorded batch work | Staff internal notes must never be visible to customers. Backend enforces visibility flag. Frontend never renders internal notes when role is customer. |
+| `07-ui-ux-design.md#T-07.23.01.01` | done | Recorded batch work | Build `TicketListPage`: uses ListPage compound component. Columns: subject, status badge, priority indicator (P1/P2/P3), last update (relative time), related entity link. Expandable row on mobile. |
+| `07-ui-ux-design.md#T-07.23.01.02` | done | Recorded batch work | Build `TicketDetailPage`: header (subject, status badge, priority, created date, related entity), conversation thread, reply input area (for public reply), internal note toggle (staff only). |
+| `07-ui-ux-design.md#T-07.23.01.03` | done | Recorded batch work | Build `CommentThread` component: chronological message list. Customer comments (white bubble, left-aligned in LTR), Staff comments (brand-colored border, same alignment), Internal notes (yellow background, "INTERNAL" badge, visible only to staff). Each comment: author avatar + name, timestamp, content, attachment thumbnails. |
+| `07-ui-ux-design.md#T-07.23.01.04` | done | Recorded batch work | Build `TicketReplyInput`: textarea with formatting toolbar (bold, italic, list, link), file upload (drag & drop), "Add internal note" toggle (staff only), "Submit reply" button. |
+| `07-ui-ux-design.md#T-07.23.01.05` | done | Recorded batch work | Build `TicketStatusDropdown` (staff): change ticket status with reason input. Statuses: Open, In Progress, Waiting on Customer, Waiting on Staff, Resolved, Closed. |
+| `07-ui-ux-design.md#T-07.23.01.06` | done | Recorded batch work | Staff internal notes must never be visible to customers. Backend enforces visibility flag. Frontend never renders internal notes when role is customer. |
 | `07-ui-ux-design.md#T-07.24.01.01` | verify | Recorded batch work | Build `DataTable` component using Base UI Table or TanStack Table. Features: column definition with header, accessor, cell renderer, sorting (client or server), row selection (checkbox), expandable rows (sub-row), sticky header, horizontal scroll for many columns, row hover highlight. |
 | `07-ui-ux-design.md#T-07.24.01.02` | verify | Recorded batch work | Build column renderers: `TextCell`, `NumberCell` (locale-formatted), `DateCell` (localized relative/absolute), `StatusCell` (colored badge), `ActionCell` (dropdown menu with row actions), `CurrencyCell` (IRR/toman formatted), `AvatarCell` (small avatar + name), `LinkCell` (clickable reference). |
 | `07-ui-ux-design.md#T-07.24.01.03` | verify | Recorded batch work | Build `CardListView` as mobile alternative: each row renders as a card showing key fields. Responsive switch at `md` breakpoint. |

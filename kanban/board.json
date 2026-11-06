@@ -444900,12 +444900,10 @@
         "story": "07-ui-ux-design.md#spec-abae28351fb6"
       },
       "requirement": "| **T-07.23.01.01** | Build `TicketListPage`: uses ListPage compound component. Columns: subject, status badge, priority indicator (P1/P2/P3), last update (relative time), related entity link. Expandable row on mobile. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -444913,9 +444911,342 @@
         "changed_paths": [],
         "batches": [
           "2026-10-01-ticket-queue-views",
-          "2026-10-02-ticket-related-records"
+          "2026-10-02-ticket-related-records",
+          "release-0.5-support-ticket-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-support-ticket-journey",
+          "base_commit": "128212f9733596377ddfee44fdb125a5645affd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+            },
+            {
+              "path": "apps/api/src/tickets/index.ts",
+              "sha256": "f645b0db09e235b415cf6dfd8ea66c3bf3c2897679f93d08c66e1c8c2651a294"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+              "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
+              "sha256": "ec278badffcc04e7a30b160755722ffbaed27bfc413e8e2f8565af83d01e69e7"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.ts",
+              "sha256": "7ef38c967cf79d3b8a1217ed7ac4ec93f21b77f8ff0b3b35ff5a70470207c606"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-input.ts",
+              "sha256": "d1e9e45d7833755fe616632bd5be6cc494e2f67fe9e2a665f2998dcedaaa37f8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-related-records.ts",
+              "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.module.ts",
+              "sha256": "54b6c5d0e26b31017e91ab13db542cd8481aa707105e35e622a41b0ab2ff23fd"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.test.ts",
+              "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms.spec.ts",
+              "sha256": "32aa043d808a3c2b059b34907d765af67f72cd85b00864a49b120caf393654e9"
+            },
+            {
+              "path": "apps/web/e2e/tickets.spec.ts",
+              "sha256": "2d012953d6dca7509be1a4741f75cdaa59f392fff07aba1a6642ab34b2f67365"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketIntakeForm.tsx",
+              "sha256": "80d6699006655e073245e9c0fc84d3fd303c5b8097685f5a6bf33efc507babdf"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
+              "sha256": "3a000ccd91a8b563da0fb62f19cdf68a653f38e8cc635ff18f42bacf0932ba51"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.test.tsx",
+              "sha256": "db4010cdf699114107ecbb20f19562e4c6dcad5bdde1ab4174edb5092eedfd66"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.tsx",
+              "sha256": "6642fbb97e9eff476f96649303862c2cf7b873120ada13d1604381e71ac853bf"
+            },
+            {
+              "path": "apps/web/src/components/TicketStaffForms.tsx",
+              "sha256": "bd2a45ae73af3d43e7519390491d7f991aee927e32ae81fdad2bcde7bafdd48e"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useServerQuery.ts",
+              "sha256": "a8cea633e39750177b09207d691feb2dc8a937292cf463bd6123d46efbae7b8f"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.ts",
+              "sha256": "6c1fec45c3274c59aad8a992bf9a736d538cabe8e593d7a19a16ae0be56aa389"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
+              "sha256": "9baa5d780c084cce0274d18aa739624a0c32aa07c25f037f54169938fceb2cf8"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form-schemas.ts",
+              "sha256": "81318277f9d9665c0d3e52580d59b9e4839b6da9791f8d0fe808c5b653320641"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "18fddab79d658b6a3ec94067f5e56509319ce6727bf093e7b38726223374d4b8"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form-schemas.ts",
+              "sha256": "15ace26c499cec270e96612413fff51698fa8ee63f3033d0401ef68de1e1b946"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.test.ts",
+              "sha256": "48e9adf9b3562872af38de146ede7246faf3f474fd8b62e20a3e8ac0f7562ce5"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.ts",
+              "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "eca68bbce4659d8676c547c1a437031ef93ceb2f1ea2c7ee722e164e0f719fb4"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/tickets.tsx",
+              "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tickets.tsx",
+              "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/support-ticket-workspace.md",
+              "sha256": "1606ed968a0c419f96c461e3fc31fef46944b52f1130d965201fef2efc24e73c"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/ticket-forms.ts",
+              "sha256": "4453bfa58099613fb378cadc27952aaf519dba8cc51c93e38914f697dfe4c83b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "86474fd59070d956d1703b675e05411f486a7e1c6efb16d08737e56005c2b63b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/form/form.tsx",
+              "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Actual shared ListPage customer/staff lists show safe subject, finite status, P1/P2/P3 priorities, localized relative and exact update time and authorized related-record links. Mobile cards retain expandable keyboard-accessible secondary fields, accepted queue state and failed-page recovery.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -444929,21 +445260,352 @@
         "story": "07-ui-ux-design.md#spec-abae28351fb6"
       },
       "requirement": "| **T-07.23.01.02** | Build `TicketDetailPage`: header (subject, status badge, priority, created date, related entity), conversation thread, reply input area (for public reply), internal note toggle (staff only). | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-02-ticket-detail-status-reasons"
+          "2026-10-02-ticket-detail-status-reasons",
+          "release-0.5-support-ticket-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-support-ticket-journey",
+          "base_commit": "128212f9733596377ddfee44fdb125a5645affd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+            },
+            {
+              "path": "apps/api/src/tickets/index.ts",
+              "sha256": "f645b0db09e235b415cf6dfd8ea66c3bf3c2897679f93d08c66e1c8c2651a294"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+              "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
+              "sha256": "ec278badffcc04e7a30b160755722ffbaed27bfc413e8e2f8565af83d01e69e7"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.ts",
+              "sha256": "7ef38c967cf79d3b8a1217ed7ac4ec93f21b77f8ff0b3b35ff5a70470207c606"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-input.ts",
+              "sha256": "d1e9e45d7833755fe616632bd5be6cc494e2f67fe9e2a665f2998dcedaaa37f8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-related-records.ts",
+              "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.module.ts",
+              "sha256": "54b6c5d0e26b31017e91ab13db542cd8481aa707105e35e622a41b0ab2ff23fd"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.test.ts",
+              "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms.spec.ts",
+              "sha256": "32aa043d808a3c2b059b34907d765af67f72cd85b00864a49b120caf393654e9"
+            },
+            {
+              "path": "apps/web/e2e/tickets.spec.ts",
+              "sha256": "2d012953d6dca7509be1a4741f75cdaa59f392fff07aba1a6642ab34b2f67365"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketIntakeForm.tsx",
+              "sha256": "80d6699006655e073245e9c0fc84d3fd303c5b8097685f5a6bf33efc507babdf"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
+              "sha256": "3a000ccd91a8b563da0fb62f19cdf68a653f38e8cc635ff18f42bacf0932ba51"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.test.tsx",
+              "sha256": "db4010cdf699114107ecbb20f19562e4c6dcad5bdde1ab4174edb5092eedfd66"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.tsx",
+              "sha256": "6642fbb97e9eff476f96649303862c2cf7b873120ada13d1604381e71ac853bf"
+            },
+            {
+              "path": "apps/web/src/components/TicketStaffForms.tsx",
+              "sha256": "bd2a45ae73af3d43e7519390491d7f991aee927e32ae81fdad2bcde7bafdd48e"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useServerQuery.ts",
+              "sha256": "a8cea633e39750177b09207d691feb2dc8a937292cf463bd6123d46efbae7b8f"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.ts",
+              "sha256": "6c1fec45c3274c59aad8a992bf9a736d538cabe8e593d7a19a16ae0be56aa389"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
+              "sha256": "9baa5d780c084cce0274d18aa739624a0c32aa07c25f037f54169938fceb2cf8"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form-schemas.ts",
+              "sha256": "81318277f9d9665c0d3e52580d59b9e4839b6da9791f8d0fe808c5b653320641"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "18fddab79d658b6a3ec94067f5e56509319ce6727bf093e7b38726223374d4b8"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form-schemas.ts",
+              "sha256": "15ace26c499cec270e96612413fff51698fa8ee63f3033d0401ef68de1e1b946"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.test.ts",
+              "sha256": "48e9adf9b3562872af38de146ede7246faf3f474fd8b62e20a3e8ac0f7562ce5"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.ts",
+              "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "eca68bbce4659d8676c547c1a437031ef93ceb2f1ea2c7ee722e164e0f719fb4"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/tickets.tsx",
+              "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tickets.tsx",
+              "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/support-ticket-workspace.md",
+              "sha256": "1606ed968a0c419f96c461e3fc31fef46944b52f1130d965201fef2efc24e73c"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/ticket-forms.ts",
+              "sha256": "4453bfa58099613fb378cadc27952aaf519dba8cc51c93e38914f697dfe4c83b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "86474fd59070d956d1703b675e05411f486a7e1c6efb16d08737e56005c2b63b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/form/form.tsx",
+              "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Current detail includes subject, status, priority, creation/update dates, related record, public chronological conversation and reply input; only currently authorized staff see internal toggle, private contact and assignment/status controls.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -444957,12 +445619,10 @@
         "story": "07-ui-ux-design.md#spec-abae28351fb6"
       },
       "requirement": "| **T-07.23.01.03** | Build `CommentThread` component: chronological message list. Customer comments (white bubble, left-aligned in LTR), Staff comments (brand-colored border, same alignment), Internal notes (yellow background, \"INTERNAL\" badge, visible only to staff). Each comment: author avatar + name, timestamp, content, attachment thumbnails. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -444973,9 +445633,342 @@
           "2026-10-02-receipt-activity-evidence",
           "2026-10-02-ticket-conversation-identities",
           "2026-10-02-ticket-detail-status-reasons",
-          "2026-10-02-ticket-reply-formatting-attachments"
+          "2026-10-02-ticket-reply-formatting-attachments",
+          "release-0.5-support-ticket-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-support-ticket-journey",
+          "base_commit": "128212f9733596377ddfee44fdb125a5645affd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+            },
+            {
+              "path": "apps/api/src/tickets/index.ts",
+              "sha256": "f645b0db09e235b415cf6dfd8ea66c3bf3c2897679f93d08c66e1c8c2651a294"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+              "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
+              "sha256": "ec278badffcc04e7a30b160755722ffbaed27bfc413e8e2f8565af83d01e69e7"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.ts",
+              "sha256": "7ef38c967cf79d3b8a1217ed7ac4ec93f21b77f8ff0b3b35ff5a70470207c606"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-input.ts",
+              "sha256": "d1e9e45d7833755fe616632bd5be6cc494e2f67fe9e2a665f2998dcedaaa37f8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-related-records.ts",
+              "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.module.ts",
+              "sha256": "54b6c5d0e26b31017e91ab13db542cd8481aa707105e35e622a41b0ab2ff23fd"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.test.ts",
+              "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms.spec.ts",
+              "sha256": "32aa043d808a3c2b059b34907d765af67f72cd85b00864a49b120caf393654e9"
+            },
+            {
+              "path": "apps/web/e2e/tickets.spec.ts",
+              "sha256": "2d012953d6dca7509be1a4741f75cdaa59f392fff07aba1a6642ab34b2f67365"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketIntakeForm.tsx",
+              "sha256": "80d6699006655e073245e9c0fc84d3fd303c5b8097685f5a6bf33efc507babdf"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
+              "sha256": "3a000ccd91a8b563da0fb62f19cdf68a653f38e8cc635ff18f42bacf0932ba51"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.test.tsx",
+              "sha256": "db4010cdf699114107ecbb20f19562e4c6dcad5bdde1ab4174edb5092eedfd66"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.tsx",
+              "sha256": "6642fbb97e9eff476f96649303862c2cf7b873120ada13d1604381e71ac853bf"
+            },
+            {
+              "path": "apps/web/src/components/TicketStaffForms.tsx",
+              "sha256": "bd2a45ae73af3d43e7519390491d7f991aee927e32ae81fdad2bcde7bafdd48e"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useServerQuery.ts",
+              "sha256": "a8cea633e39750177b09207d691feb2dc8a937292cf463bd6123d46efbae7b8f"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.ts",
+              "sha256": "6c1fec45c3274c59aad8a992bf9a736d538cabe8e593d7a19a16ae0be56aa389"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
+              "sha256": "9baa5d780c084cce0274d18aa739624a0c32aa07c25f037f54169938fceb2cf8"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form-schemas.ts",
+              "sha256": "81318277f9d9665c0d3e52580d59b9e4839b6da9791f8d0fe808c5b653320641"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "18fddab79d658b6a3ec94067f5e56509319ce6727bf093e7b38726223374d4b8"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form-schemas.ts",
+              "sha256": "15ace26c499cec270e96612413fff51698fa8ee63f3033d0401ef68de1e1b946"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.test.ts",
+              "sha256": "48e9adf9b3562872af38de146ede7246faf3f474fd8b62e20a3e8ac0f7562ce5"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.ts",
+              "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "eca68bbce4659d8676c547c1a437031ef93ceb2f1ea2c7ee722e164e0f719fb4"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/tickets.tsx",
+              "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tickets.tsx",
+              "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/support-ticket-workspace.md",
+              "sha256": "1606ed968a0c419f96c461e3fc31fef46944b52f1130d965201fef2efc24e73c"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/ticket-forms.ts",
+              "sha256": "4453bfa58099613fb378cadc27952aaf519dba8cc51c93e38914f697dfe4c83b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "86474fd59070d956d1703b675e05411f486a7e1c6efb16d08737e56005c2b63b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/form/form.tsx",
+              "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Comments ordered by created_at/id show recorded author context, approved name/role fallback, Avatar, exact timestamp, sanitized Markdown or literal plain text, current attachment thumbnails and distinct customer/staff/internal styling. Internal notes carry localized INTERNAL label.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -444989,12 +445982,10 @@
         "story": "07-ui-ux-design.md#spec-abae28351fb6"
       },
       "requirement": "| **T-07.23.01.04** | Build `TicketReplyInput`: textarea with formatting toolbar (bold, italic, list, link), file upload (drag & drop), \"Add internal note\" toggle (staff only), \"Submit reply\" button. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -445002,9 +445993,342 @@
         "changed_paths": [],
         "batches": [
           "2026-10-02-ticket-reply-formatting-attachments",
-          "2026-10-05-ticket-intake-conversation-staff-forms"
+          "2026-10-05-ticket-intake-conversation-staff-forms",
+          "release-0.5-support-ticket-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-support-ticket-journey",
+          "base_commit": "128212f9733596377ddfee44fdb125a5645affd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+            },
+            {
+              "path": "apps/api/src/tickets/index.ts",
+              "sha256": "f645b0db09e235b415cf6dfd8ea66c3bf3c2897679f93d08c66e1c8c2651a294"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+              "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
+              "sha256": "ec278badffcc04e7a30b160755722ffbaed27bfc413e8e2f8565af83d01e69e7"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.ts",
+              "sha256": "7ef38c967cf79d3b8a1217ed7ac4ec93f21b77f8ff0b3b35ff5a70470207c606"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-input.ts",
+              "sha256": "d1e9e45d7833755fe616632bd5be6cc494e2f67fe9e2a665f2998dcedaaa37f8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-related-records.ts",
+              "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.module.ts",
+              "sha256": "54b6c5d0e26b31017e91ab13db542cd8481aa707105e35e622a41b0ab2ff23fd"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.test.ts",
+              "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms.spec.ts",
+              "sha256": "32aa043d808a3c2b059b34907d765af67f72cd85b00864a49b120caf393654e9"
+            },
+            {
+              "path": "apps/web/e2e/tickets.spec.ts",
+              "sha256": "2d012953d6dca7509be1a4741f75cdaa59f392fff07aba1a6642ab34b2f67365"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketIntakeForm.tsx",
+              "sha256": "80d6699006655e073245e9c0fc84d3fd303c5b8097685f5a6bf33efc507babdf"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
+              "sha256": "3a000ccd91a8b563da0fb62f19cdf68a653f38e8cc635ff18f42bacf0932ba51"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.test.tsx",
+              "sha256": "db4010cdf699114107ecbb20f19562e4c6dcad5bdde1ab4174edb5092eedfd66"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.tsx",
+              "sha256": "6642fbb97e9eff476f96649303862c2cf7b873120ada13d1604381e71ac853bf"
+            },
+            {
+              "path": "apps/web/src/components/TicketStaffForms.tsx",
+              "sha256": "bd2a45ae73af3d43e7519390491d7f991aee927e32ae81fdad2bcde7bafdd48e"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useServerQuery.ts",
+              "sha256": "a8cea633e39750177b09207d691feb2dc8a937292cf463bd6123d46efbae7b8f"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.ts",
+              "sha256": "6c1fec45c3274c59aad8a992bf9a736d538cabe8e593d7a19a16ae0be56aa389"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
+              "sha256": "9baa5d780c084cce0274d18aa739624a0c32aa07c25f037f54169938fceb2cf8"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form-schemas.ts",
+              "sha256": "81318277f9d9665c0d3e52580d59b9e4839b6da9791f8d0fe808c5b653320641"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "18fddab79d658b6a3ec94067f5e56509319ce6727bf093e7b38726223374d4b8"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form-schemas.ts",
+              "sha256": "15ace26c499cec270e96612413fff51698fa8ee63f3033d0401ef68de1e1b946"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.test.ts",
+              "sha256": "48e9adf9b3562872af38de146ede7246faf3f474fd8b62e20a3e8ac0f7562ce5"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.ts",
+              "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "eca68bbce4659d8676c547c1a437031ef93ceb2f1ea2c7ee722e164e0f719fb4"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/tickets.tsx",
+              "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tickets.tsx",
+              "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/support-ticket-workspace.md",
+              "sha256": "1606ed968a0c419f96c461e3fc31fef46944b52f1130d965201fef2efc24e73c"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/ticket-forms.ts",
+              "sha256": "4453bfa58099613fb378cadc27952aaf519dba8cc51c93e38914f697dfe4c83b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "86474fd59070d956d1703b675e05411f486a7e1c6efb16d08737e56005c2b63b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/form/form.tsx",
+              "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Reply editor provides bold/italic/list/HTTP link formatting, safe preview, validated drag/drop and selected files, staff-only internal toggle and submit. Separate branches retain text/files and exact retry commands; failed/mismatched/uncertain outcomes do not clear drafts or resend uploads.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -445018,21 +446342,352 @@
         "story": "07-ui-ux-design.md#spec-abae28351fb6"
       },
       "requirement": "| **T-07.23.01.05** | Build `TicketStatusDropdown` (staff): change ticket status with reason input. Statuses: Open, In Progress, Waiting on Customer, Waiting on Staff, Resolved, Closed. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-02-ticket-detail-status-reasons"
+          "2026-10-02-ticket-detail-status-reasons",
+          "release-0.5-support-ticket-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-support-ticket-journey",
+          "base_commit": "128212f9733596377ddfee44fdb125a5645affd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+            },
+            {
+              "path": "apps/api/src/tickets/index.ts",
+              "sha256": "f645b0db09e235b415cf6dfd8ea66c3bf3c2897679f93d08c66e1c8c2651a294"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+              "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
+              "sha256": "ec278badffcc04e7a30b160755722ffbaed27bfc413e8e2f8565af83d01e69e7"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.ts",
+              "sha256": "7ef38c967cf79d3b8a1217ed7ac4ec93f21b77f8ff0b3b35ff5a70470207c606"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-input.ts",
+              "sha256": "d1e9e45d7833755fe616632bd5be6cc494e2f67fe9e2a665f2998dcedaaa37f8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-related-records.ts",
+              "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.module.ts",
+              "sha256": "54b6c5d0e26b31017e91ab13db542cd8481aa707105e35e622a41b0ab2ff23fd"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.test.ts",
+              "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms.spec.ts",
+              "sha256": "32aa043d808a3c2b059b34907d765af67f72cd85b00864a49b120caf393654e9"
+            },
+            {
+              "path": "apps/web/e2e/tickets.spec.ts",
+              "sha256": "2d012953d6dca7509be1a4741f75cdaa59f392fff07aba1a6642ab34b2f67365"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketIntakeForm.tsx",
+              "sha256": "80d6699006655e073245e9c0fc84d3fd303c5b8097685f5a6bf33efc507babdf"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
+              "sha256": "3a000ccd91a8b563da0fb62f19cdf68a653f38e8cc635ff18f42bacf0932ba51"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.test.tsx",
+              "sha256": "db4010cdf699114107ecbb20f19562e4c6dcad5bdde1ab4174edb5092eedfd66"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.tsx",
+              "sha256": "6642fbb97e9eff476f96649303862c2cf7b873120ada13d1604381e71ac853bf"
+            },
+            {
+              "path": "apps/web/src/components/TicketStaffForms.tsx",
+              "sha256": "bd2a45ae73af3d43e7519390491d7f991aee927e32ae81fdad2bcde7bafdd48e"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useServerQuery.ts",
+              "sha256": "a8cea633e39750177b09207d691feb2dc8a937292cf463bd6123d46efbae7b8f"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.ts",
+              "sha256": "6c1fec45c3274c59aad8a992bf9a736d538cabe8e593d7a19a16ae0be56aa389"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
+              "sha256": "9baa5d780c084cce0274d18aa739624a0c32aa07c25f037f54169938fceb2cf8"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form-schemas.ts",
+              "sha256": "81318277f9d9665c0d3e52580d59b9e4839b6da9791f8d0fe808c5b653320641"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "18fddab79d658b6a3ec94067f5e56509319ce6727bf093e7b38726223374d4b8"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form-schemas.ts",
+              "sha256": "15ace26c499cec270e96612413fff51698fa8ee63f3033d0401ef68de1e1b946"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.test.ts",
+              "sha256": "48e9adf9b3562872af38de146ede7246faf3f474fd8b62e20a3e8ac0f7562ce5"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.ts",
+              "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "eca68bbce4659d8676c547c1a437031ef93ceb2f1ea2c7ee722e164e0f719fb4"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/tickets.tsx",
+              "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tickets.tsx",
+              "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/support-ticket-workspace.md",
+              "sha256": "1606ed968a0c419f96c461e3fc31fef46944b52f1130d965201fef2efc24e73c"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/ticket-forms.ts",
+              "sha256": "4453bfa58099613fb378cadc27952aaf519dba8cc51c93e38914f697dfe4c83b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "86474fd59070d956d1703b675e05411f486a7e1c6efb16d08737e56005c2b63b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/form/form.tsx",
+              "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Staff status editor exposes all six domain states through legal transitions with required localized reason input, current assignment and permissions. Server trims/audits reasons privately, serializes transitions, rolls back audit/notification failure and replays exact original receipts without reverting newer state.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -445046,12 +446701,10 @@
         "story": "07-ui-ux-design.md#spec-abae28351fb6"
       },
       "requirement": "| **T-07.23.01.06** | ⚠️ Staff internal notes must never be visible to customers. Backend enforces visibility flag. Frontend never renders internal notes when role is customer. | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -445060,9 +446713,342 @@
         "batches": [
           "2026-10-01-support-queue-recovery",
           "2026-10-02-ticket-detail-status-reasons",
-          "2026-10-02-ticket-reply-formatting-attachments"
+          "2026-10-02-ticket-reply-formatting-attachments",
+          "release-0.5-support-ticket-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-support-ticket-journey",
+          "base_commit": "128212f9733596377ddfee44fdb125a5645affd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/src/test/ticket-notification-proof.ts",
+              "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+            },
+            {
+              "path": "apps/api/src/tickets/index.ts",
+              "sha256": "f645b0db09e235b415cf6dfd8ea66c3bf3c2897679f93d08c66e1c8c2651a294"
+            },
+            {
+              "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+              "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+            },
+            {
+              "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-actor.ts",
+              "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+              "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
+              "sha256": "ec278badffcc04e7a30b160755722ffbaed27bfc413e8e2f8565af83d01e69e7"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-input-fields.ts",
+              "sha256": "7ef38c967cf79d3b8a1217ed7ac4ec93f21b77f8ff0b3b35ff5a70470207c606"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-input.ts",
+              "sha256": "d1e9e45d7833755fe616632bd5be6cc494e2f67fe9e2a665f2998dcedaaa37f8"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-related-records.ts",
+              "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.module.ts",
+              "sha256": "54b6c5d0e26b31017e91ab13db542cd8481aa707105e35e622a41b0ab2ff23fd"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.test.ts",
+              "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms-fixture.ts",
+              "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms.spec.ts",
+              "sha256": "32aa043d808a3c2b059b34907d765af67f72cd85b00864a49b120caf393654e9"
+            },
+            {
+              "path": "apps/web/e2e/tickets.spec.ts",
+              "sha256": "2d012953d6dca7509be1a4741f75cdaa59f392fff07aba1a6642ab34b2f67365"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketIntakeForm.tsx",
+              "sha256": "80d6699006655e073245e9c0fc84d3fd303c5b8097685f5a6bf33efc507babdf"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
+              "sha256": "3a000ccd91a8b563da0fb62f19cdf68a653f38e8cc635ff18f42bacf0932ba51"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.test.tsx",
+              "sha256": "db4010cdf699114107ecbb20f19562e4c6dcad5bdde1ab4174edb5092eedfd66"
+            },
+            {
+              "path": "apps/web/src/components/TicketReplyInput.tsx",
+              "sha256": "6642fbb97e9eff476f96649303862c2cf7b873120ada13d1604381e71ac853bf"
+            },
+            {
+              "path": "apps/web/src/components/TicketStaffForms.tsx",
+              "sha256": "bd2a45ae73af3d43e7519390491d7f991aee927e32ae81fdad2bcde7bafdd48e"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useServerQuery.ts",
+              "sha256": "a8cea633e39750177b09207d691feb2dc8a937292cf463bd6123d46efbae7b8f"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+              "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketCommand.ts",
+              "sha256": "6c1fec45c3274c59aad8a992bf9a736d538cabe8e593d7a19a16ae0be56aa389"
+            },
+            {
+              "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
+              "sha256": "9baa5d780c084cce0274d18aa739624a0c32aa07c25f037f54169938fceb2cf8"
+            },
+            {
+              "path": "apps/web/src/lib/contract-review-signature-form-schemas.ts",
+              "sha256": "81318277f9d9665c0d3e52580d59b9e4839b6da9791f8d0fe808c5b653320641"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+            },
+            {
+              "path": "apps/web/src/lib/notifications.ts",
+              "sha256": "18fddab79d658b6a3ec94067f5e56509319ce6727bf093e7b38726223374d4b8"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form-schemas.ts",
+              "sha256": "15ace26c499cec270e96612413fff51698fa8ee63f3033d0401ef68de1e1b946"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.test.ts",
+              "sha256": "48e9adf9b3562872af38de146ede7246faf3f474fd8b62e20a3e8ac0f7562ce5"
+            },
+            {
+              "path": "apps/web/src/lib/ticket-form.ts",
+              "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "eca68bbce4659d8676c547c1a437031ef93ceb2f1ea2c7ee722e164e0f719fb4"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/tickets.tsx",
+              "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+            },
+            {
+              "path": "apps/web/src/routes/admin/tickets.tsx",
+              "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/support-ticket-workspace.md",
+              "sha256": "1606ed968a0c419f96c461e3fc31fef46944b52f1130d965201fef2efc24e73c"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/ticket-forms.ts",
+              "sha256": "4453bfa58099613fb378cadc27952aaf519dba8cc51c93e38914f697dfe4c83b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "86474fd59070d956d1703b675e05411f486a7e1c6efb16d08737e56005c2b63b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/form/form.tsx",
+              "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Customer SQL filters internal comments even for staff ticket owners in customer context. UI filters before storage and render. Direct/cached attachment previews, reply receipts and writes enforce current owner/profile/operating context/session/grants and never return internal bytes or private notifications to customers.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -496930,6 +498916,466 @@
       "external_sends": false,
       "production_authorized": false,
       "acceptance_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wizard-journeys/acceptance-proof.json"
+    },
+    "release-0.5-support-ticket-journeys": {
+      "batch": "release-0.5-support-ticket-journeys",
+      "base_commit": "128212f9733596377ddfee44fdb125a5645affd5",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.23.01.01",
+        "07-ui-ux-design.md#T-07.23.01.02",
+        "07-ui-ux-design.md#T-07.23.01.03",
+        "07-ui-ux-design.md#T-07.23.01.04",
+        "07-ui-ux-design.md#T-07.23.01.05",
+        "07-ui-ux-design.md#T-07.23.01.06"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/package.json",
+          "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+        },
+        {
+          "path": "apps/api/src/test/ticket-notification-proof.ts",
+          "sha256": "3ab51170aba19807c2923e4d6b048bf5df78536fe8476ef3eb0f3b67d872266d"
+        },
+        {
+          "path": "apps/api/src/tickets/index.ts",
+          "sha256": "f645b0db09e235b415cf6dfd8ea66c3bf3c2897679f93d08c66e1c8c2651a294"
+        },
+        {
+          "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+          "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+        },
+        {
+          "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+          "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-actor.ts",
+          "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+          "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+          "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
+          "sha256": "ec278badffcc04e7a30b160755722ffbaed27bfc413e8e2f8565af83d01e69e7"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-form-input-fields.ts",
+          "sha256": "7ef38c967cf79d3b8a1217ed7ac4ec93f21b77f8ff0b3b35ff5a70470207c606"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-input.ts",
+          "sha256": "d1e9e45d7833755fe616632bd5be6cc494e2f67fe9e2a665f2998dcedaaa37f8"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-related-records.ts",
+          "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.module.ts",
+          "sha256": "54b6c5d0e26b31017e91ab13db542cd8481aa707105e35e622a41b0ab2ff23fd"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.test.ts",
+          "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/dismiss-messages.ts",
+          "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms-fixture.ts",
+          "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms.spec.ts",
+          "sha256": "32aa043d808a3c2b059b34907d765af67f72cd85b00864a49b120caf393654e9"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "2d012953d6dca7509be1a4741f75cdaa59f392fff07aba1a6642ab34b2f67365"
+        },
+        {
+          "path": "apps/web/e2e/upload-fixture.ts",
+          "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+        },
+        {
+          "path": "apps/web/src/components/FilePreview.tsx",
+          "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+        },
+        {
+          "path": "apps/web/src/components/HistoryTable.tsx",
+          "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+        },
+        {
+          "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+          "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+        },
+        {
+          "path": "apps/web/src/components/TicketCommentThread.tsx",
+          "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+        },
+        {
+          "path": "apps/web/src/components/TicketIntakeForm.tsx",
+          "sha256": "80d6699006655e073245e9c0fc84d3fd303c5b8097685f5a6bf33efc507babdf"
+        },
+        {
+          "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+          "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+        },
+        {
+          "path": "apps/web/src/components/TicketQueueRecords.tsx",
+          "sha256": "1a6a67afb6a0abf0b27b30eb11fe3feb7965789a7b6cecfb6699b3a43ad9e403"
+        },
+        {
+          "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
+          "sha256": "3a000ccd91a8b563da0fb62f19cdf68a653f38e8cc635ff18f42bacf0932ba51"
+        },
+        {
+          "path": "apps/web/src/components/TicketReplyInput.test.tsx",
+          "sha256": "db4010cdf699114107ecbb20f19562e4c6dcad5bdde1ab4174edb5092eedfd66"
+        },
+        {
+          "path": "apps/web/src/components/TicketReplyInput.tsx",
+          "sha256": "6642fbb97e9eff476f96649303862c2cf7b873120ada13d1604381e71ac853bf"
+        },
+        {
+          "path": "apps/web/src/components/TicketStaffForms.tsx",
+          "sha256": "bd2a45ae73af3d43e7519390491d7f991aee927e32ae81fdad2bcde7bafdd48e"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountUser.tsx",
+          "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "a8cea633e39750177b09207d691feb2dc8a937292cf463bd6123d46efbae7b8f"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+          "sha256": "8f58c9633d8792213129619786d0b9fa580a72a7d988456a9caa0e18a38c0f8b"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.ts",
+          "sha256": "6c1fec45c3274c59aad8a992bf9a736d538cabe8e593d7a19a16ae0be56aa389"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketFormFeedback.ts",
+          "sha256": "9baa5d780c084cce0274d18aa739624a0c32aa07c25f037f54169938fceb2cf8"
+        },
+        {
+          "path": "apps/web/src/lib/contract-review-signature-form-schemas.ts",
+          "sha256": "81318277f9d9665c0d3e52580d59b9e4839b6da9791f8d0fe808c5b653320641"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+        },
+        {
+          "path": "apps/web/src/lib/notifications.ts",
+          "sha256": "18fddab79d658b6a3ec94067f5e56509319ce6727bf093e7b38726223374d4b8"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+        },
+        {
+          "path": "apps/web/src/lib/query-keys.ts",
+          "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+        },
+        {
+          "path": "apps/web/src/lib/ticket-form-schemas.ts",
+          "sha256": "15ace26c499cec270e96612413fff51698fa8ee63f3033d0401ef68de1e1b946"
+        },
+        {
+          "path": "apps/web/src/lib/ticket-form.test.ts",
+          "sha256": "48e9adf9b3562872af38de146ede7246faf3f474fd8b62e20a3e8ac0f7562ce5"
+        },
+        {
+          "path": "apps/web/src/lib/ticket-form.ts",
+          "sha256": "084ef2c87c9631118111c1195c41a22927d887f64c1b72fab25e38a08fd6134d"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "eca68bbce4659d8676c547c1a437031ef93ceb2f1ea2c7ee722e164e0f719fb4"
+        },
+        {
+          "path": "apps/web/src/providers/QueryProvider.tsx",
+          "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+        },
+        {
+          "path": "apps/web/src/routes/_app/tickets.tsx",
+          "sha256": "508cfd6ffa8554e0d05e90e8d745002bcf0024e8fcd9d3c9446a00061bdfc319"
+        },
+        {
+          "path": "apps/web/src/routes/admin/tickets.tsx",
+          "sha256": "ced5a165ae2248d8864786d2f4961d249b8cc9e0055d00c1fd240fb5ae553796"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "docs/decisions/support-ticket-workspace.md",
+          "sha256": "1606ed968a0c419f96c461e3fc31fef46944b52f1130d965201fef2efc24e73c"
+        },
+        {
+          "path": "package.json",
+          "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+        },
+        {
+          "path": "packages/i18n/src/documents.ts",
+          "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+        },
+        {
+          "path": "packages/i18n/src/ticket-forms.ts",
+          "sha256": "4453bfa58099613fb378cadc27952aaf519dba8cc51c93e38914f697dfe4c83b"
+        },
+        {
+          "path": "packages/i18n/src/workspace.ts",
+          "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "86474fd59070d956d1703b675e05411f486a7e1c6efb16d08737e56005c2b63b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+        },
+        {
+          "path": "packages/ui/src/components/ui/workflow.tsx",
+          "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+        },
+        {
+          "path": "packages/ui/src/form/form.tsx",
+          "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "criteria": {
+        "07-ui-ux-design.md#T-07.23.01.01": "Actual shared ListPage customer/staff lists show safe subject, finite status, P1/P2/P3 priorities, localized relative and exact update time and authorized related-record links. Mobile cards retain expandable keyboard-accessible secondary fields, accepted queue state and failed-page recovery.",
+        "07-ui-ux-design.md#T-07.23.01.02": "Current detail includes subject, status, priority, creation/update dates, related record, public chronological conversation and reply input; only currently authorized staff see internal toggle, private contact and assignment/status controls.",
+        "07-ui-ux-design.md#T-07.23.01.03": "Comments ordered by created_at/id show recorded author context, approved name/role fallback, Avatar, exact timestamp, sanitized Markdown or literal plain text, current attachment thumbnails and distinct customer/staff/internal styling. Internal notes carry localized INTERNAL label.",
+        "07-ui-ux-design.md#T-07.23.01.04": "Reply editor provides bold/italic/list/HTTP link formatting, safe preview, validated drag/drop and selected files, staff-only internal toggle and submit. Separate branches retain text/files and exact retry commands; failed/mismatched/uncertain outcomes do not clear drafts or resend uploads.",
+        "07-ui-ux-design.md#T-07.23.01.05": "Staff status editor exposes all six domain states through legal transitions with required localized reason input, current assignment and permissions. Server trims/audits reasons privately, serializes transitions, rolls back audit/notification failure and replays exact original receipts without reverting newer state.",
+        "07-ui-ux-design.md#T-07.23.01.06": "Customer SQL filters internal comments even for staff ticket owners in customer context. UI filters before storage and render. Direct/cached attachment previews, reply receipts and writes enforce current owner/profile/operating context/session/grants and never return internal bytes or private notifications to customers."
+      },
+      "passing_check_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/ui.json",
+          "sha256": "5df5d30c786e76132852566406bb7a10b7bcb3c72075e478eb4ec67bf2ef38e7",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/ui.log",
+          "log_sha256": "ffbf689509c777d8eec0f20a0c534c3e4db85ec6ca6dccf708130e5547145fca"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/native.json",
+          "sha256": "f86ad7c54219ada3fb81822fca71d593b3168d909965fbe8617198a7b8b4cf9d",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/native.log",
+          "log_sha256": "a042fb4e1def4e13792fd0214e321fc10b4de2ed96886866646c47a6755ea4fd"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/browser.json",
+          "sha256": "7c45f6b7c67c39f17585dd24816e0ea1280d9c421c91d9981a2d4ed014c8d5c0",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/browser.log",
+          "log_sha256": "ed7e22c75749ab8ceb2aad941a4d0ac02efeddaa506406cd3c4bd676c41b345b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/mobile.json",
+          "sha256": "4ac489876280fec01f5237ee6bf6a8bf3d436d26d45d4bae9cc2f757dd51815f",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/mobile.log",
+          "log_sha256": "ebff6bab64f051bef0658abdbd3fd5fa5d4e7109ff058f6755811193f7170aed"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/docs-format.json",
+          "sha256": "0cb1c00a299691783462dbea8564e16972d21ace0d91eecd4a91d57602d53611",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/docs-format.log",
+          "log_sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ],
+      "case_provenance": {
+        "new_native_passed": 84,
+        "new_ui_passed": 65,
+        "new_browser_passed": 50,
+        "new_browser_detail": "34 Chromium and16 focused MobileChrome cases across English/Persian, RTL/LTR, light/dark, keyboard, scoped original Axe assertions, current privacy, upload failure, exact retry and reasoned staff transitions. No retries or failed commands in this batch."
+      },
+      "review": {
+        "result": "accepted",
+        "scope": "Inspected current list/detail, chronological projection, reply and status forms, current actor/read/write/attachment boundaries against all six criteria. No demonstrated implementation gap. New behavior note reviewed once. No code/assertion/budget/money/security changes."
+      },
+      "build_reuse": {
+        "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/build-reuse.json",
+        "sha256": "8604b7015e59c490daa23e40ea5d65580ddb88f45ad18830ec3ba4c9de8d0ffd",
+        "notes": "All seven complete runtime trees and93 current reference-source bindings match. Existing final types, schema/contracts and89 original route budgets retained; no app rebuild."
+      },
+      "runtime_bindings": {
+        "apps/api/dist": {
+          "files": 2091,
+          "sha256": "8b2decded052064325556b273fa58e76288d6874313066bfbcc4a3042b8a303b",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "apps/worker/dist": {
+          "files": 500,
+          "sha256": "ec4a864e985406b076c6e036ff0e65a2dbe9e7dbcbc05f84370360f4c2d8650c",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "apps/web/dist": {
+          "files": 544,
+          "sha256": "0d8d205312fa8443822c101152bff25829a49850e83ee233b1b0d75e7f6aa366",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/shared/dist": {
+          "files": 1145,
+          "sha256": "432ca1d51a623fdf0a824884bd3351eb91bc92b8a700103566b2b4dd3cb9b682",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/db/dist": {
+          "files": 1164,
+          "sha256": "0358b84199299d60b2a27a6da46dcdd62542ae94998e024f412b234deac0a4e0",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/i18n/dist": {
+          "files": 532,
+          "sha256": "5125aaf4a1d96fbffcf762acb27e8ef285c269bb06b44acc75695a91cfb40ae4",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/ui/dist": {
+          "files": 633,
+          "sha256": "f4a051bb85c55ca440ce2f9ffcd0e86ddbec3909db49597ceb7f5f2f0e9dcb1b",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        }
+      },
+      "captures": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/captures/barghsa-ticket-reply-customer-chromium.png",
+          "sha256": "b19b61cae6b74ad80bf83c314de16396c894eaf55c625c2f978c5aeff1b79fad",
+          "reviewed": true,
+          "release_use": false,
+          "limitation": "Nested scroller clips detail; exclude reply captures. Staff queue contains an intentional unavailable related-record fixture; exclude from release album."
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/captures/barghsa-ticket-reply-staff-chromium.png",
+          "sha256": "8985ba6194006000656d725a337693d720cbb09d96c8bdaa19a86a3bd8cf928f",
+          "reviewed": true,
+          "release_use": false,
+          "limitation": "Nested scroller clips detail; exclude reply captures. Staff queue contains an intentional unavailable related-record fixture; exclude from release album."
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/captures/barghsa-ticket-views-customer-chromium.png",
+          "sha256": "a225e70a2880dcdd16ea7f24e6f0236685e0c8a7db099a1c7c7c54e0a9be9280",
+          "reviewed": true,
+          "release_use": true,
+          "limitation": null
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/captures/barghsa-ticket-views-staff-chromium.png",
+          "sha256": "515ee235510fec70e128f8356a2dbf574561166b06a68699e86779e7613811d4",
+          "reviewed": true,
+          "release_use": false,
+          "limitation": "Nested scroller clips detail; exclude reply captures. Staff queue contains an intentional unavailable related-record fixture; exclude from release album."
+        }
+      ],
+      "release_accepted": false,
+      "external_sends": false,
+      "production_authorized": false,
+      "acceptance_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
     }
   },
   "historical_improvements": [
@@ -496969,21 +499415,21 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-support-ticket-journeys",
+    "id": "release-0.5-document-media-journeys",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.23.01.01",
-      "07-ui-ux-design.md#T-07.23.01.02",
-      "07-ui-ux-design.md#T-07.23.01.03",
-      "07-ui-ux-design.md#T-07.23.01.04",
-      "07-ui-ux-design.md#T-07.23.01.05",
-      "07-ui-ux-design.md#T-07.23.01.06"
+      "07-ui-ux-design.md#T-07.25.01.01",
+      "07-ui-ux-design.md#T-07.25.01.02",
+      "07-ui-ux-design.md#T-07.25.01.03",
+      "07-ui-ux-design.md#T-07.25.01.04",
+      "07-ui-ux-design.md#T-07.25.01.05",
+      "07-ui-ux-design.md#T-07.25.01.06"
     ],
-    "goal": "Verify and finish customer/staff ticket list/detail, chronological rich replies/attachments, staff-only internal notes and reasoned status changes. Inspect current adoption before building gaps, reuse matching framework/document evidence, and preserve current actor/profile visibility, assignment permissions, sanitization, immutable activity and exact mutation/retry boundaries. Accept the complete support journey, then select the next remaining v0.5.0 group."
+    "goal": "Verify and finish configured file upload, safe file preview, document state/list and actionable localized validation in customer/staff workspaces. Inspect current implementation first, reuse matching ticket/contract/storage evidence, and preserve staged byte verification, owner/profile access, immutable financial/contract files, quarantine privacy, retention and exact upload/mutation retry boundaries. Accept the complete document/media journey before selecting another v0.5.0 group."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
-    "next_update_after": "v0.5.0 support, document/media and AI interfaces plus remaining shared adoption; owner-deferred external Telegram host remains separate",
+    "next_update_after": "v0.5.0 document/media and AI interfaces plus remaining shared adoption; owner-deferred external Telegram host remains separate",
     "method": "v0.2.0 and v0.3.0 accepted and staging/Telegram verified. Continue dependency order. Required external operational proof, including SMS, remains before production."
   },
   "capabilities": [
