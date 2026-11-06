@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-06T15:51:56.436282+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06T16:15:08.082202+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 606 | Accepted with unchanged source bindings. |
-| verify | 719 | Existing work may be complete; inspect evidence before building. |
+| done | 610 | Accepted with unchanged source bindings. |
+| verify | 715 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,12 +39,11 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect actual notification template editor, masked email/SMS provider controls and AI orchestration tabs against exact UI acceptance. Reuse accepted native domain safety and current per-case evidence; verify affected journeys, implement demonstrated gaps, retain deferred Telegram host live gates.
+Inspect current electricity rules/limits, VAT and gift-code admin journeys against exact UI acceptance. Reuse valid source-bound native financial/security evidence; verify affected UI behavior and implement only demonstrated gaps. Keep snapshot, activation, amounts, grant/session, concurrency and audit safeguards.
 
-- `07-ui-ux-design.md#T-07.30.02.05`: NotificationTemplatesPage: template list (event key filter, language toggle, channel filter), template editor with variable sidebar, preview pane with sample data, test send button.
-- `07-ui-ux-design.md#T-07.30.02.06`: EmailProviderPage: provider selector (SMTP/Resend), conditional credential fields (secrets masked), test connection button, activate/disable/rollback buttons, current active version display.
-- `07-ui-ux-design.md#T-07.30.02.07`: SmsProviderPage: API key (masked), sender line, throughput, low-credit threshold. Template mapping sub-section: event key → SMS template ID + variable mapping. Test send.
-- `07-ui-ux-design.md#T-07.30.02.08`: AiOrchestrationPage: nested tabs — Models (table + add/edit), Knowledge Bases (tree/list + upload + processing status), Policies (list + editor), Agents (list + create/edit + test chat at bottom), Agent Slots (table + assignment dropdown).
+- `07-ui-ux-design.md#T-07.30.02.09`: ElectricitySettingsPage: two sections (Simple/Advanced green rule), each with enable toggle, threshold input, percentage slider. Online top-up limit. Max contract duration, lead days. Customer increase max %. Safety validation on activation.
+- `07-ui-ux-design.md#T-07.30.02.10`: VatSettingsPage: table of VAT configurations (category, rate, effective dates), product override toggle. Add new rate with future effective date.
+- `07-ui-ux-design.md#T-07.30.02.11`: GiftCodesPage: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle.
 
 ## v0.2.0: Complete customer journeys
 
@@ -930,10 +929,10 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.02.02` | done | Recorded batch work | StaffRolesPage: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. "View effective permissions" per staff user. |
 | `07-ui-ux-design.md#T-07.30.02.03` | done | Recorded batch work | GeographyPage: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed. |
 | `07-ui-ux-design.md#T-07.30.02.04` | done | Recorded batch work | TosEditorPage: rich text editor (TipTap-like) with side-by-side diff against current active version, "Mark as material change" toggle, version history list. |
-| `07-ui-ux-design.md#T-07.30.02.05` | verify | Recorded batch work | NotificationTemplatesPage: template list (event key filter, language toggle, channel filter), template editor with variable sidebar, preview pane with sample data, test send button. |
-| `07-ui-ux-design.md#T-07.30.02.06` | verify | Recorded batch work | EmailProviderPage: provider selector (SMTP/Resend), conditional credential fields (secrets masked), test connection button, activate/disable/rollback buttons, current active version display. |
-| `07-ui-ux-design.md#T-07.30.02.07` | verify | Recorded batch work | SmsProviderPage: API key (masked), sender line, throughput, low-credit threshold. Template mapping sub-section: event key → SMS template ID + variable mapping. Test send. |
-| `07-ui-ux-design.md#T-07.30.02.08` | verify | Recorded batch work | AiOrchestrationPage: nested tabs — Models (table + add/edit), Knowledge Bases (tree/list + upload + processing status), Policies (list + editor), Agents (list + create/edit + test chat at bottom), Agent Slots (table + assignment dropdown). |
+| `07-ui-ux-design.md#T-07.30.02.05` | done | Recorded batch work | NotificationTemplatesPage: template list (event key filter, language toggle, channel filter), template editor with variable sidebar, preview pane with sample data, test send button. |
+| `07-ui-ux-design.md#T-07.30.02.06` | done | Recorded batch work | EmailProviderPage: provider selector (SMTP/Resend), conditional credential fields (secrets masked), test connection button, activate/disable/rollback buttons, current active version display. |
+| `07-ui-ux-design.md#T-07.30.02.07` | done | Recorded batch work | SmsProviderPage: API key (masked), sender line, throughput, low-credit threshold. Template mapping sub-section: event key → SMS template ID + variable mapping. Test send. |
+| `07-ui-ux-design.md#T-07.30.02.08` | done | Recorded batch work | AiOrchestrationPage: nested tabs — Models (table + add/edit), Knowledge Bases (tree/list + upload + processing status), Policies (list + editor), Agents (list + create/edit + test chat at bottom), Agent Slots (table + assignment dropdown). |
 | `07-ui-ux-design.md#T-07.30.02.09` | verify | Inventory needed | ElectricitySettingsPage: two sections (Simple/Advanced green rule), each with enable toggle, threshold input, percentage slider. Online top-up limit. Max contract duration, lead days. Customer increase max %. Safety validation on activation. |
 | `07-ui-ux-design.md#T-07.30.02.10` | verify | Inventory needed | VatSettingsPage: table of VAT configurations (category, rate, effective dates), product override toggle. Add new rate with future effective date. |
 | `07-ui-ux-design.md#T-07.30.02.11` | verify | Inventory needed | GiftCodesPage: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle. |

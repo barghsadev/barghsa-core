@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-06T15:51:56.436282+00:00",
+  "updated": "2026-11-06T16:15:08.082202+00:00",
   "source_commit": "93b9fec7a2c18f2635d57cd923ffce0626ee0413",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -407644,7 +407644,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
-              "sha256": "a6251c963c332e4d9b1cce9b543457660f73ce699f7921b16eebbd793354def3"
+              "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
             },
             {
               "path": "packages/ui/src/components/ui/select-filter.tsx",
@@ -407734,7 +407734,17 @@
               "packages/ui/src/index.ts"
             ],
             "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-controls-current-acceptance"
-          }
+          },
+          "renewals": [
+            {
+              "batch": "release-0.5-admin-communications-ai-pages",
+              "paths": [
+                "packages/ui/src/components/ui/scrollable-tabs-list.tsx"
+              ],
+              "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+              "scope": "AI-only route wrappers/current keyboard-accessible tab viewport and four additive translation keys; business/API/query bodies unchanged. Related 63 unit, 86 distinct browser cases, distribution/types and all 89 budgets verified. Pending external gates retained."
+            }
+          ]
         }
       }
     },
@@ -407819,7 +407829,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
-              "sha256": "a6251c963c332e4d9b1cce9b543457660f73ce699f7921b16eebbd793354def3"
+              "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
             },
             {
               "path": "packages/ui/src/components/ui/select-filter.tsx",
@@ -407907,7 +407917,17 @@
               "packages/ui/src/index.ts"
             ],
             "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-controls-current-acceptance"
-          }
+          },
+          "renewals": [
+            {
+              "batch": "release-0.5-admin-communications-ai-pages",
+              "paths": [
+                "packages/ui/src/components/ui/scrollable-tabs-list.tsx"
+              ],
+              "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+              "scope": "AI-only route wrappers/current keyboard-accessible tab viewport and four additive translation keys; business/API/query bodies unchanged. Related 63 unit, 86 distinct browser cases, distribution/types and all 89 budgets verified. Pending external gates retained."
+            }
+          ]
         }
       }
     },
@@ -407992,7 +408012,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
-              "sha256": "a6251c963c332e4d9b1cce9b543457660f73ce699f7921b16eebbd793354def3"
+              "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
             },
             {
               "path": "packages/ui/src/components/ui/select-filter.tsx",
@@ -408080,7 +408100,17 @@
               "packages/ui/src/index.ts"
             ],
             "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-controls-current-acceptance"
-          }
+          },
+          "renewals": [
+            {
+              "batch": "release-0.5-admin-communications-ai-pages",
+              "paths": [
+                "packages/ui/src/components/ui/scrollable-tabs-list.tsx"
+              ],
+              "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+              "scope": "AI-only route wrappers/current keyboard-accessible tab viewport and four additive translation keys; business/API/query bodies unchanged. Related 63 unit, 86 distinct browser cases, distribution/types and all 89 budgets verified. Pending external gates retained."
+            }
+          ]
         }
       }
     },
@@ -408165,7 +408195,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
-              "sha256": "a6251c963c332e4d9b1cce9b543457660f73ce699f7921b16eebbd793354def3"
+              "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
             },
             {
               "path": "packages/ui/src/components/ui/select-filter.tsx",
@@ -408253,7 +408283,17 @@
               "packages/ui/src/index.ts"
             ],
             "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/ui-controls-current-acceptance"
-          }
+          },
+          "renewals": [
+            {
+              "batch": "release-0.5-admin-communications-ai-pages",
+              "paths": [
+                "packages/ui/src/components/ui/scrollable-tabs-list.tsx"
+              ],
+              "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+              "scope": "AI-only route wrappers/current keyboard-accessible tab viewport and four additive translation keys; business/API/query bodies unchanged. Related 63 unit, 86 distinct browser cases, distribution/types and all 89 budgets verified. Pending external gates retained."
+            }
+          ]
         }
       }
     },
@@ -411443,7 +411483,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "d8b900b92120cbca48de2578e61e847f6ed5fedaaca447e85b2943e3ce8bf49c"
+              "sha256": "e432b150c2cfe453e2fe39cd4e027800d8083471e027cc444e6f0fda0c612ada"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -411810,6 +411850,14 @@
               ],
               "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
               "proof": "scope-proof.json; source-delta.json; contract-delta.json; populated migration/replay; final native/browser/static receipts"
+            },
+            {
+              "batch": "release-0.5-admin-communications-ai-pages",
+              "paths": [
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+              "scope": "AI-only route wrappers/current keyboard-accessible tab viewport and four additive translation keys; business/API/query bodies unchanged. Related 63 unit, 86 distinct browser cases, distribution/types and all 89 budgets verified. Pending external gates retained."
             }
           ],
           "funding_wallet_read_renewal": {
@@ -414007,7 +414055,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "d8b900b92120cbca48de2578e61e847f6ed5fedaaca447e85b2943e3ce8bf49c"
+              "sha256": "e432b150c2cfe453e2fe39cd4e027800d8083471e027cc444e6f0fda0c612ada"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -414374,6 +414422,14 @@
               ],
               "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
               "proof": "scope-proof.json; source-delta.json; contract-delta.json; populated migration/replay; final native/browser/static receipts"
+            },
+            {
+              "batch": "release-0.5-admin-communications-ai-pages",
+              "paths": [
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+              "scope": "AI-only route wrappers/current keyboard-accessible tab viewport and four additive translation keys; business/API/query bodies unchanged. Related 63 unit, 86 distinct browser cases, distribution/types and all 89 budgets verified. Pending external gates retained."
             }
           ],
           "funding_wallet_read_renewal": {
@@ -422067,12 +422123,10 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.05** | **NotificationTemplatesPage**: template list (event key filter, language toggle, channel filter), template editor with variable sidebar, preview pane with sample data, test send button. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -422081,9 +422135,58 @@
         "batches": [
           "2026-10-04-notification-forms",
           "2026-10-05-notification-template-filters",
-          "2026-10-05-notification-template-tables"
+          "2026-10-05-notification-template-tables",
+          "release-0.5-admin-communications-ai-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "accepted-admin-communications-ai-ui",
+          "base_commit": "46d029ec1cda66e9d8473173d0fd86cd556bec72",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/notification-template-authoring.spec.ts",
+              "sha256": "5bded4f81e0a309491df60879423295a78250911d2682fb0d34e12c193b2dcc4"
+            },
+            {
+              "path": "apps/web/e2e/notification-template-filters.spec.ts",
+              "sha256": "54de898a1d42dfbda10ab98a2006fb2a679861c3f215fea84c80ad2a6a21962a"
+            },
+            {
+              "path": "apps/web/e2e/notification-template-recovery.spec.ts",
+              "sha256": "2239608929feaeb277c7c7af7c7bc1509e9b17068ea3aa989dde7060036bf8f6"
+            },
+            {
+              "path": "apps/web/e2e/notification-template-versions.spec.ts",
+              "sha256": "d68be7c84546eb4fb2ac408951e4a4cdc15673368791821dce01f093ebca8829"
+            },
+            {
+              "path": "apps/web/src/components/BrandedEmailPreview.tsx",
+              "sha256": "5faa869a743e20b91d6e98486f36bbccd1b0cb6ebbc42ee6cc0dc2881e101581"
+            },
+            {
+              "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+              "sha256": "699b511cc34640b78edc0d6cbf0b9749b4ebaa03c6c493d06e17417649bd5502"
+            },
+            {
+              "path": "apps/web/src/lib/template-preview.ts",
+              "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+            },
+            {
+              "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+              "sha256": "a258fd38bb11869d710f273a977704c8305d79f11b547067cb2cd18e342f3035"
+            },
+            {
+              "path": "apps/web/src/pages/notification-forms.test.tsx",
+              "sha256": "fd9d523258748005538f07f5d06a3859259e8ba66c6dbe1629679a506932d0e0"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json"
+          ],
+          "criterion_result": "Existing event/locale/channel filters, versioned editor, variable sidebar with drag/keyboard insertion, safe sample preview and guarded test-send verified in current production-browser journeys. Native template authority, escaping and delivery receipts reused unchanged.",
+          "limitations": [
+            "Controlled production-built browser fixtures and existing native domain evidence. Actual Telegram external hosting/runtime and release receipts remain blocked separately."
+          ]
+        }
       }
     },
     {
@@ -422097,21 +422200,60 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.06** | **EmailProviderPage**: provider selector (SMTP/Resend), conditional credential fields (secrets masked), test connection button, activate/disable/rollback buttons, current active version display. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-delivery-provider-recovery"
+          "2026-10-01-delivery-provider-recovery",
+          "release-0.5-admin-communications-ai-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "accepted-admin-communications-ai-ui",
+          "base_commit": "46d029ec1cda66e9d8473173d0fd86cd556bec72",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/email-provider-recovery.spec.ts",
+              "sha256": "253c47a6f1d0b01dc96e4570a1f02298dc0beeab53e1e0dacad75d3793694f4a"
+            },
+            {
+              "path": "apps/web/e2e/email-provider-settings.spec.ts",
+              "sha256": "4691b98eac9ba59998db3507807b16163721b22df1d00b1e543bc21960ef198b"
+            },
+            {
+              "path": "apps/web/src/lib/email-providers-api.ts",
+              "sha256": "589b1c3f79c6ecb0f6d898516ab6853f0fb788ee37d63a2e033f126c06ec75f9"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+              "sha256": "d5e4bcddfa571254d2874cbda25af724c9caa21e9d522ccafaaf489144afb4d6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+              "sha256": "4bfcbfddbf5181324c06de75ea647d7417fc0851bd906a7c1b9b23e1e5752def"
+            },
+            {
+              "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
+              "sha256": "5e3e944e22d05b6290d5a85877fa43849b32e352ac875158814d49edeafc8d78"
+            },
+            {
+              "path": "apps/web/src/pages/provider-forms.test.tsx",
+              "sha256": "7286caff450af4224c03fb867007a72d0d25c7cb4afb2bc086b9d41e91db9619"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json"
+          ],
+          "criterion_result": "SMTP/Resend selection, conditional write-only credential fields, masked saved config, connection test, active-version identity, guarded activate/disable/rollback and recovery verified. No live external send inferred from browser fixtures.",
+          "limitations": [
+            "Controlled production-built browser fixtures and existing native domain evidence. Actual Telegram external hosting/runtime and release receipts remain blocked separately."
+          ]
+        }
       }
     },
     {
@@ -422125,21 +422267,52 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.07** | **SmsProviderPage**: API key (masked), sender line, throughput, low-credit threshold. Template mapping sub-section: event key → SMS template ID + variable mapping. Test send. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-delivery-provider-recovery"
+          "2026-10-01-delivery-provider-recovery",
+          "release-0.5-admin-communications-ai-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "accepted-admin-communications-ai-ui",
+          "base_commit": "46d029ec1cda66e9d8473173d0fd86cd556bec72",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+              "sha256": "04fd1652d140bc464f4d3e7894f2917dc23c2501a5ce68bde6095b4e3214a22e"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+              "sha256": "d5e4bcddfa571254d2874cbda25af724c9caa21e9d522ccafaaf489144afb4d6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+              "sha256": "98d4a675abc376ccf7afeb02e69aa1892ce583eb4268b0dd11957b59d9956017"
+            },
+            {
+              "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
+              "sha256": "5e3e944e22d05b6290d5a85877fa43849b32e352ac875158814d49edeafc8d78"
+            },
+            {
+              "path": "apps/web/src/pages/provider-forms.test.tsx",
+              "sha256": "7286caff450af4224c03fb867007a72d0d25c7cb4afb2bc086b9d41e91db9619"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json"
+          ],
+          "criterion_result": "Masked key, sender, throughput and low-credit threshold, locale-aware event/template/variable mappings and explicit test preview/send verified. Native durable send identity, unknown-outcome hold and protected provider snapshots unchanged. Owner-deferred live SMS activation remains a separate production gate.",
+          "limitations": [
+            "Controlled production-built browser fixtures and existing native domain evidence. Actual Telegram external hosting/runtime and release receipts remain blocked separately."
+          ]
+        }
       }
     },
     {
@@ -422153,21 +422326,112 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.08** | **AiOrchestrationPage**: nested tabs — Models (table + add/edit), Knowledge Bases (tree/list + upload + processing status), Policies (list + editor), Agents (list + create/edit + test chat at bottom), Agent Slots (table + assignment dropdown). | XL |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-01-assignment-settings-recovery"
+          "2026-10-01-assignment-settings-recovery",
+          "release-0.5-admin-communications-ai-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "accepted-admin-communications-ai-ui",
+          "base_commit": "46d029ec1cda66e9d8473173d0fd86cd556bec72",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
+              "sha256": "6251f20a637aa931a5054a92f2b692c87be910568ad4899238990bc64204215c"
+            },
+            {
+              "path": "apps/web/e2e/ai-agents.spec.ts",
+              "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+            },
+            {
+              "path": "apps/web/e2e/ai-model-forms.spec.ts",
+              "sha256": "676a9df6afce5590ed25dbace2b11eea372fdb5ce67f0ca872eaed5d540ecc0b"
+            },
+            {
+              "path": "apps/web/e2e/ai-settings-navigation.spec.ts",
+              "sha256": "e0a9f54d8d12f981ea3f081c566f0e3715f9137948663fa217bdf7bc24218bc7"
+            },
+            {
+              "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
+              "sha256": "8909e5d5ccda6a4acd9215a8ccb9c59bfcb98a7b2004bf773558d6b7212dcc98"
+            },
+            {
+              "path": "apps/web/src/components/AdminAgentTestChat.tsx",
+              "sha256": "6a29f3d56d0046b534492b935fa12b1d67b6f43ae2ace0c745312971dc156012"
+            },
+            {
+              "path": "apps/web/src/components/AdminAiSections.test.tsx",
+              "sha256": "1b56847403e9aa02fb178c5d0b36f0e15ecb4afd68d734bc25e5c038b52f7efd"
+            },
+            {
+              "path": "apps/web/src/components/AdminAiSections.tsx",
+              "sha256": "23c7364970a8c55238a17d6292ebb39ecfd7322ca5ea328d9dea32c10eb85a80"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+              "sha256": "ed7cd20a947c498097c2ee368b64369e9cc2fcae5b40ba10f4e4172ba1396018"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+              "sha256": "e548a13da4b8b91a3dc18c547913a72655e5ac1bf865969b6481bb18830fe3da"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+              "sha256": "855e733237a6f18540dcdcc55592d1f58a477e06f8d47de590c1f43f74cd9e7a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+              "sha256": "143354445bc57468891e0ca7125eb82a78f56590ac91099117b6b121069aa8b2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+              "sha256": "16bddea8a322be9003c16859b79be69a29eedb9970165acf3107985d423cff90"
+            },
+            {
+              "path": "apps/web/src/routes/admin/agent-slots.tsx",
+              "sha256": "3cc16407251878c638b131b09830d3fc0146e7e46f081a58f2e7fa286e18cc03"
+            },
+            {
+              "path": "apps/web/src/routes/admin/agents.tsx",
+              "sha256": "59d95a0a1525cd564ddfbe8bd25d46f4935922ca3f17c5269b9989821051073d"
+            },
+            {
+              "path": "apps/web/src/routes/admin/ai-models.tsx",
+              "sha256": "a24238103f39d64adfd0e82c4caa668fa65342e36ce72f11acb5212409a8d352"
+            },
+            {
+              "path": "apps/web/src/routes/admin/knowledge-bases.tsx",
+              "sha256": "c0293ef220d71a520639e41b0313c12ac4b66efdb27f0b1c80247e463683080a"
+            },
+            {
+              "path": "apps/web/src/routes/admin/policies.tsx",
+              "sha256": "68ca4bdccf395c9d369333607bf8658e18755e91e1e0d88501f8352fdfd2c106"
+            },
+            {
+              "path": "packages/i18n/src/workspace-admin-messages.ts",
+              "sha256": "e432b150c2cfe453e2fe39cd4e027800d8083471e027cc444e6f0fda0c612ada"
+            },
+            {
+              "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
+              "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json"
+          ],
+          "criterion_result": "Five route-owned nested tabs added over existing models, knowledge, policies, agents and slots pages. Only current server-offered staff paths appear. Manual keyboard activation, destination-owned selection/focus, back navigation, bilingual desktop/mobile themes and full Axe/overflow checks pass. Existing CRUD, KB upload/status, policy/group editors, agent test chat and slot assignment remain guarded. UI acceptance does not close the external Telegram slot runtime gate.",
+          "limitations": [
+            "Controlled production-built browser fixtures and existing native domain evidence. Actual Telegram external hosting/runtime and release receipts remain blocked separately."
+          ]
+        }
       }
     },
     {
@@ -455930,6 +456194,265 @@
       "release_accepted": false,
       "external_sends": false,
       "production_authorized": false
+    },
+    "release-0.5-admin-communications-ai-pages": {
+      "batch": "release-0.5-admin-communications-ai-pages",
+      "base_commit": "46d029ec1cda66e9d8473173d0fd86cd556bec72",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.30.02.05",
+        "07-ui-ux-design.md#T-07.30.02.06",
+        "07-ui-ux-design.md#T-07.30.02.07",
+        "07-ui-ux-design.md#T-07.30.02.08"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
+          "sha256": "6251f20a637aa931a5054a92f2b692c87be910568ad4899238990bc64204215c"
+        },
+        {
+          "path": "apps/web/e2e/ai-agents.spec.ts",
+          "sha256": "f309e28ca33fc1cdb08382d94824b1cfc5fc26c962e6d41892ba20b03473ad91"
+        },
+        {
+          "path": "apps/web/e2e/ai-model-forms.spec.ts",
+          "sha256": "676a9df6afce5590ed25dbace2b11eea372fdb5ce67f0ca872eaed5d540ecc0b"
+        },
+        {
+          "path": "apps/web/e2e/ai-settings-navigation.spec.ts",
+          "sha256": "e0a9f54d8d12f981ea3f081c566f0e3715f9137948663fa217bdf7bc24218bc7"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-recovery.spec.ts",
+          "sha256": "253c47a6f1d0b01dc96e4570a1f02298dc0beeab53e1e0dacad75d3793694f4a"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-settings.spec.ts",
+          "sha256": "4691b98eac9ba59998db3507807b16163721b22df1d00b1e543bc21960ef198b"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
+          "sha256": "8909e5d5ccda6a4acd9215a8ccb9c59bfcb98a7b2004bf773558d6b7212dcc98"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-authoring.spec.ts",
+          "sha256": "5bded4f81e0a309491df60879423295a78250911d2682fb0d34e12c193b2dcc4"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-filters.spec.ts",
+          "sha256": "54de898a1d42dfbda10ab98a2006fb2a679861c3f215fea84c80ad2a6a21962a"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-recovery.spec.ts",
+          "sha256": "2239608929feaeb277c7c7af7c7bc1509e9b17068ea3aa989dde7060036bf8f6"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-versions.spec.ts",
+          "sha256": "d68be7c84546eb4fb2ac408951e4a4cdc15673368791821dce01f093ebca8829"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "04fd1652d140bc464f4d3e7894f2917dc23c2501a5ce68bde6095b4e3214a22e"
+        },
+        {
+          "path": "apps/web/src/components/AdminAgentTestChat.tsx",
+          "sha256": "6a29f3d56d0046b534492b935fa12b1d67b6f43ae2ace0c745312971dc156012"
+        },
+        {
+          "path": "apps/web/src/components/AdminAiSections.test.tsx",
+          "sha256": "1b56847403e9aa02fb178c5d0b36f0e15ecb4afd68d734bc25e5c038b52f7efd"
+        },
+        {
+          "path": "apps/web/src/components/AdminAiSections.tsx",
+          "sha256": "23c7364970a8c55238a17d6292ebb39ecfd7322ca5ea328d9dea32c10eb85a80"
+        },
+        {
+          "path": "apps/web/src/components/BrandedEmailPreview.tsx",
+          "sha256": "5faa869a743e20b91d6e98486f36bbccd1b0cb6ebbc42ee6cc0dc2881e101581"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "699b511cc34640b78edc0d6cbf0b9749b4ebaa03c6c493d06e17417649bd5502"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "589b1c3f79c6ecb0f6d898516ab6853f0fb788ee37d63a2e033f126c06ec75f9"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "ed7cd20a947c498097c2ee368b64369e9cc2fcae5b40ba10f4e4172ba1396018"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "e548a13da4b8b91a3dc18c547913a72655e5ac1bf865969b6481bb18830fe3da"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "855e733237a6f18540dcdcc55592d1f58a477e06f8d47de590c1f43f74cd9e7a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "143354445bc57468891e0ca7125eb82a78f56590ac91099117b6b121069aa8b2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "d5e4bcddfa571254d2874cbda25af724c9caa21e9d522ccafaaf489144afb4d6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "4bfcbfddbf5181324c06de75ea647d7417fc0851bd906a7c1b9b23e1e5752def"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "16bddea8a322be9003c16859b79be69a29eedb9970165acf3107985d423cff90"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "a258fd38bb11869d710f273a977704c8305d79f11b547067cb2cd18e342f3035"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "98d4a675abc376ccf7afeb02e69aa1892ce583eb4268b0dd11957b59d9956017"
+        },
+        {
+          "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
+          "sha256": "5e3e944e22d05b6290d5a85877fa43849b32e352ac875158814d49edeafc8d78"
+        },
+        {
+          "path": "apps/web/src/pages/notification-forms.test.tsx",
+          "sha256": "fd9d523258748005538f07f5d06a3859259e8ba66c6dbe1629679a506932d0e0"
+        },
+        {
+          "path": "apps/web/src/pages/provider-forms.test.tsx",
+          "sha256": "7286caff450af4224c03fb867007a72d0d25c7cb4afb2bc086b9d41e91db9619"
+        },
+        {
+          "path": "apps/web/src/routes/admin/agent-slots.tsx",
+          "sha256": "3cc16407251878c638b131b09830d3fc0146e7e46f081a58f2e7fa286e18cc03"
+        },
+        {
+          "path": "apps/web/src/routes/admin/agents.tsx",
+          "sha256": "59d95a0a1525cd564ddfbe8bd25d46f4935922ca3f17c5269b9989821051073d"
+        },
+        {
+          "path": "apps/web/src/routes/admin/ai-models.tsx",
+          "sha256": "a24238103f39d64adfd0e82c4caa668fa65342e36ce72f11acb5212409a8d352"
+        },
+        {
+          "path": "apps/web/src/routes/admin/knowledge-bases.tsx",
+          "sha256": "c0293ef220d71a520639e41b0313c12ac4b66efdb27f0b1c80247e463683080a"
+        },
+        {
+          "path": "apps/web/src/routes/admin/policies.tsx",
+          "sha256": "68ca4bdccf395c9d369333607bf8658e18755e91e1e0d88501f8352fdfd2c106"
+        },
+        {
+          "path": "docs/decisions/ai-admin-navigation.md",
+          "sha256": "28ad8bf8b69f09ddaf053b07892398bc3919ab2e80a6fbaddac2434c7a542365"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "e432b150c2cfe453e2fe39cd4e027800d8083471e027cc444e6f0fda0c612ada"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "4e817834049fe7e6738f8b23f228f3b15f99316a2fc628e6f4048a81417fdc0d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
+          "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
+        },
+        {
+          "path": "packages/ui/src/lib/scroll-keyboard.ts",
+          "sha256": "4369a7e8103d8b5c88c5f572b3157633873aa7fb4077556ce495e5b9f6aa744d"
+        },
+        {
+          "path": "packages/ui/stories/overlays.stories.tsx",
+          "sha256": "6de3ecc9206f39282babc53514eda407acd1c01c1f506f2a687138422d345b78"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+        }
+      ],
+      "review": {
+        "result": "accepted",
+        "findings_resolved": [
+          "Keep tab imports on AI routes so unrelated VAT stays below its original 500 KB limit.",
+          "Bind selected tab/focus to the owning route; outgoing route cannot consume destination focus intent.",
+          "Use the existing Base UI scroll viewport and horizontal-keyboard helper; retain full Axe checks.",
+          "Poll the live tab/panel ID pair across route remounts; keep the identity assertion.",
+          "Use test-local ResizeObserver/scrollIntoView/getAnimations shims; real browser checks retain actual APIs."
+        ],
+        "details": "Complete final source/test/doc diff reviewed once and findings corrected. No API, worker, schema, money, provider transport or business page mutation changes. Original query serialization, lazy pages, pending/error boundaries, security and numeric budgets retained. Existing native evidence reused only with current source checks and explicitly reviewed additive UI/i18n deltas."
+      },
+      "criteria": {
+        "05": "Existing event/locale/channel filters, versioned editor, variable sidebar with drag/keyboard insertion, safe sample preview and guarded test-send verified in current production-browser journeys. Native template authority, escaping and delivery receipts reused unchanged.",
+        "06": "SMTP/Resend selection, conditional write-only credential fields, masked saved config, connection test, active-version identity, guarded activate/disable/rollback and recovery verified. No live external send inferred from browser fixtures.",
+        "07": "Masked key, sender, throughput and low-credit threshold, locale-aware event/template/variable mappings and explicit test preview/send verified. Native durable send identity, unknown-outcome hold and protected provider snapshots unchanged. Owner-deferred live SMS activation remains a separate production gate.",
+        "08": "Five route-owned nested tabs added over existing models, knowledge, policies, agents and slots pages. Only current server-offered staff paths appear. Manual keyboard activation, destination-owned selection/focus, back navigation, bilingual desktop/mobile themes and full Axe/overflow checks pass. Existing CRUD, KB upload/status, policy/group editors, agent test chat and slot assignment remain guarded. UI acceptance does not close the external Telegram slot runtime gate."
+      },
+      "passing_check_receipts": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/scroll-native-ui-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/scroll-native-web-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/ui-consumers-final.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/scroll-native-browser.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/ai-consumers-final.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/scroll-native-budgets.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/owned-route-types.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/scroll-native-types.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/ui-types.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/stories-types.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/owned-route-lint.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/scroll-native-lint.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/focus-lint.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/final-source-format.json"
+      ],
+      "passing_unit_cases": 63,
+      "distribution_checks": 8,
+      "passing_browser_cases": 86,
+      "browser_case_provenance": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/browser-cases.json",
+      "reused_non_ai_browser_cases": 62,
+      "reuse_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/scope-proof.json",
+      "native_reuse": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/native-reuse.json",
+      "route_interaction_gzip_budgets": 89,
+      "captures": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/captures/ai-sections-fa-dark.png",
+          "sha256": "9e4703441e7751091cefdc24d66ecf800e6af5b9485d377326bcd7c38ce875f4"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/captures/ai-sections-fa-light.png",
+          "sha256": "ea9b4e62f6d13ef3c5eccdeef8628d41f0dc9efe8a2e82c9268ec53f8a850472"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/captures/ai-sections-en-dark.png",
+          "sha256": "8734640131424138d9c752b8d740064df9fceb39adeb6e7315d58cdad40d4492"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/captures/ai-sections-en-light.png",
+          "sha256": "d0b6514de89c66d38d7af2f443a3335a49a632cb5a2b6e7f1564852e910ec7c0"
+        }
+      ],
+      "failed_attempts_preserved": [
+        "bundle-budgets.json",
+        "final-browser.json",
+        "final-format.json",
+        "final-unit.json",
+        "layout-unit.json",
+        "owned-browser.json",
+        "reviewed-browser.json",
+        "reviewed-unit-sequential.json",
+        "scroll-lint.json",
+        "scroll-native-unit.json"
+      ],
+      "failure_disposition": "Budget, route-focus and keyboard-scroll failures diagnosed and fixed without weakening gates. Parallel Vitest workspace resolution missed an existing shared entry twice; the cause remains unconfirmed, and the final selected six-file sequential run passes all 63 cases with no unhandled errors. Missing jsdom browser methods were shimmed only in the new test. Failed suites remain failed; only unchanged passing non-AI cases reused, all affected AI cases renewed.",
+      "release_accepted": false,
+      "external_sends": false,
+      "production_authorized": false
     }
   },
   "historical_improvements": [
@@ -455969,19 +456492,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-admin-communications-ai-pages",
+    "id": "release-0.5-admin-financial-settings-pages",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.30.02.05",
-      "07-ui-ux-design.md#T-07.30.02.06",
-      "07-ui-ux-design.md#T-07.30.02.07",
-      "07-ui-ux-design.md#T-07.30.02.08"
+      "07-ui-ux-design.md#T-07.30.02.09",
+      "07-ui-ux-design.md#T-07.30.02.10",
+      "07-ui-ux-design.md#T-07.30.02.11"
     ],
-    "goal": "Inspect actual notification template editor, masked email/SMS provider controls and AI orchestration tabs against exact UI acceptance. Reuse accepted native domain safety and current per-case evidence; verify affected journeys, implement demonstrated gaps, retain deferred Telegram host live gates."
+    "goal": "Inspect current electricity rules/limits, VAT and gift-code admin journeys against exact UI acceptance. Reuse valid source-bound native financial/security evidence; verify affected UI behavior and implement only demonstrated gaps. Keep snapshot, activation, amounts, grant/session, concurrency and audit safeguards."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
-    "next_update_after": "v0.4.0 live configuration and final operational boundaries",
+    "next_update_after": "v0.5.0 remaining customer/admin journey adoption and the owner-deferred external Telegram host gate",
     "method": "v0.2.0 and v0.3.0 accepted and staging/Telegram verified. Continue dependency order. Required external operational proof, including SMS, remains before production."
   },
   "capabilities": [

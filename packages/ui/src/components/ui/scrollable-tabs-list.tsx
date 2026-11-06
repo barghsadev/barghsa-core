@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
 import { TabsList } from './tabs';
 import { Button } from './button';
 import { cn } from '../../lib/utils';
+import { scrollHorizontalViewport } from '../../lib/scroll-keyboard';
 
 /** Horizontal tabs with physical overflow measurement and logical RTL scroll controls. */
 export function ScrollableTabsList({
@@ -66,18 +68,21 @@ export function ScrollableTabsList({
           <ChevronLeftIcon aria-hidden="true" className="size-4 rtl:rotate-180" />
         </Button>
       )}
-      <div
-        ref={viewport}
-        data-slot="tabs-viewport"
-        className="min-w-0 flex-1 overflow-x-auto overscroll-x-contain p-1 scroll-px-1"
-        onScroll={measure}
-        onFocusCapture={(event) => {
-          if (event.target instanceof HTMLElement && event.target.getAttribute('role') === 'tab')
-            event.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-        }}
-      >
-        <TabsList {...props} ref={list} className={cn('min-w-max', className)} />
-      </div>
+      <ScrollAreaPrimitive.Root className="min-w-0 flex-1">
+        <ScrollAreaPrimitive.Viewport
+          ref={viewport}
+          data-slot="tabs-viewport"
+          className="min-w-0 overflow-x-auto overscroll-x-contain p-1 scroll-px-1 outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+          onKeyDown={scrollHorizontalViewport}
+          onScroll={measure}
+          onFocusCapture={(event) => {
+            if (event.target instanceof HTMLElement && event.target.getAttribute('role') === 'tab')
+              event.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }}
+        >
+          <TabsList {...props} ref={list} className={cn('min-w-max', className)} />
+        </ScrollAreaPrimitive.Viewport>
+      </ScrollAreaPrimitive.Root>
       {overflowing && (
         <Button
           type="button"

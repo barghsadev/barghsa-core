@@ -1,3 +1,4 @@
+import AdminAiSections from '../../components/AdminAiSections.js';
 import { useRef } from 'react';
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
@@ -22,15 +23,17 @@ function CatalogueRoute() {
   });
   const kind = (queries.query.filters.kind || 'policies') as PolicyCatalogueKind;
   return (
-    <Page
-      key={kind}
-      initialKind={kind}
-      focusCategory={focusCategory.current}
-      onKindChange={(value) => {
-        focusCategory.current = true;
-        queries.setQuery({ filters: { kind: value } });
-      }}
-    />
+    <AdminAiSections section="/admin/policies">
+      <Page
+        key={kind}
+        initialKind={kind}
+        focusCategory={focusCategory.current}
+        onKindChange={(value) => {
+          focusCategory.current = true;
+          queries.setQuery({ filters: { kind: value } });
+        }}
+      />
+    </AdminAiSections>
   );
 }
 export const Route = createFileRoute('/admin/policies')({
