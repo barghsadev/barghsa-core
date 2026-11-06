@@ -90893,11 +90893,12 @@
         "story": "02-auth-users-admin.md#spec-569b2749e159"
       },
       "requirement": "**T-09.11.05 — Agent slot assignment**\n\n- Description: Admin assigns agents to predefined slots: Individual chatbot, Legal Entity chatbot, Staff chatbot, Website chatbot, Telegram chatbot. One agent can be used in multiple slots.\n- Technical notes: Slots defined as system configuration. Each slot mapped to an agent_id. Changing slot agent is audited. Slots are consumed by frontend and external integrations.\n- UI/UX: Per-slot dropdown showing all available agents. Current assignment displayed. \"This agent is also used in [other slots]\" warning.\n- Dependencies: T-09.11.04\n- Complexity: M",
-      "status": "blocked",
+      "status": "verify",
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "When a reachable external Telegram host is available, configure protected bot/webhook credentials and complete the authorized one-webhook handoff, actual private owned profile linkage, Telegram audience isolation and root-version receipts. Preserve the current webhook until the replacement is verified. Provisioning is explicitly deferred; no live Telegram gate is waived."
+        "Verify the exact reviewed transport image and callback preflight, then the owner-authorized one-webhook handoff without dropping pending updates.",
+        "Complete actual fresh current-customer/profile Telegram linkage, private reply, audience isolation, root-version and persisted exact message receipt evidence. Synthetic updates cannot certify this gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -91104,7 +91105,8 @@
           "release-0.4-live-operations-rehearsal",
           "release-0.4-permanent-pause-live-replacement",
           "release-0.4-live-provider-provisioning-prerequisites",
-          "release-0.4-native-knowledge-fixture-preparation"
+          "release-0.4-native-knowledge-fixture-preparation",
+          "release-0.4-telegram-external-host"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -91120,7 +91122,7 @@
             },
             {
               "path": "apps/api/scripts/telegram-test-fetch.cjs",
-              "sha256": "80e00aa5a24417eb8dc0df65968120187c9f1bf7f1b982cd45d10d0a7242e967"
+              "sha256": "33b02600e4664bd9a549b3f4a23f684a5e788c531d7bc1662f0df35aa004b1e5"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -91308,7 +91310,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "8a96ca4219f44ed07d2a9d0646081bbb6445f0b039a2475f512114c011bada70"
+              "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
@@ -91316,19 +91318,19 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links.service.ts",
-              "sha256": "3283b1eada2cbf196398b84e46a7337e92864cc452d12505501318184398f335"
+              "sha256": "d7e56e200eae3c9291cb4ca2f701491a5e1911a38f55d189a99b98db47690000"
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.test.ts",
-              "sha256": "63bd0e498b26abc19112b2b2d17139fc65dd781a28e1c91138c382eb39a5f9f3"
+              "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.ts",
-              "sha256": "937c76a4556e7e029a5815a37832c990e34e560c9a1a117653b9f81af57cff98"
+              "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "8963de2a4bd2e5f5b9e72c1c5d29708b97b2991dafbd2975d3fb9241ad45236a"
+              "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
             },
             {
               "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
@@ -91476,7 +91478,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "76850dc91e250d2b77b08db2944141882b06231957de164440ac78917c3e35b9"
+              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -91881,6 +91883,23 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-telegram-external-host",
+              "base_commit": "ffa6b5925c471a3b24a14a1ef3492998b3b99f35",
+              "paths": [
+                "apps/api/scripts/telegram-test-fetch.cjs",
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+                "apps/api/src/telegram/telegram-links.service.ts",
+                "apps/api/src/telegram/telegram-protocol.test.ts",
+                "apps/api/src/telegram/telegram-protocol.ts",
+                "apps/api/src/telegram/telegram-runtime.service.ts",
+                "deploy/staging/README.md"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
+              ],
+              "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
             }
           ]
         },
@@ -91986,9 +92005,14 @@
             "05-notifications-documents-ai.md#T-05.22.04",
             "release-readiness#R-03.02"
           ]
+        },
+        "external_telegram_host": {
+          "host": "eu.barghsa.com",
+          "owner_source": "AGENTS.md and docs/operations/telegram-host.md on2026-11-06; owner confirmed staging SSH fingerprint",
+          "state": "TLS relay provisioned;45 native cases passed; final three staging identity probes passed; handoff/linkage pending",
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
         }
-      },
-      "blocker": "Owner confirmed staging network blocks Telegram. External Telegram hosting is required and provisioning is deferred. Independent implementation may continue; actual handoff/private linkage/Telegram isolation/version receipts remain unaccepted."
+      }
     },
     {
       "key": "02-auth-users-admin.md#T-09.12.01",
@@ -403811,11 +403835,12 @@
         "story": "05-notifications-documents-ai.md#spec-cc7fccfe19d9"
       },
       "requirement": "| **T-05.22.04 — Data isolation per slot** | M | P1 |\n| Launch Individual/Legal customer questions are scoped to current account, selected profile, session and assigned slot; retrieval includes only published authorized knowledge. Staff questions require current AI permission and use curated staff/public knowledge. Website questions are anonymous and public-only. Telegram questions must use a private linked account/profile and the Telegram slot, isolated from release announcements. Current and cached results recheck authority, assignment and source eligibility. Owner approved knowledge-only scope on 2026-10-08; business profile-data tools and tool execution are explicitly deferred. Telegram consumer/linkage receipts remain mandatory. | | |",
-      "status": "blocked",
+      "status": "verify",
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "When a reachable external Telegram host is available, configure protected bot/webhook credentials and complete the authorized one-webhook handoff, actual private owned profile linkage, Telegram audience isolation and root-version receipts. Preserve the current webhook until the replacement is verified. Provisioning is explicitly deferred; no live Telegram gate is waived."
+        "Verify the exact reviewed transport image and callback preflight, then the owner-authorized one-webhook handoff without dropping pending updates.",
+        "Complete actual fresh current-customer/profile Telegram linkage, private reply, audience isolation, root-version and persisted exact message receipt evidence. Synthetic updates cannot certify this gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -403836,7 +403861,8 @@
           "release-0.4-live-operations-rehearsal",
           "release-0.4-permanent-pause-live-replacement",
           "release-0.4-live-provider-provisioning-prerequisites",
-          "release-0.4-native-knowledge-fixture-preparation"
+          "release-0.4-native-knowledge-fixture-preparation",
+          "release-0.4-telegram-external-host"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -403852,7 +403878,7 @@
             },
             {
               "path": "apps/api/scripts/telegram-test-fetch.cjs",
-              "sha256": "80e00aa5a24417eb8dc0df65968120187c9f1bf7f1b982cd45d10d0a7242e967"
+              "sha256": "33b02600e4664bd9a549b3f4a23f684a5e788c531d7bc1662f0df35aa004b1e5"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -404040,7 +404066,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "8a96ca4219f44ed07d2a9d0646081bbb6445f0b039a2475f512114c011bada70"
+              "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
@@ -404048,19 +404074,19 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links.service.ts",
-              "sha256": "3283b1eada2cbf196398b84e46a7337e92864cc452d12505501318184398f335"
+              "sha256": "d7e56e200eae3c9291cb4ca2f701491a5e1911a38f55d189a99b98db47690000"
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.test.ts",
-              "sha256": "63bd0e498b26abc19112b2b2d17139fc65dd781a28e1c91138c382eb39a5f9f3"
+              "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
             },
             {
               "path": "apps/api/src/telegram/telegram-protocol.ts",
-              "sha256": "937c76a4556e7e029a5815a37832c990e34e560c9a1a117653b9f81af57cff98"
+              "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "8963de2a4bd2e5f5b9e72c1c5d29708b97b2991dafbd2975d3fb9241ad45236a"
+              "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
             },
             {
               "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
@@ -404208,7 +404234,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "76850dc91e250d2b77b08db2944141882b06231957de164440ac78917c3e35b9"
+              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -404637,6 +404663,23 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-telegram-external-host",
+              "base_commit": "ffa6b5925c471a3b24a14a1ef3492998b3b99f35",
+              "paths": [
+                "apps/api/scripts/telegram-test-fetch.cjs",
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+                "apps/api/src/telegram/telegram-links.service.ts",
+                "apps/api/src/telegram/telegram-protocol.test.ts",
+                "apps/api/src/telegram/telegram-protocol.ts",
+                "apps/api/src/telegram/telegram-runtime.service.ts",
+                "deploy/staging/README.md"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
+              ],
+              "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
             }
           ]
         },
@@ -404742,9 +404785,14 @@
             "05-notifications-documents-ai.md#T-05.22.04",
             "release-readiness#R-03.02"
           ]
+        },
+        "external_telegram_host": {
+          "host": "eu.barghsa.com",
+          "owner_source": "AGENTS.md and docs/operations/telegram-host.md on2026-11-06; owner confirmed staging SSH fingerprint",
+          "state": "TLS relay provisioned;45 native cases passed; final three staging identity probes passed; handoff/linkage pending",
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
         }
-      },
-      "blocker": "Owner confirmed staging network blocks Telegram. External Telegram hosting is required and provisioning is deferred. Independent implementation may continue; actual handoff/private linkage/Telegram isolation/version receipts remain unaccepted."
+      }
     },
     {
       "key": "05-notifications-documents-ai.md#T-05.22.05",
@@ -507533,7 +507581,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "76850dc91e250d2b77b08db2944141882b06231957de164440ac78917c3e35b9"
+              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -508871,6 +508919,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.4-telegram-external-host",
+              "base_commit": "ffa6b5925c471a3b24a14a1ef3492998b3b99f35",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
+              ],
+              "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
             }
           ]
         },
@@ -508915,12 +508974,13 @@
         "Record controlled deliverability, callback, scanner, private download and failure recovery evidence.",
         "Keep real sends narrowly authorized; no historical replay or blanket backfill."
       ],
-      "status": "blocked",
+      "status": "verify",
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "When a reachable external Telegram host is available, configure protected bot/webhook credentials and complete the authorized one-webhook handoff, actual private owned profile linkage, Telegram audience isolation and root-version receipts. Preserve the current webhook until the replacement is verified. Provisioning is explicitly deferred; no live Telegram gate is waived.",
-        "After the Telegram gate and every v0.4 effective criterion are accepted, prepare version/captures, verify exact release push, immediately enqueue staging worker, and verify actual deployment and grouped Persian Telegram receipts. No later-release work or production deployment."
+        "Verify the exact reviewed transport image and callback preflight, then the owner-authorized one-webhook handoff without dropping pending updates.",
+        "Complete actual fresh current-customer/profile Telegram linkage, private reply, audience isolation, root-version and persisted exact message receipt evidence. Synthetic updates cannot certify this gate.",
+        "After every v0.4 effective criterion is accepted, prepare version/captures, verify exact release push, immediately enqueue staging worker, and verify actual deployment plus one grouped Persian Telegram release update. Production remains unauthorized."
       ],
       "owner": null,
       "depends_on": [],
@@ -511047,7 +511107,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "76850dc91e250d2b77b08db2944141882b06231957de164440ac78917c3e35b9"
+              "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -512233,6 +512293,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-telegram-external-host",
+              "base_commit": "ffa6b5925c471a3b24a14a1ef3492998b3b99f35",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
+              ],
+              "scope": "Scoped renewal only. Three Telegram services retain exact business methods and all45 native boundaries pass using external transport. Staging README adds one external-transport paragraph; deployment/notifier/queue execution code unchanged. No live gate, previous partial criterion or unrelated release disposition changed."
             }
           ]
         },
@@ -512246,7 +512317,8 @@
           "release-0.4-live-operations-rehearsal",
           "release-0.4-permanent-pause-live-replacement",
           "release-0.4-live-provider-provisioning-prerequisites",
-          "release-0.4-native-knowledge-fixture-preparation"
+          "release-0.4-native-knowledge-fixture-preparation",
+          "release-0.4-telegram-external-host"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -512379,9 +512451,14 @@
             "packages/shared/src/notification-delivery/branding.test.ts",
             "packages/shared/src/notifications/email-branding.ts"
           ]
+        },
+        "external_telegram_host": {
+          "host": "eu.barghsa.com",
+          "owner_source": "AGENTS.md and docs/operations/telegram-host.md on2026-11-06; owner confirmed staging SSH fingerprint",
+          "state": "TLS relay provisioned;45 native cases passed; final three staging identity probes passed; handoff/linkage pending",
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
         }
-      },
-      "blocker": "Owner confirmed staging network blocks Telegram. External Telegram hosting is required and provisioning is deferred. Independent implementation may continue; actual handoff/private linkage/Telegram isolation/version receipts remain unaccepted."
+      }
     },
     {
       "key": "release-readiness#R-04.01",
@@ -540868,6 +540945,173 @@
       "external_sends": false,
       "production_authorized": false,
       "acceptance_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
+    },
+    "release-0.4-telegram-external-host": {
+      "batch": "release-0.4-telegram-external-host",
+      "base_commit": "ffa6b5925c471a3b24a14a1ef3492998b3b99f35",
+      "source_evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e8902831bc0943720f4bf0f7f8cf10c8f05d3671689f0d111256040a841c93bf"
+        },
+        {
+          "path": "apps/api/nest-cli.json",
+          "sha256": "6224f84398d9211d89c87590173841d24fc4949460cc717616e82a806bfb2ba8"
+        },
+        {
+          "path": "apps/api/package.json",
+          "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+        },
+        {
+          "path": "apps/api/scripts/telegram-test-fetch.cjs",
+          "sha256": "33b02600e4664bd9a549b3f4a23f684a5e788c531d7bc1662f0df35aa004b1e5"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+          "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/telegram/root-version.ts",
+          "sha256": "4a25ae51b1e196b4c6ffbb0b363750375f87c57aa51fea8219196336c5e4c4e1"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links.controller.ts",
+          "sha256": "21717ef3400f715fcd2df452755ec1a56db10c769ce6b5177937445c234b1544"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links.service.ts",
+          "sha256": "d7e56e200eae3c9291cb4ca2f701491a5e1911a38f55d189a99b98db47690000"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.test.ts",
+          "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.ts",
+          "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+          "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
+          "sha256": "39f0862f3cc55b68e1f4a006fb17625555545305af2ef4f6992e37d89e28dd51"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram.module.ts",
+          "sha256": "a6509298a2f42b7a77987761414e29a71841ec6ed9cdeca929f5543b19b6e151"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+        },
+        {
+          "path": "apps/api/tsconfig.json",
+          "sha256": "6b97f6906bc116547651b6ba7282ea2af7e0e8f01ab56e426aa37c5938ab55d4"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "a68da3e6d2251e1d0b3623786a5c25b1e457b7c43f32eec1469711f8d6f767d5"
+        },
+        {
+          "path": "deploy/staging/certbot-reload-nginx.sh",
+          "sha256": "ec6a1b9862924a3ee7f1475e009dfd7f3192d14f2798cb483201d1300c708c4c"
+        },
+        {
+          "path": "deploy/telegram/README.md",
+          "sha256": "72e91a7c927dc3172069858af7a732504d58ecedbe9eb111f48dc0ca5086a4d6"
+        },
+        {
+          "path": "deploy/telegram/nginx.conf",
+          "sha256": "c6326e8aacc3126ed426009ed973ae682b4915b930a76de6ef74c462a52bfe03"
+        },
+        {
+          "path": "docs/operations/telegram-host.md",
+          "sha256": "b66d297bd69724ef801179eeb1f8967401f5154a738bf53794eb1c34d991d80d"
+        },
+        {
+          "path": "packages/i18n/src/telegram.ts",
+          "sha256": "eeb8132dcdb45f0096fd8882d5b92231adcffd99029b43753a3264a3da80376b"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+        }
+      ],
+      "checks": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/api-build.json",
+          "sha256": "459fd48c059dfe3a546dba47ec5c27b9c94d3796cc3e9c403286036e49d51446",
+          "log_sha256": "99dfcfe77fd92281338ec36867ef4ad4f7e0fd4f1f5cccd1f6f3b60b3f67b8a2"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/native.json",
+          "sha256": "f949de25af1a8f6c646819426957e7593564e099bef3132baa3b520176d321c0",
+          "log_sha256": "deae3bf49892e629899160b6e213648de34d57f80fe15655d7325bd10b4d5c59"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/types.json",
+          "sha256": "02372cab69e892a898170a94b98ab6bcef81d0272ba9c97e5d6a8439e7f039d0",
+          "log_sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/lint.json",
+          "sha256": "0406e2b4f29564212acb17cf79e75d2d3b02ed576a80d2a381acf52cf3d1c08f",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/format.json",
+          "sha256": "6765a033ac827ef4d806d22eb9663b3661951ceb1b8521ffe6329e8e5eeaa2e8",
+          "log_sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/format-final.json",
+          "sha256": "05a60c5c86946b9a0782d3f295e29f2a3f90a8494d6c89c6403f6d8bb22f2860",
+          "log_sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/certificate.json",
+          "sha256": "3450b7e1e7d368ac0cb5ad6d61e1ce7d1e83ae16ee0a94c6638a150c7ce357f8",
+          "log_sha256": "5e07ca572665469acd1295024bc8348cc152ba29dacfcff7013bc940c8ef846e"
+        }
+      ],
+      "native_distinct_passed": 45,
+      "review": "Accepted bounded transport implementation. Official default and one owner-designated HTTPS endpoint only; invalid config fails closed. Exact private-message payload/receipt/no-replay logic, current session/profile/step-up/link authority and durable queue business methods retained. Test-only compiled HTTP shim exercises external transport with all original assertions. NGINX restricts exact bot/method/source, verifies TLS, reconstructs headers, caps/rate-limits callbacks, disables retry/cache and secret-bearing logs. Safe status/upstream/timings support diagnosis.",
+      "native_scope": "45 protocol and real HTTP/database cases; no broad suite or live customer linkage claimed.",
+      "external_receipts": [
+        "relay-install-receipt.json",
+        "relay-final-config.json",
+        "public-relay-boundaries.json",
+        "staging-relay-timing-diagnosis.jsonl"
+      ],
+      "failed_observations": [
+        "Initial read-only staging identity preflight lacked confirmation. Bounded diagnosis observed504 followed by confirmed200 expected bot identities. Both address families independently completed TLS and identity. Final three probes passed in849/655/286ms. No blind send retry, timeout increase or handoff. Exact cause of the earlier transient504 remains unconfirmed; unknown sends still hold."
+      ],
+      "old_webhook_preserved": true,
+      "milestone_accepted": false,
+      "release_announced": false,
+      "production_authorized": false
     }
   },
   "historical_improvements": [
@@ -540914,11 +541158,11 @@
       "05-notifications-documents-ai.md#T-05.22.04",
       "release-readiness#R-03.02"
     ],
-    "goal": "The owner designated eu.barghsa.com for Telegram on2026-11-06. Follow docs/operations/telegram-host.md, verify authorized SSH and Telegram reachability, inspect existing integration before configuring the smallest external Telegram service, preserve current callback until replacement is verified, and complete current-owned profile linkage, audience isolation and root-version live gates. Do not treat host documentation as deployment or receipt evidence. After every v0.4 criterion is accepted, prepare the release, verify exact push, immediately enqueue staging and verify actual deployment/Persian Telegram receipts. Preserve independent v0.5 accepted work and all provider/auth/financial safeguards."
+    "goal": "Finish v0.4.0 live Telegram closure. Owner-confirmed SSH trust and TLS relay work;45 native tests and final three staging identity probes pass. Verify the exact reviewed transport image and callback, preserve existing webhook until replacement preflight passes, then perform authorized handoff and actual fresh owned-customer/profile linkage, audience isolation and exact versioned Telegram receipts. Accept all gates before release enqueue. No production action."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
-    "next_update_after": "v0.4.0 external Telegram host access, verified integration and live gate receipts; then remaining v0.5.0 UI acceptance in dependency order",
+    "next_update_after": "v0.4.0 external-host handoff/private linkage and release receipts; then remaining v0.5.0 work in dependency order",
     "method": "v0.2.0 and v0.3.0 accepted and staging/Telegram verified. Continue dependency order. Required external operational proof, including SMS, remains before production."
   },
   "capabilities": [

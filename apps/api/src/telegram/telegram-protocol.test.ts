@@ -4,9 +4,28 @@ import {
   TelegramClient,
   validTelegramWebhookSecret,
   telegramConfirmationCode,
+  telegramApiBaseUrl,
 } from './telegram-protocol';
 
 const token = '8703508822:fixture_secret_not_a_live_bot_token';
+it('allows only the direct or owner-designated external transport', async () => {
+  expect(telegramApiBaseUrl(undefined)).toBe('https://api.telegram.org');
+  expect(telegramApiBaseUrl('direct')).toBe('https://api.telegram.org');
+  expect(telegramApiBaseUrl('external-eu')).toBe('https://eu.barghsa.com/telegram-api');
+  for (const transport of ['', 'http://localhost', 'https://another.example', 'external-eu/']) {
+    expect(telegramApiBaseUrl(transport)).toBeNull();
+    expect(() => new TelegramClient(token, vi.fn(), transport)).toThrow('TELEGRAM_CONFIG_INVALID');
+  }
+  const request = vi.fn().mockRejectedValue(new Error('unconfirmed'));
+  expect(
+    await new TelegramClient(token, request, 'external-eu').sendPrivateMessage('12', 'text')
+  ).toEqual({ status: 'unknown' });
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(request.mock.calls[0]![0]).toBe(
+    'https://eu.barghsa.com/telegram-api/bot' + token + '/sendMessage'
+  );
+  expect(request.mock.calls[0]![1].redirect).toBe('error');
+});
 it('binds confirmation codes to the protected secret, intent and private identity', () => {
   const secret = 's'.repeat(48),
     intent = '0199f111-1111-7111-8111-111111111111';

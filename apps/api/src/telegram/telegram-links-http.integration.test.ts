@@ -14,6 +14,7 @@ const token = '8703508822:owned_fixture_not_a_live_bot_token';
 const envKeys = [
   'CUSTOMER_TELEGRAM_BOT_TOKEN',
   'CUSTOMER_TELEGRAM_WEBHOOK_SECRET',
+  'CUSTOMER_TELEGRAM_TRANSPORT',
   'NODE_OPTIONS',
   'BARGHSA_TEST_TELEGRAM_ENDPOINT',
   'KB_EMBEDDING_BASE_URL',
@@ -77,6 +78,7 @@ beforeAll(async () => {
   await once(provider, 'listening');
   process.env.CUSTOMER_TELEGRAM_BOT_TOKEN = token;
   process.env.CUSTOMER_TELEGRAM_WEBHOOK_SECRET = secret;
+  process.env.CUSTOMER_TELEGRAM_TRANSPORT = 'external-eu';
   process.env.BARGHSA_TEST_TELEGRAM_ENDPOINT =
     'http://127.0.0.1:' + (provider.address() as { port: number }).port;
   process.env.KB_EMBEDDING_BASE_URL = process.env.BARGHSA_TEST_TELEGRAM_ENDPOINT + '/v1';

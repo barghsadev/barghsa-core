@@ -30,6 +30,8 @@ After exact release push verification, immediately enqueue the detached staging 
 
 Use @barghsa_dev_bot and Barghsa Release Radar `-1004467450624`, with private secrets. Send at most one Persian summary and one grouped album per release, never one post per screenshot. Attach reviewed actual captures, respect album limits and link a gallery for extras. Never blindly retry unknown delivery. Login and Telegram display the root version.
 
+The owner-designated Telegram service host is `eu.barghsa.com`. Agents connect as `root` using authorized SSH keys, with no password required. See [Telegram host access](docs/operations/telegram-host.md) before configuring the service; host details alone do not certify deployment or live release gates.
+
 Production requires complete launch acceptance, operational evidence and explicit owner authorization. Staging deployment permission does not authorize production.
 
 ## Project conventions

@@ -10,6 +10,13 @@ const record = (value: unknown): Record<string, unknown> | null =>
 
 export const TELEGRAM_BOT_USERNAME = 'barghsa_dev_bot';
 
+/** Protected deployment choice, never a caller-supplied proxy or arbitrary URL. */
+export function telegramApiBaseUrl(transport: string | undefined) {
+  if (transport === undefined || transport === 'direct') return 'https://api.telegram.org';
+  if (transport === 'external-eu') return 'https://eu.barghsa.com/telegram-api';
+  return null;
+}
+
 /** Reconstruct a short-lived private-chat code without storing the code or bearer token. */
 export function telegramConfirmationCode(secret: string, intentId: string, telegramUserId: string) {
   if (!/^[A-Za-z0-9_-]{32,256}$/.test(secret)) throw new Error('TELEGRAM_CONFIG_INVALID');
@@ -83,17 +90,22 @@ export type TelegramSendReceipt =
   | { status: 'rejected'; code: number; retryAfterSeconds: number | null }
   | { status: 'unknown' };
 
-/** Fixed official endpoint, bounded responses and no automatic send replay. */
+/** Fixed approved endpoints, bounded responses and no automatic send replay. */
 export class TelegramClient {
+  private readonly baseUrl: string;
   constructor(
     private readonly token: string,
-    private readonly request: typeof fetch = fetch
+    private readonly request: typeof fetch = fetch,
+    transport?: string
   ) {
-    if (!/^\d+:[A-Za-z0-9_-]{20,}$/.test(token)) throw new Error('TELEGRAM_CONFIG_INVALID');
+    const baseUrl = telegramApiBaseUrl(transport);
+    if (!baseUrl || !/^\d+:[A-Za-z0-9_-]{20,}$/.test(token))
+      throw new Error('TELEGRAM_CONFIG_INVALID');
+    this.baseUrl = baseUrl;
   }
 
   private async call(method: 'getMe' | 'sendMessage', payload: Record<string, unknown>) {
-    const response = await this.request(`https://api.telegram.org/bot${this.token}/${method}`, {
+    const response = await this.request(`${this.baseUrl}/bot${this.token}/${method}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

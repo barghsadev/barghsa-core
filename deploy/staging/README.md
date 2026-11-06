@@ -124,6 +124,14 @@ root-version footer and the persisted exact Telegram message receipt. Unknown
 outbound delivery is terminal and must never be automatically resent. Production
 activation remains subject to explicit production authorization.
 
+The owner designated `eu.barghsa.com` as the external Telegram transport host
+because staging cannot reach Telegram. Its restricted HTTPS relay uses protected
+`CUSTOMER_TELEGRAM_TRANSPORT=external-eu`; an unset value retains direct Telegram
+access. Follow the [external transport procedure](../telegram/README.md) for TLS,
+source restrictions, callback preflight and the authorized one-webhook handoff.
+The application's private linkage, current-authority checks, audience isolation
+and durable no-replay receipts remain required.
+
 Confirmed message receipts live outside the checkout under
 `~/.local/state/barghsa-staging-releases`, overridable by
 `BARGHSA_RELEASE_STATE_DIR`. Repeating a confirmed notification does not send

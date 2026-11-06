@@ -6,7 +6,10 @@ if (target.protocol !== 'http:' || target.hostname !== '127.0.0.1' || !target.po
 const request = globalThis.fetch;
 globalThis.fetch = (input, init) => {
   const url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url);
-  if (url.origin === 'https://api.telegram.org') {
+  if (
+    url.origin === 'https://api.telegram.org' ||
+    (url.origin === 'https://eu.barghsa.com' && url.pathname.startsWith('/telegram-api/bot'))
+  ) {
     const method = url.pathname.split('/').at(-1);
     if (!['getMe', 'sendMessage'].includes(method)) throw new Error('Unexpected fixture method');
     return request(new URL('/' + method, target), init);

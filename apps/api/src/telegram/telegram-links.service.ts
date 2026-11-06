@@ -5,7 +5,11 @@ import type { PoolClient } from 'pg';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { activeProfileSql } from '../profiles/profile-context.js';
-import { TELEGRAM_BOT_USERNAME, telegramConfirmationCode } from './telegram-protocol.js';
+import {
+  TELEGRAM_BOT_USERNAME,
+  telegramConfirmationCode,
+  telegramApiBaseUrl,
+} from './telegram-protocol.js';
 import type { PrivateTelegramUpdate } from './telegram-protocol.js';
 
 export type TelegramActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -40,7 +44,8 @@ export class TelegramLinksService {
   credentialsConfigured() {
     return (
       /^\d+:[A-Za-z0-9_-]{20,}$/.test(process.env['CUSTOMER_TELEGRAM_BOT_TOKEN'] ?? '') &&
-      /^[A-Za-z0-9_-]{32,256}$/.test(process.env['CUSTOMER_TELEGRAM_WEBHOOK_SECRET'] ?? '')
+      /^[A-Za-z0-9_-]{32,256}$/.test(process.env['CUSTOMER_TELEGRAM_WEBHOOK_SECRET'] ?? '') &&
+      telegramApiBaseUrl(process.env['CUSTOMER_TELEGRAM_TRANSPORT']) !== null
     );
   }
 

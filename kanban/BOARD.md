@@ -11,11 +11,11 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 726 | Accepted with unchanged source bindings. |
-| verify | 598 | Existing work may be complete; inspect evidence before building. |
+| verify | 601 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
-| blocked | 4 | Named owner or external prerequisite. |
+| blocked | 1 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-The owner designated eu.barghsa.com for Telegram on2026-11-06. Follow docs/operations/telegram-host.md, verify authorized SSH and Telegram reachability, inspect existing integration before configuring the smallest external Telegram service, preserve current callback until replacement is verified, and complete current-owned profile linkage, audience isolation and root-version live gates. Do not treat host documentation as deployment or receipt evidence. After every v0.4 criterion is accepted, prepare the release, verify exact push, immediately enqueue staging and verify actual deployment/Persian Telegram receipts. Preserve independent v0.5 accepted work and all provider/auth/financial safeguards.
+Finish v0.4.0 live Telegram closure. Owner-confirmed SSH trust and TLS relay work;45 native tests and final three staging identity probes pass. Verify the exact reviewed transport image and callback, preserve existing webhook until replacement preflight passes, then perform authorized handoff and actual fresh owned-customer/profile linkage, audience isolation and exact versioned Telegram receipts. Accept all gates before release enqueue. No production action.
 
 - `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
 - `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
@@ -523,7 +523,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-03.01` | done | Recorded batch work | Renew document, notification and AI acceptance |
-| `release-readiness#R-03.02` | blocked | Recorded batch work | Verify live staging provider and storage boundaries |
+| `release-readiness#R-03.02` | verify | Recorded batch work | Verify live staging provider and storage boundaries |
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | done | Earlier acceptance_verified | SMS.ir configuration |
@@ -532,7 +532,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.11.02` | done | Earlier partial | Knowledge base management |
 | `02-auth-users-admin.md#T-09.11.03` | done | Earlier acceptance_verified | Policy management |
 | `02-auth-users-admin.md#T-09.11.04` | done | Earlier partial | AI agent management |
-| `02-auth-users-admin.md#T-09.11.05` | blocked | Earlier partial | Agent slot assignment |
+| `02-auth-users-admin.md#T-09.11.05` | verify | Earlier partial | Agent slot assignment |
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
 | `05-notifications-documents-ai.md#T-05.01.02` | done | Earlier acceptance_verified | Durable outbox table & write pipeline |
 | `05-notifications-documents-ai.md#T-05.01.03` | done | Earlier acceptance_verified | Job queue with retry schedule |
@@ -621,7 +621,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.22.01` | done | Recorded batch work | AuthZ for AI actions |
 | `05-notifications-documents-ai.md#T-05.22.02` | superseded | Recorded batch work | Trusted-UI confirmation for writes |
 | `05-notifications-documents-ai.md#T-05.22.03` | done | Recorded batch work | AI audit logging |
-| `05-notifications-documents-ai.md#T-05.22.04` | blocked | Recorded batch work | Data isolation per slot |
+| `05-notifications-documents-ai.md#T-05.22.04` | verify | Recorded batch work | Data isolation per slot |
 | `05-notifications-documents-ai.md#T-05.22.05` | done | Recorded batch work | Sensitive value redaction |
 | `05-notifications-documents-ai.md#T-05.22.06` | done | Recorded batch work | Source attribution in answers |
 | `05-notifications-documents-ai.md#T-05.23.01` | done | Recorded batch work | AI worker process isolation |

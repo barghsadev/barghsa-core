@@ -64,7 +64,11 @@ export class TelegramRuntimeService implements OnModuleInit, OnModuleDestroy {
     if (!this.links.credentialsConfigured()) return;
     this.version = rootReleaseVersion();
     if (!this.version) return;
-    const client = new TelegramClient(process.env['CUSTOMER_TELEGRAM_BOT_TOKEN']!);
+    const client = new TelegramClient(
+      process.env['CUSTOMER_TELEGRAM_BOT_TOKEN']!,
+      fetch,
+      process.env['CUSTOMER_TELEGRAM_TRANSPORT']
+    );
     if (!(await client.verifyIdentity())) return;
     this.client = client;
     this.links.setTransportReady(true);
