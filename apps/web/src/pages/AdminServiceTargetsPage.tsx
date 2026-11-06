@@ -3,9 +3,15 @@ import type { ServiceSettingsKind } from '../lib/service-settings-form.js';
 import { tServiceSettings as t } from '@barghsa/i18n/service-settings';
 import { useLocale } from '../hooks/useLocale.js';
 import { ServiceSettingsEditor } from './ServiceSettingsEditor.js';
+import { ServiceWorkflowSettings } from '../components/ServiceWorkflowSettings.js';
 export default function AdminServiceTargetsPage() {
   const locale = useLocale();
-  const [active, setActive] = useState<ServiceSettingsKind | null>(null);
+  const [active, setActive] = useState<ServiceSettingsKind | 'workflows' | null>(null);
+  const workflowsBusy = useCallback(
+    (busy: boolean) =>
+      setActive((owner) => (busy ? 'workflows' : owner === 'workflows' ? null : owner)),
+    []
+  );
   const targetsBusy = useCallback(
     (busy: boolean) =>
       setActive((owner) => (busy ? 'targets' : owner === 'targets' ? null : owner)),
@@ -20,6 +26,10 @@ export default function AdminServiceTargetsPage() {
   return (
     <section className="space-y-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-semibold">{t('admin.targets.pageTitle', locale)}</h1>
+      <ServiceWorkflowSettings
+        disabled={active !== null && active !== 'workflows'}
+        onBusyChange={workflowsBusy}
+      />
       <ServiceSettingsEditor
         kind="targets"
         disabled={active !== null && active !== 'targets'}

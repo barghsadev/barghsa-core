@@ -1,5 +1,6 @@
 import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
+import { DEFAULT_SERVICE_WORKFLOWS, SERVICE_WORKFLOW_CONFIG_KEY } from '@barghsa/shared/admin';
 import { resolve } from 'node:path';
 import { Pool } from 'pg';
 import { createServer, type ServerResponse } from 'node:http';
@@ -158,6 +159,81 @@ async function startWorker(overrides: Record<string, string> = {}) {
     throw error;
   }
 }
+
+it('compiled worker automatically delivers expanded workflow breach and escalation notices', async () => {
+  const worker = await startWorker();
+  try {
+    const policy = structuredClone(DEFAULT_SERVICE_WORKFLOWS),
+      id = randomUUID();
+    policy.ticket_urgent = {
+      hours: 1,
+      notification: 'breach',
+      email: false,
+      escalation: {
+        condition: 'ticket_priority',
+        from: { kind: 'any', id: null },
+        to: { kind: 'admins', id: null },
+        afterHours: 1,
+        email: false,
+      },
+    };
+    await worker.pool.query('INSERT INTO app_config(key,value) VALUES($1,$2::jsonb)', [
+      SERVICE_WORKFLOW_CONFIG_KEY,
+      JSON.stringify(policy),
+    ]);
+    await worker.pool.query(
+      `INSERT INTO tickets(id,user_id,assigned_to,subject,body,priority,status,updated_at)
+      VALUES($1,'worker-process-actor','worker-process-actor','Workflow test','Private text','urgent','waiting_staff',NOW()-INTERVAL '4 hours')`,
+      [id]
+    );
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT event_key FROM notification_outbox WHERE payload->>'item_id'=$1 ORDER BY event_key",
+              [id]
+            )
+          ).rows,
+        { timeout: 10000 }
+      )
+      .toEqual([
+        { event_key: 'admin.service_escalated' },
+        { event_key: 'admin.service_target_breached' },
+      ]);
+    await expect
+      .poll(
+        async () =>
+          (
+            await worker.pool.query(
+              "SELECT count(*)::int AS n FROM in_app_notifications WHERE recipient_user_id='worker-process-actor' AND link_route='/admin/tickets'"
+            )
+          ).rows[0].n,
+        { timeout: 10000 }
+      )
+      .toBe(2);
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT escalation_level FROM service_breach_alerts WHERE service_type='workflow_ticket_urgent' AND item_id=$1",
+          [id]
+        )
+      ).rows
+    ).toEqual([{ escalation_level: 2 }]);
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT user_id FROM audit_log WHERE event='service_workflow_escalated' AND metadata::jsonb->>'itemId'=$1",
+          [id]
+        )
+      ).rows
+    ).toEqual([{ user_id: 'worker-process-actor' }]);
+    expect(await worker.stop()).toEqual({ code: 0, signal: null });
+    expect(worker.logs()).not.toMatch(/Fatal worker|Uncaught exception|failed to record/);
+  } finally {
+    await worker.close();
+  }
+}, 25000);
 
 it('compiled worker serves health/metrics, executes scheduled jobs and drains on SIGTERM', async () => {
   const worker = await startWorker();

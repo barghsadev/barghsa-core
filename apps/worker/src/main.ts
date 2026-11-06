@@ -52,6 +52,7 @@ import { evaluateWalletLowBalanceSignals } from './wallet/low-balance-notificati
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
+import { scanServiceWorkflows } from './service-targets/workflow-scanner.js';
 import { scanServiceEscalations } from './service-targets/escalation-scanner.js';
 import { INVOICE_OVERDUE_JOB_TYPE, scanOverdueInvoices } from './invoices/overdue-scanner.js';
 import {
@@ -537,7 +538,14 @@ async function main(): Promise<void> {
     if (draining || breachScanInFlight) return;
     breachScanInFlight = true;
     try {
-      const result = await scanServiceBreaches();
+      const legacy = await scanServiceBreaches();
+      const workflow = await scanServiceWorkflows();
+      const result = {
+        ...legacy,
+        alerted: legacy.alerted + workflow.alerted + workflow.escalated,
+        pruned: legacy.pruned + workflow.pruned,
+        errors: [...legacy.errors, ...workflow.errors],
+      };
       if (result.alerted > 0 || result.errors.length > 0) {
         logger.info(
           `Breach scan: alerted=${result.alerted} skipped=${result.skippedDuplicates} pruned=${result.pruned} errors=${result.errors.length}`

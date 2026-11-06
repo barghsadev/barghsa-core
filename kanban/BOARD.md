@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 617 | Accepted with unchanged source bindings. |
-| verify | 708 | Existing work may be complete; inspect evidence before building. |
+| done | 619 | Accepted with unchanged source bindings. |
+| verify | 706 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,10 +39,18 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Implement the owner-required service targets and escalation as one enforced workflow. Inspect existing SLA scan, targets, assignment, notifications and UIs. Deliver per-priority ticket targets, order fulfillment, contract review and verification targets plus condition/from-role-or-team/to-role-or-team escalation, timeout and notification. Preserve existing consultation/verification/ticket routing, current authority, retries, audit and idempotency; verify domain and bilingual responsive UI on final sources.
+Deliver the customer onboarding and legal-profile delegation journey. Inspect existing profile forms, saved drafts, default selection, route guards, agent invitations, ownership controls and receipts. Verify existing implementation first; build only demonstrated gaps. Preserve current ownership, verification, invitation/transfer authority, profile isolation and bilingual responsive accessibility. Close the complete journey on current native/UI/browser evidence.
 
-- `07-ui-ux-design.md#T-07.30.02.15`: ServiceTargetsPage: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger.
-- `07-ui-ux-design.md#T-07.30.02.17`: EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows.
+- `07-ui-ux-design.md#T-07.28.01.01`: Build `OnboardingPage`: full-page wizard (not inside AppShell). Step 1: "What type of profile would you like to create?" — two large cards with icons: "Individual" and "Legal Entity". User can select one or both (checkboxes). "Continue" button.
+- `07-ui-ux-design.md#T-07.28.01.02`: Build `IndividualProfileForm`: title (optional, text input), first name (required), last name (required), province → city cascading selects (fetched from API), full address (textarea), postal code (required, 10-digit Iranian format validation), national ID number (required, 10-digit validation). Save as draft after each step.
+- `07-ui-ux-design.md#T-07.28.01.03`: Build `LegalProfileForm`: legal name (required), national identifier / شناسه ملی (required, unique), registration number (required), company type dropdown (required), registration date (optional Jalali date picker), economic code (optional), official phone/email (optional), province → city → address → postal code (required), authorized representative name + title (required), optional document uploads.
+- `07-ui-ux-design.md#T-07.28.01.04`: Build `OnboardingReviewPage`: shows created profile(s) summary. "Done" button redirects to `/app/dashboard` with first profile selected as default.
+- `07-ui-ux-design.md#T-07.28.01.05`: If user has no profiles and tries to access any `/app/*` route, redirect to `/onboarding`.
+- `07-ui-ux-design.md#T-07.29.01.01`: Build `AgentListPage`: list of all agents for the active legal profile. Columns: avatar + name, username (masked email/mobile), role badges (Manager/Finance/Legal), status (active/pending), invited date, last active date. Owner has crown icon. Owner row shows "Transfer ownership" action. "Invite agent" button.
+- `07-ui-ux-design.md#T-07.29.01.02`: Build `InviteAgentDialog`: input field for username (email or mobile), role radio/select (Manager, Finance, Legal), optional message. "Send invitation" button. Validates: cannot invite existing agent, cannot invite self.
+- `07-ui-ux-design.md#T-07.29.01.03`: Build `AgentDetailDialog`: shows agent details, role, activity history. Actions: change role, remove agent (with destructive confirmation dialog), withdraw pending invite.
+- `07-ui-ux-design.md#T-07.29.01.04`: Build `AgentInvitationBanner` (on dashboard): when the current user has been invited to a legal entity, show a prominent card: "You've been invited to join [Legal Entity Name] by [Inviter Name]". Accept / Decline buttons. Not dismissible until action taken.
+- `07-ui-ux-design.md#T-07.29.01.05`: Removing the last owner is blocked unless ownership is transferred first. Show explanatory message.
 
 ## v0.2.0: Complete customer journeys
 
@@ -938,9 +946,9 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.02.12` | done | Recorded batch work | UploadPoliciesPage: table (category, allowed formats, max size), edit modal per category. Deployment-safe boundary warnings. |
 | `07-ui-ux-design.md#T-07.30.02.13` | done | Recorded batch work | DualApprovalPage: threshold input (IRR) with large number format, description of affected actions. Step-up required to change. Emergency override section. |
 | `07-ui-ux-design.md#T-07.30.02.14` | done | Recorded batch work | VerificationSettingsPage: identity verification requirements per profile type (Individual/Legal), required document types, verification expiry, auto-verification for staff profiles, manual verification override. Versioned settings with Draft → Active lifecycle. |
-| `07-ui-ux-design.md#T-07.30.02.15` | verify | Recorded batch work | ServiceTargetsPage: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger. |
+| `07-ui-ux-design.md#T-07.30.02.15` | done | Recorded batch work | ServiceTargetsPage: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger. |
 | `07-ui-ux-design.md#T-07.30.02.16` | done | Recorded batch work | TeamAssignmentPage: staff team management — create teams (Support, Finance, Operations, Legal), assign staff to teams, set team lead, configure auto-assignment rules (round-robin, least-loaded, skill-based), team escalation path. |
-| `07-ui-ux-design.md#T-07.30.02.17` | verify | Inventory needed | EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows. |
+| `07-ui-ux-design.md#T-07.30.02.17` | done | Recorded batch work | EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows. |
 
 ## v0.6.0: Production readiness
 

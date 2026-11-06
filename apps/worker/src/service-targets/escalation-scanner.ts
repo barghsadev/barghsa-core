@@ -5,7 +5,9 @@ import {
   toEscalationPolicies,
   type EscalationLevelConfig,
   type ServiceResponseTargetType,
+  SERVICE_WORKFLOW_CONFIG_KEY,
 } from '@barghsa/shared/admin';
+import { workflowManagedTypes } from './workflow-scanner.js';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
 import {
   CASE_OPEN_STATUSES,
@@ -256,6 +258,13 @@ export async function scanServiceEscalations(
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock_shared(hashtext($1))', [
+        SERVICE_WORKFLOW_CONFIG_KEY,
+      ]);
+      if ((await workflowManagedTypes(client)).has(domain.serviceType)) {
+        await client.query('COMMIT');
+        continue;
+      }
 
       // Counters are applied only *after* the COMMIT below, so a partial
       // failure that rolls back the per-type transaction never reports

@@ -4,7 +4,9 @@ import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
   toServiceResponseTargets,
   type ServiceResponseTargetType,
+  SERVICE_WORKFLOW_CONFIG_KEY,
 } from '@barghsa/shared/admin';
+import { workflowManagedTypes } from './workflow-scanner.js';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 /**
@@ -321,6 +323,16 @@ export async function scanServiceBreaches(
       const client = await pool.connect();
       try {
         await client.query('BEGIN');
+
+        await client.query('SELECT pg_advisory_xact_lock_shared(hashtext($1))', [
+          SERVICE_WORKFLOW_CONFIG_KEY,
+        ]);
+        if ((await workflowManagedTypes(client)).has(domain.serviceType)) {
+          const cleared = await client.query(domain.clearSql, [domain.serviceType]);
+          result.pruned += cleared.rowCount ?? 0;
+          await client.query('COMMIT');
+          break;
+        }
 
         // Disabled type: no scanning, but clear its episode ledger so a later
         // re-enable re-evaluates every open item from scratch (episodes do not
