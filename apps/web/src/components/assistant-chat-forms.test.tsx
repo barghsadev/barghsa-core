@@ -41,6 +41,22 @@ const result = {
   latencyMs: 12,
   remainingQuota: 9,
 };
+
+it('admin: lists inactive agent drafts while refusing a forged inference selection', async () => {
+  const fetcher = vi.fn();
+  vi.stubGlobal('fetch', fetcher);
+  await mount('admin', 'profile-1', false);
+  const select = host.querySelector<HTMLSelectElement>('#test-chat-agent')!;
+  const option = select.querySelector<HTMLOptionElement>(`option[value="${id}"]`)!;
+  expect(option.textContent).toBe('Agent');
+  expect(option.disabled).toBe(true);
+  await fill(select, id);
+  await fill(input(), 'Guide question');
+  await submit();
+  await settled();
+  expect(select.getAttribute('aria-invalid')).toBe('true');
+  expect(fetcher).not.toHaveBeenCalled();
+});
 let host: HTMLDivElement, root: Root;
 beforeEach(async () => {
   await import('../lib/catalogue-form-schemas.js');

@@ -15,6 +15,7 @@ let customerKbId: string;
 let publicKbId: string;
 let adminKbId: string;
 let completions = 0;
+let providerReply = 'Use the published guide.';
 let beforeProviderReply: (() => Promise<void>) | null = null;
 let lastMessages: Array<{ role: string; content: string }> = [];
 const previousEmbeddingBase = process.env.KB_EMBEDDING_BASE_URL;
@@ -42,7 +43,7 @@ beforeAll(async () => {
     response.setHeader('content-type', 'application/json');
     response.end(
       JSON.stringify({
-        choices: [{ message: { content: 'Use the published guide.' } }],
+        choices: [{ message: { content: providerReply } }],
         usage: { prompt_tokens: 7, completion_tokens: 4 },
       })
     );
@@ -407,15 +408,20 @@ it('rejects a customer question before provider use when the assigned model budg
   expect(completions).toBe(before);
 }, 30_000);
 
-it.each([
-  ['disabled', 401],
-  ['revoked', 401],
-  ['expires', 401],
-  ['idle', 401],
-  ['csrf', 403],
-] as const)(
-  'denies late customer %s changes before exposing an answer',
-  async (change, status) => {
+it.each(
+  [
+    ['disabled', 401],
+    ['revoked', 401],
+    ['expires', 401],
+    ['idle', 401],
+    ['csrf', 403],
+  ].flatMap(([change, status]) => [
+    { change: String(change), status: Number(status), accept: 'application/json' },
+    { change: String(change), status: Number(status), accept: 'text/event-stream' },
+  ])
+)(
+  'denies late customer $change changes before exposing an answer ($accept)',
+  async ({ change, status, accept }) => {
     await http.pool.query('DELETE FROM ai_model_budgets WHERE model_id=$1', [modelId]);
     await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
       'ai:knowledge:user:knowledge-user:profile:' + individualId,
@@ -447,7 +453,10 @@ it.each([
       }
     };
     try {
-      const result = await ask({ requestId, message: 'Late session boundary' });
+      const result = await ask(
+        { requestId, message: 'Late session boundary' },
+        { ...headers, accept }
+      );
       expect(result.status).toBe(status);
       expect(JSON.stringify(await result.json())).not.toContain('Use the published guide.');
       expect(
@@ -477,3 +486,108 @@ it.each([
   },
   30_000
 );
+
+it('streams only an audited checked answer and replays JSON and SSE with one inference', async () => {
+  await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+    'ai:knowledge:user:knowledge-user:profile:' + legalId,
+  ]);
+  const body = { requestId: randomUUID(), message: 'What is the public guide?' };
+  const before = completions;
+  try {
+    providerReply = 'راهنمای منتشرشده 🌱 '.repeat(30);
+    const streamed = await ask(body, { ...headers, accept: 'text/event-stream' });
+    expect(streamed.status).toBe(200);
+    expect(streamed.headers.get('content-type')).toContain('text/event-stream');
+    expect(streamed.headers.get('cache-control')).toBe(
+      'private, no-cache, no-store, must-revalidate'
+    );
+    expect(streamed.headers.get('x-accel-buffering')).toBe('no');
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM ai_audit_log WHERE input->>'requestId'=$1 AND authorization_result='allowed'",
+          [body.requestId]
+        )
+      ).rows
+    ).toHaveLength(1);
+    const events = (await streamed.text())
+      .trim()
+      .split('\n\n')
+      .map((frame) => {
+        const [name, data] = frame.split('\n');
+        return { name: name!.slice(7), data: JSON.parse(data!.slice(6)) };
+      });
+    expect(events.at(-1)?.name).toBe('complete');
+    expect(events.length).toBeGreaterThan(2);
+    const answer = events.at(-1)!.data as KnowledgeAnswer;
+    expect(events.slice(0, -1).every((event) => event.name === 'delta')).toBe(true);
+    expect(
+      events
+        .slice(0, -1)
+        .map((event) => event.data.text)
+        .join('')
+    ).toBe(answer.reply);
+    expect(await (await ask(body)).json()).toEqual(answer);
+    expect(completions).toBe(before + 1);
+    const replay = await ask(body, { ...headers, accept: 'text/event-stream' });
+    expect(await replay.text()).toContain(`event: complete\ndata: ${JSON.stringify(answer)}`);
+    expect(completions).toBe(before + 1);
+    expect(answer.reply).toBe(providerReply);
+  } finally {
+    providerReply = 'Use the published guide.';
+  }
+});
+
+it('emits no event or answer when the required audit cannot commit', async () => {
+  await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+    'ai:knowledge:user:knowledge-user:profile:' + legalId,
+  ]);
+  await http.pool
+    .query(`CREATE FUNCTION fail_knowledge_stream_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test failure'; END $$;
+    CREATE TRIGGER fail_knowledge_stream_audit BEFORE INSERT ON ai_audit_log FOR EACH ROW EXECUTE FUNCTION fail_knowledge_stream_audit()`);
+  try {
+    const failed = await ask(
+      { requestId: randomUUID(), message: 'What is the public guide?' },
+      { ...headers, accept: 'text/event-stream' }
+    );
+    expect(failed.status).toBe(500);
+    expect(failed.headers.get('content-type')).not.toContain('text/event-stream');
+    expect(await failed.text()).not.toMatch(/event:|Use the published guide/);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_knowledge_stream_audit ON ai_audit_log; DROP FUNCTION fail_knowledge_stream_audit()'
+    );
+  }
+});
+
+it('holds every provider token behind output-policy evaluation for an SSE request', async () => {
+  await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+    'ai:knowledge:user:knowledge-user:profile:' + legalId,
+  ]);
+  const policyId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO ai_policies(id,title,policy_type,rules,created_by)
+    VALUES ($1,'Private output rule','content_filter','{"blockedTerms":["published"]}','knowledge-admin')`,
+    [policyId]
+  );
+  await http.pool.query('INSERT INTO ai_agent_policies(agent_id,policy_id) VALUES ($1,$2)', [
+    agentId,
+    policyId,
+  ]);
+  try {
+    const before = completions;
+    const denied = await ask(
+      { requestId: randomUUID(), message: 'Guide please' },
+      { ...headers, accept: 'text/event-stream' }
+    );
+    expect(denied.status).toBe(422);
+    expect(completions).toBe(before + 1);
+    expect(denied.headers.get('content-type')).not.toContain('text/event-stream');
+    const body = await denied.text();
+    expect(body).not.toMatch(/event:|Use the published guide|Private output rule/);
+    expect(body).not.toContain(policyId);
+  } finally {
+    await http.pool.query('DELETE FROM ai_agent_policies WHERE policy_id=$1', [policyId]);
+    await http.pool.query('DELETE FROM ai_policies WHERE id=$1', [policyId]);
+  }
+});

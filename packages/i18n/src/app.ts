@@ -188,6 +188,7 @@ export const fa: I18nDictionary = {
   'assistant.sources': 'منابع پاسخ',
   'assistant.answer': 'پاسخ راهنما',
   'assistant.working': 'در حال بررسی راهنماها…',
+  'assistant.incompleteAnswer': 'پاسخ تا دریافت تأیید نهایی کامل نیست.',
   'assistant.retry': 'تلاش دوباره',
   'assistant.error': 'پاسخی دریافت نشد. دوباره تلاش کنید.',
   'assistant.noSource':
@@ -1163,6 +1164,7 @@ export const en: I18nDictionary = {
   'assistant.sources': 'Answer sources',
   'assistant.answer': 'Guide answer',
   'assistant.working': 'Checking the guides…',
+  'assistant.incompleteAnswer': 'This answer is incomplete until its final receipt arrives.',
   'assistant.retry': 'Try again',
   'assistant.error': 'No answer came back. Please try again.',
   'assistant.noSource':

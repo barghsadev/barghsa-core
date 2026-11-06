@@ -853,12 +853,12 @@
 |----|------|------------|
 | **T-07.20.01.01** | Build `AIChatPanel`: slide-over sheet from right (LTR) / left (RTL) triggered by a floating action button (bottom-right/bottom-left corner of the app). Contains: chat header (AI avatar + "Barghsa AI Assistant" + close button), message list (scrollable, auto-scroll to bottom), input area (textarea + send button + suggested prompts). | L |
 | **T-07.20.01.02** | Build `ChatMessage` component: user message (right-aligned, brand-colored bubble), AI message (left-aligned, muted bubble). AI messages include: text content, source KB citations (expandable "Sources" section with KB name + title + excerpt), policy filter badges applied. Timestamp per message. | L |
-| **T-07.20.01.03** | Build `ChatInput` component: auto-resizing textarea, send button (disabled while AI is responding), suggested prompt chips (3–4 contextual suggestions, e.g. "Show my invoices", "What's my wallet balance?"). Enter to send, Shift+Enter for newline. | M |
+| **T-07.20.01.03** | Build `ChatInput` component: auto-resizing textarea, send button (disabled while AI is responding), 3–4 contextual knowledge-question suggestions, Enter to send and Shift+Enter for newline. Suggestions respect the owner-approved read-only AI scope; profile-data tools remain deferred. An explicit direct account-status read, if offered, is labeled separately and never sent to the model. | M |
 | **T-07.20.01.04** | Build `ChatWelcome` component: greeting message ("Hi [name]! How can I help you today?"), suggested starting prompts, profile context indicator ("You're asking as [profile name]"). | S |
-| **T-07.20.01.05** | Implement streaming AI response: show typing indicator (animated dots) while waiting for response. Render response progressively as tokens arrive (SSE or WebSocket stream). | M |
-| **T-07.20.01.06** | Build `TrustedUIConfirmation` component: for write actions proposed by AI, show a structured action card above the chat input area. Card displays: action type, parameters, consequences. User confirms or rejects with explicit buttons. AI cannot programmatically confirm. | L |
+| **T-07.20.01.05** | Implement SSE answer delivery with a typing indicator while waiting and progressive display of received text. Preserve complete output-policy, current-authority, source and audit checks before emitting any text; raw provider tokens remain buffered. Accept only a matching final receipt after clean completion. Interrupted streams retain the exact request for retry. Streaming adds no artificial delay and does not promise lower first-text latency. Owner required streaming with all safeguards on 2026-11-06. | M |
+| **T-07.20.01.06** | Explicitly deferred by the owner's read-only launch decision on 2026-10-08, matching T-05.22.02. Future AI-proposed writes require structured trusted-UI previews of parameters/consequences and user-only confirm/reject decisions. Launch AI has no business write tools, and ordinary CRUD dialogs do not certify this future component. | L |
 | **T-07.20.01.07** | ⚠️ Chat must respect user's language preference. AI responses in same language as user's messages. Date/number formatting locale-aware. | M |
-| **T-07.20.01.08** | ⚠️ Data isolation: Individual chatbot sees only Individual profile data. Legal chatbot sees only Legal profile data. Staff chatbot sees data based on staff roles. | M |
+| **T-07.20.01.08** | ⚠️ Knowledge answers are isolated by current Individual/Legal profile, session, assigned slot and published audience; staff knowledge requires current staff context and grants. Replays recheck current authority and source eligibility. Profile-data tools remain deferred under the owner-approved read-only scope in T-05.22.04. | M |
 
 ---
 
@@ -883,7 +883,7 @@
 | **T-07.21.01.02** | Build `ResponseMetadataPanel`: expandable sections for "Knowledge Bases Used" (KB name + document title + excerpt), "Policies Applied" (policy name + rule matched), "Token Usage" (prompt/completion/total), "Latency" (ms). | M |
 | **T-07.21.01.03** | Build "New Conversation" button to clear test chat history. | S |
 | **T-07.21.01.04** | ⚠️ Rate limit test chat: 10 requests/min per admin. Show remaining quota. Return 429 with retry-after. | S |
-| **T-07.21.01.05** | ⚠️ Test chat is isolated — does not affect production conversations or AI audit logs. | S |
+| **T-07.21.01.05** | ⚠️ Test chat uses separate session-owned conversation and receipt records and never mutates production conversations or business data. Required model budgets, redaction and append-only security audits remain active; test entries are marked `admin_test_chat`. Clearing UI history never deletes audit evidence. This follows the isolation criteria in T-05.21 and mandatory audit in T-05.22.03. | S |
 
 ---
 

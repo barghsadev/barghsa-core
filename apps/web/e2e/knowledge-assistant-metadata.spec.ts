@@ -287,3 +287,93 @@ test('a profile switch clears old policy metadata and ignores a late answer', as
     release();
   }
 });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`${locale}: checked SSE text renders progressively and a broken stream retries its exact receipt`, async ({
+    page,
+    baseURL,
+  }, info) => {
+    await setup(page, locale, baseURL!);
+    const result = answer();
+    const first = result.reply.slice(0, 12);
+    await page.addInitScript(
+      ({ result, first }) => {
+        const original = window.fetch.bind(window);
+        const requests: unknown[] = [];
+        let active: ReadableStreamDefaultController<Uint8Array>;
+        const encode = (name: string, data: unknown) =>
+          new TextEncoder().encode(`event: ${name}\ndata: ${JSON.stringify(data)}\n\n`);
+        Object.assign(window, {
+          releaseKnowledge: () => {
+            active.enqueue(encode('delta', { text: result.reply.slice(first.length) }));
+            active.enqueue(encode('complete', result));
+            active.close();
+          },
+          breakKnowledge: () => active.error(new Error('Connection lost')),
+          knowledgeRequests: requests,
+        });
+        window.fetch = (input, init) => {
+          if (typeof input === 'string' && input === '/api/ai/knowledge/questions') {
+            if (new Headers(init?.headers).get('Accept') !== 'text/event-stream')
+              throw new Error('SSE not requested');
+            requests.push(JSON.parse(String(init?.body)));
+            return Promise.resolve(
+              new Response(
+                new ReadableStream<Uint8Array>({
+                  start(controller) {
+                    active = controller;
+                    controller.enqueue(encode('delta', { text: first }));
+                  },
+                }),
+                { headers: { 'content-type': 'text/event-stream' } }
+              )
+            );
+          }
+          return original(input, init);
+        };
+      },
+      { result, first }
+    );
+    await page.goto('/ai');
+    const text = (key: string) => t(`assistant.${key}`, locale);
+    const panel = page.getByRole('region', { name: text('title') });
+    const input = panel.getByLabel(text('input'));
+    await input.fill('Published guidance?');
+    await input.press('Enter');
+    await expect(panel.getByText(first, { exact: true })).toBeVisible();
+    await expect(panel.getByText(text('incompleteAnswer'))).toBeVisible();
+    await expect(input).toBeDisabled();
+    await expect(panel.getByText(text('sources'), { exact: false })).toHaveCount(0);
+    await page.evaluate(() =>
+      (window as unknown as { breakKnowledge: () => void }).breakKnowledge()
+    );
+    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(input).toHaveValue('Published guidance?');
+    await panel.getByRole('button', { name: text('retry'), exact: true }).click();
+    await expect(panel.getByText(first, { exact: true })).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => (window as unknown as { knowledgeRequests: unknown[] }).knowledgeRequests
+      )
+    ).toEqual([
+      expect.objectContaining({ message: 'Published guidance?', requestId: expect.any(String) }),
+      expect.objectContaining({ message: 'Published guidance?', requestId: expect.any(String) }),
+    ]);
+    expect(
+      await page.evaluate(() => {
+        const rows = (window as unknown as { knowledgeRequests: unknown[] }).knowledgeRequests;
+        return JSON.stringify(rows[0]) === JSON.stringify(rows[1]);
+      })
+    ).toBe(true);
+    await page.evaluate(() =>
+      (window as unknown as { releaseKnowledge: () => void }).releaseKnowledge()
+    );
+    await expect(panel.getByText(result.reply, { exact: true })).toBeVisible();
+    await expect(panel.getByText(text('incompleteAnswer'))).toHaveCount(0);
+    await expect(input).toHaveValue('');
+    await expect(input).toBeEnabled();
+    await expect(panel.getByRole('list', { name: text('policies.checked') })).toBeVisible();
+    await expect(panel.locator(`time[datetime="${answeredAt}"]`)).toBeVisible();
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    await panel.screenshot({ path: info.outputPath(`knowledge-stream-${locale}.png`) });
+  });

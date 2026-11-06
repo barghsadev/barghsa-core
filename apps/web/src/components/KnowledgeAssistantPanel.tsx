@@ -16,7 +16,8 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useChatRetryAfter } from '../hooks/useChatRetryAfter.js';
 import { inputErrorFields } from '../lib/input-error-fields.js';
 import { authErrorCode } from '../lib/auth-errors.js';
-import { readKnowledgeAnswer, type KnowledgeAnswer } from '../lib/assistant-chat.js';
+import type { KnowledgeAnswer } from '../lib/assistant-chat.js';
+import { readKnowledgeResponse } from '../lib/knowledge-answer-stream.js';
 import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 import { knowledgeSuggestions } from '../lib/knowledge-assistant.js';
 import {
@@ -36,6 +37,7 @@ type Turn = {
   question: string;
   at: number;
   answer?: KnowledgeAnswer;
+  partial?: { text: string; receivedAt: number } | undefined;
   account?: AccountSnapshot;
 };
 type PendingRequest = { requestId: string; message: string };
@@ -159,13 +161,22 @@ function OwnedKnowledgeAssistantPanel({
     setAccountLoading(false);
     setError(null);
     setRetry(null);
+    setTurns((current) =>
+      current.map((turn) =>
+        turn.id === payload.requestId ? { ...turn, partial: undefined } : turn
+      )
+    );
     const abort = new AbortController();
     controller.current = abort;
     try {
       const response = await fetch('/api/ai/knowledge/questions', {
         method: 'POST',
         credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json', 'Accept-Language': locale }),
+        headers: withCsrf({
+          'Content-Type': 'application/json',
+          'Accept-Language': locale,
+          Accept: 'text/event-stream',
+        }),
         body: JSON.stringify(payload),
         signal: abort.signal,
       });
@@ -208,11 +219,22 @@ function OwnedKnowledgeAssistantPanel({
         else captured.current = null;
         return;
       }
-      const answer = readKnowledgeAnswer(await response.json());
+      const answer = await readKnowledgeResponse(response, abort.signal, (text) => {
+        if (abort.signal.aborted || !mounted.current) return;
+        setTurns((current) =>
+          current.map((turn) =>
+            turn.id === payload.requestId
+              ? { ...turn, partial: { text, receivedAt: turn.partial?.receivedAt ?? Date.now() } }
+              : turn
+          )
+        );
+      });
       if (abort.signal.aborted) return;
       if (response.status !== 200 || !answer) throw new Error('Invalid answer');
       setTurns((current) =>
-        current.map((turn) => (turn.id === payload.requestId ? { ...turn, answer } : turn))
+        current.map((turn) =>
+          turn.id === payload.requestId ? { ...turn, answer, partial: undefined } : turn
+        )
       );
       reset({ message: '' });
       captured.current = null;
@@ -406,6 +428,18 @@ function OwnedKnowledgeAssistantPanel({
                 knowledge={turn.answer}
               />
             )}
+            {!turn.answer && turn.partial && (
+              <ChatMessage
+                sender="assistant"
+                message={turn.partial.text}
+                locale={locale}
+                timestamp={turn.partial.receivedAt}
+                timestampLabel={copy('receivedAt')}
+                formatTimestamp={timestamp}
+              >
+                <p className="text-xs text-muted-foreground">{label('incompleteAnswer')}</p>
+              </ChatMessage>
+            )}
             {turn.account && (
               <ChatMessage
                 sender="account"
@@ -454,7 +488,15 @@ function OwnedKnowledgeAssistantPanel({
           </div>
         ))}
         {busy && (
-          <p className="text-sm text-muted-foreground">
+          <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span aria-hidden="true" className="flex gap-1">
+              {[0, 1, 2].map((dot) => (
+                <span
+                  key={dot}
+                  className="size-1 rounded-full bg-current motion-safe:animate-pulse"
+                />
+              ))}
+            </span>
             {label(accountLoading ? 'account.loading' : 'working')}
           </p>
         )}

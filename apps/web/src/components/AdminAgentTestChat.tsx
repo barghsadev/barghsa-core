@@ -298,13 +298,11 @@ export function AdminAgentTestChat({
             }}
           >
             <option value="">{label('chooseAgent')}</option>
-            {agents
-              .filter((agent) => agent.enabled)
-              .map((agent) => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.title}
-                </option>
-              ))}
+            {agents.map((agent) => (
+              <option key={agent.id} value={agent.id} disabled={!agent.enabled}>
+                {agent.title}
+              </option>
+            ))}
           </select>
           <CatalogueFieldFeedback
             id={form.errorId('agentId')}

@@ -1,3 +1,4 @@
+import { Readable } from 'node:stream';
 import {
   Body,
   Controller,
@@ -7,9 +8,10 @@ import {
   HttpException,
   Post,
   Req,
+  StreamableFile,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { appendAiAudit } from './ai-audit.js';
@@ -40,6 +42,14 @@ export class AiKnowledgeChatController {
   @Post('questions')
   @HttpCode(200)
   @Header('Cache-Control', 'private, no-store')
+  @Header('X-Accel-Buffering', 'no')
+  @ApiOkResponse({
+    description: 'A checked answer as JSON, or delta/complete SSE events when requested.',
+    content: {
+      'application/json': { schema: { type: 'object' } },
+      'text/event-stream': { schema: { type: 'string' } },
+    },
+  })
   @ApiOperation({ summary: 'Ask a read-only question using published shared knowledge bases' })
   async ask(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     const started = Date.now();
@@ -66,6 +76,23 @@ export class AiKnowledgeChatController {
         tokenUsage: result.tokenUsage,
         latencyMs: result.latencyMs,
       });
+      if (
+        req.headers.accept
+          ?.split(',')
+          .some((value) => value.trim().split(';')[0] === 'text/event-stream')
+      ) {
+        // Release only the fully checked, audited answer. Provider tokens stay private.
+        const answer = result.answer;
+        function* events() {
+          const characters = Array.from(answer.reply);
+          for (let offset = 0; offset < characters.length; offset += 128)
+            yield `event: delta\ndata: ${JSON.stringify({ text: characters.slice(offset, offset + 128).join('') })}\n\n`;
+          yield `event: complete\ndata: ${JSON.stringify(answer)}\n\n`;
+        }
+        return new StreamableFile(Readable.from(events()), {
+          type: 'text/event-stream; charset=utf-8',
+        });
+      }
       return result.answer;
     } catch (error) {
       const status = error instanceof HttpException ? error.getStatus() : 503;
