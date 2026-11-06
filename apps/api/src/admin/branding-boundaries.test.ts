@@ -106,6 +106,7 @@ describe('branding authority and version boundaries', () => {
     { expectedVersion: 0, config: { primaryColor: 'red' } },
     { expectedVersion: 0, config: { numberStyle: 'arbitrary' } },
     { expectedVersion: 0, config: { darkMode: 'false' } },
+    { expectedVersion: 0, config: { themeMode: 'automatic' } },
     { expectedVersion: 0, config: { backgroundColor: '#15201c' } },
     { expectedVersion: 0, config: { darkBackgroundColor: '#f6f7f4' } },
     { expectedVersion: 0, config: { fontFamily: 'remote-font' } },
@@ -169,3 +170,21 @@ it('forwards a favicon upload with the trusted actor and validates its type and 
   }
   expect(save).toHaveBeenCalledOnce();
 });
+
+it.each(['light', 'dark', 'system'] as const)(
+  'saves explicit %s policy with a consistent legacy boolean',
+  async (themeMode) => {
+    const { controller, save } = fixture();
+    await controller.upsertBrandConfig(
+      { expectedVersion: 2, config: { themeMode, darkMode: themeMode !== 'dark' } },
+      request()
+    );
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({ themeMode, darkMode: themeMode === 'dark' }),
+      'trusted-actor',
+      2,
+      undefined,
+      undefined
+    );
+  }
+);

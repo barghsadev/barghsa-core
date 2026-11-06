@@ -27,7 +27,7 @@ export const Route = createFileRoute('/onboarding/complete')({
  */
 function Confetti() {
   const particles = Array.from({ length: 40 }, (_, i) => {
-    const hue = (i * 37 + 180) % 360;
+    const color = ['primary', 'success', 'warning', 'info', 'purple'][i % 5];
     const left = `${(i / 40) * 100}%`;
     const delay = `${(i * 0.08).toFixed(2)}s`;
     const duration = `${(1.5 + Math.random() * 1.5).toFixed(2)}s`;
@@ -41,7 +41,7 @@ function Confetti() {
           left,
           width: size,
           height: size,
-          backgroundColor: `hsl(${hue}, 80%, 60%)`,
+          backgroundColor: `var(--${color})`,
           animationDelay: delay,
           animationDuration: duration,
           borderRadius: Math.random() > 0.5 ? '50%' : '2px',

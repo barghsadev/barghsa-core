@@ -35005,7 +35005,32 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Active brand configuration for theming."
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "darkMode": {
+                      "type": "boolean"
+                    },
+                    "themeMode": {
+                      "enum": [
+                        "light",
+                        "dark",
+                        "system"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "themeMode",
+                    "darkMode"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Active branding. A fixed theme overrides user preference; system permits user/device choice. Legacy darkMode remains available."
           },
           "500": {
             "description": "Internal server error"

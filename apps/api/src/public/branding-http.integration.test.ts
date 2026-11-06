@@ -870,3 +870,53 @@ it('publishes a validated number style only through the reviewed branding versio
     ).rows.map((row) => row.style)
   ).toEqual(['western', 'persian', 'locale']);
 });
+
+it('keeps theme policy private until exact activation and normalizes legacy fixed themes', async () => {
+  expect(await publicConfig()).toMatchObject({ themeMode: 'system' });
+  const legacy = await saved(
+    await request('admin/branding/config', 'PUT', {
+      expectedVersion: 0,
+      config: { darkMode: true },
+    })
+  );
+  expect(await publicConfig()).toMatchObject({ themeMode: 'system' });
+  expect(
+    (
+      await request('admin/branding/activate', 'POST', {
+        draftId: legacy.id,
+        expectedVersion: legacy.version,
+      })
+    ).status
+  ).toBe(200);
+  expect(await publicConfig()).toMatchObject({ themeMode: 'dark', darkMode: true });
+  const next = await saved(
+    await request('admin/branding/config', 'PUT', {
+      expectedVersion: legacy.version,
+      config: { themeMode: 'system', darkMode: true },
+    })
+  );
+  expect(next.config).toMatchObject({ themeMode: 'system', darkMode: false });
+  expect(await publicConfig()).toMatchObject({ themeMode: 'dark' });
+  expect(
+    (
+      await request('admin/branding/activate', 'POST', {
+        draftId: next.id,
+        expectedVersion: next.version,
+      })
+    ).status
+  ).toBe(200);
+  expect(await publicConfig()).toMatchObject({ themeMode: 'system', darkMode: false });
+  const count = (await http.pool.query('SELECT count(*)::int AS count FROM brand_config')).rows[0]
+    .count;
+  expect(
+    (
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: next.version,
+        config: { themeMode: 'automatic' },
+      })
+    ).status
+  ).toBe(400);
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM brand_config')).rows[0].count
+  ).toBe(count);
+});

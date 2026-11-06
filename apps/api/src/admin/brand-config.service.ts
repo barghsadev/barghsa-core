@@ -91,6 +91,7 @@ export class BrandConfigService {
         logoUrl: null,
         faviconUrl: null,
         darkMode: false,
+        themeMode: 'system',
         numberStyle: 'locale',
       },
       version: 0,

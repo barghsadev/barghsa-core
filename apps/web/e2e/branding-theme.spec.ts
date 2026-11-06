@@ -11,7 +11,10 @@ for (const locale of ['fa', 'en'] as const)
     test(`branding editor and live preview remain readable (${locale}, dark=${darkMode})`, async ({
       page,
     }) => {
-      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.emulateMedia({
+        reducedMotion: 'reduce',
+        colorScheme: darkMode ? 'dark' : 'light',
+      });
       await crmShell(page, locale);
       const config = {
         appTitle: 'Theme preview',
@@ -31,6 +34,7 @@ for (const locale of ['fa', 'en'] as const)
         logoUrl: null,
         faviconUrl: null,
         darkMode,
+        themeMode: 'system',
       };
       let preference: 'light' | 'dark' | null = null;
       await page.route('**/api/user/settings/theme', async (route) => {
@@ -117,13 +121,14 @@ for (const locale of ['fa', 'en'] as const)
       ).toHaveCSS('background-color', 'rgb(119, 119, 119)');
       await scan();
       // Preview follows the draft without changing the active application theme.
-      const toggle = page.getByRole('checkbox', {
-        name: brandingText('darkMode', locale),
+      const policy = page.getByRole('combobox', {
+        name: brandingText('themePolicy', locale),
         exact: true,
       });
-      await toggle.focus();
-      await toggle.press('Space');
-      await expect(toggle).toBeChecked({ checked: !darkMode });
+      await policy.focus();
+      await expect(policy).toBeFocused();
+      await policy.selectOption(darkMode ? 'light' : 'dark');
+      await expect(policy).toHaveValue(darkMode ? 'light' : 'dark');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       await scan();
       const accountMenu = page.getByRole('button', {
@@ -192,3 +197,129 @@ for (const locale of ['fa', 'en'] as const)
       }
     });
   }
+
+for (const locale of ['fa', 'en'] as const) {
+  test(`published admin policy controls the account UI without writing user preferences (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    let writes = 0;
+    await page.route('**/api/user/settings/theme', async (route) => {
+      if (route.request().method() === 'PUT') writes++;
+      await route.fulfill({ json: { mode: 'light' } });
+    });
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          appTitle: 'Managed theme',
+          appTitleFa: 'نمایش مدیریت‌شده',
+          supportEmail: 'support@example.test',
+          supportPhone: '02126658042',
+          supportMobile: '09002550292',
+          slogan: '',
+          primaryColor: '#176b5b',
+          secondaryColor: '#547467',
+          accentColor: '#d6a74e',
+          backgroundColor: '#f6f7f4',
+          darkBackgroundColor: '#15201c',
+          darkMode: true,
+          themeMode: 'dark',
+          logoUrl: null,
+          faviconUrl: null,
+        },
+      })
+    );
+    await page.goto('/app');
+    await page.getByRole('button', { name: shellText('accountMenu', locale), exact: true }).click();
+    const theme = page.getByRole('combobox', { name: shellText('theme', locale) });
+    await expect(theme).toBeDisabled();
+    await expect(theme).toHaveValue('dark');
+    await expect(theme).toHaveAccessibleDescription(shellText('themeManaged', locale));
+    await expect(page.locator('html')).toHaveClass(/dark/);
+    expect(writes).toBe(0);
+  });
+}
+
+for (const scenario of [
+  { name: 'admin light', policy: 'light', preference: 'dark', device: 'dark', expected: false },
+  { name: 'admin dark', policy: 'dark', preference: 'light', device: 'light', expected: true },
+  { name: 'saved light', policy: 'system', preference: 'light', device: 'dark', expected: false },
+  { name: 'saved dark', policy: 'system', preference: 'dark', device: 'light', expected: true },
+  { name: 'device dark', policy: 'system', preference: 'system', device: 'dark', expected: true },
+  {
+    name: 'invalid storage',
+    policy: 'invalid',
+    preference: 'invalid',
+    device: 'light',
+    expected: false,
+  },
+  {
+    name: 'unavailable storage',
+    policy: 'system',
+    preference: 'system',
+    device: 'dark',
+    expected: true,
+    unavailable: true,
+  },
+] as const) {
+  test(`applies ${scenario.name} before React loads under the existing CSP`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scenario.device });
+    await page.addInitScript(
+      ({ policy, preference, unavailable }) => {
+        if (unavailable)
+          Object.defineProperty(window, 'localStorage', {
+            get() {
+              throw new Error('Unavailable');
+            },
+          });
+        else {
+          localStorage.setItem('barghsa.theme-policy.v1', policy);
+          localStorage.setItem('barghsa.theme.v1', preference);
+        }
+      },
+      { ...scenario, unavailable: 'unavailable' in scenario }
+    );
+    await page.route('**/auth/assets/*.js', (route) => route.abort());
+    const response = await page.goto('/login');
+    await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
+    const bootstrap = page.locator('head script:not([src])');
+    await expect(bootstrap).toHaveCount(1);
+    const nonce = await bootstrap.evaluate((node) => (node as HTMLScriptElement).nonce);
+    expect(nonce).toBeTruthy();
+    expect(response!.headers()['content-security-policy-report-only']).toContain(
+      `'nonce-${nonce}'`
+    );
+    expect(
+      response!.headers()['content-security-policy-report-only'].match(/script-src [^;]*/)?.[0]
+    ).not.toContain("'unsafe-inline'");
+    expect(await page.locator('#root').textContent()).toBe('');
+    await expect(page.locator('html')).toHaveClass(scenario.expected ? /dark/ : /^(?!.*\bdark\b)/);
+    // The production stylesheet resolves the complete scales before any provider runs.
+    const missing = await page.evaluate(() => {
+      const css = getComputedStyle(document.documentElement);
+      const names = [
+        'neutral',
+        'primary',
+        'secondary',
+        'success',
+        'warning',
+        'danger',
+        'info',
+      ].flatMap((family) =>
+        [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map(
+          (step) => `--palette-${family}-${step}`
+        )
+      );
+      names.push(
+        '--shadow-xl',
+        '--shadow-2xl',
+        '--font-size-4xl',
+        '--font-mono',
+        '--ease-in',
+        '--spacing-16'
+      );
+      return names.filter((name) => !css.getPropertyValue(name).trim());
+    });
+    expect(missing).toEqual([]);
+  });
+}

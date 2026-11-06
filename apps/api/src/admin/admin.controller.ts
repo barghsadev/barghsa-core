@@ -151,56 +151,62 @@ export const UpsertBrandConfigSchema = z.object({
   expectedVersion: z.number().int().min(0).max(2147483647),
   logoUploadKey: z.string().max(255).optional(),
   faviconUploadKey: z.string().max(255).optional(),
-  config: z.object({
-    appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
-    appTitleFa: z.string().trim().min(1).max(100).optional().default('برقسا'),
-    supportEmail: z.email().max(254).optional().default('info@barghsa.com'),
-    supportPhone: z
-      .string()
-      .regex(/^\+?[0-9 ()-]{7,25}$/)
-      .optional()
-      .default('021-26658042'),
-    supportMobile: z
-      .string()
-      .regex(/^\+?[0-9 ()-]{7,25}$/)
-      .optional()
-      .default('09002550292'),
-    slogan: z.string().max(200).optional().default(''),
-    primaryColor: z
-      .string()
-      .regex(hexColorRe, 'Must be a valid 6-char hex color')
-      .optional()
-      .default('#176b5b'),
-    secondaryColor: z
-      .string()
-      .regex(hexColorRe, 'Must be a valid 6-char hex color')
-      .optional()
-      .default('#547467'),
-    accentColor: z
-      .string()
-      .regex(hexColorRe, 'Must be a valid 6-char hex color')
-      .optional()
-      .default('#d6a74e'),
-    backgroundColor: z
-      .string()
-      .regex(hexColorRe)
-      .refine(readableBackground('#203631'), 'Background must contrast with light-mode text')
-      .optional()
-      .default('#f6f7f4'),
-    darkBackgroundColor: z
-      .string()
-      .regex(hexColorRe)
-      .refine(readableBackground('#e7eee6'), 'Background must contrast with dark-mode text')
-      .optional()
-      .default('#15201c'),
-    fontFamily: z.enum(['vazirmatn', 'tahoma']).optional().default('vazirmatn'),
-    borderRadiusRem: z.number().min(0).max(1.5).optional().default(0.75),
-    spacingScale: z.number().min(0.875).max(1.25).optional().default(1),
-    logoUrl: assetUrl.nullable().optional().default(null),
-    faviconUrl: assetUrl.nullable().optional().default(null),
-    darkMode: z.boolean().optional().default(false),
-    numberStyle: z.enum(['locale', 'persian', 'western']).optional().default('locale'),
-  }),
+  config: z
+    .object({
+      appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
+      appTitleFa: z.string().trim().min(1).max(100).optional().default('برقسا'),
+      supportEmail: z.email().max(254).optional().default('info@barghsa.com'),
+      supportPhone: z
+        .string()
+        .regex(/^\+?[0-9 ()-]{7,25}$/)
+        .optional()
+        .default('021-26658042'),
+      supportMobile: z
+        .string()
+        .regex(/^\+?[0-9 ()-]{7,25}$/)
+        .optional()
+        .default('09002550292'),
+      slogan: z.string().max(200).optional().default(''),
+      primaryColor: z
+        .string()
+        .regex(hexColorRe, 'Must be a valid 6-char hex color')
+        .optional()
+        .default('#176b5b'),
+      secondaryColor: z
+        .string()
+        .regex(hexColorRe, 'Must be a valid 6-char hex color')
+        .optional()
+        .default('#547467'),
+      accentColor: z
+        .string()
+        .regex(hexColorRe, 'Must be a valid 6-char hex color')
+        .optional()
+        .default('#d6a74e'),
+      backgroundColor: z
+        .string()
+        .regex(hexColorRe)
+        .refine(readableBackground('#203631'), 'Background must contrast with light-mode text')
+        .optional()
+        .default('#f6f7f4'),
+      darkBackgroundColor: z
+        .string()
+        .regex(hexColorRe)
+        .refine(readableBackground('#e7eee6'), 'Background must contrast with dark-mode text')
+        .optional()
+        .default('#15201c'),
+      fontFamily: z.enum(['vazirmatn', 'tahoma']).optional().default('vazirmatn'),
+      borderRadiusRem: z.number().min(0).max(1.5).optional().default(0.75),
+      spacingScale: z.number().min(0.875).max(1.25).optional().default(1),
+      logoUrl: assetUrl.nullable().optional().default(null),
+      faviconUrl: assetUrl.nullable().optional().default(null),
+      darkMode: z.boolean().optional().default(false),
+      themeMode: z.enum(['light', 'dark', 'system']).optional(),
+      numberStyle: z.enum(['locale', 'persian', 'western']).optional().default('locale'),
+    })
+    .transform((config) => ({
+      ...config,
+      ...(config.themeMode ? { darkMode: config.themeMode === 'dark' } : {}),
+    })),
 });
 export interface BrandConfigDto {
   id: string;

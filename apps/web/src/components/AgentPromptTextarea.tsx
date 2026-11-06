@@ -1,16 +1,9 @@
 import { forwardRef, useMemo, useRef, type TextareaHTMLAttributes } from 'react';
 import { lexer, type Token } from 'marked';
+import { BRAND_TEXT_COLORS } from '../lib/prompt-colors.js';
 import { getBrandTextColor, useBrandConfig } from '../providers/BrandThemeProvider.js';
 
-const color: Record<string, [string, string]> = {
-  heading: ['#6d28d9', '#c4b5fd'],
-  list: ['#1d4ed8', '#93c5fd'],
-  link: ['#1d4ed8', '#93c5fd'],
-  code: ['#047857', '#6ee7b7'],
-  codespan: ['#047857', '#6ee7b7'],
-  strong: ['#92400e', '#fcd34d'],
-  em: ['#6d28d9', '#c4b5fd'],
-};
+const color = BRAND_TEXT_COLORS;
 /** Highlight source only: React escapes every token and submitted text stays unchanged. */
 export function promptParts(value: string) {
   try {
@@ -37,8 +30,8 @@ export const AgentPromptTextarea = forwardRef<
   HTMLTextAreaElement,
   TextareaHTMLAttributes<HTMLTextAreaElement> & { value: string }
 >(function AgentPromptTextarea({ value, className = '', onScroll, ...props }, ref) {
-  const { brandConfig, userMode } = useBrandConfig();
-  const dark = userMode === null ? brandConfig.darkMode : userMode === 'dark';
+  const { brandConfig, resolvedTheme } = useBrandConfig();
+  const dark = resolvedTheme === 'dark';
   const background = dark ? brandConfig.darkBackgroundColor : brandConfig.backgroundColor;
   const palette = useMemo(
     () =>
@@ -60,6 +53,9 @@ export const AgentPromptTextarea = forwardRef<
         ref={backdrop}
         aria-hidden="true"
         dir={props.dir}
+        style={Object.fromEntries(
+          Object.entries(palette).map(([name, value]) => [`--syntax-${name}`, value])
+        )}
         className={`pointer-events-none absolute inset-0 m-0 overflow-hidden rounded-md border-transparent text-foreground forced-colors:hidden ${typography}`}
       >
         {parts.map((part, index) => (
@@ -70,7 +66,7 @@ export const AgentPromptTextarea = forwardRef<
                 ? `text-inherit ${palette[part.color] === 'var(--foreground)' ? 'underline decoration-dotted underline-offset-4' : ''}`
                 : undefined
             }
-            style={part.color ? { color: palette[part.color] } : undefined}
+            style={part.color ? { color: `var(--syntax-${part.color})` } : undefined}
           >
             {part.text}
           </span>

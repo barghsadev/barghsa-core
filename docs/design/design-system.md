@@ -13,7 +13,7 @@ This work changes the authentication, customer application and admin shells. Exi
 | Concern                                            | Source                                          |
 | -------------------------------------------------- | ----------------------------------------------- |
 | Palette, semantic colors, layout, motion and fonts | `packages/ui/src/styles.css`                    |
-| Additional Tailwind scales                         | `packages/ui/tailwind.config.ts`                |
+| Additional Tailwind spacing and motion             | `packages/ui/tailwind.config.ts`                |
 | Public component exports                           | `packages/ui/src/index.ts`                      |
 | Active administrator branding                      | `apps/web/src/providers/BrandThemeProvider.tsx` |
 | Application frame and navigation rendering         | `apps/web/src/components/AppShell.tsx`          |
@@ -46,7 +46,13 @@ Use semantic classes in components. Keep literal colors in the token stylesheet 
 
 Pair feedback text with its matching soft background, such as `text-warning bg-warning-soft`. Never assign business status from a color alone. Labels remain visible. The dashboard preserves its existing high-count attention threshold with a restrained icon treatment.
 
-`BrandThemeProvider` still owns active primary, secondary and accent colors, foreground contrast and the administrator's light/dark choice. Its validated server configuration overrides fallback tokens. The refresh deliberately does not change saved branding or introduce another theme-preference owner. The auth illustration uses separate dark brand-panel tokens so its text stays readable for arbitrary configured action colors.
+`BrandThemeProvider` owns active primary, secondary and accent colors and foreground contrast. Published `themeMode` chooses forced light, forced dark or user/device control. A fixed administrator policy wins over the saved user preference; `system` allows the user's light/dark choice and then the device preference. Existing configurations without `themeMode` retain their `darkMode` policy. Editing a legacy record normalizes that policy without changing it. New unconfigured installations follow the device. Draft changes affect the preview until exact-version activation. The auth illustration uses separate dark brand-panel tokens so its text stays readable for arbitrary configured action colors.
+
+The complete neutral, primary, secondary, success, warning, danger and info scales live in the shared stylesheet as `--palette-<family>-50` through `950`. Light and dark have separate values. HSL preserves the existing palette colors; `color-mix(in oklch, …)` derives intermediate scale values. Tailwind's `brand-*`, `brand-secondary-*`, `surface-*` and feedback scales reference these variables. Component colors use semantic classes or custom properties. The production ESLint rule rejects literal hex, RGB, HSL and OKLCH colors in JSX/TSX; validated configuration and test fixtures keep their necessary data values.
+
+The blocking script in `apps/web/index.html` uses the cached published policy, then browser preference, then device preference before React loads. The static server applies its existing fresh CSP nonce to that script. A first visit without a cached policy follows the device until the current public configuration arrives; cached branding is a display preference, never an authorization decision. Device changes and cross-tab preference changes update the mounted application. Unavailable browser storage leaves device and in-memory controls working.
+
+Account theme updates still use the existing CSRF-protected API and apply only after its canonical acknowledgement. `system` maps to the backend's existing null preference. A forced published policy disables the account control with a localized explanation and preserves the saved preference for later user/device mode.
 
 ## Typography
 
@@ -64,6 +70,8 @@ Persian text has natural letter spacing and a relaxed line height. Avoid upperca
 
 ## Space and shape
 
+The existing design context in `.impeccable.md` and this document retains Vazirmatn for both languages, a 72px topbar and a 448px auth panel. These replace Epic 07’s earlier Inter/64px/480px defaults; the installed Base UI preset also remains in use.
+
 Use the existing 4px spacing grid. Related controls use 8–12px gaps, field groups use 16–24px, and major sections use 24–32px. A card normally has 24px padding, with the existing compact size available for dense content.
 
 | Token                    | Value  |
@@ -76,6 +84,10 @@ Use the existing 4px spacing grid. Related controls use 8–12px gaps, field gro
 | `--duration-fast`        | 150ms  |
 | `--duration-normal`      | 200ms  |
 | `--duration-slow`        | 300ms  |
+
+Typography tokens cover xs–4xl, normal/medium/semibold/bold and tight/normal/relaxed leading. `--spacing-1` through `--spacing-16` follow the configured 4px base. Shadows cover sm–2xl; motion exposes fast/normal/slow durations and in/out/in-out easing.
+
+Tailwind v4 supplies logical start/end padding, margin, positioning, alignment and the `rtl` variant. `UiDirectionProvider` shares the application’s live locale through `useDirection()` (`dir`, `isRtl`, `isLtr`); `DirectionAware` uses that same source. Changing language updates the HTML direction and Base UI context without navigation.
 
 Use borders before shadows. Shadows identify raised cards and overlays. Do not add large decorative icons or nested cards to every section. Tables keep their existing columns, sorting and controls; the shell supplies a common header surface and row hover treatment.
 

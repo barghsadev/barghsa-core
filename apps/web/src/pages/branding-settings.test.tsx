@@ -307,3 +307,18 @@ it('drops a pending favicon when its URL is edited and clears private previews o
   expect(host.querySelector('img[alt="Favicon preview"]')).toBeNull();
   expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-favicon.png');
 });
+
+it('preserves a legacy fixed theme while editing an unrelated field', async () => {
+  const legacy = { ...publishedBrand.config, darkMode: true };
+  delete legacy.themeMode;
+  current = { ...publishedBrand, config: legacy };
+  history = [current, previousBrand];
+  await render();
+  await click('Edit');
+  await fill('Legacy title');
+  await click('Save Draft');
+  expect(capture.action?.body).toEqual({
+    config: { ...legacy, appTitle: 'Legacy title', themeMode: 'dark' },
+    expectedVersion: 2,
+  });
+});

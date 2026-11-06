@@ -26,13 +26,36 @@ for (const locale of ['en', 'fa'] as const) {
                 email: 'ari@example.test',
                 mobile: '+989121234567',
                 isStaff: area === 'staff',
-                navigation: fullNavigation(area === 'staff' ? 'staff' : 'customer'),
+                navigation: {
+                  ...fullNavigation(area === 'staff' ? 'staff' : 'customer'),
+                  profileId: area === 'staff' ? null : '99111111-1111-4111-8111-111111111111',
+                },
                 operatingContext: area === 'staff' ? 'staff' : 'customer',
                 canSwitchContext: area === 'staff',
                 requiresTosAcceptance: false,
               },
             })
           : route.fulfill({ status: 401, json: {} })
+      );
+      await page.route('**/api/profiles', (route) =>
+        route.fulfill({
+          json: {
+            profiles: [
+              {
+                id: '99111111-1111-4111-8111-111111111111',
+                profileType: 'INDIVIDUAL',
+                isDefault: true,
+                status: 'VERIFIED',
+                title: null,
+                firstName: 'Ari',
+                lastName: 'Example',
+                nationalId: null,
+              },
+            ],
+            hasDefault: true,
+            activeProfileId: '99111111-1111-4111-8111-111111111111',
+          },
+        })
       );
       await page.route('**/api/user/settings/theme', (route) => {
         if (route.request().method() === 'PUT') {

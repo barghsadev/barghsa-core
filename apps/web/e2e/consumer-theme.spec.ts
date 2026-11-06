@@ -1,3 +1,4 @@
+import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
@@ -148,7 +149,15 @@ for (const locale of ['en', 'fa'] as const)
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       await page.route('**/api/auth/user', (route) =>
         route.fulfill({
-          json: { isStaff: false, userId: 'theme-owner', requiresTosAcceptance: false },
+          json: {
+            isStaff: false,
+            userId: 'theme-owner',
+            requiresTosAcceptance: false,
+            navigation: {
+              ...fullNavigation('customer'),
+              profileId: '99111111-1111-4111-8111-111111111111',
+            },
+          },
         })
       );
       await page.route('**/api/public/branding/config', (route) =>
@@ -177,7 +186,7 @@ for (const locale of ['en', 'fa'] as const)
           json: {
             profiles: [
               {
-                id: 'profile-one',
+                id: '99111111-1111-4111-8111-111111111111',
                 profileType: 'INDIVIDUAL',
                 isDefault: true,
                 status: 'VERIFIED',
@@ -187,7 +196,7 @@ for (const locale of ['en', 'fa'] as const)
                 nationalId: null,
               },
               {
-                id: 'profile-two',
+                id: '99222222-2222-4222-8222-222222222222',
                 profileType: 'INDIVIDUAL',
                 isDefault: false,
                 status: 'VERIFIED',
@@ -198,14 +207,14 @@ for (const locale of ['en', 'fa'] as const)
               },
             ],
             hasDefault: true,
-            activeProfileId: 'profile-one',
+            activeProfileId: '99111111-1111-4111-8111-111111111111',
           },
         })
       );
       await page.route('**/api/dashboard{,/**}', (route) =>
         fulfillDashboard(route, {
           json: {
-            profile: { id: 'profile-one', name: 'Theme Owner' },
+            profile: { id: '99111111-1111-4111-8111-111111111111', name: 'Theme Owner' },
             wallet: { balance: '120000', currency: 'IRR', lowBalanceWarning: true },
             activeOrders: 2,
             pendingInvoices: 3,
@@ -268,7 +277,17 @@ for (const locale of ['en', 'fa'] as const)
         const main = page.locator('#dashboard-content');
         await expect(main.getByRole('heading').first()).toBeVisible();
         await page.locator('button[aria-controls$="navigation"]').click();
-        await expect(page.locator('#profile-switcher')).toHaveValue('profile-one');
+        const profile = page.locator('#profile-switcher');
+        await expect(profile).toContainText('Theme Owner');
+        await profile.click();
+        await expect(
+          page.locator('[data-profile-id="99111111-1111-4111-8111-111111111111"]')
+        ).toBeChecked();
+        await expect(
+          page.locator('[data-profile-id="99222222-2222-4222-8222-222222222222"]')
+        ).not.toBeChecked();
+        await page.keyboard.press('Escape');
+        await expect(profile).toBeFocused();
         await expect
           .poll(() => page.locator('html').evaluate((e) => e.classList.contains('dark')))
           .toBe(dark);

@@ -3,6 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      (() => {
+        let preference, policy;
+        try {
+          preference = localStorage.getItem('barghsa.theme.v1');
+          policy = localStorage.getItem('barghsa.theme-policy.v1');
+        } catch {}
+        const mode =
+          policy === 'light' || policy === 'dark'
+            ? policy
+            : preference === 'light' || preference === 'dark'
+              ? preference
+              : matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        document.documentElement.classList.toggle('dark', mode === 'dark');
+      })();
+    </script>
     <title>Barghsa</title>
   </head>
   <body>

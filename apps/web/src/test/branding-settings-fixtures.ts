@@ -17,6 +17,7 @@ export const brandSettings = {
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,
+  themeMode: 'light' as const,
   numberStyle: 'locale' as const,
 };
 export const publishedBrand: BrandConfigDto = {

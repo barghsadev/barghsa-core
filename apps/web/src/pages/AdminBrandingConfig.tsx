@@ -1,7 +1,9 @@
+import { DEFAULT_BRAND_CONFIG } from '../lib/brand-config.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { Button } from '@barghsa/ui';
+import { Button, NativeSelect, NativeSelectOption } from '@barghsa/ui';
 import {
   getContrastForeground,
+  useBrandConfig,
   parseBrandConfig,
   type BrandConfig,
 } from '../providers/BrandThemeProvider.js';
@@ -36,26 +38,7 @@ import { t } from '@barghsa/i18n/admin-ui';
 // Default config
 // ---------------------------------------------------------------------------
 
-const DEFAULT_CONFIG: BrandConfig = {
-  appTitle: '',
-  appTitleFa: '',
-  supportEmail: '',
-  supportPhone: '',
-  supportMobile: '',
-  slogan: '',
-  primaryColor: '#176b5b',
-  secondaryColor: '#547467',
-  accentColor: '#d6a74e',
-  backgroundColor: '#f6f7f4',
-  darkBackgroundColor: '#15201c',
-  fontFamily: 'vazirmatn',
-  borderRadiusRem: 0.75,
-  spacingScale: 1,
-  logoUrl: null,
-  faviconUrl: null,
-  darkMode: false,
-  numberStyle: 'locale',
-};
+const DEFAULT_CONFIG = DEFAULT_BRAND_CONFIG;
 
 // ---------------------------------------------------------------------------
 // API helpers
@@ -94,7 +77,7 @@ function ColorInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="bg-background text-foreground border border-input rounded px-2 py-1 text-sm w-28 font-mono"
-        placeholder="#000000"
+        placeholder="#RRGGBB"
       />
       <div className="w-16 h-8 rounded border border-border" style={{ backgroundColor: value }} />
     </div>
@@ -213,12 +196,11 @@ export default function AdminBrandingConfig() {
         work.current.editing &&
         (work.current.logoUploadKey ||
           work.current.faviconUploadKey ||
-          JSON.stringify(work.current.config) !==
-            JSON.stringify({ ...DEFAULT_CONFIG, ...previous.config }))
+          JSON.stringify(work.current.config) !== JSON.stringify(parseBrandConfig(previous.config)))
       )
         setNeedsReset(true);
       else {
-        setConfig({ ...DEFAULT_CONFIG, ...activeConfig.config });
+        setConfig(parseBrandConfig(activeConfig.config)!);
         setLogoFile(null);
         setLogoUploadKey(null);
         setFaviconFile(null);
@@ -237,7 +219,7 @@ export default function AdminBrandingConfig() {
   }
   function resetEditor() {
     if (!ready || !activeConfig) return;
-    setConfig({ ...DEFAULT_CONFIG, ...activeConfig.config });
+    setConfig(parseBrandConfig(activeConfig.config)!);
     setLogoFile(null);
     setLogoUploadKey(null);
     setFaviconFile(null);
@@ -256,7 +238,11 @@ export default function AdminBrandingConfig() {
   const updateConfig = useCallback(
     (key: keyof BrandConfig, value: string | number | boolean | null) => {
       setMessage(null);
-      setConfig((prev) => ({ ...prev, [key]: value }));
+      setConfig((prev) => ({
+        ...prev,
+        [key]: value,
+        ...(key === 'themeMode' ? { darkMode: value === 'dark' } : {}),
+      }));
     },
     []
   );
@@ -867,21 +853,23 @@ export default function AdminBrandingConfig() {
 
           {/* ── Dark Mode ─────────────────────────────────────────────────── */}
           <section className="bg-background rounded-lg border border-border p-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">{text('darkMode')}</h2>
-                <p className="text-sm text-muted-foreground">{text('darkHint')}</p>
+                <h2 className="text-lg font-semibold text-foreground">{text('themePolicy')}</h2>
+                <p id="branding-theme-policy-hint" className="text-sm text-muted-foreground">
+                  {text('themePolicyHint')}
+                </p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <span className="sr-only">{text('darkMode')}</span>
-                <input
-                  type="checkbox"
-                  checked={config.darkMode}
-                  onChange={(e) => updateConfig('darkMode', e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-muted peer-focus-visible:ring-2 peer-focus-visible:ring-foreground peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-foreground peer-checked:after:bg-primary-foreground after:rounded-full after:h-5 after:w-5 after:transition-transform peer-checked:bg-primary" />
-              </label>
+              <NativeSelect
+                aria-label={text('themePolicy')}
+                aria-describedby="branding-theme-policy-hint"
+                value={config.themeMode ?? (config.darkMode ? 'dark' : 'light')}
+                onChange={(event) => updateConfig('themeMode', event.target.value)}
+              >
+                <NativeSelectOption value="light">{text('themeLight')}</NativeSelectOption>
+                <NativeSelectOption value="dark">{text('themeDark')}</NativeSelectOption>
+                <NativeSelectOption value="system">{text('themeSystem')}</NativeSelectOption>
+              </NativeSelect>
             </div>
           </section>
 
@@ -948,14 +936,19 @@ function BrandingPreview({
   logo?: string | null;
 }) {
   const safe = parseBrandConfig(config) ?? DEFAULT_CONFIG;
+  const { systemTheme } = useBrandConfig();
+  const previewDark =
+    safe.themeMode === 'system'
+      ? systemTheme === 'dark'
+      : (safe.themeMode ?? (safe.darkMode ? 'dark' : 'light')) === 'dark';
   const image =
     logo ?? safe.logoUrl?.replace('/api/public/branding/assets/', '/api/admin/branding/assets/');
   return (
     <div
       className="flex min-w-0 flex-col gap-4 rounded-lg border p-5"
       style={{
-        backgroundColor: safe.darkMode ? safe.darkBackgroundColor : safe.backgroundColor,
-        color: safe.darkMode ? '#e7eee6' : '#203631',
+        backgroundColor: previewDark ? safe.darkBackgroundColor : safe.backgroundColor,
+        color: previewDark ? 'var(--theme-dark-foreground)' : 'var(--theme-light-foreground)',
         borderColor: safe.primaryColor,
         borderRadius: `${safe.borderRadiusRem}rem`,
         padding: `${1.25 * safe.spacingScale}rem`,

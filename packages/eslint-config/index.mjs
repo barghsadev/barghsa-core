@@ -4,6 +4,7 @@ import react from 'eslint-plugin-react';
 import hooks from 'eslint-plugin-react-hooks';
 import a11y from 'eslint-plugin-jsx-a11y';
 import globals from 'globals';
+import noLiteralColors from './no-literal-colors.mjs';
 
 export default tseslint.config(
   {
@@ -49,13 +50,19 @@ export default tseslint.config(
     files: ['apps/web/src/**/*.{jsx,tsx}', 'packages/ui/src/**/*.{jsx,tsx}'],
     ...react.configs.flat.recommended,
     settings: { react: { version: '19' } },
-    plugins: { react, 'react-hooks': hooks, 'jsx-a11y': a11y },
+    plugins: {
+      react,
+      'react-hooks': hooks,
+      'jsx-a11y': a11y,
+      barghsa: { rules: { 'no-literal-colors': noLiteralColors } },
+    },
     rules: {
       ...react.configs.flat.recommended.rules,
       ...a11y.flatConfigs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react-hooks/rules-of-hooks': 'error',
+      'barghsa/no-literal-colors': 'error',
       'jsx-a11y/label-has-associated-control': ['error', { depth: 5 }],
       'jsx-a11y/no-autofocus': ['error', { ignoreNonDOM: true }],
     },
@@ -63,7 +70,7 @@ export default tseslint.config(
   {
     files: ['**/*.{test,spec}.{js,jsx,ts,tsx}', '**/test/**', '**/e2e/**'],
     // Strict production typing is separate from intentionally malformed test inputs.
-    rules: { '@typescript-eslint/no-explicit-any': 'off' },
+    rules: { '@typescript-eslint/no-explicit-any': 'off', 'barghsa/no-literal-colors': 'off' },
   },
   {
     files: ['**/e2e/**'],

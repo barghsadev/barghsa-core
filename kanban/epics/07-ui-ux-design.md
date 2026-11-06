@@ -168,10 +168,10 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-07.02.01.01** | Define global color palette tokens in `globals.css`: neutral gray scale (`50–950`), brand primary (`50–950`), brand secondary, success (green), warning (amber), danger (red), info (blue). Each scale has light and dark values. | M |
+| **T-07.02.01.01** | Define global color palette tokens in the existing shared `packages/ui/src/styles.css`: neutral gray scale (`50–950`), brand primary (`50–950`), brand secondary, success (green), warning (amber), danger (red), info (blue). Each scale has light and dark values. | M |
 | **T-07.02.01.02** | Define semantic CSS variables mapped from palette: `--background`, `--foreground`, `--card`, `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--muted`, `--muted-foreground`, `--accent`, `--accent-foreground`, `--destructive`, `--destructive-foreground`, `--border`, `--input`, `--ring`, `--radius`, `--shadow-sm` through `--shadow-2xl`. | M |
-| **T-07.02.01.03** | Define typography tokens: `--font-sans` (Inter for EN, Vazirmatn for FA), `--font-mono` (monospace for code/data), `--font-heading` (usually same as sans), `--font-size-xs` through `--font-size-4xl`, `--font-weight-normal/medium/semibold/bold`, `--line-height-tight/normal/relaxed`. | M |
-| **T-07.02.01.04** | Define spacing tokens: `--spacing-1` through `--spacing-16` (4px base unit). Layout tokens: `--sidebar-width` (default 280px), `--topbar-height` (default 64px), `--container-max-width` (default 1280px), `--auth-panel-max-width` (default 480px). | M |
+| **T-07.02.01.03** | Define typography tokens: `--font-sans` (the existing `.impeccable.md` / `docs/design/design-system.md` design context retains self-hosted Vazirmatn for both EN and FA; validated Tahoma branding override remains), `--font-mono` (monospace for code/data), `--font-heading` (usually same as sans), `--font-size-xs` through `--font-size-4xl`, `--font-weight-normal/medium/semibold/bold`, `--line-height-tight/normal/relaxed`. | M |
+| **T-07.02.01.04** | Define spacing tokens: `--spacing-1` through `--spacing-16` (4px base unit). Layout tokens: `--sidebar-width` (default 280px), `--topbar-height` (72px from the existing design context), `--container-max-width` (default 1280px), `--auth-panel-max-width` (448px from the existing design context). | M |
 | **T-07.02.01.05** | Define animation tokens: `--duration-fast` (150ms), `--duration-normal` (200ms), `--duration-slow` (300ms), `--ease-in-out`, `--ease-out`, `--ease-in`. | S |
 | **T-07.02.01.06** | ⚠️ Ensure all shadcn/ui and custom components reference CSS variables exclusively in `className` via Tailwind's `theme()` or arbitary `var(--variable)`. Zero hardcoded hex colors in component source files. | M |
 | **T-07.02.01.07** | Add a CI lint rule (`stylelint` or `eslint-plugin-tailwind`) that flags hardcoded color values (hex, rgb, hsl) in component files — all colors must use CSS variable references. | S |
@@ -186,8 +186,8 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-07.02.02.01** | Define `:root` (light default) and `.dark` CSS variable overrides for every semantic token in `globals.css`. Use `oklch` or `hsl` color space for perceptually uniform luminance adjustments. | M |
-| **T-07.02.02.02** | Implement `ThemeProvider` React component that reads: (1) user's `prefers-color-scheme` system preference (via `matchMedia`), (2) persisted user choice in localStorage, (3) admin brand config (server-provided). Priority: admin brand > user preference > system preference. | L |
+| **T-07.02.02.01** | Define `:root` (light default) and `.dark` CSS variable overrides for every semantic token in the existing shared `packages/ui/src/styles.css`. Use `oklch` or `hsl` color space for perceptually uniform luminance adjustments. | M |
+| **T-07.02.02.02** | Complete the existing `BrandThemeProvider` React component that reads: (1) user's `prefers-color-scheme` system preference (via `matchMedia`), (2) persisted user choice in localStorage, (3) admin brand config (server-provided). Priority: admin brand > user preference > system preference. | L |
 | **T-07.02.02.03** | Add `class` to `<html>` element on initial load to prevent flash of wrong theme (FOUC). Inline a blocking `<script>` in the document `<head>` that reads a cookie or localStorage and sets the class before paint. | M |
 | **T-07.02.02.04** | Provide a `useTheme()` hook returning `{ theme, setTheme, resolvedTheme }`. `theme` is the user's choice (`'light'` | `'dark'` | `'system'`); `resolvedTheme` is the actual applied theme (`'light'` | `'dark'`). Persist choice to localStorage. | S |
 
@@ -212,7 +212,7 @@
 | ID | Task | Complexity |
 |----|------|------------|
 | **T-07.03.01.01** | Configure Tailwind CSS with `rtl` variant: `dark:rtl:bg-red-500`. Add direction-aware utilities: `ps-*` (padding-inline-start), `pe-*` (padding-inline-end), `ms-*` (margin-inline-start), `me-*` (margin-inline-end), `text-start`, `text-end`, `inset-inline-start`, `inset-inline-end`, `start-*`, `end-*`. | M |
-| **T-07.03.01.02** | Create `DirectionProvider` that reads the current locale from react-i18next/next-intl, sets `dir="rtl"` or `dir="ltr"` on `<html>`, and provides `isRtl` boolean to the component tree. | S |
+| **T-07.03.01.02** | Complete the existing `UiDirectionProvider` using the application’s live locale store, sets `dir="rtl"` or `dir="ltr"` on `<html>`, and provides `isRtl` boolean to the component tree. | S |
 | **T-07.03.01.03** | Create `useDirection()` hook returning `{ dir, isRtl, isLtr }`. Create `DirectionAware` utility component that renders different content based on direction. | S |
 | **T-07.03.01.04** | Audit all shadcn/ui components for hardcoded LTR assumptions in their Radix props (e.g. `side="right"` in DropdownMenu should be `side="left"` in RTL). Create a `useFlippedPlacement(placement)` hook that flips `left` ↔ `right` when `isRtl`. | L |
 | **T-07.03.01.05** | Import and configure `packages/i18n` in `apps/web`. Set up `react-i18next` or `next-intl` with `lng` detection (cookie, URL, user preference), fallback language (`fa`), and language namespaces. | M |

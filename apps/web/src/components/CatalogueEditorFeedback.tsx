@@ -1,4 +1,6 @@
 import { Alert, Button } from '@barghsa/ui';
+import type { CSSProperties } from 'react';
+import { DANGER_TEXT_COLORS } from '../lib/brand-config.js';
 import { getBrandTextColor, useBrandConfig } from '../providers/BrandThemeProvider.js';
 type Copy = (key: string) => string;
 /** Reserve localized feedback space so blur validation cannot move a tap target. */
@@ -11,16 +13,20 @@ export function CatalogueFieldFeedback({
   error?: { message?: string | undefined } | undefined;
   message: string;
 }) {
-  const { brandConfig, userMode } = useBrandConfig();
-  const dark = userMode === null ? brandConfig.darkMode : userMode === 'dark';
+  const { brandConfig, resolvedTheme } = useBrandConfig();
+  const dark = resolvedTheme === 'dark';
   const background = dark ? brandConfig.darkBackgroundColor : brandConfig.backgroundColor;
   return (
     <p
       id={id}
+      style={
+        {
+          '--field-error': getBrandTextColor(DANGER_TEXT_COLORS[dark ? 1 : 0], [background]),
+        } as CSSProperties
+      }
       role={error ? 'alert' : undefined}
       aria-hidden={!error || undefined}
-      className={`text-sm text-destructive ${error ? '' : 'invisible'}`}
-      style={{ color: getBrandTextColor(dark ? '#ffafb2' : '#a42c35', [background]) }}
+      className={`text-sm text-[var(--field-error)] ${error ? '' : 'invisible'}`}
     >
       {error?.message ?? message}
     </p>

@@ -1,6 +1,8 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { useTheme } from '../hooks/useTheme.js';
+import { THEME_STORAGE_KEY, THEME_POLICY_STORAGE_KEY } from '../lib/theme.js';
 import { BrandThemeProvider, getBrandTextColor, useBrandConfig } from './BrandThemeProvider.js';
 let root: Root, host: HTMLDivElement;
 const config = {
@@ -45,6 +47,7 @@ async function mount() {
   });
 }
 beforeEach(() => {
+  localStorage.clear();
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'fa';
   host = document.createElement('div');
@@ -241,4 +244,121 @@ it('uses layout defaults for older published branding and rejects unreadable bac
   expect(document.documentElement.style.getPropertyValue('--brand-light-background')).toBe(
     '#f6f7f4'
   );
+});
+
+function ThemeControls() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  return (
+    <>
+      <output data-theme={theme} data-resolved={resolvedTheme} />
+      {(['light', 'dark', 'system'] as const).map((mode) => (
+        <button key={mode} onClick={() => setTheme(mode)}>
+          {mode}
+        </button>
+      ))}
+    </>
+  );
+}
+async function themeControls(policy: 'light' | 'dark' | 'system') {
+  vi.stubGlobal(
+    'fetch',
+    vi
+      .fn()
+      .mockImplementation(
+        async () => new Response(JSON.stringify({ ...config, themeMode: policy }))
+      )
+  );
+  await act(async () =>
+    root.render(
+      <BrandThemeProvider>
+        <ThemeControls />
+      </BrandThemeProvider>
+    )
+  );
+}
+function deviceTheme(dark: boolean) {
+  const media = Object.assign(new EventTarget(), { matches: dark });
+  vi.stubGlobal('matchMedia', () => media);
+  return media;
+}
+const currentTheme = () => host.querySelector('output')!.dataset.resolved;
+async function choose(mode: string) {
+  await act(async () =>
+    [...host.querySelectorAll('button')].find((node) => node.textContent === mode)!.click()
+  );
+}
+it('follows device changes, persists explicit choice and resumes device mode', async () => {
+  const media = deviceTheme(true);
+  await themeControls('system');
+  expect(currentTheme()).toBe('dark');
+  expect(document.documentElement.classList.contains('dark')).toBe(true);
+  await act(async () => {
+    media.matches = false;
+    media.dispatchEvent(new Event('change'));
+  });
+  expect(currentTheme()).toBe('light');
+  await choose('dark');
+  expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
+  await act(async () => media.dispatchEvent(new Event('change')));
+  expect(currentTheme()).toBe('dark');
+  await choose('system');
+  expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('system');
+  expect(currentTheme()).toBe('light');
+});
+it('restores a saved browser preference and synchronizes another tab without changing admin authority', async () => {
+  deviceTheme(true);
+  localStorage.setItem(THEME_STORAGE_KEY, 'light');
+  await themeControls('system');
+  expect(currentTheme()).toBe('light');
+  await act(async () => {
+    localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+    window.dispatchEvent(new StorageEvent('storage', { key: THEME_STORAGE_KEY }));
+  });
+  expect(currentTheme()).toBe('dark');
+  vi.mocked(fetch).mockResolvedValue(
+    new Response(JSON.stringify({ ...config, themeMode: 'light' }))
+  );
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(currentTheme()).toBe('light');
+  expect(localStorage.getItem(THEME_POLICY_STORAGE_KEY)).toBe('light');
+  await choose('dark');
+  expect(currentTheme()).toBe('light');
+  vi.mocked(fetch).mockResolvedValue(
+    new Response(JSON.stringify({ ...config, themeMode: 'system' }))
+  );
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(currentTheme()).toBe('dark');
+});
+it('keeps device and in-memory controls working when browser storage is unavailable', async () => {
+  deviceTheme(true);
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    throw new Error('Blocked');
+  });
+  vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    throw new Error('Blocked');
+  });
+  await themeControls('system');
+  expect(currentTheme()).toBe('dark');
+  await choose('light');
+  expect(currentTheme()).toBe('light');
+  vi.restoreAllMocks();
+});
+it('retains a legacy forced policy and rejects invalid published policy without partial changes', async () => {
+  deviceTheme(false);
+  localStorage.setItem(THEME_STORAGE_KEY, 'light');
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify(config))));
+  await act(async () =>
+    root.render(
+      <BrandThemeProvider>
+        <ThemeControls />
+      </BrandThemeProvider>
+    )
+  );
+  expect(currentTheme()).toBe('dark');
+  vi.mocked(fetch).mockResolvedValue(
+    new Response(JSON.stringify({ ...config, themeMode: 'automatic', primaryColor: '#123456' }))
+  );
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(currentTheme()).toBe('dark');
+  expect(document.documentElement.style.getPropertyValue('--primary')).toBe('#777777');
 });

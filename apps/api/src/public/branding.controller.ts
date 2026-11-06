@@ -27,6 +27,7 @@ export interface PublicBrandConfigDto {
   logoUrl: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
+  themeMode: 'light' | 'dark' | 'system';
   numberStyle: NumberStyle;
 }
 
@@ -53,7 +54,20 @@ export class PublicBrandingController {
    */
   @Get('branding/config')
   @ApiOperation({ summary: 'Get active brand configuration (public)' })
-  @ApiResponse({ status: 200, description: 'Active brand configuration for theming.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Active branding. A fixed theme overrides user preference; system permits user/device choice. Legacy darkMode remains available.',
+    schema: {
+      type: 'object',
+      required: ['themeMode', 'darkMode'],
+      properties: {
+        themeMode: { type: 'string', enum: ['light', 'dark', 'system'] },
+        darkMode: { type: 'boolean' },
+      },
+      additionalProperties: true,
+    },
+  })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async getActiveBrandConfig(): Promise<PublicBrandConfigDto> {
     const config = await this.brandConfigService.getActiveConfig();
@@ -79,6 +93,16 @@ export class PublicBrandingController {
       logoUrl: (brandConfig.logoUrl as string | null) ?? null,
       faviconUrl: (brandConfig.faviconUrl as string | null) ?? null,
       darkMode: (brandConfig.darkMode as boolean) ?? false,
+      themeMode:
+        brandConfig.themeMode === 'light' ||
+        brandConfig.themeMode === 'dark' ||
+        brandConfig.themeMode === 'system'
+          ? brandConfig.themeMode
+          : typeof brandConfig.darkMode === 'boolean'
+            ? brandConfig.darkMode
+              ? 'dark'
+              : 'light'
+            : 'system',
       numberStyle:
         brandConfig.numberStyle === 'persian' || brandConfig.numberStyle === 'western'
           ? brandConfig.numberStyle

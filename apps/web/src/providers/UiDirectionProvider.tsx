@@ -4,7 +4,7 @@ import { useDirection } from '../hooks/useDirection.js';
 
 /** Keep portal layout and Base UI keyboard behavior aligned with the document locale. */
 export function UiDirectionProvider({ children }: { children: ReactNode }) {
-  const direction = useDirection();
+  const { dir: direction } = useDirection();
   useEffect(() => {
     document.documentElement.dir = direction;
   }, [direction]);
