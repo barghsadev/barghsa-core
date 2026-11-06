@@ -119,7 +119,8 @@ export class BrandConfigService {
     config: Record<string, unknown>,
     userId: string,
     expectedVersion: number,
-    logoUploadKey?: string
+    logoUploadKey?: string,
+    faviconUploadKey?: string
   ): Promise<BrandConfigDto> {
     return this.withHistoryLock(userId, async (client) => {
       const version = await this.currentVersion(client);
@@ -128,29 +129,33 @@ export class BrandConfigService {
       const previous = await client.query<{ config: unknown }>(
         'SELECT config FROM brand_config ORDER BY version DESC LIMIT 1'
       );
-      let savedConfig = { ...config };
-      if (logoUploadKey) {
-        if (!this.attachments) throw new BadRequestException('Logo storage is unavailable');
-        const [key] = await this.attachments.seal(
-          client,
-          [logoUploadKey],
-          userId,
-          null,
-          'branding_logo'
-        );
-        savedConfig = {
-          ...savedConfig,
-          logoUrl: `/api/public/branding/assets/${key!.slice('branding-assets/'.length)}`,
-        };
-      } else if (
-        typeof config.logoUrl === 'string' &&
-        config.logoUrl.startsWith('/api/public/branding/assets/')
-      ) {
-        const known = await client.query(
-          "SELECT 1 FROM brand_config WHERE config->>'logoUrl'=$1 LIMIT 1",
-          [config.logoUrl]
-        );
-        if (!known.rows[0]) throw new BadRequestException('Unknown branding asset');
+      const savedConfig = { ...config };
+      for (const [field, uploadKey] of [
+        ['logoUrl', logoUploadKey],
+        ['faviconUrl', faviconUploadKey],
+      ] as const) {
+        if (uploadKey) {
+          if (!this.attachments)
+            throw new BadRequestException('Brand image storage is unavailable');
+          const [key] = await this.attachments.seal(
+            client,
+            [uploadKey],
+            userId,
+            null,
+            'branding_logo'
+          );
+          savedConfig[field] =
+            `/api/public/branding/assets/${key!.slice('branding-assets/'.length)}`;
+        } else if (
+          typeof config[field] === 'string' &&
+          config[field].startsWith('/api/public/branding/assets/')
+        ) {
+          const known = await client.query(
+            "SELECT 1 FROM brand_config WHERE config->>'logoUrl'=$1 OR config->>'faviconUrl'=$1 LIMIT 1",
+            [config[field]]
+          );
+          if (!known.rows[0]) throw new BadRequestException('Unknown branding asset');
+        }
       }
       await client.query("UPDATE brand_config SET status='superseded' WHERE status='draft'");
       const result = await client.query(

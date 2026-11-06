@@ -23,7 +23,7 @@ export class BrandAssetService {
     const result = await getDbPool().query<{ content_type: string; file_size: string }>(
       `SELECT s.content_type,s.file_size FROM storage_records s
        WHERE s.storage_key=$1 AND s.status='immutable' AND s.metadata->>'purpose'='branding_logo'
-       AND EXISTS(SELECT 1 FROM brand_config b WHERE b.config->>'logoUrl'=$2
+       AND EXISTS(SELECT 1 FROM brand_config b WHERE (b.config->>'logoUrl'=$2 OR b.config->>'faviconUrl'=$2)
          AND ($3::boolean OR b.status='active'))`,
       [key, url, preview]
     );

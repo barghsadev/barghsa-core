@@ -29,6 +29,8 @@ const en = {
   logoPreview: 'Logo preview',
   remove: 'Remove',
   favicon: 'Favicon URL (optional)',
+  uploadFavicon: 'Upload favicon',
+  faviconPreview: 'Favicon preview',
   numberStyle: 'Number display',
   numberStyleHint:
     'Choose digits for amounts and numbers. Page language stays the same. Publish a saved draft to apply this preference.',
@@ -49,8 +51,9 @@ const en = {
   changed: 'Settings changed. Close this dialog and refresh before continuing.',
   saved: 'Changes saved.',
   refresh: 'Refresh',
-  uploading: 'Uploading logo…',
+  uploading: 'Uploading image…',
   uploadFailed: 'Logo upload failed. Choose a PNG, JPG or WebP up to 2 MB and retry.',
+  faviconUploadFailed: 'Favicon upload failed. Choose a PNG, JPG or WebP up to 2 MB and retry.',
   loading: 'Loading branding…',
   loadFailed: 'Could not load branding. Refresh to try again.',
   timezoneFailed: 'Could not load your timezone. Retry to show saved times.',
@@ -88,6 +91,8 @@ const fa: Record<keyof typeof en, string> = {
   logoPreview: 'پیش‌نمایش نشان',
   remove: 'حذف',
   favicon: 'نشانی آیکون مرورگر (اختیاری)',
+  uploadFavicon: 'بارگذاری آیکون مرورگر',
+  faviconPreview: 'پیش‌نمایش آیکون مرورگر',
   numberStyle: 'نمایش اعداد',
   numberStyleHint:
     'رقم‌های مبالغ و اعداد را انتخاب کنید. زبان صفحه تغییر نمی‌کند. برای اعمال این تنظیم، پیش‌نویس ذخیره‌شده را منتشر کنید.',
@@ -108,9 +113,11 @@ const fa: Record<keyof typeof en, string> = {
   changed: 'تنظیمات تغییر کرده‌اند. پنجره را ببندید و تازه‌سازی کنید.',
   saved: 'تغییرات ذخیره شد.',
   refresh: 'تازه‌سازی',
-  uploading: 'در حال بارگذاری نشان…',
+  uploading: 'در حال بارگذاری تصویر…',
   uploadFailed:
     'بارگذاری نشان ناموفق بود. فایل PNG، JPG یا WebP تا ۲ مگابایت انتخاب و دوباره تلاش کنید.',
+  faviconUploadFailed:
+    'بارگذاری آیکون مرورگر ناموفق بود. فایل PNG، JPG یا WebP تا ۲ مگابایت انتخاب و دوباره تلاش کنید.',
   loading: 'در حال دریافت تنظیمات برند…',
   loadFailed: 'دریافت تنظیمات برند ناموفق بود. برای تلاش دوباره تازه‌سازی کنید.',
   timezoneFailed: 'دریافت منطقه زمانی ناموفق بود. برای نمایش زمان ذخیره دوباره تلاش کنید.',

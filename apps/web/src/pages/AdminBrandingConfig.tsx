@@ -123,6 +123,9 @@ export default function AdminBrandingConfig() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [logoUploadKey, setLogoUploadKey] = useState<string | null>(null);
+  const [faviconFile, setFaviconFile] = useState<File | null>(null);
+  const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+  const [faviconUploadKey, setFaviconUploadKey] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const uploadRequest = useRef<AbortController | null>(null);
   useEffect(() => () => uploadRequest.current?.abort(), []);
@@ -135,6 +138,15 @@ export default function AdminBrandingConfig() {
     setLogoPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [logoFile]);
+  useEffect(() => {
+    if (!faviconFile) {
+      setFaviconPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(faviconFile);
+    setFaviconPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [faviconFile]);
 
   const closeAction = useCallback(() => {
     generation.current++;
@@ -148,6 +160,8 @@ export default function AdminBrandingConfig() {
     accepted.current = null;
     setLogoFile(null);
     setLogoUploadKey(null);
+    setFaviconFile(null);
+    setFaviconUploadKey(null);
     setMessage(null);
     setConfig(DEFAULT_CONFIG);
     setEditing(false);
@@ -172,8 +186,8 @@ export default function AdminBrandingConfig() {
     coherent;
   const draftInfo =
     activeConfig?.status === 'draft' && activeConfig.version > 0 ? activeConfig : null;
-  const work = useRef({ config, editing, logoUploadKey, ready });
-  work.current = { config, editing, logoUploadKey, ready };
+  const work = useRef({ config, editing, logoUploadKey, faviconUploadKey, ready });
+  work.current = { config, editing, logoUploadKey, faviconUploadKey, ready };
   useEffect(() => {
     if (
       activeConfig &&
@@ -198,6 +212,7 @@ export default function AdminBrandingConfig() {
         previous &&
         work.current.editing &&
         (work.current.logoUploadKey ||
+          work.current.faviconUploadKey ||
           JSON.stringify(work.current.config) !==
             JSON.stringify({ ...DEFAULT_CONFIG, ...previous.config }))
       )
@@ -206,6 +221,8 @@ export default function AdminBrandingConfig() {
         setConfig({ ...DEFAULT_CONFIG, ...activeConfig.config });
         setLogoFile(null);
         setLogoUploadKey(null);
+        setFaviconFile(null);
+        setFaviconUploadKey(null);
         setNeedsReset(false);
       }
       accepted.current = activeConfig;
@@ -223,6 +240,8 @@ export default function AdminBrandingConfig() {
     setConfig({ ...DEFAULT_CONFIG, ...activeConfig.config });
     setLogoFile(null);
     setLogoUploadKey(null);
+    setFaviconFile(null);
+    setFaviconUploadKey(null);
     setNeedsReset(false);
     setMessage(null);
   }
@@ -253,6 +272,7 @@ export default function AdminBrandingConfig() {
         config: { ...config },
         expectedVersion: activeConfig.version,
         ...(logoUploadKey ? { logoUploadKey } : {}),
+        ...(faviconUploadKey ? { faviconUploadKey } : {}),
       },
       conflictMessage: text('changed'),
     });
@@ -270,23 +290,33 @@ export default function AdminBrandingConfig() {
     });
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    target: 'logo' | 'favicon'
+  ) => {
     const file = e.target.files?.[0];
+    e.currentTarget.value = '';
     if (!file) return;
     uploadRequest.current?.abort();
     const controller = new AbortController();
     uploadRequest.current = controller;
     setUploading(true);
-    setLogoUploadKey(null);
-    setLogoFile(null);
+    const setKey = target === 'logo' ? setLogoUploadKey : setFaviconUploadKey;
+    const setFile = target === 'logo' ? setLogoFile : setFaviconFile;
+    setKey(null);
+    setFile(null);
     setMessage(null);
     try {
       const key = await uploadBrandingLogo(file, controller.signal);
       if (controller.signal.aborted) return;
-      setLogoUploadKey(key);
-      setLogoFile(file);
+      setKey(key);
+      setFile(file);
     } catch {
-      if (!controller.signal.aborted) setMessage({ type: 'error', text: text('uploadFailed') });
+      if (!controller.signal.aborted)
+        setMessage({
+          type: 'error',
+          text: text(target === 'logo' ? 'uploadFailed' : 'faviconUploadFailed'),
+        });
     } finally {
       if (!controller.signal.aborted) setUploading(false);
     }
@@ -305,6 +335,7 @@ export default function AdminBrandingConfig() {
 
   const isDirty =
     Boolean(logoUploadKey) ||
+    Boolean(faviconUploadKey) ||
     (activeConfig && activeConfig.version > 0
       ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
       : true);
@@ -315,6 +346,11 @@ export default function AdminBrandingConfig() {
     (config.logoUrl?.startsWith('/api/public/branding/assets/')
       ? config.logoUrl.replace('/api/public/', '/api/admin/')
       : config.logoUrl);
+  const displayedFavicon =
+    faviconPreview ??
+    (config.faviconUrl?.startsWith('/api/public/branding/assets/')
+      ? config.faviconUrl.replace('/api/public/', '/api/admin/')
+      : config.faviconUrl);
   return (
     <div className="flex min-w-0 flex-col gap-6">
       {action && (
@@ -347,6 +383,7 @@ export default function AdminBrandingConfig() {
               draftId?: string;
               config?: BrandConfig;
               logoUploadKey?: string;
+              faviconUploadKey?: string;
             };
             if (action.method === 'PUT') {
               if (
@@ -357,8 +394,11 @@ export default function AdminBrandingConfig() {
               )
                 throw new Error('Unconfirmed branding draft');
               for (const key of Object.keys(submitted.config) as Array<keyof BrandConfig>) {
-                if (key === 'logoUrl' && submitted.logoUploadKey) {
-                  if (!dto.config.logoUrl?.startsWith('/api/public/branding/assets/'))
+                if (
+                  (key === 'logoUrl' && submitted.logoUploadKey) ||
+                  (key === 'faviconUrl' && submitted.faviconUploadKey)
+                ) {
+                  if (!dto.config[key]?.startsWith('/api/public/branding/assets/'))
                     throw new Error('Unconfirmed branding asset');
                   continue;
                 }
@@ -377,6 +417,8 @@ export default function AdminBrandingConfig() {
               window.dispatchEvent(new Event('barghsa:branding-activated'));
             setLogoFile(null);
             setLogoUploadKey(null);
+            setFaviconFile(null);
+            setFaviconUploadKey(null);
             accepted.current = dto;
             currentRead.accept(dto);
             historyRead.accept(acceptBrandRevision(history, dto));
@@ -711,7 +753,10 @@ export default function AdminBrandingConfig() {
           </section>
 
           {/* ── Logo ──────────────────────────────────────────────────────── */}
-          <section className="bg-background rounded-lg border border-border p-6 space-y-5">
+          <section
+            id="branding-assets"
+            className="bg-background rounded-lg border border-border p-6 space-y-5"
+          >
             <h2 className="text-lg font-semibold text-foreground">{text('logo')}</h2>
 
             <div className="flex flex-wrap items-start gap-6">
@@ -727,7 +772,7 @@ export default function AdminBrandingConfig() {
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   disabled={action !== null}
-                  onChange={handleLogoUpload}
+                  onChange={(event) => void handleImageUpload(event, 'logo')}
                   className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
                 />
                 <p className="text-xs text-muted-foreground mt-1">{text('logoHint')}</p>
@@ -742,6 +787,7 @@ export default function AdminBrandingConfig() {
                   />
                   <Button
                     type="button"
+                    variant="outline"
                     disabled={action !== null || uploading}
                     onClick={() => {
                       setLogoFile(null);
@@ -756,7 +802,47 @@ export default function AdminBrandingConfig() {
               )}
             </div>
 
-            <div>
+            <div className="space-y-2">
+              <label
+                htmlFor="branding-favicon-upload"
+                className="block text-sm font-medium text-foreground"
+              >
+                {text('uploadFavicon')}
+              </label>
+              <input
+                id="branding-favicon-upload"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                disabled={action !== null}
+                onChange={(event) => void handleImageUpload(event, 'favicon')}
+                aria-describedby="branding-favicon-hint"
+                className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
+              />
+              <p id="branding-favicon-hint" className="text-xs text-muted-foreground">
+                {text('logoHint')}
+              </p>
+              {displayedFavicon && (
+                <div>
+                  <img
+                    src={displayedFavicon}
+                    alt={text('faviconPreview')}
+                    className="size-8 object-contain border border-border rounded"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={action !== null || uploading}
+                    onClick={() => {
+                      setFaviconFile(null);
+                      setFaviconUploadKey(null);
+                      updateConfig('faviconUrl', null);
+                    }}
+                    className="text-xs text-destructive underline mt-1"
+                  >
+                    {text('remove')}
+                  </Button>
+                </div>
+              )}
               <label
                 htmlFor="adminbrandingconfig-field-5"
                 className="block text-sm font-medium text-foreground mb-1"
@@ -766,8 +852,13 @@ export default function AdminBrandingConfig() {
               <input
                 id="adminbrandingconfig-field-5"
                 type="text"
+                disabled={action !== null || uploading}
                 value={config.faviconUrl ?? ''}
-                onChange={(e) => updateConfig('faviconUrl', e.target.value || null)}
+                onChange={(e) => {
+                  setFaviconFile(null);
+                  setFaviconUploadKey(null);
+                  updateConfig('faviconUrl', e.target.value || null);
+                }}
                 className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm font-mono"
                 placeholder="https://cdn.example.com/favicon.ico"
               />

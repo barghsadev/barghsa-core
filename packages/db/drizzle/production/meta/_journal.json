@@ -1387,6 +1387,13 @@
       "when": 1791754024233,
       "tag": "0277_operations_alert_receipts",
       "breakpoints": true
+    },
+    {
+      "idx": 278,
+      "version": "7",
+      "when": 1793979512234,
+      "tag": "0278_brand_history_repair",
+      "breakpoints": true
     }
   ]
 }

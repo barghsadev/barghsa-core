@@ -1,5 +1,5 @@
 import { createServer, type Server } from 'node:http';
-import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -335,167 +335,223 @@ async function logoUpload(purpose = 'branding_logo', bytes = png) {
   );
   return upload.key;
 }
-it('seals a verified logo, protects draft previews and retains exact bytes after the source changes', async () => {
-  const key = await logoUpload();
-  const draft = await saved(
-    await request('admin/branding/config', 'PUT', {
-      expectedVersion: 0,
-      logoUploadKey: key,
-      config: { appTitle: 'With logo' },
-    })
-  );
-  const url = z.string().parse(draft.config.logoUrl);
-  expect(url).toMatch(/^\/api\/public\/branding\/assets\//);
-  expect((await fetch(`${http.base}${url}`)).status).toBe(404);
-  expect((await fetch(`${http.base}${url.replace('/public/', '/admin/')}`)).status).toBe(401);
-  const preview = await fetch(`${http.base}${url.replace('/public/', '/admin/')}`, { headers });
-  expect(preview.status).toBe(200);
-  expect(Buffer.from(await preview.arrayBuffer())).toEqual(png);
-  objects.set(key, Buffer.from('replaced source'));
-  expect(
-    (
-      await request('admin/branding/activate', 'POST', {
-        draftId: draft.id,
-        expectedVersion: draft.version,
+describe.each(['logo', 'favicon'] as const)('%s asset boundaries', (asset) => {
+  const uploadField = asset === 'logo' ? 'logoUploadKey' : 'faviconUploadKey';
+  const urlField = asset === 'logo' ? 'logoUrl' : 'faviconUrl';
+  it('seals a verified logo, protects draft previews and retains exact bytes after the source changes', async () => {
+    const key = await logoUpload();
+    const draft = await saved(
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: 0,
+        [uploadField]: key,
+        config: { appTitle: 'With logo' },
       })
-    ).status
-  ).toBe(200);
-  const published = await fetch(`${http.base}${url}`);
-  expect(published.status).toBe(200);
-  expect(published.headers.get('content-type')).toBe('image/png');
-  expect(published.headers.get('x-content-type-options')).toBe('nosniff');
-  expect(Buffer.from(await published.arrayBuffer())).toEqual(png);
-  const next = await saved(
-    await request('admin/branding/config', 'PUT', {
-      expectedVersion: 1,
-      config: { appTitle: 'Retain logo', logoUrl: url },
-    })
+    );
+    const url = z.string().parse(draft.config[urlField]);
+    expect(url).toMatch(/^\/api\/public\/branding\/assets\//);
+    expect((await fetch(`${http.base}${url}`)).status).toBe(404);
+    expect((await fetch(`${http.base}${url.replace('/public/', '/admin/')}`)).status).toBe(401);
+    const preview = await fetch(`${http.base}${url.replace('/public/', '/admin/')}`, { headers });
+    expect(preview.status).toBe(200);
+    expect(Buffer.from(await preview.arrayBuffer())).toEqual(png);
+    objects.set(key, Buffer.from('replaced source'));
+    expect(
+      (
+        await request('admin/branding/activate', 'POST', {
+          draftId: draft.id,
+          expectedVersion: draft.version,
+        })
+      ).status
+    ).toBe(200);
+    const published = await fetch(`${http.base}${url}`);
+    expect(published.status).toBe(200);
+    expect(published.headers.get('content-type')).toBe('image/png');
+    expect(published.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(Buffer.from(await published.arrayBuffer())).toEqual(png);
+    const next = await saved(
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: 1,
+        config: { appTitle: 'Retain logo', [urlField]: url },
+      })
+    );
+    expect(next.config[urlField]).toBe(url);
+  });
+  it.each(['ticket_attachment', 'legal_profile_document'])(
+    'rejects a logo recorded for %s',
+    async (purpose) => {
+      const key = await logoUpload(purpose);
+      expect(
+        (
+          await request('admin/branding/config', 'PUT', {
+            expectedVersion: 0,
+            [uploadField]: key,
+            config: {},
+          })
+        ).status
+      ).toBe(400);
+    }
   );
-  expect(next.config.logoUrl).toBe(url);
-});
-it.each(['ticket_attachment', 'legal_profile_document'])(
-  'rejects a logo recorded for %s',
-  async (purpose) => {
-    const key = await logoUpload(purpose);
+  it('rejects altered logo bytes and oversized logos at the final save', async () => {
+    const key = await logoUpload();
+    objects.set(key, Buffer.from('changed'));
     expect(
       (
         await request('admin/branding/config', 'PUT', {
           expectedVersion: 0,
-          logoUploadKey: key,
+          [uploadField]: key,
           config: {},
         })
       ).status
     ).toBe(400);
-  }
-);
-it('rejects altered logo bytes and oversized logos at the final save', async () => {
-  const key = await logoUpload();
-  objects.set(key, Buffer.from('changed'));
-  expect(
-    (
-      await request('admin/branding/config', 'PUT', {
-        expectedVersion: 0,
-        logoUploadKey: key,
-        config: {},
-      })
-    ).status
-  ).toBe(400);
-  const big = Buffer.concat([png, Buffer.alloc(2 * 1024 * 1024)]);
-  const largeKey = await logoUpload('branding_logo', big);
-  expect(
-    (
-      await request('admin/branding/config', 'PUT', {
-        expectedVersion: 0,
-        logoUploadKey: largeKey,
-        config: {},
-      })
-    ).status
-  ).toBe(400);
-  expect((await http.pool.query('SELECT id FROM brand_config')).rows).toHaveLength(0);
-});
-it.each([
-  'blob:https://example.test/temporary',
-  'data:image/png;base64,AAAA',
-  'javascript:alert(1)',
-  'http://example.test/logo.png',
-])('rejects nonpersistent or unsafe image URL %s', async (logoUrl) => {
-  expect(
-    (await request('admin/branding/config', 'PUT', { expectedVersion: 0, config: { logoUrl } }))
-      .status
-  ).toBe(400);
-});
-it('rejects a made-up internal branding image reference', async () => {
-  expect(
-    (
-      await request('admin/branding/config', 'PUT', {
-        expectedVersion: 0,
-        config: { logoUrl: `/api/public/branding/assets/${randomUUID()}/${'a'.repeat(64)}` },
-      })
-    ).status
-  ).toBe(400);
-});
-
-it('rejects a different uploader and keeps storage cleanup intent after an audit rollback', async () => {
-  const key = await logoUpload();
-  await http.pool.query(
-    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{uploadedBy}','\"someone-else\"') WHERE storage_key=$1",
-    [key]
-  );
-  expect(
-    (
-      await request('admin/branding/config', 'PUT', {
-        expectedVersion: 0,
-        logoUploadKey: key,
-        config: {},
-      })
-    ).status
-  ).toBe(400);
-  await http.pool.query(
-    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{uploadedBy}','\"branding-review\"') WHERE storage_key=$1",
-    [key]
-  );
-  await http.pool
-    .query(`CREATE FUNCTION reject_brand_asset_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='branding.draft_created' THEN RAISE EXCEPTION 'fixture audit unavailable'; END IF; RETURN NEW; END $$;
-    CREATE TRIGGER reject_brand_asset_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_brand_asset_audit()`);
-  try {
+    const big = Buffer.concat([png, Buffer.alloc(2 * 1024 * 1024)]);
+    const largeKey = await logoUpload('branding_logo', big);
     expect(
       (
         await request('admin/branding/config', 'PUT', {
           expectedVersion: 0,
-          logoUploadKey: key,
+          [uploadField]: largeKey,
           config: {},
         })
       ).status
-    ).toBe(500);
+    ).toBe(400);
     expect((await http.pool.query('SELECT id FROM brand_config')).rows).toHaveLength(0);
-    const reservation = (
-      await http.pool.query(
-        "SELECT storage_key,status,metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
-        [key]
-      )
-    ).rows;
-    expect(reservation).toHaveLength(1);
-    expect(reservation[0]).toMatchObject({
-      status: 'removed',
-      metadata: { provisionalCopy: true, deletionRequested: true },
-    });
-    expect(objects.has(reservation[0].storage_key)).toBe(true);
-  } finally {
+  });
+  it.each([
+    'blob:https://example.test/temporary',
+    'data:image/png;base64,AAAA',
+    'javascript:alert(1)',
+    'http://example.test/logo.png',
+  ])('rejects nonpersistent or unsafe image URL %s', async (logoUrl) => {
+    expect(
+      (
+        await request('admin/branding/config', 'PUT', {
+          expectedVersion: 0,
+          config: { [urlField]: logoUrl },
+        })
+      ).status
+    ).toBe(400);
+  });
+  it('rejects a made-up internal branding image reference', async () => {
+    expect(
+      (
+        await request('admin/branding/config', 'PUT', {
+          expectedVersion: 0,
+          config: { [urlField]: `/api/public/branding/assets/${randomUUID()}/${'a'.repeat(64)}` },
+        })
+      ).status
+    ).toBe(400);
+  });
+
+  it('rejects a different uploader and keeps storage cleanup intent after an audit rollback', async () => {
+    const key = await logoUpload();
     await http.pool.query(
-      'DROP TRIGGER reject_brand_asset_audit ON audit_log; DROP FUNCTION reject_brand_asset_audit()'
+      "UPDATE storage_records SET metadata=jsonb_set(metadata,'{uploadedBy}','\"someone-else\"') WHERE storage_key=$1",
+      [key]
     );
-  }
+    expect(
+      (
+        await request('admin/branding/config', 'PUT', {
+          expectedVersion: 0,
+          [uploadField]: key,
+          config: {},
+        })
+      ).status
+    ).toBe(400);
+    await http.pool.query(
+      "UPDATE storage_records SET metadata=jsonb_set(metadata,'{uploadedBy}','\"branding-review\"') WHERE storage_key=$1",
+      [key]
+    );
+    await http.pool
+      .query(`CREATE FUNCTION reject_brand_asset_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='branding.draft_created' THEN RAISE EXCEPTION 'fixture audit unavailable'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER reject_brand_asset_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_brand_asset_audit()`);
+    try {
+      expect(
+        (
+          await request('admin/branding/config', 'PUT', {
+            expectedVersion: 0,
+            [uploadField]: key,
+            config: {},
+          })
+        ).status
+      ).toBe(500);
+      expect((await http.pool.query('SELECT id FROM brand_config')).rows).toHaveLength(0);
+      const reservation = (
+        await http.pool.query(
+          "SELECT storage_key,status,metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+          [key]
+        )
+      ).rows;
+      expect(reservation).toHaveLength(1);
+      expect(reservation[0]).toMatchObject({
+        status: 'removed',
+        metadata: { provisionalCopy: true, deletionRequested: true },
+      });
+      expect(objects.has(reservation[0].storage_key)).toBe(true);
+    } finally {
+      await http.pool.query(
+        'DROP TRIGGER reject_brand_asset_audit ON audit_log; DROP FUNCTION reject_brand_asset_audit()'
+      );
+    }
+  });
+  it('refuses corrupted stored image bytes instead of serving them as a trusted image', async () => {
+    const key = await logoUpload();
+    const draft = await saved(
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: 0,
+        [uploadField]: key,
+        config: {},
+      })
+    );
+    const url = z.string().parse(draft.config[urlField]);
+    expect(
+      (
+        await request('admin/branding/activate', 'POST', {
+          draftId: draft.id,
+          expectedVersion: draft.version,
+        })
+      ).status
+    ).toBe(200);
+    const sealed = url.replace('/api/public/branding/assets/', 'branding-assets/');
+    objects.set(sealed, Buffer.alloc(png.length));
+    expect((await fetch(`${http.base}${url}`)).status).toBe(503);
+  });
 });
-it('refuses corrupted stored image bytes instead of serving them as a trusted image', async () => {
-  const key = await logoUpload();
-  const draft = await saved(
-    await request('admin/branding/config', 'PUT', {
+
+it('seals both images in one version, rolls back an invalid second asset and preserves safe cross-field reuse', async () => {
+  const logoUploadKey = await logoUpload();
+  const faviconUploadKey = await logoUpload();
+  objects.set(faviconUploadKey, Buffer.from('changed'));
+  const saveBoth = () =>
+    request('admin/branding/config', 'PUT', {
       expectedVersion: 0,
-      logoUploadKey: key,
+      logoUploadKey,
+      faviconUploadKey,
       config: {},
-    })
-  );
-  const url = z.string().parse(draft.config.logoUrl);
+    });
+  expect((await saveBoth()).status).toBe(400);
+  expect((await http.pool.query('SELECT id FROM brand_config')).rows).toHaveLength(0);
+  const rolledBack = (
+    await http.pool.query(
+      "SELECT status,metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+      [logoUploadKey]
+    )
+  ).rows;
+  expect(rolledBack).toHaveLength(1);
+  expect(rolledBack[0]).toMatchObject({
+    status: 'removed',
+    metadata: { provisionalCopy: true, deletionRequested: true },
+  });
+  objects.set(faviconUploadKey, png);
+  const draft = await saved(await saveBoth());
+  const logoUrl = z.string().parse(draft.config.logoUrl);
+  const faviconUrl = z.string().parse(draft.config.faviconUrl);
+  expect(logoUrl).not.toBe(faviconUrl);
+  for (const url of [logoUrl, faviconUrl]) {
+    expect((await fetch(`${http.base}${url}`)).status).toBe(404);
+    const preview = await fetch(`${http.base}${url.replace('/public/', '/admin/')}`, { headers });
+    expect(preview.status).toBe(200);
+    expect(Buffer.from(await preview.arrayBuffer())).toEqual(png);
+  }
   expect(
     (
       await request('admin/branding/activate', 'POST', {
@@ -504,9 +560,19 @@ it('refuses corrupted stored image bytes instead of serving them as a trusted im
       })
     ).status
   ).toBe(200);
-  const sealed = url.replace('/api/public/branding/assets/', 'branding-assets/');
-  objects.set(sealed, Buffer.alloc(png.length));
-  expect((await fetch(`${http.base}${url}`)).status).toBe(503);
+  for (const url of [logoUrl, faviconUrl]) {
+    const response = await fetch(`${http.base}${url}`);
+    expect(response.status).toBe(200);
+    expect(Buffer.from(await response.arrayBuffer())).toEqual(png);
+  }
+  const next = await saved(
+    await request('admin/branding/config', 'PUT', {
+      expectedVersion: 1,
+      config: { logoUrl: faviconUrl, faviconUrl: logoUrl },
+    })
+  );
+  expect(next.config.logoUrl).toBe(faviconUrl);
+  expect(next.config.faviconUrl).toBe(logoUrl);
 });
 
 it('keeps unrecorded uploads unverified while the policy store is unavailable', async () => {

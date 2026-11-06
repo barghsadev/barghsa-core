@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-06T15:26:25.854636+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06T15:43:25.768473+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 595 | Accepted with unchanged source bindings. |
-| verify | 729 | Existing work may be complete; inspect evidence before building. |
-| partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 597 | Accepted with unchanged source bindings. |
+| verify | 728 | Existing work may be complete; inspect evidence before building. |
+| partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 4 | Named owner or external prerequisite. |
@@ -39,10 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect existing versioned branding asset implementation and complete demonstrated favicon upload/editor gaps through native ownership, byte verification, draft/activate and public/private asset boundaries. Reuse accepted theme evidence. Keep deployed CDN proof and deferred Telegram hosting explicit; no new server or release claim.
+Inspect existing admin settings layout, section forms, version/history comparison, audit and OTP step-up adoption. Reuse valid source-bound native/browser evidence and implement only demonstrated gaps. Keep external Telegram hosting blocked; no new server or production deployment.
 
-- `02-auth-users-admin.md#T-09.01.01`: Branding settings page
-- `07-ui-ux-design.md#T-07.30.02.01`: BrandingSettingsPage: logo upload with preview (light + dark), color pickers (primary, secondary, accent), app title inputs (FA/EN), favicon upload, preview toggle, versioned save + activate.
+- `07-ui-ux-design.md#T-07.30.01.01`: Build `AdminSettingsLayout`: nested sidebar navigation (left) + content area (right). Categories: Branding, Staff & Roles, Geography, Products, Pricing & VAT, Gift Codes, Notifications, Documents, Electricity, AI Orchestration, Security, System. Section collapse on mobile into dropdown.
+- `07-ui-ux-design.md#T-07.30.01.02`: Build `SettingsFormSection` pattern: card with title, description, form fields. Save button per section (not full page save). Shows toast on success.
+- `07-ui-ux-design.md#T-07.30.01.03`: Build `VersionedSettingsCard`: shows current active config, last updated date, updated by. "Edit" button opens edit mode. Save creates Draft version. "Activate" button promotes Draft to Active. "View history" shows versions (date, author, status badge). Rollback button on superseded versions.
+- `07-ui-ux-design.md#T-07.30.01.04`: Build `ConfigPreviewCard`: side-by-side "Current" vs "Draft" comparison. Used for branding preview, template changes, VAT rate changes.
+- `07-ui-ux-design.md#T-07.30.01.05`: Build `AuditLogViewer`: timeline of config changes — field changed, old value, new value, changed by, timestamp. Expandable per entry.
+- `07-ui-ux-design.md#T-07.30.01.06`: Build `StepUpAuthGate`: when admin attempts a sensitive action (provider config, refund threshold, role change), show MFA step-up dialog. User re-authenticates (OTP) and the action proceeds only after successful step-up. Dialog shows "Sensitive action requires re-authentication."
 
 ## v0.2.0: Complete customer journeys
 
@@ -640,7 +644,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | --- | --- | --- | --- |
 | `release-readiness#R-04.01` | todo | Inventory needed | Verify full customer and admin UI adoption |
 | `release-readiness#R-04.02` | todo | Inventory needed | Renew accessibility and performance evidence |
-| `02-auth-users-admin.md#T-09.01.01` | partial | Earlier partial | Branding settings page |
+| `02-auth-users-admin.md#T-09.01.01` | done | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |
 | `07-ui-ux-design.md#T-07.01.01.01` | done | Earlier acceptance_verified | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. |
 | `07-ui-ux-design.md#T-07.01.01.02` | partial | Earlier partial | Install and configure shadcn/ui CLI: set `style: "new-york"`, `baseColor: "zinc"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). |
@@ -924,7 +928,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.01.04` | verify | Recorded batch work | Build `ConfigPreviewCard`: side-by-side "Current" vs "Draft" comparison. Used for branding preview, template changes, VAT rate changes. |
 | `07-ui-ux-design.md#T-07.30.01.05` | verify | Recorded batch work | Build `AuditLogViewer`: timeline of config changes — field changed, old value, new value, changed by, timestamp. Expandable per entry. |
 | `07-ui-ux-design.md#T-07.30.01.06` | verify | Recorded batch work | Build `StepUpAuthGate`: when admin attempts a sensitive action (provider config, refund threshold, role change), show MFA step-up dialog. User re-authenticates (OTP) and the action proceeds only after successful step-up. Dialog shows "Sensitive action requires re-authentication." |
-| `07-ui-ux-design.md#T-07.30.02.01` | verify | Inventory needed | BrandingSettingsPage: logo upload with preview (light + dark), color pickers (primary, secondary, accent), app title inputs (FA/EN), favicon upload, preview toggle, versioned save + activate. |
+| `07-ui-ux-design.md#T-07.30.02.01` | done | Recorded batch work | BrandingSettingsPage: logo upload with preview (light + dark), color pickers (primary, secondary, accent), app title inputs (FA/EN), favicon upload, preview toggle, versioned save + activate. |
 | `07-ui-ux-design.md#T-07.30.02.02` | verify | Recorded batch work | StaffRolesPage: roles table with permissions grouped by module (checkbox grid). Read-only for predefined roles initially. "View effective permissions" per staff user. |
 | `07-ui-ux-design.md#T-07.30.02.03` | verify | Recorded batch work | GeographyPage: provinces table with expandable cities per row. Add/edit/delete actions. Persian and English names. Bulk import for city seed. |
 | `07-ui-ux-design.md#T-07.30.02.04` | verify | Inventory needed | TosEditorPage: rich text editor (TipTap-like) with side-by-side diff against current active version, "Mark as material change" toggle, version history list. |

@@ -5,6 +5,8 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Page from './AdminBrandingConfig.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { publishedBrand, previousBrand, draftBrand } from '../test/branding-settings-fixtures.js';
+import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
+vi.mock('../lib/branding-logo-upload.js', () => ({ uploadBrandingLogo: vi.fn() }));
 const capture = vi.hoisted(() => ({
   action: null as TeamAction | null,
   success: null as ((result: unknown) => Promise<void>) | null,
@@ -51,6 +53,13 @@ beforeEach(() => {
   fail = false;
   denied = false;
   capture.action = null;
+  vi.mocked(uploadBrandingLogo)
+    .mockReset()
+    .mockImplementation(async (file) => `uploads/image/${file.name}`);
+  vi.spyOn(URL, 'createObjectURL').mockImplementation(
+    (file) => `blob:preview-${(file as File).name}`
+  );
+  vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
   vi.stubGlobal(
     'fetch',
     vi.fn(
@@ -65,6 +74,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 async function render() {
   await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
@@ -206,4 +216,94 @@ it('previews published defaults without inventing saved history', async () => {
   expect(host.textContent).toContain('No saved versions yet.');
   await click('Edit');
   expect(save().disabled).toBe(false);
+});
+
+async function upload(target: 'logo' | 'favicon') {
+  const input = host.querySelector<HTMLInputElement>(
+    target === 'logo' ? '#adminbrandingconfig-field-4' : '#branding-favicon-upload'
+  )!;
+  Object.defineProperty(input, 'files', {
+    configurable: true,
+    value: [new File(['image'], `${target}.png`, { type: 'image/png' })],
+  });
+  await act(async () => input.dispatchEvent(new Event('change', { bubbles: true })));
+  return input;
+}
+it('keeps two verified image previews separate and accepts only their canonical saved receipt', async () => {
+  await render();
+  await click('Edit');
+  const input = await upload('favicon');
+  expect(input.value).toBe('');
+  await upload('logo');
+  expect(host.querySelector<HTMLImageElement>('img[alt="Favicon preview"]')?.src).toBe(
+    'blob:preview-favicon.png'
+  );
+  expect(host.querySelector<HTMLImageElement>('img[alt="Logo preview"]')?.src).toBe(
+    'blob:preview-logo.png'
+  );
+  await click('Save Draft');
+  expect(capture.action?.body).toEqual({
+    config: publishedBrand.config,
+    expectedVersion: 2,
+    logoUploadKey: 'uploads/image/logo.png',
+    faviconUploadKey: 'uploads/image/favicon.png',
+  });
+  const receipt = {
+    ...draftBrand,
+    config: {
+      ...publishedBrand.config,
+      logoUrl: `/api/public/branding/assets/${draftBrand.id}/${'a'.repeat(64)}`,
+      faviconUrl: `/api/public/branding/assets/${draftBrand.id}/${'b'.repeat(64)}`,
+    },
+  };
+  await expect(
+    capture.success!({
+      ...receipt,
+      config: { ...receipt.config, faviconUrl: 'https://example.test/unconfirmed.png' },
+    })
+  ).rejects.toThrow('Unconfirmed branding asset');
+  await expect(
+    capture.success!({ ...receipt, config: { ...receipt.config, appTitle: 'Unconfirmed change' } })
+  ).rejects.toThrow('Unconfirmed branding settings');
+  await act(async () => capture.success!(receipt));
+  expect(host.textContent).toContain('Changes saved.');
+  expect(
+    host.querySelector<HTMLImageElement>('img[alt="Favicon preview"]')?.getAttribute('src')
+  ).toBe(receipt.config.faviconUrl.replace('/public/', '/admin/'));
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-favicon.png');
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-logo.png');
+});
+it('fences a pending favicon after a foreign revision and clears it only on explicit reset', async () => {
+  await render();
+  await click('Edit');
+  await upload('favicon');
+  current = draftBrand;
+  history = [draftBrand, publishedBrand, previousBrand];
+  await click('Refresh');
+  expect(save().disabled).toBe(true);
+  expect(host.querySelector('img[alt="Favicon preview"]')).not.toBeNull();
+  await click('Use latest saved settings');
+  expect(host.querySelector('img[alt="Favicon preview"]')).toBeNull();
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-favicon.png');
+});
+it('drops a pending favicon when its URL is edited and clears private previews on denial', async () => {
+  await render();
+  await click('Edit');
+  await upload('favicon');
+  await act(async () => {
+    const input = host.querySelector<HTMLInputElement>('#adminbrandingconfig-field-5')!;
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      input,
+      'https://example.test/favicon.png'
+    );
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await click('Save Draft');
+  expect(capture.action?.body).not.toHaveProperty('faviconUploadKey');
+  await act(async () => capture.close!());
+  await upload('favicon');
+  denied = true;
+  await click('Refresh');
+  expect(host.querySelector('img[alt="Favicon preview"]')).toBeNull();
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-favicon.png');
 });

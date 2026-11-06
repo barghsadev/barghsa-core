@@ -150,6 +150,7 @@ const readableBackground = (text: string) => (background: string) => {
 export const UpsertBrandConfigSchema = z.object({
   expectedVersion: z.number().int().min(0).max(2147483647),
   logoUploadKey: z.string().max(255).optional(),
+  faviconUploadKey: z.string().max(255).optional(),
   config: z.object({
     appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
     appTitleFa: z.string().trim().min(1).max(100).optional().default('برقسا'),
@@ -1018,6 +1019,10 @@ export class AdminController {
           type: 'string',
           description: 'Verified branding_logo image upload owned by the editor',
         },
+        faviconUploadKey: {
+          type: 'string',
+          description: 'Verified branding_logo image upload for the favicon, owned by the editor',
+        },
         config: {
           type: 'object',
           description: 'Brand config JSON (appTitle, colors, etc.)',
@@ -1066,7 +1071,8 @@ export class AdminController {
       parsed.data.config,
       req.session.userId,
       parsed.data.expectedVersion,
-      parsed.data.logoUploadKey
+      parsed.data.logoUploadKey,
+      parsed.data.faviconUploadKey
     );
   }
 

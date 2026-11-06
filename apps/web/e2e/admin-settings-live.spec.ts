@@ -1,3 +1,4 @@
+import { brandingText } from '@barghsa/i18n/branding';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
@@ -3005,3 +3006,113 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
     await expect(page.getByRole('cell', { name: `Live SMS ${locale}`, exact: true })).toBeVisible();
   });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`favicon upload stays private until exact saved activation (${locale})`, async ({
+    page,
+  }, testInfo) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      await forwardLiveRequest(route, {
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+    });
+    const readPublic = async () => {
+      const response = await page.request.get(`${http.base}/api/public/branding/config`);
+      expect(response.status()).toBe(200);
+      return response.json();
+    };
+    const before = await readPublic();
+    await page.goto('/admin/branding');
+    await page
+      .getByRole('button', { name: adminText('admin.settings.edit', locale), exact: true })
+      .click();
+    const upload = page.getByLabel(brandingText('uploadFavicon', locale), { exact: true });
+    await upload.setInputFiles({
+      name: 'blocked.svg',
+      mimeType: 'image/svg+xml',
+      buffer: Buffer.from('<svg/>'),
+    });
+    await expect(page.getByRole('alert')).toContainText(
+      brandingText('faviconUploadFailed', locale)
+    );
+    const bytes = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=',
+      'base64'
+    );
+    await upload.setInputFiles({ name: 'favicon.png', mimeType: 'image/png', buffer: bytes });
+    const preview = page.getByRole('img', {
+      name: brandingText('faviconPreview', locale),
+      exact: true,
+    });
+    await expect(preview).toHaveAttribute('src', /^blob:/);
+    const { default: AxeBuilder } = await import('@axe-core/playwright');
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('#branding-assets')
+          .withRules(['color-contrast'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+    const saveResponse = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === '/api/admin/branding/config' &&
+        response.request().method() === 'PUT'
+    );
+    await page.getByRole('button', { name: brandingText('save', locale), exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    const response = await saveResponse;
+    expect(response.status()).toBe(200);
+    const draft = await response.json();
+    expect(draft.status).toBe('draft');
+    expect(draft.config.faviconUrl).toMatch(/^\/api\/public\/branding\/assets\//);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect((await readPublic()).faviconUrl).toBe(before.faviconUrl);
+    expect((await page.request.get(`${http.base}${draft.config.faviconUrl}`)).status()).toBe(404);
+    await expect(preview).toHaveAttribute(
+      'src',
+      draft.config.faviconUrl.replace('/public/', '/admin/')
+    );
+    await expect
+      .poll(() => preview.evaluate((image: HTMLImageElement) => image.naturalWidth))
+      .toBe(1);
+    await settleLiveRequests();
+    await page.reload();
+    await expect(preview).toHaveAttribute(
+      'src',
+      draft.config.faviconUrl.replace('/public/', '/admin/')
+    );
+    await preview.scrollIntoViewIfNeeded();
+    await page
+      .locator('section')
+      .filter({ has: upload })
+      .screenshot({
+        path: testInfo.outputPath(`favicon-private-${locale}.png`),
+      });
+    await page.getByRole('button', { name: brandingText('activate', locale), exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect((await readPublic()).faviconUrl).toBe(draft.config.faviconUrl);
+    const published = await page.request.get(`${http.base}${draft.config.faviconUrl}`);
+    expect(published.status()).toBe(200);
+    expect(published.headers()['content-type']).toBe('image/png');
+    expect(await published.body()).toEqual(bytes);
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', draft.config.faviconUrl);
+  });
+}

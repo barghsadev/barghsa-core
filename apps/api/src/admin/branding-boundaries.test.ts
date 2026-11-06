@@ -96,7 +96,8 @@ describe('branding authority and version boundaries', () => {
       expect.objectContaining({ appTitle: 'Reviewed title', logoUrl }),
       'trusted-actor',
       2,
-      'upload-key'
+      'upload-key',
+      undefined
     );
     expect(save.mock.calls[0]?.[0]).not.toHaveProperty('status');
   });
@@ -142,7 +143,29 @@ describe('branding authority and version boundaries', () => {
       }),
       'trusted-actor',
       2,
+      undefined,
       undefined
     );
   });
+});
+
+it('forwards a favicon upload with the trusted actor and validates its type and bound', async () => {
+  const { controller, save } = fixture();
+  await controller.upsertBrandConfig(
+    { expectedVersion: 2, faviconUploadKey: 'verified-favicon', config: {}, actor: 'forged' },
+    request()
+  );
+  expect(save).toHaveBeenCalledWith(
+    expect.any(Object),
+    'trusted-actor',
+    2,
+    undefined,
+    'verified-favicon'
+  );
+  for (const faviconUploadKey of [42, 'x'.repeat(256)]) {
+    await expect(
+      controller.upsertBrandConfig({ expectedVersion: 2, faviconUploadKey, config: {} }, request())
+    ).rejects.toMatchObject({ status: 400 });
+  }
+  expect(save).toHaveBeenCalledOnce();
 });

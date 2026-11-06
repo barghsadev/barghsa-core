@@ -1009,6 +1009,10 @@
                     "minimum": 0,
                     "type": "integer"
                   },
+                  "faviconUploadKey": {
+                    "description": "Verified branding_logo image upload for the favicon, owned by the editor",
+                    "type": "string"
+                  },
                   "logoUploadKey": {
                     "description": "Verified branding_logo image upload owned by the editor",
                     "type": "string"

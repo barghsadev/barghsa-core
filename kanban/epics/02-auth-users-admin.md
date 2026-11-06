@@ -632,7 +632,7 @@
 **T-09.01.01 — Branding settings page**
 
 - Description: Admin can configure brand logo (upload), colors, favicon, app title. Changes reflected across customer-facing UI.
-- Technical notes: Store brand config as JSON in DB (versioned). Logo stored as file in object storage. CDN URLs for assets on frontend. Theme: primary color, secondary color, accent color. Config is Draft → Active lifecycle.
+- Technical notes: Store brand config as JSON in DB (versioned). Logo and favicon uploads are verified and sealed in object storage; the frontend uses same-origin application image URLs with `Cache-Control: no-store`. Draft images require staff read permission and public reads require an active branding reference. This retained design replaces the CDN requirement with owner approval on 2026-11-06. Theme: primary color, secondary color, accent color. Config is Draft → Active lifecycle.
 - UI/UX: Form with image upload (logo), color pickers (primary/secondary/accent), text inputs (app title, slogan). Preview of changes. "Activate" button with version info.
 - Dependencies: admin config framework, file storage
 - Complexity: M
