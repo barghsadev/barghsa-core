@@ -90893,12 +90893,11 @@
         "story": "02-auth-users-admin.md#spec-569b2749e159"
       },
       "requirement": "**T-09.11.05 — Agent slot assignment**\n\n- Description: Admin assigns agents to predefined slots: Individual chatbot, Legal Entity chatbot, Staff chatbot, Website chatbot, Telegram chatbot. One agent can be used in multiple slots.\n- Technical notes: Slots defined as system configuration. Each slot mapped to an agent_id. Changing slot agent is audited. Slots are consumed by frontend and external integrations.\n- UI/UX: Per-slot dropdown showing all available agents. Current assignment displayed. \"This agent is also used in [other slots]\" warning.\n- Dependencies: T-09.11.04\n- Complexity: M",
-      "status": "verify",
+      "status": "blocked",
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Verify the exact reviewed transport image and callback preflight, then the owner-authorized one-webhook handoff without dropping pending updates.",
-        "Complete actual fresh current-customer/profile Telegram linkage, private reply, audience isolation, root-version and persisted exact message receipt evidence. Synthetic updates cannot certify this gate."
+        "Owner completes the real current-customer/profile Telegram link and controlled private question requested at https://stg.barghsa.com/settings/security. Verify fresh confirmation, current authority, Telegram slot, only published customer/public sources, root footer and exact sent message IDs before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -91106,7 +91105,8 @@
           "release-0.4-permanent-pause-live-replacement",
           "release-0.4-live-provider-provisioning-prerequisites",
           "release-0.4-native-knowledge-fixture-preparation",
-          "release-0.4-telegram-external-host"
+          "release-0.4-telegram-external-host",
+          "release-0.4-telegram-verified-handoff"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -92009,10 +92009,12 @@
         "external_telegram_host": {
           "host": "eu.barghsa.com",
           "owner_source": "AGENTS.md and docs/operations/telegram-host.md on2026-11-06; owner confirmed staging SSH fingerprint",
-          "state": "TLS relay provisioned;45 native cases passed; final three staging identity probes passed; handoff/linkage pending",
-          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
+          "state": "TLS relay and scoped API preflight healthy; authenticated callback and authorized handoff confirmed; awaiting owner actual customer linkage/question",
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
+          "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
         }
-      }
+      },
+      "blocker": "External transport and authorized webhook handoff are verified. Owner must complete the real current-customer/profile link and one private knowledge question to certify live linkage, audience and exact persisted reply receipts. Synthetic callbacks are not acceptance."
     },
     {
       "key": "02-auth-users-admin.md#T-09.12.01",
@@ -403835,12 +403837,11 @@
         "story": "05-notifications-documents-ai.md#spec-cc7fccfe19d9"
       },
       "requirement": "| **T-05.22.04 — Data isolation per slot** | M | P1 |\n| Launch Individual/Legal customer questions are scoped to current account, selected profile, session and assigned slot; retrieval includes only published authorized knowledge. Staff questions require current AI permission and use curated staff/public knowledge. Website questions are anonymous and public-only. Telegram questions must use a private linked account/profile and the Telegram slot, isolated from release announcements. Current and cached results recheck authority, assignment and source eligibility. Owner approved knowledge-only scope on 2026-10-08; business profile-data tools and tool execution are explicitly deferred. Telegram consumer/linkage receipts remain mandatory. | | |",
-      "status": "verify",
+      "status": "blocked",
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Verify the exact reviewed transport image and callback preflight, then the owner-authorized one-webhook handoff without dropping pending updates.",
-        "Complete actual fresh current-customer/profile Telegram linkage, private reply, audience isolation, root-version and persisted exact message receipt evidence. Synthetic updates cannot certify this gate."
+        "Owner completes the real current-customer/profile Telegram link and controlled private question requested at https://stg.barghsa.com/settings/security. Verify fresh confirmation, current authority, Telegram slot, only published customer/public sources, root footer and exact sent message IDs before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -403862,7 +403863,8 @@
           "release-0.4-permanent-pause-live-replacement",
           "release-0.4-live-provider-provisioning-prerequisites",
           "release-0.4-native-knowledge-fixture-preparation",
-          "release-0.4-telegram-external-host"
+          "release-0.4-telegram-external-host",
+          "release-0.4-telegram-verified-handoff"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -404789,10 +404791,12 @@
         "external_telegram_host": {
           "host": "eu.barghsa.com",
           "owner_source": "AGENTS.md and docs/operations/telegram-host.md on2026-11-06; owner confirmed staging SSH fingerprint",
-          "state": "TLS relay provisioned;45 native cases passed; final three staging identity probes passed; handoff/linkage pending",
-          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
+          "state": "TLS relay and scoped API preflight healthy; authenticated callback and authorized handoff confirmed; awaiting owner actual customer linkage/question",
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
+          "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
         }
-      }
+      },
+      "blocker": "External transport and authorized webhook handoff are verified. Owner must complete the real current-customer/profile link and one private knowledge question to certify live linkage, audience and exact persisted reply receipts. Synthetic callbacks are not acceptance."
     },
     {
       "key": "05-notifications-documents-ai.md#T-05.22.05",
@@ -508974,13 +508978,12 @@
         "Record controlled deliverability, callback, scanner, private download and failure recovery evidence.",
         "Keep real sends narrowly authorized; no historical replay or blanket backfill."
       ],
-      "status": "verify",
+      "status": "blocked",
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Verify the exact reviewed transport image and callback preflight, then the owner-authorized one-webhook handoff without dropping pending updates.",
-        "Complete actual fresh current-customer/profile Telegram linkage, private reply, audience isolation, root-version and persisted exact message receipt evidence. Synthetic updates cannot certify this gate.",
-        "After every v0.4 effective criterion is accepted, prepare version/captures, verify exact release push, immediately enqueue staging worker, and verify actual deployment plus one grouped Persian Telegram release update. Production remains unauthorized."
+        "Owner completes the real current-customer/profile Telegram link and controlled private question requested at https://stg.barghsa.com/settings/security. Verify fresh confirmation, current authority, Telegram slot, only published customer/public sources, root footer and exact sent message IDs before acceptance.",
+        "Once all v0.4 gates are accepted, prepare version/reviewed captures, verify exact push, immediately enqueue staging, then verify actual deployment and one Persian summary/grouped album receipts. Production remains unauthorized."
       ],
       "owner": null,
       "depends_on": [],
@@ -512318,7 +512321,8 @@
           "release-0.4-permanent-pause-live-replacement",
           "release-0.4-live-provider-provisioning-prerequisites",
           "release-0.4-native-knowledge-fixture-preparation",
-          "release-0.4-telegram-external-host"
+          "release-0.4-telegram-external-host",
+          "release-0.4-telegram-verified-handoff"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -512455,10 +512459,12 @@
         "external_telegram_host": {
           "host": "eu.barghsa.com",
           "owner_source": "AGENTS.md and docs/operations/telegram-host.md on2026-11-06; owner confirmed staging SSH fingerprint",
-          "state": "TLS relay provisioned;45 native cases passed; final three staging identity probes passed; handoff/linkage pending",
-          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json"
+          "state": "TLS relay and scoped API preflight healthy; authenticated callback and authorized handoff confirmed; awaiting owner actual customer linkage/question",
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
+          "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/verified-handoff-proof.json"
         }
-      }
+      },
+      "blocker": "External transport and authorized webhook handoff are verified. Owner must complete the real current-customer/profile link and one private knowledge question to certify live linkage, audience and exact persisted reply receipts. Synthetic callbacks are not acceptance."
     },
     {
       "key": "release-readiness#R-04.01",
@@ -541112,6 +541118,120 @@
       "milestone_accepted": false,
       "release_announced": false,
       "production_authorized": false
+    },
+    "release-0.4-telegram-verified-handoff": {
+      "batch": "release-0.4-telegram-verified-handoff",
+      "base_commit": "fded4e34544bd6f3948d3b53eef63c13394fa5cf",
+      "source_evidence": [
+        {
+          "path": "deploy/telegram/nginx.conf",
+          "sha256": "b93356de1e7c4ff28e6c7873b2de470142cb4da068035774471eeb918828c08e"
+        },
+        {
+          "path": "deploy/telegram/README.md",
+          "sha256": "45a660cdfa79f2d2028b952f81aa1c3da7df1f37e678fb565ece9b0d367a644b"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.ts",
+          "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links.service.ts",
+          "sha256": "d7e56e200eae3c9291cb4ca2f701491a5e1911a38f55d189a99b98db47690000"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+          "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.test.ts",
+          "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
+        }
+      ],
+      "receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/api-preflight-activation.json",
+          "sha256": "effb73f8f80c583701b149e0ebe8bf0a6a6bcf13bf9f44510b3e7e86f7b9c9ca"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/relay-chain-config.json",
+          "sha256": "9ce0f2d3847f0c939c422e06f337f589735eca47aaa377b244118e7810463d36"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/telegram-configured-route-proof.json",
+          "sha256": "93879da5283b93963b3c215ae647e30b10a4976fa1bf2ef574af5e64e9c2b7e4"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/telegram-handoff-receipt.json",
+          "sha256": "01a495cef7b18c49e5768fa7f13c6daaebd22a6f2287b95d99a09228cc13f871"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/public-relay-boundaries.json",
+          "sha256": "bc89a32bfcd2436485b136b69c16a6240e0156e88d99a697789668559284948e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/live-readonly-before-link.json",
+          "sha256": "0f7529d8cfc2d14be3baae094976a05a159fae6abd29dec06b4aaea2ce8989a2"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/webhook-handoff-final.json",
+          "sha256": "790296cc59df56851f4839340e69e36b963af1abf4b393744abe00ff6714b23f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/format-chain.json",
+          "sha256": "334aa25a422e582dba103a2dd6e452e6d895b46df4243bc6425cb058f6c5037e"
+        }
+      ],
+      "api_activation": {
+        "source_commit": "fded4e34544bd6f3948d3b53eef63c13394fa5cf",
+        "base_source_commit": "e867a1910a27be01ee1487321e4866405dcdc35a",
+        "base_image_id": "sha256:f1e65cc6f621954968d4daa13cd95254b3dd6be5e6af3e5f0b040266a09ed506",
+        "image": "barghsa-app:telegram-preflight-fded4e34544b",
+        "image_id": "sha256:d4c4d7198f8976a692189a96ed954f1274a81d28fd3d6eddd3677b01fb6791eb",
+        "compiled_files": {
+          "telegram-protocol.js": "65b0b32bb51099b61ed122134107149c275b7f80eb17ebfeb0866e6ad9ef2805",
+          "telegram-protocol.js.map": "a039750307d6f5aa724914e66246d6920e18ae9d68d7ab09548b8c64a7ca49a7",
+          "telegram-links.service.js": "1508b0c18f1a62e3cbb17199a71847f61d829bb88f514d56f67ab4d643b2d56f",
+          "telegram-links.service.js.map": "50bdc10a04b7c2949a57a1980a8eb9bd9d08de9daa31389fa3363e5ffc33106c",
+          "telegram-runtime.service.js": "3e80aebbbc1132be627b48090da8b4dc14351ceb5146e1182f9464af403cd5c2",
+          "telegram-runtime.service.js.map": "7189022f44689077cdd5342852b86a361890eab175008234a9f1d8c461809114"
+        },
+        "api_healthy": true,
+        "transport": "external-eu",
+        "only_api_changed": true,
+        "schema_changed": false,
+        "official_release_pointer_unchanged": true,
+        "public_web_unchanged": true,
+        "root_version": "0.3.0",
+        "milestone_released": false,
+        "production_authorized": false
+      },
+      "handoff": {
+        "status": "confirmed",
+        "target": "https://eu.barghsa.com/api/telegram/webhook",
+        "confirmed_at": "2026-11-06T20:20:26.765137+00:00",
+        "pending_update_count": 0,
+        "allowed_updates": [
+          "message"
+        ],
+        "previous_origin": "moaning-undertake-chivalry.ngrok-free.dev",
+        "drop_pending_updates": false,
+        "actual_private_linkage_receipts_pending": true
+      },
+      "review": "Fixed callback502 at its verified TLS cause: openssl with depth1 rejected staging certificate at cross-signed Root YE. NGINX now verifies its complete trusted CA chain at depth3; TLS verification remains on. Exact valid-secret empty update returns200 ignored; invalid secret401. Changed config passed nginx-t and reload. Seven prior negative boundary probes remain valid: only safe metadata logging and chain depth changed; method/source/token/secret/body/rate/retry/cache rules are exact. No application/schema change after45 passing native cases.",
+      "native_reuse": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/transport-implementation-proof.json",
+      "failed_check_receipt": {
+        "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-telegram-external-host/webhook-handoff.json",
+        "sha256": "6c405cf97201120e8c3ff338cdda38bb20c928895810ad6bd1bc80b396206ff9"
+      },
+      "transient_provider_limitation": "Earlier read-only getMe504 remained unconfirmed in cause; final three expected identity probes completed849/655/286ms. Provider sends remain bounded and unknown outcomes held without replay.",
+      "private_linkage_accepted": false,
+      "milestone_accepted": false,
+      "production_authorized": false
     }
   },
   "historical_improvements": [
@@ -541158,11 +541278,11 @@
       "05-notifications-documents-ai.md#T-05.22.04",
       "release-readiness#R-03.02"
     ],
-    "goal": "Finish v0.4.0 live Telegram closure. Owner-confirmed SSH trust and TLS relay work;45 native tests and final three staging identity probes pass. Verify the exact reviewed transport image and callback, preserve existing webhook until replacement preflight passes, then perform authorized handoff and actual fresh owned-customer/profile linkage, audience isolation and exact versioned Telegram receipts. Accept all gates before release enqueue. No production action."
+    "goal": "Close v0.4.0 immediately after the requested actual owner customer Telegram link/question. External host, scoped reviewed API image, secret-authenticated callback and authorized one-webhook handoff are verified. Collect durable real private receipts and current profile/audience/version evidence; never fabricate a human link. Then accept milestone and enqueue exact release immediately. Independent later-release preparation may continue while this concrete owner action is pending; no production action."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
-    "next_update_after": "v0.4.0 external-host handoff/private linkage and release receipts; then remaining v0.5.0 work in dependency order",
+    "next_update_after": "Owner actual Telegram link/question and v0.4.0 release receipts; then remaining v0.5.0 UI acceptance",
     "method": "v0.2.0 and v0.3.0 accepted and staging/Telegram verified. Continue dependency order. Required external operational proof, including SMS, remains before production."
   },
   "capabilities": [

@@ -32,7 +32,8 @@ stdin; never pass them as command arguments. Install the result at
 before reloading. The root NGINX master reads this configuration before dropping
 worker privileges.
 
-TLS verification applies to both upstreams. The outbound path is restricted to
+TLS verification applies to both upstreams, with depth 3 for staging's valid
+cross-signed CA chain. The outbound path is restricted to
 the staging IP and the exact bot token and methods. Callback bodies are bounded
 to 64 KB, rate limited and authenticated at both relay and application. Request
 headers are rebuilt; cookies and arbitrary authorization headers are not relayed.
