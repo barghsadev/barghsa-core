@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-06T16:15:08.082202+00:00",
+  "updated": "2026-11-06",
   "source_commit": "93b9fec7a2c18f2635d57cd923ffce0626ee0413",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -422445,19 +422445,131 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.09** | **ElectricitySettingsPage**: two sections (Simple/Advanced green rule), each with enable toggle, threshold input, percentage slider. Online top-up limit. Max contract duration, lead days. Customer increase max %. Safety validation on activation. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.5-admin-financial-settings-pages"
+        ],
+        "current_acceptance": {
+          "kind": "verified-financial-admin-ui-journeys",
+          "base_commit": "9ac463c4a6f918e9e7bc8bb7cbbd10fc382ac54e",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/catalogue-form-fixture.ts",
+              "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+              "sha256": "b8b4428ad8ad1c0ee11cdd0bfa181f02343137e7d50bf435e85c2bfe958557f1"
+            },
+            {
+              "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+              "sha256": "51397f42bf352adbd6291dc70bfe077d160cbff3f3e10db0a1c48778758fe086"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueResource.ts",
+              "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/admin-settings-navigation.ts",
+              "sha256": "09210a32cae635bc50e215a072c70d50b978869b40f2a53d138be51188363657"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+              "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.test.ts",
+              "sha256": "df87ee38d7ca32226d70d137174646291030a705a7e054a08b295756e3980e64"
+            },
+            {
+              "path": "apps/web/src/lib/electricity-settings-form.ts",
+              "sha256": "c052cbb7a4744a5237486fcf346f3e6e148889669d3d1ce9f039e3a2d7984818"
+            },
+            {
+              "path": "apps/web/src/lib/limit-settings-form.ts",
+              "sha256": "a02fa51319d6c3e0b60a70ecd7157c70d898849c8785a3c3d8dd5a5d87129f03"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+              "sha256": "7ae1dd4d68d4552a3be4074e892f2d50e62cf2d0ed07873f08ddc3f8908e4db3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+            },
+            {
+              "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
+              "sha256": "b1dc73d20f949101a79d723cf11b98e93865be8cb23ddfece941d179e4c8e5c1"
+            },
+            {
+              "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+              "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/financial-admin-settings.md",
+              "sha256": "42190959024d999bc58ccb98ca47ba0fb0f2aa219cad432209487f37343e8a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Existing independent simple/advanced green activation, thresholds and percentage sliders verified. Existing contract duration, lead days and increase controls and versioned online top-up limit verified on current settings/workspace routes. Native activation safety and snapshots remain source-current. Bilingual light/dark desktop/mobile validation, receipt recovery and denial pass; documentation maps existing controls.",
+          "limitations": [
+            "Production-built browser fixtures; native financial evidence reused after all 529 recorded source bindings matched. External delivery and release acceptance remain separate."
+          ]
+        }
       }
     },
     {
@@ -422471,19 +422583,123 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.10** | **VatSettingsPage**: table of VAT configurations (category, rate, effective dates), product override toggle. Add new rate with future effective date. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.5-admin-financial-settings-pages"
+        ],
+        "current_acceptance": {
+          "kind": "verified-financial-admin-ui-journeys",
+          "base_commit": "9ac463c4a6f918e9e7bc8bb7cbbd10fc382ac54e",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/catalogue-form-fixture.ts",
+              "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/vat-forms.spec.ts",
+              "sha256": "2bd095f8bb4d1302f41d91f0e42a967750a0568bc08789fe4496fe6920605e74"
+            },
+            {
+              "path": "apps/web/e2e/vat-recovery.spec.ts",
+              "sha256": "109683dd920939632ddd4833dcee8e334ed11831f5ba78af0918251d5f217559"
+            },
+            {
+              "path": "apps/web/e2e/vat.spec.ts",
+              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+              "sha256": "51397f42bf352adbd6291dc70bfe077d160cbff3f3e10db0a1c48778758fe086"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueResource.ts",
+              "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/admin-settings-navigation.ts",
+              "sha256": "09210a32cae635bc50e215a072c70d50b978869b40f2a53d138be51188363657"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+              "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+            },
+            {
+              "path": "apps/web/src/lib/vat-form-schema.ts",
+              "sha256": "c9d355edc620e6c38097979d81cd681e781611b2419fd182a7e3f589ff41b3b0"
+            },
+            {
+              "path": "apps/web/src/lib/vat-form.test.ts",
+              "sha256": "052f2b4c000502ae1e66b55ba99b6441b30c49b5837b7c7fb1d7e5d0f9c3e8c2"
+            },
+            {
+              "path": "apps/web/src/lib/vat-form.ts",
+              "sha256": "05e475e7fb7b1f0d63540aeb46dc2602f1a340090d978b1e51548ad0c4d78cb5"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVatPage.tsx",
+              "sha256": "d825ece0b840e222cbf6f261eb021d6e5092c4021c3f03ab1176262d3b0cdcef"
+            },
+            {
+              "path": "apps/web/src/pages/vat-recovery.test.tsx",
+              "sha256": "d36fbda1850e7506829843ff7033c040eba3d1530ca2995484c682b78a9aa27a"
+            },
+            {
+              "path": "apps/web/src/test/vat-catalogue-fixtures.ts",
+              "sha256": "1659fe5adfd7e5e7b13f60fd5a53ff81297541c7ea76b5e0a2faa82aaadeeb6a"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/financial-admin-settings.md",
+              "sha256": "42190959024d999bc58ccb98ca47ba0fb0f2aa219cad432209487f37343e8a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Existing category/rate/effective-date tables, future scheduling in account timezone and product override add/end controls verified. Effective windows enable/disable overrides while preserving history. Exact percentage conversion, DST validation, stale basis, step-up, recovery and denied-state clearing pass. Native financial transactions and snapshots retain current evidence.",
+          "limitations": [
+            "Production-built browser fixtures; native financial evidence reused after all 529 recorded source bindings matched. External delivery and release acceptance remain separate."
+          ]
+        }
       }
     },
     {
@@ -422497,19 +422713,139 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.11** | **GiftCodesPage**: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.5-admin-financial-settings-pages"
+        ],
+        "current_acceptance": {
+          "kind": "verified-financial-admin-ui-journeys",
+          "base_commit": "9ac463c4a6f918e9e7bc8bb7cbbd10fc382ac54e",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/catalogue-form-fixture.ts",
+              "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+            },
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+            },
+            {
+              "path": "apps/web/e2e/gift-code-forms.spec.ts",
+              "sha256": "277adb375b846af35012b8c24c651b7c88ce4a44b64ed3183046954ae426afbf"
+            },
+            {
+              "path": "apps/web/e2e/gift-code-recovery.spec.ts",
+              "sha256": "ea9f04a7d2a3429c76dc95e25cb981cff89e78c9830352d52fa437ad4adf0599"
+            },
+            {
+              "path": "apps/web/e2e/gift-code-tables.spec.ts",
+              "sha256": "13d36b02438c03a56d406cfdd4acc594391225c76dd8636617c5e8dae421f11b"
+            },
+            {
+              "path": "apps/web/e2e/gift-codes.spec.ts",
+              "sha256": "710f1bb4ac5d169ca506e7b9bcedb86413bbfa29514a499ab895b467573881d8"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+              "sha256": "51397f42bf352adbd6291dc70bfe077d160cbff3f3e10db0a1c48778758fe086"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueResource.ts",
+              "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+            },
+            {
+              "path": "apps/web/src/hooks/useGiftCodeCatalogue.test.tsx",
+              "sha256": "85e38d592e46e4b6eee119844300da7693b3e083ba927f7376459aaae16132b3"
+            },
+            {
+              "path": "apps/web/src/hooks/useGiftCodeCatalogue.ts",
+              "sha256": "4e4d3aec4c22b448a2a2e9e3aa91cadf7c945a5506d311998f9de7ef34c1da5a"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/admin-settings-navigation.ts",
+              "sha256": "09210a32cae635bc50e215a072c70d50b978869b40f2a53d138be51188363657"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+              "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+            },
+            {
+              "path": "apps/web/src/lib/gift-code-catalogue.ts",
+              "sha256": "9686d2ec1177ebe972c28e8c24db064ec327491185ca772d55564725057ab90b"
+            },
+            {
+              "path": "apps/web/src/lib/gift-code-form.test.ts",
+              "sha256": "60c8ece4f94bce18b92644526d94550b00b0fe0979c87f30c2f8e86160a463d2"
+            },
+            {
+              "path": "apps/web/src/lib/gift-code-form.ts",
+              "sha256": "1a6beba36c0e43cbfed533e0871b0e44ecb4190353b5eae2cb356066a98f56df"
+            },
+            {
+              "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+              "sha256": "d2af85c6259bd3df98996123bd8333b360ed99a6944ecbb8eccb03721e2ae89a"
+            },
+            {
+              "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
+              "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+            },
+            {
+              "path": "apps/web/src/pages/gift-code-recovery.test.tsx",
+              "sha256": "46cb247041f26dbd4a2d514888226b50ca8795599a63a33c8bb9ffcb182abc26"
+            },
+            {
+              "path": "apps/web/src/test/gift-code-fixtures.ts",
+              "sha256": "34ac34a164a70afa391966ac53129705ccb20642f148594d1710783d02ecc366"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/financial-admin-settings.md",
+              "sha256": "42190959024d999bc58ccb98ca47ba0fb0f2aa219cad432209487f37343e8a84"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/acceptance-proof.json"
+          ],
+          "criterion_result": "Existing search/filter list, create/edit, exact IRR/percentage validation, per-profile/recent usage statistics and active/inactive review verified. Responsive tables/cards preserve exact values and drafts. Unverified outcomes hold, stale decisions invalidate and denied scopes clear. Approved category-matching and ledger policy retain current native evidence.",
+          "limitations": [
+            "Production-built browser fixtures; native financial evidence reused after all 529 recorded source bindings matched. External delivery and release acceptance remain separate."
+          ]
+        }
       }
     },
     {
@@ -456453,6 +456789,243 @@
       "release_accepted": false,
       "external_sends": false,
       "production_authorized": false
+    },
+    "release-0.5-admin-financial-settings-pages": {
+      "batch": "release-0.5-admin-financial-settings-pages",
+      "base_commit": "9ac463c4a6f918e9e7bc8bb7cbbd10fc382ac54e",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.30.02.09",
+        "07-ui-ux-design.md#T-07.30.02.10",
+        "07-ui-ux-design.md#T-07.30.02.11"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/catalogue-form-fixture.ts",
+          "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+          "sha256": "b8b4428ad8ad1c0ee11cdd0bfa181f02343137e7d50bf435e85c2bfe958557f1"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-forms.spec.ts",
+          "sha256": "277adb375b846af35012b8c24c651b7c88ce4a44b64ed3183046954ae426afbf"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-recovery.spec.ts",
+          "sha256": "ea9f04a7d2a3429c76dc95e25cb981cff89e78c9830352d52fa437ad4adf0599"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "13d36b02438c03a56d406cfdd4acc594391225c76dd8636617c5e8dae421f11b"
+        },
+        {
+          "path": "apps/web/e2e/gift-codes.spec.ts",
+          "sha256": "710f1bb4ac5d169ca506e7b9bcedb86413bbfa29514a499ab895b467573881d8"
+        },
+        {
+          "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+          "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+        },
+        {
+          "path": "apps/web/e2e/vat-forms.spec.ts",
+          "sha256": "2bd095f8bb4d1302f41d91f0e42a967750a0568bc08789fe4496fe6920605e74"
+        },
+        {
+          "path": "apps/web/e2e/vat-recovery.spec.ts",
+          "sha256": "109683dd920939632ddd4833dcee8e334ed11831f5ba78af0918251d5f217559"
+        },
+        {
+          "path": "apps/web/e2e/vat.spec.ts",
+          "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+        },
+        {
+          "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+          "sha256": "51397f42bf352adbd6291dc70bfe077d160cbff3f3e10db0a1c48778758fe086"
+        },
+        {
+          "path": "apps/web/src/components/OperationalQueueTable.tsx",
+          "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+          "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/hooks/useGiftCodeCatalogue.test.tsx",
+          "sha256": "85e38d592e46e4b6eee119844300da7693b3e083ba927f7376459aaae16132b3"
+        },
+        {
+          "path": "apps/web/src/hooks/useGiftCodeCatalogue.ts",
+          "sha256": "4e4d3aec4c22b448a2a2e9e3aa91cadf7c945a5506d311998f9de7ef34c1da5a"
+        },
+        {
+          "path": "apps/web/src/hooks/useWizardForm.ts",
+          "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+        },
+        {
+          "path": "apps/web/src/lib/admin-settings-navigation.ts",
+          "sha256": "09210a32cae635bc50e215a072c70d50b978869b40f2a53d138be51188363657"
+        },
+        {
+          "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+          "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-settings-form.test.ts",
+          "sha256": "df87ee38d7ca32226d70d137174646291030a705a7e054a08b295756e3980e64"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-settings-form.ts",
+          "sha256": "c052cbb7a4744a5237486fcf346f3e6e148889669d3d1ce9f039e3a2d7984818"
+        },
+        {
+          "path": "apps/web/src/lib/gift-code-catalogue.ts",
+          "sha256": "9686d2ec1177ebe972c28e8c24db064ec327491185ca772d55564725057ab90b"
+        },
+        {
+          "path": "apps/web/src/lib/gift-code-form.test.ts",
+          "sha256": "60c8ece4f94bce18b92644526d94550b00b0fe0979c87f30c2f8e86160a463d2"
+        },
+        {
+          "path": "apps/web/src/lib/gift-code-form.ts",
+          "sha256": "1a6beba36c0e43cbfed533e0871b0e44ecb4190353b5eae2cb356066a98f56df"
+        },
+        {
+          "path": "apps/web/src/lib/limit-settings-form.ts",
+          "sha256": "a02fa51319d6c3e0b60a70ecd7157c70d898849c8785a3c3d8dd5a5d87129f03"
+        },
+        {
+          "path": "apps/web/src/lib/vat-form-schema.ts",
+          "sha256": "c9d355edc620e6c38097979d81cd681e781611b2419fd182a7e3f589ff41b3b0"
+        },
+        {
+          "path": "apps/web/src/lib/vat-form.test.ts",
+          "sha256": "052f2b4c000502ae1e66b55ba99b6441b30c49b5837b7c7fb1d7e5d0f9c3e8c2"
+        },
+        {
+          "path": "apps/web/src/lib/vat-form.ts",
+          "sha256": "05e475e7fb7b1f0d63540aeb46dc2602f1a340090d978b1e51548ad0c4d78cb5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "7ae1dd4d68d4552a3be4074e892f2d50e62cf2d0ed07873f08ddc3f8908e4db3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "d2af85c6259bd3df98996123bd8333b360ed99a6944ecbb8eccb03721e2ae89a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "d825ece0b840e222cbf6f261eb021d6e5092c4021c3f03ab1176262d3b0cdcef"
+        },
+        {
+          "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
+          "sha256": "e3dec280caff6303c62b992340cb150b0776ba0d11cd9638076af89bac45c8d1"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+          "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+        },
+        {
+          "path": "apps/web/src/pages/gift-code-recovery.test.tsx",
+          "sha256": "46cb247041f26dbd4a2d514888226b50ca8795599a63a33c8bb9ffcb182abc26"
+        },
+        {
+          "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
+          "sha256": "b1dc73d20f949101a79d723cf11b98e93865be8cb23ddfece941d179e4c8e5c1"
+        },
+        {
+          "path": "apps/web/src/pages/vat-recovery.test.tsx",
+          "sha256": "d36fbda1850e7506829843ff7033c040eba3d1530ca2995484c682b78a9aa27a"
+        },
+        {
+          "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+          "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+        },
+        {
+          "path": "apps/web/src/test/gift-code-fixtures.ts",
+          "sha256": "34ac34a164a70afa391966ac53129705ccb20642f148594d1710783d02ecc366"
+        },
+        {
+          "path": "apps/web/src/test/vat-catalogue-fixtures.ts",
+          "sha256": "1659fe5adfd7e5e7b13f60fd5a53ff81297541c7ea76b5e0a2faa82aaadeeb6a"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "docs/decisions/financial-admin-settings.md",
+          "sha256": "42190959024d999bc58ccb98ca47ba0fb0f2aa219cad432209487f37343e8a84"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+        }
+      ],
+      "criteria": {
+        "09": "Existing independent simple/advanced green activation, thresholds and percentage sliders verified. Existing contract duration, lead days and increase controls and versioned online top-up limit verified on current settings/workspace routes. Native activation safety and snapshots remain source-current. Bilingual light/dark desktop/mobile validation, receipt recovery and denial pass; documentation maps existing controls.",
+        "10": "Existing category/rate/effective-date tables, future scheduling in account timezone and product override add/end controls verified. Effective windows enable/disable overrides while preserving history. Exact percentage conversion, DST validation, stale basis, step-up, recovery and denied-state clearing pass. Native financial transactions and snapshots retain current evidence.",
+        "11": "Existing search/filter list, create/edit, exact IRR/percentage validation, per-profile/recent usage statistics and active/inactive review verified. Responsive tables/cards preserve exact values and drafts. Unverified outcomes hold, stale decisions invalidate and denied scopes clear. Approved category-matching and ledger policy retain current native evidence."
+      },
+      "review": {
+        "result": "accepted",
+        "details": "Inspected existing controls and callers before rebuilding. No demonstrated product gap. Reviewed documentation and board-only batch. Existing financial windows, snapshots, server permissions and receipt guards retained."
+      },
+      "passing_check_receipts": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/ui.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/browser.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/mobile-browser.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/docs-format.json"
+      ],
+      "passing_unit_cases": 106,
+      "passing_browser_cases": 64,
+      "native_reuse": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-settings/native-reuse.json",
+      "unchanged_build_and_budget_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+      "runtime_bindings": {
+        "apps/web/dist": {
+          "files": 540,
+          "sha256": "4510b74728eabbabf93cb6760659a0c24f9be8e0450837b512dc6d37c3db3e52",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/ui/dist": {
+          "files": 633,
+          "sha256": "f4a051bb85c55ca440ce2f9ffcd0e86ddbec3909db49597ceb7f5f2f0e9dcb1b",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/i18n/dist": {
+          "files": 532,
+          "sha256": "91118783c7cfc8b554d344276b01805c3e88962be58e2670236b645750bccd69",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        }
+      },
+      "release_accepted": false,
+      "external_sends": false
     }
   },
   "historical_improvements": [
@@ -456492,14 +457065,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-admin-financial-settings-pages",
+    "id": "release-0.5-admin-safety-operations-pages",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.30.02.09",
-      "07-ui-ux-design.md#T-07.30.02.10",
-      "07-ui-ux-design.md#T-07.30.02.11"
+      "07-ui-ux-design.md#T-07.30.02.12",
+      "07-ui-ux-design.md#T-07.30.02.13",
+      "07-ui-ux-design.md#T-07.30.02.14",
+      "07-ui-ux-design.md#T-07.30.02.15",
+      "07-ui-ux-design.md#T-07.30.02.16",
+      "07-ui-ux-design.md#T-07.30.02.17"
     ],
-    "goal": "Inspect current electricity rules/limits, VAT and gift-code admin journeys against exact UI acceptance. Reuse valid source-bound native financial/security evidence; verify affected UI behavior and implement only demonstrated gaps. Keep snapshot, activation, amounts, grant/session, concurrency and audit safeguards."
+    "goal": "Inspect and close existing upload policy, dual approval, verification, service target, team assignment and escalation UI. Reuse current native evidence; build only demonstrated gaps and preserve permissions, step-up, publication, queues and audit."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",

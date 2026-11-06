@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-06T16:15:08.082202+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 610 | Accepted with unchanged source bindings. |
-| verify | 715 | Existing work may be complete; inspect evidence before building. |
+| done | 613 | Accepted with unchanged source bindings. |
+| verify | 712 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,11 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Inspect current electricity rules/limits, VAT and gift-code admin journeys against exact UI acceptance. Reuse valid source-bound native financial/security evidence; verify affected UI behavior and implement only demonstrated gaps. Keep snapshot, activation, amounts, grant/session, concurrency and audit safeguards.
+Inspect and close existing upload policy, dual approval, verification, service target, team assignment and escalation UI. Reuse current native evidence; build only demonstrated gaps and preserve permissions, step-up, publication, queues and audit.
 
-- `07-ui-ux-design.md#T-07.30.02.09`: ElectricitySettingsPage: two sections (Simple/Advanced green rule), each with enable toggle, threshold input, percentage slider. Online top-up limit. Max contract duration, lead days. Customer increase max %. Safety validation on activation.
-- `07-ui-ux-design.md#T-07.30.02.10`: VatSettingsPage: table of VAT configurations (category, rate, effective dates), product override toggle. Add new rate with future effective date.
-- `07-ui-ux-design.md#T-07.30.02.11`: GiftCodesPage: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle.
+- `07-ui-ux-design.md#T-07.30.02.12`: UploadPoliciesPage: table (category, allowed formats, max size), edit modal per category. Deployment-safe boundary warnings.
+- `07-ui-ux-design.md#T-07.30.02.13`: DualApprovalPage: threshold input (IRR) with large number format, description of affected actions. Step-up required to change. Emergency override section.
+- `07-ui-ux-design.md#T-07.30.02.14`: VerificationSettingsPage: identity verification requirements per profile type (Individual/Legal), required document types, verification expiry, auto-verification for staff profiles, manual verification override. Versioned settings with Draft → Active lifecycle.
+- `07-ui-ux-design.md#T-07.30.02.15`: ServiceTargetsPage: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger.
+- `07-ui-ux-design.md#T-07.30.02.16`: TeamAssignmentPage: staff team management — create teams (Support, Finance, Operations, Legal), assign staff to teams, set team lead, configure auto-assignment rules (round-robin, least-loaded, skill-based), team escalation path.
+- `07-ui-ux-design.md#T-07.30.02.17`: EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows.
 
 ## v0.2.0: Complete customer journeys
 
@@ -933,9 +936,9 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.02.06` | done | Recorded batch work | EmailProviderPage: provider selector (SMTP/Resend), conditional credential fields (secrets masked), test connection button, activate/disable/rollback buttons, current active version display. |
 | `07-ui-ux-design.md#T-07.30.02.07` | done | Recorded batch work | SmsProviderPage: API key (masked), sender line, throughput, low-credit threshold. Template mapping sub-section: event key → SMS template ID + variable mapping. Test send. |
 | `07-ui-ux-design.md#T-07.30.02.08` | done | Recorded batch work | AiOrchestrationPage: nested tabs — Models (table + add/edit), Knowledge Bases (tree/list + upload + processing status), Policies (list + editor), Agents (list + create/edit + test chat at bottom), Agent Slots (table + assignment dropdown). |
-| `07-ui-ux-design.md#T-07.30.02.09` | verify | Inventory needed | ElectricitySettingsPage: two sections (Simple/Advanced green rule), each with enable toggle, threshold input, percentage slider. Online top-up limit. Max contract duration, lead days. Customer increase max %. Safety validation on activation. |
-| `07-ui-ux-design.md#T-07.30.02.10` | verify | Inventory needed | VatSettingsPage: table of VAT configurations (category, rate, effective dates), product override toggle. Add new rate with future effective date. |
-| `07-ui-ux-design.md#T-07.30.02.11` | verify | Inventory needed | GiftCodesPage: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle. |
+| `07-ui-ux-design.md#T-07.30.02.09` | done | Recorded batch work | ElectricitySettingsPage: two sections (Simple/Advanced green rule), each with enable toggle, threshold input, percentage slider. Online top-up limit. Max contract duration, lead days. Customer increase max %. Safety validation on activation. |
+| `07-ui-ux-design.md#T-07.30.02.10` | done | Recorded batch work | VatSettingsPage: table of VAT configurations (category, rate, effective dates), product override toggle. Add new rate with future effective date. |
+| `07-ui-ux-design.md#T-07.30.02.11` | done | Recorded batch work | GiftCodesPage: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle. |
 | `07-ui-ux-design.md#T-07.30.02.12` | verify | Recorded batch work | UploadPoliciesPage: table (category, allowed formats, max size), edit modal per category. Deployment-safe boundary warnings. |
 | `07-ui-ux-design.md#T-07.30.02.13` | verify | Inventory needed | DualApprovalPage: threshold input (IRR) with large number format, description of affected actions. Step-up required to change. Emergency override section. |
 | `07-ui-ux-design.md#T-07.30.02.14` | verify | Recorded batch work | VerificationSettingsPage: identity verification requirements per profile type (Individual/Legal), required document types, verification expiry, auto-verification for staff profiles, manual verification override. Versioned settings with Draft → Active lifecycle. |
