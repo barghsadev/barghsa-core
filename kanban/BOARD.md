@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06T21:34:19.716330+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 741 | Accepted with unchanged source bindings. |
-| verify | 586 | Existing work may be complete; inspect evidence before building. |
+| done | 744 | Accepted with unchanged source bindings. |
+| verify | 583 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,10 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Follow owner replacement of deleted paid Liara with OpenRouter free models through restricted eu.barghsa.com relay. Key is in ignored mode0600.env; no credential in Git. Configure and verify actual zero-priced chat and1536-dimensional embeddings, process/reindex existing knowledge safely, complete actual Telegram reply/audience/version receipt, then accept and release v0.4.0. No Liara recreation or production deployment. Fifteen list/table criteria have been accepted independently; no later infrastructure batch.
+Accepted v0.4.0. Push exact candidate, immediately enqueue detached staging worker, verify exact live health/metadata and one Persian summary plus one grouped album. Then resume v0.5.0 in dependency order. No production authorization.
 
-- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
-- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
 - `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
 
 ## v0.2.0: Complete customer journeys
@@ -523,7 +521,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-03.01` | done | Recorded batch work | Renew document, notification and AI acceptance |
-| `release-readiness#R-03.02` | verify | Recorded batch work | Verify live staging provider and storage boundaries |
+| `release-readiness#R-03.02` | done | Recorded batch work | Verify live staging provider and storage boundaries |
 | `02-auth-users-admin.md#T-09.04.01` | done | Earlier acceptance_verified | Notification template editor |
 | `02-auth-users-admin.md#T-09.06.01` | done | Earlier acceptance_verified | Email transport configuration |
 | `02-auth-users-admin.md#T-09.06.02` | done | Earlier acceptance_verified | SMS.ir configuration |
@@ -532,7 +530,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `02-auth-users-admin.md#T-09.11.02` | done | Earlier partial | Knowledge base management |
 | `02-auth-users-admin.md#T-09.11.03` | done | Earlier acceptance_verified | Policy management |
 | `02-auth-users-admin.md#T-09.11.04` | done | Earlier partial | AI agent management |
-| `02-auth-users-admin.md#T-09.11.05` | verify | Earlier partial | Agent slot assignment |
+| `02-auth-users-admin.md#T-09.11.05` | done | Earlier partial | Agent slot assignment |
 | `05-notifications-documents-ai.md#T-05.01.01` | done | Earlier acceptance_verified | Notification module scaffold |
 | `05-notifications-documents-ai.md#T-05.01.02` | done | Earlier acceptance_verified | Durable outbox table & write pipeline |
 | `05-notifications-documents-ai.md#T-05.01.03` | done | Earlier acceptance_verified | Job queue with retry schedule |
@@ -621,7 +619,7 @@ Documents are safely uploaded, reviewed and retained; notifications and configur
 | `05-notifications-documents-ai.md#T-05.22.01` | done | Recorded batch work | AuthZ for AI actions |
 | `05-notifications-documents-ai.md#T-05.22.02` | superseded | Recorded batch work | Trusted-UI confirmation for writes |
 | `05-notifications-documents-ai.md#T-05.22.03` | done | Recorded batch work | AI audit logging |
-| `05-notifications-documents-ai.md#T-05.22.04` | verify | Recorded batch work | Data isolation per slot |
+| `05-notifications-documents-ai.md#T-05.22.04` | done | Recorded batch work | Data isolation per slot |
 | `05-notifications-documents-ai.md#T-05.22.05` | done | Recorded batch work | Sensitive value redaction |
 | `05-notifications-documents-ai.md#T-05.22.06` | done | Recorded batch work | Source attribution in answers |
 | `05-notifications-documents-ai.md#T-05.23.01` | done | Recorded batch work | AI worker process isolation |

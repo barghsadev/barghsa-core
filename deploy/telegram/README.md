@@ -128,3 +128,10 @@ prohibits personal/confidential input and production or business-critical use.
 Before production, select and verify a provider whose terms support the intended
 knowledge and traffic. Do not treat this staging configuration as production
 provider acceptance.
+
+Native adversarial questions also exposed a model-quality limitation: the free
+chat model sometimes labels a public phrase or filename as an internal marker.
+The actual staff-only marker and staff sources remained excluded from every
+public/customer response. Preserve these outputs for model evaluation. Retrieved
+source attribution establishes which passages were supplied; it does not certify
+every generated claim. Keep this finding in the production model evaluation.

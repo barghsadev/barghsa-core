@@ -9,6 +9,7 @@ const version: string = JSON.parse(
 for (const locale of ['en', 'fa'] as const) {
   test(`login displays the shared release version (${locale})`, async ({ page }, info) => {
     await setupCatalogueForms(page, locale, locale === 'fa');
+    await page.route('**/api/auth/user', (route) => route.fulfill({ status: 401, json: {} }));
     await page.addInitScript(
       (language) => localStorage.setItem('barghsa-locale', language),
       locale
