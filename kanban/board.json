@@ -762,6 +762,24 @@
       "decision": "Retain same-origin sealed image URLs and Cache-Control: no-store for branding; reconcile CDN wording. Upload ownership/byte checks, private draft previews and active-reference publication remain required.",
       "evidence": "Owner answer: Retain existing image URLs and privacy settings (recommended).",
       "documentation": "docs/decisions/branding-assets.md"
+    },
+    "v05_expanded_admin_configuration": {
+      "status": "required",
+      "approved_by": "owner",
+      "approved_at": "2026-11-06",
+      "owner_answer": "Implement the expanded specification before v0.5.0",
+      "scope": [
+        "Per-profile verification requirements, required document types, expiry, configurable staff auto-verification and restricted manual override with draft/active lifecycle.",
+        "Per-priority ticket response, order fulfillment, contract review and verification targets with enforced escalation/notification.",
+        "Condition/from-role-or-team/to-role-or-team escalation with timeout and notification for ticket, order review and verification."
+      ],
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.30.02.14",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17"
+      ],
+      "disposition": "Do not reconcile these tasks down to current domain controls. Build and verify the expanded requirements before acceptance.",
+      "notes_path": "docs/decisions/admin-configuration-expansion.md"
     }
   },
   "specification_sources": {
@@ -422859,21 +422877,96 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.12** | **UploadPoliciesPage**: table (category, allowed formats, max size), edit modal per category. Deployment-safe boundary warnings. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-04-storage-policy-forms"
+          "2026-10-04-storage-policy-forms",
+          "release-0.5-admin-safety-operations-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-safety-and-team-ui-journeys",
+          "base_commit": "6c5f15f635c512e4261186331061d2c99a70569d",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+              "sha256": "7d511b84b45fad49f4dab5f53cb8c09c45b5efa880e6af2e94180d4e0351ee7b"
+            },
+            {
+              "path": "apps/web/e2e/upload-policies.spec.ts",
+              "sha256": "a73cb35410bd136bc537497f531ad90b6a609aab2e4a5f109640394409ca04d2"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+              "sha256": "104a4f1cea9c497de807177771023de890ff6e341c4305a3b064a0005bdd56dd"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueResource.ts",
+              "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+              "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+            },
+            {
+              "path": "apps/web/src/lib/storage-policy-form.ts",
+              "sha256": "a15c8daf2b9784086ff6d781cac3167d01630788a97761420123cbff7ca249c3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+              "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+            },
+            {
+              "path": "apps/web/src/pages/storage-policy-forms.test.tsx",
+              "sha256": "56759456a593c679d182c822eeb93515360190b178078777ef5ffed012ff5ef5"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/admin-configuration-expansion.md",
+              "sha256": "f4c9d78f893d70c97b980c3c497ae96543a1a447450f459970f15ba6a1d64702"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/acceptance-proof.json"
+          ],
+          "criterion_result": "Existing category, format and maximum-size table, per-category edit dialog, history and deployment ceilings verified. Restricted access, declared/actual-byte safeguards, modal validation, stale boundaries, unverified receipt/reset, keyboard, localized themes and mobile behavior retained. Native policy tests remain source-current.",
+          "limitations": [
+            "Production-built browser fixtures. Existing native evidence reused after all 445 recorded source bindings matched. Expanded verification/service-target/escalation criteria and actual release gates remain unaccepted."
+          ]
+        }
       }
     },
     {
@@ -422887,19 +422980,111 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.13** | **DualApprovalPage**: threshold input (IRR) with large number format, description of affected actions. Step-up required to change. Emergency override section. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.5-admin-safety-operations-pages"
+        ],
+        "current_acceptance": {
+          "kind": "verified-admin-safety-and-team-ui-journeys",
+          "base_commit": "6c5f15f635c512e4261186331061d2c99a70569d",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/approval-threshold.spec.ts",
+              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+            },
+            {
+              "path": "apps/web/e2e/receipt-emergency.spec.ts",
+              "sha256": "4f7d0b8938e8e0169871c13615931b54ee4390163d1a86e8e70ad4570c6813a8"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+              "sha256": "104a4f1cea9c497de807177771023de890ff6e341c4305a3b064a0005bdd56dd"
+            },
+            {
+              "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
+              "sha256": "463e454cb319dd94fcb0845cd046c9cd5aa0442d6f990a678990853a9c73faf8"
+            },
+            {
+              "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+              "sha256": "b6c6cd1671729ca5c4dd43196065b0c597b4669bcba3922e83eb1000375b507e"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueResource.ts",
+              "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+              "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+            },
+            {
+              "path": "apps/web/src/lib/limit-settings-form.ts",
+              "sha256": "a02fa51319d6c3e0b60a70ecd7157c70d898849c8785a3c3d8dd5a5d87129f03"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
+              "sha256": "28161e084a126f0a26e46d2b5361becfc50a5eaca417a91a85cc41d588cf85bc"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "5dc1a959c0dfacd5779c5b3c3c865e2f06900a13a983d688172f3c19aa9b5856"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "143786921ef55380f04f91b9edb8456ca6b79c69064fa8d564e9f4d8620de383"
+            },
+            {
+              "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
+              "sha256": "4309352844fd12bb5565032afc85d3646e481b144eb917355c834d0f9286cc7f"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/admin-configuration-expansion.md",
+              "sha256": "f4c9d78f893d70c97b980c3c497ae96543a1a447450f459970f15ba6a1d64702"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/acceptance-proof.json"
+          ],
+          "criterion_result": "Existing large-IRR threshold editor, affected-action description and OTP step-up verified. Elevated emergency receipt section captures reason and exact receipt review through step-up; pending writes lock competing actions. Native permission, rollback, immutable credit, audit and immediate private alert evidence retain 244 matching source bindings. Emergency actions remain on eligible receipt details.",
+          "limitations": [
+            "Production-built browser fixtures. Existing native evidence reused after all 445 recorded source bindings matched. Expanded verification/service-target/escalation criteria and actual release gates remain unaccepted."
+          ]
+        }
       }
     },
     {
@@ -422917,7 +423102,9 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Implement per-profile verification requirements and required document types with draft/active settings and guarded receipt recovery.",
+        "Enforce configured verification expiry and staff auto-verification in the actual profile/review/commercial-access paths; retain restricted manual review.",
+        "Pass targeted native, migration and bilingual responsive UI checks on final sources."
       ],
       "owner": null,
       "depends_on": [],
@@ -422945,7 +423132,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Implement per-priority ticket response, order fulfillment and contract review targets alongside existing verification/consultation controls.",
+        "Enforce timing, escalation and notification behavior for expanded targets and verify native and UI boundaries."
       ],
       "owner": null,
       "depends_on": [],
@@ -422969,21 +423157,108 @@
         "story": "07-ui-ux-design.md#spec-9a23ff2be1ce"
       },
       "requirement": "| **T-07.30.02.16** | **TeamAssignmentPage**: staff team management — create teams (Support, Finance, Operations, Legal), assign staff to teams, set team lead, configure auto-assignment rules (round-robin, least-loaded, skill-based), team escalation path. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-06-staff-operation-tables"
+          "2026-10-06-staff-operation-tables",
+          "release-0.5-admin-safety-operations-pages"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-admin-safety-and-team-ui-journeys",
+          "base_commit": "6c5f15f635c512e4261186331061d2c99a70569d",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/assignment-settings-recovery.spec.ts",
+              "sha256": "579381044e979674dcfdf12259709488d616460a71137dd1d64c44467e29ee87"
+            },
+            {
+              "path": "apps/web/e2e/staff-team-forms.spec.ts",
+              "sha256": "8bebc2625583da05b387424ad82b272562ea25788670ff276cea0608b529398a"
+            },
+            {
+              "path": "apps/web/e2e/staff-teams.spec.ts",
+              "sha256": "9f934b7c370ac865be2c33014a6f867b9912ed5dd3f651bf7edc5d03ab1a6998"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+              "sha256": "911fb3cc2f705803d3b6ccfbedd31f0b58354e0ec130dd87bb25a243d55213ba"
+            },
+            {
+              "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+              "sha256": "104a4f1cea9c497de807177771023de890ff6e341c4305a3b064a0005bdd56dd"
+            },
+            {
+              "path": "apps/web/src/components/OperationalQueueTable.tsx",
+              "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+              "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+            },
+            {
+              "path": "apps/web/src/hooks/useCatalogueResource.ts",
+              "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+            },
+            {
+              "path": "apps/web/src/hooks/useWizardForm.ts",
+              "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+            },
+            {
+              "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+              "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+            },
+            {
+              "path": "apps/web/src/lib/staff-team-form.ts",
+              "sha256": "0a39766950c2eea78c37fe96d3d75cbde0172849dcdd054df0a7dffd9a21332b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+              "sha256": "865c0e0a537722060519d01d29a74688116058e899dee04618b56d624f932ea2"
+            },
+            {
+              "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
+              "sha256": "32229b918f5d3ecc1b977a68fc54945eaad2ed4ec6cfa970b57034d4ec4c462b"
+            },
+            {
+              "path": "apps/web/src/pages/staff-team-forms.test.tsx",
+              "sha256": "7c326b23404506cf7689c39f367f149fd139c6296f39be1c43512517c92a9ce3"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/admin-configuration-expansion.md",
+              "sha256": "f4c9d78f893d70c97b980c3c497ae96543a1a447450f459970f15ba6a1d64702"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/acceptance-proof.json"
+          ],
+          "criterion_result": "Existing team CRUD, current staff membership, member-bound lead, round-robin/expertise/load strategies and team escalation/fallback routing verified. Read recovery, stale membership/rules, preserved drafts, unverified write/reset, captured step-up, localizations, keyboard and mobile forms pass. Native routing/permission/audit evidence remains current.",
+          "limitations": [
+            "Production-built browser fixtures. Existing native evidence reused after all 445 recorded source bindings matched. Expanded verification/service-target/escalation criteria and actual release gates remain unaccepted."
+          ]
+        }
       }
     },
     {
@@ -423001,7 +423276,8 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Implement condition, source/destination role-or-team, notification choices and timeout configuration for ticket, order review and verification.",
+        "Enforce rules through actual routing/escalation workers with concurrency, authority, duplicate-delivery and audit checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -457026,6 +457302,188 @@
       },
       "release_accepted": false,
       "external_sends": false
+    },
+    "release-0.5-admin-safety-operations-pages": {
+      "batch": "release-0.5-admin-safety-operations-pages",
+      "base_commit": "6c5f15f635c512e4261186331061d2c99a70569d",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.30.02.12",
+        "07-ui-ux-design.md#T-07.30.02.13",
+        "07-ui-ux-design.md#T-07.30.02.16"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/approval-threshold.spec.ts",
+          "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+        },
+        {
+          "path": "apps/web/e2e/assignment-settings-recovery.spec.ts",
+          "sha256": "579381044e979674dcfdf12259709488d616460a71137dd1d64c44467e29ee87"
+        },
+        {
+          "path": "apps/web/e2e/receipt-emergency.spec.ts",
+          "sha256": "4f7d0b8938e8e0169871c13615931b54ee4390163d1a86e8e70ad4570c6813a8"
+        },
+        {
+          "path": "apps/web/e2e/staff-team-forms.spec.ts",
+          "sha256": "8bebc2625583da05b387424ad82b272562ea25788670ff276cea0608b529398a"
+        },
+        {
+          "path": "apps/web/e2e/staff-teams.spec.ts",
+          "sha256": "9f934b7c370ac865be2c33014a6f867b9912ed5dd3f651bf7edc5d03ab1a6998"
+        },
+        {
+          "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+          "sha256": "7d511b84b45fad49f4dab5f53cb8c09c45b5efa880e6af2e94180d4e0351ee7b"
+        },
+        {
+          "path": "apps/web/e2e/upload-policies.spec.ts",
+          "sha256": "a73cb35410bd136bc537497f531ad90b6a609aab2e4a5f109640394409ca04d2"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+        },
+        {
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "911fb3cc2f705803d3b6ccfbedd31f0b58354e0ec130dd87bb25a243d55213ba"
+        },
+        {
+          "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
+          "sha256": "104a4f1cea9c497de807177771023de890ff6e341c4305a3b064a0005bdd56dd"
+        },
+        {
+          "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
+          "sha256": "463e454cb319dd94fcb0845cd046c9cd5aa0442d6f990a678990853a9c73faf8"
+        },
+        {
+          "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+          "sha256": "b6c6cd1671729ca5c4dd43196065b0c597b4669bcba3922e83eb1000375b507e"
+        },
+        {
+          "path": "apps/web/src/components/OperationalQueueTable.tsx",
+          "sha256": "69c5abcbdb7c290028cae21d1d7b0742eae2ee398af7206ce0d0752a6aedbd30"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+          "sha256": "c6bd716d6156b50c23c9049afb9278d8643a81f35d9017236b453ce6d90c9039"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/hooks/useWizardForm.ts",
+          "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+        },
+        {
+          "path": "apps/web/src/lib/catalogue-form-schemas.ts",
+          "sha256": "f300777b59f7e9fd45ed14472dc1d03fd25257e72ecf1931829e214793fb091a"
+        },
+        {
+          "path": "apps/web/src/lib/limit-settings-form.ts",
+          "sha256": "a02fa51319d6c3e0b60a70ecd7157c70d898849c8785a3c3d8dd5a5d87129f03"
+        },
+        {
+          "path": "apps/web/src/lib/staff-team-form.ts",
+          "sha256": "0a39766950c2eea78c37fe96d3d75cbde0172849dcdd054df0a7dffd9a21332b"
+        },
+        {
+          "path": "apps/web/src/lib/storage-policy-form.ts",
+          "sha256": "a15c8daf2b9784086ff6d781cac3167d01630788a97761420123cbff7ca249c3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
+          "sha256": "28161e084a126f0a26e46d2b5361becfc50a5eaca417a91a85cc41d588cf85bc"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "5dc1a959c0dfacd5779c5b3c3c865e2f06900a13a983d688172f3c19aa9b5856"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "865c0e0a537722060519d01d29a74688116058e899dee04618b56d624f932ea2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "143786921ef55380f04f91b9edb8456ca6b79c69064fa8d564e9f4d8620de383"
+        },
+        {
+          "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
+          "sha256": "32229b918f5d3ecc1b977a68fc54945eaad2ed4ec6cfa970b57034d4ec4c462b"
+        },
+        {
+          "path": "apps/web/src/pages/staff-team-forms.test.tsx",
+          "sha256": "7c326b23404506cf7689c39f367f149fd139c6296f39be1c43512517c92a9ce3"
+        },
+        {
+          "path": "apps/web/src/pages/storage-policy-forms.test.tsx",
+          "sha256": "56759456a593c679d182c822eeb93515360190b178078777ef5ffed012ff5ef5"
+        },
+        {
+          "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
+          "sha256": "4309352844fd12bb5565032afc85d3646e481b144eb917355c834d0f9286cc7f"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "docs/decisions/admin-configuration-expansion.md",
+          "sha256": "f4c9d78f893d70c97b980c3c497ae96543a1a447450f459970f15ba6a1d64702"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+        }
+      ],
+      "criteria": {
+        "12": "Existing category, format and maximum-size table, per-category edit dialog, history and deployment ceilings verified. Restricted access, declared/actual-byte safeguards, modal validation, stale boundaries, unverified receipt/reset, keyboard, localized themes and mobile behavior retained. Native policy tests remain source-current.",
+        "13": "Existing large-IRR threshold editor, affected-action description and OTP step-up verified. Elevated emergency receipt section captures reason and exact receipt review through step-up; pending writes lock competing actions. Native permission, rollback, immutable credit, audit and immediate private alert evidence retain 244 matching source bindings. Emergency actions remain on eligible receipt details.",
+        "16": "Existing team CRUD, current staff membership, member-bound lead, round-robin/expertise/load strategies and team escalation/fallback routing verified. Read recovery, stale membership/rules, preserved drafts, unverified write/reset, captured step-up, localizations, keyboard and mobile forms pass. Native routing/permission/audit evidence remains current."
+      },
+      "review": {
+        "result": "accepted",
+        "details": "Inspected existing implementations and callers. No product rebuild needed for these three tasks. Documentation and board-only diff reviewed; no safeguards or expanded requirements removed."
+      },
+      "passing_check_receipts": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/ui.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/browser.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/mobile-browser.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/docs-format.json"
+      ],
+      "passing_unit_cases": 142,
+      "passing_browser_cases": 51,
+      "native_reuse": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-safety-operations/native-reuse.json",
+      "native_source_bindings": 445,
+      "unchanged_build_and_budget_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-communications-ai/acceptance-proof.json",
+      "runtime_bindings": {
+        "apps/web/dist": {
+          "files": 540,
+          "sha256": "4510b74728eabbabf93cb6760659a0c24f9be8e0450837b512dc6d37c3db3e52",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/ui/dist": {
+          "files": 633,
+          "sha256": "f4a051bb85c55ca440ce2f9ffcd0e86ddbec3909db49597ceb7f5f2f0e9dcb1b",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/i18n/dist": {
+          "files": 532,
+          "sha256": "91118783c7cfc8b554d344276b01805c3e88962be58e2670236b645750bccd69",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        }
+      },
+      "release_accepted": false,
+      "external_sends": false
     }
   },
   "historical_improvements": [
@@ -457065,17 +457523,12 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-admin-safety-operations-pages",
+    "id": "release-0.5-expanded-verification-settings",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.30.02.12",
-      "07-ui-ux-design.md#T-07.30.02.13",
-      "07-ui-ux-design.md#T-07.30.02.14",
-      "07-ui-ux-design.md#T-07.30.02.15",
-      "07-ui-ux-design.md#T-07.30.02.16",
-      "07-ui-ux-design.md#T-07.30.02.17"
+      "07-ui-ux-design.md#T-07.30.02.14"
     ],
-    "goal": "Inspect and close existing upload policy, dual approval, verification, service target, team assignment and escalation UI. Reuse current native evidence; build only demonstrated gaps and preserve permissions, step-up, publication, queues and audit."
+    "goal": "Deliver full owner-required verification settings with per-profile requirements/documents, expiry, configurable protected staff auto-verification, manual review and draft/active lifecycle. Inspect current mode, evidence upload/sealing, CRM review, staff creation and commercial profile checks. Implement enforcement and UI as one outcome; preserve current identity and financial/security safeguards."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
