@@ -89163,11 +89163,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -89378,6 +89378,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -90921,8 +90933,7 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Owner refreshed management login and confirmed deleting costly Liara workspace. Do not recreate it. Configure restricted eu.barghsa.com OpenRouter transport using the owner key in ignored protected.env and current zero-priced chat/embedding models. Reindex actual knowledge through the existing pipeline before switching query embedding space; retain1536-dimensional integrity, current authority, audiences, budgets and no-replay safeguards.",
-        "Pass native model/provider/retrieval tests, then verify a fresh actual private Telegram knowledge answer and exact persisted sent receipt. Prior failed question stays terminal."
+        "Free chat and both1536-dimensional knowledge indexes are configured and enabled through native guarded APIs. Activate the reviewed complete-answer fix and renew real public/staff/Individual/Legal retrieval, then verify a fresh actual private Telegram question and exact persisted sent receipt. Keep every earlier failed question terminal."
       ],
       "owner": null,
       "depends_on": [],
@@ -91134,7 +91145,8 @@
           "release-0.4-telegram-verified-handoff",
           "release-0.4-telegram-real-link-provider-diagnosis",
           "release-0.4-openrouter-free-provider-and-telegram-closure",
-          "release-0.4-knowledge-model-change-disable-fix"
+          "release-0.4-knowledge-model-change-disable-fix",
+          "release-0.4-free-ai-complete-answer-fix"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -91574,11 +91586,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -91940,6 +91952,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -92057,9 +92081,10 @@
         "openrouter_free_replacement": {
           "owner_approved": true,
           "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
-          "native_configuration_and_reindex": "pending",
-          "real_telegram_answer": "pending",
-          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+          "native_configuration_and_reindex": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/enable-compatible-free-provider-native-events.json",
+          "real_telegram_answer": "pending fresh actual question after complete native retrieval renewal",
+          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json",
+          "complete_answer_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
         }
       }
     },
@@ -395518,11 +395543,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -395733,6 +395758,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -395913,11 +395950,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -396128,6 +396165,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -396310,11 +396359,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -396525,6 +396574,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -396705,11 +396766,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -396920,6 +396981,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -401420,11 +401493,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -401601,6 +401674,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -401908,11 +401993,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -402089,6 +402174,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -402394,11 +402491,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -402575,6 +402672,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -402880,11 +402989,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -403085,6 +403194,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -403389,11 +403510,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -403541,6 +403662,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -403853,11 +403986,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -404034,6 +404167,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -404067,8 +404212,7 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Owner refreshed management login and confirmed deleting costly Liara workspace. Do not recreate it. Configure restricted eu.barghsa.com OpenRouter transport using the owner key in ignored protected.env and current zero-priced chat/embedding models. Reindex actual knowledge through the existing pipeline before switching query embedding space; retain1536-dimensional integrity, current authority, audiences, budgets and no-replay safeguards.",
-        "Pass native model/provider/retrieval tests, then verify a fresh actual private Telegram knowledge answer and exact persisted sent receipt. Prior failed question stays terminal."
+        "Free chat and both1536-dimensional knowledge indexes are configured and enabled through native guarded APIs. Activate the reviewed complete-answer fix and renew real public/staff/Individual/Legal retrieval, then verify a fresh actual private Telegram question and exact persisted sent receipt. Keep every earlier failed question terminal."
       ],
       "owner": null,
       "depends_on": [],
@@ -404094,7 +404238,8 @@
           "release-0.4-telegram-verified-handoff",
           "release-0.4-telegram-real-link-provider-diagnosis",
           "release-0.4-openrouter-free-provider-and-telegram-closure",
-          "release-0.4-knowledge-model-change-disable-fix"
+          "release-0.4-knowledge-model-change-disable-fix",
+          "release-0.4-free-ai-complete-answer-fix"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -404538,11 +404683,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -404924,6 +405069,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -405041,9 +405198,10 @@
         "openrouter_free_replacement": {
           "owner_approved": true,
           "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
-          "native_configuration_and_reindex": "pending",
-          "real_telegram_answer": "pending",
-          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+          "native_configuration_and_reindex": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/enable-compatible-free-provider-native-events.json",
+          "real_telegram_answer": "pending fresh actual question after complete native retrieval renewal",
+          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json",
+          "complete_answer_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
         }
       }
     },
@@ -405334,11 +405492,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -405515,6 +405673,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -405819,11 +405989,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -406000,6 +406170,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -406305,11 +406487,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -406486,6 +406668,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -406792,11 +406986,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -406997,6 +407191,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -407301,11 +407507,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -407482,6 +407688,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -407786,11 +408004,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -407967,6 +408185,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -519695,11 +519925,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -520544,6 +520774,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -520592,9 +520834,8 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Owner refreshed management login and confirmed deleting costly Liara workspace. Do not recreate it. Configure restricted eu.barghsa.com OpenRouter transport using the owner key in ignored protected.env and current zero-priced chat/embedding models. Reindex actual knowledge through the existing pipeline before switching query embedding space; retain1536-dimensional integrity, current authority, audiences, budgets and no-replay safeguards.",
-        "Pass native model/provider/retrieval tests, then verify a fresh actual private Telegram knowledge answer and exact persisted sent receipt. Prior failed question stays terminal.",
-        "After all gates pass, prepare accepted v0.4.0 version/captures, verify exact release push, immediately enqueue staging, and verify actual deployment plus Persian summary/grouped album receipts. Production remains unauthorized."
+        "Free chat and both1536-dimensional knowledge indexes are configured and enabled through native guarded APIs. Activate the reviewed complete-answer fix and renew real public/staff/Individual/Legal retrieval, then verify a fresh actual private Telegram question and exact persisted sent receipt. Keep every earlier failed question terminal.",
+        "Accept complete v0.4.0, verify exact release push, immediately enqueue staging, and verify actual staging and Persian release receipts. Production remains unauthorized."
       ],
       "owner": null,
       "depends_on": [],
@@ -523245,11 +523486,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
-              "sha256": "4736056ab6044ea55e1068e1a961da93865a2ae81581b9c767ac66534e44bec6"
+              "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
-              "sha256": "71aaf503f35ff614ea2e9fcfd75e07619505eb8321f110b2ba7b02ba147c82ac"
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
             },
             {
               "path": "packages/shared/src/ai-models/embedding.test.ts",
@@ -523942,6 +524183,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.4-free-ai-complete-answer-fix",
+              "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+              "paths": [
+                "packages/shared/src/ai-models/completion.test.ts",
+                "packages/shared/src/ai-models/completion.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
+              ],
+              "scope": "Extend existing bounded reasoning suppression to the selected free Lightning model; reject explicit provider token-limit termination. Original assertions and20-second/8192-token safety limits retained.111 related cases plus27 distribution checks pass. No live Telegram/release criterion accepted."
             }
           ]
         },
@@ -523960,7 +524213,8 @@
           "release-0.4-telegram-verified-handoff",
           "release-0.4-telegram-real-link-provider-diagnosis",
           "release-0.4-openrouter-free-provider-and-telegram-closure",
-          "release-0.4-knowledge-model-change-disable-fix"
+          "release-0.4-knowledge-model-change-disable-fix",
+          "release-0.4-free-ai-complete-answer-fix"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -524105,9 +524359,10 @@
         "openrouter_free_replacement": {
           "owner_approved": true,
           "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
-          "native_configuration_and_reindex": "pending",
-          "real_telegram_answer": "pending",
-          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+          "native_configuration_and_reindex": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/enable-compatible-free-provider-native-events.json",
+          "real_telegram_answer": "pending fresh actual question after complete native retrieval renewal",
+          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json",
+          "complete_answer_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/complete-answer-fix-proof.json"
         }
       }
     },
@@ -554367,6 +554622,285 @@
           ]
         }
       ]
+    },
+    "release-0.4-free-ai-complete-answer-fix": {
+      "batch": "release-0.4-free-ai-complete-answer-fix",
+      "base_commit": "50ac9e00ab1cc64f49f4bb858a3f0697a281b632",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.ts",
+          "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-routed-http.integration.test.ts",
+          "sha256": "9a4879b297b767eec8ffcba00c3932d36a9d0467ae55d36a84e4e02c14f5fce8"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+          "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+          "sha256": "ce62b3fbe158771f942473cee91d7a91dd970e74d8497b81f4195ab9eb52f20a"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
+          "sha256": "0bfa6db0557ca59226d37e2cf12ce91fc28102c02427329e3db3357fe509dd1e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
+          "sha256": "5dc79440360c10d845959f2688a58018f52e148bbb5fc978e1f0140456af8a38"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
+          "sha256": "64f1e21c7208b0922720908f060797ab1b5b51b84af01d2d206278c7620d9071"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+          "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
+        },
+        {
+          "path": "apps/worker/src/ai-inference/server.test.ts",
+          "sha256": "e3fab55f489d88c0258b967144e450d429c6334996140340bad78669758140d0"
+        },
+        {
+          "path": "apps/worker/src/ai-inference/server.ts",
+          "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+        },
+        {
+          "path": "deploy/telegram/README.md",
+          "sha256": "88ffa68214403d9586ec33e2fdc267875997019166db66419b2620d2357ad010"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+        },
+        {
+          "path": "packages/shared/src/ai-models/completion.test.ts",
+          "sha256": "44020f459671179b4b1c69a366f306b64e89a53542e50ff0214701100e50b569"
+        },
+        {
+          "path": "packages/shared/src/ai-models/completion.ts",
+          "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
+        },
+        {
+          "path": "packages/shared/tsconfig.json",
+          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+        }
+      ],
+      "checks": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/completion-shared-build.json",
+          "sha256": "065388ad651825c70914ee337d164cff1b08710c20c4fc1136586b50b2d1fa68",
+          "log_sha256": "8d956125be5a6e880e305083311da8e5f8908162021db3cce0515b39bbdfde2e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/completion-unit.json",
+          "sha256": "5f7558aef79e1f3dcf1a39b57b755e53f6987172207bbcab50880deb590a6026",
+          "log_sha256": "674f2374d5d23bf45b6e2f9b0cd5feaa29f2502ed44a3bb8594bf29aa18ba117"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/completion-api-consumers.json",
+          "sha256": "720fb57c94e1333ef7b0cb3e6af453dd2732fc6e8c2dbe5a12518580e0d8531f",
+          "log_sha256": "ff85ddbb212d8ba9de3b8493ae4c7f90b905ee5faf911657cf727df670ad8e66"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/completion-worker-consumers.json",
+          "sha256": "30a9b9e1febd58b62fed2ff8ff6e4dec9970d366eb149ba1caa1b78a4a409514",
+          "log_sha256": "cafe6a97abb23604df4dd32c4b5204c3af88137fe1141a73be52947689e06345"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/completion-types.json",
+          "sha256": "4e33086b2ae9c1e1f00d9cb9f7c2e25362d2b26b35073373d85161183369340e",
+          "log_sha256": "96db2113a90537c6442706fff36663c1dcfbc5a09abcacefa368742d0a1298a7"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/completion-lint.json",
+          "sha256": "ed24e3c2e617c67f4303bb34d1cbe823fe293a5e49e541775eff4377de9b75c1",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/completion-format.json",
+          "sha256": "7b7d34c1f96d5fb0b604ea2fcb7c74542d1daf465b46b33b598aa7af3f721f76",
+          "log_sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ],
+      "distinct_passed_cases": 111,
+      "distribution_checks": 27,
+      "observed_failure": {
+        "customer_native": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/lightning-customer-native.json",
+        "diagnosis": "Transport/domain assertions passed, but manual answer inspection found a mid-sentence legal-profile answer. It is not accepted as a complete-answer gate. Default provider reasoning consumed the cap.",
+        "raw_comparison": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/free-lightning-reasoning-diagnosis.log"
+      },
+      "fix": "Use existing reasoning effort:none for exact free Lightning model. Reject OpenAI length and Anthropic max_tokens terminations even when content is nonempty. Preserve all prior request/SSRF/secret/content/usage checks and exact limits.",
+      "review": "Reviewed the full three-file diff once. All original test assertions retained; one model case and two real HTTP protocol truncation cases added. No schema, money, ownership, authorization or generic model-configuration change.",
+      "source_renewals": [
+        {
+          "key": "02-auth-users-admin.md#T-09.11.01",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "02-auth-users-admin.md#T-09.11.05",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.16.01",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.16.02",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.16.03",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.16.04",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.21.01",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.21.02",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.21.03",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.01",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.02",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.03",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.04",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.05",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.22.06",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.01",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.02",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.03",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.23.04",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "release-readiness#R-03.01",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        },
+        {
+          "key": "release-readiness#R-03.02",
+          "paths": [
+            "packages/shared/src/ai-models/completion.test.ts",
+            "packages/shared/src/ai-models/completion.ts"
+          ]
+        }
+      ],
+      "native_state": {
+        "free_chat_model": "nvidia/nemotron-3.5-lightning:free",
+        "embedding_model": "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+        "real_reindex": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/enable-compatible-free-provider-native-events.json",
+        "new_completion_preflight": "pending",
+        "complete_native_answer_renewal": "pending",
+        "real_private_telegram_answer": "pending"
+      },
+      "production_authorized": false,
+      "release_accepted": false
     }
   },
   "historical_improvements": [

@@ -107,3 +107,24 @@ Never query the former Liara embedding space with a different model. Verify real
 processing and retrieval before re-enabling the linked agent or declaring the
 Telegram knowledge-answer gate passed. OpenRouter documents the
 [embedding catalogue](https://openrouter.ai/docs/api/api-reference/embeddings/list-embeddings-models).
+
+The staging embedding selection is
+`nvidia/llama-nemotron-embed-vl-1b-v2:free`. Its native probe returned both complete
+public-document vectors at 1,536 dimensions with zero reported cost. The newer
+Nemotron 3.5 endpoint returned upstream inference errors for the same batch,
+despite passing short probes. A successful reachability test is insufficient;
+verify the actual document batch and real retrieval after every provider change.
+
+Chat uses `nvidia/nemotron-3.5-lightning:free` explicitly. The automatic free
+router exceeded the existing completion deadline on a customer question, while
+Liquid's free endpoint returned 429. Keep the application deadlines and token cap;
+a model test alone cannot certify a complete answer. Select and test a free model
+through the existing guarded configuration API rather than adding a paid fallback.
+
+These free endpoints are for staging with published public knowledge and harmless
+synthetic staff fixtures. NVIDIA's
+[trial notice](https://openrouter.ai/nvidia/llama-nemotron-embed-vl-1b-v2:free)
+prohibits personal/confidential input and production or business-critical use.
+Before production, select and verify a provider whose terms support the intended
+knowledge and traffic. Do not treat this staging configuration as production
+provider acceptance.

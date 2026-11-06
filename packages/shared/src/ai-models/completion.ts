@@ -65,9 +65,13 @@ export async function completeChat(input: ChatCompletionInput): Promise<ChatComp
         temperature: input.temperature,
         messages: input.messages,
         stream: false,
-        // Flash otherwise adds reasoning tokens outside the visible answer cap.
+        // These models otherwise spend the visible answer cap on reasoning.
         // Keep this bounded assistant within its existing latency/token budget.
-        ...(['deepseek/deepseek-v4-flash', 'deepseek-v4-flash'].includes(input.modelName)
+        ...([
+          'deepseek/deepseek-v4-flash',
+          'deepseek-v4-flash',
+          'nvidia/nemotron-3.5-lightning:free',
+        ].includes(input.modelName)
           ? { reasoning: { effort: 'none' } }
           : {}),
       };
@@ -96,6 +100,11 @@ export async function completeChat(input: ChatCompletionInput): Promise<ChatComp
   } catch {
     throw new Error('ai_completion_invalid_response');
   }
+  const finishReason = anthropic
+    ? data.stop_reason
+    : (data.choices as Array<{ finish_reason?: unknown }> | undefined)?.[0]?.finish_reason;
+  if (finishReason === 'length' || finishReason === 'max_tokens')
+    throw new Error('ai_completion_truncated_response');
   const reply = anthropic
     ? Array.isArray(data.content)
       ? (data.content as Array<{ text?: unknown }>).find(
