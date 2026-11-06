@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-06T21:34:19.716330+00:00",
+  "updated": "2026-11-06T21:49:52.844424+00:00",
   "source_commit": "234eda1bcfb5528981e8cc194d67ee939b8048e4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10,14 +10,14 @@
     "consultation"
   ],
   "latest_release": {
-    "version": "0.3.0",
-    "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
+    "version": "0.4.0",
+    "commit": "eab6a0a0eede4005e3ce2ad3f5d95c28783a5492",
     "staging_status": "completed",
-    "completed_at": "2026-10-11T19:36:46.414444+00:00",
+    "completed_at": "2026-11-06T21:44:11.796580+00:00",
     "telegram_messages": [
-      91,
-      92,
-      93
+      94,
+      95,
+      96
     ]
   },
   "migration": {
@@ -3366,7 +3366,7 @@
       "version": "0.4.0",
       "title": "Documents, notifications and AI",
       "goal": "Documents are safely uploaded, reviewed and retained; notifications and configured AI work end to end without cross-profile disclosure.",
-      "status": "accepted",
+      "status": "released",
       "depends_on": [
         "0.3.0"
       ],
@@ -3375,9 +3375,26 @@
         "Unknown provider delivery is held without blind resend.",
         "Required knowledge retrieval, policies, agent slots and chat are verified or their exact missing work is completed."
       ],
-      "published_commit": null,
-      "staging_receipt": null,
-      "telegram_receipt": null,
+      "published_commit": "eab6a0a0eede4005e3ce2ad3f5d95c28783a5492",
+      "staging_receipt": {
+        "job": "/Users/majid/.local/state/barghsa-staging-queue/jobs/eab6a0a0eede4005e3ce2ad3f5d95c28783a5492/job.json",
+        "live_verification": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/release-live-receipt.json",
+        "completed_at": "2026-11-06T21:44:11.796580+00:00",
+        "version": "0.4.0",
+        "commit": "eab6a0a0eede4005e3ce2ad3f5d95c28783a5492",
+        "health": "API/web/worker/AI inference healthy; exact HTTPS metadata; actual private S3 write and signed read PASS; three migrations applied; API root version0.4.0 verified"
+      },
+      "telegram_receipt": {
+        "summary": "/Users/majid/.local/state/barghsa-staging-releases/605c4e6f8fc551391642944104612a9125ed49cba07600ae6d6feba1c2f64f7a.json",
+        "album": "/Users/majid/.local/state/barghsa-staging-releases/album-605c4e6f8fc551391642944104612a9125ed49cba07600ae6d6feba1c2f64f7a.json",
+        "chat_id": -1004467450624,
+        "message_ids": [
+          94,
+          95,
+          96
+        ],
+        "media_group_id": "14352011606949929"
+      },
       "acceptance": {
         "accepted_at": "2026-11-06T21:34:19.716156+00:00",
         "evidence": "release-0.4-milestone-acceptance",
@@ -3390,6 +3407,16 @@
           "free_provider_scope": "Staging only; provider trial/confidentiality/quality limitations recorded. Production provider and production authorization remain unaccepted."
         },
         "production_authorized": false
+      },
+      "push_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/release-push-receipt.json",
+      "deployment_job": {
+        "commit": "eab6a0a0eede4005e3ce2ad3f5d95c28783a5492",
+        "phase": "completed",
+        "status_path": "/Users/majid/.local/state/barghsa-staging-queue/jobs/eab6a0a0eede4005e3ce2ad3f5d95c28783a5492/job.json",
+        "retry_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/deployment-anonymous-retry.json",
+        "diagnosis": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/docker-credential-stall-diagnosis.json",
+        "scoped_build_client_context": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/docker-anonymous/client-context.json",
+        "operations_runbook": "docs/operations/docker-release-client.md"
       }
     },
     {
@@ -434975,7 +435002,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Current BrandThemeProvider keeps userMode only in React state, has no matchMedia or persistence, and lets userMode override brandConfig.darkMode. Implement the specified admin > persisted user > system behavior with existing versioned branding and current consumer compatibility."
       ],
       "owner": null,
       "depends_on": [],
@@ -435001,7 +435028,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Current document head has no before-paint theme initialization. Add bounded preference/published-brand policy initialization while preserving CSP and existing security headers."
       ],
       "owner": null,
       "depends_on": [],
@@ -435027,7 +435054,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Current theme context exposes session-only userMode/setUserMode. Inspect callers and complete the required light/dark/system theme API, actual resolved mode and durable browser preference."
       ],
       "owner": null,
       "depends_on": [],
@@ -435105,7 +435132,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Current web useDirection returns only rtl/ltr, consumed by UiDirectionProvider. Complete dir/isRtl/isLtr and DirectionAware using the existing locale subscription; verify live locale changes and callers."
       ],
       "owner": null,
       "depends_on": [],
@@ -557758,6 +557785,41 @@
       "current_task_acceptance_count": 110,
       "source_renewals": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/release-0.4-final-binding.json",
       "production_authorized": false
+    },
+    "release-0.4-delivery-receipts": {
+      "release": "0.4.0",
+      "commit": "eab6a0a0eede4005e3ce2ad3f5d95c28783a5492",
+      "live_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/release-live-receipt.json",
+      "private_reply_message_id": 249,
+      "release_channel_message_ids": [
+        94,
+        95,
+        96
+      ],
+      "media_group_id": "14352011606949929",
+      "source_evidence": [
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "53b897128e806f6a85cb96c7504bd3c5c2f924e5d1b367b696f51c5ace204a42"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "711bc0a7470f4e21e4891176655fe76e93f71feb768631a17b67ff103dd19dde"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "d667a127c0616c5512862554cde5ba5d99402cb7c9a42bc8691f8b6ea9e9500e"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "c3c1c6983777d6395cb8ba03fe96aaf9739ea3d6d1ac6abc92239cb9df9ebf46"
+        },
+        {
+          "path": "docs/operations/docker-release-client.md",
+          "sha256": "0d81c0468f3c44dcc8c43ff0ce1675e01f6f08850b98846af6f39ecb748e2821"
+        }
+      ],
+      "scope": "Actual independent staging worker and durable release receipts confirmed. Registry credential-helper failure diagnosed before exact failed-job retry with scoped anonymous client; global Docker settings unchanged. No unknown send retry or production authorization."
     }
   },
   "historical_improvements": [
@@ -557797,17 +557859,30 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-staging-publication",
-    "release": "0.4.0",
+    "id": "release-0.5-theme-direction-completion",
+    "release": "0.5.0",
     "task_keys": [
-      "release-readiness#R-03.02"
+      "07-ui-ux-design.md#T-07.02.01.01",
+      "07-ui-ux-design.md#T-07.02.01.02",
+      "07-ui-ux-design.md#T-07.02.01.03",
+      "07-ui-ux-design.md#T-07.02.01.04",
+      "07-ui-ux-design.md#T-07.02.01.05",
+      "07-ui-ux-design.md#T-07.02.01.06",
+      "07-ui-ux-design.md#T-07.02.01.07",
+      "07-ui-ux-design.md#T-07.02.02.01",
+      "07-ui-ux-design.md#T-07.02.02.02",
+      "07-ui-ux-design.md#T-07.02.02.03",
+      "07-ui-ux-design.md#T-07.02.02.04",
+      "07-ui-ux-design.md#T-07.03.01.01",
+      "07-ui-ux-design.md#T-07.03.01.02",
+      "07-ui-ux-design.md#T-07.03.01.03"
     ],
-    "goal": "Accepted v0.4.0. Push exact candidate, immediately enqueue detached staging worker, verify exact live health/metadata and one Persian summary plus one grouped album. Then resume v0.5.0 in dependency order. No production authorization."
+    "goal": "v0.4.0 accepted, deployed and Telegram-confirmed. Complete v0.5.0 theme/token and locale-direction requirements from existing code: preserve published-brand controls; implement admin/user/system priority, persisted choice and before-paint theme; fill demonstrated token/lint and direction API gaps. Inspect all callers before changes, retain locale/RTL/a11y and original91 budgets. No later-release infrastructure batch or new version before accepted v0.5.0."
   },
   "launch_forecast": {
-    "status": "not_yet_defensible",
-    "next_update_after": "v0.4.0 deployment/Telegram release receipts and remaining v0.5.0 acceptance census",
-    "method": "v0.4.0 effective criteria accepted; private Telegram answer verified. Release publication remains separate. Existing v0.5.0 accepted UI work retained; later production provider/SMS, operational/recovery and launch rehearsal gates remain. No date or production readiness inferred."
+    "status": "deadline_at_risk_until_remaining_v0_5_and_operational_census",
+    "next_update_after": "v0.5.0 theme/direction acceptance and remaining UI census",
+    "method": "v0.4.0 delivered with exact staging/private/customer/release-channel evidence.129 v0.5.0 tasks remain unaccepted, including demonstrated theme gaps. Continue coherent UI journeys and reuse current evidence. Later provider/SMS, recovery/backup, monitoring and launch-rehearsal gates remain before accepted0.9.0; production authorization absent. No unsupported delivery-date guarantee."
   },
   "capabilities": [
     {

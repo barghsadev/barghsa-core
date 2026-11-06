@@ -2,9 +2,9 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-06T21:34:19.716330+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06T21:49:52.844424+00:00. First production launch: electricity, saving, solar and consultation.
 
-Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
+Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
 Counts describe evidence and task acceptance, not the percentage of product built.
 
@@ -39,9 +39,22 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Accepted v0.4.0. Push exact candidate, immediately enqueue detached staging worker, verify exact live health/metadata and one Persian summary plus one grouped album. Then resume v0.5.0 in dependency order. No production authorization.
+v0.4.0 accepted, deployed and Telegram-confirmed. Complete v0.5.0 theme/token and locale-direction requirements from existing code: preserve published-brand controls; implement admin/user/system priority, persisted choice and before-paint theme; fill demonstrated token/lint and direction API gaps. Inspect all callers before changes, retain locale/RTL/a11y and original91 budgets. No later-release infrastructure batch or new version before accepted v0.5.0.
 
-- `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
+- `07-ui-ux-design.md#T-07.02.01.01`: Define global color palette tokens in `globals.css`: neutral gray scale (`50–950`), brand primary (`50–950`), brand secondary, success (green), warning (amber), danger (red), info (blue). Each scale has light and dark values.
+- `07-ui-ux-design.md#T-07.02.01.02`: Define semantic CSS variables mapped from palette: `--background`, `--foreground`, `--card`, `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--muted`, `--muted-foreground`, `--accent`, `--accent-foreground`, `--destructive`, `--destructive-foreground`, `--border`, `--input`, `--ring`, `--radius`, `--shadow-sm` through `--shadow-2xl`.
+- `07-ui-ux-design.md#T-07.02.01.03`: Define typography tokens: `--font-sans` (Inter for EN, Vazirmatn for FA), `--font-mono` (monospace for code/data), `--font-heading` (usually same as sans), `--font-size-xs` through `--font-size-4xl`, `--font-weight-normal/medium/semibold/bold`, `--line-height-tight/normal/relaxed`.
+- `07-ui-ux-design.md#T-07.02.01.04`: Define spacing tokens: `--spacing-1` through `--spacing-16` (4px base unit). Layout tokens: `--sidebar-width` (default 280px), `--topbar-height` (default 64px), `--container-max-width` (default 1280px), `--auth-panel-max-width` (default 480px).
+- `07-ui-ux-design.md#T-07.02.01.05`: Define animation tokens: `--duration-fast` (150ms), `--duration-normal` (200ms), `--duration-slow` (300ms), `--ease-in-out`, `--ease-out`, `--ease-in`.
+- `07-ui-ux-design.md#T-07.02.01.06`: Ensure all shadcn/ui and custom components reference CSS variables exclusively in `className` via Tailwind's `theme()` or arbitary `var(--variable)`. Zero hardcoded hex colors in component source files.
+- `07-ui-ux-design.md#T-07.02.01.07`: Add a CI lint rule (`stylelint` or `eslint-plugin-tailwind`) that flags hardcoded color values (hex, rgb, hsl) in component files — all colors must use CSS variable references.
+- `07-ui-ux-design.md#T-07.02.02.01`: Define `:root` (light default) and `.dark` CSS variable overrides for every semantic token in `globals.css`. Use `oklch` or `hsl` color space for perceptually uniform luminance adjustments.
+- `07-ui-ux-design.md#T-07.02.02.02`: Implement `ThemeProvider` React component that reads: (1) user's `prefers-color-scheme` system preference (via `matchMedia`), (2) persisted user choice in localStorage, (3) admin brand config (server-provided). Priority: admin brand > user preference > system preference.
+- `07-ui-ux-design.md#T-07.02.02.03`: Add `class` to `<html>` element on initial load to prevent flash of wrong theme (FOUC). Inline a blocking `<script>` in the document `<head>` that reads a cookie or localStorage and sets the class before paint.
+- `07-ui-ux-design.md#T-07.02.02.04`: Provide a `useTheme()` hook returning `{ theme, setTheme, resolvedTheme }`. `theme` is the user's choice (`'light'`
+- `07-ui-ux-design.md#T-07.03.01.01`: Configure Tailwind CSS with `rtl` variant: `dark:rtl:bg-red-500`. Add direction-aware utilities: `ps-*` (padding-inline-start), `pe-*` (padding-inline-end), `ms-*` (margin-inline-start), `me-*` (margin-inline-end), `text-start`, `text-end`, `inset-inline-start`, `inset-inline-end`, `start-*`, `end-*`.
+- `07-ui-ux-design.md#T-07.03.01.02`: Create `DirectionProvider` that reads the current locale from react-i18next/next-intl, sets `dir="rtl"` or `dir="ltr"` on `<html>`, and provides `isRtl` boolean to the component tree.
+- `07-ui-ux-design.md#T-07.03.01.03`: Create `useDirection()` hook returning `{ dir, isRtl, isLtr }`. Create `DirectionAware` utility component that renders different content based on direction.
 
 ## v0.2.0: Complete customer journeys
 
