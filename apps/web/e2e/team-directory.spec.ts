@@ -7,11 +7,12 @@ for (const locale of ['en', 'fa'] as const)
   for (const theme of ['light', 'dark'] as const) {
     test(`team directory and personal invitation (${locale}, ${theme})`, async ({ page }) => {
       const fa = locale === 'fa';
+      let recipient = false;
       await crmShell(page, locale);
       await page.route('**/api/auth/user', (route) =>
         route.fulfill({
           json: {
-            userId: 'owner',
+            userId: recipient ? 'recipient' : 'owner',
             isStaff: false,
             operatingContext: 'customer',
             canSwitchContext: false,
@@ -47,7 +48,6 @@ for (const locale of ['en', 'fa'] as const)
       await page.route('**/api/profiles/ownership-transfers', (route) =>
         route.fulfill({ json: { transfers: [] } })
       );
-      let recipient = false;
       const note = 'Please review our accounts.\n<script>plain text</script>';
       await page.route('**/api/invitations/pending', (route) =>
         route.fulfill({
@@ -55,8 +55,8 @@ for (const locale of ['en', 'fa'] as const)
             invitations: recipient
               ? [
                   {
-                    id: 'recipient-note',
-                    profileId: teamProfiles().activeProfileId,
+                    id: '10000000-0000-4000-8000-000000000001',
+                    profileId: '10000000-0000-4000-8000-000000000002',
                     profileName: 'Example company',
                     role: 'Finance',
                     invitedBy: 'owner',
