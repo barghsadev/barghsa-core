@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 657 | Accepted with unchanged source bindings. |
-| verify | 668 | Existing work may be complete; inspect evidence before building. |
+| done | 667 | Accepted with unchanged source bindings. |
+| verify | 658 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,18 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify and finish shared wizard/review/draft recovery and actual simple/advanced electricity, saving, solar and onboarding journeys. Inspect existing implementations and approved decisions, reuse matching onboarding/financial evidence, and build only demonstrated missing criteria. Preserve authoritative financial review, owner-bound drafts, exact receipt/retry, private discard, validation, accessibility and navigation recovery.
+Verify and finish customer/staff ticket list/detail, chronological rich replies/attachments, staff-only internal notes and reasoned status changes. Inspect current adoption before building gaps, reuse matching framework/document evidence, and preserve current actor/profile visibility, assignment permissions, sanitization, immutable activity and exact mutation/retry boundaries. Accept the complete support journey, then select the next remaining v0.5.0 group.
 
-- `07-ui-ux-design.md#T-07.22.01.01`: Build `FormWizard` component: step indicator (numbered circles with labels, completed/active/pending visual states, connector lines), step content area, navigation bar (Back/Save Draft/Next). Back button preserved on all non-first steps. Next validates current step fields only.
-- `07-ui-ux-design.md#T-07.22.01.02`: Implement server-side draft saving: after each completed step, POST server draft. On resume, fetch draft and prefill form. Drafts have TTL (admin-configurable, default 7 days).
-- `07-ui-ux-design.md#T-07.22.01.03`: Build `StepReviewPage`: final step showing all collected data in read-only format. Backend-rendered snapshot for financial orders (authoritative total). "Edit" links next to each section to return to that step.
-- `07-ui-ux-design.md#T-07.22.01.04`: If user navigates away mid-wizard, show confirmation dialog: "You have unsaved changes. Save draft before leaving?"
-- `07-ui-ux-design.md#T-07.22.01.05`: Wizard state preserved in URL (step number as search param) for deep-linkability.
-- `07-ui-ux-design.md#T-07.22.02.01`: Simple electricity order wizard: Step 1 (Period type: weekly/monthly + period selector), Step 2 (kWh entry with bill data suggestion), Step 3 (Price preview with green composition breakdown), Step 4 (Gift code optional), Step 5 (Review + submit).
-- `07-ui-ux-design.md#T-07.22.02.02`: Advanced electricity order wizard: Step 1 (Date range: start/end Jalali date pickers), Step 2 (Bundle builder: 4 product quantity inputs with green rule derivation), Step 3 (Price preview), Step 4 (Gift code), Step 5 (Review + submit).
-- `07-ui-ux-design.md#T-07.22.02.03`: Solar construction request wizard: Step 1 (Solar type + property details), Step 2 (On-Grid/Off-Grid selection + bill identifier for On-Grid), Step 3 (Contract stages preview + TOS check), Step 4 (Review + submit).
-- `07-ui-ux-design.md#T-07.22.02.04`: Saving plan order wizard: Step 1 (Select plan), Step 2 (Select hardware), Step 3 (Bill identifier), Step 4 (Address select/add), Step 5 (Accept agreement + Review + Submit).
-- `07-ui-ux-design.md#T-07.22.02.05`: Onboarding wizard: Step 1 (Select profile type: Individual/Legal), Step 2a (Individual: name, national ID, province/city, address, postal code), Step 2b (Legal: company info, representative, address, registration info), Step 3 (Review + Submit).
+- `07-ui-ux-design.md#T-07.23.01.01`: Build `TicketListPage`: uses ListPage compound component. Columns: subject, status badge, priority indicator (P1/P2/P3), last update (relative time), related entity link. Expandable row on mobile.
+- `07-ui-ux-design.md#T-07.23.01.02`: Build `TicketDetailPage`: header (subject, status badge, priority, created date, related entity), conversation thread, reply input area (for public reply), internal note toggle (staff only).
+- `07-ui-ux-design.md#T-07.23.01.03`: Build `CommentThread` component: chronological message list. Customer comments (white bubble, left-aligned in LTR), Staff comments (brand-colored border, same alignment), Internal notes (yellow background, "INTERNAL" badge, visible only to staff). Each comment: author avatar + name, timestamp, content, attachment thumbnails.
+- `07-ui-ux-design.md#T-07.23.01.04`: Build `TicketReplyInput`: textarea with formatting toolbar (bold, italic, list, link), file upload (drag & drop), "Add internal note" toggle (staff only), "Submit reply" button.
+- `07-ui-ux-design.md#T-07.23.01.05`: Build `TicketStatusDropdown` (staff): change ticket status with reason input. Statuses: Open, In Progress, Waiting on Customer, Waiting on Staff, Resolved, Closed.
+- `07-ui-ux-design.md#T-07.23.01.06`: Staff internal notes must never be visible to customers. Backend enforces visibility flag. Frontend never renders internal notes when role is customer.
 
 ## v0.2.0: Complete customer journeys
 
@@ -879,16 +875,16 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.21.01.03` | verify | Inventory needed | Build "New Conversation" button to clear test chat history. |
 | `07-ui-ux-design.md#T-07.21.01.04` | verify | Inventory needed | Rate limit test chat: 10 requests/min per admin. Show remaining quota. Return 429 with retry-after. |
 | `07-ui-ux-design.md#T-07.21.01.05` | verify | Inventory needed | Test chat is isolated — does not affect production conversations or AI audit logs. |
-| `07-ui-ux-design.md#T-07.22.01.01` | verify | Recorded batch work | Build `FormWizard` component: step indicator (numbered circles with labels, completed/active/pending visual states, connector lines), step content area, navigation bar (Back/Save Draft/Next). Back button preserved on all non-first steps. Next validates current step fields only. |
-| `07-ui-ux-design.md#T-07.22.01.02` | verify | Recorded batch work | Implement server-side draft saving: after each completed step, POST server draft. On resume, fetch draft and prefill form. Drafts have TTL (admin-configurable, default 7 days). |
-| `07-ui-ux-design.md#T-07.22.01.03` | verify | Recorded batch work | Build `StepReviewPage`: final step showing all collected data in read-only format. Backend-rendered snapshot for financial orders (authoritative total). "Edit" links next to each section to return to that step. |
-| `07-ui-ux-design.md#T-07.22.01.04` | verify | Recorded batch work | If user navigates away mid-wizard, show confirmation dialog: "You have unsaved changes. Save draft before leaving?" |
-| `07-ui-ux-design.md#T-07.22.01.05` | verify | Recorded batch work | Wizard state preserved in URL (step number as search param) for deep-linkability. |
-| `07-ui-ux-design.md#T-07.22.02.01` | verify | Inventory needed | Simple electricity order wizard: Step 1 (Period type: weekly/monthly + period selector), Step 2 (kWh entry with bill data suggestion), Step 3 (Price preview with green composition breakdown), Step 4 (Gift code optional), Step 5 (Review + submit). |
-| `07-ui-ux-design.md#T-07.22.02.02` | verify | Inventory needed | Advanced electricity order wizard: Step 1 (Date range: start/end Jalali date pickers), Step 2 (Bundle builder: 4 product quantity inputs with green rule derivation), Step 3 (Price preview), Step 4 (Gift code), Step 5 (Review + submit). |
-| `07-ui-ux-design.md#T-07.22.02.03` | verify | Recorded batch work | Solar construction request wizard: Step 1 (Solar type + property details), Step 2 (On-Grid/Off-Grid selection + bill identifier for On-Grid), Step 3 (Contract stages preview + TOS check), Step 4 (Review + submit). |
-| `07-ui-ux-design.md#T-07.22.02.04` | verify | Inventory needed | Saving plan order wizard: Step 1 (Select plan), Step 2 (Select hardware), Step 3 (Bill identifier), Step 4 (Address select/add), Step 5 (Accept agreement + Review + Submit). |
-| `07-ui-ux-design.md#T-07.22.02.05` | verify | Recorded batch work | Onboarding wizard: Step 1 (Select profile type: Individual/Legal), Step 2a (Individual: name, national ID, province/city, address, postal code), Step 2b (Legal: company info, representative, address, registration info), Step 3 (Review + Submit). |
+| `07-ui-ux-design.md#T-07.22.01.01` | done | Recorded batch work | Build `FormWizard` component: step indicator (numbered circles with labels, completed/active/pending visual states, connector lines), step content area, navigation bar (Back/Save Draft/Next). Back button preserved on all non-first steps. Next validates current step fields only. |
+| `07-ui-ux-design.md#T-07.22.01.02` | done | Recorded batch work | Implement server-side draft saving: after each completed step, POST server draft. On resume, fetch draft and prefill form. Drafts have TTL (admin-configurable, default 7 days). |
+| `07-ui-ux-design.md#T-07.22.01.03` | done | Recorded batch work | Build `StepReviewPage`: final step showing all collected data in read-only format. Backend-rendered snapshot for financial orders (authoritative total). "Edit" links next to each section to return to that step. |
+| `07-ui-ux-design.md#T-07.22.01.04` | done | Recorded batch work | If user navigates away mid-wizard, show confirmation dialog: "You have unsaved changes. Save draft before leaving?" |
+| `07-ui-ux-design.md#T-07.22.01.05` | done | Recorded batch work | Wizard state preserved in URL (step number as search param) for deep-linkability. |
+| `07-ui-ux-design.md#T-07.22.02.01` | done | Recorded batch work | Simple electricity order wizard: Step 1 (Period type: weekly/monthly + period selector), Step 2 (kWh entry with bill data suggestion), Step 3 (Price preview with green composition breakdown), Step 4 (Gift code optional), Step 5 (Review + submit). |
+| `07-ui-ux-design.md#T-07.22.02.02` | done | Recorded batch work | Advanced electricity order wizard: Step 1 (Date range: start/end Jalali date pickers), Step 2 (Bundle builder: 4 product quantity inputs with green rule derivation), Step 3 (Price preview), Step 4 (Gift code), Step 5 (Review + submit). |
+| `07-ui-ux-design.md#T-07.22.02.03` | done | Recorded batch work | Solar construction request wizard: Step 1 (Solar type + property details), Step 2 (On-Grid/Off-Grid selection + bill identifier for On-Grid), Step 3 (Contract stages preview + TOS check), Step 4 (Review + submit). |
+| `07-ui-ux-design.md#T-07.22.02.04` | done | Recorded batch work | Saving plan order wizard: Step 1 (Select plan), Step 2 (Select hardware), Step 3 (Bill identifier), Step 4 (Address select/add), Step 5 (Accept agreement + Review + Submit). |
+| `07-ui-ux-design.md#T-07.22.02.05` | done | Recorded batch work | Onboarding wizard: Step 1 (Select profile type: Individual/Legal), Step 2a (Individual: name, national ID, province/city, address, postal code), Step 2b (Legal: company info, representative, address, registration info), Step 3 (Review + Submit). |
 | `07-ui-ux-design.md#T-07.23.01.01` | verify | Recorded batch work | Build `TicketListPage`: uses ListPage compound component. Columns: subject, status badge, priority indicator (P1/P2/P3), last update (relative time), related entity link. Expandable row on mobile. |
 | `07-ui-ux-design.md#T-07.23.01.02` | verify | Recorded batch work | Build `TicketDetailPage`: header (subject, status badge, priority, created date, related entity), conversation thread, reply input area (for public reply), internal note toggle (staff only). |
 | `07-ui-ux-design.md#T-07.23.01.03` | verify | Recorded batch work | Build `CommentThread` component: chronological message list. Customer comments (white bubble, left-aligned in LTR), Staff comments (brand-colored border, same alignment), Internal notes (yellow background, "INTERNAL" badge, visible only to staff). Each comment: author avatar + name, timestamp, content, attachment thumbnails. |
