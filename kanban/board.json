@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "source_commit": "93b9fec7a2c18f2635d57cd923ffce0626ee0413",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -89583,7 +89583,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -89603,7 +89603,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-              "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+              "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
@@ -89905,6 +89905,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         }
@@ -91121,7 +91133,8 @@
           "release-0.4-telegram-external-host",
           "release-0.4-telegram-verified-handoff",
           "release-0.4-telegram-real-link-provider-diagnosis",
-          "release-0.4-openrouter-free-provider-and-telegram-closure"
+          "release-0.4-openrouter-free-provider-and-telegram-closure",
+          "release-0.4-knowledge-model-change-disable-fix"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -92045,7 +92058,8 @@
           "owner_approved": true,
           "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
           "native_configuration_and_reindex": "pending",
-          "real_telegram_answer": "pending"
+          "real_telegram_answer": "pending",
+          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
         }
       }
     },
@@ -372030,7 +372044,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -373508,6 +373522,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         }
@@ -396950,7 +396975,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -396970,7 +396995,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-              "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+              "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
@@ -397272,6 +397297,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         }
@@ -397312,7 +397349,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -397332,7 +397369,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-              "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+              "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
@@ -397634,6 +397671,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         }
@@ -397676,7 +397725,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -397696,7 +397745,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-              "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+              "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
@@ -397998,6 +398047,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         }
@@ -398039,7 +398100,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -398059,7 +398120,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-              "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+              "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
@@ -398361,6 +398422,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         }
@@ -404020,7 +404093,8 @@
           "release-0.4-telegram-external-host",
           "release-0.4-telegram-verified-handoff",
           "release-0.4-telegram-real-link-provider-diagnosis",
-          "release-0.4-openrouter-free-provider-and-telegram-closure"
+          "release-0.4-openrouter-free-provider-and-telegram-closure",
+          "release-0.4-knowledge-model-change-disable-fix"
         ],
         "current_acceptance": {
           "status": "partial",
@@ -404968,7 +405042,8 @@
           "owner_approved": true,
           "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
           "native_configuration_and_reindex": "pending",
-          "real_telegram_answer": "pending"
+          "real_telegram_answer": "pending",
+          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
         }
       }
     },
@@ -515222,7 +515297,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -516894,6 +516969,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         },
@@ -517501,7 +517587,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -517521,7 +517607,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-              "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+              "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -520446,6 +520532,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         },
@@ -521063,7 +521161,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "1e3277968d3621c042a30f082204df567d8c5428119dc12bc12cc88a891bc331"
+              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -521083,7 +521181,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-              "sha256": "7ae9d7ac23dc6126b234637b801a21d88c31f19090ad1cacf74369e35c569966"
+              "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -523832,6 +523930,18 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json"
               ],
               "scope": "Only existing embedding dimension made explicit in request; all vector/SSRF/bounds/order checks otherwise byte-exact.49 related cases and27 shared distribution checks pass. Gateway/docs change only; no unrelated task/release/live provider gates certified."
+            },
+            {
+              "batch": "release-0.4-knowledge-model-change-disable-fix",
+              "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+              ],
+              "checks": [
+                "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
+              ],
+              "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
             }
           ]
         },
@@ -523849,7 +523959,8 @@
           "release-0.4-telegram-external-host",
           "release-0.4-telegram-verified-handoff",
           "release-0.4-telegram-real-link-provider-diagnosis",
-          "release-0.4-openrouter-free-provider-and-telegram-closure"
+          "release-0.4-openrouter-free-provider-and-telegram-closure",
+          "release-0.4-knowledge-model-change-disable-fix"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -523995,7 +524106,8 @@
           "owner_approved": true,
           "implementation_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/implementation-proof.json",
           "native_configuration_and_reindex": "pending",
-          "real_telegram_answer": "pending"
+          "real_telegram_answer": "pending",
+          "kb_update_fix": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
         }
       }
     },
@@ -554135,6 +554247,123 @@
           "paths": [
             "packages/shared/src/ai-models/embedding.test.ts",
             "packages/shared/src/ai-models/embedding.ts"
+          ]
+        }
+      ]
+    },
+    "release-0.4-knowledge-model-change-disable-fix": {
+      "batch": "release-0.4-knowledge-model-change-disable-fix",
+      "base_commit": "7b2d6b24083dceb2941fd9b068a6a02e370f4f3d",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "87dd6d5a81dea33ac9306937c0cae3733a990ca68d726a89421b7fea7d3041b0"
+        }
+      ],
+      "checks": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-api-build.json",
+          "sha256": "f44ad64705830809e3063069ab34718c18f0819fee91315bfbf8fc6da76aa4fc",
+          "log_sha256": "38226ebea0e339c2d20109add1d4c4bb9700be3bd4cf6623353bceb882e6c058"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-native.json",
+          "sha256": "c352e27e26d9cb61347abdd63ad590861fef67e001a1bdf33dd8ecc2bb67bc38",
+          "log_sha256": "d119ea47638e61becee55f74f73b568dd102683287cc66cde980382bb390e56f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-types.json",
+          "sha256": "97d2745b77bc13d1bb78c301797391d28dfb9ec172b1b73fb309d879d3484bbf",
+          "log_sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-lint.json",
+          "sha256": "0abaf0c6f8c9e0044f03f1a94f0f3c514b2f2a4850e91ef9900703b5064e9807",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-format.json",
+          "sha256": "4cee6a43c81b64fff093db66c5bd9cd9ce92867d1ff7f17478ec0a7474ae51c4",
+          "log_sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ],
+      "distinct_passed_cases": 109,
+      "actual_failure": {
+        "native_configuration": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/configure-native.json",
+        "correlation_id": "01a1b2a9-9b06-730f-be8d-f790b531ca1f",
+        "postgres_error": "multiple assignments to same column is_enabled",
+        "failed_transaction": "rolled back; model and linked agent remain disabled while reindex is pending"
+      },
+      "fix": "Source changes already enforce disabled state below. Skip the separate optional enabled assignment for those changes, so a legitimate embedding-model change with explicit isEnabled=false writes that column once. The existing early409 for enabling changed content and ready-content gate remain.",
+      "review": "One-line transaction-path fix. All other service bytes are exact. Real HTTP/database source-settings test now exercises original implicit-disable and actual explicit-disable/model-change paths; every original assertion remains and the changed-source enable409/index-retention check is strengthened. All109 KB controller/service/HTTP cases pass.",
+      "native_provider_state": "Existing free model passed guarded native test and encrypted configuration; no agent/model enabled and no cross-model query permitted before real reindex.",
+      "other_observation": "PostgreSQL logs also show an existing monitoring query referencing missing pg_stat_statements. Separate observation only; not the KB failure cause and not fixed or accepted here.",
+      "release_accepted": false,
+      "production_authorized": false,
+      "source_renewals": [
+        {
+          "key": "02-auth-users-admin.md#T-09.11.02",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+            "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+          ]
+        },
+        {
+          "key": "03-core-business.md#T-03.90.03",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.01",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+            "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.02",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+            "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.03",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+            "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+          ]
+        },
+        {
+          "key": "05-notifications-documents-ai.md#T-05.17.04",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+            "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+          ]
+        },
+        {
+          "key": "release-readiness#R-02.02",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+          ]
+        },
+        {
+          "key": "release-readiness#R-03.01",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+            "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
+          ]
+        },
+        {
+          "key": "release-readiness#R-03.02",
+          "paths": [
+            "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+            "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
           ]
         }
       ]

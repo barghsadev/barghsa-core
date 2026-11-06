@@ -175,86 +175,105 @@ it('requeues a failed KB through an audited staff action', async () => {
   ).toEqual([{ event: 'kb_reprocess_requested' }]);
 });
 
-it('saves KB source settings, requires ready content to enable, and invalidates chunks after a source change', async () => {
-  const create = await fetch(`${http.base}/api/admin/knowledge-bases`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      title: 'Web reference',
-      sourceType: 'url',
-      sourceConfig: { urls: ['https://example.org/help'] },
-      chunkingStrategy: { size: 600, overlap: 60 },
-      vectorEmbeddingModel: 'embed-1536',
-    }),
-  });
-  expect(create.status).toBe(201);
-  const kb = (await create.json()) as {
-    id: string;
-    sourceType: string;
-    contentState: string;
-    isEnabled: boolean;
-  };
-  expect(kb).toMatchObject({ sourceType: 'url', contentState: 'empty', isEnabled: false });
-  const enable = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify({ isEnabled: true }),
-  });
-  expect(enable.status).toBe(409);
-  const saved = (
-    await http.pool.query(
-      'SELECT source_type,source_config,chunking_strategy,vector_embedding_model FROM knowledge_bases WHERE id=$1',
-      [kb.id]
-    )
-  ).rows[0];
-  expect(saved).toMatchObject({
-    source_type: 'url',
-    source_config: { urls: ['https://example.org/help'] },
-    chunking_strategy: { size: 600, overlap: 60 },
-    vector_embedding_model: 'embed-1536',
-  });
+it.each([false, true])(
+  'saves KB settings and invalidates old chunks safely (explicit disable: %s)',
+  async (explicitDisable) => {
+    const create = await fetch(`${http.base}/api/admin/knowledge-bases`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        title: 'Web reference',
+        sourceType: 'url',
+        sourceConfig: { urls: ['https://example.org/help'] },
+        chunkingStrategy: { size: 600, overlap: 60 },
+        vectorEmbeddingModel: 'embed-1536',
+      }),
+    });
+    expect(create.status).toBe(201);
+    const kb = (await create.json()) as {
+      id: string;
+      sourceType: string;
+      contentState: string;
+      isEnabled: boolean;
+    };
+    expect(kb).toMatchObject({ sourceType: 'url', contentState: 'empty', isEnabled: false });
+    const enable = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ isEnabled: true }),
+    });
+    expect(enable.status).toBe(409);
+    const saved = (
+      await http.pool.query(
+        'SELECT source_type,source_config,chunking_strategy,vector_embedding_model FROM knowledge_bases WHERE id=$1',
+        [kb.id]
+      )
+    ).rows[0];
+    expect(saved).toMatchObject({
+      source_type: 'url',
+      source_config: { urls: ['https://example.org/help'] },
+      chunking_strategy: { size: 600, overlap: 60 },
+      vector_embedding_model: 'embed-1536',
+    });
 
-  await http.pool.query(
-    "UPDATE knowledge_bases SET content_state='ready',is_enabled=true WHERE id=$1",
-    [kb.id]
-  );
-  await http.pool.query('INSERT INTO kb_chunks(kb_id,chunk_index,content) VALUES ($1,0,$2)', [
-    kb.id,
-    'Old passage',
-  ]);
-  const rename = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify({ title: 'Renamed reference' }),
-  });
-  expect(rename.status).toBe(200);
-  expect(await rename.json()).toMatchObject({ contentState: 'ready', isEnabled: true });
-  const unchangedSettings = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify({
-      sourceType: 'url',
-      sourceConfig: { urls: ['https://example.org/help'] },
-      chunkingStrategy: { size: 600, overlap: 60 },
-      vectorEmbeddingModel: 'embed-1536',
-    }),
-  });
-  expect(unchangedSettings.status).toBe(200);
-  expect(await unchangedSettings.json()).toMatchObject({ contentState: 'ready', isEnabled: true });
-  expect(
-    (await http.pool.query('SELECT id FROM kb_chunks WHERE kb_id=$1', [kb.id])).rows
-  ).toHaveLength(1);
-  const change = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify({ sourceConfig: { urls: ['https://example.org/new'] } }),
-  });
-  expect(change.status).toBe(200);
-  expect(await change.json()).toMatchObject({ contentState: 'empty', isEnabled: false });
-  expect(
-    (await http.pool.query('SELECT id FROM kb_chunks WHERE kb_id=$1', [kb.id])).rows
-  ).toHaveLength(0);
-});
+    await http.pool.query(
+      "UPDATE knowledge_bases SET content_state='ready',is_enabled=true WHERE id=$1",
+      [kb.id]
+    );
+    await http.pool.query('INSERT INTO kb_chunks(kb_id,chunk_index,content) VALUES ($1,0,$2)', [
+      kb.id,
+      'Old passage',
+    ]);
+    const rename = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ title: 'Renamed reference' }),
+    });
+    expect(rename.status).toBe(200);
+    expect(await rename.json()).toMatchObject({ contentState: 'ready', isEnabled: true });
+    const unchangedSettings = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        sourceType: 'url',
+        sourceConfig: { urls: ['https://example.org/help'] },
+        chunkingStrategy: { size: 600, overlap: 60 },
+        vectorEmbeddingModel: 'embed-1536',
+      }),
+    });
+    expect(unchangedSettings.status).toBe(200);
+    expect(await unchangedSettings.json()).toMatchObject({
+      contentState: 'ready',
+      isEnabled: true,
+    });
+    expect(
+      (await http.pool.query('SELECT id FROM kb_chunks WHERE kb_id=$1', [kb.id])).rows
+    ).toHaveLength(1);
+    const enableChanged = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ vectorEmbeddingModel: 'replacement-1536', isEnabled: true }),
+    });
+    expect(enableChanged.status).toBe(409);
+    expect(
+      (await http.pool.query('SELECT id FROM kb_chunks WHERE kb_id=$1', [kb.id])).rows
+    ).toHaveLength(1);
+    const change = await fetch(`${http.base}/api/admin/knowledge-bases/${kb.id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(
+        explicitDisable
+          ? { vectorEmbeddingModel: 'replacement-1536', isEnabled: false }
+          : { sourceConfig: { urls: ['https://example.org/new'] } }
+      ),
+    });
+    expect(change.status).toBe(200);
+    expect(await change.json()).toMatchObject({ contentState: 'empty', isEnabled: false });
+    expect(
+      (await http.pool.query('SELECT id FROM kb_chunks WHERE kb_id=$1', [kb.id])).rows
+    ).toHaveLength(0);
+  }
+);
 const cases = entities.flatMap((entity) =>
   (['create', 'update', 'delete'] as const).map((action) => ({ ...entity, action }))
 );

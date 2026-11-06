@@ -578,7 +578,7 @@ export class KnowledgeBasesService {
         input.vectorEmbeddingModel !== existing.vector_embedding_model
       )
         push('vector_embedding_model', input.vectorEmbeddingModel);
-      if (input.isEnabled !== undefined) {
+      if (input.isEnabled !== undefined && !sourceChanged) {
         if (input.isEnabled && existing.content_state !== 'ready') {
           throw new HttpException(
             {
