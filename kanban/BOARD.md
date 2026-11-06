@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 673 | Accepted with unchanged source bindings. |
-| verify | 652 | Existing work may be complete; inspect evidence before building. |
+| done | 679 | Accepted with unchanged source bindings. |
+| verify | 646 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,14 +39,21 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify and finish configured file upload, safe file preview, document state/list and actionable localized validation in customer/staff workspaces. Inspect current implementation first, reuse matching ticket/contract/storage evidence, and preserve staged byte verification, owner/profile access, immutable financial/contract files, quarantine privacy, retention and exact upload/mutation retry boundaries. Accept the complete document/media journey before selecting another v0.5.0 group.
+Verify and finish customer/staff read-only AI assistance and isolated admin agent test conversations, metadata, localized stream/input/recovery and current scope boundaries. Inspect current implementation first; apply the owner-approved knowledge-only launch scope and explicitly deferred profile-data/tools/write-confirmation features without falsely certifying them as implemented. Reuse matching AI native evidence, preserve current model/policy/budget/rate/privacy authority and record any remaining concrete criteria.
 
-- `07-ui-ux-design.md#T-07.25.01.01`: Build `FileUpload` component: drop zone (dashed border, icon, "Drag files here or click to browse" text), file list (name, size, progress bar per file), file type validation (extension + MIME against configured allowlist), size validation, max file count. Accessibility: keyboard-accessible drop zone, screen reader announces upload progress.
-- `07-ui-ux-design.md#T-07.25.01.02`: Build `FilePreview` component: image preview (thumbnail), PDF preview (first page), document icon fallback. Used in document lists, ticket attachments, upload review.
-- `07-ui-ux-design.md#T-07.25.01.03`: Build `DocumentStatusBadge` component: state labels with colored badges — Uploading (gray), Pending scan (yellow pulse), Available (green), Submitted for review (blue), Approved (green check), Rejected (red, with reason shown), Superseded (outline), Quarantined (red alert), Removed (gray strikethrough).
-- `07-ui-ux-design.md#T-07.25.01.04`: Build `DocumentList` component: list of documents with icon, filename, size, upload date, status badge, download/delete/replace actions per permission.
-- `07-ui-ux-design.md#T-07.25.01.05`: Upload validation errors must be specific: "PDF files up to 25MB are accepted", "File type .exe is not supported".
-- `07-ui-ux-design.md#T-07.25.01.06`: Quarantined files show safe message: "This file cannot be accepted. Please upload a replacement." — never reveal malware detection details to customer.
+- `07-ui-ux-design.md#T-07.20.01.01`: Build `AIChatPanel`: slide-over sheet from right (LTR) / left (RTL) triggered by a floating action button (bottom-right/bottom-left corner of the app). Contains: chat header (AI avatar + "Barghsa AI Assistant" + close button), message list (scrollable, auto-scroll to bottom), input area (textarea + send button + suggested prompts).
+- `07-ui-ux-design.md#T-07.20.01.02`: Build `ChatMessage` component: user message (right-aligned, brand-colored bubble), AI message (left-aligned, muted bubble). AI messages include: text content, source KB citations (expandable "Sources" section with KB name + title + excerpt), policy filter badges applied. Timestamp per message.
+- `07-ui-ux-design.md#T-07.20.01.03`: Build `ChatInput` component: auto-resizing textarea, send button (disabled while AI is responding), suggested prompt chips (3–4 contextual suggestions, e.g. "Show my invoices", "What's my wallet balance?"). Enter to send, Shift+Enter for newline.
+- `07-ui-ux-design.md#T-07.20.01.04`: Build `ChatWelcome` component: greeting message ("Hi [name]! How can I help you today?"), suggested starting prompts, profile context indicator ("You're asking as [profile name]").
+- `07-ui-ux-design.md#T-07.20.01.05`: Implement streaming AI response: show typing indicator (animated dots) while waiting for response. Render response progressively as tokens arrive (SSE or WebSocket stream).
+- `07-ui-ux-design.md#T-07.20.01.06`: Build `TrustedUIConfirmation` component: for write actions proposed by AI, show a structured action card above the chat input area. Card displays: action type, parameters, consequences. User confirms or rejects with explicit buttons. AI cannot programmatically confirm.
+- `07-ui-ux-design.md#T-07.20.01.07`: Chat must respect user's language preference. AI responses in same language as user's messages. Date/number formatting locale-aware.
+- `07-ui-ux-design.md#T-07.20.01.08`: Data isolation: Individual chatbot sees only Individual profile data. Legal chatbot sees only Legal profile data. Staff chatbot sees data based on staff roles.
+- `07-ui-ux-design.md#T-07.21.01.01`: Build `AgentTestChat` component: agent selector dropdown (lists all agents), chat message list (reuses ChatMessage from E-07.20), input area + send button. Below chat: response metadata panel showing source KBs (expandable with excerpts), policy filters applied, token usage, latency.
+- `07-ui-ux-design.md#T-07.21.01.02`: Build `ResponseMetadataPanel`: expandable sections for "Knowledge Bases Used" (KB name + document title + excerpt), "Policies Applied" (policy name + rule matched), "Token Usage" (prompt/completion/total), "Latency" (ms).
+- `07-ui-ux-design.md#T-07.21.01.03`: Build "New Conversation" button to clear test chat history.
+- `07-ui-ux-design.md#T-07.21.01.04`: Rate limit test chat: 10 requests/min per admin. Show remaining quota. Return 429 with retry-after.
+- `07-ui-ux-design.md#T-07.21.01.05`: Test chat is isolated — does not affect production conversations or AI audit logs.
 
 ## v0.2.0: Complete customer journeys
 
@@ -895,12 +902,12 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.24.01.02` | verify | Recorded batch work | Build column renderers: `TextCell`, `NumberCell` (locale-formatted), `DateCell` (localized relative/absolute), `StatusCell` (colored badge), `ActionCell` (dropdown menu with row actions), `CurrencyCell` (IRR/toman formatted), `AvatarCell` (small avatar + name), `LinkCell` (clickable reference). |
 | `07-ui-ux-design.md#T-07.24.01.03` | verify | Recorded batch work | Build `CardListView` as mobile alternative: each row renders as a card showing key fields. Responsive switch at `md` breakpoint. |
 | `07-ui-ux-design.md#T-07.24.01.04` | verify | Recorded batch work | Ensure table is keyboard navigable: Tab through rows, Enter/Space for row actions, arrow keys for sort/filter navigation. Screen reader announces row count, column headers, current sort. |
-| `07-ui-ux-design.md#T-07.25.01.01` | verify | Recorded batch work | Build `FileUpload` component: drop zone (dashed border, icon, "Drag files here or click to browse" text), file list (name, size, progress bar per file), file type validation (extension + MIME against configured allowlist), size validation, max file count. Accessibility: keyboard-accessible drop zone, screen reader announces upload progress. |
-| `07-ui-ux-design.md#T-07.25.01.02` | verify | Recorded batch work | Build `FilePreview` component: image preview (thumbnail), PDF preview (first page), document icon fallback. Used in document lists, ticket attachments, upload review. |
-| `07-ui-ux-design.md#T-07.25.01.03` | verify | Recorded batch work | Build `DocumentStatusBadge` component: state labels with colored badges — Uploading (gray), Pending scan (yellow pulse), Available (green), Submitted for review (blue), Approved (green check), Rejected (red, with reason shown), Superseded (outline), Quarantined (red alert), Removed (gray strikethrough). |
-| `07-ui-ux-design.md#T-07.25.01.04` | verify | Recorded batch work | Build `DocumentList` component: list of documents with icon, filename, size, upload date, status badge, download/delete/replace actions per permission. |
-| `07-ui-ux-design.md#T-07.25.01.05` | verify | Recorded batch work | Upload validation errors must be specific: "PDF files up to 25MB are accepted", "File type .exe is not supported". |
-| `07-ui-ux-design.md#T-07.25.01.06` | verify | Recorded batch work | Quarantined files show safe message: "This file cannot be accepted. Please upload a replacement." — never reveal malware detection details to customer. |
+| `07-ui-ux-design.md#T-07.25.01.01` | done | Recorded batch work | Build `FileUpload` component: drop zone (dashed border, icon, "Drag files here or click to browse" text), file list (name, size, progress bar per file), file type validation (extension + MIME against configured allowlist), size validation, max file count. Accessibility: keyboard-accessible drop zone, screen reader announces upload progress. |
+| `07-ui-ux-design.md#T-07.25.01.02` | done | Recorded batch work | Build `FilePreview` component: image preview (thumbnail), PDF preview (first page), document icon fallback. Used in document lists, ticket attachments, upload review. |
+| `07-ui-ux-design.md#T-07.25.01.03` | done | Recorded batch work | Build `DocumentStatusBadge` component: state labels with colored badges — Uploading (gray), Pending scan (yellow pulse), Available (green), Submitted for review (blue), Approved (green check), Rejected (red, with reason shown), Superseded (outline), Quarantined (red alert), Removed (gray strikethrough). |
+| `07-ui-ux-design.md#T-07.25.01.04` | done | Recorded batch work | Build `DocumentList` component: list of documents with icon, filename, size, upload date, status badge, download/delete/replace actions per permission. |
+| `07-ui-ux-design.md#T-07.25.01.05` | done | Recorded batch work | Upload validation errors must be specific: "PDF files up to 25MB are accepted", "File type .exe is not supported". |
+| `07-ui-ux-design.md#T-07.25.01.06` | done | Recorded batch work | Quarantined files show safe message: "This file cannot be accepted. Please upload a replacement." — never reveal malware detection details to customer. |
 | `07-ui-ux-design.md#T-07.26.01.01` | done | Recorded batch work | Build `Currency` component: displays amount in IRR with locale formatting. Props: `amount` (integer IRR), `showToman` (show toman equivalent in parentheses), `showCurrencyCode` (show "IRR" suffix), `variant` (default, large for wallet balance, small for inline). Persian format: `۱,۲۳۴,۵۶۷ ریال`, English format: `IRR 1,234,567`. |
 | `07-ui-ux-design.md#T-07.26.01.02` | done | Recorded batch work | Build `WalletBalanceCard`: available balance (large), posted balance (muted), reserved balance (muted, if > 0). "Charge wallet" button. Low-balance warning (red text) when pending invoices exceed balance. Clickable → navigates to wallet page. |
 | `07-ui-ux-design.md#T-07.26.01.03` | done | Recorded batch work | Build `TransactionList` component: chronological list of wallet transactions. Each row: date (localized), type icon + label (top-up, payment, refund, etc.), amount (+/- in green/red), state badge, description, reference link. Cursor-based pagination. |

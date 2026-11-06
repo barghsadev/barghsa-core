@@ -447196,21 +447196,392 @@
         "story": "07-ui-ux-design.md#spec-1fbe11bd77db"
       },
       "requirement": "| **T-07.25.01.01** | Build `FileUpload` component: drop zone (dashed border, icon, \"Drag files here or click to browse\" text), file list (name, size, progress bar per file), file type validation (extension + MIME against configured allowlist), size validation, max file count. Accessibility: keyboard-accessible drop zone, screen reader announces upload progress. | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-02-document-upload-controls"
+          "2026-10-02-document-upload-controls",
+          "release-0.5-document-media-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-document-media-journey",
+          "base_commit": "7c54cda6995afa0875b6d0931aa5bf82fd48d231",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "43e223f2820309d1ac326263c44452216e8c4c4387f37e766f3c632d5543fcbb"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.service.ts",
+              "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.test.ts",
+              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.ts",
+              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.controller.ts",
+              "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.service.ts",
+              "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+            },
+            {
+              "path": "apps/api/src/documents/document-validation.ts",
+              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.module.ts",
+              "sha256": "27c20bc833f2e4f50893bb104de5bb4c3ca0c1db8b0b50758a52a16db3acbf6e"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/document-records.spec.ts",
+              "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+            },
+            {
+              "path": "apps/web/e2e/document-upload-controls.spec.ts",
+              "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+            },
+            {
+              "path": "apps/web/e2e/documents.spec.ts",
+              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
+              "sha256": "079ab4d2865b9f0c0e0299a43e0337cca71ed2f604322db3d1965b47104879ca"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDetail.tsx",
+              "sha256": "d7b051dab8f5b0fd7f3377ab34916cf1810c7ba1135613ae6c0c4f734838c4c3"
+            },
+            {
+              "path": "apps/web/src/components/DocumentLegalHolds.tsx",
+              "sha256": "f91ed453e583a24a5240031e3e3cd006162a1091ea825ecb2bb43ddb6ad86745"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "b72ff043583387492e2762f4cfa11ec602b9b98a343ee0440ba8f73945cff61b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "2ad04e2c09222075df8b070e6084bdf81f519fd631b474744ace0747e6a5de9d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+              "sha256": "3b9b96a6fadf224f6338d277b0b3437e627301787394c61e036b34416335db2a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentStatusBadge.tsx",
+              "sha256": "7283eb10eb23bc32e8a5e094f12779ca9faffc8e91d4c6f259e0762f0b5cd491"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "d6c37396df5f6294163fa2f72d09396ede07c72c1f72b5dd55bd7594e993fc76"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "583d6be1433192e261b441e28541e2e4fa03095cd29b09df152437f9c4b81d95"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "89e1041d53f71c237626abb94d3503b0a1794a102ffd3891333a2dbb6611ac1b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "650fb1dea739c328f7e22a740c4cf741faf25851a98c7485e3d391cf0c06f3cf"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.test.tsx",
+              "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.test.tsx",
+              "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.tsx",
+              "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorPageRows.ts",
+              "sha256": "675dfd015611f6ce2f72bc5732585439670fa1bc5f4b163bf588ad4dbf90640d"
+            },
+            {
+              "path": "apps/web/src/hooks/useFileSelectionKey.ts",
+              "sha256": "d32bb6a952d37ef0725d3d25e12b76e7810a07f95d174d1aa122065e1311ef60"
+            },
+            {
+              "path": "apps/web/src/hooks/useListView.ts",
+              "sha256": "1a034921ca3a002e9affe3a4dff753ecd56b59de8a9abe31b3eb277c2d6db309"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+              "sha256": "fb7a44646eee66d784bf321f3aa9d83cc64cb21978d8bc40fb011265f349e349"
+            },
+            {
+              "path": "apps/web/src/lib/csrf.ts",
+              "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+            },
+            {
+              "path": "apps/web/src/lib/document-upload-progress.test.ts",
+              "sha256": "18a34c9970936187d0a0287ad9b5fbc07d6dc6801caa5e9dd57f9dbd2d546623"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.test.ts",
+              "sha256": "16be68bd91239f84bc0762170ef91a4ee9866fd20c190b18fed725574f5c1d22"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.ts",
+              "sha256": "a45e01710a5302ef892d8a434d78fb52e187a10d331f2e2ca2c86f752f737907"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.test.ts",
+              "sha256": "3b8bf0bef233d60035254dacc8aaf200acdee42885f6b806cdd479e6af224781"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.ts",
+              "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/record-list-query.ts",
+              "sha256": "eabf68ca7b0435840c5ec7ab797bb4a3e4e60ac8088fc0099840bbd1f5c0fff2"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/staff-order-list-query.ts",
+              "sha256": "0e72aaa5445b6353734b49adcf1f3d794008d7fe9e49adf9361097bdc61a3029"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+              "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/documents.tsx",
+              "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+            },
+            {
+              "path": "apps/web/src/routes/admin/documents.tsx",
+              "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+            },
+            {
+              "path": "apps/web/src/test/document-list-fixtures.ts",
+              "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/document-media-workspace.md",
+              "sha256": "3ef4a2f4f1d5ce6fd899058a956e11f9c38d524c8f1e8d2a8b4792c1a123e337"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Current shared FileUpload provides keyboard browse/drop, ordered file metadata, localized configured extension/MIME/size/count validation, retained accepted files and named progress/phase announcements. DocumentUpload captures reservation/file/confirmation identity and resumes without duplicating acknowledged transfer or document effects.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -447224,12 +447595,10 @@
         "story": "07-ui-ux-design.md#spec-1fbe11bd77db"
       },
       "requirement": "| **T-07.25.01.02** | Build `FilePreview` component: image preview (thumbnail), PDF preview (first page), document icon fallback. Used in document lists, ticket attachments, upload review. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -447237,9 +447606,382 @@
         "changed_paths": [],
         "batches": [
           "2026-10-02-document-record-views",
-          "2026-10-02-shared-file-previews"
+          "2026-10-02-shared-file-previews",
+          "release-0.5-document-media-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-document-media-journey",
+          "base_commit": "7c54cda6995afa0875b6d0931aa5bf82fd48d231",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "43e223f2820309d1ac326263c44452216e8c4c4387f37e766f3c632d5543fcbb"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.service.ts",
+              "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.test.ts",
+              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.ts",
+              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.controller.ts",
+              "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.service.ts",
+              "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+            },
+            {
+              "path": "apps/api/src/documents/document-validation.ts",
+              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.module.ts",
+              "sha256": "27c20bc833f2e4f50893bb104de5bb4c3ca0c1db8b0b50758a52a16db3acbf6e"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/document-records.spec.ts",
+              "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+            },
+            {
+              "path": "apps/web/e2e/document-upload-controls.spec.ts",
+              "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+            },
+            {
+              "path": "apps/web/e2e/documents.spec.ts",
+              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
+              "sha256": "079ab4d2865b9f0c0e0299a43e0337cca71ed2f604322db3d1965b47104879ca"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDetail.tsx",
+              "sha256": "d7b051dab8f5b0fd7f3377ab34916cf1810c7ba1135613ae6c0c4f734838c4c3"
+            },
+            {
+              "path": "apps/web/src/components/DocumentLegalHolds.tsx",
+              "sha256": "f91ed453e583a24a5240031e3e3cd006162a1091ea825ecb2bb43ddb6ad86745"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "b72ff043583387492e2762f4cfa11ec602b9b98a343ee0440ba8f73945cff61b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "2ad04e2c09222075df8b070e6084bdf81f519fd631b474744ace0747e6a5de9d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+              "sha256": "3b9b96a6fadf224f6338d277b0b3437e627301787394c61e036b34416335db2a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentStatusBadge.tsx",
+              "sha256": "7283eb10eb23bc32e8a5e094f12779ca9faffc8e91d4c6f259e0762f0b5cd491"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "d6c37396df5f6294163fa2f72d09396ede07c72c1f72b5dd55bd7594e993fc76"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "583d6be1433192e261b441e28541e2e4fa03095cd29b09df152437f9c4b81d95"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "89e1041d53f71c237626abb94d3503b0a1794a102ffd3891333a2dbb6611ac1b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "650fb1dea739c328f7e22a740c4cf741faf25851a98c7485e3d391cf0c06f3cf"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.test.tsx",
+              "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.test.tsx",
+              "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.tsx",
+              "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorPageRows.ts",
+              "sha256": "675dfd015611f6ce2f72bc5732585439670fa1bc5f4b163bf588ad4dbf90640d"
+            },
+            {
+              "path": "apps/web/src/hooks/useFileSelectionKey.ts",
+              "sha256": "d32bb6a952d37ef0725d3d25e12b76e7810a07f95d174d1aa122065e1311ef60"
+            },
+            {
+              "path": "apps/web/src/hooks/useListView.ts",
+              "sha256": "1a034921ca3a002e9affe3a4dff753ecd56b59de8a9abe31b3eb277c2d6db309"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+              "sha256": "fb7a44646eee66d784bf321f3aa9d83cc64cb21978d8bc40fb011265f349e349"
+            },
+            {
+              "path": "apps/web/src/lib/csrf.ts",
+              "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+            },
+            {
+              "path": "apps/web/src/lib/document-upload-progress.test.ts",
+              "sha256": "18a34c9970936187d0a0287ad9b5fbc07d6dc6801caa5e9dd57f9dbd2d546623"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.test.ts",
+              "sha256": "16be68bd91239f84bc0762170ef91a4ee9866fd20c190b18fed725574f5c1d22"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.ts",
+              "sha256": "a45e01710a5302ef892d8a434d78fb52e187a10d331f2e2ca2c86f752f737907"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.test.ts",
+              "sha256": "3b8bf0bef233d60035254dacc8aaf200acdee42885f6b806cdd479e6af224781"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.ts",
+              "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/record-list-query.ts",
+              "sha256": "eabf68ca7b0435840c5ec7ab797bb4a3e4e60ac8088fc0099840bbd1f5c0fff2"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/staff-order-list-query.ts",
+              "sha256": "0e72aaa5445b6353734b49adcf1f3d794008d7fe9e49adf9361097bdc61a3029"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+              "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/documents.tsx",
+              "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+            },
+            {
+              "path": "apps/web/src/routes/admin/documents.tsx",
+              "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+            },
+            {
+              "path": "apps/web/src/test/document-list-fixtures.ts",
+              "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/document-media-workspace.md",
+              "sha256": "3ef4a2f4f1d5ce6fd899058a956e11f9c38d524c8f1e8d2a8b4792c1a123e337"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Shared FilePreview renders image thumbnails, bounded authenticated transient selected-PDF first pages, current-authorized stored derivatives and safe icon fallback. Local object URLs are revoked, hidden/obsolete rendering aborted, unsafe protocols and executable SVG/unknown files refused. Actual document, ticket and upload callers verified.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -447253,21 +447995,392 @@
         "story": "07-ui-ux-design.md#spec-1fbe11bd77db"
       },
       "requirement": "| **T-07.25.01.03** | Build `DocumentStatusBadge` component: state labels with colored badges — Uploading (gray), Pending scan (yellow pulse), Available (green), Submitted for review (blue), Approved (green check), Rejected (red, with reason shown), Superseded (outline), Quarantined (red alert), Removed (gray strikethrough). | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-02-document-record-views"
+          "2026-10-02-document-record-views",
+          "release-0.5-document-media-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-document-media-journey",
+          "base_commit": "7c54cda6995afa0875b6d0931aa5bf82fd48d231",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "43e223f2820309d1ac326263c44452216e8c4c4387f37e766f3c632d5543fcbb"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.service.ts",
+              "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.test.ts",
+              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.ts",
+              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.controller.ts",
+              "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.service.ts",
+              "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+            },
+            {
+              "path": "apps/api/src/documents/document-validation.ts",
+              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.module.ts",
+              "sha256": "27c20bc833f2e4f50893bb104de5bb4c3ca0c1db8b0b50758a52a16db3acbf6e"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/document-records.spec.ts",
+              "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+            },
+            {
+              "path": "apps/web/e2e/document-upload-controls.spec.ts",
+              "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+            },
+            {
+              "path": "apps/web/e2e/documents.spec.ts",
+              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
+              "sha256": "079ab4d2865b9f0c0e0299a43e0337cca71ed2f604322db3d1965b47104879ca"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDetail.tsx",
+              "sha256": "d7b051dab8f5b0fd7f3377ab34916cf1810c7ba1135613ae6c0c4f734838c4c3"
+            },
+            {
+              "path": "apps/web/src/components/DocumentLegalHolds.tsx",
+              "sha256": "f91ed453e583a24a5240031e3e3cd006162a1091ea825ecb2bb43ddb6ad86745"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "b72ff043583387492e2762f4cfa11ec602b9b98a343ee0440ba8f73945cff61b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "2ad04e2c09222075df8b070e6084bdf81f519fd631b474744ace0747e6a5de9d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+              "sha256": "3b9b96a6fadf224f6338d277b0b3437e627301787394c61e036b34416335db2a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentStatusBadge.tsx",
+              "sha256": "7283eb10eb23bc32e8a5e094f12779ca9faffc8e91d4c6f259e0762f0b5cd491"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "d6c37396df5f6294163fa2f72d09396ede07c72c1f72b5dd55bd7594e993fc76"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "583d6be1433192e261b441e28541e2e4fa03095cd29b09df152437f9c4b81d95"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "89e1041d53f71c237626abb94d3503b0a1794a102ffd3891333a2dbb6611ac1b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "650fb1dea739c328f7e22a740c4cf741faf25851a98c7485e3d391cf0c06f3cf"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.test.tsx",
+              "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.test.tsx",
+              "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.tsx",
+              "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorPageRows.ts",
+              "sha256": "675dfd015611f6ce2f72bc5732585439670fa1bc5f4b163bf588ad4dbf90640d"
+            },
+            {
+              "path": "apps/web/src/hooks/useFileSelectionKey.ts",
+              "sha256": "d32bb6a952d37ef0725d3d25e12b76e7810a07f95d174d1aa122065e1311ef60"
+            },
+            {
+              "path": "apps/web/src/hooks/useListView.ts",
+              "sha256": "1a034921ca3a002e9affe3a4dff753ecd56b59de8a9abe31b3eb277c2d6db309"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+              "sha256": "fb7a44646eee66d784bf321f3aa9d83cc64cb21978d8bc40fb011265f349e349"
+            },
+            {
+              "path": "apps/web/src/lib/csrf.ts",
+              "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+            },
+            {
+              "path": "apps/web/src/lib/document-upload-progress.test.ts",
+              "sha256": "18a34c9970936187d0a0287ad9b5fbc07d6dc6801caa5e9dd57f9dbd2d546623"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.test.ts",
+              "sha256": "16be68bd91239f84bc0762170ef91a4ee9866fd20c190b18fed725574f5c1d22"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.ts",
+              "sha256": "a45e01710a5302ef892d8a434d78fb52e187a10d331f2e2ca2c86f752f737907"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.test.ts",
+              "sha256": "3b8bf0bef233d60035254dacc8aaf200acdee42885f6b806cdd479e6af224781"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.ts",
+              "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/record-list-query.ts",
+              "sha256": "eabf68ca7b0435840c5ec7ab797bb4a3e4e60ac8088fc0099840bbd1f5c0fff2"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/staff-order-list-query.ts",
+              "sha256": "0e72aaa5445b6353734b49adcf1f3d794008d7fe9e49adf9361097bdc61a3029"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+              "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/documents.tsx",
+              "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+            },
+            {
+              "path": "apps/web/src/routes/admin/documents.tsx",
+              "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+            },
+            {
+              "path": "apps/web/src/test/document-list-fixtures.ts",
+              "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/document-media-workspace.md",
+              "sha256": "3ef4a2f4f1d5ce6fd899058a956e11f9c38d524c8f1e8d2a8b4792c1a123e337"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "All nine document states have localized distinct semantic badges/icons; PendingScan pulses with reduced-motion respect, Removed is struck through, Approved has check and Rejected reason is displayed in list/detail. Unknown state stays distinguishable without invented authority.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -447281,12 +448394,10 @@
         "story": "07-ui-ux-design.md#spec-1fbe11bd77db"
       },
       "requirement": "| **T-07.25.01.04** | Build `DocumentList` component: list of documents with icon, filename, size, upload date, status badge, download/delete/replace actions per permission. | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -447295,9 +448406,382 @@
         "batches": [
           "2026-10-01-document-list-recovery",
           "2026-10-02-document-list-actions",
-          "2026-10-02-document-record-views"
+          "2026-10-02-document-record-views",
+          "release-0.5-document-media-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-document-media-journey",
+          "base_commit": "7c54cda6995afa0875b6d0931aa5bf82fd48d231",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "43e223f2820309d1ac326263c44452216e8c4c4387f37e766f3c632d5543fcbb"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.service.ts",
+              "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.test.ts",
+              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.ts",
+              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.controller.ts",
+              "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.service.ts",
+              "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+            },
+            {
+              "path": "apps/api/src/documents/document-validation.ts",
+              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.module.ts",
+              "sha256": "27c20bc833f2e4f50893bb104de5bb4c3ca0c1db8b0b50758a52a16db3acbf6e"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/document-records.spec.ts",
+              "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+            },
+            {
+              "path": "apps/web/e2e/document-upload-controls.spec.ts",
+              "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+            },
+            {
+              "path": "apps/web/e2e/documents.spec.ts",
+              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
+              "sha256": "079ab4d2865b9f0c0e0299a43e0337cca71ed2f604322db3d1965b47104879ca"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDetail.tsx",
+              "sha256": "d7b051dab8f5b0fd7f3377ab34916cf1810c7ba1135613ae6c0c4f734838c4c3"
+            },
+            {
+              "path": "apps/web/src/components/DocumentLegalHolds.tsx",
+              "sha256": "f91ed453e583a24a5240031e3e3cd006162a1091ea825ecb2bb43ddb6ad86745"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "b72ff043583387492e2762f4cfa11ec602b9b98a343ee0440ba8f73945cff61b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "2ad04e2c09222075df8b070e6084bdf81f519fd631b474744ace0747e6a5de9d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+              "sha256": "3b9b96a6fadf224f6338d277b0b3437e627301787394c61e036b34416335db2a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentStatusBadge.tsx",
+              "sha256": "7283eb10eb23bc32e8a5e094f12779ca9faffc8e91d4c6f259e0762f0b5cd491"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "d6c37396df5f6294163fa2f72d09396ede07c72c1f72b5dd55bd7594e993fc76"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "583d6be1433192e261b441e28541e2e4fa03095cd29b09df152437f9c4b81d95"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "89e1041d53f71c237626abb94d3503b0a1794a102ffd3891333a2dbb6611ac1b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "650fb1dea739c328f7e22a740c4cf741faf25851a98c7485e3d391cf0c06f3cf"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.test.tsx",
+              "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.test.tsx",
+              "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.tsx",
+              "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorPageRows.ts",
+              "sha256": "675dfd015611f6ce2f72bc5732585439670fa1bc5f4b163bf588ad4dbf90640d"
+            },
+            {
+              "path": "apps/web/src/hooks/useFileSelectionKey.ts",
+              "sha256": "d32bb6a952d37ef0725d3d25e12b76e7810a07f95d174d1aa122065e1311ef60"
+            },
+            {
+              "path": "apps/web/src/hooks/useListView.ts",
+              "sha256": "1a034921ca3a002e9affe3a4dff753ecd56b59de8a9abe31b3eb277c2d6db309"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+              "sha256": "fb7a44646eee66d784bf321f3aa9d83cc64cb21978d8bc40fb011265f349e349"
+            },
+            {
+              "path": "apps/web/src/lib/csrf.ts",
+              "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+            },
+            {
+              "path": "apps/web/src/lib/document-upload-progress.test.ts",
+              "sha256": "18a34c9970936187d0a0287ad9b5fbc07d6dc6801caa5e9dd57f9dbd2d546623"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.test.ts",
+              "sha256": "16be68bd91239f84bc0762170ef91a4ee9866fd20c190b18fed725574f5c1d22"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.ts",
+              "sha256": "a45e01710a5302ef892d8a434d78fb52e187a10d331f2e2ca2c86f752f737907"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.test.ts",
+              "sha256": "3b8bf0bef233d60035254dacc8aaf200acdee42885f6b806cdd479e6af224781"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.ts",
+              "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/record-list-query.ts",
+              "sha256": "eabf68ca7b0435840c5ec7ab797bb4a3e4e60ac8088fc0099840bbd1f5c0fff2"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/staff-order-list-query.ts",
+              "sha256": "0e72aaa5445b6353734b49adcf1f3d794008d7fe9e49adf9361097bdc61a3029"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+              "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/documents.tsx",
+              "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+            },
+            {
+              "path": "apps/web/src/routes/admin/documents.tsx",
+              "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+            },
+            {
+              "path": "apps/web/src/test/document-list-fixtures.ts",
+              "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/document-media-workspace.md",
+              "sha256": "3ef4a2f4f1d5ce6fd899058a956e11f9c38d524c8f1e8d2a8b4792c1a123e337"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Current DocumentList shows icon/name/size/upload date/state and explicit lazy preview/download plus permitted replace/remove controls in table and mobile cards. Layout preserves selected detail, drafts and accepted revision-bound receipts. Owner/profile/grant denial clears private controls/links; revision-bound mutations retain exact retries and immutable history.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -447311,21 +448795,392 @@
         "story": "07-ui-ux-design.md#spec-1fbe11bd77db"
       },
       "requirement": "| **T-07.25.01.05** | ⚠️ Upload validation errors must be specific: \"PDF files up to 25MB are accepted\", \"File type .exe is not supported\". | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-02-document-upload-controls"
+          "2026-10-02-document-upload-controls",
+          "release-0.5-document-media-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-document-media-journey",
+          "base_commit": "7c54cda6995afa0875b6d0931aa5bf82fd48d231",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "43e223f2820309d1ac326263c44452216e8c4c4387f37e766f3c632d5543fcbb"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.service.ts",
+              "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.test.ts",
+              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.ts",
+              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.controller.ts",
+              "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.service.ts",
+              "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+            },
+            {
+              "path": "apps/api/src/documents/document-validation.ts",
+              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.module.ts",
+              "sha256": "27c20bc833f2e4f50893bb104de5bb4c3ca0c1db8b0b50758a52a16db3acbf6e"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/document-records.spec.ts",
+              "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+            },
+            {
+              "path": "apps/web/e2e/document-upload-controls.spec.ts",
+              "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+            },
+            {
+              "path": "apps/web/e2e/documents.spec.ts",
+              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
+              "sha256": "079ab4d2865b9f0c0e0299a43e0337cca71ed2f604322db3d1965b47104879ca"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDetail.tsx",
+              "sha256": "d7b051dab8f5b0fd7f3377ab34916cf1810c7ba1135613ae6c0c4f734838c4c3"
+            },
+            {
+              "path": "apps/web/src/components/DocumentLegalHolds.tsx",
+              "sha256": "f91ed453e583a24a5240031e3e3cd006162a1091ea825ecb2bb43ddb6ad86745"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "b72ff043583387492e2762f4cfa11ec602b9b98a343ee0440ba8f73945cff61b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "2ad04e2c09222075df8b070e6084bdf81f519fd631b474744ace0747e6a5de9d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+              "sha256": "3b9b96a6fadf224f6338d277b0b3437e627301787394c61e036b34416335db2a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentStatusBadge.tsx",
+              "sha256": "7283eb10eb23bc32e8a5e094f12779ca9faffc8e91d4c6f259e0762f0b5cd491"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "d6c37396df5f6294163fa2f72d09396ede07c72c1f72b5dd55bd7594e993fc76"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "583d6be1433192e261b441e28541e2e4fa03095cd29b09df152437f9c4b81d95"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "89e1041d53f71c237626abb94d3503b0a1794a102ffd3891333a2dbb6611ac1b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "650fb1dea739c328f7e22a740c4cf741faf25851a98c7485e3d391cf0c06f3cf"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.test.tsx",
+              "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.test.tsx",
+              "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.tsx",
+              "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorPageRows.ts",
+              "sha256": "675dfd015611f6ce2f72bc5732585439670fa1bc5f4b163bf588ad4dbf90640d"
+            },
+            {
+              "path": "apps/web/src/hooks/useFileSelectionKey.ts",
+              "sha256": "d32bb6a952d37ef0725d3d25e12b76e7810a07f95d174d1aa122065e1311ef60"
+            },
+            {
+              "path": "apps/web/src/hooks/useListView.ts",
+              "sha256": "1a034921ca3a002e9affe3a4dff753ecd56b59de8a9abe31b3eb277c2d6db309"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+              "sha256": "fb7a44646eee66d784bf321f3aa9d83cc64cb21978d8bc40fb011265f349e349"
+            },
+            {
+              "path": "apps/web/src/lib/csrf.ts",
+              "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+            },
+            {
+              "path": "apps/web/src/lib/document-upload-progress.test.ts",
+              "sha256": "18a34c9970936187d0a0287ad9b5fbc07d6dc6801caa5e9dd57f9dbd2d546623"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.test.ts",
+              "sha256": "16be68bd91239f84bc0762170ef91a4ee9866fd20c190b18fed725574f5c1d22"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.ts",
+              "sha256": "a45e01710a5302ef892d8a434d78fb52e187a10d331f2e2ca2c86f752f737907"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.test.ts",
+              "sha256": "3b8bf0bef233d60035254dacc8aaf200acdee42885f6b806cdd479e6af224781"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.ts",
+              "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/record-list-query.ts",
+              "sha256": "eabf68ca7b0435840c5ec7ab797bb4a3e4e60ac8088fc0099840bbd1f5c0fff2"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/staff-order-list-query.ts",
+              "sha256": "0e72aaa5445b6353734b49adcf1f3d794008d7fe9e49adf9361097bdc61a3029"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+              "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/documents.tsx",
+              "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+            },
+            {
+              "path": "apps/web/src/routes/admin/documents.tsx",
+              "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+            },
+            {
+              "path": "apps/web/src/test/document-list-fixtures.ts",
+              "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/document-media-workspace.md",
+              "sha256": "3ef4a2f4f1d5ce6fd899058a956e11f9c38d524c8f1e8d2a8b4792c1a123e337"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Configured allowed formats, actual size and count appear before upload. Invalid extension/MIME, oversized/empty/name/count selections show specific localized messages and preserve the existing draft. Current policy changes revalidate retained selections; server refuses declared or actual byte/context mismatches before trusted use.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -447339,21 +449194,392 @@
         "story": "07-ui-ux-design.md#spec-1fbe11bd77db"
       },
       "requirement": "| **T-07.25.01.06** | ⚠️ Quarantined files show safe message: \"This file cannot be accepted. Please upload a replacement.\" — never reveal malware detection details to customer. | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-02-document-record-views"
+          "2026-10-02-document-record-views",
+          "release-0.5-document-media-journeys"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-customer-staff-document-media-journey",
+          "base_commit": "7c54cda6995afa0875b6d0931aa5bf82fd48d231",
+          "source_evidence": [
+            {
+              "path": "apps/api/package.json",
+              "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+            },
+            {
+              "path": "apps/api/src/documents/document-notifications.ts",
+              "sha256": "43e223f2820309d1ac326263c44452216e8c4c4387f37e766f3c632d5543fcbb"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.service.ts",
+              "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.test.ts",
+              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.ts",
+              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.controller.ts",
+              "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.service.ts",
+              "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+            },
+            {
+              "path": "apps/api/src/documents/document-validation.ts",
+              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.module.ts",
+              "sha256": "27c20bc833f2e4f50893bb104de5bb4c3ca0c1db8b0b50758a52a16db3acbf6e"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+            },
+            {
+              "path": "apps/web/e2e/dismiss-messages.ts",
+              "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+            },
+            {
+              "path": "apps/web/e2e/document-records.spec.ts",
+              "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+            },
+            {
+              "path": "apps/web/e2e/document-upload-controls.spec.ts",
+              "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+            },
+            {
+              "path": "apps/web/e2e/documents.spec.ts",
+              "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+            },
+            {
+              "path": "apps/web/e2e/navigation-fixture.ts",
+              "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
+              "sha256": "079ab4d2865b9f0c0e0299a43e0337cca71ed2f604322db3d1965b47104879ca"
+            },
+            {
+              "path": "apps/web/src/components/DocumentDetail.tsx",
+              "sha256": "d7b051dab8f5b0fd7f3377ab34916cf1810c7ba1135613ae6c0c4f734838c4c3"
+            },
+            {
+              "path": "apps/web/src/components/DocumentLegalHolds.tsx",
+              "sha256": "f91ed453e583a24a5240031e3e3cd006162a1091ea825ecb2bb43ddb6ad86745"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "b72ff043583387492e2762f4cfa11ec602b9b98a343ee0440ba8f73945cff61b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "2ad04e2c09222075df8b070e6084bdf81f519fd631b474744ace0747e6a5de9d"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+              "sha256": "3b9b96a6fadf224f6338d277b0b3437e627301787394c61e036b34416335db2a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentStatusBadge.tsx",
+              "sha256": "7283eb10eb23bc32e8a5e094f12779ca9faffc8e91d4c6f259e0762f0b5cd491"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.test.tsx",
+              "sha256": "d6c37396df5f6294163fa2f72d09396ede07c72c1f72b5dd55bd7594e993fc76"
+            },
+            {
+              "path": "apps/web/src/components/DocumentUpload.tsx",
+              "sha256": "583d6be1433192e261b441e28541e2e4fa03095cd29b09df152437f9c4b81d95"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+              "sha256": "89e1041d53f71c237626abb94d3503b0a1794a102ffd3891333a2dbb6611ac1b"
+            },
+            {
+              "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+              "sha256": "650fb1dea739c328f7e22a740c4cf741faf25851a98c7485e3d391cf0c06f3cf"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.test.tsx",
+              "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
+            },
+            {
+              "path": "apps/web/src/components/FilePreview.tsx",
+              "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.test.tsx",
+              "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+            },
+            {
+              "path": "apps/web/src/components/FileUpload.tsx",
+              "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+            },
+            {
+              "path": "apps/web/src/components/HistoryTable.tsx",
+              "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+            },
+            {
+              "path": "apps/web/src/components/TeamActionDialog.tsx",
+              "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorPageRows.ts",
+              "sha256": "675dfd015611f6ce2f72bc5732585439670fa1bc5f4b163bf588ad4dbf90640d"
+            },
+            {
+              "path": "apps/web/src/hooks/useFileSelectionKey.ts",
+              "sha256": "d32bb6a952d37ef0725d3d25e12b76e7810a07f95d174d1aa122065e1311ef60"
+            },
+            {
+              "path": "apps/web/src/hooks/useListView.ts",
+              "sha256": "1a034921ca3a002e9affe3a4dff753ecd56b59de8a9abe31b3eb277c2d6db309"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+              "sha256": "fb7a44646eee66d784bf321f3aa9d83cc64cb21978d8bc40fb011265f349e349"
+            },
+            {
+              "path": "apps/web/src/lib/csrf.ts",
+              "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+            },
+            {
+              "path": "apps/web/src/lib/document-upload-progress.test.ts",
+              "sha256": "18a34c9970936187d0a0287ad9b5fbc07d6dc6801caa5e9dd57f9dbd2d546623"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.test.ts",
+              "sha256": "16be68bd91239f84bc0762170ef91a4ee9866fd20c190b18fed725574f5c1d22"
+            },
+            {
+              "path": "apps/web/src/lib/file-preview.ts",
+              "sha256": "a45e01710a5302ef892d8a434d78fb52e187a10d331f2e2ca2c86f752f737907"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.test.ts",
+              "sha256": "3b8bf0bef233d60035254dacc8aaf200acdee42885f6b806cdd479e6af224781"
+            },
+            {
+              "path": "apps/web/src/lib/file-upload.ts",
+              "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/query-keys.ts",
+              "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+            },
+            {
+              "path": "apps/web/src/lib/record-list-query.ts",
+              "sha256": "eabf68ca7b0435840c5ec7ab797bb4a3e4e60ac8088fc0099840bbd1f5c0fff2"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+            },
+            {
+              "path": "apps/web/src/lib/staff-order-list-query.ts",
+              "sha256": "0e72aaa5445b6353734b49adcf1f3d794008d7fe9e49adf9361097bdc61a3029"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+              "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/routes/_app/documents.tsx",
+              "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+            },
+            {
+              "path": "apps/web/src/routes/admin/documents.tsx",
+              "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+            },
+            {
+              "path": "apps/web/src/test/document-list-fixtures.ts",
+              "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/decisions/document-media-workspace.md",
+              "sha256": "3ef4a2f4f1d5ce6fd899058a956e11f9c38d524c8f1e8d2a8b4792c1a123e337"
+            },
+            {
+              "path": "package.json",
+              "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+            },
+            {
+              "path": "packages/db/package.json",
+              "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+            },
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+            },
+            {
+              "path": "packages/i18n/src/app.ts",
+              "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+            },
+            {
+              "path": "packages/i18n/src/documents.ts",
+              "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+            },
+            {
+              "path": "packages/i18n/src/workspace.ts",
+              "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/acceptance-proof.json"
+          ],
+          "criterion_result": "Quarantined state or scanState blocks preview/download and suppresses scanner reasons in backend customer projections/history and again in UI list/detail/badge. Only the safe localized replacement message appears; cached previews, current grants and superseded files cannot bypass the boundary.",
+          "limitations": [
+            "Production-built local browser fixtures and native acceptance. No whole-release/staging/Telegram acceptance; broader shared and release gates remain tracked."
+          ]
+        }
       }
     },
     {
@@ -499376,6 +501602,506 @@
       "external_sends": false,
       "production_authorized": false,
       "acceptance_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-support-ticket-journeys/acceptance-proof.json"
+    },
+    "release-0.5-document-media-journeys": {
+      "batch": "release-0.5-document-media-journeys",
+      "base_commit": "7c54cda6995afa0875b6d0931aa5bf82fd48d231",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.25.01.01",
+        "07-ui-ux-design.md#T-07.25.01.02",
+        "07-ui-ux-design.md#T-07.25.01.03",
+        "07-ui-ux-design.md#T-07.25.01.04",
+        "07-ui-ux-design.md#T-07.25.01.05",
+        "07-ui-ux-design.md#T-07.25.01.06"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/package.json",
+          "sha256": "082ec7b723034f71ab6d515bfdc10804eca67cf9ddec92785fcd93e460804ab2"
+        },
+        {
+          "path": "apps/api/src/documents/document-access.ts",
+          "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "508afb721d9f0e27f9bcd49ca47b34cc7a87bf37ebff735bd1b929aafaa0df84"
+        },
+        {
+          "path": "apps/api/src/documents/document-notifications.ts",
+          "sha256": "43e223f2820309d1ac326263c44452216e8c4c4387f37e766f3c632d5543fcbb"
+        },
+        {
+          "path": "apps/api/src/documents/document-preview.test.ts",
+          "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+        },
+        {
+          "path": "apps/api/src/documents/document-preview.ts",
+          "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+        },
+        {
+          "path": "apps/api/src/documents/document-retention.controller.ts",
+          "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+        },
+        {
+          "path": "apps/api/src/documents/document-retention.service.ts",
+          "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+        },
+        {
+          "path": "apps/api/src/documents/document-storage.service.ts",
+          "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+        },
+        {
+          "path": "apps/api/src/documents/document-template-extraction.test.ts",
+          "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+        },
+        {
+          "path": "apps/api/src/documents/document-template-extraction.ts",
+          "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+        },
+        {
+          "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+          "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+        },
+        {
+          "path": "apps/api/src/documents/document-template.controller.ts",
+          "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+        },
+        {
+          "path": "apps/api/src/documents/document-template.service.ts",
+          "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+        },
+        {
+          "path": "apps/api/src/documents/document-validation.ts",
+          "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+        },
+        {
+          "path": "apps/api/src/documents/document.controller.ts",
+          "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+        },
+        {
+          "path": "apps/api/src/documents/document.module.ts",
+          "sha256": "27c20bc833f2e4f50893bb104de5bb4c3ca0c1db8b0b50758a52a16db3acbf6e"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/dismiss-messages.ts",
+          "sha256": "0d517bb7fc4fa6582d3423f688e868a898d500a9f8b83bc633b68442bf84d1d9"
+        },
+        {
+          "path": "apps/web/e2e/document-records.spec.ts",
+          "sha256": "2270d1d47e5ba7b41d3fb5707baed4369b4001a0d5e82bd1d6d72c077b853cc5"
+        },
+        {
+          "path": "apps/web/e2e/document-upload-controls.spec.ts",
+          "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+        },
+        {
+          "path": "apps/web/e2e/documents.spec.ts",
+          "sha256": "a70fcee47610ec0c0ffd7adfa9416d0d795fad4695a116e9aaf62f8f384eb931"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+        },
+        {
+          "path": "apps/web/e2e/upload-fixture.ts",
+          "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "d3f3a9300e94593960bbe8646175a969991a41a2a6245be0dc6713100e88b449"
+        },
+        {
+          "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
+          "sha256": "079ab4d2865b9f0c0e0299a43e0337cca71ed2f604322db3d1965b47104879ca"
+        },
+        {
+          "path": "apps/web/src/components/DocumentDetail.tsx",
+          "sha256": "d7b051dab8f5b0fd7f3377ab34916cf1810c7ba1135613ae6c0c4f734838c4c3"
+        },
+        {
+          "path": "apps/web/src/components/DocumentLegalHolds.tsx",
+          "sha256": "f91ed453e583a24a5240031e3e3cd006162a1091ea825ecb2bb43ddb6ad86745"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRecords.test.tsx",
+          "sha256": "b72ff043583387492e2762f4cfa11ec602b9b98a343ee0440ba8f73945cff61b"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRecords.tsx",
+          "sha256": "2ad04e2c09222075df8b070e6084bdf81f519fd631b474744ace0747e6a5de9d"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
+          "sha256": "3b9b96a6fadf224f6338d277b0b3437e627301787394c61e036b34416335db2a"
+        },
+        {
+          "path": "apps/web/src/components/DocumentStatusBadge.tsx",
+          "sha256": "7283eb10eb23bc32e8a5e094f12779ca9faffc8e91d4c6f259e0762f0b5cd491"
+        },
+        {
+          "path": "apps/web/src/components/DocumentUpload.test.tsx",
+          "sha256": "d6c37396df5f6294163fa2f72d09396ede07c72c1f72b5dd55bd7594e993fc76"
+        },
+        {
+          "path": "apps/web/src/components/DocumentUpload.tsx",
+          "sha256": "583d6be1433192e261b441e28541e2e4fa03095cd29b09df152437f9c4b81d95"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+          "sha256": "89e1041d53f71c237626abb94d3503b0a1794a102ffd3891333a2dbb6611ac1b"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "650fb1dea739c328f7e22a740c4cf741faf25851a98c7485e3d391cf0c06f3cf"
+        },
+        {
+          "path": "apps/web/src/components/FilePreview.test.tsx",
+          "sha256": "79f1612d2038a61fd3ee47c5af2e1487eb11399b57ba403586f3c315e435bcf6"
+        },
+        {
+          "path": "apps/web/src/components/FilePreview.tsx",
+          "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+        },
+        {
+          "path": "apps/web/src/components/FileUpload.test.tsx",
+          "sha256": "e6d567309b7f26d8086e538dd7da85d5036ea580f0ed78eed153a27ad119bc57"
+        },
+        {
+          "path": "apps/web/src/components/FileUpload.tsx",
+          "sha256": "85954b76f4b1aab887523eff4a0276fb84338ec8ec340a2e7b033eaf01ed9f21"
+        },
+        {
+          "path": "apps/web/src/components/HistoryTable.tsx",
+          "sha256": "fc0feead0d6e77ff413ecd322f71fffd843158e265c3d80e986944f9d1aa64a7"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "22bfc3f3f370dcd0e8074c280173421c173d6e88f2cd9d377d6883e9bf7d0c87"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountUser.tsx",
+          "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+        },
+        {
+          "path": "apps/web/src/hooks/useCursorPageRows.ts",
+          "sha256": "675dfd015611f6ce2f72bc5732585439670fa1bc5f4b163bf588ad4dbf90640d"
+        },
+        {
+          "path": "apps/web/src/hooks/useFileSelectionKey.ts",
+          "sha256": "d32bb6a952d37ef0725d3d25e12b76e7810a07f95d174d1aa122065e1311ef60"
+        },
+        {
+          "path": "apps/web/src/hooks/useListView.ts",
+          "sha256": "1a034921ca3a002e9affe3a4dff753ecd56b59de8a9abe31b3eb277c2d6db309"
+        },
+        {
+          "path": "apps/web/src/hooks/useNumberFormatting.ts",
+          "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+          "sha256": "fb7a44646eee66d784bf321f3aa9d83cc64cb21978d8bc40fb011265f349e349"
+        },
+        {
+          "path": "apps/web/src/lib/csrf.ts",
+          "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+        },
+        {
+          "path": "apps/web/src/lib/document-upload-progress.test.ts",
+          "sha256": "18a34c9970936187d0a0287ad9b5fbc07d6dc6801caa5e9dd57f9dbd2d546623"
+        },
+        {
+          "path": "apps/web/src/lib/documents.test.ts",
+          "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "apps/web/src/lib/file-preview.test.ts",
+          "sha256": "16be68bd91239f84bc0762170ef91a4ee9866fd20c190b18fed725574f5c1d22"
+        },
+        {
+          "path": "apps/web/src/lib/file-preview.ts",
+          "sha256": "a45e01710a5302ef892d8a434d78fb52e187a10d331f2e2ca2c86f752f737907"
+        },
+        {
+          "path": "apps/web/src/lib/file-upload.test.ts",
+          "sha256": "3b8bf0bef233d60035254dacc8aaf200acdee42885f6b806cdd479e6af224781"
+        },
+        {
+          "path": "apps/web/src/lib/file-upload.ts",
+          "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+        },
+        {
+          "path": "apps/web/src/lib/query-keys.ts",
+          "sha256": "d3c61332437e188bc6753c0f1175b910ac2d21baca953146973ea28ec4ab0257"
+        },
+        {
+          "path": "apps/web/src/lib/record-list-query.ts",
+          "sha256": "eabf68ca7b0435840c5ec7ab797bb4a3e4e60ac8088fc0099840bbd1f5c0fff2"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "70c0c1ccb999ab21b5e2d1e3954de637009a5ed0f6e291e1a8537d186146a0e4"
+        },
+        {
+          "path": "apps/web/src/lib/staff-order-list-query.ts",
+          "sha256": "0e72aaa5445b6353734b49adcf1f3d794008d7fe9e49adf9361097bdc61a3029"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentsPage.tsx",
+          "sha256": "a22349c1e3e75fbc349b02bfcb29a12cfbff1572b636e525c8fd1c4facd62ff6"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+        },
+        {
+          "path": "apps/web/src/providers/QueryProvider.tsx",
+          "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+        },
+        {
+          "path": "apps/web/src/routes/_app/documents.tsx",
+          "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+        },
+        {
+          "path": "apps/web/src/routes/admin/documents.tsx",
+          "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+        },
+        {
+          "path": "apps/web/src/test/document-list-fixtures.ts",
+          "sha256": "3f3cc032408858b5f9299f26a4f12fb6fb37d0acbfc9f5b5d6865fe10e40656b"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "docs/decisions/document-media-workspace.md",
+          "sha256": "3ef4a2f4f1d5ce6fd899058a956e11f9c38d524c8f1e8d2a8b4792c1a123e337"
+        },
+        {
+          "path": "package.json",
+          "sha256": "82b171fa99e75b05a287165cebe5a5783392c5e6912ae75c2926ad8418501d76"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "0b9e272612db27620e3b9576e20a22fe85b687e5344c044c61390692a77a6488"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "9be6f2c3f3e4bdd3f6cf6044618cecdf144c4463a14dd40fb17e5af7dfb21971"
+        },
+        {
+          "path": "packages/i18n/src/documents.ts",
+          "sha256": "44bb9eeef72ee87aaa850a75a7ab20dc55631b54f61fd34500f57c1e2c48cf8b"
+        },
+        {
+          "path": "packages/i18n/src/workspace.ts",
+          "sha256": "d75a0d6ce059a89f3d68412a15b32329e69c5c3251469f3fae1a465f5d95bbe6"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "6d5a353d3158f26d466bb511d212057ef8b19eb86410a655be71446f78feecb7"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "97977e30906e41e140d87ad0801863fde6cb2f533fed0cc9f230dea929b4f247"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "47a8aa11de87da850add8a185afbd77fdbf6d388ec8a2a0f6700165ba1ed23bf"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+          "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+        },
+        {
+          "path": "packages/ui/src/components/ui/workflow.tsx",
+          "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aa857d37ebe2bdf50d3d67e0aa33e87dbb4a0c7dce084636834578e4dd6967e6"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "criteria": {
+        "07-ui-ux-design.md#T-07.25.01.01": "Current shared FileUpload provides keyboard browse/drop, ordered file metadata, localized configured extension/MIME/size/count validation, retained accepted files and named progress/phase announcements. DocumentUpload captures reservation/file/confirmation identity and resumes without duplicating acknowledged transfer or document effects.",
+        "07-ui-ux-design.md#T-07.25.01.02": "Shared FilePreview renders image thumbnails, bounded authenticated transient selected-PDF first pages, current-authorized stored derivatives and safe icon fallback. Local object URLs are revoked, hidden/obsolete rendering aborted, unsafe protocols and executable SVG/unknown files refused. Actual document, ticket and upload callers verified.",
+        "07-ui-ux-design.md#T-07.25.01.03": "All nine document states have localized distinct semantic badges/icons; PendingScan pulses with reduced-motion respect, Removed is struck through, Approved has check and Rejected reason is displayed in list/detail. Unknown state stays distinguishable without invented authority.",
+        "07-ui-ux-design.md#T-07.25.01.04": "Current DocumentList shows icon/name/size/upload date/state and explicit lazy preview/download plus permitted replace/remove controls in table and mobile cards. Layout preserves selected detail, drafts and accepted revision-bound receipts. Owner/profile/grant denial clears private controls/links; revision-bound mutations retain exact retries and immutable history.",
+        "07-ui-ux-design.md#T-07.25.01.05": "Configured allowed formats, actual size and count appear before upload. Invalid extension/MIME, oversized/empty/name/count selections show specific localized messages and preserve the existing draft. Current policy changes revalidate retained selections; server refuses declared or actual byte/context mismatches before trusted use.",
+        "07-ui-ux-design.md#T-07.25.01.06": "Quarantined state or scanState blocks preview/download and suppresses scanner reasons in backend customer projections/history and again in UI list/detail/badge. Only the safe localized replacement message appears; cached previews, current grants and superseded files cannot bypass the boundary."
+      },
+      "passing_check_receipts": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/ui.json",
+          "sha256": "dc5c4ecb557ceceaf141157c4063926ab604a4ff01524e90ea72c879c13dbff3",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/ui.log",
+          "log_sha256": "9866a3ea891d390ee462987f7335b2b9ae799c572c53676fc9f2e6b012523ada"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/native.json",
+          "sha256": "485bdcdb30b3b8d335f0a915d5df202ff28326a222c345702868d003d08b14f9",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/native.log",
+          "log_sha256": "4241989d7f9577807c070514b655fff4c59b687622770a92630229b0c8d2a171"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/browser.json",
+          "sha256": "1f7c54d157c536b55d206894be0588f4439edc7bf6e05bea94349cfa5cbeb8ef",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/browser.log",
+          "log_sha256": "4f4d8a0a0c4d6d826cbd5983c18777871148911abcce0746aeaf133d74cbc7c5"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/mobile.json",
+          "sha256": "62c1e0196e10d5040c963beaf35258a549d8c6dcf3ad375e45f5f4a2dce2afcd",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/mobile.log",
+          "log_sha256": "0ffaea4a556bc5b2c470da3a520cc081de355dee8cef2365f967eb7ba9eacdf3"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/docs-format.json",
+          "sha256": "3610445223f3ab48a4c6e1176c62a85046e60847291fd582aef42c263ed6ef02",
+          "log": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/docs-format.log",
+          "log_sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ],
+      "case_provenance": {
+        "new_native_passed": 47,
+        "new_ui_passed": 115,
+        "new_browser_passed": 44,
+        "new_browser_detail": "32 Chromium and12 focused MobileChrome cases. English/Persian, light/dark, RTL/LTR, original scoped Axe/keyboard/width assertions, lazy authorized preview/download, configurable upload validation, pause/resume, exact revision retries and quarantine privacy verified. No failed commands or retries in this batch."
+      },
+      "review": {
+        "result": "accepted",
+        "scope": "Current shared picker/preview, document list/detail/upload and actual customer/staff boundaries inspected against all six criteria. No demonstrated implementation gap. New behavior note reviewed once. Existing owner-approved policy/route/privacy/lineage representations retained. No code/assertion/budget/money/security changes."
+      },
+      "build_reuse": {
+        "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/build-reuse.json",
+        "sha256": "17d73d4cafdf7faac0e9ca7f28d6cf0b4a6585b1f79b3279d67118083ed55362",
+        "notes": "All seven complete runtime trees and80 current support source bindings match. Existing final types, schema/contracts and89 original route budgets retained; no application rebuild. Current84 native/65 UI/50 browser support results cover the unchanged ticket preview consumer."
+      },
+      "runtime_bindings": {
+        "apps/api/dist": {
+          "files": 2091,
+          "sha256": "8b2decded052064325556b273fa58e76288d6874313066bfbcc4a3042b8a303b",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "apps/worker/dist": {
+          "files": 500,
+          "sha256": "ec4a864e985406b076c6e036ff0e65a2dbe9e7dbcbc05f84370360f4c2d8650c",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "apps/web/dist": {
+          "files": 544,
+          "sha256": "0d8d205312fa8443822c101152bff25829a49850e83ee233b1b0d75e7f6aa366",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/shared/dist": {
+          "files": 1145,
+          "sha256": "432ca1d51a623fdf0a824884bd3351eb91bc92b8a700103566b2b4dd3cb9b682",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/db/dist": {
+          "files": 1164,
+          "sha256": "0358b84199299d60b2a27a6da46dcdd62542ae94998e024f412b234deac0a4e0",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/i18n/dist": {
+          "files": 532,
+          "sha256": "5125aaf4a1d96fbffcf762acb27e8ef285c269bb06b44acc75695a91cfb40ae4",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        },
+        "packages/ui/dist": {
+          "files": 633,
+          "sha256": "f4a051bb85c55ca440ce2f9ffcd0e86ddbec3909db49597ceb7f5f2f0e9dcb1b",
+          "algorithm": "sha256(sorted relative path + NUL + file sha256 bytes)"
+        }
+      },
+      "captures": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/captures/barghsa-documents-customer-fa-chromium.png",
+          "sha256": "d03eea1d7a633b8042137327c473623dcd4153b9177e878211f05b3753bd160a",
+          "reviewed": true,
+          "release_use": false,
+          "limitation": "Actual local scoped fixture has intentional unavailable navigation or invitation data and a scrolled composition; keep out of release album. No screenshot-only suite repeated."
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/captures/barghsa-inline-documents-staff-en-chromium.png",
+          "sha256": "a76945b960fe87ea948eb68f4f56fe5a5c03c4fbeda8ed17cc65f007f2fcbbdd",
+          "reviewed": true,
+          "release_use": false,
+          "limitation": "Actual local scoped fixture has intentional unavailable navigation or invitation data and a scrolled composition; keep out of release album. No screenshot-only suite repeated."
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/captures/barghsa-local-pdf-customer-fa-chromium.png",
+          "sha256": "c69ea3b06ec4bfe347737ce6ed43a8efad5f85d69033f9dcdd1595c8bc17154f",
+          "reviewed": true,
+          "release_use": false,
+          "limitation": "Actual local scoped fixture has intentional unavailable navigation or invitation data and a scrolled composition; keep out of release album. No screenshot-only suite repeated."
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/captures/barghsa-upload-staff-fa-confirmation-chromium.png",
+          "sha256": "3bfcdab4cfb2bdb8e73ca1aa9f9d85d34d16cb9d9c10541538479038ef24f716",
+          "reviewed": true,
+          "release_use": false,
+          "limitation": "Actual local scoped fixture has intentional unavailable navigation or invitation data and a scrolled composition; keep out of release album. No screenshot-only suite repeated."
+        }
+      ],
+      "release_accepted": false,
+      "external_sends": false,
+      "production_authorized": false,
+      "acceptance_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-document-media-journeys/acceptance-proof.json"
     }
   },
   "historical_improvements": [
@@ -499415,21 +502141,28 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-document-media-journeys",
+    "id": "release-0.5-ai-chat-journeys",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.25.01.01",
-      "07-ui-ux-design.md#T-07.25.01.02",
-      "07-ui-ux-design.md#T-07.25.01.03",
-      "07-ui-ux-design.md#T-07.25.01.04",
-      "07-ui-ux-design.md#T-07.25.01.05",
-      "07-ui-ux-design.md#T-07.25.01.06"
+      "07-ui-ux-design.md#T-07.20.01.01",
+      "07-ui-ux-design.md#T-07.20.01.02",
+      "07-ui-ux-design.md#T-07.20.01.03",
+      "07-ui-ux-design.md#T-07.20.01.04",
+      "07-ui-ux-design.md#T-07.20.01.05",
+      "07-ui-ux-design.md#T-07.20.01.06",
+      "07-ui-ux-design.md#T-07.20.01.07",
+      "07-ui-ux-design.md#T-07.20.01.08",
+      "07-ui-ux-design.md#T-07.21.01.01",
+      "07-ui-ux-design.md#T-07.21.01.02",
+      "07-ui-ux-design.md#T-07.21.01.03",
+      "07-ui-ux-design.md#T-07.21.01.04",
+      "07-ui-ux-design.md#T-07.21.01.05"
     ],
-    "goal": "Verify and finish configured file upload, safe file preview, document state/list and actionable localized validation in customer/staff workspaces. Inspect current implementation first, reuse matching ticket/contract/storage evidence, and preserve staged byte verification, owner/profile access, immutable financial/contract files, quarantine privacy, retention and exact upload/mutation retry boundaries. Accept the complete document/media journey before selecting another v0.5.0 group."
+    "goal": "Verify and finish customer/staff read-only AI assistance and isolated admin agent test conversations, metadata, localized stream/input/recovery and current scope boundaries. Inspect current implementation first; apply the owner-approved knowledge-only launch scope and explicitly deferred profile-data/tools/write-confirmation features without falsely certifying them as implemented. Reuse matching AI native evidence, preserve current model/policy/budget/rate/privacy authority and record any remaining concrete criteria."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
-    "next_update_after": "v0.5.0 document/media and AI interfaces plus remaining shared adoption; owner-deferred external Telegram host remains separate",
+    "next_update_after": "v0.5.0 AI interfaces plus remaining shared adoption; owner-deferred external Telegram host remains separate",
     "method": "v0.2.0 and v0.3.0 accepted and staging/Telegram verified. Continue dependency order. Required external operational proof, including SMS, remains before production."
   },
   "capabilities": [
